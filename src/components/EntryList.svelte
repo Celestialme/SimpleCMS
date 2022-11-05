@@ -1,6 +1,6 @@
 <script lang="ts">
     import axios from "axios";
-    import { env } from '$env/dynamic/private'
+    import env  from '@root/env'
     import { prevFormData} from "@root/stores/store"
     import { onMount } from "svelte";
     import DeleteIcon from "./icons/DeleteIcon.svelte";

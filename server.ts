@@ -8,12 +8,11 @@ import multer from "multer"
 
 // mongoose.connect(`mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}/${env.DB_NAME}?retryWrites=true&w=majority`);
 
-mongoose.connect(`${env.DB_HOST}/${env.DB_NAME}`, {
-
-    authSource: "admin",
-    user: env.DB_USER,
-    pass: env.DB_PASSWORD
-
+mongoose.connect(env.DB_HOST, {
+  authSource: "admin",
+  user: env.DB_USER,
+  pass: env.DB_PASSWORD,
+  dbName: env.DB_NAME,
 });
 
   let collections:{[Key:string]:mongoose.Model<any>} = {}

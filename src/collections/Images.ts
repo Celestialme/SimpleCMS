@@ -8,7 +8,6 @@ let schema:Schema = {
    fields:[
        Text({title:"name2"}),
        Relation({title:"relation_title",relation:Posts,display:async (data:any,field: any, entry: any)=>{
-        console.log(data)
         return data.name
        }}),
    ]
