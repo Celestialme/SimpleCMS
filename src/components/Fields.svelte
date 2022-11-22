@@ -13,7 +13,7 @@ export let  getData=async ()=>{
 }
  
 onMount(async ()=>{
-    $getFieldsData.push(getData)
+    $getFieldsData.add(getData)
 })
  
     

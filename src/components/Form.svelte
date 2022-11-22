@@ -7,7 +7,7 @@
     let button:HTMLButtonElement
     let checked:boolean =false
 
-$:{$getFieldsData=[]
+$:{$getFieldsData=new Set()
     collection,
     checked
 }

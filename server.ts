@@ -40,6 +40,10 @@ mongoose.connect(env.DB_HOST, {
     let collection  = collections[req.query.collection as string]
     res.send(await collection.findById(req.query.id as string))
   })
+  app.get("/api/find",async (req,res)=>{
+    let collection  = collections[req.query.collection as string]
+    res.send(await collection.find(JSON.parse(req.query.query as string)))
+  })
 
    app.get('/api/:endpoint', async (req, res) => {
     let collection  = collections[req.params.endpoint]

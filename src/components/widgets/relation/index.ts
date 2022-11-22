@@ -9,7 +9,7 @@ export default ({title,relation,display}:{title:string,relation:Schema,display?:
       return await (display as Display)(_data,field,entry)
     }
     if(!_display) _display= display
-    let field:any= {schema:{},title, strict:false,relation,display:_display}
+    let field:any= {schema:{},title, strict:false,relation,display:_display,rawDisplay:display}
     field.schema[title]="string"
     
     field.widget_name = "Relation"

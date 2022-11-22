@@ -70,3 +70,8 @@ return formFieldsData
 export async  function findById(id:string,collection:Schema){
     return (await axios.get(`${env.HOST}:${env.PORT}/api/findById?collection=${collection.name}&id=${id}`)).data
  }
+
+ export async  function find(query:object,collection:Schema){
+    let _query = JSON.stringify(query)
+    return (await axios.get(`${env.HOST}:${env.PORT}/api/find?collection=${collection.name}&query=${_query}`)).data
+ }

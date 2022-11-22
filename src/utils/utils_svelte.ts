@@ -37,7 +37,7 @@ export async function saveFormData(collection:Schema){
 }
 
 
-export async function saveSimpleData(collection:Schema,data:any,doc_id?:string){
+export async function saveSimpleData(collection:Schema,data:any,doc_id?:string,insert?:boolean){
     let formData =  new FormData()
     for (let key in  data){
         if (typeof data[key]=="object"){
@@ -50,14 +50,14 @@ export async function saveSimpleData(collection:Schema,data:any,doc_id?:string){
             formData.append(key,data[key])
         }
       }
-      return await saveData(collection,formData,doc_id)
+      return await saveData(collection,formData,doc_id,insert)
 }
 
 
 
-export async function saveData(collection:Schema,formData:FormData,doc_id?:string){
+export async function saveData(collection:Schema,formData:FormData,doc_id?:string,insert?:boolean){
     let oldData_id= doc_id || (get(prevFormData) as any)?._id
-    if(oldData_id){
+    if(oldData_id&&!insert){
         formData.append("_id", oldData_id) 
         return  await axios.patch(`${env.HOST}:${env.PORT}/api/${collection.name}`,formData)
     }else{
