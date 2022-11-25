@@ -1,5 +1,0 @@
-<div>
-    Signhup
-</div>
-
-<slot/>

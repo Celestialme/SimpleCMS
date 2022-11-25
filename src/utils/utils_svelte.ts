@@ -1,6 +1,6 @@
 import widgets from "@src/components/widgets";
 import {get} from "svelte/store"
-import {prevFormData,getFieldsData} from "@root/stores/store"
+import {prevFormData,getFieldsData} from "@src/stores/store"
 import axios from "axios";
 import  env  from "../../env";
 import type { Schema } from "@src/collections/types";

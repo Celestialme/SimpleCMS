@@ -1,12 +1,18 @@
 <script lang="ts">
     import axios from "axios";
     import env  from '@root/env'
-    import { prevFormData} from "@root/stores/store"
+    import { prevFormData} from "@src/stores/store"
     import { onMount } from "svelte";
     import DeleteIcon from "./icons/DeleteIcon.svelte";
+  import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch} from 'flowbite-svelte';
+    export let showFields = false;
     export let collection:any=undefined;
-    let entryList:any=[];   
+    let entryList:any=[];
+    let deleteMode= false
     let deleteMap:any={}
+    let deleteAll=false;
+    $:process_deleteAll(deleteAll)
+    $:deleteMode = Object.values(deleteMap).includes(true)
     let refresh_deleteMap = (_:any)=>{
       deleteMap={}
     }
@@ -26,6 +32,7 @@
 $:refresh&&refresh(collection)
 
 async function deleteEntry(){
+  deleteAll=false
   let deleteList:Array<string>=[]
   for (let item in deleteMap){
     deleteMap[item] && deleteList.push(entryList[item]._id)
@@ -37,51 +44,68 @@ async function deleteEntry(){
   refresh(collection)
 
 }
-let a:any
+let filter:any="";
+let filtered_entryList=[...entryList]
+$:{filtered_entryList=entryList.filter((item:object)=>{return filter?Object.values(item).some(x=>x.toString().includes(filter)):true});filter}
+
+
+function process_deleteAll(deleteAll:boolean){
+if(deleteAll){
+  for (let item in entryList){
+    deleteMap[item] =true
+  }
+}else{
+  for (let item in deleteMap){
+    deleteMap[item] =false
+  }
+}
+}
 </script>
 
 
-<div class="overflow-x-auto w-[50vw]">
-    <table class="table w-full">
-      <thead>
-        <tr>
-          <th >Index</th>
+<div class="relative">
+  <div class="flex justify-center items-center ">
+    <TableSearch divClass="ml-auto" placeholder="Search..." hoverable={true} bind:inputValue={filter}/>
+    <Button gradient color={deleteMode?"red":"green"} class="ml-auto" on:click={()=>{deleteMode?deleteEntry():showFields=true}}>{deleteMode?"delete":"create"}</Button>
+  </div>
+
+    <Table hoverable={true} class="relative">
+    <TableHead>
+
+          <TableHeadCell >Index</TableHeadCell>
           {#each collection.fields as field}
-          <th class="text-center">{field.title}</th>
+          <TableHeadCell class="text-center">{field.title}</TableHeadCell>
          {/each}
-         <th class="text-right"><button on:click={deleteEntry} class="btn btn-sm">DELETE</button></th>
-        </tr>
-      </thead>
-      <tbody>
+         <TableHeadCell class="text-right"> <DeleteIcon bind:checked={deleteAll}  class="ml-auto mr-[25px]"/></TableHeadCell>
+  
+      </TableHead>
+      <TableBody class="divide-y">
 
 
-    {#each entryList as entry,index}
-        <tr on:click={()=>{document.getElementById("modal_action")?.click();$prevFormData=entry}}>
-            <th>{index+1}</th>
+    {#each filtered_entryList as entry,index}
+        
+        <TableBodyRow  on:click={()=>{showFields=true;$prevFormData=entry}}>
+            <TableBodyCell>{index+1}</TableBodyCell>
     
        
             {#each collection.fields as field}
               {#await  field?.display?.(entry[field.title],field,entry)}
-              <td class="text-center">Loading...</td>
+              <TableBodyCell class="text-center">Loading...</TableBodyCell>
               {:then display}
                 {entry.displays ={},""}
-                <td class="text-center">{ @html entry.displays[field.title]= display }</td>
+                <TableBodyCell class="text-center">{ @html entry.displays[field.title]= display }</TableBodyCell>
                 {/await}
             {/each}
-            <th>
+            <TableBodyCell>
           
-              <DeleteIcon bind:checked={deleteMap[index]} class="ml-auto mr-[20px]"/>
+              <DeleteIcon bind:checked={deleteMap[index]}  class="ml-auto mr-[25px]"/>
         
-            </th>
-        </tr>
+            </TableBodyCell>
+          </TableBodyRow>
     {/each}
 
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
+
   </div>
   
-  <style>
-    tbody tr:hover *{
-      background: #e0e0e0;
-    }
-  </style>

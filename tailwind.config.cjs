@@ -8,8 +8,8 @@ const config = {
     extend: {},
   },
 
-  plugins: [require("daisyui")],
-  darkMode: 'class',
+  plugins: [require('flowbite/plugin')],
+  darkMode: 'media',
 };
 
 module.exports = config;

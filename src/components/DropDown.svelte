@@ -1,27 +1,56 @@
 <script lang="ts">
-    export let data:Array<any>=[];
+    import { Search } from "flowbite-svelte";
+
+
+    export let dropDownData:Array<any>=[];
+    export let showDropDown:boolean;
     export let selected;
     export let display:any
+    let value="";
+    let data:Array<any>=[]
+    let filteredData=data
+    $:{filteredData = data.filter((x:any)=>{return value?x.item.includes(value):true});value;data}
+    $:process_data(dropDownData)
+    async function process_data(dropDownData:Array<any>){
+        let temp = []
+        for(let item of dropDownData){
+            temp.push({item:await display(item),_id:item._id})
+        }
+        data=temp
+    }
+    function getVal(e:Event){
+        value = (e.target as HTMLInputElement).value;
+        console.log(value)
+    }
 </script>
-<div class="container">
-{#each data as item}
-{#await display(item)}
-<p>...loading</p>
-{:then data}
-<p on:click|preventDefault={()=>selected=item}>{data}</p>
-{/await}
-{/each}
+{#if showDropDown}
+    <div class="container">
+    <Search on:keyup={getVal} size="md" />
+    {#each filteredData as item}
+    {console.log(item),""}
+    <p on:click={()=>{selected=item;showDropDown=false;}}>{item.item}</p>
 
-</div>
+    {/each}
 
+    </div>
+{/if}
 <style>
     .container{
         position: absolute;
         top: 100%;
-        left:0
+        left:0;
+        background-color:white;
+        margin-top: 5px;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
     }
     p{
         padding:10px;
+
+    }
+    p:hover{
+        background-color: #65dfff;
+        color:white;
 
     }
 </style>

@@ -6,7 +6,7 @@ let schema:Schema =  {
     strict:false,
    fields:[
     Text({title:'seperate'}),
-    MegaMenu({title:"Metalworking",menu:[
+    MegaMenu({title:"Menus",menu:[
       {
           
             fields:[

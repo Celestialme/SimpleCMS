@@ -4,11 +4,18 @@ import Media from "./Media";
 import Menu from "./Menu";
 
 
-
-
-export default [
+let categories =  [
+  {
+  category:"collections",
+  collections:[
     Images,
     Posts,
     Media,
     Menu
-]
+  ]
+},
+
+   
+  ]
+export {categories}
+export default categories.map(x=>x.collections).reduce((x,acc)=> x.concat(acc))
