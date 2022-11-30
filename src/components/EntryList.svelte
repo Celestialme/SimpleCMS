@@ -7,8 +7,8 @@
   import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell, TableSearch} from 'flowbite-svelte';
     export let showFields = false;
     export let collection:any=undefined;
+    export let deleteMode= false
     let entryList:any=[];
-    let deleteMode= false
     let deleteMap:any={}
     let deleteAll=false;
     $:process_deleteAll(deleteAll)
@@ -31,7 +31,7 @@
     })
 $:refresh&&refresh(collection)
 
-async function deleteEntry(){
+export async function deleteEntry(){
   deleteAll=false
   let deleteList:Array<string>=[]
   for (let item in deleteMap){
@@ -65,8 +65,8 @@ if(deleteAll){
 
 <div class="relative">
   <div class="flex justify-center items-center ">
-    <TableSearch divClass="ml-auto" placeholder="Search..." hoverable={true} bind:inputValue={filter}/>
-    <Button gradient color={deleteMode?"red":"green"} class="ml-auto" on:click={()=>{deleteMode?deleteEntry():showFields=true}}>{deleteMode?"delete":"create"}</Button>
+    <TableSearch  placeholder="Search..." hoverable={true} bind:inputValue={filter}/>
+    
   </div>
 
     <Table hoverable={true} class="relative">

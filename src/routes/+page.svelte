@@ -9,10 +9,15 @@
   import axios from "axios";
   import env from "@root/env";
   import { goto } from "$app/navigation";
+  import { Button, DarkMode, Navbar, NavHamburger, Search, Sidebar, SidebarBrand, SidebarGroup, SidebarWrapper } from "flowbite-svelte";
   let valid = false;
   let collection = collections[0];
+  let filterCollections=""
   let fields: any = get_fields(collection);
   let refresh: (collection: any) => Promise<any>;
+  let showFields = false;
+  let deleteEntry = async () => {};
+  let deleteMode: boolean;
   axios
     .post(
       `${env.API}/validateSession`,
@@ -39,39 +44,74 @@
     showFields = false;
     $prevFormData = undefined;
   }
-  let showFields = false;
+
   $: {
     $prevFormData = undefined;
     collection;
   }
+  let site = {
+    name: "SimpleCMS",
+    href: "/",
+    img: "https://flowbite-svelte.com/images/flowbite-svelte-icon-logo.svg",
+  };
+  let toggleSideBar = false;
+  function updateFilter(e:KeyboardEvent) {
+    filterCollections = (e.target as HTMLInputElement).value;
+  }
 </script>
 
 <div class="body">
-  {#if valid}
-    <div class="controlls text-white">
-      <Collections
-        data={categories}
-        bind:fields
-        bind:collection
-        bind:showFields
-      />
+  <Navbar class="dark:text-white " navDivClass="flex  justify-between items-center w-full max-w-full">
+    <NavHamburger on:click={() => (toggleSideBar = !toggleSideBar)} />
+
+    <div class="dark:text-white hidden md:block mr-auto ">
+      <SidebarBrand {site} aClass="flex items-center pl-2.5" />
     </div>
-
-    <div class="content">
-      {#if showFields}
-        <Form {fields} {collection} on:submit={onSubmit} />
-      {/if}
-
-      <div hidden={showFields}>
-        <EntryList bind:showFields {collection} bind:refresh />
+    
+    <Button
+      gradient
+      color={deleteMode ? "red" : "green"}
+      class="ml-auto"
+      on:click={() => {
+        deleteMode ? deleteEntry() : (showFields = true);
+      }}>{deleteMode ? "delete" : "create"}</Button
+    >
+   
+    <DarkMode />
+  </Navbar>
+  <div class="flex relative ">
+    {#if valid}
+      <div hidden={toggleSideBar}  class="controlls text-white absolute md:relative  left-0 top-0 z-10 md:block">
+        <Sidebar id="sidebarLeft">
+          <SidebarWrapper class="border-r-2 ">
+            <SidebarGroup bind:fields bind:collection bind:showFields>
+              <SidebarBrand {site} />
+              <Search size="md" placeholder="Search ..."  on:keyup={updateFilter}/>
+             
+              <Collections data={categories} {filterCollections} bind:fields bind:collection bind:showFields />
+           
+            </SidebarGroup>
+          </SidebarWrapper>
+        </Sidebar>
       </div>
-    </div>
-  {/if}
+
+      <div class="content">
+        {#if showFields}
+          <Form {fields} {collection} on:submit={onSubmit} />
+        {/if}
+
+        <div hidden={showFields}>
+          <EntryList bind:showFields bind:deleteEntry bind:deleteMode {collection} bind:refresh />
+        </div>
+      </div>
+    {/if}
+  </div>
 </div>
 
 <style>
   .body {
     display: flex;
+    flex-direction: column;
   }
   .content {
     margin: 0 auto;
