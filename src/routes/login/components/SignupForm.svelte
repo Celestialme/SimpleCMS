@@ -2,19 +2,55 @@
   import Icon from "@iconify/svelte";
   import env from "@root/env";
   import axios from "axios";
-  import { Button, FloatingLabelInput } from "flowbite-svelte";
+  import { Button, FloatingLabelInput, Helper } from "flowbite-svelte";
   import { credentials } from "@src/stores/store";
   import CMSLogo from "./icons/Logo.svelte";
   import { goto } from "$app/navigation";
   export let show: boolean = false;
   let showPassword: boolean = false;
-  let forgot: boolean = false;
   let email = "";
+  let errorStatus = {
+    email: { status: false, msg: "" },
+    confirm: { status: false, msg: "" },
+    password: { status: false, msg: "" },
+  };
   let password = "";
   let confirmPassword = "";
 
   async function signup() {
-    if (password !==confirmPassword) return
+    email = email.trim();
+    let emailRegex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    let error = false;
+
+    if (!emailRegex.test(email)) {
+      errorStatus.email.status = true;
+      errorStatus.email.msg = "please type valid Email";
+      error = true;
+    }
+    if (!/\.\w+$/.test(email)) {
+      errorStatus.email.msg = "Email should be ending with domain (eg .com)";
+    }
+    if (!email.includes("@")) {
+      errorStatus.email.msg = "Email should contain @ symbol";
+    }
+    if (!email) {
+      errorStatus.email.msg = "Email field should not be empty";
+    }
+    if (!password) {
+      errorStatus.password.msg = "Password field should not be empty";
+      errorStatus.password.status = true;
+      error = true;
+    }
+
+    if (password !== confirmPassword) {
+      errorStatus.confirm.msg = "Passwords Does not Match";
+      errorStatus.confirm.status = true;
+      error = true;
+    }
+
+    
+
+    if (error) return;
     let resp = (
       await axios.post(
         `${env.API}/signup`,
@@ -43,36 +79,22 @@
 
     <!-- Email field -->
 
-    <FloatingLabelInput
-      id="floating_email"
-      name="email"
-      type="text"
-      color="base"
-      label="Email Address"
-      class="mb-10 !text-white"
-      bind:value={email}
-    />
-
+    <FloatingLabelInput id="floating_email" name="email" type="text" on:keydown={() => (errorStatus.email.status = false)} color={errorStatus.email.status ? "red" : "base"} label="Email Address" class="mb-10 !text-white" bind:value={email} />
+    {#if errorStatus.email.status}
+      <Helper class="mb-5 -mt-4" color="red">{errorStatus.email.msg}</Helper>
+    {/if}
     <div class="relative">
       <!-- password field -->
-      <FloatingLabelInput
-        id="floating_password"
-        name="password"
-        label="Password"
-        color="base"
-        type={showPassword ? "text" : "password"}
-        class="mb-4 !text-white"
-        bind:value={password}
-      />
+      <FloatingLabelInput id="floating_password" name="password" label="Password" on:keydown={() => (errorStatus.password.status = false)} color={errorStatus.password.status ? "red" : "base"} type={showPassword ? "text" : "password"} class="mb-4 !text-white" bind:value={password} />
+      {#if errorStatus.password.status}
+        <Helper class="mb-5 -mt-4" color="red">{errorStatus.password.msg}</Helper>
+      {/if}
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div
-        class="absolute top-0 right-0"
-        on:click={() => (showPassword = !showPassword)}
-      >
+      <div class="absolute top-0 right-0" on:click={() => (showPassword = !showPassword)}>
         {#if showPassword}
           <Icon icon="bi:eye-fill" color="gray" width="32" height="32" />
         {:else}
-          <Icon icon="bi:eye-slash-fill" color="base" width="32" height="32" />
+          <Icon icon="bi:eye-slash-fill" width="32" height="32" />
         {/if}
       </div>
     </div>
@@ -82,16 +104,17 @@
         id="password_confirm"
         name="Password Confirm"
         label="Password Confirm"
-        color="base"
+        on:keydown={() => (errorStatus.confirm.status = false)}
+        color={errorStatus.confirm.status ? "red" : "base"}
         type={showPassword ? "text" : "password"}
         class="mb-4 !text-white"
         bind:value={confirmPassword}
       />
+      {#if errorStatus.confirm.status}
+        <Helper class="mb-5" color="red">{errorStatus.confirm.msg}</Helper>
+      {/if}
       <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <div
-        class="absolute top-0 right-0"
-        on:click={() => (showPassword = !showPassword)}
-      >
+      <div class="absolute top-0 right-0" on:click={() => (showPassword = !showPassword)}>
         {#if showPassword}
           <Icon icon="bi:eye-fill" color="gray" width="32" height="32" />
         {:else}
@@ -101,7 +124,6 @@
     </div>
     <div class="buttons">
       <Button on:click={signup} color="light" class="mt-4">Sign Up</Button>
-
     </div>
   </div>
 </div>

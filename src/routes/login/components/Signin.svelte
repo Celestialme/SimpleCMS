@@ -36,4 +36,7 @@
     border-bottom-right-radius: 5% 50%;
     width: calc(var(--width) + 10%);
   }
+
+
+
 </style>

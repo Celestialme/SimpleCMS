@@ -11,7 +11,7 @@
   let forgot: boolean = false;
   let email = "";
   let password = "";
-
+  let form:HTMLDivElement
   async function signin() {
     let resp = (
       await axios.post(
@@ -27,13 +27,16 @@
     if (resp.status == 200) {
       $credentials = resp;
       goto("/");
+    }else{
+      form.classList.add("wiggle")
+      setTimeout(()=>form.classList.remove("wiggle"),300)
     }
   }
 </script>
 
 <div class:hide={!show} class="w-full duration-[2000ms] opacity-100">
   {#if !forgot}
-    <div class="w-full lg:w-1/2 mx-auto p-4  mt-[15%] mb-[5%]">
+    <div bind:this={form} class="w-full lg:w-1/2 mx-auto p-4  mt-[15%] mb-[5%]">
       <div class="flex flex-row gap-2 mb-8">
         <CMSLogo className="w-10" fill="red" />
 
@@ -120,4 +123,25 @@
     transition: 0s;
     opacity: 0;
   }
+  :global(.wiggle){
+    animation:wiggle 0.3s forwards;
+  }
+  @keyframes wiggle {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(150px);
+  }
+  50% {
+    transform: translateX(-75px);
+  }
+  75% {
+    transform: translateX(200px);
+  }
+  100% {
+    transform: translateX(0px);
+   
+  }
+}
 </style>
