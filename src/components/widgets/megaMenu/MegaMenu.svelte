@@ -1,6 +1,6 @@
 <script lang="ts">
 import Fields from "@src/components/Fields.svelte";
-import { get_fields } from "@src/utils/utils_svelte";
+import { shape_fields } from "@src/utils/utils_svelte";
 import {prevFormData,MenuCurrentChild} from "@src/stores/store"
 
 import ListNode from "./ListNode.svelte";
@@ -22,7 +22,7 @@ let getData= async()=>{
     if(!showLevelContent && !editing){
         return
     }
-    let data:any = getInputFieldsData(inputFields,get_fields(menu[depth]))
+    let data:any = getInputFieldsData(inputFields,shape_fields(menu[depth].fields))
     
     let formData:any = {}
     if(depth==0&&!editing){ //creating parent
@@ -62,7 +62,7 @@ let getData= async()=>{
 
         <div class="p-[20px] my-4 rounded-lg border-2 border-[#8cccff] relative"  hidden={!showLevelContent}>
             <Button on:click={()=>{showLevelContent = !showLevelContent;editing=false}} size="xs"  gradient color="red" class="z-10 top-0  absolute right-0">X</Button>
-            <Fields  bind:inputFields={inputFields} value={editing?$MenuCurrentChild:null}  fields={get_fields(menu[depth])} {getData}/>
+            <Fields  bind:inputFields={inputFields} value={editing?$MenuCurrentChild:null}  fields={shape_fields(menu[depth].fields)} {getData}/>
         </div>
 
 

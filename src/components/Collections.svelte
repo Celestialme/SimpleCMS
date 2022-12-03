@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Schema } from "@src/collections/types";
-  import { get_fields } from "@src/utils/utils_svelte";
+  import { shape_fields } from "@src/utils/utils_svelte";
   export let filterCollections: string;
   export let fields: Array<any>;
   export let collection: Schema;
@@ -45,7 +45,7 @@
       <p
         class="text-black cursor-pointer py-2 text-center bg-white hover:bg-[#65dfff] hover:text-white"
         on:click={() => {
-          fields = get_fields(_collection);
+          fields = shape_fields(_collection.fields);
           collection = _collection;
           showFields = false;
         }}

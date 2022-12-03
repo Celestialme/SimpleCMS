@@ -1,6 +1,6 @@
 <script lang="ts">
   import collections, { categories } from "@src/collections";
-  import { get_fields, saveFormData } from "@src/utils/utils_svelte";
+  import { shape_fields, saveFormData } from "@src/utils/utils_svelte";
   import Form from "@src/components/Form.svelte";
   import EntryList from "@src/components/EntryList.svelte";
   import { prevFormData, credentials } from "@src/stores/store";
@@ -13,7 +13,7 @@
   let valid = false;
   let collection = collections[0];
   let filterCollections=""
-  let fields: any = get_fields(collection);
+  let fields: any = shape_fields(collection.fields);
   let refresh: (collection: any) => Promise<any>;
   let showFields = false;
   let deleteEntry = async () => {};

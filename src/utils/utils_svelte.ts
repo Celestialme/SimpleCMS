@@ -4,14 +4,14 @@ import {prevFormData,getFieldsData} from "@src/stores/store"
 import axios from "axios";
 import  env  from "../../env";
 import type { Schema } from "@src/collections/types";
-export    function get_fields(collection:{name:string,fields:any}){
-    let fields=[]
-    for (let field of collection.fields){
+export    function shape_fields(fields:Array<any>){ // get fields from collection
+    let _fields=[]
+    for (let field of fields){
         let key:keyof typeof widgets = field.widget_name
         
-        fields.push({widget:widgets[key],field})
+        _fields.push({widget:widgets[key],field})
     }
-    return fields
+    return _fields
 }
 
 
@@ -56,8 +56,15 @@ export async function saveSimpleData(collection:Schema,data:any,doc_id?:string,i
 
 
 export async function saveData(collection:Schema,formData:FormData,doc_id?:string,insert?:boolean){
+  
     let oldData_id= doc_id || (get(prevFormData) as any)?._id
-    if(oldData_id&&!insert){
+    //if formData object is empty then:
+
+
+    if (!formData.entries().next().value)   
+    {
+        return {data:404}
+    }else if(oldData_id&&!insert){
         formData.append("_id", oldData_id) 
         return  await axios.patch(`${env.HOST}:${env.PORT}/api/${collection.name}`,formData)
     }else{

@@ -1,7 +1,7 @@
 <script lang="ts">
      import Fields from "@src/components/Fields.svelte";
     import { getInputFieldsData ,findById,find} from "@src/utils/utils";
-    import {  get_fields, saveSimpleData } from "@src/utils/utils_svelte";
+    import {  shape_fields, saveSimpleData } from "@src/utils/utils_svelte";
     import {prevFormData,getFieldsData} from "@src/stores/store"
     import DropDown from "@src/components/DropDown.svelte";
     import { Button } from "flowbite-svelte";
@@ -18,7 +18,7 @@
     let getData=async()=>{
       let obj:any = {}
       if(!selected){
-       let relationField =  getInputFieldsData(inputFields,get_fields(field.relation))
+       let relationField =  getInputFieldsData(inputFields,shape_fields(field.relation.fields))
      relativeDataId =  (await saveSimpleData(field.relation,relationField,relativeDataId,!relativeDataId)).data[0]?._id || relativeDataId
       }else{
         relativeDataId = selected._id
@@ -33,7 +33,7 @@
     })()
 
 
-    $getFieldsData.add(getData)
+    
 </script>
 
 {#if !expanded }
@@ -47,7 +47,7 @@
 {:else} 
 <div class="p-[20px] my-4 rounded-lg border-2 border-[#8cccff] relative" >
   <Button on:click={()=>{expanded = !expanded;selected=null}} size="xs"  gradient color="red" class="z-10 top-0  absolute right-0">X</Button>
-  <Fields  {getData} bind:inputFields value={selected||value} fields={get_fields(field.relation)}/>
+  <Fields  {getData} bind:inputFields value={selected||value} fields={shape_fields(field.relation.fields)}/>
 </div>
 
 {/if}

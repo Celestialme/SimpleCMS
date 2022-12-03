@@ -25,14 +25,31 @@ export  function saveFiles(req:any){
     for(let file of _files){
         let {buffer,fieldname,...meta} =file
         files[fieldname as keyof typeof files] = meta
-        let path = schema?.fields.find(field => field.title === fieldname).path
+        let path = _findFieldByTitle(schema,fieldname).path
+        
           if(!fs.existsSync(path)) fs.mkdirSync(path,{ recursive: true })
           
           fs.writeFileSync(path+"/"+meta.originalname,buffer)
         }
         return files
     }
+function _findFieldByTitle(schema:any,fieldname:string,found={val:false}):any{
+    for(let field of schema.fields){
+       
+        if(field.title==fieldname){
+            console.log(field)
+            found.val=true
 
+            return field
+        }else if(field.fields.length>0){
+            
+           return _findFieldByTitle(field,fieldname, found)
+        }
+    }
+    if(!found){
+        throw new Error("FIELD NOT FOUND")
+    }
+}
 
 
   export  function parse(obj:any){
@@ -59,7 +76,7 @@ return obj
 export function getInputFieldsData(sections:Array<HTMLDivElement>,fields:Array<any>){
     let formFieldsData:any ={}
     for(let index in fields){
-        let inputs:any = [...sections[index].children].filter((x:any)=>x.value || x.files)
+        let inputs:any = [...sections[index].children].filter((x:any)=>x.value || x.files) // section is input
         inputs = inputs.length > 1?inputs.map((x:any)=>x.files||x.value):inputs[0]?.files || inputs[0]?.value||null
         if(!inputs)continue
         formFieldsData[fields[index].field.title] = inputs

@@ -2,6 +2,7 @@ import Images from "./Images";
 import Posts from "./Posts";
 import Media from "./Media";
 import Menu from "./Menu";
+import multiImage from "./MultiImage";
 
 
 let categories =  [
@@ -11,7 +12,8 @@ let categories =  [
     Images,
     Posts,
     Media,
-    Menu
+    Menu,
+    multiImage
   ]
 },
 
