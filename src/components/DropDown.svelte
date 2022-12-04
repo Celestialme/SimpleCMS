@@ -27,7 +27,6 @@
     <div class="container">
     <Search on:keyup={getVal} size="md" />
     {#each filteredData as item}
-    {console.log(item),""}
     <p on:click={()=>{selected=item;showDropDown=false;}}>{item.item}</p>
 
     {/each}

@@ -1,11 +1,12 @@
 import MegaMenu from "../components/widgets/megaMenu"
 import Text from "../components/widgets/text"
+import Relation from "../components/widgets/relation"
+import Posts from "./Posts"
 import type {Schema} from "./types"
 let schema:Schema =  {
     name: 'Menu',
     strict:false,
    fields:[
-    Text({title:'seperate'}),
     MegaMenu({title:"Menus",menu:[
       {
           
@@ -18,7 +19,9 @@ let schema:Schema =  {
    
         fields:[
             Text({title:"name"}),
-            Text({title:"telnum"})
+            Relation({title:"bla_name",relation:Posts,display:async (data:any,field: any, entry: any)=>{
+                return data.name
+               }}),
         ],
     },
     {

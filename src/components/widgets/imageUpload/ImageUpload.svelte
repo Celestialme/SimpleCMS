@@ -2,21 +2,24 @@
   import axios from "axios";
   export let field = { title: "", path: "" };
   export let value: any;
+  export let widgetValue;
+
   function setFile(node: HTMLInputElement) {
     if (value.type) {
       let fileList = new DataTransfer();
       fileList.items.add(value);
-      node.files = fileList.files;
+      widgetValue=node.files = fileList.files;
     } else {
-      axios.get(`${field.path}/${value.originalname}`,{responseType: "blob"}).then(({ data }) => {
+      axios.get(`${field.path}/${value.originalname}`, { responseType: "blob" }).then(({ data }) => {
         let fileList = new DataTransfer();
         let file = new File([data], value.originalname, {
           type: value.mimetype,
         });
         fileList.items.add(file);
-        node.files = fileList.files;
+        widgetValue = node.files = fileList.files;
       });
     }
+    node.onchange = (e) => (widgetValue = (e.target as HTMLInputElement).files);
   }
 </script>
 

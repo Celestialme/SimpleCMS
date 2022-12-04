@@ -73,16 +73,7 @@ function _findFieldByTitle(schema:any,fieldname:string,found={val:false}):any{
 return obj
 }
 
-export function getInputFieldsData(sections:Array<HTMLDivElement>,fields:Array<any>){
-    let formFieldsData:any ={}
-    for(let index in fields){
-        let inputs:any = [...sections[index].children].filter((x:any)=>x.value || x.files) // section is input
-        inputs = inputs.length > 1?inputs.map((x:any)=>x.files||x.value):inputs[0]?.files || inputs[0]?.value||null
-        if(!inputs)continue
-        formFieldsData[fields[index].field.title] = inputs
-}
-return formFieldsData
-}
+
 
 export async  function findById(id:string,collection:Schema){
     return (await axios.get(`${env.HOST}:${env.PORT}/api/findById?collection=${collection.name}&id=${id}`)).data
