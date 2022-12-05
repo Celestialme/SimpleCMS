@@ -10,12 +10,14 @@
   import env from "@root/env";
   import { goto } from "$app/navigation";
   import { Button, DarkMode, Navbar, NavHamburger, Search, Sidebar, SidebarBrand, SidebarGroup, SidebarWrapper } from "flowbite-svelte";
+  import Icon from "@iconify/svelte";
   let valid = false;
   let collection = collections[0];
-  let filterCollections=""
+  let filterCollections = "";
   let fields: any = shape_fields(collection.fields);
   let refresh: (collection: any) => Promise<any>;
   let showFields = false;
+  let category = "";
   let deleteEntry = async () => {};
   let deleteMode: boolean;
   axios
@@ -52,10 +54,10 @@
   let site = {
     name: "SimpleCMS",
     href: "/",
-    img: "https://flowbite-svelte.com/images/flowbite-svelte-icon-logo.svg",
+    img: "/SimpleCMS_Logo.svg",
   };
   let toggleSideBar = false;
-  function updateFilter(e:KeyboardEvent) {
+  function updateFilter(e: KeyboardEvent) {
     filterCollections = (e.target as HTMLInputElement).value;
   }
 </script>
@@ -67,29 +69,34 @@
     <div class="dark:text-white hidden md:block mr-auto ">
       <SidebarBrand {site} aClass="flex items-center pl-2.5" />
     </div>
-    
+
     <Button
       gradient
       color={deleteMode ? "red" : "green"}
       class="ml-auto"
       on:click={() => {
         deleteMode ? deleteEntry() : (showFields = true);
-      }}>{deleteMode ? "delete" : "create"}</Button
+      }}
     >
-   
+      {#if deleteMode}
+        <Icon icon="bi:trash3-fill" class="mr-1" color="white" width="22" /> Delete
+      {:else}
+        <Icon icon="ic:round-plus" class="mr-1" color="white" width="22" /> Create
+      {/if}</Button
+    >
+
     <DarkMode />
   </Navbar>
   <div class="flex relative ">
     {#if valid}
-      <div hidden={toggleSideBar}  class="controlls text-white absolute md:relative  left-0 top-0 z-10 md:block">
+      <div hidden={toggleSideBar} class="controlls text-white absolute md:relative  left-0 top-0 z-10 md:block">
         <Sidebar id="sidebarLeft">
           <SidebarWrapper class="border-r-2 ">
             <SidebarGroup bind:fields bind:collection bind:showFields>
-              <SidebarBrand {site} />
-              <Search size="md" placeholder="Search ..."  on:keyup={updateFilter}/>
-             
-              <Collections data={categories} {filterCollections} bind:fields bind:collection bind:showFields />
-           
+              <SidebarBrand {site} class="md:hidden " />
+              <Search size="md" placeholder="Search ..." on:keyup={updateFilter} />
+
+              <Collections data={categories} {filterCollections} bind:fields bind:collection bind:category bind:showFields />
             </SidebarGroup>
           </SidebarWrapper>
         </Sidebar>
@@ -97,11 +104,11 @@
 
       <div class="content">
         {#if showFields}
-          <Form {fields} {collection} on:submit={onSubmit} />
+          <Form {fields} {collection} bind:showFields on:submit={onSubmit} />
         {/if}
 
         <div hidden={showFields}>
-          <EntryList bind:showFields bind:deleteEntry bind:deleteMode {collection} bind:refresh />
+          <EntryList bind:showFields bind:deleteEntry bind:deleteMode {collection} {category} bind:refresh />
         </div>
       </div>
     {/if}

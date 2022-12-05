@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Icon from "@iconify/svelte";
   import type { Schema } from "@src/collections/types";
   import { shape_fields } from "@src/utils/utils_svelte";
   export let filterCollections: string;
@@ -6,11 +7,12 @@
   export let collection: Schema;
   export let data: Array<any>;
   export let showFields: boolean;
+  export let category: string = "";
   let expanded: any = {};
 
   function setHeight(node: HTMLDivElement) {
     let height = node.clientHeight;
-    node.style.setProperty("--height", (height<=300?height:300) + "px");
+    node.style.setProperty("--height", (height <= 300 ? height : 300) + "px");
     node.style.maxHeight = "0px";
     node.style.transition = " 0.5s";
   }
@@ -43,13 +45,15 @@
   <div use:setHeight class="overflow-hidden" class:expand={expanded[index]}>
     {#each item.collections as _collection}
       <p
-        class="text-black cursor-pointer py-2 text-center bg-white hover:bg-[#65dfff] hover:text-white"
+        class="text-black cursor-pointer py-2 text-center bg-white hover:bg-[#65dfff] hover:text-white relative border-b"
         on:click={() => {
           fields = shape_fields(_collection.fields);
+          category = item.category;
           collection = _collection;
           showFields = false;
         }}
       >
+        <Icon icon={_collection.icon} color="dark" width="24" class="absolute top-[50%] left-0 -translate-y-[50%] ml-2" />
         {_collection.name}
       </p>
     {/each}

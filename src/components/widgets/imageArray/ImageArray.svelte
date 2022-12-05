@@ -24,7 +24,7 @@
 {#if files.length > 0}
   {#each files as file,index}
   <div class="p-[20px] my-4 rounded-lg border-2 border-[#8cccff] relative">
-    <Fields {getData} {collection} root={false} {fields} bind:fieldsValue = {_fieldsValue[index]} value={{image2:file}} />
+    <Fields {getData} {collection} root={false} {fields} bind:fieldsValue = {_fieldsValue[index]} value={{"Multi Image Array":file}} />
   </div>
   {/each}
 {:else if $prevFormData}

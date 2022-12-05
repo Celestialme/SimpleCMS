@@ -2,7 +2,7 @@ import Text from "./text/Text.svelte"
 import Relation from "./relation/Relation.svelte"
 import MegaMenu from "./megaMenu/MegaMenu.svelte"
 import ImageUpload from "./imageUpload/ImageUpload.svelte"
-import MultiImage from "./multiImage/MultiImage.svelte"
+import ImageArray from "./imageArray/ImageArray.svelte"
 let widgets:Object={}
 try{
 
@@ -11,7 +11,7 @@ try{
         Relation,
         ImageUpload,
         MegaMenu,
-        MultiImage
+        ImageArray
     }
 }catch(e){}
 export default  widgets

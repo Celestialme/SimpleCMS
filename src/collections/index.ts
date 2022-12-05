@@ -2,7 +2,7 @@ import Images from "./Images";
 import Posts from "./Posts";
 import Media from "./Media";
 import Menu from "./Menu";
-import multiImage from "./MultiImage";
+import multiImage from "./imageArray";
 
 
 let categories =  [

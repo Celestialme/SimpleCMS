@@ -18,6 +18,6 @@ field.schema[title]={
     alt:"string",
     
 }
-field.widget_name = "MultiImage"
+field.widget_name = "ImageArray"
 return field
 }
