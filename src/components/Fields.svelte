@@ -26,6 +26,8 @@
         <Icon icon={field.field.icon} color="white" width="24" class="absolute right-0" />
       {/if}
     </div>
+    {#if field.widget}
     <svelte:component this={field.widget} {collection} bind:widgetValue={fieldsValue[field.field.title]} {root} value={value ? value?.[field.field.title] : $prevFormData?.[field.field.title] || ""} field={field.field} />
+    {/if}
   </div>
 {/each}

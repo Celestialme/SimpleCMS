@@ -46,8 +46,8 @@
     {#each item.collections as _collection}
       <p
         class="text-black cursor-pointer py-2 text-center bg-white hover:bg-[#65dfff] hover:text-white relative border-b"
-        on:click={() => {
-          fields = shape_fields(_collection.fields);
+        on:click={async () => {
+          fields =await shape_fields(_collection.fields);
           category = item.category;
           collection = _collection;
           showFields = false;

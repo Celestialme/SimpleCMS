@@ -6,9 +6,8 @@
   export let collection: any;
   export let value: any;
   let _fieldsValue:any = [];
-  let fields = shape_fields(field.fields);
+  let fields:any
   let files: any = [];
-  $:console.log(_fieldsValue)
   let getData = async () => {
     for (let i = 0; i < files.length; i++) {
       let fieldsData = _fieldsValue[i];
@@ -19,6 +18,7 @@
       await saveSimpleData(collection, fieldsData);
     }
   };
+  shape_fields(field.fields).then(data=>fields=data);
 </script>
 
 {#if files.length > 0}

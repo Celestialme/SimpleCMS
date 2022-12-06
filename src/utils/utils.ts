@@ -2,11 +2,11 @@
 export let DB={}
 
 export  let fieldsToSchema =(fields: Array<any>) => {
-    let schema:{widget_name?:"string"} = {}
+    let schema:any={}
     for (let field of fields){
         schema={...schema,...field.schema}
     }
-    delete schema.widget_name;
+    delete schema.widget;
     return schema
 }
 

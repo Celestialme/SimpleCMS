@@ -14,10 +14,10 @@
   let valid = false;
   let collection = collections[0];
   let filterCollections = "";
-  let fields: any = shape_fields(collection.fields);
+  let fields: any
   let refresh: (collection: any) => Promise<any>;
   let showFields = false;
-  let category = "";
+  let category = categories[0].category;
   let deleteEntry = async () => {};
   let deleteMode: boolean;
   axios
@@ -60,6 +60,7 @@
   function updateFilter(e: KeyboardEvent) {
     filterCollections = (e.target as HTMLInputElement).value;
   }
+  shape_fields(collection.fields).then((data)=>fields=data);
 </script>
 
 <div class="body">

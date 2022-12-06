@@ -14,9 +14,11 @@
     async function process_data(dropDownData:Array<any>){
         let temp = []
         for(let item of dropDownData){
+            console.log(item)
             temp.push({item:await display(item),_id:item._id})
         }
         data=temp
+        
     }
     function getVal(e:Event){
         value = (e.target as HTMLInputElement).value;
@@ -24,7 +26,7 @@
     }
 </script>
 {#if showDropDown}
-    <div class="container">
+    <div class="container text-black">
     <Search on:keyup={getVal} size="md" />
     {#each filteredData as item}
     <p on:click={()=>{selected=item;showDropDown=false;}}>{item.item}</p>

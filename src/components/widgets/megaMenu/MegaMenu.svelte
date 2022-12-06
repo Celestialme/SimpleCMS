@@ -9,7 +9,6 @@
   export let value: any = {};
   export let root:boolean=true
   let fieldsValue = {};
-  $: console.log(fieldsValue);
   let editing: boolean = false;
   let menu = field.menu;
   let showLevelContent = false;
@@ -18,7 +17,9 @@
   MenuCurrentChild.subscribe((_) => {
     value = value; // refresh tree when editing/deleting
   });
-  $: console.log(shape_fields(menu[depth].fields));
+  let fields:any;
+  $:shape_fields(menu[depth].fields).then((data)=>fields=data)
+
   let getData = async () => {
     if (!showLevelContent && !editing) {
       return;
@@ -79,6 +80,6 @@
       color="red"
       class="z-10 top-0  absolute right-0">X</Button
     >
-    <Fields bind:fieldsValue bind:inputFields root={false} value={editing ? $MenuCurrentChild : null} fields={shape_fields(menu[depth].fields)} {getData} />
+    <Fields bind:fieldsValue bind:inputFields root={false} value={editing ? $MenuCurrentChild : null} {fields} {getData} />
   </div>
 {/if}

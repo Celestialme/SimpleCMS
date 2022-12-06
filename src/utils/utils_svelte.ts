@@ -1,15 +1,14 @@
-import widgets from "@src/components/widgets";
 import {get} from "svelte/store"
 import {prevFormData,getFieldsData} from "@src/stores/store"
 import axios from "axios";
 import  env  from "../../env";
 import type { Schema } from "@src/collections/types";
-export    function shape_fields(fields:Array<any>){ // get fields from collection
+export  async  function shape_fields(fields:Array<any>){ // get fields from collection
     let _fields=[]
+    if(!fields)return[]
     for (let field of fields){
-        let key:keyof typeof widgets = field.widget_name
-        
-        _fields.push({widget:widgets[key],field})
+            console.log(field)
+        _fields.push({widget:await field.widget(),field})
     }
     return _fields
 }
@@ -17,9 +16,10 @@ export    function shape_fields(fields:Array<any>){ // get fields from collectio
 
 export async function saveFormData(collection:Schema){
     let formData =  new FormData()
-   
+  
     for(let getData of get(getFieldsData)){
         let data = await getData()
+        
       for (let key in  data){
         if (typeof data[key]=="object"){
             for(let _key in data[key]){ // for multiple files

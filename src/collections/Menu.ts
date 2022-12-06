@@ -1,6 +1,4 @@
-import MegaMenu from "../components/widgets/megaMenu";
-import Text from "../components/widgets/text";
-import Relation from "../components/widgets/relation";
+import widgets from "../components/widgets"
 import Posts from "./Posts";
 import type { Schema } from "./types";
 let schema: Schema = {
@@ -8,29 +6,29 @@ let schema: Schema = {
   icon: "bi:menu-button-wide",
   strict: false,
   fields: [
-    MegaMenu({
+    widgets.MegaMenu({
       title: "Menus",
       menu: [
         {
-          fields: [Text({ title: "name" })],
+          fields: [widgets.Text({ title: "name" })],
         },
         {
           fields: [
-            Text({ title: "name" }),
-            Relation({
+            widgets.Text({ title: "name" }),
+            widgets.Relation({
               title: "bla_name",
               relation: Posts,
               display: async (data: any, field: any, entry: any) => {
-                return data.name;
+                return data.Name;
               },
             }),
           ],
         },
         {
-          fields: [Text({ title: "name" }), Text({ title: "img" }), Text({ title: "address" })],
+          fields: [widgets.Text({ title: "name" }), widgets.Text({ title: "img" }), widgets.Text({ title: "address" })],
         },
         {
-          fields: [Text({ title: "name" }), Text({ title: "img" }), Text({ title: "address" })],
+          fields: [widgets.Text({ title: "name" }), widgets.Text({ title: "img" }), widgets.Text({ title: "address" })],
         },
       ],
     }),
