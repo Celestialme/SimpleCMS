@@ -62,6 +62,8 @@ let schema: Schema = {
 
 		widgets.Checkbox({ title: 'Checkbox', color: 'green', required: true }),
 
+		widgets.Address({ title: 'Address' }),
+
 		widgets.Url({
 			title: 'url',
 			icon: 'carbon:character-whole-number',

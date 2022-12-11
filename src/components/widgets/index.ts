@@ -11,12 +11,13 @@ import Checkbox from './checkbox';
 import Radio from './radio';
 import Number from './number';
 import Group from './group';
+import Address from './address';
 
 let widgets = {
 	/**text widget does all good stuff*/
 
 	// Address flexible Address fields
-	//Address,
+	Address,
 	// Array - for repeating content, supports nested fields
 	//Array,
 	// Blocks - block-based fields, allowing powerful layout creation
