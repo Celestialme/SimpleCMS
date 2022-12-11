@@ -31,6 +31,7 @@
 				{#if field.field.localization}
 					<div class="flex items-center px-2 gap-1">
 						<Icon icon="bi:translate" color="dark" width="18" class="text-sm" />
+						<div class="text-xs font-normal text-red-500">EN</div>
 					</div>
 				{/if}
 				{#if field.field.icon}

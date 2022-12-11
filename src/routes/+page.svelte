@@ -6,7 +6,6 @@
 	import { prevFormData, credentials } from '@src/stores/store';
 	import Collections from '@src/components/Collections.svelte';
 	import Alerts from '@src/components/Alerts.svelte';
-	// Icons from https://icon-sets.iconify.design/
 	import axios from 'axios';
 	import env from '@root/env';
 	import { goto } from '$app/navigation';
@@ -17,18 +16,16 @@
 		DarkMode,
 		Dropdown,
 		DropdownItem,
-		Navbar,
 		NavHamburger,
 		Search,
-		Sidebar,
-		SidebarBrand,
 		SidebarGroup,
-		SidebarWrapper,
 		Tooltip
 	} from 'flowbite-svelte';
+	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
 	import { fly } from 'svelte/transition';
 	import SimpleCmsLogo from '@src/components/icons/SimpleCMS_Logo.svelte';
+
 	let valid = false;
 	let collection = collections[0];
 	let filterCollections = '';
@@ -42,6 +39,7 @@
 	let toggleSideBar = false;
 	// change sidebar width so only icons show
 	let switchSideBar = true;
+
 	axios
 		.post(
 			`${env.API}/validateSession`,
@@ -73,12 +71,8 @@
 		$prevFormData = undefined;
 		collection;
 	}
-	let site = {
-		name: 'SimpleCMS',
-		href: '/',
-		img: '/SimpleCMS_Logo.svg'
-	};
 
+	// search filter
 	function updateFilter(e: KeyboardEvent) {
 		filterCollections = (e.target as HTMLInputElement).value;
 	}
@@ -92,11 +86,13 @@
 	<Alerts />
 
 	<div class="flex relative ">
+		<!-- This secures all without access -->
 		{#if valid}
 			<div
 				hidden={toggleSideBar}
 				class="controlls text-white absolute md:relative  left-0 top-0 z-10 md:block"
 			>
+				<!-- fly out not working on sidebar with change -->
 				<aside
 					id="sidebarLeft"
 					in:fly={{ x: -200, duration: 500 }}
@@ -112,7 +108,7 @@
 						/>
 					{/if}
 
-					<!-- sidebar collapse button	 -->
+					<!-- sidebar collapse button -->
 					<button
 						class="absolute top-2 -right-4 mr-1 text-gray-500 dark:text-white border-4 border-gray-300 dark:border-gray-900 rounded-full hover:cursor-pointer hover:bg-red-600 hover:dark:bg-black hover:dark:text-red-600"
 						on:click={() => (switchSideBar = !switchSideBar)}
@@ -126,10 +122,11 @@
 
 					<SidebarGroup bind:fields bind:collection bind:showFields>
 						<div href="/" class="flex justify-start items-center cursor-pointer 1 mt-2">
-							<SimpleCmsLogo fill="red" className="h-8 ml-[10px] hidden xl:block"/>
+							<SimpleCmsLogo fill="red" className="h-8 ml-[10px] hidden xl:block" />
 							{#if switchSideBar}
 								<span class="ml-2 mt-1 text-black dark:text-white text-2xl font-bold"
-									>SimpleCMS</span>
+									>SimpleCMS</span
+								>
 							{/if}
 						</div>
 
@@ -147,7 +144,7 @@
 					</SidebarGroup>
 					{#if switchSideBar}
 						<SidebarGroup border class="!mt-auto mb-5 mr-2 ">
-							<div class="flex justify-between my-1">
+							<div class="flex justify-between my-1 ml-2">
 								<a href="/user" class="flex-col">
 									<Avatar size="xs" class="border-2 border-gray-400 dark:border-gray" />
 									<div class="text-[9px] text-gray-400 dark:text-white">Admin</div>
@@ -185,10 +182,10 @@
 						</SidebarGroup>
 					{:else}
 						<SidebarGroup border class="absolute flex-col text-center mt-2 pb-5 bottom-0">
-							<div class="flex-col">
+							<a href="/user" class="flex-col ">
 								<Avatar size="xs" class="border-2 border-gray-400 dark:border-gray m-auto" />
 								<div class="text-[9px] text-gray-400 dark:text-white">Admin</div>
-							</div>
+							</a>
 							<Tooltip placement="right" stlye="auto">Admin User</Tooltip>
 
 							<Button size="xs" color="alternative" class="border-0 p-0 m-0 -ml-1 ">Eng</Button

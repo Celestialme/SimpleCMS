@@ -1,8 +1,16 @@
-import widgets from "../components/widgets"
-import type { Schema } from "./types";
+import widgets from '../components/widgets';
+
+import type { Schema } from './types';
+
 let schema: Schema = {
-  name: "Media",
-  icon: "bi:menu-button-wide",
-  fields: [widgets.ImageUpload({ title: "Upload Image", path: "media/images" })],
+	// Collection Name & Icon (optional) shown on Sidebar
+	// See for possible Icons https://icon-sets.iconify.design/
+	name: 'Media',
+	icon: 'bi:menu-button-wide',
+
+	// Defined Fields that are used in Collection
+	// Inspect Widget fields for possible options
+	fields: [widgets.ImageUpload({ title: 'Upload Image', path: 'media/images' })]
 };
+
 export default schema;

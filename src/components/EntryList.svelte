@@ -11,20 +11,24 @@
 		NavHamburger,
 		Pagination,
 		Search,
+		SpeedDial,
+		Listgroup,
+		ListgroupItem,
 		Table,
 		TableBody,
 		TableBodyCell,
 		TableBodyRow,
 		TableHead,
 		TableHeadCell,
-		TableSearch,
 		Tooltip
 	} from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
+
 	export let showFields = false;
 	export let collection: any = undefined;
 	export let deleteMode = false;
 	export let category = 'Some';
+
 	let entryList: any = [];
 	let deleteMap: any = {};
 	let deleteAll = false;
@@ -65,7 +69,7 @@
 			return filter ? Object.values(item).some((x) => x.toString().includes(filter)) : true;
 		});
 		filter;
-		console.log(filter)
+		console.log(filter);
 	}
 
 	function process_deleteAll(deleteAll: boolean) {
@@ -84,11 +88,11 @@
 	// Table pagination
 	let helper = { start: 1, end: 10, total: 100 };
 	let pages = [
-		{ name: "1", href: '/' },
-		{ name: "2", href: '/' },
-		{ name: "3", href: '/' },
-		{ name: "4", href: '/' },
-		{ name: "5", href: '/' }
+		{ name: '1', href: '/' },
+		{ name: '2', href: '/' },
+		{ name: '3', href: '/' },
+		{ name: '4', href: '/' },
+		{ name: '5', href: '/' }
 	];
 	const previous = () => {
 		alert('Previous btn clicked. Make a call to your server to fetch data.');
@@ -103,45 +107,78 @@
 	function searchFilter() {
 		alert('filter added soon');
 	}
-	function search(e:Event){
-		filter = (e.target as HTMLInputElement).value
-
+	function search(e: Event) {
+		filter = (e.target as HTMLInputElement).value;
 	}
 </script>
 
 <div class="relative">
 	<div class="flex gap-2 mb-2 items-center">
-		<NavHamburger  on:click={() => (toggleSideBar = !toggleSideBar)} btnClass = 'md:hidden mr-1'/>
+		<NavHamburger on:click={() => (toggleSideBar = !toggleSideBar)} btnClass="md:hidden mr-1" />
+
 		<div class="flex flex-col w-80">
 			<div class="text-gray-400 text-xs  capitalize mb-2">{category}</div>
 			<div
 				class="text-sm md:text-xl xl:text-2xl dark:text-white font-bold uppercase flex justify-start items-center "
 			>
-				<span>
-					<Icon icon={collection.icon} color="white" width="24" class="mr-2" /></span
-				>{collection.name}
+				<span> <Icon icon={collection.icon} width="24" class="mr-2" /></span>{collection.name}
 			</div>
-
-      
 		</div>
+
+		<!-- expanding search -->
 
 		<!-- Search box -->
 		<div class="flex justify-center items-center relative w-[50%] pr-[20px]">
 			<Search
+				size="md"
 				placeholder="Search {collection.name} ..."
 				hoverable={true}
 				on:keyup={search}
-        class="p-2"
+				class="p-2"
 			/>
-			<button type="button" on:click={searchFilter} class="outline-none absolute right-0 mr-[20px]">
+			<button
+				type="button"
+				on:click={searchFilter}
+				class="outline-none absolute right-0 mr-[20px] px-2"
+			>
 				<Icon icon="bi:filter-circle" color="gray" width="22" class="block" />
 			</button>
 		</div>
-    	<!-- create/delete -->
-    <Button
+
+		<!-- info/schedual -->
+
+		<SpeedDial defaultClass="relative" tooltip="none" placement="bottom">
+			<Icon slot="icon" icon="bi:pencil-fill" width="18" />
+			<Listgroup class="w-32" active>
+				<ListgroupItem class="flex text-green-500 gap-1">
+					<Icon icon="bi:hand-thumbs-up-fill" width="18" />
+					Publish
+				</ListgroupItem>
+				<ListgroupItem class="flex text-yellow-400 gap-1">
+					<Icon icon="bi:pause-circle" width="18" />
+					Unpublish
+				</ListgroupItem>
+				<ListgroupItem class="flex text-blue-500 gap-1">
+					<Icon icon="bi:clock" width="18" />
+					Schedule
+				</ListgroupItem>
+				<ListgroupItem class="flex gap-1">
+					<Icon icon="bi:clipboard-data-fill" width="18" />
+					Clone
+				</ListgroupItem>
+				<ListgroupItem class="flex text-red-600 gap-1">
+					<Icon icon="bi:trash3-fill" width="18" />
+					Delete
+				</ListgroupItem>
+			</Listgroup>
+		</SpeedDial>
+
+		<!-- create/delete -->
+		<Button
 			gradient
+			pill
 			color={deleteMode ? 'red' : 'green'}
-			class="ml-auto"
+			class="!p-2 md:ml-auto"
 			on:click={() => {
 				deleteMode ? deleteEntry() : (showFields = true);
 			}}
@@ -158,15 +195,57 @@
 	</div>
 	<Table hoverable={true} class="relative">
 		<TableHead>
-			<TableHeadCell>Index</TableHeadCell>
+			<TableHeadCell
+				><div class="flex  justify-center items-center gap-1">
+					#
+					{#if !sort}
+						{#if !order}
+							<button on:click={() => (order = !order)}
+								><div class="flex-col">
+									<Icon icon="bi:caret-up-fill" color="base" width="14" class="" />
+									<Icon icon="bi:caret-down" color="gray" width="14" class="-mt-1" />
+								</div></button
+							>
+						{:else}
+							<button on:click={() => (order = !order)}
+								><div class="flex-col ">
+									<Icon icon="bi:caret-up" color="gray" width="14" class="" />
+									<Icon icon="bi:caret-down-fill" color="base" width="14" class="-mt-1" />
+								</div></button
+							>
+						{/if}
+					{/if}
+				</div></TableHeadCell
+			>
 			{#each collection.fields as field}
-				<TableHeadCell class="text-center">{field.title}</TableHeadCell>
+				<TableHeadCell
+					><div class="flex  justify-center items-center gap-1">
+						{field.title}
+						{#if !sort}
+							{#if !order}
+								<button on:click={() => (order = !order)}
+									><div class="flex-col">
+										<Icon icon="bi:caret-up-fill" color="base" width="14" class="" />
+										<Icon icon="bi:caret-down" color="gray" width="14" class="-mt-1" />
+									</div></button
+								>
+							{:else}
+								<button on:click={() => (order = !order)}
+									><div class="flex-col ">
+										<Icon icon="bi:caret-up" color="gray" width="14" class="" />
+										<Icon icon="bi:caret-down-fill" color="base" width="14" class="-mt-1" />
+									</div></button
+								>
+							{/if}
+						{/if}
+					</div></TableHeadCell
+				>
 			{/each}
-			<TableHeadCell class="text-right"
+			<TableHeadCell
 				><DeleteIcon bind:checked={deleteAll} class="ml-auto mr-[25px]" /></TableHeadCell
 			>
 		</TableHead>
-		<TableBody class="divide-y">
+		<TableBody>
 			{#each filtered_entryList as entry, index}
 				<TableBodyRow
 					on:click={() => {
@@ -200,6 +279,7 @@
 			of
 			<span class="font-semibold text-gray-900 dark:text-white">{helper.total} </span> Entries
 		</div>
+
 		<Pagination {pages} on:previous={previous} on:next={next} icon class="shadow-lg">
 			<svelte:fragment slot="prev">
 				<span class="sr-only">Previous</span>

@@ -1,21 +1,26 @@
-import widgets from "../components/widgets";
-import type { Schema } from "./types";
+import widgets from '../components/widgets';
+
+import type { Schema } from './types';
+
 let schema: Schema = {
-  name: "Posts",
-  icon: "bi:card-text",
-  fields: [
-    widgets.Text({ title: "Name", icon: "ri:t-box-line", placeholder: "Enter Name" }),
-    widgets.Text({ title: "Author", icon: "bi:person", placeholder: "Enter Author" }),
-    widgets.Text({
-      title: "Number as Text",
-      icon: "carbon:character-whole-number",
-      prefix: "€",
-      suffix: "cent",
-      count: "10",
-      placeholder: "Enter Number",
-      required: true,
-			localization: true,
-    }),
-  ],
+	// Collection Name & Icon (optional) shown on Sidebar
+	// See for possible Icons https://icon-sets.iconify.design/
+	name: 'Posts',
+	icon: 'bi:card-text',
+
+	// Defined Fields that are used in Collection
+	// Inspect Widget fields for possible options
+	fields: [
+		widgets.Text({
+			title: 'Test',
+			icon: 'ri:t-box-line',
+			placeholder: 'Enter First Name',
+			required: true,
+			localization: true
+		})
+	]
 };
 export default schema;
+
+// widgets.DateRange({ title: "DateRange Not working", required: true }),
+// widgets.Date({ title: "DateNot working", required: true }),

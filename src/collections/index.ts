@@ -1,24 +1,25 @@
-import Images from "./Images";
-import Posts from "./Posts";
-import Media from "./Media";
-import Menu from "./Menu";
-import multiImage from "./imageArray";
+// Index file to Structure Category & Collections in Sidebar.
+import Test from './Test';
+import Images from './Images';
+import Posts from './Posts';
+import Media from './Media';
+import Menu from './Menu';
+import ImageArray from './ImageArray';
 
+//import ImageArray from './ImageArray';
 
-let categories =  [
-  {
-  category:"collections",
-  icon: "bi:collection",
-  collections:[
-    Images,
-    Posts,
-    Media,
-    Menu,
-    multiImage
-  ]
-},
+let categories = [
+	{
+		category: 'Collections',
+		icon: 'bi:collection',
+		collections: [Test, Posts, Menu]
+	},
+	{
+		category: 'Media',
+		icon: 'bi:images',
+		collections: [Images, Media, ImageArray]
+	}
+];
+export { categories };
 
-   
-  ]
-export {categories}
-export default categories.map(x=>x.collections).reduce((x,acc)=> x.concat(acc))
+export default categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc));

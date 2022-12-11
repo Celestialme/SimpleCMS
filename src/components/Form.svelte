@@ -20,7 +20,11 @@
 <div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded">
 	<div class="flex justify-start mb-5 font-bold relative">
 		<Icon icon={collection?.icon} color="dark" width="24" class="mr-1" />Create {collection?.name}
-		<Button pill={true} size="xs" color="light" class="absolute px-6 py-1 right-10 hover:bg-gray-100 dark:hover:bg-gray-700"
+		<Button
+			pill={true}
+			size="xs"
+			color="light"
+			class="absolute px-6 py-1 right-10 hover:bg-gray-100 dark:hover:bg-gray-700"
 			><Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
 			<Chevron>{language}</Chevron></Button
 		>
@@ -44,9 +48,9 @@
 	<Fields {collection} {fields} />
 
 	<form on:submit|preventDefault enctype="multipart/form-data">
-		<div class="my-2">
-			<button
-				><Button class="w-full" submit gradient color="lime"
+		<div class="mt-4 flex justify-center">
+			<button class="w-full"
+				><Button class="w-full max-w-[350px]" submit gradient color="lime"
 					><Icon icon="ph:floppy-disk-back" color="dark" width="24" class="mr-1" />SAVE</Button
 				><Tooltip placement="bottom" color="green">Save {collection?.name}</Tooltip></button
 			>
