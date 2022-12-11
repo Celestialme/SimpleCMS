@@ -8,6 +8,7 @@ import multiImage from "./imageArray";
 let categories =  [
   {
   category:"collections",
+  icon: "bi:collection",
   collections:[
     Images,
     Posts,

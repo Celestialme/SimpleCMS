@@ -36,3 +36,21 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
+
+## place env.ts in root folder
+import pkg from "./package.json" assert { type: "json" };
+let env = {
+    HOST : "http://localhost",
+    PORT : 3000,
+    DB_NAME : "test",
+    DB_USER : "username",
+    DB_PASSWORD : "password",
+    DB_HOST:"mongodb+srv://main.qfd1u.mongodb.net",
+    API:"",
+    PKG:{
+      VERSION:pkg.version
+    }
+    }
+    env.API =`${env.HOST}:${env.PORT}/api`
+    export default env

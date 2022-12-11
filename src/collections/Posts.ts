@@ -13,6 +13,8 @@ let schema: Schema = {
       suffix: "cent",
       count: "10",
       placeholder: "Enter Number",
+      required: true,
+			localization: true,
     }),
   ],
 };

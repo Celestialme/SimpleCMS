@@ -1,7 +1,7 @@
 <script>
     export let checked=false;
 </script>
-<div  class="w-[35px] h-[35px] border-4 border-gray-800 flex justify-center items-center rounded-md {$$props.class}" on:click|stopPropagation={()=>checked=!checked}>
+<div  class="w-[35px] h-[35px] border-4 border-gray-800 dark:border-gray-500 flex justify-center items-center rounded-md {$$props.class}" on:click|stopPropagation={()=>checked=!checked}>
 {#if checked}
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 224 224" fill="none">
     <mask id="mask0_218_2" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="224" height="224">
