@@ -20,7 +20,7 @@
 
 {#each fields as field, index}
 	<div bind:this={inputFields[index]} class="section my-2 relative">
-		<div class="text-white font-bold flex capitalize relative">
+		<div class=" font-bold flex capitalize relative">
 			<p class=" font-bold">
 				{field.field.title}
 				{#if field.field.required}

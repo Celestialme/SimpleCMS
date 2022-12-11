@@ -17,10 +17,10 @@
 	let open = false;
 </script>
 
-<div class="fields text-white bg-gray-800 p-4 rounded">
+<div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded">
 	<div class="flex justify-start mb-5 font-bold relative">
 		<Icon icon={collection?.icon} color="dark" width="24" class="mr-1" />Create {collection?.name}
-		<Button pill={true} size="xs" color="dark" class="absolute px-6 py-1 right-10 hover:bg-gray-700"
+		<Button pill={true} size="xs" color="light" class="absolute px-6 py-1 right-10 hover:bg-gray-100 dark:hover:bg-gray-700"
 			><Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
 			<Chevron>{language}</Chevron></Button
 		>
@@ -35,7 +35,7 @@
 			{/each}
 		</Dropdown>
 		<Tooltip placement="bottom" color="gray">Current Content Language</Tooltip>
-		<CloseButton class="absolute text-white right-0" on:click={() => (showFields = false)} />
+		<CloseButton class="absolute dark:text-white right-0" on:click={() => (showFields = false)} />
 		<Tooltip placement="right" color="!dark">Close without saving</Tooltip>
 	</div>
 	{#if fields.some((field) => field.field.required)}
