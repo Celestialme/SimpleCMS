@@ -39,6 +39,7 @@ You can preview the production build with `npm run preview`.
 
 
 ## place env.ts in root folder
+``` 
 import pkg from "./package.json" assert { type: "json" };
 let env = {
     HOST : "http://localhost",
@@ -54,3 +55,4 @@ let env = {
     }
     env.API =`${env.HOST}:${env.PORT}/api`
     export default env
+   ```
