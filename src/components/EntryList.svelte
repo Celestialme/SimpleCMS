@@ -32,11 +32,13 @@
 	let entryList: any = [];
 	let deleteMap: any = {};
 	let deleteAll = false;
+	
 	$: process_deleteAll(deleteAll);
 	$: deleteMode = Object.values(deleteMap).includes(true);
 	let refresh_deleteMap = (_: any) => {
 		deleteMap = {};
 	};
+	
 	$: refresh_deleteMap(collection);
 	export let refresh: (collection: any) => Promise<any>;
 	onMount(() => {
