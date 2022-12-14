@@ -17,7 +17,9 @@
 	let open = false;
 </script>
 
-<div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded overflow-y-auto max-h-screen">
+<div
+	class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded overflow-y-auto max-h-screen"
+>
 	<div class="flex justify-start mb-5 font-bold relative  overflow-visible">
 		<Icon icon={collection?.icon} color="dark" width="24" class="mr-1" />Create {collection?.name}
 		<Button
@@ -39,14 +41,19 @@
 			{/each}
 		</Dropdown>
 		<Tooltip placement="bottom" color="gray">Current Content Language</Tooltip>
-		<CloseButton class="absolute dark:text-white right-0" on:click={() => {showFields = false;$entryData = new Set()}} />
-		<Tooltip  placement="bottom" color="!dark">Close without saving</Tooltip>
+		<CloseButton
+			class="absolute dark:text-white right-0"
+			on:click={() => {
+				showFields = false;
+				$entryData = new Set();
+			}}
+		/>
+		<Tooltip placement="bottom" color="!dark">Close without saving</Tooltip>
 	</div>
 	{#if fields.some((field) => field.field.required)}
-		<div class="text-red-500 text-xs -mt-3">* Required</div>
+		<div class="text-red-500 font-bold text-xs -mt-3">* Required</div>
 	{/if}
 	<Fields {collection} {fields} />
-
 </div>
 
 <style>
