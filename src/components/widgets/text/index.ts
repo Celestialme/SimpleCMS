@@ -1,5 +1,4 @@
 import type { Display } from '../types';
-
 export default ({
 	title,
 	icon,
@@ -8,7 +7,6 @@ export default ({
 	prefix,
 	suffix,
 	required,
-	localization,
 	display
 }: {
 	title: string;
@@ -18,10 +16,15 @@ export default ({
 	prefix?: string;
 	suffix?: string;
 	required?: boolean;
-	localization?: boolean;
 	display?: Display;
 }) => {
-	if (!display) display = (data: any, field: any, entry: any) => data;
+	
+	if (!display) display = async (data: any, field: any, entry: any) => {
+		let {language} = await import ("../../../stores/store")
+		let {get} = await import('svelte/store')
+		return data[get(language)] || ""
+	
+	};
 	let field: any = {
 		schema: {},
 		title,
@@ -31,10 +34,9 @@ export default ({
 		prefix,
 		suffix,
 		required,
-		localization,
 		display
 	};
-	field.schema[title] = 'string';
+	field.schema[title] = {String:String};
 	field.widget = async () => {
 		// @ts-ignore
 		return (await import('./Text.svelte')).default;
