@@ -2,19 +2,18 @@
 	export let fields: Array<any> = [];
 	export let collection: Schema | undefined = undefined;
 	export let showFields: boolean = true;
-	import { entryData, getFieldsData,language} from '@src/stores/store';
-	import env from "@root/env"
+	import { entryData, getFieldsData, language } from '@src/stores/store';
+	import env from '@root/env';
 	import type { Schema } from '@src/collections/types';
 	import { Button, Chevron, CloseButton, Dropdown, DropdownItem, Tooltip } from 'flowbite-svelte';
 	import Fields from './Fields.svelte';
 	import Icon from '@iconify/svelte';
 
-
 	$: {
 		$getFieldsData = new Set();
 		collection;
 	}
-	
+
 	let open = false;
 </script>
 
@@ -35,26 +34,31 @@
 					on:click={() => {
 						$language = _language;
 						open = false;
-					}}>{env.translations[(_language)]}</DropdownItem
+					}}>{env.translations[_language]}</DropdownItem
 				>
 			{/each}
 		</Dropdown>
 		<Tooltip placement="bottom" color="gray">Current Content Language</Tooltip>
-		<CloseButton class="absolute dark:text-white right-0" on:click={() => {showFields = false;$entryData = new Set()}} />
-		<Tooltip  placement="bottom" color="!dark">Close without saving</Tooltip>
+		<CloseButton
+			class="absolute dark:text-white right-0"
+			on:click={() => {
+				showFields = false;
+				$entryData = new Set();
+			}}
+		/>
+		<Tooltip placement="bottom" color="!dark">Close without saving</Tooltip>
 	</div>
 	{#if fields.some((field) => field.field.required)}
-		<div class="text-red-500 text-xs -mt-3">* Required</div>
+		<div class="text-red-500 font-bold text-xs -mt-3">* Required</div>
 	{/if}
 	<Fields {collection} {fields} />
-
 </div>
 
 <style>
 	:global(.fields .title) {
 		color: white;
 	}
-	.fields{
-		max-height:calc(100vh - 50px)
+	.fields {
+		max-height: calc(100vh - 50px);
 	}
 </style>

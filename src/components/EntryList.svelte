@@ -6,6 +6,7 @@
 	import DeleteIcon from './icons/DeleteIcon.svelte';
 	import {
 		Button,
+		ButtonGroup,
 		ChevronLeft,
 		ChevronRight,
 		NavHamburger,
@@ -32,13 +33,13 @@
 	let entryList: any = [];
 	let deleteMap: any = {};
 	let deleteAll = false;
-	
+
 	$: process_deleteAll(deleteAll);
 	$: deleteMode = Object.values(deleteMap).includes(true);
 	let refresh_deleteMap = (_: any) => {
 		deleteMap = {};
 	};
-	
+
 	$: refresh_deleteMap(collection);
 	export let refresh: (collection: any) => Promise<any>;
 	onMount(() => {
@@ -147,53 +148,52 @@
 			</button>
 		</div>
 
-		<!-- info/schedual -->
-
-		<SpeedDial defaultClass="relative" tooltip="none" placement="bottom">
-			<Icon slot="icon" icon="bi:pencil-fill" width="18" />
-			<Listgroup class="w-32" active>
-				<ListgroupItem class="flex text-green-500 gap-1">
-					<Icon icon="bi:hand-thumbs-up-fill" width="18" />
-					Publish
-				</ListgroupItem>
-				<ListgroupItem class="flex text-yellow-400 gap-1">
-					<Icon icon="bi:pause-circle" width="18" />
-					Unpublish
-				</ListgroupItem>
-				<ListgroupItem class="flex text-blue-500 gap-1">
-					<Icon icon="bi:clock" width="18" />
-					Schedule
-				</ListgroupItem>
-				<ListgroupItem class="flex gap-1">
-					<Icon icon="bi:clipboard-data-fill" width="18" />
-					Clone
-				</ListgroupItem>
-				<ListgroupItem class="flex text-red-600 gap-1">
-					<Icon icon="bi:trash3-fill" width="18" />
-					Delete
-				</ListgroupItem>
-			</Listgroup>
-		</SpeedDial>
-
 		<!-- create/delete -->
-		<Button
-			gradient
-			pill
-			color={deleteMode ? 'red' : 'green'}
-			class="!p-2 md:ml-auto"
-			on:click={() => {
-				deleteMode ? deleteEntry() : (showFields = true);
-			}}
-		>
-			{#if deleteMode}
-				<Icon icon="bi:trash3-fill" color="white" width="22" class="mr-1" /> Delete
-			{:else}
-				<Icon icon="ic:round-plus" color="white" width="24" class="mr-1" /> Create
-			{/if}</Button
-		>
-		<Tooltip placement="bottom" style="light" class="z-20"
-			>{deleteMode ? 'Delete ' + collection.name : 'Create New ' + collection.name}
-		</Tooltip>
+		<ButtonGroup>
+			<Button
+				gradient
+				pill
+				color={deleteMode ? 'red' : 'green'}
+				class="!p-2 md:ml-auto"
+				on:click={() => {
+					deleteMode ? deleteEntry() : (showFields = true);
+				}}
+			>
+				{#if deleteMode}
+					<Icon icon="bi:trash3-fill" color="white" width="22" class="mr-1" /> Delete
+				{:else}
+					<Icon icon="ic:round-plus" color="white" width="24" class="mr-1" /> Create
+				{/if}</Button
+			>
+			<Tooltip placement="bottom" style="light" class="z-20"
+				>{deleteMode ? 'Delete ' + collection.name : 'Create New ' + collection.name}
+			</Tooltip>
+			<SpeedDial defaultClass="relative" tooltip="none" placement="bottom">
+				<Icon slot="icon" icon="bi:pencil-fill" width="18" />
+				<Listgroup class="w-32" active>
+					<ListgroupItem class="flex text-green-500 gap-1">
+						<Icon icon="bi:hand-thumbs-up-fill" width="18" />
+						Publish
+					</ListgroupItem>
+					<ListgroupItem class="flex text-yellow-400 gap-1">
+						<Icon icon="bi:pause-circle" width="18" />
+						Unpublish
+					</ListgroupItem>
+					<ListgroupItem class="flex text-blue-500 gap-1">
+						<Icon icon="bi:clock" width="18" />
+						Schedule
+					</ListgroupItem>
+					<ListgroupItem class="flex gap-1">
+						<Icon icon="bi:clipboard-data-fill" width="18" />
+						Clone
+					</ListgroupItem>
+					<ListgroupItem class="flex text-red-600 gap-1">
+						<Icon icon="bi:trash3-fill" width="18" />
+						Delete
+					</ListgroupItem>
+				</Listgroup>
+			</SpeedDial>
+		</ButtonGroup>
 	</div>
 	<Table hoverable={true} class="relative">
 		<TableHead>
