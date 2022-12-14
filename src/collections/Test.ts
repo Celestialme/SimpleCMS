@@ -16,7 +16,6 @@ let schema: Schema = {
 			icon: 'ri:t-box-line',
 			placeholder: 'Enter First Name',
 			required: true,
-			localization: true
 			// entry_list: false,
 
 			// localization: {DE, ES,}
@@ -42,7 +41,6 @@ let schema: Schema = {
 			count: '10',
 			placeholder: 'Enter Number',
 			required: true,
-			localization: true
 		}),
 
 		widgets.Email({
@@ -70,7 +68,8 @@ let schema: Schema = {
 			placeholder: 'Enter Website',
 			required: true,
 			localization: true
-		})
+		}),
+		widgets.RichText({title:"rich text"})
 	]
 };
 export default schema;

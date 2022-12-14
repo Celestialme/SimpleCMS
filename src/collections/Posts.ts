@@ -16,7 +16,14 @@ let schema: Schema = {
 			icon: 'ri:t-box-line',
 			placeholder: 'Enter First Name',
 			required: true,
-			localization: true
+		
+		}),
+		widgets.Text({
+			title: 'name',
+			icon: 'ri:t-box-line',
+			placeholder: 'Enter First Name',
+			required: true,
+		
 		})
 	]
 };

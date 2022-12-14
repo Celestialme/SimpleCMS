@@ -1,4 +1,5 @@
 import Text from './text';
+import RichText from './richText';
 import Relation from './relation';
 import MegaMenu from './megaMenu';
 import ImageUpload from './imageUpload';
@@ -53,7 +54,7 @@ let widgets = {
 	// Relation - assign relationships to other collections
 	Relation,
 	// Rich Text - fully extensible Lexical Rich Text editor
-	// Richtext,
+	RichText,
 	// Row - used for admin field layout, no effect on data shape
 	//Row,
 	// Select - dropdown / picklist style value selector
@@ -67,7 +68,8 @@ let widgets = {
 	// Upload - allows local file and image upload
 	//Upload
 	// Url - Link to internal / External hyperlinks
-	Url
+	Url,
+	
 };
 
 export default widgets;

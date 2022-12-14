@@ -47,7 +47,7 @@
 				{collection}
 				bind:widgetValue={fieldsValue[field.field.title]}
 				{root}
-				value={value ? value?.[field.field.title] : $entryData?.[field.field.title] || ''}
+				value={value ? value?.[field.field.title] : $entryData?.[field.field.title] || {}}
 				field={field.field}
 			/>
 		{/if}

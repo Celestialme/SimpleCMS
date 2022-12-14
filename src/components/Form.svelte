@@ -2,22 +2,23 @@
 	export let fields: Array<any> = [];
 	export let collection: Schema | undefined = undefined;
 	export let showFields: boolean = true;
-	import { entryData as entryData, getFieldsData } from '@src/stores/store';
+	import { entryData, getFieldsData,language} from '@src/stores/store';
+	import env from "@root/env"
 	import type { Schema } from '@src/collections/types';
 	import { Button, Chevron, CloseButton, Dropdown, DropdownItem, Tooltip } from 'flowbite-svelte';
 	import Fields from './Fields.svelte';
 	import Icon from '@iconify/svelte';
 
+
 	$: {
 		$getFieldsData = new Set();
 		collection;
 	}
-	let language = 'English';
-	let languages = ['English', 'German'];
+	
 	let open = false;
 </script>
 
-<div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded overflow-y-auto max-h-screen">
+<div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded overflow-y-auto">
 	<div class="flex justify-start mb-5 font-bold relative  overflow-visible">
 		<Icon icon={collection?.icon} color="dark" width="24" class="mr-1" />Create {collection?.name}
 		<Button
@@ -26,15 +27,15 @@
 			color="light"
 			class="absolute px-6 py-1 right-10 hover:bg-gray-100 dark:hover:bg-gray-700"
 			><Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
-			<Chevron>{language}</Chevron></Button
+			<Chevron>{env.translations[$language]}</Chevron></Button
 		>
 		<Dropdown bind:open>
-			{#each languages as _language}
+			{#each Object.keys(env.translations) as _language}
 				<DropdownItem
 					on:click={() => {
-						language = _language;
+						$language = _language;
 						open = false;
-					}}>{_language}</DropdownItem
+					}}>{env.translations[(_language)]}</DropdownItem
 				>
 			{/each}
 		</Dropdown>
@@ -52,5 +53,8 @@
 <style>
 	:global(.fields .title) {
 		color: white;
+	}
+	.fields{
+		max-height:calc(100vh - 50px)
 	}
 </style>
