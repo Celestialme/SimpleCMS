@@ -17,15 +17,22 @@
 	let email = '';
 	let password = '';
 
-	// define default
-	let color = 'blue';
-	const values = [0, [0]];
+	// Color Picker
+
+	let values = { Appearance: [], Accent: ['red'] };
+	import ColorPicker from 'svelte-awesome-color-picker';
+
+	let color = 'red';
+	function rgb() {
+		//console.log(rgb);
+		color = rgb;
+	}
 </script>
 
 <div class="flex flex-row gap-2 mb-8">
 	<CMSLogo className="w-10" fill="red" />
 
-	<h1 class="text-3xl text-light font-bold">SimpleCMS - User Profile</h1>
+	<h1 class="text-3xl dark:text-white font-bold">SimpleCMS - User Profile</h1>
 </div>
 
 {#if !forgot}
@@ -97,8 +104,10 @@
 <Avatar size="lg" class="text-dark dark:text-white text-center">user name</Avatar>
 
 <div class="text-xl text-dark font-bold dark:text-white my-2">Appearance:</div>
-<div class="mb-2 p-3 inline-block rounded-full border-2 border-white">
-	<ButtonGroup class="space-x-px" mandatory bind:value={values[0]}>
+<div
+	class="mb-2 p-3 inline-block rounded-full bg-white dark:bg-inherit dark:border-2 dark:border-white"
+>
+	<ButtonGroup class="space-x-px" appearance bind:value={values[0]}>
 		<Button pill gradient {color} value="light">Light</Button>
 		<Button pill gradient {color} value="light">Dark</Button>
 		<Button pill gradient {color} value="auto">Auto</Button>
@@ -107,64 +116,67 @@
 <Helper>Enables Darkmode for the admin interface.</Helper>
 
 <div class="text-xl text-dark font-bold dark:text-white my-2">Accent color:</div>
-<div class="mb-2 p-3 inline-block rounded-full border-2 border-white ">
+<ButtonGroup
+	bind:value={values.preselected}
+	class="mb-2 p-3 rounded-full bg-white dark:bg-inherit dark:border-2 border-white "
+>
 	<Button
 		pill
-		class="!p-2 h-8 w-8 border dark:border-white"
+		class="!p-2 h-8 w-8 dark:hover:border dark:hover:border-white"
 		gradient
 		color="red"
 		value="red"
 	/><Tooltip placement="bottom">Default Red</Tooltip>
 	<Button
 		pill
-		class="!p-2 h-8 w-8 border dark:border-white"
+		class="!p-2 h-8 w-8 dark:hover:border dark:hover:border-white"
 		gradient
 		color="blue"
 		value="blue"
 	/><Tooltip placement="bottom">Blue</Tooltip>
 	<Button
 		pill
-		class="!p-2 h-8 w-8 border dark:border-white"
+		class="!p-2 h-8 w-8 dark:hover:border dark:hover:border-white"
 		gradient
 		color="green"
 		value="green"
 	/><Tooltip placement="bottom">Green</Tooltip>
 	<Button
 		pill
-		class="!p-2 h-8 w-8 border dark:border-white"
+		class="!p-2 h-8 w-8 dark:hover:border dark:hover:border-white"
 		gradient
 		color="cyan"
 		value="cyan"
 	/><Tooltip placement="bottom">Cyan</Tooltip>
 	<Button
 		pill
-		class="!p-2 h-8 w-8 border dark:border-white"
+		class="!p-2 h-8 w-8 dark:hover:border dark:hover:border-white"
 		gradient
 		color="teal"
 		value="teal"
 	/><Tooltip placement="bottom">Teal</Tooltip>
 	<Button
 		pill
-		class="!p-2 h-8 w-8 border dark:border-white"
+		class="!p-2 h-8 w-8 dark:hover:border dark:hover:border-white"
 		gradient
 		color="lime"
 		value="lime"
 	/><Tooltip placement="bottom">Lime</Tooltip>
 	<Button
 		pill
-		class="!p-2 h-8 w-8 border dark:border-white"
+		class="!p-2 h-8 w-8 dark:hover:border dark:hover:border-white"
 		gradient
 		color="pink"
 		value="pink"
 	/><Tooltip placement="bottom">Pink</Tooltip>
 	<Button
 		pill
-		class="!p-2 h-8 w-8 border dark:border-white"
+		class="!p-2 h-8 w-8 dark:hover:border dark:hover:border-white"
 		gradient
 		color="purple"
 		value="purple"
 	/><Tooltip placement="bottom">Purple</Tooltip>
-	<Button pill class="!p-2 h-8 w-8 border dark:border-white" gradient color="alternative" />
-	<Tooltip placement="bottom">Custom</Tooltip>
-</div>
+	<ColorPicker bind:color />
+	<Tooltip placement="bottom">Current Custom Color</Tooltip>
+</ButtonGroup>
 <Helper>Sets the Accent Theme Color</Helper>
