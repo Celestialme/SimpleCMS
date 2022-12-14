@@ -1,8 +1,9 @@
 import {get} from "svelte/store"
-import {prevFormData,getFieldsData} from "@src/stores/store"
+import {entryData,getFieldsData} from "@src/stores/store"
 import axios from "axios";
 import  env  from "../../env";
 import type { Schema } from "@src/collections/types";
+import { config } from "./utils";
 export  async  function shape_fields(fields:Array<any>){ // get fields from collection
     let _fields=[]
     if(!fields)return[]
@@ -57,7 +58,7 @@ export async function saveSimpleData(collection:Schema,data:any,doc_id?:string,i
 
 export async function saveData(collection:Schema,formData:FormData,doc_id?:string,insert?:boolean){
   
-    let oldData_id= doc_id || (get(prevFormData) as any)?._id
+    let oldData_id= doc_id || (get(entryData) as any)?._id
     //if formData object is empty then:
 
 
@@ -66,8 +67,8 @@ export async function saveData(collection:Schema,formData:FormData,doc_id?:strin
         return {data:404}
     }else if(oldData_id&&!insert){
         formData.append("_id", oldData_id) 
-        return  await axios.patch(`${env.HOST}:${env.PORT}/api/${collection.name}`,formData)
+        return  await axios.patch(`${env.HOST}:${env.PORT}/api/${collection.name}`,formData,config)
     }else{
-        return await axios.post(`${env.HOST}:${env.PORT}/api/${collection.name}`,formData)
+        return await axios.post(`${env.HOST}:${env.PORT}/api/${collection.name}`,formData,config)
     }
 }

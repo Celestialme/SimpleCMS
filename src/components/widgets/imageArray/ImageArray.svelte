@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Fields from "@src/components/Fields.svelte";
 	import { saveSimpleData, shape_fields } from "@src/utils/utils_svelte";
-	import { prevFormData } from "@src/stores/store";
+	import { entryData } from "@src/stores/store";
 
 	export let field = { title: "", fields: [] };
 	export let collection: any;
@@ -38,7 +38,7 @@
 			/>
 		</div>
 	{/each}
-{:else if $prevFormData}
+{:else if $entryData}
 	<Fields
 		{getData}
 		{collection}

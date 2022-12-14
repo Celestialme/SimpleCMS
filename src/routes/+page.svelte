@@ -3,7 +3,7 @@
 	import { shape_fields, saveFormData } from '@src/utils/utils_svelte';
 	import Form from '@src/components/Form.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
-	import { prevFormData, credentials } from '@src/stores/store';
+	import { entryData, credentials } from '@src/stores/store';
 	import Collections from '@src/components/Collections.svelte';
 	import Alerts from '@src/components/Alerts.svelte';
 	import axios from 'axios';
@@ -58,17 +58,15 @@
 				goto('/login');
 			}
 		});
-	async function onSubmit(e: Event) {
-		e.preventDefault();
-
+	async function submit() {
 		await saveFormData(collection);
 		refresh(collection);
 		showFields = false;
-		$prevFormData = undefined;
+		$entryData = undefined;
 	}
 
 	$: {
-		$prevFormData = undefined;
+		$entryData = undefined;
 		collection;
 	}
 
@@ -211,9 +209,9 @@
 				</aside>
 			</div>
 
-			<div class="content">
+			<div class="content flex-grow md:flex-grow-0" class:!mt-[50px]={showFields}>
 				{#if showFields}
-					<Form {fields} {collection} bind:showFields on:submit={onSubmit} />
+					<Form {fields} {collection} bind:showFields />
 				{/if}
 
 				<div hidden={showFields}>
@@ -229,6 +227,13 @@
 				</div>
 			</div>
 		{/if}
+		{#if showFields}
+			<div class="md:w-[200px] h-[50px] w-full md:h-full fixed md:relative text-center">
+				<Button on:click={() => submit()} class="w-full max-w-[100px] md:max-w-[350px]" submit gradient color="lime"
+					><Icon icon="ph:floppy-disk-back" color="dark" width="24" class="mr-1" />SAVE</Button
+				><Tooltip placement="bottom" color="green">Save {collection?.name}</Tooltip>
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -241,6 +246,7 @@
 		margin: 0 auto;
 		min-width: 30%;
 		max-width: 2000px;
+	
 	}
 	:global(.content > *) {
 		margin: 5px 0;

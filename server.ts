@@ -16,7 +16,7 @@ const Session = mongoose.model('session', new mongoose.Schema({ ...session }, { 
 export const auth = lucia({
 	adapter: adapter(mongoose),
 	env: 'DEV',
-	generateCustomUserId: async () => generateRandomString(8),
+	generateCustomUserId: async () => generateRandomString(32),
 	transformUserData: (user) => ({
 		userId: user.id,
 		username: user.username
@@ -33,9 +33,13 @@ mongoose.connect(env.DB_HOST, {
 let collections: { [Key: string]: mongoose.Model<any> } = {};
 
 for (let schema of schemas) {
-	const schema_object = new mongoose.Schema(fieldsToSchema(schema.fields), {
-		strict: schema.strict || false
-	});
+	const schema_object = new mongoose.Schema(
+		{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
+		{
+			strict: schema.strict || false,
+			timestamps: { currentTime: () => Date.now() }
+		}
+	);
 	collections[schema.name] = mongoose.model(schema.name, schema_object);
 }
 
@@ -76,7 +80,7 @@ app.post('/api/signup', async (req, res) => {
 		.createUser('email', req.body.email, {
 			password: req.body.password,
 			attributes: {
-				username: 'Celestialme'
+				username: 'Admin'
 			}
 		})
 		.catch(() => null);

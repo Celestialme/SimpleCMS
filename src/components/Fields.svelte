@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { prevFormData, getFieldsData } from '@src/stores/store';
+	import { entryData, getFieldsData } from '@src/stores/store';
 	import type { Schema } from '@src/collections/types';
 	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
@@ -47,7 +47,7 @@
 				{collection}
 				bind:widgetValue={fieldsValue[field.field.title]}
 				{root}
-				value={value ? value?.[field.field.title] : $prevFormData?.[field.field.title] || ''}
+				value={value ? value?.[field.field.title] : $entryData?.[field.field.title] || ''}
 				field={field.field}
 			/>
 		{/if}

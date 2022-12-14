@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Fields from '@src/components/Fields.svelte';
 	import { shape_fields } from '@src/utils/utils_svelte';
-	import { prevFormData, MenuCurrentChild } from '@src/stores/store';
+	import { entryData, MenuCurrentChild } from '@src/stores/store';
 
 	import ListNode from './ListNode.svelte';
 	import { Button } from 'flowbite-svelte';

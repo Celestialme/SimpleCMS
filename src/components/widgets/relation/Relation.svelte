@@ -2,7 +2,7 @@
 	import Fields from '@src/components/Fields.svelte';
 	import { findById, find } from '@src/utils/utils';
 	import { shape_fields, saveSimpleData } from '@src/utils/utils_svelte';
-	import { prevFormData, getFieldsData } from '@src/stores/store';
+	import { entryData, getFieldsData } from '@src/stores/store';
 	import DropDown from '@src/components/DropDown.svelte';
 	import { Button } from 'flowbite-svelte';
 
@@ -42,8 +42,8 @@
 			value = await findById(value, field.relation);
 			//if we dont have display from entrylist already, generate new one
 			display =
-				(value && $prevFormData?.displays?.[field.title]) ||
-				(value && (await field.display(widgetValue, field, $prevFormData)));
+				(value && $entryData?.displays?.[field.title]) ||
+				(value && (await field.display(widgetValue, field, $entryData)));
 		}
 	})();
 

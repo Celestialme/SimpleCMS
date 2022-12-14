@@ -2,7 +2,7 @@
 	export let fields: Array<any> = [];
 	export let collection: Schema | undefined = undefined;
 	export let showFields: boolean = true;
-	import { prevFormData, getFieldsData } from '@src/stores/store';
+	import { entryData as entryData, getFieldsData } from '@src/stores/store';
 	import type { Schema } from '@src/collections/types';
 	import { Button, Chevron, CloseButton, Dropdown, DropdownItem, Tooltip } from 'flowbite-svelte';
 	import Fields from './Fields.svelte';
@@ -17,8 +17,8 @@
 	let open = false;
 </script>
 
-<div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded">
-	<div class="flex justify-start mb-5 font-bold relative">
+<div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded overflow-y-auto max-h-screen">
+	<div class="flex justify-start mb-5 font-bold relative  overflow-visible">
 		<Icon icon={collection?.icon} color="dark" width="24" class="mr-1" />Create {collection?.name}
 		<Button
 			pill={true}
@@ -39,30 +39,18 @@
 			{/each}
 		</Dropdown>
 		<Tooltip placement="bottom" color="gray">Current Content Language</Tooltip>
-		<CloseButton class="absolute dark:text-white right-0" on:click={() => (showFields = false)} />
-		<Tooltip placement="right" color="!dark">Close without saving</Tooltip>
+		<CloseButton class="absolute dark:text-white right-0" on:click={() => {showFields = false;$entryData = new Set()}} />
+		<Tooltip  placement="bottom" color="!dark">Close without saving</Tooltip>
 	</div>
 	{#if fields.some((field) => field.field.required)}
 		<div class="text-red-500 text-xs -mt-3">* Required</div>
 	{/if}
 	<Fields {collection} {fields} />
 
-	<form on:submit|preventDefault enctype="multipart/form-data">
-		<div class="mt-4 flex justify-center">
-			<button class="w-full"
-				><Button class="w-full max-w-[350px]" submit gradient color="lime"
-					><Icon icon="ph:floppy-disk-back" color="dark" width="24" class="mr-1" />SAVE</Button
-				><Tooltip placement="bottom" color="green">Save {collection?.name}</Tooltip></button
-			>
-		</div>
-	</form>
 </div>
 
 <style>
 	:global(.fields .title) {
 		color: white;
-	}
-	button {
-		width: min(70%, 200px);
 	}
 </style>

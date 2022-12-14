@@ -1,7 +1,7 @@
 <script lang="ts">
 	import axios from 'axios';
 	import env from '@root/env';
-	import { prevFormData } from '@src/stores/store';
+	import { entryData } from '@src/stores/store';
 	import { onMount } from 'svelte';
 	import DeleteIcon from './icons/DeleteIcon.svelte';
 	import {
@@ -252,7 +252,7 @@
 				<TableBodyRow
 					on:click={() => {
 						showFields = true;
-						$prevFormData = entry;
+						$entryData = entry;
 					}}
 				>
 					<TableBodyCell>{index + 1}</TableBodyCell>

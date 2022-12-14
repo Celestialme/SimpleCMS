@@ -83,3 +83,10 @@ export async  function findById(id:string,collection:Schema){
     let _query = JSON.stringify(query)
     return (await axios.get(`${env.HOST}:${env.PORT}/api/find?collection=${collection.name}&query=${_query}`)).data
  }
+
+
+ export const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  };
