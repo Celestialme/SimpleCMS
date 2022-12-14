@@ -209,7 +209,7 @@
 				</aside>
 			</div>
 
-			<div class="content flex-grow md:flex-grow-0" class:!mt-[50px]={showFields}>
+			<div class="content flex-grow md:flex-grow-0" class:!mt-[60px]={showFields}>
 				{#if showFields}
 					<Form {fields} {collection} bind:showFields />
 				{/if}
@@ -228,8 +228,15 @@
 			</div>
 		{/if}
 		{#if showFields}
-			<div class="md:w-[200px] h-[50px] w-full md:h-full fixed md:relative text-center">
-				<Button on:click={() => submit()} class="w-full max-w-[100px] md:max-w-[350px]" submit gradient color="lime"
+			<div
+				class="bg-white dark:bg-gray-800 shadow border-b-2 md:border-none dark:border-white border-gray-800 md:px-2 md:w-[200px] h-[60px] w-full md:h-full fixed md:relative text-center"
+			>
+				<Button
+					on:click={() => submit()}
+					class="w-full mt-2 mb-1 max-w-[150px] md:mt-2 md:max-w-[350px]"
+					submit
+					gradient
+					color="lime"
 					><Icon icon="ph:floppy-disk-back" color="dark" width="24" class="mr-1" />SAVE</Button
 				><Tooltip placement="bottom" color="green">Save {collection?.name}</Tooltip>
 			</div>
@@ -246,7 +253,6 @@
 		margin: 0 auto;
 		min-width: 30%;
 		max-width: 2000px;
-	
 	}
 	:global(.content > *) {
 		margin: 5px 0;
