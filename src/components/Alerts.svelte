@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Alert, Toast, Progressbar } from 'flowbite-svelte';
+	import { Alert, Toast, Modal, Progressbar } from 'flowbite-svelte';
 	import { fly } from 'svelte/transition';
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
@@ -8,6 +8,8 @@
 	let alertType = Alert;
 	let alertIcon = 'mdi:tick-outline';
 	let progress = 50;
+	let alertTitle = 'SimpleCMS';
+	let defaultModal = false;
 </script>
 
 {#if alertMessage}
@@ -41,5 +43,13 @@
 			</svelte:fragment>
 			{alertMessage}
 		</Toast>
+	{:else if alertType == Modal}
+		<Modal title={alertTitle} bind:open={defaultModal} autoclose>
+			{alertMessage}
+			<svelte:fragment slot="footer">
+				<Button on:click={() => alert('Handle "success"')}>I accept</Button>
+				<Button color="alternative">Decline</Button>
+			</svelte:fragment>
+		</Modal>
 	{/if}
 {/if}

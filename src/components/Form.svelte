@@ -18,13 +18,21 @@
 </script>
 
 <div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded overflow-y-auto">
-	<div class="flex justify-start mb-5 font-bold relative  overflow-visible">
-		<Icon icon={collection?.icon} color="dark" width="24" class="mr-1" />Create {collection?.name}
+	<div class="flex justify-start mb-5 font-bold relative  overflow-visible ">
+		<div class="flex flex-col w-80">
+			<div class="text-gray-400 text-sm capitalize mb-2">Create</div>
+			<div
+				class="-mt-2 text-sm md:text-xl xl:text-2xl dark:text-white font-bold uppercase flex justify-start items-center "
+			>
+				<span> <Icon icon={collection?.icon} width="24" class="mr-2" /></span>{collection?.name}
+			</div>
+		</div>
+
 		<Button
 			pill={true}
-			size="xs"
+			size="sm"
 			color="light"
-			class="absolute px-6 py-1 right-10 hover:bg-gray-100 dark:hover:bg-gray-700"
+			class="absolute w-[200px] px-6 py-2 right-14 hover:bg-gray-100 dark:hover:bg-gray-700"
 			><Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
 			<Chevron>{env.translations[$language]}</Chevron></Button
 		>
@@ -39,6 +47,7 @@
 			{/each}
 		</Dropdown>
 		<Tooltip placement="bottom" color="gray">Current Content Language</Tooltip>
+
 		<CloseButton
 			class="absolute dark:text-white right-0"
 			on:click={() => {
@@ -46,10 +55,10 @@
 				$entryData = new Set();
 			}}
 		/>
-		<Tooltip placement="bottom" color="!dark">Close without saving</Tooltip>
+		<Tooltip placement="bottom" class="z-20">Close without saving</Tooltip>
 	</div>
 	{#if fields.some((field) => field.field.required)}
-		<div class="text-red-500 font-bold text-xs -mt-3">* Required</div>
+		<div class="text-red-500 text-md text-center -mt-3">* Required</div>
 	{/if}
 	<Fields {collection} {fields} />
 </div>

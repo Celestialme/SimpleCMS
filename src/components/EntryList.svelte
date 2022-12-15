@@ -7,14 +7,15 @@
 	import {
 		Button,
 		ButtonGroup,
+		ChevronDown,
 		ChevronLeft,
 		ChevronRight,
+		Dropdown,
+		DropdownItem,
+		DropdownDivider,
 		NavHamburger,
 		Pagination,
 		Search,
-		SpeedDial,
-		Listgroup,
-		ListgroupItem,
 		Table,
 		TableBody,
 		TableBodyCell,
@@ -30,6 +31,8 @@
 	export let deleteMode = false;
 	export let category = 'Some';
 
+	// define default button
+	let entryButton = 'create';
 	let entryList: any = [];
 	let deleteMap: any = {};
 	let deleteAll = false;
@@ -55,6 +58,7 @@
 
 	export async function deleteEntry() {
 		deleteAll = false;
+
 		let deleteList: Array<string> = [];
 		for (let item in deleteMap) {
 			deleteMap[item] && deleteList.push(entryList[item]._id);
@@ -120,16 +124,15 @@
 		<NavHamburger on:click={() => (toggleSideBar = !toggleSideBar)} btnClass="md:hidden mr-1" />
 
 		<div class="flex flex-col w-80">
-			<div class="text-gray-400 text-xs  capitalize mb-2">{category}</div>
+			<div class="text-gray-400 text-xs capitalize mb-2">{category}</div>
 			<div
-				class="text-sm md:text-xl xl:text-2xl dark:text-white font-bold uppercase flex justify-start items-center "
+				class="-mt-2 text-sm md:text-xl xl:text-2xl dark:text-white font-bold uppercase flex justify-start items-center "
 			>
 				<span> <Icon icon={collection.icon} width="24" class="mr-2" /></span>{collection.name}
 			</div>
 		</div>
 
 		<!-- expanding search -->
-
 		<!-- Search box -->
 		<div class="flex justify-center items-center relative w-[50%] pr-[20px]">
 			<Search
@@ -148,53 +151,180 @@
 			</button>
 		</div>
 
-		<!-- create/delete -->
+		<!-- create/delete/publish/unpublish -->
 		<ButtonGroup>
-			<Button
-				gradient
-				pill
-				color={deleteMode ? 'red' : 'green'}
-				class="!p-2 md:ml-auto"
-				on:click={() => {
-					deleteMode ? deleteEntry() : (showFields = true);
-				}}
-			>
-				{#if deleteMode}
+			{#if entryButton == 'create'}
+				<Button
+					gradient
+					pill
+					color="lime"
+					class="!p-2 w-[150px] text-xl md:ml-auto"
+					on:click={() => {
+						showFields = true;
+					}}
+				>
+					<Icon icon="ic:round-plus" color="black" width="30" class="mr-1" /> Create
+				</Button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Create ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'publish'}
+				<Button
+					gradient
+					pill
+					color="blue"
+					class="!p-2 w-[150px] text-xl md:ml-auto"
+					on:click={() => {
+						deleteEntry();
+					}}
+				>
+					<Icon icon="bi:hand-thumbs-up-fill" color="white" width="22" class="mr-1" /> Publish
+				</Button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Publish ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'unpublish'}
+				<Button
+					pill
+					color="yellow"
+					class="!p-2 w-[150px] text-xl md:ml-auto"
+					on:click={() => {
+						unpublishEntry();
+					}}
+				>
+					<Icon icon="bi:pause-circle" color="white" width="22" class="mr-1" /> Unpublish
+				</Button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Unpublish ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'schedule'}
+				<Button
+					gradient
+					pill
+					color="pink"
+					class="!p-2 w-[150px] text-xl md:ml-auto"
+					on:click={() => {
+						scheduleEntry();
+					}}
+				>
+					<Icon icon="bi:clock" color="white" width="22" class="mr-1" /> Schedule
+				</Button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Schedule ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'clone'}
+				<Button
+					pill
+					color="light"
+					class="!p-2 w-[150px] text-xl md:ml-auto"
+					on:click={() => {
+						cloneEntry();
+					}}
+				>
+					<Icon icon="bi:clipboard-data-fill" color="white" width="22" class="mr-1" /> Clone
+				</Button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Clone ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'delete'}
+				<Button
+					gradient
+					pill
+					color="red"
+					class="!p-2 w-[150px] text-xl md:ml-auto"
+					on:click={() => {
+						deleteEntry();
+					}}
+				>
 					<Icon icon="bi:trash3-fill" color="white" width="22" class="mr-1" /> Delete
-				{:else}
-					<Icon icon="ic:round-plus" color="white" width="24" class="mr-1" /> Create
-				{/if}</Button
-			>
-			<Tooltip placement="bottom" style="light" class="z-20"
-				>{deleteMode ? 'Delete ' + collection.name : 'Create New ' + collection.name}
-			</Tooltip>
-			<SpeedDial defaultClass="relative" tooltip="none" placement="bottom">
-				<Icon slot="icon" icon="bi:pencil-fill" width="18" />
-				<Listgroup class="w-32" active>
-					<ListgroupItem class="flex text-green-500 gap-1">
-						<Icon icon="bi:hand-thumbs-up-fill" width="18" />
+				</Button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Delete ' + collection.name}
+				</Tooltip>
+			{/if}
+
+			<Button class="px-1 rounded-r-xl "><ChevronDown /></Button>
+			<Dropdown>
+				{#if entryButton == 'create'}{:else}
+					<DropdownItem
+						on:click={() => {
+							entryButton = 'create';
+						}}
+						class="flex justify-start items-center gap-1 text-lg text-black hover:text-white -my-1 bg-lime-500 font-bold gap-1"
+					>
+						<Icon icon="ic:round-plus" width="22" />
+						Create
+					</DropdownItem>
+					<DropdownDivider />
+				{/if}
+
+				{#if entryButton == 'publish'}{:else}
+					<DropdownItem
+						on:click={() => {
+							entryButton = 'publish';
+						}}
+						class="flex justify-start items-center gap-1 text-lg text-blue-500 font-bold gap-1"
+					>
+						<Icon icon="bi:hand-thumbs-up-fill" width="20" />
 						Publish
-					</ListgroupItem>
-					<ListgroupItem class="flex text-yellow-400 gap-1">
-						<Icon icon="bi:pause-circle" width="18" />
+					</DropdownItem>
+					<DropdownDivider />
+				{/if}
+
+				{#if entryButton == 'unpublish'}{:else}
+					<DropdownItem
+						on:click={() => {
+							entryButton = 'unpublish';
+						}}
+						class="flex justify-start items-center gap-1 text-lg text-yellow-300 font-bold gap-1"
+					>
+						<Icon icon="bi:pause-circle" width="20" />
 						Unpublish
-					</ListgroupItem>
-					<ListgroupItem class="flex text-blue-500 gap-1">
-						<Icon icon="bi:clock" width="18" />
+					</DropdownItem>
+					<DropdownDivider />
+				{/if}
+
+				{#if entryButton == 'schedule'}{:else}
+					<DropdownItem
+						on:click={() => {
+							entryButton = 'schedule';
+						}}
+						class="flex justify-start items-center gap-1 text-lg text-pink-300 font-bold gap-1"
+					>
+						<Icon icon="bi:clock" width="20" />
 						Schedule
-					</ListgroupItem>
-					<ListgroupItem class="flex gap-1">
-						<Icon icon="bi:clipboard-data-fill" width="18" />
+					</DropdownItem>
+					<DropdownDivider />
+				{/if}
+
+				{#if entryButton == 'clone'}{:else}
+					<DropdownItem
+						on:click={() => {
+							entryButton = 'clone';
+						}}
+						class="flex justify-start items-center gap-1 text-lg font-bold gap-1"
+					>
+						<Icon icon="bi:clipboard-data-fill" width="20" />
 						Clone
-					</ListgroupItem>
-					<ListgroupItem class="flex text-red-600 gap-1">
-						<Icon icon="bi:trash3-fill" width="18" />
+					</DropdownItem>
+					<DropdownDivider />
+				{/if}
+
+				{#if entryButton == 'delete'}{:else}
+					<DropdownItem
+						on:click={() => {
+							entryButton = 'delete';
+						}}
+						class="flex justify-start items-center gap-1 text-lg text-red-600 font-bold gap-1"
+					>
+						<Icon icon="bi:trash3-fill" width="20" />
 						Delete
-					</ListgroupItem>
-				</Listgroup>
-			</SpeedDial>
+					</DropdownItem>
+				{/if}
+			</Dropdown>
 		</ButtonGroup>
 	</div>
+
 	<Table hoverable={true} class="relative">
 		<TableHead>
 			<TableHeadCell
