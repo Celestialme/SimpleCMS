@@ -89,6 +89,20 @@
 			}
 		}
 	}
+
+	export async function publishEntry() {
+		alert('publish added soon');
+	}
+	export async function unpublishEntry() {
+		alert('unpublish added soon');
+	}
+	export async function scheduleEntry() {
+		alert('schedule added soon');
+	}
+	export async function cloneEntry() {
+		alert('clone added soon');
+	}
+
 	export let toggleSideBar = false;
 
 	// Table pagination
@@ -134,13 +148,13 @@
 </script>
 
 <div class="relative">
-	<div class="flex gap-2 mb-2 items-center">
+	<div class="mb-2 flex items-center gap-2">
 		<NavHamburger on:click={() => (toggleSideBar = !toggleSideBar)} btnClass="md:hidden mr-1" />
 
-		<div class="flex flex-col w-80">
-			<div class="text-gray-400 text-xs capitalize mb-2">{category}</div>
+		<div class="flex w-80 flex-col">
+			<div class="mb-2 text-xs capitalize text-gray-400">{category}</div>
 			<div
-				class="-mt-2 text-sm md:text-xl xl:text-2xl dark:text-white font-bold uppercase flex justify-start items-center "
+				class="-mt-2 flex items-center justify-start text-sm font-bold uppercase dark:text-white md:text-xl xl:text-2xl "
 			>
 				<span> <Icon icon={collection.icon} width="24" class="mr-2" /></span>{collection.name}
 			</div>
@@ -148,7 +162,7 @@
 
 		<!-- expanding search -->
 		<!-- Search box -->
-		<div class="flex justify-center items-center relative w-[50%] pr-[20px]">
+		<div class="relative flex w-[50%] items-center justify-center pr-[20px]">
 			<Search
 				size="md"
 				placeholder="Search {collection.name} ..."
@@ -159,112 +173,103 @@
 			<button
 				type="button"
 				on:click={searchFilter}
-				class="outline-none absolute right-0 mr-[20px] px-2"
+				class="absolute right-0 mr-[20px] px-2 outline-none"
 			>
 				<Icon icon="bi:filter-circle" color="gray" width="22" class="block" />
 			</button>
 		</div>
 
-		<!-- create/delete/publish/unpublish -->
+		<!-- create/publish/unpublish/schedule/clone/delete -->
 		<ButtonGroup>
-			{#if entryButton == 'create'}
-				<Button
-					gradient
-					pill
-					color="lime"
-					class="!p-2 w-[150px] text-xl md:ml-auto"
-					on:click={() => {
-						showFields = true;
-					}}
-				>
-					<Icon icon="ic:round-plus" color="black" width="30" class="mr-1" /> Create
-				</Button>
-				<Tooltip placement="bottom" style="light" class="z-20"
-					>{'Create ' + collection.name}
-				</Tooltip>
-			{:else if entryButton == 'publish'}
-				<Button
-					gradient
-					pill
-					color="blue"
-					class="!p-2 w-[150px] text-xl md:ml-auto"
-					on:click={() => {
-						deleteEntry();
-					}}
-				>
-					<Icon icon="bi:hand-thumbs-up-fill" color="white" width="22" class="mr-1" /> Publish
-				</Button>
-				<Tooltip placement="bottom" style="light" class="z-20"
-					>{'Publish ' + collection.name}
-				</Tooltip>
-			{:else if entryButton == 'unpublish'}
-				<Button
-					pill
-					color="yellow"
-					class="!p-2 w-[150px] text-xl md:ml-auto"
-					on:click={() => {
-						unpublishEntry();
-					}}
-				>
-					<Icon icon="bi:pause-circle" color="white" width="22" class="mr-1" /> Unpublish
-				</Button>
-				<Tooltip placement="bottom" style="light" class="z-20"
-					>{'Unpublish ' + collection.name}
-				</Tooltip>
-			{:else if entryButton == 'schedule'}
-				<Button
-					gradient
-					pill
-					color="pink"
-					class="!p-2 w-[150px] text-xl md:ml-auto"
-					on:click={() => {
-						scheduleEntry();
-					}}
-				>
-					<Icon icon="bi:clock" color="white" width="22" class="mr-1" /> Schedule
-				</Button>
-				<Tooltip placement="bottom" style="light" class="z-20"
-					>{'Schedule ' + collection.name}
-				</Tooltip>
-			{:else if entryButton == 'clone'}
-				<Button
-					pill
-					color="light"
-					class="!p-2 w-[150px] text-xl md:ml-auto"
-					on:click={() => {
-						cloneEntry();
-					}}
-				>
-					<Icon icon="bi:clipboard-data-fill" color="white" width="22" class="mr-1" /> Clone
-				</Button>
-				<Tooltip placement="bottom" style="light" class="z-20"
-					>{'Clone ' + collection.name}
-				</Tooltip>
-			{:else if entryButton == 'delete'}
-				<Button
-					gradient
-					pill
-					color="red"
-					class="!p-2 w-[150px] text-xl md:ml-auto"
-					on:click={() => {
-						deleteEntry();
-					}}
-				>
-					<Icon icon="bi:trash3-fill" color="white" width="22" class="mr-1" /> Delete
-				</Button>
-				<Tooltip placement="bottom" style="light" class="z-20"
-					>{'Delete ' + collection.name}
-				</Tooltip>
-			{/if}
+			{#each ['create', 'publish', 'unpublish', 'schedule', 'clone', 'delete'] as button}
+				{#if entryButton == button}
+					<!-- yellow and clone button gradient not working -->
+					<Button
+						gradient={button == 'create' ||
+							button == 'publish' ||
+							button == 'schedule' ||
+							button == 'delete'}
+						pill
+						color={button == 'create'
+							? 'lime'
+							: button == 'publish'
+							? 'blue'
+							: button == 'unpublish'
+							? 'yellow'
+							: button == 'schedule'
+							? 'pink'
+							: button == 'delete'
+							? 'red'
+							: 'light'}
+						class="w-[150px] !p-2 text-xl md:ml-auto"
+						on:click={() => {
+							if (button == 'create') {
+								showFields = true;
+							} else if (button == 'publish') {
+								publishEntry();
+							} else if (button == 'unpublish') {
+								unpublishEntry();
+							} else if (button == 'schedule') {
+								scheduleEntry();
+							} else if (button == 'clone') {
+								cloneEntry();
+							} else if (button == 'delete') {
+								deleteEntry();
+							}
+						}}
+					>
+						<Icon
+							icon={button == 'create'
+								? 'ic:round-plus'
+								: button == 'publish'
+								? 'bi:hand-thumbs-up-fill'
+								: button == 'unpublish'
+								? 'bi:pause-circle'
+								: button == 'schedule'
+								? 'bi:clock'
+								: button == 'clone'
+								? 'bi:clipboard-data-fill'
+								: 'bi:trash3-fill'}
+							color="white"
+							width="22"
+							class="mr-1"
+						/>
+						{button == 'create'
+							? 'Create'
+							: button == 'publish'
+							? 'Publish'
+							: button == 'unpublish'
+							? 'Unpublish'
+							: button == 'schedule'
+							? 'Schedule'
+							: button == 'clone'
+							? 'Clone'
+							: 'Delete'}
+					</Button>
+					<Tooltip placement="bottom" style="light" class="z-20">
+						{(button == 'create'
+							? 'CREATE '
+							: button == 'publish'
+							? 'PUBLISH '
+							: button == 'unpublish'
+							? 'UnPUBLISH '
+							: button == 'schedule'
+							? 'SCHEDULE '
+							: button == 'clone'
+							? 'CLONE '
+							: 'DELETE ') + collection.name}
+					</Tooltip>
+				{/if}
+			{/each}
 
-			<Button class="px-1 rounded-r-xl "><ChevronDown /></Button>
+			<Button class="rounded-r-xl px-1 "><ChevronDown /></Button>
 			<Dropdown>
 				{#if entryButton == 'create'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'create';
 						}}
-						class="flex justify-start items-center gap-1 text-lg text-black hover:text-white -my-1 bg-lime-500 font-bold gap-1"
+						class="-my-1 flex items-center justify-start gap-1 gap-1 bg-lime-500 text-lg font-bold text-black hover:text-white"
 					>
 						<Icon icon="ic:round-plus" width="22" />
 						Create
@@ -277,7 +282,7 @@
 						on:click={() => {
 							entryButton = 'publish';
 						}}
-						class="flex justify-start items-center gap-1 text-lg text-blue-500 font-bold gap-1"
+						class="flex items-center justify-start gap-1 gap-1 text-lg font-bold text-blue-500"
 					>
 						<Icon icon="bi:hand-thumbs-up-fill" width="20" />
 						Publish
@@ -290,7 +295,7 @@
 						on:click={() => {
 							entryButton = 'unpublish';
 						}}
-						class="flex justify-start items-center gap-1 text-lg text-yellow-300 font-bold gap-1"
+						class="flex items-center justify-start gap-1 gap-1 text-lg font-bold text-yellow-300"
 					>
 						<Icon icon="bi:pause-circle" width="20" />
 						Unpublish
@@ -303,7 +308,7 @@
 						on:click={() => {
 							entryButton = 'schedule';
 						}}
-						class="flex justify-start items-center gap-1 text-lg text-pink-300 font-bold gap-1"
+						class="flex items-center justify-start gap-1 gap-1 text-lg font-bold text-pink-300"
 					>
 						<Icon icon="bi:clock" width="20" />
 						Schedule
@@ -316,7 +321,7 @@
 						on:click={() => {
 							entryButton = 'clone';
 						}}
-						class="flex justify-start items-center gap-1 text-lg font-bold gap-1"
+						class="flex items-center justify-start gap-1 gap-1 text-lg font-bold"
 					>
 						<Icon icon="bi:clipboard-data-fill" width="20" />
 						Clone
@@ -329,7 +334,7 @@
 						on:click={() => {
 							entryButton = 'delete';
 						}}
-						class="flex justify-start items-center text-lg text-red-600 font-bold gap-1"
+						class="flex items-center justify-start gap-1 gap-1 text-lg font-bold text-red-600"
 					>
 						<Icon icon="bi:trash3-fill" width="20" />
 						Delete
@@ -339,45 +344,38 @@
 		</ButtonGroup>
 	</div>
 
+	<!-- show Collection data in table -->
 	<Table hoverable={true} class="relative">
 		<TableHead>
-			<TableHeadCell
-				><div class="flex  justify-center items-center gap-1">
-					#
-					{#if !sort}
-						{#if !order}
-							<button on:click={() => (order = !order)}
-								><div class="flex-col">
-									<Icon icon="bi:caret-up-fill" color="base" width="14" class="" />
-									<Icon icon="bi:caret-down" color="gray" width="14" class="-mt-1" />
-								</div></button
-							>
-						{:else}
-							<button on:click={() => (order = !order)}
-								><div class="flex-col ">
-									<Icon icon="bi:caret-up" color="gray" width="14" class="" />
-									<Icon icon="bi:caret-down-fill" color="base" width="14" class="-mt-1" />
-								</div></button
-							>
-						{/if}
-					{/if}
-				</div></TableHeadCell
-			>
+			<TableHeadCell>
+				<DeleteIcon bind:checked={deleteAll} />
+			</TableHeadCell>
+
+			<TableHeadCell class="dark:text-white">#</TableHeadCell>
+
 			{#each collection.fields as field}
-				<TableHeadCell
-					><div class="flex  justify-center items-center gap-1">
+				<TableHeadCell class="dark:text-white">
+					<div
+						on:click={() => {
+							sort = field.name;
+							order = !order;
+						}}
+						class="flex items-center justify-start gap-1"
+					>
 						{field.title}
+
+						<!-- {#if (sort = field.name)} -->
 						{#if !sort}
 							{#if !order}
-								<button on:click={() => (order = !order)}
-									><div class="flex-col">
+								<button>
+									<div class="flex-col">
 										<Icon icon="bi:caret-up-fill" color="base" width="14" class="" />
 										<Icon icon="bi:caret-down" color="gray" width="14" class="-mt-1" />
 									</div></button
 								>
 							{:else}
-								<button on:click={() => (order = !order)}
-									><div class="flex-col ">
+								<button>
+									<div class="flex-col ">
 										<Icon icon="bi:caret-up" color="gray" width="14" class="" />
 										<Icon icon="bi:caret-down-fill" color="base" width="14" class="-mt-1" />
 									</div></button
@@ -387,9 +385,6 @@
 					</div></TableHeadCell
 				>
 			{/each}
-			<TableHeadCell
-				><DeleteIcon bind:checked={deleteAll} class="ml-auto mr-[25px]" /></TableHeadCell
-			>
 		</TableHead>
 		<TableBody>
 			{#each filtered_entryList as entry, index}
@@ -399,26 +394,27 @@
 						$entryData = entry;
 					}}
 				>
+					<TableBodyCell>
+						<DeleteIcon bind:checked={deleteMap[index]} />
+					</TableBodyCell>
+
 					<TableBodyCell>{index + 1}</TableBodyCell>
 
 					{#each collection.fields as field}
 						{#await field?.display?.(entry[field.title], field, entry)}
-							<TableBodyCell class="text-center">Loading...</TableBodyCell>
+							<TableBodyCell class="">Loading...</TableBodyCell>
 						{:then display}
 							{((entry.displays = {}), '')}
-							<TableBodyCell class="text-center"
-								>{@html (entry.displays[field.title] = display)}</TableBodyCell
+							<TableBodyCell class="">{@html (entry.displays[field.title] = display)}</TableBodyCell
 							>
 						{/await}
 					{/each}
-					<TableBodyCell>
-						<DeleteIcon bind:checked={deleteMap[index]} class="ml-auto mr-[25px]" />
-					</TableBodyCell>
 				</TableBodyRow>
 			{/each}
 		</TableBody>
 	</Table>
-	<div class="flex items-center justify-between gap-2 mt-4">
+
+	<div class="mt-4 flex items-center justify-between gap-2">
 		<div class="text-sm text-gray-700 dark:text-gray-400">
 			Showing <span class="font-semibold text-gray-900 dark:text-white">{helper.start}</span> to
 			<span class="font-semibold text-gray-900 dark:text-white">{helper.end}</span>
@@ -429,12 +425,12 @@
 		<Pagination {pages} on:previous={previous} on:next={next} icon class="shadow-lg">
 			<svelte:fragment slot="prev">
 				<span class="sr-only">Previous</span>
-				<ChevronLeft class="w-5 h-5" />
+				<ChevronLeft class="h-5 w-5" />
 			</svelte:fragment>
 
 			<svelte:fragment slot="next">
 				<span class="sr-only">Next</span>
-				<ChevronRight class="w-5 h-5" />
+				<ChevronRight class="h-5 w-5" />
 			</svelte:fragment>
 		</Pagination>
 	</div>
