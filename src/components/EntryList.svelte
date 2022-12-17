@@ -131,20 +131,6 @@
 		filter = (e.target as HTMLInputElement).value;
 	}
 
-
-	function unpublishEntry() {
-		throw new Error('Function not implemented.');
-	}
-
-
-	function cloneEntry() {
-		throw new Error('Function not implemented.');
-	}
-
-
-	function scheduleEntry() {
-		throw new Error('Function not implemented.');
-	}
 </script>
 
 <div class="relative">
