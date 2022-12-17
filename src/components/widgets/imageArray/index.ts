@@ -1,29 +1,24 @@
 // ImageArray - allows multiple image upload with editor
 import type { Display } from '../types';
-
+import type ImageUpload from '../imageUpload';
+import type { Field, Params } from './types';
 export default ({
 	// Accept parameters from collection
 	title,
+	imageUploadTitle,
 	icon,
 	fields,
 	required,
 	display
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	required?: boolean;
-	fields: Array<any>;
-	display?: Display;
-}) => {
-	let uploader = fields.find((x) => (x.upload = true));
+}: Params) => {
+	let uploader = fields.find((x) => (imageUploadTitle == x.title));
 	if (!display)
 		display = async (data: any, field: any, entry: any) =>
 			`<img class='max-w-[200px] inline-block' src="${uploader.path}/${
 				entry[uploader.title].originalname
 			}" />`;
 
-	let field: any = { schema: {}, title, icon, upload: true, fields, required, display };
+	let field:Field = { schema: {}, title,imageUploadTitle, icon, upload: true, fields, required, display } as Field;
 
 	field.schema[title] = {
 		originalname: 'string',

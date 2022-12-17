@@ -1,3 +1,4 @@
+import env from '../../env';
 import widgets from '../components/widgets';
 
 import Posts from './Posts';
@@ -27,8 +28,9 @@ let schema: Schema = {
 							title: 'bla_name',
 							icon: 'ri:t-box-line',
 							relation: Posts,
-							display: async (data: any, field: any, entry: any) => {
-								return data.name;
+							display: (data: any, field: any, entry: any) => {
+								
+								return data.name[env.LANGUAGE];
 							}
 						})
 					]

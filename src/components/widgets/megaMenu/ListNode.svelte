@@ -6,7 +6,7 @@
 	export let level: number = 0;
 	export let editing: boolean = false;
 	export let showLevelContent: boolean = false;
-	import { MenuCurrentChild } from '@src/stores/store';
+	import { MenuCurrentChild,language } from '@src/stores/store';
 	import { Button } from 'flowbite-svelte';
 	let expanded = false;
 </script>
@@ -17,7 +17,7 @@
 			{#if children?.length > 0}
 				<div class="arrow" class:expanded />
 			{/if}
-			{self?.name}
+			{self?.Name[$language]}
 		</p>
 		{#if level > 0}
 			<Button

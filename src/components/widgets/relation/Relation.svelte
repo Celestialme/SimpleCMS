@@ -8,9 +8,9 @@
 
 	export let field: any;
 	export let value: any;
-	export let widgetValue = value; // is relative data id
+	export let widgetValue:string|null; // is relative data id
+	$:widgetValue = typeof value == "string"? value : widgetValue // widgetvalue is id, type is String, we need to update it later when value is changed.
 	export let root: boolean = true;
-
 	let expanded: boolean = false;
 	let inputFields: HTMLDivElement[] = [];
 	let fieldsValue = {};
@@ -29,7 +29,7 @@
 		if (!selected) {
 			let relationField = fieldsValue;
 			widgetValue =
-				(await saveSimpleData(field.relation, relationField, widgetValue, !widgetValue)).data[0]
+				(await saveSimpleData(field.relation, relationField, widgetValue as string, !widgetValue)).data[0]
 					?._id || widgetValue;
 		} else {
 			widgetValue = selected._id;
@@ -37,13 +37,17 @@
 		obj[field.title] = widgetValue;
 	};
 	(async () => {
+		
 		if (value && typeof value == 'string') {
-			console.log(value);
-			value = await findById(value, field.relation);
+		
+			 value = await findById(value, field.relation);
+		
 			//if we dont have display from entrylist already, generate new one
+			
 			display =
 				(value && $entryData?.displays?.[field.title]) ||
-				(value && (await field.display(widgetValue, field, $entryData)));
+				(value && widgetValue && (await field.display(widgetValue, field, $entryData)));
+				
 		}
 	})();
 
@@ -79,8 +83,9 @@
 			class=" mr-1 btn btn-small">{value ? '✎' : '+'}</Button
 		>
 
-		<DropDown bind:showDropDown {dropDownData} bind:selected display={field.rawDisplay} />
+		
 	</div>
+	<DropDown bind:showDropDown {dropDownData} bind:selected display={field.rawDisplay} />
 {:else}
 	<div class="p-[20px] my-4 rounded-lg border-2 border-[#8cccff] relative">
 		<Button

@@ -1,3 +1,4 @@
+import env from '../../env';
 import widgets from '../components/widgets';
 import Posts from './Posts';
 import type { Schema } from './types';
@@ -11,10 +12,11 @@ let schema: Schema = {
 	fields: [
 		widgets.ImageArray({
 			title: 'ImageArray',
+			imageUploadTitle:"Multi Image Array",
 			fields: [
 				widgets.ImageUpload({ title: 'Multi Image Array', path: 'media/image_array' }),
 
-				widgets.Text({ title: 'Name', icon: 'ri:t-box-line' }),
+				widgets.Text({ title: 'Name', icon: 'ri:t-box-line',localization:true }),
 				widgets.Text({ title: 'Alt-Text', icon: 'ic:outline-loyalty' }),
 				widgets.Text({ title: 'Alt-Title', icon: 'ri:t-box-line' }),
 
@@ -23,7 +25,7 @@ let schema: Schema = {
 					icon: 'mdi:relation-many-to-one',
 					relation: Posts,
 					display: async (data: any, field: any, entry: any) => {
-						return data.Name;
+						return data.name[env.LANGUAGE];
 					}
 				})
 			]

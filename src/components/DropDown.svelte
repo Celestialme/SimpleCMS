@@ -37,9 +37,7 @@
 {/if}
 <style>
     .container{
-        position: absolute;
-        top: 100%;
-        left:0;
+       
         background-color:white;
         margin-top: 5px;
         border-bottom-left-radius: 6px;

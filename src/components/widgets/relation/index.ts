@@ -18,9 +18,10 @@ export default ({
 	display?: Display;
 }) => {
 	let _display: Display | undefined;
-	if (!display) display = async (data: any, field: any, entry: any) => data;
+	if (!display) display = async (data: any, field: any, entry: any) => data; //default
 	else
 		_display = async (data: any, field: any, entry: any) => {
+			console.log(data)
 			let _data = await findById(data, relation);
 			return await (display as Display)(_data, field, entry);
 		};

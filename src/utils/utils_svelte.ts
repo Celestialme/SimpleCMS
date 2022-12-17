@@ -9,7 +9,6 @@ export async function shape_fields(fields: Array<any>) {
 	let _fields = [];
 	if (!fields) return [];
 	for (let field of fields) {
-		console.log(field);
 		_fields.push({ widget: await field.widget(), field });
 	}
 	return _fields;
@@ -22,7 +21,18 @@ export async function saveFormData(collection: Schema) {
 		let data = await getData();
 
 		for (let key in data) {
-			formData.append(key, JSON.stringify(data[key]));
+			console.log(data[key])
+			if (data[key] instanceof FileList) {
+				for (let _key in data[key]) {
+					// for multiple files
+					console.log(data[key]);
+					formData.append(key, data[key][_key]);
+				}
+			} else if(typeof data[key] === 'object') {
+				formData.append(key, JSON.stringify(data[key]));
+			}else  {
+				formData.append(key, data[key]);
+			}
 		}
 	}
 	return await saveData(collection, formData);
@@ -36,13 +46,16 @@ export async function saveSimpleData(
 ) {
 	let formData = new FormData();
 	for (let key in data) {
-		if (typeof data[key] == 'object') {
+		console.log(data[key])
+		if (data[key] instanceof FileList) {
 			for (let _key in data[key]) {
 				// for multiple files
 				console.log(data[key]);
 				formData.append(key, data[key][_key]);
 			}
-		} else {
+		} else if(typeof data[key] === 'object') {
+			formData.append(key, JSON.stringify(data[key]));
+		}else  {
 			formData.append(key, data[key]);
 		}
 	}

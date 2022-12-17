@@ -1,7 +1,7 @@
 import Posts from './Posts';
 import widgets from '../components/widgets';
 import type { Schema } from './types';
-
+import env from "../../env"
 let schema: Schema = {
 	// Collection Name & Icon (optional) shown on Sidebar
 	// See for possible Icons https://icon-sets.iconify.design/
@@ -18,7 +18,8 @@ let schema: Schema = {
 			icon: 'ri:t-box-line',
 			relation: Posts,
 			display: async (data: any, field: any, entry: any) => {
-				return data.Name;
+			
+				return data.name[env.LANGUAGE];
 			}
 		})
 	]

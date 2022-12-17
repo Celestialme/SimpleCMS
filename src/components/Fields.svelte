@@ -16,6 +16,7 @@
 	onMount(async () => {
 		$getFieldsData.add(getData);
 	});
+	$:console.log(fieldsValue);
 </script>
 
 {#each fields as field, index}
@@ -47,7 +48,7 @@
 				{collection}
 				bind:widgetValue={fieldsValue[field.field.title]}
 				{root}
-				value={value ? value?.[field.field.title] : $entryData?.[field.field.title] || {}}
+				value={value ? value?.[field.field.title] : $entryData?.[field.field.title] || null}
 				field={field.field}
 			/>
 		{/if}

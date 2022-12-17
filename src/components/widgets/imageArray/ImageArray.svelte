@@ -1,16 +1,17 @@
 <script lang="ts">
-	import Fields from "@src/components/Fields.svelte";
-	import { saveSimpleData, shape_fields } from "@src/utils/utils_svelte";
-	import { entryData } from "@src/stores/store";
+	import type { Field } from './types';
+	import Fields from '@src/components/Fields.svelte';
+	import { saveSimpleData, shape_fields } from '@src/utils/utils_svelte';
+	import { entryData } from '@src/stores/store';
 
-	export let field = { title: "", fields: [] };
+	export let field: Field;
 	export let collection: any;
-	export let value: any;
+	// export let value: any;
 
 	let _fieldsValue: any = [];
 	let fields: any;
 	let files: any = [];
-
+	$: console.log(_fieldsValue);
 	let getData = async () => {
 		for (let i = 0; i < files.length; i++) {
 			let fieldsData = _fieldsValue[i];
@@ -22,6 +23,7 @@
 			await saveSimpleData(collection, fieldsData);
 		}
 	};
+
 	shape_fields(field.fields).then((data) => (fields = data));
 </script>
 
@@ -34,18 +36,12 @@
 				root={false}
 				{fields}
 				bind:fieldsValue={_fieldsValue[index]}
-				value={{ "Multi Image Array": file }}
+				value={{ [field.imageUploadTitle]: file }}
 			/>
 		</div>
 	{/each}
 {:else if $entryData}
-	<Fields
-		{getData}
-		{collection}
-		{fields}
-		bind:fieldsValue={_fieldsValue}
-		{value}
-	/>
+	<Fields {getData} {collection} {fields} bind:fieldsValue={_fieldsValue} value={$entryData} />
 {:else}
 	<input
 		bind:files

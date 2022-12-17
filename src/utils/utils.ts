@@ -76,6 +76,7 @@ return obj
 
 
 export async  function findById(id:string,collection:Schema){
+    if(!id || !collection)return
     return (await axios.get(`${env.HOST}:${env.PORT}/api/findById?collection=${collection.name}&id=${id}`)).data
  }
 

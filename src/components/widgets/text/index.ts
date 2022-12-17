@@ -1,4 +1,4 @@
-import type { Display } from '../types';
+import type { Field, Params } from './types';
 export default ({
 	title,
 	icon,
@@ -7,17 +7,9 @@ export default ({
 	prefix,
 	suffix,
 	required,
+	localization,
 	display
-}: {
-	title: string;
-	icon?: string;
-	placeholder?: string;
-	count?: string;
-	prefix?: string;
-	suffix?: string;
-	required?: boolean;
-	display?: Display;
-}) => {
+}:Params) => {
 	
 	if (!display) display = async (data: any, field: any, entry: any) => {
 		let {language} = await import ("../../../stores/store")
@@ -25,7 +17,7 @@ export default ({
 		return data[get(language)] || ""
 	
 	};
-	let field: any = {
+	let field:Field = {
 		schema: {},
 		title,
 		icon,
@@ -34,8 +26,9 @@ export default ({
 		prefix,
 		suffix,
 		required,
+		localization,
 		display
-	};
+	} as Field;
 	field.schema[title] = {String:String};
 	field.widget = async () => {
 		// @ts-ignore

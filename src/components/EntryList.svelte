@@ -76,7 +76,6 @@
 			return filter ? Object.values(item).some((x) => x.toString().includes(filter)) : true;
 		});
 		filter;
-		console.log(filter);
 	}
 
 	function process_deleteAll(deleteAll: boolean) {
@@ -116,6 +115,21 @@
 	}
 	function search(e: Event) {
 		filter = (e.target as HTMLInputElement).value;
+	}
+
+
+	function unpublishEntry() {
+		throw new Error('Function not implemented.');
+	}
+
+
+	function cloneEntry() {
+		throw new Error('Function not implemented.');
+	}
+
+
+	function scheduleEntry() {
+		throw new Error('Function not implemented.');
 	}
 </script>
 
@@ -245,7 +259,7 @@
 
 			<Button class="px-1 rounded-r-xl "><ChevronDown /></Button>
 			<Dropdown>
-				{#if entryButton == 'create'}{:else}
+				{#if entryButton == 'create'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'create';
@@ -258,7 +272,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'publish'}{:else}
+				{#if entryButton == 'publish'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'publish';
@@ -271,7 +285,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'unpublish'}{:else}
+				{#if entryButton == 'unpublish'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'unpublish';
@@ -284,7 +298,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'schedule'}{:else}
+				{#if entryButton == 'schedule'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'schedule';
@@ -297,7 +311,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'clone'}{:else}
+				{#if entryButton == 'clone'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'clone';
@@ -310,12 +324,12 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'delete'}{:else}
+				{#if entryButton == 'delete'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'delete';
 						}}
-						class="flex justify-start items-center gap-1 text-lg text-red-600 font-bold gap-1"
+						class="flex justify-start items-center text-lg text-red-600 font-bold gap-1"
 					>
 						<Icon icon="bi:trash3-fill" width="20" />
 						Delete
