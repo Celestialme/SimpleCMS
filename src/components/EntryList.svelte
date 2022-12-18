@@ -130,7 +130,6 @@
 	function search(e: Event) {
 		filter = (e.target as HTMLInputElement).value;
 	}
-
 </script>
 
 <div class="relative">
@@ -184,7 +183,7 @@
 							? 'yellow'
 							: button == 'schedule'
 							? 'pink'
-							: button == 'delete'
+							: button == 'clone'
 							? 'red'
 							: 'light'}
 						class="w-[150px] !p-2 text-xl md:ml-auto"
@@ -250,7 +249,7 @@
 
 			<Button class="rounded-r-xl px-1 "><ChevronDown /></Button>
 			<Dropdown>
-				{#if entryButton == 'create'}
+				{#if entryButton == 'create'}{:else}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'create';
@@ -263,7 +262,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'publish'}
+				{#if entryButton == 'publish'}{:else}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'publish';
@@ -276,7 +275,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'unpublish'}
+				{#if entryButton == 'unpublish'}{:else}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'unpublish';
@@ -289,7 +288,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'schedule'}
+				{#if entryButton == 'schedule'}{:else}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'schedule';
@@ -302,7 +301,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'clone'}
+				{#if entryButton == 'clone'}{:else}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'clone';
@@ -315,7 +314,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'delete'}
+				{#if entryButton == 'delete'}{:else}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'delete';

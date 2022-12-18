@@ -16,21 +16,21 @@
 	onMount(async () => {
 		$getFieldsData.add(getData);
 	});
-	$:console.log(fieldsValue);
+	$: console.log(fieldsValue);
 </script>
 
 {#each fields as field, index}
-	<div bind:this={inputFields[index]} class="section my-2 relative">
-		<div class=" font-bold flex capitalize relative">
+	<div bind:this={inputFields[index]} class="section relative my-2">
+		<div class=" relative flex font-bold capitalize">
 			<p class=" font-bold">
 				{field.field.title}
 				{#if field.field.required}
-					<span class="text-red-500 ml-1 pb-3">*</span>
+					<span class="ml-1 pb-3 text-red-500">*</span>
 				{/if}
 			</p>
 			<div class="absolute right-0 flex gap-4">
 				{#if field.field.localization}
-					<div class="flex items-center px-2 gap-1">
+					<div class="flex items-center gap-1 px-2">
 						<Icon icon="bi:translate" color="dark" width="18" class="text-sm" />
 						<div class="text-xs font-normal text-red-500">EN</div>
 					</div>
