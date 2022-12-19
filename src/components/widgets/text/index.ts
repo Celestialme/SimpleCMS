@@ -1,5 +1,6 @@
-import type { Field, Params } from './types';
-export default ({
+import env  from '@root/env';
+import type { Text_Field, Text_Params } from './types';
+let widget = ({
 	title,
 	icon,
 	placeholder,
@@ -9,15 +10,16 @@ export default ({
 	required,
 	localization,
 	display
-}:Params) => {
+}:Text_Params) => {
 	
 	if (!display) display = async (data: any, field: any, entry: any) => {
 		let {language} = await import ("../../../stores/store")
 		let {get} = await import('svelte/store')
-		return data[get(language)] || ""
+		let _language = localization?get(language):env.LANGUAGE
+		return data[_language] || "No Value"
 	
 	};
-	let field:Field = {
+	let field = {
 		schema: {},
 		title,
 		icon,
@@ -28,7 +30,7 @@ export default ({
 		required,
 		localization,
 		display
-	} as Field;
+	} as Text_Field;
 	field.schema[title] = {String:String};
 	field.widget = async () => {
 		// @ts-ignore
@@ -36,3 +38,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget

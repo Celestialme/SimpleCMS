@@ -1,23 +1,17 @@
 // Date Widget
 import type { Display } from "../types";
+import type { Date_Field, Date_Params } from "./types";
 
-export default ({
+let widget =  ({
 	// Defines type of collections
 	title,
 	icon,
 	required,
 	display,
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	required?: boolean;
-	localization?: boolean;
-	display?: Display;
-}) => {
+}: Date_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, required, display };
+	let field = { schema: {}, title, icon, required, display } as Date_Field;
 	field.schema[title] = "string";
 
 	field.widget = async () => {
@@ -26,3 +20,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget

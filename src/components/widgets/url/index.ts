@@ -1,4 +1,5 @@
 import type { Display } from "../types";
+import type { Url_Params,Url_Field } from "./types";
 
 export default ({
 	// Accept parameters from collection
@@ -8,18 +9,10 @@ export default ({
 	required,
 	localization,
 	display,
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	placeholder?: string;
-	required?: boolean;
-	localization?: boolean;
-	display?: Display;
-}) => {
+}: Url_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, placeholder, required, localization, display };
+	let field = { schema: {}, title, icon, placeholder, required, localization, display } as Url_Field;
 
 	field.schema[title] = "string";
 

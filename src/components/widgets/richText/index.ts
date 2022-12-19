@@ -1,6 +1,6 @@
 import type { Display } from '../types';
 
-export default ({
+let widget =  ({
 	title,
 	required,
 	localization,
@@ -26,3 +26,4 @@ export default ({
 	};
 	return field;
 };
+export default widget

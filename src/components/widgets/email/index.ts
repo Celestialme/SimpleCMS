@@ -1,6 +1,7 @@
 import type { Display } from "../types";
+import type { Email_Field, Email_Params } from "./type";
 
-export default ({
+let widget = ({
 	// Accept parameters from collection
 	title,
 	icon,
@@ -8,18 +9,10 @@ export default ({
 	required,
 	localization,
 	display,
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	placeholder?: string;
-	required?: boolean;
-	localization?: boolean;
-	display?: Display;
-}) => {
+}: Email_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, placeholder, required, localization, display };
+	let field  = { schema: {}, title, icon, placeholder, required, localization, display } as Email_Field;
 
 	field.schema[title] = "string";
 
@@ -29,3 +22,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget

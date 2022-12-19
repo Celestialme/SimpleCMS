@@ -1,24 +1,17 @@
 // DateRange Widget
 import type { Display } from "../types";
-
-export default ({
+import type { DateRange_Field, DateRange_Params } from "./type";
+let widget =  ({
 	// Defines type of collections
 	title,
 	icon,
 	format,
 	required,
 	display,
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	format?: string;
-	required?: boolean;
-	display?: Display;
-}) => {
+}: DateRange_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, format, required, display };
+	let field  = { schema: {}, title, icon, format, required, display } as DateRange_Field;
 
 	field.schema[title] = "string";
 
@@ -28,3 +21,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget

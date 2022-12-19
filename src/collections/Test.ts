@@ -70,7 +70,7 @@ let schema: Schema = {
 			localization: true
 		}),
 
-		widgets.RichText({ title: 'rich text' })
+		// widgets.RichText({ title: 'rich text' })
 	]
 };
 export default schema;

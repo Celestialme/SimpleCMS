@@ -1,22 +1,15 @@
 import { findById } from '../../../utils/utils';
-import type { Schema } from '../../../collections/types';
+
 import type { Display } from '../types';
-export default ({
+import type { Relation_Params, Relation_Field } from './types';
+let widget =  ({
 	// Accept parameters from collection
 	title,
 	icon,
 	required,
 	relation,
 	display
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	required?: boolean;
-	relation: Schema;
-
-	display?: Display;
-}) => {
+}:Relation_Params) => {
 	let _display: Display | undefined;
 	if (!display) display = async (data: any, field: any, entry: any) => data; //default
 	else
@@ -26,7 +19,7 @@ export default ({
 			return await (display as Display)(_data, field, entry);
 		};
 	if (!_display) _display = display;
-	let field: any = {
+	let field = {
 		schema: {},
 		title,
 		icon,
@@ -35,7 +28,7 @@ export default ({
 		relation,
 		display: _display,
 		rawDisplay: display
-	};
+	}as Relation_Field;
 
 	field.schema[title] = 'string';
 
@@ -45,3 +38,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget

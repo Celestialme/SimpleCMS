@@ -1,8 +1,9 @@
 import type { Display } from "../types";
-export default ({ title, path = "", display }: { title: string; path: string; display?: Display }) => {
+import type { ImageUpload_Field, ImageUpload_Params } from "./types";
+let widget =  ({ title, path = "", display }: ImageUpload_Params) => {
   if (!display) display = async (data: any, field: any, entry: any) => `<img class='max-w-[200px] inline-block' src="${path}/${data.originalname}" />`;
 
-  let field: any = { schema: {}, title, upload: true, path, display };
+  let field = { schema: {}, title, upload: true, path, display } as ImageUpload_Field;
   field.schema[title] = {
     originalname: "string",
     encoding: "string",
@@ -17,3 +18,5 @@ export default ({ title, path = "", display }: { title: string; path: string; di
   };
   return field;
 };
+
+export default widget

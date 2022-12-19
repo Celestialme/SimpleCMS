@@ -1,21 +1,16 @@
 import type { Display } from '../types';
+import type { Address_Field, Address_Params } from './types';
 
-export default ({
+let widget =  ({
 	// Accept parameters from collection
 	title,
 	icon,
 	required,
 	display
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	required?: boolean;
-	display?: Display;
-}) => {
+}: Address_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, required, display };
+	let field = { schema: {}, title, icon, required, display } as Address_Field;
 
 	field.schema[title] = 'string';
 
@@ -25,3 +20,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget

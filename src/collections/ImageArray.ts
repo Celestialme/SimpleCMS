@@ -1,4 +1,4 @@
-import env from '../../env';
+import env from '@root/env';
 import widgets from '../components/widgets';
 import Posts from './Posts';
 import type { Schema } from './types';
@@ -14,8 +14,8 @@ let schema: Schema = {
 			title: 'ImageArray',
 			imageUploadTitle:"Multi Image Array",
 			fields: [
+				
 				widgets.ImageUpload({ title: 'Multi Image Array', path: 'media/image_array' }),
-
 				widgets.Text({ title: 'Name', icon: 'ri:t-box-line',localization:true }),
 				widgets.Text({ title: 'Alt-Text', icon: 'ic:outline-loyalty' }),
 				widgets.Text({ title: 'Alt-Title', icon: 'ri:t-box-line' }),

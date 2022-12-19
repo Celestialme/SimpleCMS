@@ -1,26 +1,20 @@
 import type { Display } from '../types';
-export default ({
+import type { MegaMenu_Field, MegaMenu_Params } from './types';
+let widget =  ({
 	// Accept parameters from collection
 	title,
 	menu,
 	required,
 	localization,
 	display
-}: {
-	// Defines type of collections
-	title: string;
-	menu: object;
-	required?: boolean;
-	localization?: boolean;
-	display?: Display;
-}) => {
+}: MegaMenu_Params) => {
 	if (!display) display = async (data: any, field: any, entry: any) => {
 		let { language } = await import('../../../stores/store')
 		let { get } = await import('svelte/store')
 		return data.Name[get(language)]
 	};
 
-	let field: any = { schema: {}, title, menu, strict: false, required, localization, display };
+	let field = { schema: {}, title, menu, strict: false, required, localization, display } as MegaMenu_Field;
 
 	field.schema[title] = {};
 
@@ -30,3 +24,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget

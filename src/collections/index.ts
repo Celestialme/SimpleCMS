@@ -6,13 +6,12 @@ import Media from './Media';
 import Menu from './Menu';
 import ImageArray from './ImageArray';
 
-//import ImageArray from './ImageArray';
 
 let categories = [
 	{
 		category: 'Collections',
 		icon: 'bi:collection',
-		collections: [Test, Posts, Menu]
+		collections: [Test,Posts, Menu]
 	},
 	{
 		category: 'Media',

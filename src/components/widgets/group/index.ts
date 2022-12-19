@@ -1,15 +1,11 @@
 import type { Display } from "../types";
-export default ({
+import type { Group_Field, Group_Params } from "./type";
+let widget = ({
 	title,
 	fields,
 	required,
 	display,
-}: {
-	title: string;
-	required?: boolean;
-	fields: Array<any>;
-	display?: Display;
-}) => {
+}: Group_Params) => {
 	let uploader = fields.find((x) => (x.upload = true));
 	if (!display)
 		display = async (data: any, field: any, entry: any) =>
@@ -17,7 +13,7 @@ export default ({
 				entry[uploader.title].originalname
 			}" />`;
 
-	let field: any = { schema: {}, title, upload: true, fields, required, display };
+	let field  = { schema: {}, title, upload: true, fields, required, display } as Group_Field;
 
 	field.schema[title] = {
 		originalname: "string",
@@ -33,3 +29,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget

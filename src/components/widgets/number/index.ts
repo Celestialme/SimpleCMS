@@ -1,23 +1,17 @@
 import type { Display } from "../types";
+import type { Number_Field, Number_Params } from "./types";
 
-export default ({
+let widget = ({
 	// Accept parameters from collection
 	title,
 	icon,
 	placeholder,
 	required,
 	display,
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	placeholder?: string;
-	required?: boolean;
-	display?: Display;
-}) => {
+}:Number_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, placeholder, required, display };
+	let field = { schema: {}, title, icon, placeholder, required, display } as Number_Field;
 
 	field.schema[title] = "string";
 
@@ -27,3 +21,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget
