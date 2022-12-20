@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { Button, Input, Label, Dropdown, DropdownItem, Search } from 'flowbite-svelte';
 
+	import { Map, Marker } from '@beyonk/svelte-mapbox';
+	import env from '@root/env';
+	let mapComponent;
+
+	function onReady() {
+		mapComponent.flyTo({ center: [51.3405894, 6.6066283] });
+	}
+
 	export let field: any = undefined;
 	export let value = '';
 
@@ -9,6 +17,16 @@
 </script>
 
 <address>
+	<!-- TODo: MAP Not working yet  -->
+	<Map
+		accessToken={env.MAPBOX_TOKEN}
+		style="mapbox://styles/mapbox/streets-v12"
+		bind:this={mapComponent}
+		on:ready={onReady}
+	>
+		<Marker lat="51.3405894" lng="6.6066283" label="Asset-Trade" />
+	</Map>
+
 	<form>
 		<Label for="name">Name</Label>
 		<Input required type="text" id="name" name="name" autocomplete="name" />
@@ -52,7 +70,7 @@
 			autocomplete="country"
 			enterkeyhint="done"
 			required
-			class="overflow-y-auto px-3 pb-3 text-sm h-44"
+			class="h-44 overflow-y-auto px-3 pb-3 text-sm"
 		>
 			<DropdownItem value="AF">Afghanistan</DropdownItem>
 			<DropdownItem value="AX">Åland Islands</DropdownItem>

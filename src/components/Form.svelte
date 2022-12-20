@@ -17,12 +17,12 @@
 	let open = false;
 </script>
 
-<div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded overflow-y-auto">
-	<div class="flex justify-start mb-5 font-bold relative  overflow-visible ">
-		<div class="flex flex-col w-80">
-			<div class="text-gray-400 text-sm capitalize mb-2">Create</div>
+<div class="fields text-dark overflow-y-auto rounded bg-white p-3 dark:bg-gray-800 dark:text-white">
+	<div class="relative mb-5 flex justify-start overflow-visible  font-bold ">
+		<div class="flex w-80 flex-col">
+			<div class="mb-2 text-sm capitalize text-gray-400">Create</div>
 			<div
-				class="-mt-2 text-sm md:text-xl xl:text-2xl dark:text-white font-bold uppercase flex justify-start items-center "
+				class="-mt-2 flex items-center justify-start text-sm font-bold uppercase dark:text-white md:text-xl xl:text-2xl "
 			>
 				<span> <Icon icon={collection?.icon} width="24" class="mr-2" /></span>{collection?.name}
 			</div>
@@ -32,7 +32,7 @@
 			pill={true}
 			size="sm"
 			color="light"
-			class="absolute w-[200px] px-6 py-2 right-14 hover:bg-gray-100 dark:hover:bg-gray-700"
+			class="absolute right-14 px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 md:w-[200px]"
 			><Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
 			<Chevron>{env.translations[$language]}</Chevron></Button
 		>
@@ -49,7 +49,7 @@
 		<Tooltip placement="bottom" color="gray">Current Content Language</Tooltip>
 
 		<CloseButton
-			class="absolute dark:text-white right-0"
+			class="absolute right-0 dark:text-white"
 			on:click={() => {
 				showFields = false;
 				$entryData = new Set();
@@ -58,7 +58,7 @@
 		<Tooltip placement="bottom" class="z-20">Close without saving</Tooltip>
 	</div>
 	{#if fields.some((field) => field.field.required)}
-		<div class="text-red-500 text-md text-center -mt-3">* Required</div>
+		<div class="text-md -mt-3 text-center text-red-500">* Required</div>
 	{/if}
 	<Fields {collection} {fields} />
 </div>
