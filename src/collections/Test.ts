@@ -15,7 +15,8 @@ let schema: Schema = {
 			title: 'First',
 			icon: 'ri:t-box-line',
 			placeholder: 'Enter First Name',
-			required: true
+			required: true,
+			localization: true
 			// entry_list: false,
 
 			// localization: {DE, ES,}
@@ -68,7 +69,7 @@ let schema: Schema = {
 			placeholder: 'Enter Website',
 			required: true,
 			localization: true
-		}),
+		})
 
 		// widgets.RichText({ title: 'rich text' })
 	]

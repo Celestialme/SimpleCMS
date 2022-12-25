@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { entryData, getFieldsData } from '@src/stores/store';
+	import { entryData, getFieldsData, language } from '@src/stores/store';
+	import env from '@root/env';
 	import type { Schema } from '@src/collections/types';
 	import { onMount } from 'svelte';
 	import Icon from '@iconify/svelte';
@@ -32,7 +33,7 @@
 				{#if field.field.localization}
 					<div class="flex items-center gap-1 px-2">
 						<Icon icon="bi:translate" color="dark" width="18" class="text-sm" />
-						<div class="text-xs font-normal text-red-500">EN</div>
+						<div class="text-xs font-normal text-red-500">{env.translations[$language]}</div>
 					</div>
 				{/if}
 				{#if field.field.icon}
@@ -42,6 +43,7 @@
 				{/if}
 			</div>
 		</div>
+		<!-- display all widget fields -->
 		{#if field.widget}
 			<svelte:component
 				this={field.widget}

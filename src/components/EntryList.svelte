@@ -5,9 +5,8 @@
 	import { onMount } from 'svelte';
 	import DeleteIcon from './icons/DeleteIcon.svelte';
 	import {
-		Button,
 		ButtonGroup,
-		ChevronDown,
+		Chevron,
 		ChevronLeft,
 		ChevronRight,
 		Dropdown,
@@ -15,7 +14,6 @@
 		DropdownDivider,
 		NavHamburger,
 		Pagination,
-		Search,
 		Table,
 		TableBody,
 		TableBodyCell,
@@ -36,6 +34,7 @@
 	let entryList: any = [];
 	let deleteMap: any = {};
 	let deleteAll = false;
+	let open = false;
 
 	$: process_deleteAll(deleteAll);
 	$: deleteMode = Object.values(deleteMap).includes(true);
@@ -127,6 +126,8 @@
 	function searchFilter() {
 		alert('filter added soon');
 	}
+
+	// Language filter incorrect
 	function search(e: Event) {
 		filter = (e.target as HTMLInputElement).value;
 	}
@@ -145,111 +146,143 @@
 			</div>
 		</div>
 
-		<!-- expanding search -->
-		<!-- Search box -->
-		<div class="relative flex w-[50%] items-center justify-center pr-[20px]">
-			<Search
-				size="md"
-				placeholder="Search {collection.name} ..."
-				hoverable={true}
-				on:keyup={search}
-				class="p-2"
-			/>
-			<button
-				type="button"
-				on:click={searchFilter}
-				class="absolute right-0 mr-[20px] px-2 outline-none"
-			>
-				<Icon icon="bi:filter-circle" color="gray" width="22" class="block" />
-			</button>
+		<!-- expanding Search box -->
+		<div class="mx-auto max-w-md">
+			<form action="" class="relative mx-auto w-max">
+				<input
+					on:keyup={search}
+					placeholder="Search {collection.name} ..."
+					class="peer relative z-10 h-12 w-12 cursor-pointer rounded-full border bg-transparent pl-12 text-black outline-none focus:w-full focus:cursor-text focus:pl-16 focus:pr-4 dark:bg-gray-500/50 dark:text-white md:w-full "
+				/>
+				<!-- <Icon icon="ic:baseline-search" height="24" class=" text-gray-400" /> -->
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-white px-3.5 "
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					stroke-width="2"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+					/>
+				</svg>
+			</form>
 		</div>
+
+		<!-- language switcher for entryList -->
+		<button
+			class="flex items-center  justify-center rounded-lg bg-gray-600  py-3 pl-3 pr-1 text-white  hover:bg-gray-700"
+			><Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
+			<Chevron>
+				<!-- <div class="hidden md:block">
+					{env.translations[$language]}
+				</div> -->
+			</Chevron>
+		</button>
+		<Dropdown bind:open>
+			{#each Object.keys(env.translations) as _language}
+				<!-- TODO: Dont display active language -->
+				<DropdownItem
+					on:click={() => {
+						$language = _language;
+						open = false;
+					}}
+					>{env.translations[_language]}
+				</DropdownItem>
+			{/each}
+		</Dropdown>
 
 		<!-- create/publish/unpublish/schedule/clone/delete -->
 		<ButtonGroup>
-			{#each ['create', 'publish', 'unpublish', 'schedule', 'clone', 'delete'] as button}
-				{#if entryButton == button}
-					<!-- yellow and clone button gradient not working -->
-					<Button
-						gradient={button == 'create' ||
-							button == 'publish' ||
-							button == 'schedule' ||
-							button == 'delete'}
-						pill
-						color={button == 'create'
-							? 'lime'
-							: button == 'publish'
-							? 'blue'
-							: button == 'unpublish'
-							? 'yellow'
-							: button == 'schedule'
-							? 'pink'
-							: button == 'clone'
-							? 'red'
-							: 'light'}
-						class="w-[150px] !p-2 text-xl md:ml-auto"
-						on:click={() => {
-							if (button == 'create') {
-								showFields = true;
-							} else if (button == 'publish') {
-								publishEntry();
-							} else if (button == 'unpublish') {
-								unpublishEntry();
-							} else if (button == 'schedule') {
-								scheduleEntry();
-							} else if (button == 'clone') {
-								cloneEntry();
-							} else if (button == 'delete') {
-								deleteEntry();
-							}
-						}}
-					>
-						<Icon
-							icon={button == 'create'
-								? 'ic:round-plus'
-								: button == 'publish'
-								? 'bi:hand-thumbs-up-fill'
-								: button == 'unpublish'
-								? 'bi:pause-circle'
-								: button == 'schedule'
-								? 'bi:clock'
-								: button == 'clone'
-								? 'bi:clipboard-data-fill'
-								: 'bi:trash3-fill'}
-							color="white"
-							width="22"
-							class="mr-1"
-						/>
-						{button == 'create'
-							? 'Create'
-							: button == 'publish'
-							? 'Publish'
-							: button == 'unpublish'
-							? 'Unpublish'
-							: button == 'schedule'
-							? 'Schedule'
-							: button == 'clone'
-							? 'Clone'
-							: 'Delete'}
-					</Button>
-					<Tooltip placement="bottom" style="light" class="z-20">
-						{(button == 'create'
-							? 'CREATE '
-							: button == 'publish'
-							? 'PUBLISH '
-							: button == 'unpublish'
-							? 'UnPUBLISH '
-							: button == 'schedule'
-							? 'SCHEDULE '
-							: button == 'clone'
-							? 'CLONE '
-							: 'DELETE ') + collection.name}
-					</Tooltip>
-				{/if}
-			{/each}
+			{#if entryButton == 'create'}
+				<button
+					class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl md:ml-auto md:w-[150px]"
+					on:click={() => {
+						showFields = true;
+					}}
+				>
+					<Icon icon="ic:round-plus" color="black" width="30" class="mr-1" />
+					<div class="hidden md:block">Create</div>
+				</button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Create ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'publish'}
+				<button
+					class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+					on:click={() => {
+						publishEntry();
+					}}
+				>
+					<Icon icon="bi:hand-thumbs-up-fill" color="white" width="22" class="mr-1" />
+					<div class="hidden md:block">Publish</div>
+				</button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Publish ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'unpublish'}
+				<button
+					class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-200 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+					on:click={() => {
+						unpublishEntry();
+					}}
+				>
+					<Icon icon="bi:pause-circle" color="white" width="22" class="mr-1" />
+					<div class="hidden md:block">Unpublish</div>
+				</button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Unpublish ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'schedule'}
+				<button
+					class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-pink-600 via-pink-500 to-pink-400 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+					on:click={() => {
+						scheduleEntry();
+					}}
+				>
+					<Icon icon="bi:clock" color="white" width="22" class="mr-1" />
+					<div class="hidden md:block">Schedule</div>
+				</button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Schedule ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'clone'}
+				<button
+					class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+					on:click={() => {
+						cloneEntry();
+					}}
+				>
+					<Icon icon="bi:clipboard-data-fill" color="white" width="22" class="mr-1" />
+					<div class="hidden md:block">Clone</div>
+				</button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Clone ' + collection.name}
+				</Tooltip>
+			{:else if entryButton == 'delete'}
+				<button
+					class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-red-600 via-red-500 to-red-400 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+					on:click={() => {
+						deleteEntry();
+					}}
+				>
+					<Icon icon="bi:trash3-fill" color="white" width="22" class="mr-1" />
+					<div class="hidden md:block">Delete</div>
+				</button>
+				<Tooltip placement="bottom" style="light" class="z-20"
+					>{'Delete ' + collection.name}
+				</Tooltip>
+			{/if}
 
-			<Button class="rounded-r-xl px-1 "><ChevronDown /></Button>
+			<button
+				class=" mr-1 rounded-r-lg border-l border-white bg-gray-600 pl-1 pr-2 text-white md:pl-2 md:pr-3 "
+				><Chevron /></button
+			>
 			<Dropdown>
-				{#if entryButton == 'create'}{:else}
+				{#if entryButton != 'create'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'create';
@@ -262,7 +295,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'publish'}{:else}
+				{#if entryButton != 'publish'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'publish';
@@ -275,7 +308,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'unpublish'}{:else}
+				{#if entryButton != 'unpublish'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'unpublish';
@@ -288,7 +321,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'schedule'}{:else}
+				{#if entryButton != 'schedule'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'schedule';
@@ -301,7 +334,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'clone'}{:else}
+				{#if entryButton != 'clone'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'clone';
@@ -314,7 +347,7 @@
 					<DropdownDivider />
 				{/if}
 
-				{#if entryButton == 'delete'}{:else}
+				{#if entryButton != 'delete'}
 					<DropdownItem
 						on:click={() => {
 							entryButton = 'delete';

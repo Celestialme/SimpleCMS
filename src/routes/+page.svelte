@@ -83,19 +83,19 @@
 <div class="body">
 	<Alerts />
 
-	<div class="flex relative ">
+	<div class="relative flex ">
 		<!-- This secures all without access -->
 		{#if valid}
 			<div
 				hidden={toggleSideBar}
-				class="controlls text-white absolute md:relative  left-0 top-0 z-10 md:block"
+				class="controlls absolute left-0 top-0  z-20 text-white md:relative md:block"
 			>
 				<!-- fly out not working on sidebar with change -->
 				<aside
 					id="sidebarLeft"
 					in:fly={{ x: -200, duration: 500 }}
 					out:fly={{ x: -200, duration: 500 }}
-					class="bg-white dark:bg-gray-800 h-screen shadow-xl flex flex-col px-2 resize-x rounded-r-md + {switchSideBar
+					class="+ flex h-screen resize-x flex-col rounded-r-md bg-white px-2 shadow-xl dark:bg-gray-800 {switchSideBar
 						? 'w-[225px]'
 						: 'w-[80px]'}"
 				>
@@ -108,7 +108,7 @@
 
 					<!-- sidebar collapse button -->
 					<button
-						class="absolute top-2 -right-4 mr-1 text-gray-500 dark:text-white border-4 border-gray-300 dark:border-gray-900 rounded-full hover:cursor-pointer hover:bg-red-600 hover:dark:bg-black hover:dark:text-red-600"
+						class="absolute top-2 -right-4 mr-1 rounded-full border-4 border-gray-300 text-gray-500 hover:cursor-pointer hover:bg-red-600 dark:border-gray-900 dark:text-white hover:dark:bg-black hover:dark:text-red-600"
 						on:click={() => (switchSideBar = !switchSideBar)}
 					>
 						{#if !switchSideBar}
@@ -119,10 +119,10 @@
 					</button>
 
 					<SidebarGroup bind:fields bind:collection bind:showFields>
-						<div href="/" class="flex justify-start items-center cursor-pointer 1 mt-2">
+						<div href="/" class="1 mt-2 flex cursor-pointer items-center justify-start">
 							<SimpleCmsLogo fill="red" className="h-8 ml-[10px] hidden xl:block" />
 							{#if switchSideBar}
-								<span class="ml-2 mt-1 text-black dark:text-white text-2xl font-bold"
+								<span class="ml-2 mt-1 text-2xl font-bold text-black dark:text-white"
 									>SimpleCMS</span
 								>
 							{/if}
@@ -142,20 +142,15 @@
 					</SidebarGroup>
 					{#if switchSideBar}
 						<SidebarGroup border class="!mt-auto mb-5 mr-2 ">
-							<div class="flex justify-between my-1 ml-2">
+							<div class="my-1 ml-2 flex justify-between">
 								<a href="/user" class="flex-col">
-									<Avatar size="xs" class="border-2 border-gray-400 dark:border-gray" />
+									<Avatar size="xs" class="dark:border-gray border-2 border-gray-400" />
 									<div class="text-[9px] text-gray-400 dark:text-white">Admin</div>
 								</a>
 								<Tooltip placement="right" stlye="auto">Admin User</Tooltip>
 
 								<Button size="xs" color="alternative" class="border-0">Eng</Button>
-								<!-- not working with dropdown 
-									<Tooltip
-									placement="right"
-									stlye="auto"
-									>System Language
-								</Tooltip> -->
+
 								<Dropdown color="dark" placement="right-start">
 									<DropdownItem>English</DropdownItem>
 									<DropdownItem>German</DropdownItem>
@@ -170,23 +165,23 @@
 
 							<div class="flex justify-center p-1 pb-2">
 								<Badge
-									color="green"
+									color="none"
 									rounded
-									class="px-6"
+									class="bg-gradient-to-br from-lime-500 via-lime-500 to-lime-300 px-6 text-black"
 									href="https://github.com/Celestialme/SimpleCMS"
 									target="blank">Version: {env.PKG.VERSION}</Badge
 								>
 							</div>
 						</SidebarGroup>
 					{:else}
-						<SidebarGroup border class="absolute flex-col text-center mt-2 pb-5 bottom-0">
+						<SidebarGroup border class="absolute bottom-0 mt-2 flex-col pb-5 text-center">
 							<a href="/user" class="flex-col ">
-								<Avatar size="xs" class="border-2 border-gray-400 dark:border-gray m-auto" />
+								<Avatar size="xs" class="dark:border-gray m-auto border-2 border-gray-400" />
 								<div class="text-[9px] text-gray-400 dark:text-white">Admin</div>
 							</a>
 							<Tooltip placement="right" stlye="auto">Admin User</Tooltip>
 
-							<Button size="xs" color="alternative" class="border-0 p-0 m-0 -ml-1 ">Eng</Button
+							<Button size="xs" color="alternative" class="m-0 -ml-1 border-0 p-0 ">Eng</Button
 							><Dropdown placement="right-start" color="dark">
 								<DropdownItem>English</DropdownItem>
 								<DropdownItem>German</DropdownItem>
@@ -209,7 +204,7 @@
 				</aside>
 			</div>
 
-			<div class="content flex-grow md:flex-grow-0 !mt-[60px] md:!mt-0">
+			<div class="content !mt-[60px] flex-grow md:!mt-0 md:flex-grow-0">
 				{#if showFields}
 					<Form {fields} {collection} bind:showFields />
 				{/if}
@@ -229,11 +224,11 @@
 		{/if}
 		{#if showFields}
 			<div
-				class="bg-white dark:bg-gray-800 shadow border-b-2 md:border-none dark:border-white border-gray-800 md:px-2 md:w-[200px] h-[60px] w-full md:h-full fixed md:relative text-center"
+				class="fixed h-[65px] w-full border-b-2 border-gray-800 bg-white text-center shadow dark:border-white dark:bg-gray-800 md:relative md:h-full md:w-[200px] md:border-none md:px-2"
 			>
 				<Button
 					on:click={() => submit()}
-					class="w-full mt-2 mb-1 max-w-[150px] md:mt-2 md:max-w-[350px] text-xl"
+					class="mt-2 mb-2 w-full max-w-[150px] text-xl md:mt-2 md:max-w-[350px]"
 					submit
 					gradient
 					color="lime"
