@@ -1,7 +1,7 @@
 <script lang="ts">
 	import axios from 'axios';
 	import env from '@root/env';
-	import { entryData } from '@src/stores/store';
+	import { entryData, language } from '@src/stores/store';
 	import { onMount } from 'svelte';
 	import DeleteIcon from './icons/DeleteIcon.svelte';
 	import {
@@ -384,7 +384,7 @@
 					</TableBodyCell>
 
 					<TableBodyCell>{index + 1}</TableBodyCell>
-
+					{#key $language}
 					{#each collection.fields as field}
 						{#await field?.display?.(entry[field.title], field, entry)}
 							<TableBodyCell class="">Loading...</TableBodyCell>
@@ -394,6 +394,7 @@
 							>
 						{/await}
 					{/each}
+					{/key}
 				</TableBodyRow>
 			{/each}
 		</TableBody>

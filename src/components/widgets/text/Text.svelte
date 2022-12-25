@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Field } from './types';
+	import type { Text_Field } from './types';
 	import { Badge, ButtonGroup, Input, InputAddon, Helper } from 'flowbite-svelte';
 	import type { Colors } from 'flowbite-svelte/types';
 	import {language} from "@src/stores/store"
 	import env from '@root/env';
-	export let field: Field;
+	export let field: Text_Field;
 	export let value={};
 	export let widgetValue:any = {};
 	$:!value&&(value={})//default value
