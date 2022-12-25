@@ -1,5 +1,5 @@
 import { get } from 'svelte/store';
-import { entryData, getFieldsData ,language} from '@src/stores/store';
+import { entryData, getFieldsData, language } from '@src/stores/store';
 import axios from 'axios';
 import env from '../../env';
 import type { Schema } from '@src/collections/types';
@@ -21,16 +21,16 @@ export async function saveFormData(collection: Schema) {
 		let data = await getData();
 
 		for (let key in data) {
-			console.log(data[key])
+			console.log(data[key]);
 			if (data[key] instanceof FileList) {
 				for (let _key in data[key]) {
 					// for multiple files
 					console.log(data[key]);
 					formData.append(key, data[key][_key]);
 				}
-			} else if(typeof data[key] === 'object') {
+			} else if (typeof data[key] === 'object') {
 				formData.append(key, JSON.stringify(data[key]));
-			}else  {
+			} else {
 				formData.append(key, data[key]);
 			}
 		}
@@ -46,16 +46,16 @@ export async function saveSimpleData(
 ) {
 	let formData = new FormData();
 	for (let key in data) {
-		console.log(data[key])
+		console.log(data[key]);
 		if (data[key] instanceof FileList) {
 			for (let _key in data[key]) {
 				// for multiple files
 				console.log(data[key]);
 				formData.append(key, data[key][_key]);
 			}
-		} else if(typeof data[key] === 'object') {
+		} else if (typeof data[key] === 'object') {
 			formData.append(key, JSON.stringify(data[key]));
-		}else  {
+		} else {
 			formData.append(key, data[key]);
 		}
 	}
@@ -81,4 +81,10 @@ export async function saveData(
 	}
 }
 
+export function any(input: any) {
+	return input as any;
+  }
+export function never(input: any){
+	return input as never;
+}
 

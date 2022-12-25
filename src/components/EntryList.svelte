@@ -23,6 +23,9 @@
 		Tooltip
 	} from 'flowbite-svelte';
 	import Icon from '@iconify/svelte';
+	import type { LinkType } from 'flowbite-svelte/types';
+	import { never } from '@src/utils/utils_svelte';
+	
 
 	export let showFields = false;
 	export let collection: any = undefined;
@@ -107,12 +110,12 @@
 	// Table pagination
 	let helper = { start: 1, end: 10, total: 100 };
 	let pages = [
-		{ name: '1', href: '/' },
-		{ name: '2', href: '/' },
-		{ name: '3', href: '/' },
-		{ name: '4', href: '/' },
-		{ name: '5', href: '/' }
-	];
+		{ name: 1, href: '/' },
+		{ name: 2, href: '/' },
+		{ name: 3, href: '/' },
+		{ name: 4, href: '/' },
+		{ name: 5, href: '/' }
+	] as Array<LinkType>;
 	const previous = () => {
 		alert('Previous btn clicked. Make a call to your server to fetch data.');
 	};
@@ -148,7 +151,7 @@
 
 		<!-- expanding Search box -->
 		<div class="mx-auto max-w-md">
-			<form action="" class="relative mx-auto w-max">
+			<div  class="relative mx-auto w-max">
 				<input
 					on:keyup={search}
 					placeholder="Search {collection.name} ..."
@@ -169,7 +172,7 @@
 						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 					/>
 				</svg>
-			</form>
+			</div>
 		</div>
 
 		<!-- language switcher for entryList -->
@@ -177,14 +180,13 @@
 			class="flex items-center  justify-center rounded-lg bg-gray-600  py-3 pl-3 pr-1 text-white  hover:bg-gray-700"
 			><Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
 			<Chevron>
-				<!-- <div class="hidden md:block">
-					{env.translations[$language]}
-				</div> -->
+				<div class="hidden md:block">
+					{$language}
+				</div>
 			</Chevron>
 		</button>
 		<Dropdown bind:open>
-			{#each Object.keys(env.translations) as _language}
-				<!-- TODO: Dont display active language -->
+			{#each Object.keys(env.translations).filter(data=>$language!=data) as _language}
 				<DropdownItem
 					on:click={() => {
 						$language = _language;
@@ -326,7 +328,7 @@
 						on:click={() => {
 							entryButton = 'schedule';
 						}}
-						class="flex items-center justify-start gap-1 gap-1 text-lg font-bold text-pink-300"
+						class="flex items-center justify-start  gap-1 text-lg font-bold text-pink-300"
 					>
 						<Icon icon="bi:clock" width="20" />
 						Schedule
@@ -339,7 +341,7 @@
 						on:click={() => {
 							entryButton = 'clone';
 						}}
-						class="flex items-center justify-start gap-1 gap-1 text-lg font-bold"
+						class="flex items-center justify-start  gap-1 text-lg font-bold"
 					>
 						<Icon icon="bi:clipboard-data-fill" width="20" />
 						Clone
@@ -352,7 +354,7 @@
 						on:click={() => {
 							entryButton = 'delete';
 						}}
-						class="flex items-center justify-start gap-1 gap-1 text-lg font-bold text-red-600"
+						class="flex items-center justify-start  gap-1 text-lg font-bold text-red-600"
 					>
 						<Icon icon="bi:trash3-fill" width="20" />
 						Delete
@@ -369,10 +371,10 @@
 				<DeleteIcon bind:checked={deleteAll} />
 			</TableHeadCell>
 
-			<TableHeadCell class="dark:text-white">#</TableHeadCell>
+			<TableHeadCell  class={never("dark:text-white")}>#</TableHeadCell>
 
 			{#each collection.fields as field}
-				<TableHeadCell class="dark:text-white">
+				<TableHeadCell class={never("dark:text-white")}>
 					<div
 						on:click={() => {
 							sort = field.name;
