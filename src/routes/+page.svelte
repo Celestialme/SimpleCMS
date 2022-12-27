@@ -13,6 +13,7 @@
 		Avatar,
 		Badge,
 		Button,
+		CloseButton,
 		DarkMode,
 		Dropdown,
 		DropdownItem,
@@ -21,7 +22,7 @@
 		SidebarGroup,
 		Tooltip
 	} from 'flowbite-svelte';
-	
+
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
 
@@ -236,6 +237,23 @@
 					color="lime"
 					><Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />SAVE</Button
 				><Tooltip placement="bottom" color="green">Save {collection?.name}</Tooltip>
+
+				<Button
+					on:click={() => {
+						showFields = false;
+						$entryData = new Set();
+					}}
+					class="mt-2 mb-2 w-full max-w-[150px] text-xl md:mt-2 md:hidden md:max-w-[350px]"
+					submit
+					color="light"
+					><Icon
+						icon="
+				ic:round-close"
+						color="dark"
+						width="30"
+						class="mr-1"
+					/>Close</Button
+				><Tooltip placement="bottom" color="green">Close {collection?.name}</Tooltip>
 			</div>
 		{/if}
 	</div>

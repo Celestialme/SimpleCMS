@@ -49,7 +49,7 @@
 		<Tooltip placement="bottom" color="gray">Current Content Language</Tooltip>
 
 		<CloseButton
-			class="absolute right-0 dark:text-white"
+			class="absolute right-0 hidden dark:text-white  md:block"
 			on:click={() => {
 				showFields = false;
 				$entryData = new Set();
