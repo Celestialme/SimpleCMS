@@ -25,7 +25,7 @@ vitePlugin: {
     // show or hide the inspector option
     showToggleButton: 'always',
     // inspector position
-    toggleButtonPos: 'bottom-left',
+    toggleButtonPos: 'bottom-right',
    
     },
   },

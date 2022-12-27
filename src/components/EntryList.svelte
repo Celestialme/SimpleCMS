@@ -25,7 +25,6 @@
 	import Icon from '@iconify/svelte';
 	import type { LinkType } from 'flowbite-svelte/types';
 	import { never } from '@src/utils/utils_svelte';
-	
 
 	export let showFields = false;
 	export let collection: any = undefined;
@@ -136,7 +135,7 @@
 	}
 </script>
 
-<div class="relative">
+<div class="relative -mt-[65px] md:mt-0">
 	<div class="mb-2 flex items-center gap-2">
 		<NavHamburger on:click={() => (toggleSideBar = !toggleSideBar)} btnClass="md:hidden mr-1" />
 
@@ -151,7 +150,7 @@
 
 		<!-- expanding Search box -->
 		<div class="mx-auto max-w-md">
-			<div  class="relative mx-auto w-max">
+			<div class="relative mx-auto w-max">
 				<input
 					on:keyup={search}
 					placeholder="Search {collection.name} ..."
@@ -178,16 +177,17 @@
 		<!-- language switcher for entryList -->
 		<button
 			class="flex items-center  justify-center rounded-lg bg-gray-600  py-3 pl-3 pr-1 text-white  hover:bg-gray-700"
-			><Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
-			<Chevron>
-				<div class="hidden md:block">
+			>
+			<Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
+			<div class="hidden lg:block uppercase">
+				<Chevron>
 					{$language}
-				</div>
-			</Chevron>
+				</Chevron>
+			</div>
 		</button>
 		<Dropdown bind:open>
-			{#each Object.keys(env.translations).filter(data=>$language!=data) as _language}
-				<DropdownItem
+			{#each Object.keys(env.translations).filter((data) => $language != data) as _language}
+				<DropdownItem 
 					on:click={() => {
 						$language = _language;
 						open = false;
@@ -201,7 +201,7 @@
 		<ButtonGroup>
 			{#if entryButton == 'create'}
 				<button
-					class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl md:ml-auto md:w-[150px]"
+					class="flex w-[65px] items-center justify-center rounded-l-full bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl md:ml-auto md:w-[150px]"
 					on:click={() => {
 						showFields = true;
 					}}
@@ -371,10 +371,10 @@
 				<DeleteIcon bind:checked={deleteAll} />
 			</TableHeadCell>
 
-			<TableHeadCell  class={never("dark:text-white")}>#</TableHeadCell>
+			<TableHeadCell class={never('dark:text-white')}>#</TableHeadCell>
 
 			{#each collection.fields as field}
-				<TableHeadCell class={never("dark:text-white")}>
+				<TableHeadCell class={never('dark:text-white')}>
 					<div
 						on:click={() => {
 							sort = field.name;
@@ -420,15 +420,16 @@
 
 					<TableBodyCell>{index + 1}</TableBodyCell>
 					{#key $language}
-					{#each collection.fields as field}
-						{#await field?.display?.(entry[field.title], field, entry)}
-							<TableBodyCell class="">Loading...</TableBodyCell>
-						{:then display}
-							{((entry.displays = {}), '')}
-							<TableBodyCell class="">{@html (entry.displays[field.title] = display)}</TableBodyCell
-							>
-						{/await}
-					{/each}
+						{#each collection.fields as field}
+							{#await field?.display?.(entry[field.title], field, entry)}
+								<TableBodyCell class="">Loading...</TableBodyCell>
+							{:then display}
+								{((entry.displays = {}), '')}
+								<TableBodyCell class=""
+									>{@html (entry.displays[field.title] = display)}</TableBodyCell
+								>
+							{/await}
+						{/each}
 					{/key}
 				</TableBodyRow>
 			{/each}

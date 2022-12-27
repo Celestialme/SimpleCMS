@@ -18,7 +18,7 @@
 </script>
 
 <div class="fields text-dark overflow-y-auto rounded bg-white p-3 dark:bg-gray-800 dark:text-white">
-	<div class="relative mb-5 flex justify-start overflow-visible  font-bold ">
+	<div class="relative mb-5 flex justify-start overflow-visible font-bold ">
 		<div class="flex w-80 flex-col">
 			<div class="mb-2 text-sm capitalize text-gray-400">Create</div>
 			<div

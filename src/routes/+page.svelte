@@ -21,8 +21,10 @@
 		SidebarGroup,
 		Tooltip
 	} from 'flowbite-svelte';
+	
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
+
 	import { fly } from 'svelte/transition';
 	import SimpleCmsLogo from '@src/components/icons/SimpleCMS_Logo.svelte';
 
@@ -83,12 +85,12 @@
 <div class="body">
 	<Alerts />
 
-	<div class="relative flex ">
+	<div class="relative flex">
 		<!-- This secures all without access -->
 		{#if valid}
 			<div
 				hidden={toggleSideBar}
-				class="controlls absolute left-0 top-0  z-20 text-white md:relative md:block"
+				class="absolute left-0 top-0 z-20 text-white md:relative md:block"
 			>
 				<!-- fly out not working on sidebar with change -->
 				<aside
