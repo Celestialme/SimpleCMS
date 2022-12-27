@@ -1,4 +1,4 @@
-import env  from '@root/env';
+import env from '@root/env';
 import type { Text_Field, Text_Params } from './types';
 let widget = ({
 	title,
@@ -9,16 +9,16 @@ let widget = ({
 	suffix,
 	required,
 	localization,
+	width,
 	display
-}:Text_Params) => {
-	
-	if (!display) display = async (data: any, field: any, entry: any) => {
-		let {language} = await import ("../../../stores/store")
-		let {get} = await import('svelte/store')
-		let _language = localization?get(language):env.LANGUAGE
-		return data[_language] || "No Value"
-	
-	};
+}: Text_Params) => {
+	if (!display)
+		display = async (data: any, field: any, entry: any) => {
+			let { language } = await import('../../../stores/store');
+			let { get } = await import('svelte/store');
+			let _language = localization ? get(language) : env.LANGUAGE;
+			return data[_language] || 'No Value';
+		};
 	let field = {
 		schema: {},
 		title,
@@ -29,9 +29,10 @@ let widget = ({
 		suffix,
 		required,
 		localization,
+		width,
 		display
 	} as Text_Field;
-	field.schema[title] = {String:String};
+	field.schema[title] = { String: String };
 	field.widget = async () => {
 		// @ts-ignore
 		return (await import('./Text.svelte')).default;
@@ -39,4 +40,4 @@ let widget = ({
 	return field;
 };
 
-export default widget
+export default widget;

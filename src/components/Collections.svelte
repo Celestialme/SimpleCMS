@@ -59,7 +59,7 @@
 		/>
 
 		{#if switchSideBar}
-			<div class="name">test{item.category}</div>
+			<div class="name">{item.category}</div>
 		{/if}
 	</div>
 	{#if !switchSideBar}
