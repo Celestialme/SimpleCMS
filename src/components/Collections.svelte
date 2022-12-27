@@ -31,7 +31,7 @@
 			category: category.category,
 			icon: category.icon,
 			collections: category.collections.filter((collection: any) =>
-				collection.name.includes(filterCollections)
+				collection.name.toLowerCase().includes(filterCollections)
 			)
 		}));
 	$: {
@@ -49,24 +49,27 @@
 			expanded[index] = !expanded[index];
 			expanded[index] ? setOverflowY(e, true) : setOverflowY(e, false);
 		}}
-		class="relative overflow-visible rounded py-2 bg-gray-500 cursor-pointer text-center arrow h-[40px]"
+		class="arrow relative h-[40px] cursor-pointer overflow-visible rounded bg-gray-500 py-2 text-center"
 		class:arrow_up={expanded[index]}
 	>
-
-	<Icon icon={item.icon} width="24" class="mr-2 absolute top-[50%] left-0 -translate-y-[50%] ml-2" />
+		<Icon
+			icon={item.icon}
+			width="24"
+			class="absolute top-[50%] left-0 mr-2 ml-2 -translate-y-[50%]"
+		/>
 
 		{#if switchSideBar}
-			<div class="name">{item.category}</div>			
+			<div class="name">test{item.category}</div>
 		{/if}
 	</div>
 	{#if !switchSideBar}
-			<Tooltip placement="right">{item.category}</Tooltip>
-		{/if}
+		<Tooltip placement="right">{item.category}</Tooltip>
+	{/if}
 
 	<div use:setHeight class="overflow-hidden" class:expand={expanded[index]}>
 		{#each item.collections as _collection}
 			<p
-				class="text-black cursor-pointer py-2 text-center bg-white hover:bg-[#65dfff] hover:text-white relative border-b"
+				class="relative cursor-pointer border-b bg-white py-2 text-center text-black hover:bg-[#65dfff] hover:text-white"
 				on:click={async () => {
 					fields = await shape_fields(_collection.fields);
 					category = item.category;
@@ -75,18 +78,18 @@
 				}}
 			>
 				{#if switchSideBar}
-					<div class="h-[40px] flex justify-center items-center">
+					<div class="flex h-[40px] items-center justify-center">
 						<Icon
 							icon={_collection.icon}
 							width="24"
-							class="text-red-700 h-40px absolute top-[50%] left-0 -translate-y-[50%] ml-2 "
+							class="h-40px absolute top-[50%] left-0 ml-2 -translate-y-[50%] text-red-700 "
 						/>
 						{_collection.name}
 					</div>
 				{:else}
 					<div class="flex flex-col py-1 ">
-						<Icon icon={_collection.icon} width="24" class="text-red-700 m-auto " />
-						<div class="text-[9px] text-clip truncate overflow-clip">
+						<Icon icon={_collection.icon} width="24" class="m-auto text-red-700 " />
+						<div class="overflow-clip truncate text-clip text-[9px]">
 							{_collection.name}
 						</div>
 					</div>

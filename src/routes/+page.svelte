@@ -41,6 +41,7 @@
 	let toggleSideBar = false;
 	// change sidebar width so only icons show
 	let switchSideBar = true;
+	let visible = false;
 
 	axios
 		.post(
@@ -73,8 +74,9 @@
 	}
 
 	// search filter
+	// collection parent names should hide on search
 	function updateFilter(e: KeyboardEvent) {
-		filterCollections = (e.target as HTMLInputElement).value;
+		filterCollections = (e.target as HTMLInputElement).value.toLowerCase();
 	}
 	shape_fields(collection.fields).then((data) => (fields = data));
 	function is_dark() {
