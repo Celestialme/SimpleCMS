@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { Button, Input, Label, Dropdown, DropdownItem, Search } from 'flowbite-svelte';
 
-	import { Map, Marker } from '@beyonk/svelte-mapbox';
+	import { Map, Geocoder, Marker } from '@beyonk/svelte-mapbox';
 	import env from '@root/env';
-	let mapComponent;
+
+	let mapComponent: { flyTo: (arg0: { center: number[] }) => void };
 
 	function onReady() {
 		mapComponent.flyTo({ center: [51.3405894, 6.6066283] });
@@ -19,8 +20,8 @@
 <address>
 	<!-- TODo: MAP Not working yet  -->
 	<Map
-		accessToken={env.MAPBOX_TOKEN}
-		style="mapbox://styles/mapbox/streets-v12"
+		accessToken={env.MAPBOX_API_TOKEN}
+		style="mapbox://styles/mapbox/streets-v8"
 		bind:this={mapComponent}
 		on:ready={onReady}
 	>

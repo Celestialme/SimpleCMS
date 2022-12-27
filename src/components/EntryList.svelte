@@ -4,6 +4,7 @@
 	import { entryData, language } from '@src/stores/store';
 	import { onMount } from 'svelte';
 	import DeleteIcon from './icons/DeleteIcon.svelte';
+
 	import {
 		ButtonGroup,
 		Chevron,
@@ -22,6 +23,7 @@
 		TableHeadCell,
 		Tooltip
 	} from 'flowbite-svelte';
+
 	import Icon from '@iconify/svelte';
 	import type { LinkType } from 'flowbite-svelte/types';
 	import { never } from '@src/utils/utils_svelte';
@@ -107,7 +109,23 @@
 	export let toggleSideBar = false;
 
 	// Table pagination
-	let helper = { start: 1, end: 10, total: 100 };
+
+	let rows = [];
+	let page = 1;
+	let totalPages = [];
+	let currentPageRows = [];
+
+	import { writable } from 'svelte/store';
+	let itemsPerPage = writable(5);
+
+	function changeItemsPerPage(newValue: number) {
+		itemsPerPage.set(newValue);
+		// refresh itemsPerPage??
+		refresh(collection);
+	}
+
+	// need to arrows on mobile only
+	// first & Last should be added
 	let pages = [
 		{ name: 1, href: '/' },
 		{ name: 2, href: '/' },
@@ -148,15 +166,19 @@
 			</div>
 		</div>
 
-		<!-- expanding Search box -->
+		<!-- expanding Search box  
+			lightmode needs more work
+		-->
 		<div class="mx-auto max-w-md">
 			<div class="relative mx-auto w-max">
 				<input
 					on:keyup={search}
 					placeholder="Search {collection.name} ..."
-					class="peer relative z-10 h-12 w-12 cursor-pointer rounded-full border bg-transparent pl-12 text-black outline-none focus:w-full focus:cursor-text focus:pl-16 focus:pr-4 dark:bg-gray-500/50 dark:text-white md:w-full "
+					class="peer relative z-10 h-12 w-12 cursor-pointer rounded-full border bg-transparent pl-12 text-black outline-none focus:w-full focus:cursor-text focus:pl-16 focus:pr-4 dark:bg-gray-500/50 dark:text-white lg:w-full "
 				/>
-				<!-- <Icon icon="ic:baseline-search" height="24" class=" text-gray-400" /> -->
+				<!-- not working
+				<Icon icon="ic:baseline-search" height="24" class=" text-gray-400" /> 
+				-->
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-white px-3.5 "
@@ -176,18 +198,19 @@
 
 		<!-- language switcher for entryList -->
 		<button
-			class="flex items-center  justify-center rounded-lg bg-gray-600  py-3 pl-3 pr-1 text-white  hover:bg-gray-700"
-			>
-			<Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
-			<div class="hidden lg:block uppercase">
+			class="flex items-center justify-center rounded-lg bg-gray-600 py-3  pl-3 pr-1 uppercase text-white  hover:bg-gray-700"
+		>
+			<Icon icon="bi:translate" color="dark" width="22" class="mr-2 md:mr-1" />
+
+			<div class="flex hidden items-center justify-center pr-2 uppercase sm:inline-flex sm:pr-0">
 				<Chevron>
-					{$language}
+					<div class="invisible sm:visible">{$language}</div>
 				</Chevron>
 			</div>
 		</button>
 		<Dropdown bind:open>
 			{#each Object.keys(env.translations).filter((data) => $language != data) as _language}
-				<DropdownItem 
+				<DropdownItem
 					on:click={() => {
 						$language = _language;
 						open = false;
@@ -201,7 +224,7 @@
 		<ButtonGroup>
 			{#if entryButton == 'create'}
 				<button
-					class="flex w-[65px] items-center justify-center rounded-l-full bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl md:ml-auto md:w-[150px]"
+					class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl md:ml-auto md:w-[150px]"
 					on:click={() => {
 						showFields = true;
 					}}
@@ -406,6 +429,7 @@
 				>
 			{/each}
 		</TableHead>
+
 		<TableBody>
 			{#each filtered_entryList as entry, index}
 				<TableBodyRow
@@ -436,13 +460,48 @@
 		</TableBody>
 	</Table>
 
-	<div class="mt-4 flex items-center justify-between gap-2">
+	<div class="mt-4 flex items-center justify-between gap-1">
 		<div class="text-sm text-gray-700 dark:text-gray-400">
-			Showing <span class="font-semibold text-gray-900 dark:text-white">{helper.start}</span> to
-			<span class="font-semibold text-gray-900 dark:text-white">{helper.end}</span>
+			Showing <span class="font-semibold text-gray-900 dark:text-white">{collection.item}</span>
+			to
+			<span class="font-semibold text-gray-900 dark:text-white">{$itemsPerPage}</span>
 			of
-			<span class="font-semibold text-gray-900 dark:text-white">{helper.total} </span> Entries
+			<span class="font-semibold text-gray-900 dark:text-white"
+				>{1 + collection.fields.length}
+			</span>
+			Entries
 		</div>
+
+		<button
+			class="-mt-1 flex items-center justify-center rounded-lg border bg-white px-2 py-2 text-sm shadow-lg dark:border-gray-600  dark:bg-gray-800  dark:text-gray-400 dark:hover:bg-gray-700"
+			><Chevron>{$itemsPerPage}</Chevron></button
+		>
+		<Dropdown class="text-center">
+			<DropdownItem
+				name="itemsPerPage"
+				bind:group={itemsPerPage}
+				value={25}
+				on:click={() => changeItemsPerPage(25)}>25 Entries</DropdownItem
+			>
+			<DropdownItem
+				name="itemsPerPage"
+				bind:group={itemsPerPage}
+				value={50}
+				on:click={() => changeItemsPerPage(50)}>50 Entries</DropdownItem
+			>
+			<DropdownItem
+				name="itemsPerPage"
+				bind:group={itemsPerPage}
+				value={100}
+				on:click={() => changeItemsPerPage(100)}>100 Entries</DropdownItem
+			>
+			<DropdownItem
+				name="itemsPerPage"
+				bind:group={itemsPerPage}
+				value={500}
+				on:click={() => changeItemsPerPage(500)}>500 Entries</DropdownItem
+			>
+		</Dropdown>
 
 		<Pagination {pages} on:previous={previous} on:next={next} icon class="shadow-lg">
 			<svelte:fragment slot="prev">

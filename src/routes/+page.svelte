@@ -13,7 +13,6 @@
 		Avatar,
 		Badge,
 		Button,
-		CloseButton,
 		DarkMode,
 		Dropdown,
 		DropdownItem,
