@@ -12,7 +12,7 @@ let schema: Schema = {
 	// Inspect Widget fields for possible options
 	fields: [
 		widgets.Group({
-			title: '1',
+			title: 'Group',
 
 			fields: [
 				widgets.Text({
@@ -23,6 +23,7 @@ let schema: Schema = {
 					localization: true,
 					width: '50%'
 				}),
+
 				widgets.Text({
 					title: 'last',
 					icon: 'ri:t-box-line',

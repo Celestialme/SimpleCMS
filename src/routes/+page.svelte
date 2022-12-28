@@ -208,7 +208,7 @@
 				</aside>
 			</div>
 
-			<div class="content !mt-[60px] flex-grow md:!mt-0 md:flex-grow-0">
+			<div class="content md:max-width !mt-[60px] flex-grow md:!mt-0">
 				{#if showFields}
 					<Form {fields} {collection} bind:showFields />
 				{/if}
