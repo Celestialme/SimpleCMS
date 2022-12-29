@@ -82,6 +82,25 @@
 	function is_dark() {
 		return document.documentElement.classList.contains('dark');
 	}
+
+	let completionPercentage = '25%';
+	let required = true;
+
+	// import { writable } from 'svelte/store';
+	// export const completionPercentage = writable(0);
+
+	// // Update the completion percentage based on the form fields
+	// function updateCompletionPercentage() {
+	// 	const formFields = getFormFields();
+	// 	let completedFields = 0;
+	// 	formFields.forEach((field) => {
+	// 		if (field.value) {
+	// 			completedFields += 1;
+	// 		}
+	// 	});
+	// 	const percentage = (completedFields / formFields.length) * 100;
+	// 	completionPercentage.set(percentage);
+	// }
 </script>
 
 <div class="body">
@@ -230,14 +249,59 @@
 			<div
 				class="fixed h-[65px] w-full border-b-2 border-gray-800 bg-white text-center shadow dark:border-white dark:bg-gray-800 md:relative md:h-full md:w-[200px] md:border-none md:px-2"
 			>
-				<Button
+				<!-- Save button with progressbar -->
+
+				<!-- <Button
 					on:click={() => submit()}
-					class="mt-2 mb-2 w-full max-w-[150px] text-xl md:mt-2 md:max-w-[350px]"
+					class="relative mt-2 mb-2 w-full max-w-[150px] text-xl md:mt-2 md:max-w-[350px]"
 					submit
 					gradient
 					color="lime"
-					><Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />SAVE</Button
-				><Tooltip placement="bottom" color="green">Save {collection?.name}</Tooltip>
+					><div class="relative flex items-center justify-center text-xl uppercase">
+						<Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />
+						Save
+					</div>
+					{#if required}
+						
+						<div class="relative mt-2 h-2 w-full rounded-full bg-gray-500">
+							<div
+								class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-blue-500"
+								style="width: 50%"
+							/>
+							<div
+								class="absolute top-0 left-0 flex h-full w-full items-center justify-center text-xs font-bold text-white"
+							>
+								50%
+							</div>
+						</div>
+					{/if}
+				</Button>
+				<Tooltip placement="bottom" color="green">Save {collection?.name}</Tooltip> -->
+
+				<button
+					on:click={() => submit()}
+					class="w-full max-w-[150px] rounded-lg bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 px-4 py-2 font-bold hover:bg-lime-500 focus:bg-lime-500 active:bg-lime-600 md:max-w-[350px]"
+				>
+					<div class="flex items-center justify-center text-xl uppercase">
+						<Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />
+						Save
+					</div>
+					{#if required}
+						<!-- progress bar -->
+						<div class="relative mt-1 h-2 w-full rounded-full bg-gray-500">
+							<div
+								class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-blue-500"
+								style="width: 50%"
+							/>
+							<div
+								class="absolute top-0 left-0 flex h-full w-full items-center justify-center text-xs font-bold text-white"
+							>
+								50%
+							</div>
+						</div>
+					{/if}
+				</button>
+				<Tooltip placement="bottom">Save {collection?.name}</Tooltip>
 
 				<Button
 					on:click={() => {
