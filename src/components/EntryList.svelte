@@ -174,7 +174,7 @@
 				<input
 					on:keyup={search}
 					placeholder="Search {collection.name} ..."
-					class="peer relative z-10 h-12 w-12 cursor-pointer rounded-full border bg-transparent pl-12 text-black outline-none focus:w-full focus:cursor-text focus:pl-16 focus:pr-4 dark:bg-gray-500/50 dark:text-white lg:w-full "
+					class="  relative z-10 h-12 w-12 cursor-pointer rounded-full border bg-transparent pl-12 text-black outline-none focus:w-full focus:cursor-text focus:rounded-md focus:pl-16 focus:pr-4 dark:bg-gray-500/50 dark:text-white lg:w-full "
 				/>
 				<!-- not working
 				<Icon icon="ic:baseline-search" height="24" class=" text-gray-400" /> 
@@ -208,7 +208,7 @@
 				</Chevron>
 			</div>
 		</button>
-		<Dropdown bind:open>
+		<Dropdown bind:open class="dark:bg-grey-500 rounded border-2  text-black ">
 			{#each Object.keys(env.translations).filter((data) => $language != data) as _language}
 				<DropdownItem
 					on:click={() => {
@@ -388,77 +388,77 @@
 	</div>
 
 	<!-- show Collection data in table -->
-	<Table hoverable={true} class="relative">
-		<TableHead>
-			<TableHeadCell>
-				<DeleteIcon bind:checked={deleteAll} />
-			</TableHeadCell>
+	<div class="table-container max-h-[80vh] overflow-auto">
+		<table class="table-hover fixed_header table ">
+			<thead class="sticky top-0 ">
+				<tr>
+					<th><DeleteIcon bind:checked={deleteAll} /></th>
 
-			<TableHeadCell class={never('dark:text-white')}>#</TableHeadCell>
+					<th class={never('dark:text-white')}>#</th>
 
-			{#each collection.fields as field}
-				<TableHeadCell class={never('dark:text-white')}>
-					<div
+					{#each collection.fields as field}
+						<th class={never('dark:text-white')}>
+							<div
+								on:click={() => {
+									sort = field.name;
+									order = !order;
+								}}
+								class="flex items-center justify-start gap-1"
+							>
+								{field.title}
+
+								<!-- {#if (sort = field.name)} -->
+								{#if !sort}
+									{#if !order}
+										<button>
+											<div class="flex-col">
+												<Icon icon="bi:caret-up-fill" color="base" width="14" class="" />
+												<Icon icon="bi:caret-down" color="gray" width="14" class="-mt-1" />
+											</div></button
+										>
+									{:else}
+										<button>
+											<div class="flex-col ">
+												<Icon icon="bi:caret-up" color="gray" width="14" class="" />
+												<Icon icon="bi:caret-down-fill" color="base" width="14" class="-mt-1" />
+											</div></button
+										>
+									{/if}
+								{/if}
+							</div></th
+						>
+					{/each}
+				</tr>
+			</thead>
+
+			<tbody class="table-row-group">
+				{#each filtered_entryList as entry, index}
+					<tr
 						on:click={() => {
-							sort = field.name;
-							order = !order;
+							showFields = true;
+							$entryData = entry;
 						}}
-						class="flex items-center justify-start gap-1"
 					>
-						{field.title}
+						<td>
+							<DeleteIcon bind:checked={deleteMap[index]} />
+						</td>
 
-						<!-- {#if (sort = field.name)} -->
-						{#if !sort}
-							{#if !order}
-								<button>
-									<div class="flex-col">
-										<Icon icon="bi:caret-up-fill" color="base" width="14" class="" />
-										<Icon icon="bi:caret-down" color="gray" width="14" class="-mt-1" />
-									</div></button
-								>
-							{:else}
-								<button>
-									<div class="flex-col ">
-										<Icon icon="bi:caret-up" color="gray" width="14" class="" />
-										<Icon icon="bi:caret-down-fill" color="base" width="14" class="-mt-1" />
-									</div></button
-								>
-							{/if}
-						{/if}
-					</div></TableHeadCell
-				>
-			{/each}
-		</TableHead>
-
-		<TableBody>
-			{#each filtered_entryList as entry, index}
-				<TableBodyRow
-					on:click={() => {
-						showFields = true;
-						$entryData = entry;
-					}}
-				>
-					<TableBodyCell>
-						<DeleteIcon bind:checked={deleteMap[index]} />
-					</TableBodyCell>
-
-					<TableBodyCell>{index + 1}</TableBodyCell>
-					{#key $language}
-						{#each collection.fields as field}
-							{#await field?.display?.(entry[field.title], field, entry)}
-								<TableBodyCell class="">Loading...</TableBodyCell>
-							{:then display}
-								{((entry.displays = {}), '')}
-								<TableBodyCell class=""
-									>{@html (entry.displays[field.title] = display)}</TableBodyCell
-								>
-							{/await}
-						{/each}
-					{/key}
-				</TableBodyRow>
-			{/each}
-		</TableBody>
-	</Table>
+						<td>{index + 1}</td>
+						{#key $language}
+							{#each collection.fields as field}
+								{#await field?.display?.(entry[field.title], field, entry)}
+									<td class="">Loading...</td>
+								{:then display}
+									{((entry.displays = {}), '')}
+									<td class="">{@html (entry.displays[field.title] = display)}</td>
+								{/await}
+							{/each}
+						{/key}
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
 
 	<div class="mt-4 flex items-center justify-between gap-1">
 		<div class="text-sm text-gray-700 dark:text-gray-400">
@@ -516,3 +516,32 @@
 		</Pagination>
 	</div>
 </div>
+
+<style>
+	@import '@skeletonlabs/skeleton/styles/all.css';
+	@import '@skeletonlabs/skeleton/styles/elements.css';
+	@import '@skeletonlabs/skeleton/styles/elements/tables.css';
+
+	.fixed_header {
+		table-layout: fixed;
+		border-collapse: collapse;
+	}
+
+	.fixed_header tbody {
+		display: block;
+		width: 100%;
+		overflow: auto;
+		max-height: 70vh;
+	}
+
+	.fixed_header thead tr {
+		display: block;
+	}
+
+	.fixed_header th,
+	.fixed_header td {
+		padding: 5px;
+		text-align: left;
+		width: 200px;
+	}
+</style>

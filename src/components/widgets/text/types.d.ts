@@ -23,6 +23,6 @@ export type Text_Params = {
 	suffix?: string;
 	required?: boolean;
 	localization?: boolean;
-	width?: string;
+	width: string;
 	display?: Display;
 };

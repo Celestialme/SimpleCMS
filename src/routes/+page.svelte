@@ -227,7 +227,7 @@
 				</aside>
 			</div>
 
-			<div class="content md:max-width !mt-[60px] flex-grow md:!mt-0">
+			<div class="content !mt-[60px] flex-grow md:!mt-0 md:flex-grow-0">
 				{#if showFields}
 					<Form {fields} {collection} bind:showFields />
 				{/if}
@@ -288,7 +288,9 @@
 					</div>
 					{#if required}
 						<!-- progress bar -->
-						<div class="relative mt-1 h-2 w-full rounded-full bg-gray-500">
+						<div
+							class="relative mx-auto mt-1 hidden h-2 w-[90%] rounded-full bg-gray-500 px-4 md:block"
+						>
 							<div
 								class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-blue-500"
 								style="width: 50%"
@@ -302,23 +304,20 @@
 					{/if}
 				</button>
 				<Tooltip placement="bottom">Save {collection?.name}</Tooltip>
-
-				<Button
-					on:click={() => {
-						showFields = false;
-						$entryData = new Set();
-					}}
-					class="mt-2 mb-2 w-full max-w-[150px] text-xl md:mt-2 md:hidden md:max-w-[350px]"
-					submit
-					color="light"
-					><Icon
-						icon="
-				ic:round-close"
-						color="dark"
-						width="30"
-						class="mr-1"
-					/>Close</Button
-				><Tooltip placement="bottom" color="green">Close {collection?.name}</Tooltip>
+				{#if required}
+					<!-- progress bar -->
+					<div class="relative mx-auto mt-1 h-2 w-[80%] rounded-full bg-gray-500 px-4 md:hidden">
+						<div
+							class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-blue-500"
+							style="width: 50%"
+						/>
+						<div
+							class="absolute top-0 left-0 flex h-full w-full items-center justify-center text-xs font-bold text-white"
+						>
+							50%
+						</div>
+					</div>
+				{/if}
 			</div>
 		{/if}
 	</div>

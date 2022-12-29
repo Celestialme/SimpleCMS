@@ -2,6 +2,7 @@ const config = {
 	content: [
 	  "./src/**/*.{html,js,svelte,ts}",
 	  "./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
+	  require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
   
 	theme: {
@@ -31,7 +32,10 @@ const config = {
   
 	},
   
-	plugins: [require('flowbite/plugin')],
+	plugins: [
+		require('flowbite/plugin'),
+		require('@skeletonlabs/skeleton/tailwind/theme.cjs')
+	],
 	darkMode: 'class',
   };
   
