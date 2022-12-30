@@ -12,13 +12,13 @@ let schema: Schema = {
 	fields: [
 		widgets.ImageArray({
 			title: 'ImageArray',
-			imageUploadTitle:"Multi Image Array",
+			imageUploadTitle: 'Multi Image Array',
 			fields: [
-				
 				widgets.ImageUpload({ title: 'Multi Image Array', path: 'media/image_array' }),
-				widgets.Text({ title: 'Name', icon: 'ri:t-box-line',localization:true }),
-				widgets.Text({ title: 'Alt-Text', icon: 'ic:outline-loyalty' }),
-				widgets.Text({ title: 'Alt-Title', icon: 'ri:t-box-line' }),
+
+				widgets.Text({ title: 'Name', icon: 'ri:t-box-line', localization: true }),
+				widgets.Text({ title: 'Alt-Text', icon: 'ic:outline-loyalty', localization: true }),
+				widgets.Text({ title: 'Alt-Title', icon: 'ri:t-box-line', localization: true }),
 
 				widgets.Relation({
 					title: 'Relation to Posts',

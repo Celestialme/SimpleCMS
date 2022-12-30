@@ -2,11 +2,12 @@
 	import Icon from '@iconify/svelte';
 	import env from '@root/env';
 	import axios from 'axios';
-	import { Button, FloatingLabelInput, Helper } from 'flowbite-svelte';
 	import { credentials } from '@src/stores/store';
 	import CMSLogo from './icons/Logo.svelte';
 	import { goto } from '$app/navigation';
+
 	export let show: boolean = false;
+
 	let showPassword: boolean = false;
 	let email = '';
 	let errorStatus = {
@@ -24,7 +25,7 @@
 
 		if (!emailRegex.test(email)) {
 			errorStatus.email.status = true;
-			errorStatus.email.msg = 'please type valid Email';
+			errorStatus.email.msg = 'Please type valid Email';
 			error = true;
 		}
 		if (!/\.\w+$/.test(email)) {
@@ -67,80 +68,112 @@
 	}
 </script>
 
-<div class:hide={!show} class="w-full duration-[2000ms] opacity-100">
-	<div class="w-full lg:w-1/2 mx-auto p-4  mt-[15%] mb-[5%]">
-		<div class="flex flex-row gap-2 mb-8">
+<div class:hide={!show} class="w-full opacity-100 duration-[2000ms]">
+	<div class="mx-auto mt-[15%] mb-[5%] w-full  p-4 lg:w-1/2">
+		<div class="mb-8 flex flex-row gap-2">
 			<CMSLogo className="w-10" fill="red" />
 
 			<h1 class="text-3xl font-bold text-white">SimpleCMS - Sign Up</h1>
 		</div>
 
-		<!-- Email field -->
+		<form>
+			<!-- Email field -->
+			<div class="group relative z-0 mb-6 w-full">
+				<input
+					bind:value={email}
+					on:keydown={() => (errorStatus.email.status = false)}
+					color={errorStatus.email.status ? 'red' : 'base'}
+					type="email"
+					name="floating_email"
+					class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+					placeholder=" "
+					required
+				/>
+				<label
+					for="floating_email"
+					class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
+					>Email Address</label
+				>
 
-		<FloatingLabelInput
-			id="floating_email"
-			name="email"
-			type="text"
-			on:keydown={() => (errorStatus.email.status = false)}
-			color={errorStatus.email.status ? 'red' : 'base'}
-			label="Email Address"
-			class="mb-10 !text-white"
-			bind:value={email}
-		/>
-		{#if errorStatus.email.status}
-			<Helper class="mb-5 -mt-4" color="red">{errorStatus.email.msg}</Helper>
-		{/if}
-		<div class="relative">
-			<!-- password field -->
-			<FloatingLabelInput
-				id="floating_password"
-				name="password"
-				label="Password"
-				on:keydown={() => (errorStatus.password.status = false)}
-				color={errorStatus.password.status ? 'red' : 'base'}
-				type={showPassword ? 'text' : 'password'}
-				class="mb-4 !text-white"
-				bind:value={password}
-			/>
-			{#if errorStatus.password.status}
-				<Helper class="mb-5 -mt-4" color="red">{errorStatus.password.msg}</Helper>
-			{/if}
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="absolute top-0 right-0" on:click={() => (showPassword = !showPassword)}>
-				{#if showPassword}
-					<Icon icon="bi:eye-fill" color="white" width="24" />
-				{:else}
-					<Icon icon="bi:eye-slash-fill" color="gray" width="24" />
+				{#if errorStatus.email.status}
+					<div class="absolute top-11 left-0 text-xs text-red-500">{errorStatus.email.msg}</div>
 				{/if}
 			</div>
-		</div>
-		<div class="relative">
-			<!-- confirm password field -->
-			<FloatingLabelInput
-				id="password_confirm"
-				name="Password Confirm"
-				label="Password Confirm"
-				on:keydown={() => (errorStatus.confirm.status = false)}
-				color={errorStatus.confirm.status ? 'red' : 'base'}
-				type={showPassword ? 'text' : 'password'}
-				class="mb-4 !text-white"
-				bind:value={confirmPassword}
-			/>
-			{#if errorStatus.confirm.status}
-				<Helper class="mb-5" color="red">{errorStatus.confirm.msg}</Helper>
-			{/if}
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="absolute top-0 right-0" on:click={() => (showPassword = !showPassword)}>
-				{#if showPassword}
-					<Icon icon="bi:eye-fill" color="white" width="24" />
-				{:else}
-					<Icon icon="bi:eye-slash-fill" color="gray" width="24" />
+
+			<!-- Password field -->
+			<!-- TODO  - not working error 'type' attribute cannot be dynamic if input uses two-way binding 
+					type={showPassword ? 'text' : 'password'}
+				-->
+			<div class="group relative z-0 mb-6 w-full">
+				<input
+					bind:value={password}
+					on:keydown={() => (errorStatus.password.status = false)}
+					color={errorStatus.password.status ? 'red' : 'base'}
+					type="password"
+					name="floating_password"
+					autocomplete="current-password"
+					id="floating_password"
+					class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+					placeholder=" "
+					required
+				/>
+				<label
+					for="floating_password"
+					class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
+					>Password</label
+				>
+
+				<div class="absolute top-0 right-0" on:click={() => (showPassword = !showPassword)}>
+					{#if showPassword}
+						<Icon icon="bi:eye-fill" color="base" width="24" />
+					{:else}
+						<Icon icon="bi:eye-slash-fill" color="gray" width="24" />
+					{/if}
+				</div>
+
+				{#if errorStatus.password.status}
+					<div class="absolute top-11 left-0 text-xs text-red-500">{errorStatus.password.msg}</div>
 				{/if}
 			</div>
-		</div>
-		<div class="buttons">
-			<Button on:click={signup} color="light" class="mt-4">Sign Up</Button>
-		</div>
+
+			<!-- Password Confirm -->
+			<!-- TODO  - not working error 'type' attribute cannot be dynamic if input uses two-way binding 
+					type={showPassword ? 'text' : 'password'}
+				-->
+			<div class="group relative z-0 mb-6 w-full">
+				<input
+					bind:value={confirmPassword}
+					on:keydown={() => (errorStatus.confirm.status = false)}
+					color={errorStatus.confirm.status ? 'red' : 'base'}
+					type="password"
+					name="repeat_password"
+					id="floating_repeat_password"
+					class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+					placeholder=" "
+					required
+				/>
+				<label
+					for="floating_repeat_password"
+					class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
+					>Confirm Password</label
+				>
+
+				<div class="absolute top-0 right-0" on:click={() => (showPassword = !showPassword)}>
+					{#if showPassword}
+						<Icon icon="bi:eye-fill" color="base" width="24" />
+					{:else}
+						<Icon icon="bi:eye-slash-fill" color="gray" width="24" />
+					{/if}
+				</div>
+
+				{#if errorStatus.confirm.status}
+					<div class="absolute top-11 left-0 text-xs text-red-500">{errorStatus.confirm.msg}</div>
+				{/if}
+			</div>
+		</form>
+
+		<!-- TODO Skeleton Css not working -->
+		<button on:click={signup} class="btn btn-filled-surface btn-base mt-4">Sign Up</button>
 	</div>
 </div>
 

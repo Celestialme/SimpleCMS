@@ -210,8 +210,7 @@
 									use:tooltip={{ content: 'Admin User', position: 'right' }}
 								>
 									<Avatar
-										src={avatarSrc ??
-											'https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg'}
+										src={avatarSrc ?? '/Default_User.svg'}
 										class="dark:border-gray border-2 border-gray-400"
 									/>
 									<div class="text-center text-[9px] text-gray-400 dark:text-white">Admin</div>

@@ -8,7 +8,6 @@
 	// Skeleton
 	import { tooltip } from '@skeletonlabs/skeleton';
 	import { menu } from '@skeletonlabs/skeleton';
-	import { Paginator } from '@skeletonlabs/skeleton';
 
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
@@ -97,19 +96,6 @@
 	export let toggleSideBar = false;
 
 	// Table pagination
-
-	$: pageItems = {
-		//offset: 0,
-		//limit: 5,
-		// 	size: sourceData.length,
-		amounts: [10, 25, 50, 100, 500]
-	};
-
-	// $: sourcePaginated = source.slice(
-	// 	page.offset * page.limit, // start
-	// 	page.offset * page.limit + page.limit // end
-	// );
-
 	let rows = [];
 	let page = 1;
 	let totalPages = [];
@@ -239,18 +225,18 @@
 			<div class="inline-flex shadow-md hover:shadow-lg focus:shadow-lg" role="group">
 				{#if entryButton == 'create'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl font-bold text-white  md:ml-auto md:w-[150px]"
 						on:click={() => {
 							showFields = true;
 						}}
 						use:tooltip={{ content: 'Create ' + collection.name, position: 'bottom' }}
 					>
-						<Icon icon="ic:round-plus" color="black" width="30" class="mr-1" />
+						<Icon icon="ic:round-plus" color="white" width="30" class="mr-1" />
 						<div class="hidden md:block">Create</div>
 					</button>
 				{:else if entryButton == 'publish'}
 					<button
-						class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							publishEntry();
 						}}
@@ -261,7 +247,7 @@
 					</button>
 				{:else if entryButton == 'unpublish'}
 					<button
-						class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-200 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-200 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							unpublishEntry();
 						}}
@@ -272,7 +258,7 @@
 					</button>
 				{:else if entryButton == 'schedule'}
 					<button
-						class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-pink-600 via-pink-500 to-pink-400 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-pink-600 via-pink-500 to-pink-400 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							scheduleEntry();
 						}}
@@ -283,7 +269,7 @@
 					</button>
 				{:else if entryButton == 'clone'}
 					<button
-						class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							cloneEntry();
 						}}
@@ -294,7 +280,7 @@
 					</button>
 				{:else if entryButton == 'delete'}
 					<button
-						class="flex w-[70px] items-center justify-center rounded-l-full bg-gradient-to-br from-red-600 via-red-500 to-red-400 py-2 text-xl text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-red-600 via-red-500 to-red-400 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							deleteEntry();
 						}}
@@ -470,11 +456,6 @@
 			</tbody>
 		</table>
 	</div>
-
-	<!-- <Paginator bind:settings={pageItems} on:page={onPageChange} on:amount={onAmountChange} /> 
-	dont like this style at all 
-	-->
-	<Paginator bind:settings={pageItems} />
 </div>
 
 <div class="flex items-center justify-between  border-gray-200 px-4 py-3 sm:px-6">

@@ -13,7 +13,7 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"typesafe-i18n": "typesafe-i18n",
-		"start": "npm run dev -- --host & node --experimental-specifier-resolution=node --loader ts-node/esm ./server.ts",
+		"start": "npm run dev & node --experimental-specifier-resolution=node --loader ts-node/esm ./server.ts",
 		"stop": "npx kill-port 5173 & npx kill-port 3501"
 	},
 	"devDependencies": {
