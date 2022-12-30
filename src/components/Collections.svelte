@@ -1,8 +1,13 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	import type { Schema } from '@src/collections/types';
 	import { shape_fields } from '@src/utils/utils_svelte';
-	import { Tooltip } from 'flowbite-svelte';
+
+	// skeleton
+	import { tooltip } from '@skeletonlabs/skeleton';
+
+	// Icons from https://icon-sets.iconify.design/
+	import Icon from '@iconify/svelte';
+
 	export let filterCollections: string;
 	export let fields: Array<any>;
 	export let collection: Schema;
@@ -10,6 +15,7 @@
 	export let showFields: boolean;
 	export let category: string = '';
 	export let switchSideBar = true;
+
 	let expanded: any = {};
 
 	function setHeight(node: HTMLDivElement) {
@@ -43,13 +49,15 @@
 	}
 </script>
 
+<!-- Show Collection Group Names -->
 {#each filtered as item, index}
 	<div
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
 			expanded[index] ? setOverflowY(e, true) : setOverflowY(e, false);
 		}}
-		class="arrow relative h-[40px] cursor-pointer overflow-visible rounded bg-gray-500 py-2 text-center"
+		use:tooltip={{ content: item.category, position: 'right' }}
+		class="arrow relative h-[40px] cursor-pointer overflow-visible rounded-sm bg-gray-500 py-2 text-center last:mb-1"
 		class:arrow_up={expanded[index]}
 	>
 		<Icon
@@ -57,19 +65,16 @@
 			width="24"
 			class="absolute top-[50%] left-0 mr-2 ml-2 -translate-y-[50%]"
 		/>
-
 		{#if switchSideBar}
 			<div class="name">{item.category}</div>
 		{/if}
 	</div>
-	{#if !switchSideBar}
-		<Tooltip placement="right">{item.category}</Tooltip>
-	{/if}
 
-	<div use:setHeight class="overflow-hidden" class:expand={expanded[index]}>
+	<div use:setHeight class="overflow-hidden " class:expand={expanded[index]}>
+		<!-- Show Collection Group Childern -->
 		{#each item.collections as _collection}
 			<p
-				class="relative cursor-pointer border-b bg-white py-2 text-center text-black hover:bg-[#65dfff] hover:text-white"
+				class="relative cursor-pointer border-b border-gray-400 bg-white p-0 text-center text-black last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-gray-600"
 				on:click={async () => {
 					fields = await shape_fields(_collection.fields);
 					category = item.category;
@@ -82,7 +87,7 @@
 						<Icon
 							icon={_collection.icon}
 							width="24"
-							class="h-40px absolute top-[50%] left-0 ml-2 -translate-y-[50%] text-red-700 "
+							class="absolute top-[50%] left-0 ml-2 -translate-y-[50%] text-red-700 "
 						/>
 						{_collection.name}
 					</div>
@@ -95,9 +100,6 @@
 					</div>
 				{/if}
 			</p>
-			{#if !switchSideBar}
-				<Tooltip placement="right" class="absolute">{_collection.name}</Tooltip>
-			{/if}
 		{/each}
 	</div>
 {/each}
@@ -120,6 +122,7 @@
 		margin-right: 10px;
 		transition: transform 0.1s ease-in;
 	}
+
 	.arrow_up::after {
 		transform: rotate(225deg);
 	}

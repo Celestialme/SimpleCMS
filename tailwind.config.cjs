@@ -34,7 +34,10 @@ const config = {
   
 	plugins: [
 		require('flowbite/plugin'),
-		require('@skeletonlabs/skeleton/tailwind/theme.cjs')
+		require('@skeletonlabs/skeleton/tailwind/theme.cjs'),
+		require('@tailwindcss/forms'),
+		require('@tailwindcss/typography'),
+		require('@tailwindcss/line-clamp'),
 	],
 	darkMode: 'class',
   };

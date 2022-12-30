@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Text_Field } from './types';
-	import { Badge, ButtonGroup, Input, InputAddon, Helper } from 'flowbite-svelte';
-	import type { Colors } from 'flowbite-svelte/types';
+
 	import { language } from '@src/stores/store';
 	import env from '@root/env';
 
@@ -11,35 +10,42 @@
 	$: !value && (value = {}); //default value
 
 	$: widgetValue = value || {};
-	let BadgeColor = 'dark' as Colors;
 
 	$: _language = field.localization ? $language : env.LANGUAGE;
 </script>
 
-<ButtonGroup class={field.width ? field.width : 'w-full'}>
-	{#if field.prefix}<InputAddon>{field.prefix}</InputAddon>{/if}
+<div>
+	<div class="relative mt-1 rounded-md shadow-sm">
+		{#if field.prefix}
+			<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+				<span class="text-gray-500 sm:text-sm">{field.prefix}</span>
+			</div>
+		{/if}
 
-	<Input
-		id="input-text"
-		type="text"
-		placeholder={field.placeholder}
-		bind:value={widgetValue[_language]}
-	/>
+		<input
+			type="text"
+			name="price"
+			id="price"
+			class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+			placeholder="0.00"
+		/>
 
-	{#if field.count}
-		<InputAddon size="sm" defaultClass="bg-primary">
-			<Badge rounded large color={BadgeColor} class="border border-gray-500">
-				{field.count}
-			</Badge>
-		</InputAddon>{/if}
+		{#if field.count}
+			<div class="absolute inset-y-0 right-0 flex items-center">
+				<span class="badge badge-filled-primary pr-2  text-gray-500">{field.count}</span>
+			</div>
+		{/if}
 
-	{#if field.suffix}
-		<InputAddon>{field.suffix}</InputAddon>
-	{/if}
-</ButtonGroup>
+		{#if field.suffix}
+			<div class="absolute inset-y-0 right-0 flex items-center">
+				<span class="pr-2 text-gray-500">{field.suffix}</span>
+			</div>
+		{/if}
+	</div>
+</div>
 
-<!-- {#if field.validation}
-	<Helper color="red" class="mt-1">
-		{field.validation}
-	</Helper>
-{/if} -->
+<style>
+	@import '@skeletonlabs/skeleton/styles/all.css';
+	@import '@skeletonlabs/skeleton/styles/elements.css';
+	@import '@skeletonlabs/skeleton/styles/elements/badges.css';
+</style>

@@ -6,27 +6,31 @@
 	import { entryData, credentials } from '@src/stores/store';
 	import Collections from '@src/components/Collections.svelte';
 	import Alerts from '@src/components/Alerts.svelte';
+	import { fly } from 'svelte/transition';
 	import axios from 'axios';
 	import env from '@root/env';
 	import { goto } from '$app/navigation';
-	import {
-		Avatar,
-		Badge,
-		Button,
-		DarkMode,
-		Dropdown,
-		DropdownItem,
-		NavHamburger,
-		Search,
-		SidebarGroup,
-		Tooltip
-	} from 'flowbite-svelte';
+
+	// skeleton
+	import { Avatar } from '@skeletonlabs/skeleton';
+	let avatarSrc = '';
+	import { menu } from '@skeletonlabs/skeleton';
+	import { tooltip } from '@skeletonlabs/skeleton';
 
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
 
-	import { fly } from 'svelte/transition';
 	import SimpleCmsLogo from '@src/components/icons/SimpleCMS_Logo.svelte';
+
+	let expanded = false;
+	let toggle = true;
+	let searchbutton;
+
+	// darkmode - is this still required?
+	const toggleTheme = () => {
+		const isDark = window.document.documentElement.classList.toggle('dark');
+		localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+	};
 
 	let valid = false;
 	let collection = collections[0];
@@ -123,10 +127,21 @@
 						: 'w-[80px]'}"
 				>
 					{#if !switchSideBar}
-						<NavHamburger
-							btnClass="mt-2 -ml-2 xl:hidden"
-							on:click={() => (toggleSideBar = !toggleSideBar)}
-						/>
+						<!-- hamburger -->
+						<div class="flex items-center">
+							<button
+								class="btn btn-sm mt-2 -ml-2 "
+								on:click={() => (toggleSideBar = !toggleSideBar)}
+							>
+								<span>
+									<svg viewBox="0 0 100 80" class="fill-token h-4 w-4">
+										<rect width="100" height="20" />
+										<rect y="30" width="100" height="20" />
+										<rect y="60" width="100" height="20" />
+									</svg>
+								</span>
+							</button>
+						</div>
 					{/if}
 
 					<!-- sidebar collapse button -->
@@ -141,88 +156,159 @@
 						{/if}
 					</button>
 
-					<SidebarGroup bind:fields bind:collection bind:showFields>
-						<div href="/" class="1 mt-2 flex cursor-pointer items-center justify-start">
-							<SimpleCmsLogo fill="red" className="h-8 ml-[10px] hidden xl:block" />
-							{#if switchSideBar}
-								<span class="ml-2 mt-1 text-2xl font-bold text-black dark:text-white"
-									>SimpleCMS</span
-								>
-							{/if}
+					<a href="/" class="1 mt-2 flex cursor-pointer items-center justify-start">
+						<SimpleCmsLogo fill="red" className="h-8 ml-[10px] " />
+						{#if switchSideBar}
+							<span class="ml-2 mt-1 text-2xl font-bold text-black dark:text-white">SimpleCMS</span>
+						{/if}
+					</a>
+
+					<!-- Search Collections -->
+					<div class="mx-auto my-2 max-w-md">
+						<div class="relative mx-auto w-max">
+							<input
+								on:keyup={updateFilter}
+								placeholder="Search ..."
+								class="relative z-10 h-10 w-10 cursor-pointer rounded-full border bg-transparent pl-12 text-black outline-none focus:w-full focus:cursor-text focus:rounded-md focus:pl-10 focus:pr-4 dark:bg-gray-500/50 dark:text-white lg:w-full "
+							/>
+
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-white px-3.5 "
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+								/>
+							</svg>
 						</div>
+					</div>
 
-						<Search size="md" placeholder="Search ..." class="mt-3" on:keyup={updateFilter} />
+					<!-- Display Collections -->
+					<Collections
+						data={categories}
+						{filterCollections}
+						{switchSideBar}
+						bind:fields
+						bind:collection
+						bind:category
+						bind:showFields
+					/>
 
-						<Collections
-							data={categories}
-							{filterCollections}
-							{switchSideBar}
-							bind:fields
-							bind:collection
-							bind:category
-							bind:showFields
-						/>
-					</SidebarGroup>
 					{#if switchSideBar}
-						<SidebarGroup border class="!mt-auto mb-5 mr-2 ">
-							<div class="my-1 ml-2 flex justify-between">
-								<a href="/user" class="flex-col">
-									<Avatar size="xs" class="dark:border-gray border-2 border-gray-400" />
-									<div class="text-[9px] text-gray-400 dark:text-white">Admin</div>
+						<!-- Sidebar left footer Desktop -->
+						<div class="mt-auto border-t border-gray-500 pt-2 ">
+							<div class="my-1 flex items-center justify-between">
+								<a
+									href="/user"
+									class="flex-col"
+									use:tooltip={{ content: 'Admin User', position: 'right' }}
+								>
+									<Avatar
+										src={avatarSrc ??
+											'https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg'}
+										class="dark:border-gray border-2 border-gray-400"
+									/>
+									<div class="text-center text-[9px] text-gray-400 dark:text-white">Admin</div>
 								</a>
-								<Tooltip placement="right" stlye="auto">Admin User</Tooltip>
 
-								<Button size="xs" color="alternative" class="border-0">Eng</Button>
+								<!-- System Language desktop -->
+								<span class="relative">
+									<!-- Trigger: apply the 'use:menu' action and supply the unique menu ID -->
+									<button
+										use:menu={{ menu: 'system-language' }}
+										use:tooltip={{ content: 'System Language', position: 'right' }}
+										class="text-gray-500 dark:text-white">Eng</button
+									>
 
-								<Dropdown color="dark" placement="right-start">
-									<DropdownItem>English</DropdownItem>
-									<DropdownItem>German</DropdownItem>
-								</Dropdown>
+									<!-- Menu: set a matching 'data-menu-[menuId]' attribute -->
+									<nav
+										class="list-nav card w-40 bg-gray-500 p-2 shadow-xl dark:border"
+										data-menu="system-language"
+									>
+										<ul class="divide-y-2">
+											<li><a href="/">English</a></li>
+											<li><a href="/">German</a></li>
+										</ul>
+									</nav>
+								</span>
 
-								<DarkMode />
-
-								<Tooltip placement="right" stlye="auto">
-									{is_dark() ? 'Switch to Light mode' : 'Switch to Dark mode'}
-								</Tooltip>
+								<button
+									on:click={toggleTheme}
+									id="theme-toggle"
+									class="btn rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+									use:tooltip={{ content: 'Switch', position: 'right' }}
+								>
+									<Icon icon="bi:sun" width="16" id="theme-toggle-light-icon" />
+									<Icon icon="bi:moon-fill" width="16" id="theme-toggle-dark-icon" />
+								</button>
 							</div>
 
 							<div class="flex justify-center p-1 pb-2">
-								<Badge
-									color="none"
-									rounded
-									class="bg-gradient-to-br from-lime-500 via-lime-500 to-lime-300 px-6 text-black"
-									href="https://github.com/Celestialme/SimpleCMS"
-									target="blank">Version: {env.PKG.VERSION}</Badge
-								>
+								<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
+									<span class="badge badge-filled-primary">Version: {env.PKG.VERSION}</span>
+								</a>
 							</div>
-						</SidebarGroup>
+						</div>
 					{:else}
-						<SidebarGroup border class="absolute bottom-0 mt-2 flex-col pb-5 text-center">
-							<a href="/user" class="flex-col ">
-								<Avatar size="xs" class="dark:border-gray m-auto border-2 border-gray-400" />
+						<!-- Sidebar left footer mobile -->
+						<div
+							class="absolute bottom-0 mt-2 flex-col border-t border-gray-500 pb-5 pt-2 text-center"
+						>
+							<a
+								href="/user"
+								class="flex-col"
+								use:tooltip={{ content: 'Admin', position: 'right' }}
+							>
+								<Avatar
+									src={avatarSrc ?? '/path/to/default.jpg'}
+									class="dark:border-gray m-auto border-2 border-gray-400"
+								/>
 								<div class="text-[9px] text-gray-400 dark:text-white">Admin</div>
 							</a>
-							<Tooltip placement="right" stlye="auto">Admin User</Tooltip>
 
-							<Button size="xs" color="alternative" class="m-0 -ml-1 border-0 p-0 ">Eng</Button
-							><Dropdown placement="right-start" color="dark">
-								<DropdownItem>English</DropdownItem>
-								<DropdownItem>German</DropdownItem>
-							</Dropdown>
+							<!-- System Language Mobile -->
+							<span class="relative">
+								<!-- Trigger: apply the 'use:menu' action and supply the unique menu ID -->
+								<button
+									use:menu={{ menu: 'system-language' }}
+									use:tooltip={{ content: 'System Language', position: 'right' }}
+									class="text-gray-500 dark:text-white">Eng</button
+								>
 
-							<div class="-ml-2"><DarkMode /></div>
-							<Tooltip placement="right" stlye="auto"
-								>{is_dark() ? 'Switch to Light mode' : 'Switch to Dark mode'}</Tooltip
-							>
+								<!-- Menu: set a matching 'data-menu-[menuId]' attribute -->
+								<nav
+									class="list-nav card w-40 bg-gray-500 p-2 shadow-xl dark:border"
+									data-menu="system-language"
+								>
+									<ul class="divide-y-2">
+										<li><a href="/">English</a></li>
+										<li><a href="/">German</a></li>
+									</ul>
+								</nav>
+							</span>
 
-							<Badge
-								color="green"
-								rounded
-								href="https://github.com/Celestialme/SimpleCMS"
-								target="blank"
-								class="mt-2">Ver. {env.PKG.VERSION}</Badge
-							>
-						</SidebarGroup>
+							<div class="-ml-2">
+								<button
+									on:click={toggleTheme}
+									id="theme-toggle"
+									class="btn rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+									use:tooltip={{ content: 'Switch', position: 'right' }}
+								>
+									<Icon icon="bi:sun" width="16" id="theme-toggle-light-icon" />
+									<Icon icon="bi:moon-fill" width="16" id="theme-toggle-dark-icon" />
+								</button>
+							</div>
+
+							<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
+								<span class="badge badge-filled-primary">Ver. {env.PKG.VERSION}</span>
+							</a>
+						</div>
 					{/if}
 				</aside>
 			</div>
@@ -251,35 +337,9 @@
 			>
 				<!-- Save button with progressbar -->
 
-				<!-- <Button
-					on:click={() => submit()}
-					class="relative mt-2 mb-2 w-full max-w-[150px] text-xl md:mt-2 md:max-w-[350px]"
-					submit
-					gradient
-					color="lime"
-					><div class="relative flex items-center justify-center text-xl uppercase">
-						<Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />
-						Save
-					</div>
-					{#if required}
-						
-						<div class="relative mt-2 h-2 w-full rounded-full bg-gray-500">
-							<div
-								class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-blue-500"
-								style="width: 50%"
-							/>
-							<div
-								class="absolute top-0 left-0 flex h-full w-full items-center justify-center text-xs font-bold text-white"
-							>
-								50%
-							</div>
-						</div>
-					{/if}
-				</Button>
-				<Tooltip placement="bottom" color="green">Save {collection?.name}</Tooltip> -->
-
 				<button
 					on:click={() => submit()}
+					use:tooltip={{ content: 'Save {collection?.name}', position: 'right' }}
 					class="w-full max-w-[150px] rounded-lg bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 px-4 py-2 font-bold hover:bg-lime-500 focus:bg-lime-500 active:bg-lime-600 md:max-w-[350px]"
 				>
 					<div class="flex items-center justify-center text-xl uppercase">
@@ -303,7 +363,7 @@
 						</div>
 					{/if}
 				</button>
-				<Tooltip placement="bottom">Save {collection?.name}</Tooltip>
+
 				{#if required}
 					<!-- progress bar -->
 					<div class="relative mx-auto mt-1 h-2 w-[80%] rounded-full bg-gray-500 px-4 md:hidden">
@@ -324,6 +384,10 @@
 </div>
 
 <style>
+	/* why re these import needed here and not globally in +layout? */
+	@import '@skeletonlabs/skeleton/styles/all.css';
+	@import '@skeletonlabs/skeleton/styles/elements.css';
+	@import '@skeletonlabs/skeleton/styles/elements/tables.css';
 	.body {
 		display: flex;
 		flex-direction: column;

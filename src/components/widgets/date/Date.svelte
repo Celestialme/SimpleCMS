@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { Datepicker } from "flowbite-svelte";
+	import { Datepicker } from 'svelte-calendar';
 
 	export let field: any = undefined;
-	export let value = "";
+	export let value = '';
 
 	export let widgetValue;
 	$: widgetValue = value;
 </script>
 
-<Datepicker datepickerButtons />
+<Datepicker bind:value />

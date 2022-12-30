@@ -1,17 +1,16 @@
 <script lang="ts">
-	import { Input } from "flowbite-svelte";
-
 	export let field: any = undefined;
-	export let value = "";
+	export let value = '';
 
 	export let widgetValue;
 	$: widgetValue = value;
 </script>
 
-<Input
+<input
+	bind:value
+	placeholder={field.placeholder}
 	type="url"
 	id="website"
-	placeholder={field.placeholder}
-	bind:value
+	autocomplete="off"
 	class="input w-full "
 />

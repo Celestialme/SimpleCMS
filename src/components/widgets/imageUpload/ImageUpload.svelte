@@ -1,14 +1,17 @@
 <script lang="ts">
 	import axios from 'axios';
+
+	import { FileDropzone } from '@skeletonlabs/skeleton';
+
 	export let field = { title: '', path: '' };
 	//value is File when used inside imageArray, is dbObject when shown from entrylist.
-	export let value: any={};
+	export let value: any = {};
 	export let widgetValue: FileList;
-	$:console.log(widgetValue)
+	$: console.log(widgetValue);
 	function setFile(node: HTMLInputElement) {
 		node.onchange = (e) => (widgetValue = (e.target as HTMLInputElement).files as FileList);
 		if (!value) return;
-		
+
 		if (value.type) {
 			let fileList = new DataTransfer();
 			fileList.items.add(value);
@@ -25,7 +28,6 @@
 					widgetValue = node.files = fileList.files;
 				});
 		}
-		
 	}
 </script>
 
@@ -33,11 +35,13 @@
 	use:setFile
 	hidden={!!widgetValue}
 	name={field.title}
-	class="w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+	class="w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400"
 	type="file"
 />
+<FileDropzone />
+
 {#if widgetValue}
-	<img  src={URL.createObjectURL(widgetValue[0])} alt="" />
+	<img src={URL.createObjectURL(widgetValue[0])} alt="" />
 {/if}
 
 <style>

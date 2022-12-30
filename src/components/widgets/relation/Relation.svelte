@@ -4,7 +4,7 @@
 	import { shape_fields, saveSimpleData } from '@src/utils/utils_svelte';
 	import { entryData, getFieldsData } from '@src/stores/store';
 	import DropDown from '@src/components/DropDown.svelte';
-	import { Button } from 'flowbite-svelte';
+	
 
 	export let field: any;
 	export let value: any;
@@ -66,21 +66,21 @@
 		>
 			{selectedField || display || 'Chose existing...'}
 		</p>
-		<Button
+		<button
 			on:click={() => {
 				value = null;
 				widgetValue = null;
 				selected = null;
 				display = null;
 			}}
-			class="btn btn-small">D</Button
+			class="btn ">D</Button
 		>
-		<Button
+		<button
 			on:click={() => {
 				expanded = !expanded;
 				selected = null;
 			}}
-			class=" mr-1 btn btn-small">{value ? '✎' : '+'}</Button
+			class=" mr-1 btn">{value ? '✎' : '+'}</Button
 		>
 
 		

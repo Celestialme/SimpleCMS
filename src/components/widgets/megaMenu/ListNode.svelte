@@ -6,46 +6,46 @@
 	export let level: number = 0;
 	export let editing: boolean = false;
 	export let showLevelContent: boolean = false;
-	import { MenuCurrentChild,language } from '@src/stores/store';
-	import { Button } from 'flowbite-svelte';
+	import { MenuCurrentChild, language } from '@src/stores/store';
+
 	let expanded = false;
 </script>
 
 <li>
 	<div on:click={() => (expanded = !expanded)}>
-		<p style="margin-left:{20 * level}px" class="pl-[20px] relative text-black">
+		<p style="margin-left:{20 * level}px" class="relative pl-[20px] text-black">
 			{#if children?.length > 0}
 				<div class="arrow" class:expanded />
 			{/if}
 			{self?.Name[$language]}
 		</p>
 		{#if level > 0}
-			<Button
+			<button
 				on:click={() => {
 					parent.children.splice(parent.children.indexOf(self), 1);
 					depth = level;
 					editing = true;
 					$MenuCurrentChild = self;
 				}}
-				class="ml-auto btn btn-sm">❌</Button
+				class="btn btn-sm ml-auto">❌</button
 			>
 		{/if}
-		<Button
+		<button
 			on:click={() => {
 				depth = level;
 				showLevelContent = !showLevelContent;
 				$MenuCurrentChild = self;
 				editing = true;
 			}}
-			class=" btn btn-sm {level == 0 ? 'ml-auto' : ''}">✎</Button
+			class="btn btn-sm {level == 0 ? 'ml-auto' : ''}">✎</button
 		>
-		<Button
+		<button
 			on:click={() => {
 				depth = level + 1;
 				showLevelContent = !showLevelContent;
 				$MenuCurrentChild = self;
 			}}
-			class="btn btn-sm">+</Button
+			class="btn btn-sm">+</button
 		>
 	</div>
 </li>
