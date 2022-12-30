@@ -53,7 +53,6 @@ let schema: Schema = {
 		widgets.Number({
 			title: 'Number',
 			icon: 'carbon:character-whole-number',
-			placeholder: 'Enter Number',
 			required: true
 		}),
 

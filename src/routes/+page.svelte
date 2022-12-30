@@ -13,7 +13,7 @@
 
 	// skeleton
 	import { Avatar } from '@skeletonlabs/skeleton';
-	let avatarSrc = '';
+	let avatarSrc = null;
 	import { menu } from '@skeletonlabs/skeleton';
 	import { tooltip } from '@skeletonlabs/skeleton';
 
@@ -25,12 +25,6 @@
 	let expanded = false;
 	let toggle = true;
 	let searchbutton;
-
-	// darkmode - is this still required?
-	const toggleTheme = () => {
-		const isDark = window.document.documentElement.classList.toggle('dark');
-		localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
-	};
 
 	let valid = false;
 	let collection = collections[0];
@@ -83,9 +77,18 @@
 		filterCollections = (e.target as HTMLInputElement).value.toLowerCase();
 	}
 	shape_fields(collection.fields).then((data) => (fields = data));
+
+	// darkmode - is this still required?
+	const toggleTheme = () => {
+		const isDark = window.document.documentElement.classList.toggle('dark');
+		localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+	};
+
 	function is_dark() {
 		return document.documentElement.classList.contains('dark');
 	}
+
+	console.log(is_dark);
 
 	let completionPercentage = '25%';
 	let required = true;
@@ -122,13 +125,13 @@
 					id="sidebarLeft"
 					in:fly={{ x: -200, duration: 500 }}
 					out:fly={{ x: -200, duration: 500 }}
-					class="+ flex h-screen resize-x flex-col rounded-r-md bg-white px-2 shadow-xl dark:bg-gray-800 {switchSideBar
+					class="+ mr-2 flex h-screen resize-x flex-col rounded-r-md bg-white px-2 shadow-xl dark:bg-gray-800 {switchSideBar
 						? 'w-[225px]'
 						: 'w-[80px]'}"
 				>
 					{#if !switchSideBar}
 						<!-- hamburger -->
-						<div class="flex items-center">
+						<div class="flex items-center md:hidden">
 							<button
 								class="btn btn-sm mt-2 -ml-2 "
 								on:click={() => (toggleSideBar = !toggleSideBar)}
@@ -146,7 +149,7 @@
 
 					<!-- sidebar collapse button -->
 					<button
-						class="absolute top-2 -right-4 mr-1 rounded-full border-4 border-gray-300 text-gray-500 hover:cursor-pointer hover:bg-red-600 dark:border-gray-900 dark:text-white hover:dark:bg-black hover:dark:text-red-600"
+						class="absolute top-2 -right-2 mr-1 rounded-full border-4 border-gray-300 text-gray-500 hover:cursor-pointer hover:bg-red-600 dark:border-gray-900 dark:text-white hover:dark:bg-black hover:dark:text-red-600"
 						on:click={() => (switchSideBar = !switchSideBar)}
 					>
 						{#if !switchSideBar}
@@ -209,10 +212,7 @@
 									class="flex-col"
 									use:tooltip={{ content: 'Admin User', position: 'right' }}
 								>
-									<Avatar
-										src={avatarSrc ?? '/Default_User.svg'}
-										class="dark:border-gray border-2 border-gray-400"
-									/>
+									<Avatar src={avatarSrc ?? '/Default_User.svg'} class=" border border-gray-400" />
 									<div class="text-center text-[9px] text-gray-400 dark:text-white">Admin</div>
 								</a>
 
@@ -265,8 +265,8 @@
 								use:tooltip={{ content: 'Admin', position: 'right' }}
 							>
 								<Avatar
-									src={avatarSrc ?? '/path/to/default.jpg'}
-									class="dark:border-gray m-auto border-2 border-gray-400"
+									src={avatarSrc ?? '/Default_User.svg'}
+									class="m-auto border border-gray-400"
 								/>
 								<div class="text-[9px] text-gray-400 dark:text-white">Admin</div>
 							</a>
@@ -339,9 +339,9 @@
 				<button
 					on:click={() => submit()}
 					use:tooltip={{ content: 'Save {collection?.name}', position: 'right' }}
-					class="w-full max-w-[150px] rounded-lg bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 px-4 py-2 font-bold hover:bg-lime-500 focus:bg-lime-500 active:bg-lime-600 md:max-w-[350px]"
+					class="w-full max-w-[150px] rounded-lg bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 px-4 py-2 font-bold hover:bg-lime-500 focus:bg-lime-500 active:bg-lime-600 md:mt-2 md:max-w-[350px]"
 				>
-					<div class="flex items-center justify-center text-xl uppercase">
+					<div class=" flex items-center justify-center text-xl uppercase">
 						<Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />
 						Save
 					</div>

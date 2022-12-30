@@ -18,27 +18,39 @@
 	<div class="relative mt-1 rounded-md shadow-sm">
 		{#if field.prefix}
 			<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-				<span class="text-gray-500 sm:text-sm">{field.prefix}</span>
+				<span class="text-gray-600 dark:text-gray-200">{field.prefix}</span>
 			</div>
 		{/if}
 
 		<input
 			type="text"
-			name="price"
-			id="price"
-			class="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-			placeholder="0.00"
+			name={field.title}
+			id={field.title}
+			class="block w-full rounded-md border-gray-300 pl-7 pr-12 sm:text-sm"
+			placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}
 		/>
-
+		<!-- why is this not working ?
+			right-[calc(#suffix - 12px)] 
+		-->
 		{#if field.count}
-			<div class="absolute inset-y-0 right-0 flex items-center">
-				<span class="badge badge-filled-primary pr-2  text-gray-500">{field.count}</span>
-			</div>
+			{#if field.suffix}
+				<div class=" absolute inset-y-0 right-9  flex items-center">
+					<span class="badge mr-1 border border-gray-500 text-gray-600 dark:text-gray-200"
+						>{field.count}</span
+					>
+				</div>
+			{:else}
+				<div class="absolute inset-y-0 right-0 flex items-center">
+					<span class="badge mr-1 border border-gray-500 text-gray-600 dark:text-gray-200"
+						>{field.count}</span
+					>
+				</div>
+			{/if}
 		{/if}
 
 		{#if field.suffix}
-			<div class="absolute inset-y-0 right-0 flex items-center">
-				<span class="pr-2 text-gray-500">{field.suffix}</span>
+			<div id="suffix" class="absolute inset-y-0 right-0 flex items-center">
+				<span class="pr-2 text-gray-600 dark:text-gray-200">{field.suffix}</span>
 			</div>
 		{/if}
 	</div>

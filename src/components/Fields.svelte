@@ -17,18 +17,21 @@
 	onMount(async () => {
 		$getFieldsData.add(getData);
 	});
-	$: console.log(fieldsValue);
+	// $: console.log(fieldsValue.width);
 </script>
 
 {#each fields as field, index}
-	<div bind:this={inputFields[index]} class="section relative my-2">
+	<!-- width does not seam to apply -->
+	<div bind:this={inputFields[index]} class="section relative my-2 {field.field.width || 'w-full'}">
 		<div class=" relative flex font-bold capitalize">
-			<p class=" font-bold">
+			<p class="font-bold">
 				{field.field.title}
+
 				{#if field.field.required}
 					<span class="ml-1 pb-3 text-red-500">*</span>
 				{/if}
 			</p>
+
 			<div class="absolute right-0 flex gap-4">
 				{#if field.field.localization}
 					<div class="flex items-center gap-1 px-2">

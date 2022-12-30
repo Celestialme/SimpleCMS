@@ -44,7 +44,9 @@
 			params={{ x: 200 }}
 			class="absolute bottom-2 right-3 z-20 my-2 bg-gradient-to-br  from-lime-700 via-lime-600 to-lime-500 text-white shadow-xl"
 		>
-			<button on:click={() => (alertMessage = '')} class="btn absolute -top-2 right-0">X</button>
+			<button on:click={() => (alertMessage = '')} class="btn btn-sm absolute top-0 right-0"
+				>X</button
+			>
 			<svelte:fragment slot="lead">
 				<Icon icon={alertIcon} width="24" color="white" />
 			</svelte:fragment>

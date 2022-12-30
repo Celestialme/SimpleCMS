@@ -8,9 +8,9 @@
 
 <input
 	bind:value
-	placeholder={field.placeholder}
+	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}
 	type="url"
 	id="website"
 	autocomplete="off"
-	class="input w-full "
+	class="input w-full rounded-md"
 />

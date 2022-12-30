@@ -20,9 +20,271 @@
 	export let widgetValue;
 	$: widgetValue = value;
 
-	// Language filter incorrect
-	function searchCountry(e: Event) {
-		// more
+	let countries = [
+		{ code: 'AF', name: 'Afghanistan' },
+		{ code: 'AX', name: 'Åland Islands' },
+		{ code: 'AL', name: 'Albania' },
+		{ code: 'DZ', name: 'Algeria' },
+		{ code: 'AS', name: 'American Samoa' },
+		{ code: 'AD', name: 'Andorra' },
+		{ code: 'AO', name: 'Angola' },
+		{ code: 'AI', name: 'Anguilla' },
+		{ code: 'AQ', name: 'Antarctica' },
+		{ code: 'AG', name: 'Antigua &amp; Barbuda' },
+		{ code: 'AR', name: 'Argentina' },
+		{ code: 'AM', name: 'Armenia' },
+		{ code: 'AW', name: 'Aruba' },
+		{ code: 'AC', name: 'Ascension Island' },
+		{ code: 'AU', name: 'Australia' },
+		{ code: 'AT', name: 'Austria' },
+		{ code: 'AZ', name: 'Azerbaijan' },
+		{ code: 'BS', name: 'Bahamas' },
+		{ code: 'BH', name: 'Bahrain' },
+		{ code: 'BD', name: 'Bangladesh' },
+		{ code: 'BB', name: 'Barbados' },
+		{ code: 'BY', name: 'Belarus' },
+		{ code: 'BE', name: 'Belgium' },
+		{ code: 'BZ', name: 'Belize' },
+		{ code: 'BJ', name: 'Benin' },
+		{ code: 'BM', name: 'Bermuda' },
+		{ code: 'BT', name: 'Bhutan' },
+		{ code: 'BO', name: 'Bolivia' },
+		{ code: 'BA', name: 'Bosnia &amp; Herzegovina' },
+		{ code: 'BW', name: 'Botswana' },
+		{ code: 'BV', name: 'Bouvet Island' },
+		{ code: 'BR', name: 'Brazil' },
+		{ code: 'IO', name: 'British Indian Ocean Territory' },
+		{ code: 'VG', name: 'British Virgin Islands' },
+		{ code: 'BN', name: 'Brunei' },
+		{ code: 'BG', name: 'Bulgaria' },
+		{ code: 'BF', name: 'Burkina Faso' },
+		{ code: 'BI', name: 'Burundi' },
+		{ code: 'KH', name: 'Cambodia' },
+		{ code: 'CM', name: 'Cameroon' },
+		{ code: 'CA', name: 'Canada' },
+		{ code: 'CV', name: 'Cape Verde' },
+		{ code: 'BQ', name: 'Caribbean Netherlands' },
+		{ code: 'KY', name: 'Cayman Islands' },
+		{ code: 'CF', name: 'Central African Republic' },
+		{ code: 'TD', name: 'Chad' },
+		{ code: 'CL', name: 'Chile' },
+		{ code: 'CN', name: 'China' },
+		{ code: 'CX', name: 'Christmas Island' },
+		{ code: 'CC', name: 'Cocos (Keeling) Islands' },
+		{ code: 'CO', name: 'Colombia' },
+		{ code: 'KM', name: 'Comoros' },
+		{ code: 'CG', name: 'Congo - Brazzaville' },
+		{ code: 'CD', name: 'Congo - Kinshasa' },
+		{ code: 'CK', name: 'Cook Islands' },
+		{ code: 'CR', name: 'Costa Rica' },
+		{ code: 'CI', name: 'Côte d’Ivoire' },
+		{ code: 'HR', name: 'Croatia' },
+		{ code: 'CW', name: 'Curaçao' },
+		{ code: 'CY', name: 'Cyprus' },
+		{ code: 'CZ', name: 'Czechia' },
+		{ code: 'DK', name: 'Denmark' },
+		{ code: 'DJ', name: 'Djibouti' },
+		{ code: 'DM', name: 'Dominica' },
+		{ code: 'DO', name: 'Dominican Republic' },
+		{ code: 'EC', name: 'Ecuador' },
+		{ code: 'EG', name: 'Egypt' },
+		{ code: 'SV', name: 'El Salvador' },
+		{ code: 'GQ', name: 'Equatorial Guinea' },
+		{ code: 'ER', name: 'Eritrea' },
+		{ code: 'EE', name: 'Estonia' },
+		{ code: 'SZ', name: 'Eswatini' },
+		{ code: 'ET', name: 'Ethiopia' },
+		{ code: 'FK', name: 'Falkland Islands (Islas Malvinas)' },
+		{ code: 'FO', name: 'Faroe Islands' },
+		{ code: 'FJ', name: 'Fiji' },
+		{ code: 'FI', name: 'Finland' },
+		{ code: 'FR', name: 'France' },
+		{ code: 'GF', name: 'French Guiana' },
+		{ code: 'PF', name: 'French Polynesia' },
+		{ code: 'TF', name: 'French Southern Territories' },
+		{ code: 'GA', name: 'Gabon' },
+		{ code: 'GM', name: 'Gambia' },
+		{ code: 'GE', name: 'Georgia' },
+		{ code: 'DE', name: 'Germany' },
+		{ code: 'GH', name: 'Ghana' },
+		{ code: 'GI', name: 'Gibraltar' },
+		{ code: 'GR', name: 'Greece' },
+		{ code: 'GL', name: 'Greenland' },
+		{ code: 'GD', name: 'Grenada' },
+		{ code: 'GP', name: 'Guadeloupe' },
+		{ code: 'GU', name: 'Guam' },
+		{ code: 'GT', name: 'Guatemala' },
+		{ code: 'GG', name: 'Guernsey' },
+		{ code: 'GN', name: 'Guinea' },
+		{ code: 'GW', name: 'Guinea-Bissau' },
+		{ code: 'GY', name: 'Guyana' },
+		{ code: 'HT', name: 'Haiti' },
+		{ code: 'HM', name: 'Heard &amp; McDonald Islands' },
+		{ code: 'HN', name: 'Honduras' },
+		{ code: 'HK', name: 'Hong Kong' },
+		{ code: 'HU', name: 'Hungary' },
+		{ code: 'IS', name: 'Iceland' },
+		{ code: 'IN', name: 'India' },
+		{ code: 'ID', name: 'Indonesia' },
+		{ code: 'IR', name: 'Iran' },
+		{ code: 'IQ', name: 'Iraq' },
+		{ code: 'IE', name: 'Ireland' },
+		{ code: 'IM', name: 'Isle of Man' },
+		{ code: 'IL', name: 'Israel' },
+		{ code: 'IT', name: 'Italy' },
+		{ code: 'JM', name: 'Jamaica' },
+		{ code: 'JP', name: 'Japan' },
+		{ code: 'JE', name: 'Jersey' },
+		{ code: 'JO', name: 'Jordan' },
+		{ code: 'KZ', name: 'Kazakhstan' },
+		{ code: 'KE', name: 'Kenya' },
+		{ code: 'KI', name: 'Kiribati' },
+		{ code: 'XK', name: 'Kosovo' },
+		{ code: 'KW', name: 'Kuwait' },
+		{ code: 'KG', name: 'Kyrgyzstan' },
+		{ code: 'LA', name: 'Laos' },
+		{ code: 'LV', name: 'Latvia' },
+		{ code: 'LB', name: 'Lebanon' },
+		{ code: 'LS', name: 'Lesotho' },
+		{ code: 'LR', name: 'Liberia' },
+		{ code: 'LY', name: 'Libya' },
+		{ code: 'LI', name: 'Liechtenstein' },
+		{ code: 'LT', name: 'Lithuania' },
+		{ code: 'LU', name: 'Luxembourg' },
+		{ code: 'MO', name: 'Macao' },
+		{ code: 'MG', name: 'Madagascar' },
+		{ code: 'MW', name: 'Malawi' },
+		{ code: 'MY', name: 'Malaysia' },
+		{ code: 'MV', name: 'Maldives' },
+		{ code: 'ML', name: 'Mali' },
+		{ code: 'MT', name: 'Malta' },
+		{ code: 'MH', name: 'Marshall Islands' },
+		{ code: 'MQ', name: 'Martinique' },
+		{ code: 'MR', name: 'Mauritania' },
+		{ code: 'MU', name: 'Mauritius' },
+		{ code: 'YT', name: 'Mayotte' },
+		{ code: 'MX', name: 'Mexico' },
+		{ code: 'FM', name: 'Micronesia' },
+		{ code: 'MD', name: 'Moldova' },
+		{ code: 'MC', name: 'Monaco' },
+		{ code: 'MN', name: 'Mongolia' },
+		{ code: 'ME', name: 'Montenegro' },
+		{ code: 'MS', name: 'Montserrat' },
+		{ code: 'MA', name: 'Morocco' },
+		{ code: 'MZ', name: 'Mozambique' },
+		{ code: 'MM', name: 'Myanmar (Burma)' },
+		{ code: 'NA', name: 'Namibia' },
+		{ code: 'NR', name: 'Nauru' },
+		{ code: 'NP', name: 'Nepal' },
+		{ code: 'NL', name: 'Netherlands' },
+		{ code: 'NC', name: 'New Caledonia' },
+		{ code: 'NZ', name: 'New Zealand' },
+		{ code: 'NI', name: 'Nicaragua' },
+		{ code: 'NE', name: 'Niger' },
+		{ code: 'NG', name: 'Nigeria' },
+		{ code: 'NU', name: 'Niue' },
+		{ code: 'NF', name: 'Norfolk Island' },
+		{ code: 'KP', name: 'North Korea' },
+		{ code: 'MK', name: 'North Macedonia' },
+		{ code: 'MP', name: 'Northern Mariana Islands' },
+		{ code: 'NO', name: 'Norway' },
+		{ code: 'OM', name: 'Oman' },
+		{ code: 'PK', name: 'Pakistan' },
+		{ code: 'PW', name: 'Palau' },
+		{ code: 'PS', name: 'Palestine' },
+		{ code: 'PA', name: 'Panama' },
+		{ code: 'PG', name: 'Papua New Guinea' },
+		{ code: 'PY', name: 'Paraguay' },
+		{ code: 'PE', name: 'Peru' },
+		{ code: 'PH', name: 'Philippines' },
+		{ code: 'PN', name: 'Pitcairn Islands' },
+		{ code: 'PL', name: 'Poland' },
+		{ code: 'PT', name: 'Portugal' },
+		{ code: 'PR', name: 'Puerto Rico' },
+		{ code: 'QA', name: 'Qatar' },
+		{ code: 'RE', name: 'Réunion' },
+		{ code: 'RO', name: 'Romania' },
+		{ code: 'RU', name: 'Russia' },
+		{ code: 'RW', name: 'Rwanda' },
+		{ code: 'WS', name: 'Samoa' },
+		{ code: 'SM', name: 'San Marino' },
+		{ code: 'ST', name: 'São Tomé &amp; Príncipe' },
+		{ code: 'SA', name: 'Saudi Arabia' },
+		{ code: 'SN', name: 'Senegal' },
+		{ code: 'RS', name: 'Serbia' },
+		{ code: 'SC', name: 'Seychelles' },
+		{ code: 'SL', name: 'Sierra Leone' },
+		{ code: 'SG', name: 'Singapore' },
+		{ code: 'SX', name: 'Sint Maarten' },
+		{ code: 'SK', name: 'Slovakia' },
+		{ code: 'SI', name: 'Slovenia' },
+		{ code: 'SB', name: 'Solomon Islands' },
+		{ code: 'SO', name: 'Somalia' },
+		{ code: 'ZA', name: 'South Africa' },
+		{ code: 'GS', name: 'South Georgia &amp; South Sandwich Islands' },
+		{ code: 'KR', name: 'South Korea' },
+		{ code: 'SS', name: 'South Sudan' },
+		{ code: 'ES', name: 'Spain' },
+		{ code: 'LK', name: 'Sri Lanka' },
+		{ code: 'BL', name: 'St Barthélemy' },
+		{ code: 'SH', name: 'St Helena' },
+		{ code: 'KN', name: 'St Kitts &amp; Nevis' },
+		{ code: 'LC', name: 'St Lucia' },
+		{ code: 'MF', name: 'St Martin' },
+		{ code: 'PM', name: 'St Pierre &amp; Miquelon' },
+		{ code: 'VC', name: 'St Vincent &amp; Grenadines' },
+		{ code: 'SR', name: 'Suriname' },
+		{ code: 'SJ', name: 'Svalbard &amp; Jan Mayen' },
+		{ code: 'SE', name: 'Sweden' },
+		{ code: 'CH', name: 'Switzerland' },
+		{ code: 'TW', name: 'Taiwan' },
+		{ code: 'TJ', name: 'Tajikistan' },
+		{ code: 'TZ', name: 'Tanzania' },
+		{ code: 'TH', name: 'Thailand' },
+		{ code: 'TL', name: 'Timor-Leste' },
+		{ code: 'TG', name: 'Togo' },
+		{ code: 'TK', name: 'Tokelau' },
+		{ code: 'TO', name: 'Tonga' },
+		{ code: 'TT', name: 'Trinidad &amp; Tobago' },
+		{ code: 'TA', name: 'Tristan da Cunha' },
+		{ code: 'TN', name: 'Tunisia' },
+		{ code: 'TR', name: 'Turkey' },
+		{ code: 'TM', name: 'Turkmenistan' },
+		{ code: 'TC', name: 'Turks &amp; Caicos Islands' },
+		{ code: 'TV', name: 'Tuvalu' },
+		{ code: 'UG', name: 'Uganda' },
+		{ code: 'UA', name: 'Ukraine' },
+		{ code: 'AE', name: 'United Arab Emirates' },
+		{ code: 'GB', name: 'United Kingdom' },
+		{ code: 'US', name: 'United States' },
+		{ code: 'UY', name: 'Uruguay' },
+		{ code: 'UM', name: 'US Outlying Islands' },
+		{ code: 'VI', name: 'US Virgin Islands' },
+		{ code: 'UZ', name: 'Uzbekistan' },
+		{ code: 'VU', name: 'Vanuatu' },
+		{ code: 'VA', name: 'Vatican City' },
+		{ code: 'VE', name: 'Venezuela' },
+		{ code: 'VN', name: 'Vietnam' },
+		{ code: 'WF', name: 'Wallis &amp; Futuna' },
+		{ code: 'EH', name: 'Western Sahara' },
+		{ code: 'YE', name: 'Yemen' },
+		{ code: 'ZM', name: 'Zambia' },
+		{ code: 'ZW', name: 'Zimbabwe' }
+	];
+
+	let selectedCountry = '';
+
+	// Initialize a filtered array of countries that will be displayed in the dropdown menu
+	let filteredCountries = countries;
+
+	function searchCountry(event) {
+		// Get the search query from the input field
+		let query = event.target.value;
+
+		// Filter the countries array based on the search query
+		filteredCountries = countries.filter((country) =>
+			country.name.toLowerCase().includes(query.toLowerCase())
+		);
 	}
 </script>
 
@@ -39,7 +301,15 @@
 
 	<form>
 		<label for="name">Name</label>
-		<input required type="text" id="name" name="name" autocomplete="name" />
+		<input
+			required
+			type="text"
+			id="name"
+			name="name"
+			autocomplete="name"
+			placeholder="Name"
+			class="rounded-md"
+		/>
 
 		<label for="street-address">Street address</label>
 		<input
@@ -47,8 +317,10 @@
 			id="street-address"
 			name="street-address"
 			autocomplete="street-address"
+			placeholder="Street address"
 			required
 			enterkeyhint="next"
+			class="rounded-md"
 		/>
 
 		<label for="postal-code">ZIP or Postal Code</label>
@@ -57,8 +329,10 @@
 			type="text"
 			id="postal-code"
 			name="postal-code"
+			placeholder="ZIP or Postal Code"
 			autocomplete="postal-code"
 			enterkeyhint="next"
+			class="rounded-md"
 		/>
 
 		<label for="city">City</label>
@@ -67,287 +341,40 @@
 			type="text"
 			id="city"
 			name="city"
-			autocomplete="address-level2"
+			placeholder="City"
+			autocomplete="city"
 			enterkeyhint="next"
+			class="rounded-md"
 		/>
 
 		<!-- Dropdown Country with search -->
-		<div class="relative mx-auto w-max">
+		<label class="relative mt-3">
 			<input
+				bind:value={selectedCountry}
 				on:keyup={searchCountry}
 				use:menu={{ menu: 'country' }}
 				id="country"
 				placeholder="Search Country ..."
-				class="btn"
+				class="btn btn-base relative w-full rounded-md bg-gray-300 pl-10 text-left text-white dark:bg-gray-600 "
 			/>
 
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-white px-3.5 "
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke="currentColor"
-				stroke-width="2"
+			<Icon
+				icon="ic:baseline-search"
+				height="24"
+				class="absolute top-3 left-2 text-slate-500 dark:text-gray-400"
+			/>
+			<nav
+				class="list-nav card absolute top-0 left-0 max-h-40 w-64 overflow-auto p-4 shadow-xl"
+				data-menu="country"
 			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-				/>
-			</svg>
-		</div>
-		<nav class="list-nav card w-64 p-4 shadow-xl" data-menu="country">
-			<ul class="divide-y">
-				<li value="AF">Afghanistan</li>
-				<li value="AX">Åland Islands</li>
-				<li value="AL">Albania</li>
-				<li value="DZ">Algeria</li>
-				<li value="AS">American Samoa</li>
-				<li value="AD">Andorra</li>
-				<li value="AO">Angola</li>
-				<li value="AI">Anguilla</li>
-				<li value="AQ">Antarctica</li>
-				<li value="AG">Antigua &amp; Barbuda</li>
-				<li value="AR">Argentina</li>
-				<li value="AM">Armenia</li>
-				<li value="AW">Aruba</li>
-				<li value="AC">Ascension Island</li>
-				<li value="AU">Australia</li>
-				<li value="AT">Austria</li>
-				<li value="AZ">Azerbaijan</li>
-				<li value="BS">Bahamas</li>
-				<li value="BH">Bahrain</li>
-				<li value="BD">Bangladesh</li>
-				<li value="BB">Barbados</li>
-				<li value="BY">Belarus</li>
-				<li value="BE">Belgium</li>
-				<li value="BZ">Belize</li>
-				<li value="BJ">Benin</li>
-				<li value="BM">Bermuda</li>
-				<li value="BT">Bhutan</li>
-				<li value="BO">Bolivia</li>
-				<li value="BA">Bosnia &amp; Herzegovina</li>
-				<li value="BW">Botswana</li>
-				<li value="BV">Bouvet Island</li>
-				<li value="BR">Brazil</li>
-				<li value="IO">British Indian Ocean Territory</li>
-				<li value="VG">British Virgin Islands</li>
-				<li value="BN">Brunei</li>
-				<li value="BG">Bulgaria</li>
-				<li value="BF">Burkina Faso</li>
-				<li value="BI">Burundi</li>
-				<li value="KH">Cambodia</li>
-				<li value="CM">Cameroon</li>
-				<li value="CA">Canada</li>
-				<li value="CV">Cape Verde</li>
-				<li value="BQ">Caribbean Netherlands</li>
-				<li value="KY">Cayman Islands</li>
-				<li value="CF">Central African Republic</li>
-				<li value="TD">Chad</li>
-				<li value="CL">Chile</li>
-				<li value="CN">China</li>
-				<li value="CX">Christmas Island</li>
-				<li value="CC">Cocos (Keeling) Islands</li>
-				<li value="CO">Colombia</li>
-				<li value="KM">Comoros</li>
-				<li value="CG">Congo - Brazzaville</li>
-				<li value="CD">Congo - Kinshasa</li>
-				<li value="CK">Cook Islands</li>
-				<li value="CR">Costa Rica</li>
-				<li value="CI">Côte d’Ivoire</li>
-				<li value="HR">Croatia</li>
-				<li value="CW">Curaçao</li>
-				<li value="CY">Cyprus</li>
-				<li value="CZ">Czechia</li>
-				<li value="DK">Denmark</li>
-				<li value="DJ">Djibouti</li>
-				<li value="DM">Dominica</li>
-				<li value="DO">Dominican Republic</li>
-				<li value="EC">Ecuador</li>
-				<li value="EG">Egypt</li>
-				<li value="SV">El Salvador</li>
-				<li value="GQ">Equatorial Guinea</li>
-				<li value="ER">Eritrea</li>
-				<li value="EE">Estonia</li>
-				<li value="SZ">Eswatini</li>
-				<li value="ET">Ethiopia</li>
-				<li value="FK">Falkland Islands (Islas Malvinas)</li>
-				<li value="FO">Faroe Islands</li>
-				<li value="FJ">Fiji</li>
-				<li value="FI">Finland</li>
-				<li value="FR">France</li>
-				<li value="GF">French Guiana</li>
-				<li value="PF">French Polynesia</li>
-				<li value="TF">French Southern Territories</li>
-				<li value="GA">Gabon</li>
-				<li value="GM">Gambia</li>
-				<li value="GE">Georgia</li>
-				<li value="DE">Germany</li>
-				<li value="GH">Ghana</li>
-				<li value="GI">Gibraltar</li>
-				<li value="GR">Greece</li>
-				<li value="GL">Greenland</li>
-				<li value="GD">Grenada</li>
-				<li value="GP">Guadeloupe</li>
-				<li value="GU">Guam</li>
-				<li value="GT">Guatemala</li>
-				<li value="GG">Guernsey</li>
-				<li value="GN">Guinea</li>
-				<li value="GW">Guinea-Bissau</li>
-				<li value="GY">Guyana</li>
-				<li value="HT">Haiti</li>
-				<li value="HM">Heard &amp; McDonald Islands</li>
-				<li value="HN">Honduras</li>
-				<li value="HK">Hong Kong</li>
-				<li value="HU">Hungary</li>
-				<li value="IS">Iceland</li>
-				<li value="IN">India</li>
-				<li value="ID">Indonesia</li>
-				<li value="IR">Iran</li>
-				<li value="IQ">Iraq</li>
-				<li value="IE">Ireland</li>
-				<li value="IM">Isle of Man</li>
-				<li value="IL">Israel</li>
-				<li value="IT">Italy</li>
-				<li value="JM">Jamaica</li>
-				<li value="JP">Japan</li>
-				<li value="JE">Jersey</li>
-				<li value="JO">Jordan</li>
-				<li value="KZ">Kazakhstan</li>
-				<li value="KE">Kenya</li>
-				<li value="KI">Kiribati</li>
-				<li value="XK">Kosovo</li>
-				<li value="KW">Kuwait</li>
-				<li value="KG">Kyrgyzstan</li>
-				<li value="LA">Laos</li>
-				<li value="LV">Latvia</li>
-				<li value="LB">Lebanon</li>
-				<li value="LS">Lesotho</li>
-				<li value="LR">Liberia</li>
-				<li value="LY">Libya</li>
-				<li value="LI">Liechtenstein</li>
-				<li value="LT">Lithuania</li>
-				<li value="LU">Luxembourg</li>
-				<li value="MO">Macao</li>
-				<li value="MG">Madagascar</li>
-				<li value="MW">Malawi</li>
-				<li value="MY">Malaysia</li>
-				<li value="MV">Maldives</li>
-				<li value="ML">Mali</li>
-				<li value="MT">Malta</li>
-				<li value="MH">Marshall Islands</li>
-				<li value="MQ">Martinique</li>
-				<li value="MR">Mauritania</li>
-				<li value="MU">Mauritius</li>
-				<li value="YT">Mayotte</li>
-				<li value="MX">Mexico</li>
-				<li value="FM">Micronesia</li>
-				<li value="MD">Moldova</li>
-				<li value="MC">Monaco</li>
-				<li value="MN">Mongolia</li>
-				<li value="ME">Montenegro</li>
-				<li value="MS">Montserrat</li>
-				<li value="MA">Morocco</li>
-				<li value="MZ">Mozambique</li>
-				<li value="MM">Myanmar (Burma)</li>
-				<li value="NA">Namibia</li>
-				<li value="NR">Nauru</li>
-				<li value="NP">Nepal</li>
-				<li value="NL">Netherlands</li>
-				<li value="NC">New Caledonia</li>
-				<li value="NZ">New Zealand</li>
-				<li value="NI">Nicaragua</li>
-				<li value="NE">Niger</li>
-				<li value="NG">Nigeria</li>
-				<li value="NU">Niue</li>
-				<li value="NF">Norfolk Island</li>
-				<li value="KP">North Korea</li>
-				<li value="MK">North Macedonia</li>
-				<li value="MP">Northern Mariana Islands</li>
-				<li value="NO">Norway</li>
-				<li value="OM">Oman</li>
-				<li value="PK">Pakistan</li>
-				<li value="PW">Palau</li>
-				<li value="PS">Palestine</li>
-				<li value="PA">Panama</li>
-				<li value="PG">Papua New Guinea</li>
-				<li value="PY">Paraguay</li>
-				<li value="PE">Peru</li>
-				<li value="PH">Philippines</li>
-				<li value="PN">Pitcairn Islands</li>
-				<li value="PL">Poland</li>
-				<li value="PT">Portugal</li>
-				<li value="PR">Puerto Rico</li>
-				<li value="QA">Qatar</li>
-				<li value="RE">Réunion</li>
-				<li value="RO">Romania</li>
-				<li value="RU">Russia</li>
-				<li value="RW">Rwanda</li>
-				<li value="WS">Samoa</li>
-				<li value="SM">San Marino</li>
-				<li value="ST">São Tomé &amp; Príncipe</li>
-				<li value="SA">Saudi Arabia</li>
-				<li value="SN">Senegal</li>
-				<li value="RS">Serbia</li>
-				<li value="SC">Seychelles</li>
-				<li value="SL">Sierra Leone</li>
-				<li value="SG">Singapore</li>
-				<li value="SX">Sint Maarten</li>
-				<li value="SK">Slovakia</li>
-				<li value="SI">Slovenia</li>
-				<li value="SB">Solomon Islands</li>
-				<li value="SO">Somalia</li>
-				<li value="ZA">South Africa</li>
-				<li value="GS">South Georgia &amp; South Sandwich Islands</li>
-				<li value="KR">South Korea</li>
-				<li value="SS">South Sudan</li>
-				<li value="ES">Spain</li>
-				<li value="LK">Sri Lanka</li>
-				<li value="BL">St Barthélemy</li>
-				<li value="SH">St Helena</li>
-				<li value="KN">St Kitts &amp; Nevis</li>
-				<li value="LC">St Lucia</li>
-				<li value="MF">St Martin</li>
-				<li value="PM">St Pierre &amp; Miquelon</li>
-				<li value="VC">St Vincent &amp; Grenadines</li>
-				<li value="SR">Suriname</li>
-				<li value="SJ">Svalbard &amp; Jan Mayen</li>
-				<li value="SE">Sweden</li>
-				<li value="CH">Switzerland</li>
-				<li value="TW">Taiwan</li>
-				<li value="TJ">Tajikistan</li>
-				<li value="TZ">Tanzania</li>
-				<li value="TH">Thailand</li>
-				<li value="TL">Timor-Leste</li>
-				<li value="TG">Togo</li>
-				<li value="TK">Tokelau</li>
-				<li value="TO">Tonga</li>
-				<li value="TT">Trinidad &amp; Tobago</li>
-				<li value="TA">Tristan da Cunha</li>
-				<li value="TN">Tunisia</li>
-				<li value="TR">Turkey</li>
-				<li value="TM">Turkmenistan</li>
-				<li value="TC">Turks &amp; Caicos Islands</li>
-				<li value="TV">Tuvalu</li>
-				<li value="UG">Uganda</li>
-				<li value="UA">Ukraine</li>
-				<li value="AE">United Arab Emirates</li>
-				<li value="GB">United Kingdom</li>
-				<li value="US">United States</li>
-				<li value="UY">Uruguay</li>
-				<li value="UM">US Outlying Islands</li>
-				<li value="VI">US Virgin Islands</li>
-				<li value="UZ">Uzbekistan</li>
-				<li value="VU">Vanuatu</li>
-				<li value="VA">Vatican City</li>
-				<li value="VE">Venezuela</li>
-				<li value="VN">Vietnam</li>
-				<li value="WF">Wallis &amp; Futuna</li>
-				<li value="EH">Western Sahara</li>
-				<li value="YE">Yemen</li>
-				<li value="ZM">Zambia</li>
-				<li value="ZW">Zimbabwe</li>
-			</ul>
-		</nav>
+				<ul class="divide-y divide-gray-500">
+					{#each filteredCountries as country}
+						<li value={country.code} on:click={() => (selectedCountry = country.name)}>
+							{country.name}
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		</label>
 	</form>
 </address>

@@ -6,4 +6,10 @@
 	$: widgetValue = value;
 </script>
 
-<input bind:value type="email" id="email" placeholder={field.placeholder} class="input w-full" />
+<input
+	bind:value
+	type="email"
+	id="email"
+	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}
+	class="input w-full rounded-md"
+/>

@@ -25,8 +25,8 @@
 
 <div class="fields text-dark overflow-y-auto rounded bg-white p-3 dark:bg-gray-800 dark:text-white">
 	<div class="relative mb-5 flex justify-start overflow-visible font-bold ">
-		<div class="flex w-80 flex-col">
-			<div class="mb-2 text-sm capitalize text-gray-300">Create</div>
+		<div class="flex w-full flex-col">
+			<div class="mb-2 text-sm capitalize text-gray-500 dark:text-gray-300">Create</div>
 			<div
 				class="-mt-2 flex items-center justify-start text-sm font-bold uppercase dark:text-white md:text-xl xl:text-2xl "
 			>
@@ -37,7 +37,7 @@
 		<span class="absolute right-14">
 			<button
 				use:menu={{ menu: 'ContentLang' }}
-				class="btn btn-filled-surface btn-base flex items-center justify-center rounded-lg uppercase"
+				class="btn btn-sm btn-filled-surface  flex items-center justify-center rounded-lg uppercase"
 			>
 				<Icon icon="bi:translate" color="dark" width="22" class="mr-1 md:mr-1" />
 				{$language}
@@ -58,7 +58,6 @@
 				</ul>
 			</nav>
 		</span>
-
 		<button
 			on:click={() => {
 				showFields = false;
@@ -68,9 +67,21 @@
 			class="btn absolute right-0 dark:text-white"
 		>
 			<span class="sr-only">Close menu</span>
-			<Icon icon="material-symbols:close" width="24" />
+			<Icon icon="material-symbols:close" width="26" />
 		</button>
 	</div>
+
+	<button
+		on:click={() => {
+			showFields = false;
+			$entryData = new Set();
+		}}
+		use:tooltip={{ content: 'Close without saving ', position: 'bottom' }}
+		class="btn absolute right-0 dark:text-white"
+	>
+		<span class="sr-only">Close menu</span>
+		<Icon icon="material-symbols:close" width="26" />
+	</button>
 
 	{#if fields.some((field) => field.field.required)}
 		<div class="text-md -mt-3 text-center text-red-500">* Required</div>

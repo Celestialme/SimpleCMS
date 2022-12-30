@@ -7,7 +7,10 @@
 	import DropDown from '@src/components/DropDown.svelte';
 
 	// Skeleton
-	import { menu } from '@skeletonlabs/skeleton';
+	import { tooltip } from '@skeletonlabs/skeleton';
+
+	// Icons from https://icon-sets.iconify.design/
+	import Icon from '@iconify/svelte';
 
 	export let field: any;
 	export let value: any;
@@ -57,7 +60,7 @@
 </script>
 
 {#if !expanded}
-	<div class="flex items-center justify-center gap-1 rounded-lg bg-white py-1">
+	<div class="flex items-center justify-center gap-1 rounded-lg bg-gray-200  dark:bg-gray-500">
 		<p
 			on:click={async () => {
 				!dropDownData.length && (dropDownData = await find({}, field.relation));
@@ -68,20 +71,22 @@
 			{selectedField || display || 'Chose existing...'}
 		</p>
 		<button
+			use:tooltip={{ content: 'Edit', position: 'bottom' }}
 			on:click={() => {
 				value = null;
 				widgetValue = null;
 				selected = null;
 				display = null;
 			}}
-			class="btn">D</button
+			class="btn"><Icon icon="bi:pencil-fill" width="22" /></button
 		>
 		<button
+			use:tooltip={{ content: 'Add New', position: 'bottom' }}
 			on:click={() => {
 				expanded = !expanded;
 				selected = null;
 			}}
-			class=" btn mr-1">{value ? '✎' : '+'}</button
+			class="btn mr-1"><Icon icon="ic:baseline-plus" width="22" /></button
 		>
 	</div>
 

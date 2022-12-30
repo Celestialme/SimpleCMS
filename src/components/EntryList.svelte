@@ -102,7 +102,8 @@
 	let currentPageRows = [];
 
 	import { writable } from 'svelte/store';
-	let itemsPerPage = writable(5);
+	// Is not really stored on page reload
+	let itemsPerPage = writable(10);
 
 	function changeItemsPerPage(newValue: number) {
 		itemsPerPage.set(newValue);
@@ -143,7 +144,10 @@
 	<div class="mb-2 flex items-center gap-2">
 		<!-- hamburger -->
 		<div class="flex items-center">
-			<button class="btn btn-sm mr-4 lg:hidden" on:click={() => (toggleSideBar = !toggleSideBar)}>
+			<button
+				class="btn btn-sm -mr-2 sm:mr-0 md:hidden"
+				on:click={() => (toggleSideBar = !toggleSideBar)}
+			>
 				<span>
 					<svg viewBox="0 0 100 80" class="fill-token h-4 w-4">
 						<rect width="100" height="20" />
@@ -155,11 +159,13 @@
 		</div>
 
 		<div class="flex w-80 flex-col">
-			<div class="mb-2 text-xs capitalize text-gray-400">{category}</div>
+			<div class="mb-2 text-xs capitalize text-gray-600 dark:text-gray-400">{category}</div>
 			<div
 				class="-mt-2 flex items-center justify-start text-sm font-bold uppercase dark:text-white md:text-xl xl:text-2xl "
 			>
-				<span> <Icon icon={collection.icon} width="24" class="mr-2" /></span>{collection.name}
+				<span>
+					<Icon icon={collection.icon} width="24" class="mr-1 sm:mr-2" /></span
+				>{collection.name}
 			</div>
 		</div>
 
@@ -171,14 +177,12 @@
 				<input
 					on:keyup={search}
 					placeholder="Search {collection.name} ..."
-					class="  relative z-10 h-12 w-12 cursor-pointer rounded-full border bg-transparent pl-12 text-black outline-none focus:w-full focus:cursor-text focus:rounded-md focus:pl-16 focus:pr-4 dark:bg-gray-500/50 dark:text-white lg:w-full "
+					class="relative z-10 mt-[2px] h-10 w-10 cursor-pointer rounded-full border border-gray-700 bg-gray-300/50 pl-12 text-black outline-none focus:w-full focus:cursor-text focus:rounded-md dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12 md:w-12 md:w-full "
 				/>
-				<!-- not working
-				<Icon icon="ic:baseline-search" height="24" class=" text-gray-400" /> 
-				-->
+				<!-- searchIcon -->
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
-					class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-white px-3.5 "
+					class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-black px-3.5 dark:stroke-white "
 					fill="none"
 					viewBox="0 0 24 24"
 					stroke="currentColor"
@@ -194,16 +198,19 @@
 		</div>
 
 		<!-- language switcher for entryList -->
-		<span class="relative">
+		<span class="relative rounded-md shadow-xl">
 			<button
 				use:menu={{ menu: 'ContentLang' }}
-				class="btn btn-filled-surface btn-base flex items-center justify-center rounded-lg uppercase"
+				class="btn flex items-center justify-center rounded-md border border-gray-600 px-2 pt-1 pr-0 uppercase md:pt-2"
 			>
-				<Icon icon="bi:translate" color="dark" width="22" class="mr-1 md:mr-1" />
-				{$language}
+				<Icon icon="bi:translate" color="dark" width="22" class="-mr-2 md:mr-1" />
+				<span class="hidden sm:block">{$language}</span>
 				<Icon icon="mdi:chevron-down" width="24" />
 			</button>
-			<nav class="list-nav card w-40 border p-4 shadow-xl" data-menu="ContentLang">
+			<nav
+				class="list-nav card w-[95px] border bg-gray-600 p-2 text-center text-white shadow-xl transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:bg-gray-300 dark:text-black"
+				data-menu="ContentLang"
+			>
 				<ul class="divide-y">
 					{#each Object.keys(env.translations).filter((data) => $language != data) as _language}
 						<li
@@ -222,21 +229,24 @@
 		<!-- create/publish/unpublish/schedule/clone/delete -->
 		<div class="flex items-center justify-center">
 			<!-- the actual buttons -->
-			<div class="inline-flex shadow-md hover:shadow-lg focus:shadow-lg" role="group">
+			<div
+				class="inline-flex rounded-l-full rounded-r shadow-md hover:shadow-lg focus:shadow-lg"
+				role="group"
+			>
 				{#if entryButton == 'create'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl font-bold text-white  md:ml-auto md:w-[150px]"
 						on:click={() => {
 							showFields = true;
 						}}
 						use:tooltip={{ content: 'Create ' + collection.name, position: 'bottom' }}
+						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl font-bold text-black md:ml-auto md:w-[150px]"
 					>
-						<Icon icon="ic:round-plus" color="white" width="30" class="mr-1" />
+						<Icon icon="ic:round-plus" color="black" width="22" class="mr-1" />
 						<div class="hidden md:block">Create</div>
 					</button>
 				{:else if entryButton == 'publish'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							publishEntry();
 						}}
@@ -247,7 +257,7 @@
 					</button>
 				{:else if entryButton == 'unpublish'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-200 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-200 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							unpublishEntry();
 						}}
@@ -258,7 +268,7 @@
 					</button>
 				{:else if entryButton == 'schedule'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-pink-600 via-pink-500 to-pink-400 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-pink-600 via-pink-500 to-pink-400 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							scheduleEntry();
 						}}
@@ -269,7 +279,7 @@
 					</button>
 				{:else if entryButton == 'clone'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							cloneEntry();
 						}}
@@ -280,7 +290,7 @@
 					</button>
 				{:else if entryButton == 'delete'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full bg-gradient-to-br from-red-600 via-red-500 to-red-400 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-red-600 via-red-500 to-red-400 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							deleteEntry();
 						}}
@@ -294,20 +304,23 @@
 				<!-- Dropdown selection -->
 				<button
 					use:menu={{ menu: 'entrySelect', interactive: true }}
-					class=" relative inline-block rounded-l rounded-r bg-gray-600 px-2 text-xs font-medium uppercase leading-tight text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-600"
+					class="relative mr-1 inline-block rounded-l-none rounded-r bg-gray-600 px-2 text-xs font-medium uppercase leading-tight text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700"
 				>
 					<Icon icon="mdi:chevron-down" width="24" /></button
 				>
 
-				<nav class="list-nav card w-64 p-4 shadow-xl" data-menu="entrySelect">
-					<ul class="divide-y ">
+				<nav
+					class="list-nav card mt-14 mr-1 w-52 border bg-gray-600 p-2 shadow-xl dark:border-none dark:bg-gray-300"
+					data-menu="entrySelect"
+				>
+					<ul>
 						{#if entryButton != 'create'}
 							<li>
 								<button
 									on:click={() => {
 										entryButton = 'create';
 									}}
-									class="btn btn-filled-success btn-base -my-1 flex w-full items-center justify-start gap-1 text-lg font-bold text-white  "
+									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 text-lg font-bold text-gray-800"
 								>
 									<Icon icon="ic:round-plus" width="22" />
 									Create
@@ -319,7 +332,7 @@
 									on:click={() => {
 										entryButton = 'publish';
 									}}
-									class="btn btn-filled-secondary btn-base flex w-full items-center justify-start gap-1 text-lg font-bold "
+									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 text-lg font-bold text-white"
 								>
 									<Icon icon="bi:hand-thumbs-up-fill" width="20" />
 									Publish
@@ -332,7 +345,7 @@
 									on:click={() => {
 										entryButton = 'unpublish';
 									}}
-									class="btn btn-filled-warning btn-base flex w-full items-center justify-start gap-1 text-lg font-bold text-white "
+									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-200 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:pause-circle" width="20" />
 									Unpublish
@@ -345,7 +358,7 @@
 									on:click={() => {
 										entryButton = 'schedule';
 									}}
-									class="btn btn-filled-tertiary btn-base flex w-full items-center justify-start gap-1 text-lg font-bold text-white "
+									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-pink-600 via-pink-500 to-pink-400 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:clock" width="20" />
 									Schedule
@@ -358,7 +371,7 @@
 									on:click={() => {
 										entryButton = 'clone';
 									}}
-									class="btn btn-base flex w-full items-center justify-start gap-1 text-lg font-bold  ring-2 ring-inset ring-surface-500 "
+									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:clipboard-data-fill" width="20" />
 									Clone
@@ -371,7 +384,7 @@
 									on:click={() => {
 										entryButton = 'delete';
 									}}
-									class="btn btn-filled-error btn-base flex w-full items-center justify-start gap-1 text-lg font-bold text-white "
+									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-red-700  via-red-600 to-red-500 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:trash3-fill" width="20" />
 									Delete
@@ -384,17 +397,17 @@
 		</div>
 	</div>
 
-	<!-- show Collection data in table -->
-	<div class="table-container max-h-[80vh] overflow-auto">
-		<table class="table-hover fixed_header table ">
-			<thead class="sticky top-0 ">
-				<tr>
+	<!-- Show Collection Table -->
+	<div class="table-container max-h-[80vh] overflow-auto shadow-xl">
+		<table class="table-hover fixed_header table">
+			<thead class="sticky top-0">
+				<tr class="bg-gray-600 dark:bg-inherit">
 					<th><DeleteIcon bind:checked={deleteAll} /></th>
 
-					<th class={never('dark:text-white')}>#</th>
+					<th class={never('text-white')}>#</th>
 
 					{#each collection.fields as field}
-						<th class={never('dark:text-white')}>
+						<th class={never('text-white')}>
 							<div
 								on:click={() => {
 									sort = field.name;
@@ -410,13 +423,13 @@
 										<button>
 											<div class="flex-col">
 												<Icon icon="bi:caret-up-fill" color="base" width="14" class="" />
-												<Icon icon="bi:caret-down" color="gray" width="14" class="-mt-1" />
+												<Icon icon="bi:caret-down-fill" color="gray" width="14" class="-mt-1" />
 											</div></button
 										>
 									{:else}
 										<button>
 											<div class="flex-col ">
-												<Icon icon="bi:caret-up" color="gray" width="14" class="" />
+												<Icon icon="bi:caret-up-fill" color="gray" width="14" class="" />
 												<Icon icon="bi:caret-down-fill" color="base" width="14" class="-mt-1" />
 											</div></button
 										>
@@ -458,21 +471,9 @@
 	</div>
 </div>
 
-<div class="flex items-center justify-between  border-gray-200 px-4 py-3 sm:px-6">
-	<div class="flex flex-1 justify-between sm:hidden">
-		<a
-			href="#"
-			class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-			>Previous</a
-		>
-		<a
-			href="#"
-			class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-			>Next</a
-		>
-	</div>
-	<div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-		<div class="text-sm text-gray-700 dark:text-gray-400">
+<div class="flex items-center justify-between  border-gray-200 p-2 ">
+	<div class="flex flex-1 items-center justify-between">
+		<div class="hidden text-sm text-gray-700 dark:text-gray-400 sm:block">
 			Showing <span class="font-semibold text-gray-900 dark:text-white">1</span>
 			to
 			<span class="font-semibold text-gray-900 dark:text-white">{$itemsPerPage}</span>
@@ -483,29 +484,57 @@
 			Entries
 		</div>
 
-		<span class="relative">
+		<span class="relative rounded-md">
 			<button
 				use:menu={{ menu: 'pageItems' }}
-				class="btn btn-filled-surface btn-base flex items-center justify-center rounded-lg uppercase"
+				class="btn flex items-center justify-center rounded-md border border-gray-600 px-2 uppercase"
 			>
 				{$itemsPerPage}
 				<Icon icon="mdi:chevron-down" width="24" />
 			</button>
-			<nav class="list-nav card w-40 border p-4 shadow-xl" data-menu="pageItems">
+			<nav
+				class="list-nav card w-[100px] cursor-pointer border bg-gray-600 p-2 text-center text-white shadow-xl dark:bg-gray-300 sm:absolute sm:top-0 sm:-left-6"
+				data-menu="pageItems"
+			>
 				<ul class="divide-y">
-					<li value={25} on:click={() => changeItemsPerPage(25)}>25 Entries</li>
-					<li value={50} on:click={() => changeItemsPerPage(50)}>50 Entries</li>
-					<li value={100} on:click={() => changeItemsPerPage(100)}>100 Entries</li>
-					<li value={500} on:click={() => changeItemsPerPage(500)}>500 Entries</li>
+					<li
+						class="-mx-2 transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:text-black hover:dark:text-white"
+						value={25}
+						on:click={() => changeItemsPerPage(25)}
+					>
+						25 Entries
+					</li>
+					<li
+						class="-mx-2 transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:text-black hover:dark:text-white"
+						value={50}
+						on:click={() => changeItemsPerPage(50)}
+					>
+						50 Entries
+					</li>
+					<li
+						class="-mx-2 transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:text-black hover:dark:text-white"
+						value={100}
+						on:click={() => changeItemsPerPage(100)}
+					>
+						100 Entries
+					</li>
+					<li
+						class="-mx-2 transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:text-black hover:dark:text-white"
+						value={500}
+						on:click={() => changeItemsPerPage(500)}
+					>
+						500 Entries
+					</li>
 				</ul>
 			</nav>
 		</span>
 
-		<div>
+		<div class="dark:text-white">
 			<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
 				<a
+					on:click={previous}
 					href="#"
-					class="relative inline-flex items-center rounded-l-md border border-gray-300  px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+					class="relative inline-flex items-center rounded-l-md border border-gray-500 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 				>
 					<span class="sr-only">Previous</span>
 					<Icon icon="mdi:chevron-left" width="24" />
@@ -513,33 +542,34 @@
 				<a
 					href="#"
 					aria-current="page"
-					class="relative z-10 inline-flex items-center border border-gray-300 px-4 py-2 text-sm font-medium text-indigo-600 focus:z-20"
+					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>1</a
 				>
 				<a
 					href="#"
-					class="relative inline-flex items-center border border-gray-300 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>2</a
 				>
 				<a
 					href="#"
-					class="relative hidden items-center border border-gray-300  px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 md:inline-flex"
+					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>3</a
 				>
 
 				<a
 					href="#"
-					class="relative inline-flex items-center border border-gray-300  px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>4</a
 				>
 				<a
 					href="#"
-					class="relative inline-flex items-center border border-gray-300 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>5</a
 				>
 				<a
+					on:click={next}
 					href="#"
-					class="relative inline-flex items-center rounded-r-md border border-gray-300  px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+					class="relative inline-flex items-center rounded-r-md border border-gray-500 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 				>
 					<span class="sr-only">Next</span>
 					<Icon icon="mdi:chevron-right" width="24" />
