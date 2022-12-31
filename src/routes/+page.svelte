@@ -166,18 +166,27 @@
 						{/if}
 					</a>
 
-					<!-- Search Collections -->
-					<div class="mx-auto my-2 max-w-md">
-						<div class="relative mx-auto w-max">
-							<input
-								on:keyup={updateFilter}
-								placeholder="Search ..."
-								class="relative z-10 h-10 w-10 cursor-pointer rounded-full border bg-transparent pl-12 text-black outline-none focus:w-full focus:cursor-text focus:rounded-md focus:pl-10 focus:pr-4 dark:bg-gray-500/50 dark:text-white lg:w-full "
-							/>
+					<!-- Search Collections  perhap overflow is better? -->
+					<div class="mx-auto my-2 max-w-full">
+						<div class="relative mx-auto ">
+							{#if !switchSideBar}
+								<input
+									on:keyup={updateFilter}
+									on:focus={() => (switchSideBar = !switchSideBar)}
+									placeholder="Search ..."
+									class="relative z-10 h-10 w-10 cursor-pointer rounded-full border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12"
+								/>
+							{:else}
+								<input
+									on:keyup={updateFilter}
+									placeholder="Search ..."
+									class="relative z-10 h-10  w-full  cursor-pointer rounded-md border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-gray-600/50 dark:text-white"
+								/>
+							{/if}
 
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
-								class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-white px-3.5 "
+								class="absolute inset-y-0 my-auto h-8 w-12 border-transparent stroke-black px-3.5 dark:stroke-white "
 								fill="none"
 								viewBox="0 0 24 24"
 								stroke="currentColor"
