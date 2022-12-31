@@ -158,26 +158,48 @@
 			</button>
 		</div>
 
-		<div class="flex w-80 flex-col">
-			<div class="mb-2 text-xs capitalize text-gray-600 dark:text-gray-400">{category}</div>
+		<!-- Tweak to adjust to icon width
+			<div class="grid grid-cols-3 grid-rows-2">
+			{#if collection.icon}
+				<div class="row-span-2 mb-1 flex items-end justify-start">
+					<Icon icon={collection.icon} width="24" class="mr-1 sm:mr-2" />
+				</div>
+			{/if}
+			{#if category}
+				<div
+					class="col-span-2 -mb-1  flex items-end text-xs capitalize text-gray-600 dark:text-gray-400"
+				>
+					{category}
+				</div>
+			{/if}
+			{#if collection.name}
+				<div class="col-span-2 text-lg font-bold uppercase">
+					{collection.name}
+				</div>
+			{/if}
+		</div> -->
+
+		<div class="flex flex-col">
+			{#if category}<div class="mb-2 text-xs capitalize text-gray-600 dark:text-gray-400">
+					{category}
+				</div>{/if}
 			<div
 				class="-mt-2 flex items-center justify-start text-sm font-bold uppercase dark:text-white md:text-xl xl:text-2xl "
 			>
-				<span>
-					<Icon icon={collection.icon} width="24" class="mr-1 sm:mr-2" /></span
-				>{collection.name}
+				{#if collection.icon}<span>
+						<Icon icon={collection.icon} width="24" class="mr-1 sm:mr-2" /></span
+					>{/if}
+				{#if collection.name}{collection.name}{/if}
 			</div>
 		</div>
 
-		<!-- expanding Search box  
-			lightmode needs more work
-		-->
+		<!-- Expanding Search box -->
 		<div class="mx-auto max-w-md">
 			<div class="relative mx-auto w-max">
 				<input
 					on:keyup={search}
 					placeholder="Search {collection.name} ..."
-					class="relative z-10 mt-[2px] h-10 w-10 cursor-pointer rounded-full border border-gray-700 bg-gray-300/50 pl-12 text-black outline-none focus:w-full focus:cursor-text focus:rounded-md dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12 md:w-12 md:w-full "
+					class="relative z-10 mt-[2px] h-10 w-10 cursor-pointer rounded-full border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-md dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12 md:w-full "
 				/>
 				<!-- searchIcon -->
 				<svg
@@ -401,7 +423,7 @@
 	<div class="table-container max-h-[80vh] overflow-auto shadow-xl">
 		<table class="table-hover fixed_header table">
 			<thead class="sticky top-0">
-				<tr class="bg-gray-600 dark:bg-inherit">
+				<tr class="border-b-2 border-black bg-gray-500 dark:border-white dark:bg-inherit">
 					<th><DeleteIcon bind:checked={deleteAll} /></th>
 
 					<th class={never('text-white')}>#</th>
@@ -423,13 +445,13 @@
 										<button>
 											<div class="flex-col">
 												<Icon icon="bi:caret-up-fill" color="base" width="14" class="" />
-												<Icon icon="bi:caret-down-fill" color="gray" width="14" class="-mt-1" />
+												<Icon icon="bi:caret-down-fill" color="black" width="14" class="-mt-1" />
 											</div></button
 										>
 									{:else}
 										<button>
 											<div class="flex-col ">
-												<Icon icon="bi:caret-up-fill" color="gray" width="14" class="" />
+												<Icon icon="bi:caret-up-fill" color="black" width="14" class="" />
 												<Icon icon="bi:caret-down-fill" color="base" width="14" class="-mt-1" />
 											</div></button
 										>
@@ -533,42 +555,42 @@
 			<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
 				<a
 					on:click={previous}
-					href="#"
+					href="/"
 					class="relative inline-flex items-center rounded-l-md border border-gray-500 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 				>
 					<span class="sr-only">Previous</span>
 					<Icon icon="mdi:chevron-left" width="24" />
 				</a>
 				<a
-					href="#"
+					href="/"
 					aria-current="page"
 					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>1</a
 				>
 				<a
-					href="#"
+					href="/"
 					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>2</a
 				>
 				<a
-					href="#"
+					href="/"
 					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>3</a
 				>
 
 				<a
-					href="#"
+					href="/"
 					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>4</a
 				>
 				<a
-					href="#"
+					href="/"
 					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 					>5</a
 				>
 				<a
 					on:click={next}
-					href="#"
+					href="/"
 					class="relative inline-flex items-center rounded-r-md border border-gray-500 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 				>
 					<span class="sr-only">Next</span>
