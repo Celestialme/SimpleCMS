@@ -17,19 +17,6 @@ let schema: Schema = {
 			placeholder: 'Enter First Name',
 			required: true,
 			localization: true
-			// entry_list: false,
-
-			// localization: {DE, ES,}
-
-			// interface translation:
-			// DE{.
-			// 	title: 'Vorname'
-			// 	placeholder: 'Image Titel'}
-			// 	icon: "ri:t-box-line",
-
-			// ES{
-			// 	title: 'Nombre'
-			// 	placeholder: 'Image Titel'}
 		}),
 
 		widgets.Text({ title: 'Last', icon: 'ri:t-box-line', placeholder: 'Enter Last Name' }),
@@ -53,6 +40,12 @@ let schema: Schema = {
 		widgets.Number({
 			title: 'Number',
 			icon: 'carbon:character-whole-number',
+			required: true
+		}),
+
+		widgets.PhoneNumber({
+			title: 'Phone Number',
+			icon: 'material-symbols:perm-phone-msg',
 			required: true
 		}),
 

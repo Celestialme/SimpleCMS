@@ -11,6 +11,7 @@ import Url from './url';
 import Checkbox from './checkbox';
 import Radio from './radio';
 import Number from './number';
+import PhoneNumber from './phonenumber';
 import Group from './group';
 import Address from './address';
 
@@ -25,6 +26,7 @@ export type Widgets = {
 	ImageArray: typeof ImageArray;
 	MegaMenu: typeof MegaMenu;
 	Number: typeof Number;
+	PhoneNumber: typeof Number;
 	Radio: typeof Radio;
 	Relation: typeof Relation;
 	RichText: typeof RichText;
@@ -65,6 +67,8 @@ let widgets: Widgets = {
 	Number,
 	// Geolocation - geometric coordinates for location data
 	//Geolocation,
+	// PhoneNumber - Field checking for phone/Fax numbers
+	PhoneNumber,
 	// Radio - radio button group, allowing only one value to be selected
 	Radio,
 	// Range - specific rangeslider with Values

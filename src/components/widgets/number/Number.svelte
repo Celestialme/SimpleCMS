@@ -8,8 +8,8 @@
 
 <input
 	bind:value
-	type="email"
-	id="email"
+	type="number"
+	id="number"
 	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}
 	class="input w-full rounded-md"
 />
