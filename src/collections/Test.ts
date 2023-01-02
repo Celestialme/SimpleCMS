@@ -60,6 +60,8 @@ let schema: Schema = {
 
 		widgets.Checkbox({ title: 'Checkbox', color: 'green', required: true }),
 
+		widgets.RichText({ title: 'Description' }),
+
 		widgets.Address({ title: 'Address' }),
 
 		widgets.Url({

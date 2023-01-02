@@ -15,26 +15,24 @@ import Group from './group';
 import Address from './address';
 
 export type Widgets = {
-	Address:typeof Address,
-	Checkbox:typeof Checkbox,
-	Date:typeof Date,
-	DateRange:typeof DateRange,
-	Email:typeof Email,
-	Group:typeof Group,
-	ImageUpload:typeof ImageUpload,
-	ImageArray:typeof ImageArray,
-	MegaMenu:typeof MegaMenu,
-	Number:typeof Number,
-	Radio:typeof Radio,
-	Relation:typeof Relation,
-	// RichText:typeof RichText,
-	Text:typeof Text,
-	Url:typeof Url,
-	
+	Address: typeof Address;
+	Checkbox: typeof Checkbox;
+	Date: typeof Date;
+	DateRange: typeof DateRange;
+	Email: typeof Email;
+	Group: typeof Group;
+	ImageUpload: typeof ImageUpload;
+	ImageArray: typeof ImageArray;
+	MegaMenu: typeof MegaMenu;
+	Number: typeof Number;
+	Radio: typeof Radio;
+	Relation: typeof Relation;
+	RichText: typeof RichText;
+	Text: typeof Text;
+	Url: typeof Url;
 };
 
-
-let widgets:Widgets = {
+let widgets: Widgets = {
 	/**text widget does all good stuff*/
 
 	// Address flexible Address fields
@@ -74,7 +72,7 @@ let widgets:Widgets = {
 	// Relation - assign relationships to other collections
 	Relation,
 	// Rich Text - fully extensible Lexical Rich Text editor
-	// RichText,
+	RichText,
 	// Row - used for admin field layout, no effect on data shape
 	//Row,
 	// Select - dropdown / picklist style value selector
@@ -88,7 +86,6 @@ let widgets:Widgets = {
 	// Upload - allows local file and image upload
 	//Upload
 	// Url - Link to internal / External hyperlinks
-	Url,
-	
+	Url
 } as const;
-export default widgets
+export default widgets;
