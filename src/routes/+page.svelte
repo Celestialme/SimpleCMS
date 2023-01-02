@@ -20,11 +20,13 @@
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
 
-	import SimpleCmsLogo from '@src/components/icons/SimpleCMS_Logo.svelte';
+	//typesafe-i18n
+	// import type { LayoutLoad } from './$types'
+	// import { setLocale } from './i18n/i18n-svelte';
+	// setLocale();
+	// import LL from './i18n/i18n-svelte';
 
-	let expanded = false;
-	let toggle = true;
-	let searchbutton;
+	import SimpleCmsLogo from '@src/components/icons/SimpleCMS_Logo.svelte';
 
 	let valid = false;
 	let collection = collections[0];
@@ -39,7 +41,6 @@
 	let toggleSideBar = false;
 	// change sidebar width so only icons show
 	let switchSideBar = true;
-	let visible = false;
 
 	axios
 		.post(
@@ -240,8 +241,8 @@
 										data-menu="system-language"
 									>
 										<ul class="divide-y-2">
-											<li><a href="/">English</a></li>
-											<li><a href="/">German</a></li>
+											<li><button on:click={() => setLocale('en')}> English </button></li>
+											<li><button on:click={() => setLocale('de')}> Deutsch </button></li>
 										</ul>
 									</nav>
 								</span>
