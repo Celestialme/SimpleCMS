@@ -73,7 +73,7 @@
 		<div class="mb-8 flex flex-row gap-2">
 			<CMSLogo className="w-10" fill="red" />
 
-			<h1 class="text-3xl font-bold text-white">SimpleCMS - Sign Up</h1>
+			<h1 class="text-2xl font-bold text-white lg:text-3xl">SimpleCMS Sign Up</h1>
 		</div>
 
 		<form>
@@ -85,7 +85,7 @@
 					color={errorStatus.email.status ? 'red' : 'base'}
 					type="email"
 					name="floating_email"
-					class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+					class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
 					placeholder=" "
 					required
 				/>
@@ -113,7 +113,7 @@
 					name="floating_password"
 					autocomplete="current-password"
 					id="floating_password"
-					class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+					class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
 					placeholder=" "
 					required
 				/>
@@ -123,7 +123,7 @@
 					>Password</label
 				>
 
-				<div class="absolute top-0 right-0" on:click={() => (showPassword = !showPassword)}>
+				<div class="absolute top-2 right-2" on:click={() => (showPassword = !showPassword)}>
 					{#if showPassword}
 						<Icon icon="bi:eye-fill" color="base" width="24" />
 					{:else}
@@ -148,7 +148,7 @@
 					type="password"
 					name="repeat_password"
 					id="floating_repeat_password"
-					class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+					class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
 					placeholder=" "
 					required
 				/>
@@ -158,7 +158,7 @@
 					>Confirm Password</label
 				>
 
-				<div class="absolute top-0 right-0" on:click={() => (showPassword = !showPassword)}>
+				<div class="absolute top-2 right-2" on:click={() => (showPassword = !showPassword)}>
 					{#if showPassword}
 						<Icon icon="bi:eye-fill" color="base" width="24" />
 					{:else}
@@ -173,7 +173,9 @@
 		</form>
 
 		<!-- TODO Skeleton Css not working -->
-		<button on:click={signup} class="btn btn-filled-surface btn-base mt-4">Sign Up</button>
+		<button on:click={signup} class="btn btn-sm mt-4 rounded-md  bg-white text-black"
+			>Sign Up</button
+		>
 	</div>
 </div>
 

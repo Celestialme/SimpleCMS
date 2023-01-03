@@ -70,7 +70,7 @@
 		<div bind:this={form} class="mx-auto mt-[15%] mb-[5%] w-full p-4 lg:w-1/2">
 			<div class="mb-8 flex flex-row gap-2">
 				<CMSLogo className="w-10" fill="red" />
-				<h1 class="text-3xl font-bold">SimpleCMS - Sign In</h1>
+				<h1 class="text-2xl font-bold text-black lg:text-3xl">SimpleCMS Sign In</h1>
 			</div>
 
 			<form>
@@ -82,7 +82,7 @@
 						color={errorStatus.email.status ? 'red' : 'base'}
 						type="email"
 						name="floating_email"
-						class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm !text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
 						placeholder=" "
 						required
 					/>
@@ -109,7 +109,7 @@
 						name="floating_password"
 						autocomplete="current-password"
 						id="floating_password"
-						class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm !text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
 						placeholder=" "
 						required
 					/>
@@ -119,7 +119,7 @@
 						>Password</label
 					>
 
-					<div class="absolute top-0 right-0" on:click={() => (showPassword = !showPassword)}>
+					<div class="absolute top-2 right-2" on:click={() => (showPassword = !showPassword)}>
 						{#if showPassword}
 							<Icon icon="bi:eye-fill" color="base" width="24" />
 						{:else}
@@ -136,16 +136,22 @@
 			</form>
 
 			<div class="buttons">
-				<button on:click={signin} class="btn btn-base btn-filled-primary mt-4">Sign In</button>
+				<button on:click={signin} class="btn btn-sm  mt-4 rounded-lg border bg-gray-700 text-white "
+					>Sign In</button
+				>
 
-				<button on:click={() => (forgot = true)} class="btn mt-4 ml-4 ">Forgotten Password</button>
+				<button
+					on:click={() => (forgot = true)}
+					class="btn btn-sm  mt-4 ml-4 rounded-lg border border-gray-700  text-gray-700 "
+					>Forgotten Password</button
+				>
 			</div>
 		</div>
 	{:else}
 		<form class="mx-auto w-full p-4 lg:w-1/2">
 			<div class="mb-8 flex flex-row gap-2">
 				<CMSLogo className="w-10" fill="red" />
-				<h1 class="text-3xl font-bold">Forgotten Password</h1>
+				<h1 class="text-3xl font-bold text-black ">Forgotten Password</h1>
 			</div>
 
 			<!-- Email field -->
@@ -157,7 +163,7 @@
 					color={errorStatus.email.status ? 'red' : 'base'}
 					type="email"
 					name="floating_email"
-					class="peer block w-full appearance-none border-0 border-b-2 border-gray-300 bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+					class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm !text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
 					placeholder=" "
 					required
 				/>
@@ -173,7 +179,9 @@
 			</div>
 
 			<!-- TODO Skeleton CSS not working -->
-			<button type="submit" class="btn btn-filled-surface btn-base mt-4"
+			<button
+				type="submit"
+				class="btn btn-sm text-whitebtn-base mt-4 rounded-lg border bg-gray-600 text-white"
 				>Send Password Reset Email</button
 			>
 		</form>
