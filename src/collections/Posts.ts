@@ -1,3 +1,5 @@
+import env from '@root/env';
+import { format } from '@src/utils/utils';
 import widgets from '../components/widgets';
 
 import type { Schema } from './types';
@@ -12,8 +14,29 @@ let schema: Schema = {
 	// Inspect Widget fields for possible options
 	fields: [
 		widgets.Group({
-			title: 'Group',
+			title: 'User',
+			display: async (data: any, field: any, entry: any) => {
+				return format([
+					{
+						label: 'Name',
+						text: entry.first,
 
+						newLine: true
+					},
+					{
+						text: entry.middle,
+						labelColor: 'blue',
+						textColor: 'yellow',
+						newLine: false
+					},
+					{
+						text: entry.last,
+						labelColor: 'blue',
+						textColor: 'green',
+						newLine: false
+					}
+				]);
+			},
 			fields: [
 				widgets.Text({
 					title: 'first',
@@ -21,26 +44,25 @@ let schema: Schema = {
 					placeholder: 'Enter First Name',
 					required: true,
 					localization: true,
-					width: '50%'
+					width: '30%'
 				}),
 
+				widgets.Text({
+					title: 'middle',
+					icon: 'ri:t-box-line',
+					placeholder: 'Enter Last Name',
+					required: false,
+					localization: false,
+					width: '70%'
+				}),
 				widgets.Text({
 					title: 'last',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Last Name',
 					required: false,
-					localization: false,
-					width: '33%'
+					localization: false
 				})
 			]
-		}),
-
-		widgets.Text({
-			title: 'Post',
-			icon: 'ri:t-box-line',
-			placeholder: 'Enter Post',
-			required: false,
-			localization: false
 		})
 	]
 };

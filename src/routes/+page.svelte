@@ -3,7 +3,7 @@
 	import { shape_fields, saveFormData } from '@src/utils/utils_svelte';
 	import Form from '@src/components/Form.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
-	import { entryData, credentials } from '@src/stores/store';
+	import { entryData, credentials, is_dark } from '@src/stores/store';
 	import Collections from '@src/components/Collections.svelte';
 	import Alerts from '@src/components/Alerts.svelte';
 	import { fly } from 'svelte/transition';
@@ -13,7 +13,7 @@
 
 	// skeleton
 	import { Avatar } from '@skeletonlabs/skeleton';
-	let avatarSrc = null;
+	let avatarSrc = '';
 	import { menu } from '@skeletonlabs/skeleton';
 	import { tooltip } from '@skeletonlabs/skeleton';
 
@@ -35,7 +35,7 @@
 	let refresh: (collection: any) => Promise<any>;
 	let showFields = false;
 	let category = categories[0].category;
-	let deleteEntry = async () => {};
+
 	let deleteMode: boolean;
 	// show/hide Sidebar
 	let toggleSideBar = false;
@@ -81,15 +81,9 @@
 
 	// darkmode - is this still required?
 	const toggleTheme = () => {
-		const isDark = window.document.documentElement.classList.toggle('dark');
-		localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+		$is_dark = window.document.documentElement.classList.toggle('dark');
+		localStorage.setItem('is_dark', $is_dark ? 'true' : 'false');
 	};
-
-	function is_dark() {
-		return document.documentElement.classList.contains('dark');
-	}
-
-	console.log(is_dark);
 
 	let completionPercentage = '25%';
 	let required = true;
@@ -222,7 +216,7 @@
 									class="flex-col"
 									use:tooltip={{ content: 'Admin User', position: 'right' }}
 								>
-									<Avatar src={avatarSrc ?? '/Default_User.svg'} class=" border border-gray-400" />
+									<Avatar src={avatarSrc || '/Default_User.svg'} class=" border border-gray-400" />
 									<div class="text-center text-[9px] text-gray-400 dark:text-white">Admin</div>
 								</a>
 
@@ -241,20 +235,25 @@
 										data-menu="system-language"
 									>
 										<ul class="divide-y-2">
-											<li><button on:click={() => setLocale('en')}> English </button></li>
-											<li><button on:click={() => setLocale('de')}> Deutsch </button></li>
+											<li><button> English </button></li>
+											<li><button> Deutsch </button></li>
 										</ul>
 									</nav>
 								</span>
 
 								<button
 									on:click={toggleTheme}
-									id="theme-toggle"
 									class="btn rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-									use:tooltip={{ content: 'Switch', position: 'right' }}
+									use:tooltip={{
+										content: `Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`,
+										position: 'right'
+									}}
 								>
-									<Icon icon="bi:sun" width="16" id="theme-toggle-light-icon" />
-									<Icon icon="bi:moon-fill" width="16" id="theme-toggle-dark-icon" />
+									{#if $is_dark}
+										<Icon icon="bi:sun" width="16" />
+									{:else}
+										<Icon icon="bi:moon-fill" width="16" />
+									{/if}
 								</button>
 							</div>
 
@@ -275,7 +274,7 @@
 								use:tooltip={{ content: 'Admin', position: 'right' }}
 							>
 								<Avatar
-									src={avatarSrc ?? '/Default_User.svg'}
+									src={avatarSrc || '/Default_User.svg'}
 									class="m-auto border border-gray-400"
 								/>
 								<div class="text-[9px] text-gray-400 dark:text-white">Admin</div>
@@ -331,7 +330,6 @@
 					<EntryList
 						bind:toggleSideBar
 						bind:showFields
-						bind:deleteEntry
 						bind:deleteMode
 						{collection}
 						{category}
@@ -393,10 +391,6 @@
 </div>
 
 <style>
-	/* why re these import needed here and not globally in +layout? */
-	@import '@skeletonlabs/skeleton/styles/all.css';
-	@import '@skeletonlabs/skeleton/styles/elements.css';
-	@import '@skeletonlabs/skeleton/styles/elements/tables.css';
 	.body {
 		display: flex;
 		flex-direction: column;

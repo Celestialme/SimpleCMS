@@ -56,7 +56,11 @@
 			expanded[index] = !expanded[index];
 			expanded[index] ? setOverflowY(e, true) : setOverflowY(e, false);
 		}}
-		use:tooltip={{ content: item.category, position: 'right' }}
+		use:tooltip={{
+			content: item.category,
+			position: 'right',
+			width: switchSideBar ? '100px' : '0px'
+		}}
 		class="arrow relative h-[40px] cursor-pointer overflow-visible rounded-sm bg-gray-500 py-2 text-center last:mb-1"
 		class:arrow_up={expanded[index]}
 	>

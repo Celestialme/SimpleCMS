@@ -26,6 +26,7 @@
 			type="text"
 			name={field.title}
 			id={field.title}
+			bind:value={widgetValue[_language]}
 			class="block w-full rounded-md border-gray-300 pl-7 pr-12 sm:text-sm"
 			placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}
 		/>
@@ -55,9 +56,3 @@
 		{/if}
 	</div>
 </div>
-
-<style>
-	@import '@skeletonlabs/skeleton/styles/all.css';
-	@import '@skeletonlabs/skeleton/styles/elements.css';
-	@import '@skeletonlabs/skeleton/styles/elements/badges.css';
-</style>

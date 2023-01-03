@@ -13,7 +13,7 @@
 
 <li>
 	<div on:click={() => (expanded = !expanded)}>
-		<p style="margin-left:{20 * level}px" class="relative pl-[20px] text-black">
+		<p style="margin-left:{20 * level}px" class="relative pl-[20px] !text-black">
 			{#if children?.length > 0}
 				<div class="arrow" class:expanded />
 			{/if}

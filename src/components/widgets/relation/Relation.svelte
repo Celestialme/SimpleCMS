@@ -2,7 +2,7 @@
 	import Fields from '@src/components/Fields.svelte';
 	import { findById, find } from '@src/utils/utils';
 	import { shape_fields, saveSimpleData } from '@src/utils/utils_svelte';
-	import { entryData, getFieldsData } from '@src/stores/store';
+	import { getFieldsData, language } from '@src/stores/store';
 
 	import DropDown from '@src/components/DropDown.svelte';
 
@@ -43,17 +43,14 @@
 		}
 		obj[field.title] = widgetValue;
 	};
-	(async () => {
+	let _ = async (_language: string) => {
 		if (value && typeof value == 'string') {
 			value = await findById(value, field.relation);
-
-			//if we dont have display from entrylist already, generate new one
-
-			display =
-				(value && $entryData?.displays?.[field.title]) ||
-				(value && widgetValue && (await field.display(widgetValue, field, $entryData)));
 		}
-	})();
+		//if we dont have display from entrylist already, generate new one
+		display = (await field.rawDisplay(value))[_language];
+	};
+	$: _($language);
 
 	if (root) $getFieldsData.add(getData); // extra push needed because getData gets pushed to executed functions when fields are expanded so choosing wont work without.
 	shape_fields(field.relation.fields).then((data) => (fields = data));
@@ -98,9 +95,6 @@
 				expanded = !expanded;
 				selected = null;
 			}}
-			size="xs"
-			gradient
-			color="red"
 			class="btn absolute top-0  right-0 z-10">X</button
 		>
 

@@ -4,7 +4,7 @@
 	import { entryData, MenuCurrentChild } from '@src/stores/store';
 
 	import ListNode from './ListNode.svelte';
-	import { Button } from 'flowbite-svelte';
+	import Icon from '@iconify/svelte';
 	export let field: any;
 	export let value: any = {};
 	export let root: boolean = true;
@@ -52,16 +52,18 @@
 </script>
 
 <div hidden={showLevelContent}>
-	<ul class="menu bg-white rounded-md">
+	<ul class="menu rounded-md bg-white text-black">
 		{#if !value}
 			<li>
 				<div>
-					<Button
+					<button
 						on:click={() => {
 							(depth = 0), (showLevelContent = !showLevelContent);
 						}}
-						class="ml-auto btn btn-sm">+</Button
+						class="btn btn-sm btn-filled-primary ml-auto rounded text-xl text-black"
 					>
+						<Icon icon="ic:baseline-plus" width="22" />
+					</button>
 				</div>
 			</li>
 		{:else}
@@ -77,20 +79,19 @@
 </div>
 {#if showLevelContent}
 	<div
-		class="p-[20px] my-4 rounded-lg border-2 border-[#8cccff] relative"
+		class="relative my-4 rounded-lg border-2 border-[#8cccff] p-[20px]"
 		hidden={!showLevelContent}
 	>
-		<Button
+		<button
 			on:click={() => {
 				showLevelContent = !showLevelContent;
 				editing = false;
 				fieldsValue = {};
 			}}
-			size="xs"
-			gradient
-			color="red"
-			class="z-10 top-0  absolute right-0">X</Button
+			class="btn btn-sm absolute top-0 right-0 z-10 mb-2 dark:text-white"
 		>
+			<Icon icon="material-symbols:close" width="26" />
+		</button>
 		<Fields
 			bind:fieldsValue
 			bind:inputFields

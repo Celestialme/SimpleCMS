@@ -8,7 +8,9 @@ export let language: Writable<string> = writable(env.LANGUAGE);
 export let credentials: Writable<{ username: string; session: string }> = writable(
 	JSON.parse(window.localStorage.getItem('credentials') || '{"username":null,"session":null}')
 );
-
+export let is_dark: Writable<boolean> = writable(
+	JSON.parse(window.localStorage.getItem('is_dark') || 'true')
+);
 credentials.subscribe((val) => {
 	window.localStorage.setItem('credentials', JSON.stringify(val));
 });

@@ -4,3 +4,10 @@
 </script>
 
 <slot />
+
+<style>
+	@import '@skeletonlabs/skeleton/styles/all.css';
+	@import '@skeletonlabs/skeleton/styles/elements.css';
+	@import '@skeletonlabs/skeleton/styles/elements/tables.css';
+	@import '@skeletonlabs/skeleton/styles/elements/badges.css';
+</style>

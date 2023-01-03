@@ -13,7 +13,7 @@
 	import Icon from '@iconify/svelte';
 
 	import type { LinkType } from 'flowbite-svelte/types';
-	import { never } from '@src/utils/utils_svelte';
+	import { never, any } from '@src/utils/utils_svelte';
 
 	export let showFields = false;
 	export let collection: any = undefined;
@@ -26,7 +26,7 @@
 	let deleteMap: any = {};
 	let deleteAll = false;
 	let open = false;
-
+	let tmp_entry: any;
 	$: process_deleteAll(deleteAll);
 	$: deleteMode = Object.values(deleteMap).includes(true);
 	let refresh_deleteMap = (_: any) => {
@@ -46,7 +46,7 @@
 	});
 	$: refresh && refresh(collection);
 
-	export async function deleteEntry() {
+	async function deleteEntry() {
 		deleteAll = false;
 
 		let deleteList: Array<string> = [];
@@ -65,9 +65,11 @@
 		filtered_entryList = entryList.filter((item: object) => {
 			return filter ? Object.values(item).some((x) => x.toString().includes(filter)) : true;
 		});
+		// string == relationship id which does not need to be translatable object
+
 		filter;
 	}
-
+	$: console.log(filtered_entryList);
 	function process_deleteAll(deleteAll: boolean) {
 		if (deleteAll) {
 			for (let item in entryList) {
@@ -102,6 +104,7 @@
 	let currentPageRows = [];
 
 	import { writable } from 'svelte/store';
+	import { flattenData } from '@src/utils/utils';
 	// Is not really stored on page reload
 	let itemsPerPage = writable(10);
 
@@ -255,7 +258,7 @@
 				class="inline-flex rounded-l-full rounded-r shadow-md hover:shadow-lg focus:shadow-lg"
 				role="group"
 			>
-				{#if entryButton == 'create'}
+				{#if entryButton == 'create'&& !deleteMode}
 					<button
 						on:click={() => {
 							showFields = true;
@@ -310,7 +313,7 @@
 						<Icon icon="bi:clipboard-data-fill" color="white" width="22" class="mr-1" />
 						<div class="hidden md:block">Clone</div>
 					</button>
-				{:else if entryButton == 'delete'}
+				{:else if entryButton == 'delete' || deleteMode}
 					<button
 						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-red-600 via-red-500 to-red-400 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
@@ -421,7 +424,7 @@
 
 	<!-- Show Collection Table -->
 	<div class="table-container max-h-[80vh] overflow-auto shadow-xl">
-		<table class="table-hover fixed_header table">
+		<table class="table-hover fixed_header inline-block">
 			<thead class="sticky top-0">
 				<tr class="border-b-2 border-black bg-gray-500 dark:border-white dark:bg-inherit">
 					<th><DeleteIcon bind:checked={deleteAll} /></th>
@@ -478,7 +481,8 @@
 						<td>{index + 1}</td>
 						{#key $language}
 							{#each collection.fields as field}
-								{#await field?.display?.(entry[field.title], field, entry)}
+								{((tmp_entry = flattenData(entry, $language)), '')}
+								{#await field?.display?.(tmp_entry[field.title], field, tmp_entry)}
 									<td class="">Loading...</td>
 								{:then display}
 									{((entry.displays = {}), '')}
@@ -602,9 +606,6 @@
 </div>
 
 <style>
-	@import '@skeletonlabs/skeleton/styles/all.css';
-	@import '@skeletonlabs/skeleton/styles/elements.css';
-	@import '@skeletonlabs/skeleton/styles/elements/tables.css';
 	.fixed_header {
 		table-layout: fixed;
 		border-collapse: collapse;
@@ -625,6 +626,6 @@
 	.fixed_header td {
 		padding: 5px;
 		text-align: left;
-		width: 200px;
+		width: 220px;
 	}
 </style>

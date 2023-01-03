@@ -22,7 +22,11 @@
 
 {#each fields as field, index}
 	<!-- width does not seam to apply -->
-	<div bind:this={inputFields[index]} class="section relative my-2 {field.field.width || 'w-full'}">
+	<div
+		bind:this={inputFields[index]}
+		class="section relative my-2  {!field.field.width ? 'w-full' : 'max-md:!w-full'}"
+		style={field.field.width && `width:${field.field.width.replace('%', '') * 1 - 1}%`}
+	>
 		<div class=" relative flex font-bold capitalize">
 			<p class="font-bold">
 				{field.field.title}

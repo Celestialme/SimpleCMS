@@ -1,24 +1,28 @@
-import { findById } from '../../../utils/utils';
+import env from '@root/env';
+import { findById, flattenData } from '@src/utils/utils';
 
 import type { Display } from '../types';
 import type { Relation_Params, Relation_Field } from './types';
-let widget =  ({
+let widget = ({
 	// Accept parameters from collection
 	title,
 	icon,
 	required,
 	relation,
 	display
-}:Relation_Params) => {
+}: Relation_Params) => {
 	let _display: Display | undefined;
 	if (!display) display = async (data: any, field: any, entry: any) => data; //default
 	else
 		_display = async (data: any, field: any, entry: any) => {
-			console.log(data)
+			let { language } = await import('../../../stores/store');
+			let { get } = await import('svelte/store');
 			let _data = await findById(data, relation);
+			_data = flattenData(_data, get(language));
 			return await (display as Display)(_data, field, entry);
 		};
 	if (!_display) _display = display;
+
 	let field = {
 		schema: {},
 		title,
@@ -28,7 +32,7 @@ let widget =  ({
 		relation,
 		display: _display,
 		rawDisplay: display
-	}as Relation_Field;
+	} as Relation_Field;
 
 	field.schema[title] = 'string';
 
@@ -39,4 +43,4 @@ let widget =  ({
 	return field;
 };
 
-export default widget
+export default widget;

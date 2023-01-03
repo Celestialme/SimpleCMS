@@ -136,11 +136,9 @@
 			</form>
 
 			<div class="buttons">
-				<button on:click={signin} color="dark" class="btn mt-4">Sign In</button>
+				<button on:click={signin} class="btn btn-base btn-filled-primary mt-4">Sign In</button>
 
-				<button on:click={() => (forgot = true)} outline color="light" class="btn mt-4 ml-4"
-					>Forgotten Password</button
-				>
+				<button on:click={() => (forgot = true)} class="btn mt-4 ml-4 ">Forgotten Password</button>
 			</div>
 		</div>
 	{:else}

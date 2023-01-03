@@ -14,10 +14,7 @@ let widget = ({
 }: Text_Params) => {
 	if (!display)
 		display = async (data: any, field: any, entry: any) => {
-			let { language } = await import('../../../stores/store');
-			let { get } = await import('svelte/store');
-			let _language = localization ? get(language) : env.LANGUAGE;
-			return data[_language] || 'No Value';
+			return data || 'No Value';
 		};
 	let field = {
 		schema: {},
