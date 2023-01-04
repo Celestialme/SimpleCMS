@@ -1,7 +1,6 @@
 <script lang="ts">
 	import env from '@root/env';
 	import { language } from '@src/stores/store';
-	import { Search, DarkMode } from 'flowbite-svelte';
 
 	export let dropDownData: Array<any> = [];
 	export let showDropDown: boolean;

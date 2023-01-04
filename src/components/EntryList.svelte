@@ -258,7 +258,7 @@
 				class="inline-flex rounded-l-full rounded-r shadow-md hover:shadow-lg focus:shadow-lg"
 				role="group"
 			>
-				{#if entryButton == 'create'&& !deleteMode}
+				{#if entryButton == 'create' && !deleteMode}
 					<button
 						on:click={() => {
 							showFields = true;
@@ -282,7 +282,7 @@
 					</button>
 				{:else if entryButton == 'unpublish'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-200 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-yellow-500 via-yellow-400 to-yellow-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							unpublishEntry();
 						}}
