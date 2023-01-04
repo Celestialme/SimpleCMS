@@ -8,6 +8,7 @@ let widget = ({
 	placeholder,
 	required,
 	localization,
+	width,
 	options,
 	display
 }: SelectList_Params) => {
@@ -21,6 +22,7 @@ let widget = ({
 		required,
 		localization,
 		options,
+		width,
 		display
 	} as SelectList_Field;
 

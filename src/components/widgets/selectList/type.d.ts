@@ -9,6 +9,7 @@ export type SelectList_Field = {
 	required: boolean | undefined;
 	localization: boolean | undefined;
 	options: boolean | undefined;
+	width: string;
 	display: Display;
 };
 export type SelectList_Params = {
@@ -19,5 +20,6 @@ export type SelectList_Params = {
 	required?: boolean;
 	localization?: boolean;
 	options?: string;
+	width?: string;
 	display?: Display;
 };
