@@ -15,6 +15,7 @@ import PhoneNumber from './phoneNumber';
 import Group from './group';
 import SelectList from './selectList';
 import Address from './address';
+import Seo from './seo';
 
 export type Widgets = {
 	Address: typeof Address;
@@ -34,6 +35,7 @@ export type Widgets = {
 	SelectList: typeof SelectList;
 	Text: typeof Text;
 	Url: typeof Url;
+	Seo: typeof Seo;
 };
 
 let widgets: Widgets = {
@@ -83,6 +85,8 @@ let widgets: Widgets = {
 	//Row,
 	// SelectList - dropdown / picklist style value selector
 	SelectList,
+	// Seo - Basic Seo Title /Descritption with preview
+	Seo,
 	// Tabs
 	//Tabs,
 	// Text - simple text input

@@ -122,7 +122,9 @@ let schema: Schema = {
 			placeholder: 'Enter Website',
 			required: true,
 			localization: true
-		})
+		}),
+
+		widgets.Seo({ title: 'Seo' })
 	]
 };
 export default schema;

@@ -347,7 +347,7 @@
 				<button
 					on:click={() => submit()}
 					use:tooltip={{ content: 'Save {collection?.name}', position: 'right' }}
-					class="w-full max-w-[150px] rounded-lg bg-gradient-to-br from-lime-300 via-lime-400 to-lime-500 px-4 py-2 font-bold hover:bg-lime-500 focus:bg-lime-500 active:bg-lime-600 md:mt-2 md:max-w-[350px]"
+					class="w-full max-w-[150px] rounded-lg bg-gradient-to-br from-lime-400 via-lime-500 to-lime-600 px-4 py-2 font-bold hover:bg-lime-500 focus:bg-lime-500 active:bg-lime-600 md:mt-2 md:max-w-[350px]"
 				>
 					<div class=" flex items-center justify-center text-xl uppercase">
 						<Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />

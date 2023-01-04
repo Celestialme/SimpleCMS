@@ -264,7 +264,7 @@
 							showFields = true;
 						}}
 						use:tooltip={{ content: 'Create ' + collection.name, position: 'bottom' }}
-						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 px-2 py-2 text-xl font-bold text-black md:ml-auto md:w-[150px]"
+						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-lime-600 via-lime-500 to-lime-400 px-2 py-2 text-xl font-bold text-black md:ml-auto md:w-[150px]"
 					>
 						<Icon icon="ic:round-plus" color="black" width="22" class="mr-1" />
 						<div class="hidden md:block">Create</div>
@@ -345,7 +345,7 @@
 									on:click={() => {
 										entryButton = 'create';
 									}}
-									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-lime-500 via-lime-400 to-lime-300 text-lg font-bold text-gray-800"
+									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-lime-600 via-lime-500 to-lime-400 text-lg font-bold text-gray-800"
 								>
 									<Icon icon="ic:round-plus" width="22" />
 									Create
