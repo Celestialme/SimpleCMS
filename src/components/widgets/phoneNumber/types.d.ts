@@ -1,15 +1,15 @@
 import type { Display } from '../types';
 
-export type Number_Field = {
+export type PhoneNumber_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
 	title: string;
-    icon: string | undefined;
-    placeholder: string | undefined;
-    required: boolean | undefined;
-    display: Display;
+	icon: string | undefined;
+	placeholder: string | undefined;
+	required: boolean | undefined;
+	display: Display;
 };
-export type Number_Params = {
+export type PhoneNumber_Params = {
 	title: string;
 	icon?: string;
 	placeholder?: string;

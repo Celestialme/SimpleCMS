@@ -11,8 +11,9 @@ import Url from './url';
 import Checkbox from './checkbox';
 import Radio from './radio';
 import Number from './number';
-import PhoneNumber from './phonenumber';
+import PhoneNumber from './phoneNumber';
 import Group from './group';
+import SelectList from './selectList';
 import Address from './address';
 
 export type Widgets = {
@@ -30,6 +31,7 @@ export type Widgets = {
 	Radio: typeof Radio;
 	Relation: typeof Relation;
 	RichText: typeof RichText;
+	SelectList: typeof SelectList;
 	Text: typeof Text;
 	Url: typeof Url;
 };
@@ -79,8 +81,8 @@ let widgets: Widgets = {
 	RichText,
 	// Row - used for admin field layout, no effect on data shape
 	//Row,
-	// Select - dropdown / picklist style value selector
-	//Select,
+	// SelectList - dropdown / picklist style value selector
+	SelectList,
 	// Tabs
 	//Tabs,
 	// Text - simple text input

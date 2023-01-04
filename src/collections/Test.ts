@@ -1,4 +1,5 @@
 import widgets from '../components/widgets';
+import { format } from '@src/utils/utils';
 
 import type { Schema } from './types';
 
@@ -11,15 +12,66 @@ let schema: Schema = {
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [
-		widgets.Text({
-			title: 'First',
-			icon: 'ri:t-box-line',
-			placeholder: 'Enter First Name',
-			required: true,
-			localization: true
-		}),
+		widgets.Group({
+			title: 'User',
+			display: async (data: any, field: any, entry: any) => {
+				return format([
+					{
+						label: 'Prefix',
+						text: entry.prefix,
+						newLine: true // not working
+					},
+					{
+						label: 'Name',
+						text: entry.first
+					},
+					{
+						text: entry.middle,
+						labelColor: 'blue',
+						textColor: 'yellow'
+					},
+					{
+						text: entry.last,
+						labelColor: 'blue',
+						textColor: 'green',
+						newLine: true // not working
+					}
+				]);
+			},
+			fields: [
+				widgets.SelectList({
+					title: 'prefix',
+					icon: 'ri:t-box-line',
+					placeholder: 'Enter Prefix',
+					width: '33%'
+					// options : ('Mr.', 'Ms.', 'Mrs.', 'Dr.');
+				}),
 
-		widgets.Text({ title: 'Last', icon: 'ri:t-box-line', placeholder: 'Enter Last Name' }),
+				widgets.Text({
+					title: 'first',
+					icon: 'ri:t-box-line',
+					placeholder: 'Enter First Name',
+					required: true,
+					width: '33%'
+				}),
+
+				widgets.Text({
+					title: 'middle',
+					icon: 'ri:t-box-line',
+					placeholder: 'Enter Middle Name',
+					required: false,
+					width: '33%'
+				}),
+
+				widgets.Text({
+					title: 'last',
+					icon: 'ri:t-box-line',
+					placeholder: 'Enter Last Name',
+					required: true,
+					width: '33%'
+				})
+			]
+		}),
 
 		widgets.Text({
 			title: 'Full Text option',
@@ -28,6 +80,7 @@ let schema: Schema = {
 			suffix: 'cent',
 			count: '10',
 			placeholder: 'Enter Number',
+			localization: true,
 			required: true
 		}),
 
@@ -49,9 +102,15 @@ let schema: Schema = {
 			required: true
 		}),
 
-		widgets.Radio({ title: 'Radio', color: 'red', required: true }),
+		widgets.Group({
+			title: 'Test 2nd Group',
 
-		widgets.Checkbox({ title: 'Checkbox', color: 'green', required: true }),
+			fields: [
+				widgets.Radio({ title: 'Radio', color: 'red', required: true }),
+
+				widgets.Checkbox({ title: 'Checkbox', color: 'green', required: true })
+			]
+		}),
 
 		widgets.RichText({ title: 'Description' }),
 
@@ -64,8 +123,6 @@ let schema: Schema = {
 			required: true,
 			localization: true
 		})
-
-		// widgets.RichText({ title: 'rich text' })
 	]
 };
 export default schema;
