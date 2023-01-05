@@ -37,15 +37,15 @@
 	}
 
 	// Function to analyze the title and  description
-	let suggestions = analyze(title, description);
 	let count = 0;
 	let progress = 0;
-	$: progress = (count / 15) * 100;
+	$: progress = (count / 8) * 100;
+
+	let suggestions = analyze(title, description);
 
 	function analyze(title, description) {
 		let suggestions: any = [];
-		let count: number = 0;
-
+		console.log(count);
 		// Check if the title is more than 50 characters
 		if (title.length > 50) {
 			suggestions.push({
@@ -57,7 +57,7 @@
 		// Check if the title is more than 30 characters
 		else if (title.length > 30) {
 			suggestions.push({
-				text: 'Your title is more than 30 characters. Good!',
+				text: 'Your title is more than 30 characters. Try 50+. Good!',
 				impact: 2
 			});
 			count += 2;
@@ -65,7 +65,7 @@
 		// Otherwise, the title is less than 30 characters
 		else {
 			suggestions.push({
-				text: 'Your title is less than 30 characters. Bad!',
+				text: 'Your title is too short. Make sure your title is at least 50 characters. Bad!',
 				impact: 1
 			});
 			count += 1;
@@ -103,7 +103,7 @@
 				text: 'Your description is 2 to 4 sentences long. Perfect!',
 				impact: 3
 			});
-			count += 2;
+			count += 3;
 		} else {
 			suggestions.push({
 				text: 'Your descripton is only 1 sentence long. Make sure your description is 2 to 4 sentences long.',
@@ -121,13 +121,14 @@
 			count += 3;
 		} else {
 			suggestions.push({
-				text: 'Your title does not use numbers. The use of numbers in your title can increase your CTR. Bad!',
+				text: 'Your title does not use numbers. The use of numbers in your title can increase your CTR.',
 				impact: 1
 			});
 			count += 1;
 		}
 
 		// Check if the title has a power word
+		// TODO: Translation
 		const powerWords = [
 			'amazing',
 			'attractive',
@@ -213,6 +214,7 @@
 		}
 
 		// Define the list of CTA keywords
+		// TODO: Translation
 		const ctaKeywords = [
 			'buy',
 			'click here',
@@ -258,7 +260,6 @@
 
 		return suggestions;
 	}
-	console.log(count);
 </script>
 
 <div class="input-container rounded">
@@ -289,11 +290,11 @@
 	/>
 </div>
 
-<div class="input-container">
+<div class="input-container mt-2">
 	<label
-		class={description.length >= 150 && description.length <= 155
+		class={description.length >= 120 && description.length <= 165
 			? 'input-label green'
-			: description.length >= 30 && description.length <= 149
+			: description.length >= 30 && description.length <= 129
 			? 'input-label orange'
 			: description.length < 30
 			? 'input-label'
@@ -306,48 +307,93 @@
 			</div>
 		</div>
 	</label>
-	<input
+	<textarea
 		id="description-input"
-		type="text"
-		class="rounded-md"
-		required
+		name="description-input"
 		placeholder="SEO Description"
+		rows="2"
+		cols="50"
 		bind:value={description}
 		on:input={handleDescriptionChange}
+		class="rounded-md"
 	/>
 </div>
 
-<div
-	class="dark:boder-white mt-2 rounded border border-gray-500 dark:border-white dark:bg-transparent"
->
-	<h2 class="mb-1 p-2 text-center text-black underline dark:text-white">SimpleCMS SEO Preview</h2>
-	<h3 class="px-4 text-blue-700">{title}</h3>
-	<p class="-mt-1 p-4 text-lg text-black">{description}</p>
-	<p class="text-md mb-2 -mt-2 px-4 !text-gray-500">https://www.google.de</p>
+<div class="dark:boder-white mt-2 border-y border-gray-500 dark:border-white dark:bg-transparent">
+	<h2 class="mb-1 pt-2 text-center text-2xl text-black underline dark:text-white">
+		SimpleCMS SEO Preview
+	</h2>
+	<p class="text-md px-4 !text-gray-500">https://.....</p>
+	<h3 class="px-4 font-semibold text-blue-700">{title}</h3>
+	<p class=" mb-2 px-4 pb-4 text-lg text-black">{description}</p>
 </div>
 
-<div class="mt-2 flex justify-center dark:text-white">
-	<ProgressRadial value={progress} class="mt-1 mr-4  w-20 text-white">{progress}%</ProgressRadial>
-	<div class="mb-2">
-		<div class="mb-1 flex gap-5">
-			<h3>List of Suggestions:</h3>
-			<div class="flex items-center gap-2">
-				<Icon icon="mdi:close-octagon" color="red" width="24" />
-				<span class="flex-auto">0 - 49</span>
+<!-- Mobile -->
+<div class="md:hidden">
+	<h3 class="mb-2 text-center ">List of Suggestions:</h3>
+	<div class="flex">
+		<ProgressRadial
+			value={progress}
+			stroke="180"
+			meter="stroke-primary-500"
+			class="mt-1 mr-6 w-20 text-2xl text-white sm:w-28">{progress}%</ProgressRadial
+		>
+		<div class="flex flex-col justify-start">
+			<div class="gap sm:flex sm:gap-4">
+				<div class="flex justify-center gap-2 ">
+					<Icon icon="mdi:close-octagon" color="red" width="24" />
+					<span class="flex-auto">0 - 49</span>
+				</div>
+				<div class="flex justify-center gap-2">
+					<span><Icon icon="bi:hand-thumbs-up-fill" width="24" class="text-blue-500" /></span>
+					<span class="flex-auto">50 - 79</span>
+				</div>
+				<div class="flex justify-center gap-2 ">
+					<span><Icon icon="material-symbols:check-circle-outline" color="green" width="24" /></span
+					>
+					<span class="flex-auto">80 - 100</span>
+				</div>
 			</div>
-			<div class="flex items-center gap-2">
-				<span><Icon icon="bi:hand-thumbs-up-fill" color="blue" width="24" /></span>
-				<span class="flex-auto">50 - 79</span>
-			</div>
-			<div class="flex items-center gap-2">
-				<span><Icon icon="material-symbols:check-circle-outline" color="green" width="24" /></span>
-				<span class="flex-auto">80 - 100</span>
-			</div>
+			<p class="mt-1 hidden text-justify sm:block">
+				Optimize title & description for Google search results, to improve the visual appeal to
+				brings more clicks to your website
+			</p>
 		</div>
-		<p>
-			Optimize title & description for Google search results, to improve the visual appeal to brings
-			more clicks to your website
-		</p>
+	</div>
+</div>
+
+<!-- desktop -->
+<div class="hidden md:block">
+	<div class="mt-2 flex items-center justify-center dark:text-white ">
+		<ProgressRadial
+			value={progress}
+			stroke="180"
+			meter="stroke-primary-500"
+			class="mt-1 mr-6 w-28 text-2xl text-white">{progress}%</ProgressRadial
+		>
+		<div class="mb-2">
+			<div class="mb-2 flex items-center justify-between lg:justify-start lg:gap-5">
+				<h3 class="">List of Suggestions:</h3>
+
+				<div class="flex items-center gap-2">
+					<Icon icon="mdi:close-octagon" color="red" width="24" />
+					<span class="flex-auto">0 - 49</span>
+				</div>
+				<div class="flex items-center gap-2">
+					<span><Icon icon="bi:hand-thumbs-up-fill" width="24" class="text-blue-500" /></span>
+					<span class="flex-auto">50 - 79</span>
+				</div>
+				<div class="flex items-center gap-2">
+					<span><Icon icon="material-symbols:check-circle-outline" color="green" width="24" /></span
+					>
+					<span class="flex-auto">80 - 100</span>
+				</div>
+			</div>
+			<p>
+				Optimize title & description for Google search results, to improve the visual appeal to
+				brings more clicks to your website
+			</p>
+		</div>
 	</div>
 </div>
 
@@ -358,7 +404,7 @@
 				{#if suggestion.impact === 3}
 					<Icon icon="material-symbols:check-circle-outline" color="green" width="24" />
 				{:else if suggestion.impact === 2}
-					<Icon icon="bi:hand-thumbs-up-fill" color="blue" width="24" />
+					<Icon icon="bi:hand-thumbs-up-fill" width="24" class="text-blue-500" />
 				{:else}
 					<Icon icon="mdi:close-octagon" color="red" width="24" />
 				{/if}
