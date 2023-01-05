@@ -58,8 +58,9 @@ let schema: Schema = {
 				widgets.Text({
 					title: 'middle',
 					icon: 'ri:t-box-line',
-					placeholder: 'Enter Middle Name',
+					placeholder: 'Middle Name (ReadOnly)',
 					required: false,
+					readonly: true,
 					width: '33%'
 				}),
 
@@ -79,6 +80,8 @@ let schema: Schema = {
 			prefix: '€',
 			suffix: 'cent',
 			count: '10',
+			minlength: '2',
+			maxlength: '15',
 			placeholder: 'Enter Number',
 			localization: true,
 			required: true
@@ -124,7 +127,12 @@ let schema: Schema = {
 			localization: true
 		}),
 
-		widgets.Seo({ title: 'Seo' })
+		widgets.Seo({
+			title: 'Basic Seo',
+			icon: 'icon-park-outline:seo',
+			localization: true,
+			required: true
+		})
 	]
 };
 export default schema;

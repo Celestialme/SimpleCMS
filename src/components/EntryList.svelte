@@ -69,7 +69,7 @@
 
 		filter;
 	}
-	$: console.log(filtered_entryList);
+	//$: console.log(filtered_entryList);
 	function process_deleteAll(deleteAll: boolean) {
 		if (deleteAll) {
 			for (let item in entryList) {

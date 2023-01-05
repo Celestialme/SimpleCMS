@@ -13,7 +13,7 @@
 	import Icon from '@iconify/svelte';
 
 	let alertMessage = 'SimpleCMS is getting better every day';
-	let alertType = Alert;
+	let alertType = '';
 	let alertIcon = 'mdi:tick-outline';
 	let progress = '10%';
 	let alertTitle = 'SimpleCMS';

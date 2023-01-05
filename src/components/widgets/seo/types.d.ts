@@ -7,6 +7,7 @@ export type Seo_Field = {
 	icon: string | undefined;
 	color: string | undefined;
 	required: boolean | undefined;
+	localization: boolean | undefined;
 	display: Display;
 };
 export type Seo_Params = {
@@ -14,5 +15,6 @@ export type Seo_Params = {
 	icon?: string;
 	color?: string;
 	required?: boolean;
+	localization?: boolean;
 	display?: Display;
 };

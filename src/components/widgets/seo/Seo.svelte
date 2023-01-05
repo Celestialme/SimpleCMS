@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { language } from '@src/stores/store';
+	import env from '@root/env';
+
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
 	import Icon from '@iconify/svelte';
 
@@ -7,13 +10,14 @@
 
 	export let widgetValue;
 	$: widgetValue = value;
+	$: _language = field.localization ? $language : env.LANGUAGE;
 
 	let title = '';
 	let titleCharacterWidth = 0;
 	let description = '';
 	let descriptionCharacterWidth = 0;
 
-	function calculateCharacterWidth(character, fontSize, fontFamily) {
+	function calculateCharacterWidth(character: string, fontSize: number, fontFamily: string) {
 		const span = document.createElement('span');
 		span.style.fontSize = `${fontSize}px`;
 		span.style.fontFamily = fontFamily;
@@ -24,13 +28,13 @@
 		return characterWidth;
 	}
 
-	function handleTitleChange(event) {
+	function handleTitleChange(event: { target: { value: string } }) {
 		title = event.target.value;
 		titleCharacterWidth = calculateCharacterWidth(title, 16, 'Arial');
 		suggestions = analyze(title, description);
 	}
 
-	function handleDescriptionChange(event) {
+	function handleDescriptionChange(event: { target: { value: string } }) {
 		description = event.target.value;
 		descriptionCharacterWidth = calculateCharacterWidth(description, 14, 'Arial');
 		suggestions = analyze(title, description);
@@ -43,9 +47,10 @@
 
 	let suggestions = analyze(title, description);
 
-	function analyze(title, description) {
+	function analyze(title: string, description: string) {
 		let suggestions: any = [];
-		console.log(count);
+		// console.log(count);
+
 		// Check if the title is more than 50 characters
 		if (title.length > 50) {
 			suggestions.push({
@@ -263,6 +268,7 @@
 </script>
 
 <div class="input-container rounded">
+	<!-- svelte-ignore a11y-label-has-associated-control -->
 	<label
 		class={title.length >= 50 && title.length <= 60
 			? 'input-label green'
@@ -291,6 +297,7 @@
 </div>
 
 <div class="input-container mt-2">
+	<!-- svelte-ignore a11y-label-has-associated-control -->
 	<label
 		class={description.length >= 120 && description.length <= 165
 			? 'input-label green'
@@ -334,7 +341,7 @@
 	<div class="flex">
 		<ProgressRadial
 			value={progress}
-			stroke="180"
+			stroke?="180"
 			meter="stroke-primary-500"
 			class="mt-1 mr-6 w-20 text-2xl text-white sm:w-28">{progress}%</ProgressRadial
 		>
@@ -367,7 +374,7 @@
 	<div class="mt-2 flex items-center justify-center dark:text-white ">
 		<ProgressRadial
 			value={progress}
-			stroke="180"
+			stroke?="180"
 			meter="stroke-primary-500"
 			class="mt-1 mr-6 w-28 text-2xl text-white">{progress}%</ProgressRadial
 		>

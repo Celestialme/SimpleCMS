@@ -9,7 +9,7 @@
 	let options = ['Mr.', 'Ms.', 'Mrs.', 'Dr.']; // replace data from collection
 </script>
 
-<select bind:value class="rounded-md">
+<select bind:value class="mt-[4px] rounded-md py-[0.35rem] ">
 	<!-- TODO: add placeholder -->
 	{#each options as value}<option {value}>{value}</option>{/each}
 </select>

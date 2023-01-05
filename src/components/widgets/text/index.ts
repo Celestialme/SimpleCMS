@@ -1,13 +1,16 @@
-import env from '@root/env';
 import type { Text_Field, Text_Params } from './types';
 let widget = ({
+	// accept parameters from collection
 	title,
 	icon,
 	placeholder,
 	count,
+	minlength,
+	maxlength,
 	prefix,
 	suffix,
 	required,
+	readonly,
 	localization,
 	width,
 	display
@@ -22,9 +25,12 @@ let widget = ({
 		icon,
 		placeholder,
 		count,
+		minlength,
+		maxlength,
 		prefix,
 		suffix,
 		required,
+		readonly,
 		localization,
 		width,
 		display
