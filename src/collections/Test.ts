@@ -114,7 +114,7 @@ let schema: Schema = {
 
 		widgets.RichText({ title: 'Description' }),
 
-		widgets.Address({ title: 'Address' }),
+		// widgets.Address({ title: 'Address' }),
 
 		widgets.Url({
 			title: 'url',
