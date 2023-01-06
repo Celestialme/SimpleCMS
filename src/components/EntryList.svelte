@@ -12,7 +12,6 @@
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
 
-	import type { LinkType } from 'flowbite-svelte/types';
 	import { never, any } from '@src/utils/utils_svelte';
 
 	export let showFields = false;
@@ -23,6 +22,7 @@
 	// define default button
 	let entryButton = 'create';
 	let entryList: any = [];
+	let totalPages = 0;
 	let deleteMap: any = {};
 	let deleteAll = false;
 	let open = false;
@@ -38,9 +38,12 @@
 	onMount(() => {
 		refresh = async (collection: any) => {
 			entryList = [];
-			entryList = await axios
-				.get(`${env.HOST}:${env.PORT}/api/${collection.name}`)
-				.then((data) => data.data);
+			({ entryList, totalCount:paging.totalCount } = await axios
+				.get(
+					`${env.HOST}:${env.PORT}/api/${collection.name}?page=${paging.page}&length=${paging.entryLength}`
+				)
+				.then((data) => data.data));
+			totalPages = Math.ceil(paging.totalCount / paging.entryLength);
 			deleteMap = {};
 		};
 	});
@@ -96,20 +99,11 @@
 	}
 
 	export let toggleSideBar = false;
-
-	// Table pagination
-	let rows = [];
-	let page = 1;
-	let totalPages = [];
-	let currentPageRows = [];
-
-	import { writable } from 'svelte/store';
 	import { flattenData } from '@src/utils/utils';
 	// Is not really stored on page reload
-	let itemsPerPage = writable(10);
 
 	function changeItemsPerPage(newValue: number) {
-		itemsPerPage.set(newValue);
+		paging.entryLength = newValue;
 		// refresh itemsPerPage??
 		refresh(collection);
 	}
@@ -122,13 +116,9 @@
 		{ name: 3, href: '/' },
 		{ name: 4, href: '/' },
 		{ name: 5, href: '/' }
-	] as Array<LinkType>;
-	const previous = () => {
-		alert('Previous btn clicked. Make a call to your server to fetch data.');
-	};
-	const next = () => {
-		alert('Next btn clicked. Make a call to your server to fetch data.');
-	};
+	] as Array<{ name: number; href: string }>;
+	let paging = { page: 1, entryLength: 10, totalCount:0,lengthList: [10, 25, 50, 100, 500] };
+
 
 	// sort and filter
 	let sort = false;
@@ -500,12 +490,12 @@
 <div class="flex items-center justify-between  border-gray-200 p-2 ">
 	<div class="flex flex-1 items-center justify-between">
 		<div class="hidden text-sm text-gray-700 dark:text-gray-400 sm:block">
-			Showing <span class="font-semibold text-gray-900 dark:text-white">1</span>
+			Showing <span class="font-semibold text-gray-900 dark:text-white">{(paging.page  - 1) * paging.entryLength+1}</span>
 			to
-			<span class="font-semibold text-gray-900 dark:text-white">{$itemsPerPage}</span>
+			<span class="font-semibold text-gray-900 dark:text-white">{paging.entryLength * paging.page > paging.totalCount?paging.totalCount:paging.entryLength * paging.page}</span>
 			of
 			<span class="font-semibold text-gray-900 dark:text-white"
-				>{1 + collection.fields.length}
+				>{paging.totalCount}
 			</span>
 			Entries
 		</div>
@@ -515,7 +505,7 @@
 				use:menu={{ menu: 'pageItems' }}
 				class="btn flex items-center justify-center rounded-md border border-gray-600 px-2 uppercase"
 			>
-				{$itemsPerPage}
+				{paging.entryLength}
 				<Icon icon="mdi:chevron-down" width="24" />
 			</button>
 			<nav
@@ -523,83 +513,49 @@
 				data-menu="pageItems"
 			>
 				<ul class="divide-y">
-					<li
-						class="-mx-2 transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:text-black hover:dark:text-white"
-						value={25}
-						on:click={() => changeItemsPerPage(25)}
-					>
-						25 Entries
-					</li>
-					<li
-						class="-mx-2 transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:text-black hover:dark:text-white"
-						value={50}
-						on:click={() => changeItemsPerPage(50)}
-					>
-						50 Entries
-					</li>
-					<li
-						class="-mx-2 transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:text-black hover:dark:text-white"
-						value={100}
-						on:click={() => changeItemsPerPage(100)}
-					>
-						100 Entries
-					</li>
-					<li
-						class="-mx-2 transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:text-black hover:dark:text-white"
-						value={500}
-						on:click={() => changeItemsPerPage(500)}
-					>
-						500 Entries
-					</li>
+					{#each paging.lengthList as length}
+						<li
+							class="-mx-2 transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-0 active:bg-gray-700 dark:text-black hover:dark:text-white"
+							value={length}
+							on:click={() => changeItemsPerPage(length)}
+						>
+							{length} Entries
+						</li>
+					{/each}
 				</ul>
 			</nav>
 		</span>
 
 		<div class="dark:text-white">
 			<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-				<a
-					on:click={previous}
-					href="/"
+				<div
+					on:click={()=>{paging.page>1 && (paging.page--,refresh(collection) )} }
 					class="relative inline-flex items-center rounded-l-md border border-gray-500 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 				>
 					<span class="sr-only">Previous</span>
 					<Icon icon="mdi:chevron-left" width="24" />
-				</a>
-				<a
-					href="/"
-					aria-current="page"
-					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
-					>1</a
-				>
-				<a
-					href="/"
-					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
-					>2</a
-				>
-				<a
-					href="/"
-					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
-					>3</a
-				>
+				</div>
+				{#each Array(totalPages) as _, i}
+					<div
+						on:click={() => {
+							paging.page = i+1;
+							refresh(collection);
+						}}
+						class:active = {paging.page == i+1}
+						aria-current="page"
+						class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+					>
+						{i+1}
+					</div>
+				{/each}
 
-				<a
-					href="/"
-					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
-					>4</a
-				>
-				<a
-					href="/"
-					class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
-					>5</a
-				>
-				<a
-					on:click={next}
-					href="/"
+				<div
+				on:click={()=>{paging.page<totalPages && (paging.page++,refresh(collection) )} }
 					class="relative inline-flex items-center rounded-r-md border border-gray-500 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 				>
 					<span class="sr-only">Next</span>
 					<Icon icon="mdi:chevron-right" width="24" />
-				</a>
+				</div>
 			</nav>
 		</div>
 	</div>
@@ -627,5 +583,10 @@
 		padding: 5px;
 		text-align: left;
 		width: 220px;
+	}
+	.active{
+		background:rgb(11, 236, 11);
+		color:white
+		/* style this as you want */
 	}
 </style>

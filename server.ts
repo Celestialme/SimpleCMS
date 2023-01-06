@@ -98,8 +98,12 @@ app.post('/api/validateSession', async (req, res) => {
 });
 
 app.get('/api/:endpoint', async (req, res) => {
+	let page = parseInt((req.query.page as string))|| 1
 	let collection = collections[req.params.endpoint];
-	res.send(await collection.find());
+	let length = parseInt((req.query.length as string))|| Infinity
+	let skip = (page - 1) * length
+	res.send({entryList:await collection.find().skip(skip).limit(length),totalCount:await collection.countDocuments()});
+	
 });
 
 app.patch('/api/:endpoint', async (req, res) => {
