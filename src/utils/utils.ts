@@ -112,10 +112,11 @@ export function flattenData(data: any, language: string) {
 	if (!data) return [];
 	return Object.keys(data).reduce((acc: any, x) => {
 		acc[x] =
-			typeof data[x] != 'string' && data[x] !== null
+				data[x].constructor == Object && (data[x][language] || data[x][env.LANGUAGE])
 				? data[x][language] || data[x][env.LANGUAGE]
 				: data[x];
 
 		return acc;
 	}, {});
 }
+
