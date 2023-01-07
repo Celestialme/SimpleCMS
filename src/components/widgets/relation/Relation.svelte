@@ -6,6 +6,9 @@
 
 	import DropDown from '@src/components/DropDown.svelte';
 
+	// typesafe-i18n
+	import LL from '../../../i18n/i18n-svelte';
+
 	// Skeleton
 	import { tooltip } from '@skeletonlabs/skeleton';
 
@@ -65,10 +68,10 @@
 			}}
 			class="w-full cursor-pointer text-center text-black"
 		>
-			{selectedField || display || 'Chose existing...'}
+			{selectedField || display || $LL.WIDGET_Relation_ChoseExisting()}
 		</p>
 		<button
-			use:tooltip={{ content: 'Edit', position: 'bottom' }}
+			use:tooltip={{ content: $LL.WIDGET_Relation_Edit(), position: 'bottom' }}
 			on:click={() => {
 				value = null;
 				widgetValue = null;
@@ -78,7 +81,7 @@
 			class="btn"><Icon icon="bi:pencil-fill" width="22" /></button
 		>
 		<button
-			use:tooltip={{ content: 'Add New', position: 'bottom' }}
+			use:tooltip={{ content: $LL.WIDGET_Relation_AddNew(), position: 'bottom' }}
 			on:click={() => {
 				expanded = !expanded;
 				selected = null;
@@ -95,7 +98,7 @@
 				expanded = !expanded;
 				selected = null;
 			}}
-			class="btn absolute top-0  right-0 z-10">X</button
+			class="btn absolute top-0 right-0 z-10">X</button
 		>
 
 		<Fields {getData} bind:inputFields bind:fieldsValue value={selected || value} {fields} />

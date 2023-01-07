@@ -5,6 +5,9 @@
 	import { onMount } from 'svelte';
 	import DeleteIcon from './icons/DeleteIcon.svelte';
 
+	// typesafe-i18n
+	import LL from '../i18n/i18n-svelte';
+
 	// Skeleton
 	import { tooltip } from '@skeletonlabs/skeleton';
 	import { menu } from '@skeletonlabs/skeleton';
@@ -38,7 +41,7 @@
 	onMount(() => {
 		refresh = async (collection: any) => {
 			entryList = [];
-			({ entryList, totalCount:paging.totalCount } = await axios
+			({ entryList, totalCount: paging.totalCount } = await axios
 				.get(
 					`${env.HOST}:${env.PORT}/api/${collection.name}?page=${paging.page}&length=${paging.entryLength}`
 				)
@@ -108,24 +111,11 @@
 		refresh(collection);
 	}
 
-	// need to arrows on mobile only
-	// first & Last should be added
-	let pages = [
-		{ name: 1, href: '/' },
-		{ name: 2, href: '/' },
-		{ name: 3, href: '/' },
-		{ name: 4, href: '/' },
-		{ name: 5, href: '/' }
-	] as Array<{ name: number; href: string }>;
-	let paging = { page: 1, entryLength: 10, totalCount:0,lengthList: [10, 25, 50, 100, 500] };
-
+	let paging = { page: 1, entryLength: 10, totalCount: 0, lengthList: [10, 25, 50, 100, 500] };
 
 	// sort and filter
 	let sort = false;
 	let order = false; // false = down / true = up
-	function searchFilter() {
-		alert('filter added soon');
-	}
 
 	// Language filter incorrect
 	function search(e: Event) {
@@ -191,7 +181,7 @@
 			<div class="relative mx-auto w-max">
 				<input
 					on:keyup={search}
-					placeholder="Search {collection.name} ..."
+					placeholder="{$LL.ENTITYLIST_Search()} {collection.name} ..."
 					class="relative z-10 mt-[2px] h-10 w-10 cursor-pointer rounded-full border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-md dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12 md:w-full "
 				/>
 				<!-- searchIcon -->
@@ -253,11 +243,14 @@
 						on:click={() => {
 							showFields = true;
 						}}
-						use:tooltip={{ content: 'Create ' + collection.name, position: 'bottom' }}
+						use:tooltip={{
+							content: $LL.ENTITYLIST_Create() + ' ' + collection.name,
+							position: 'bottom'
+						}}
 						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-lime-600 via-lime-500 to-lime-400 px-2 py-2 text-xl font-bold text-black md:ml-auto md:w-[150px]"
 					>
 						<Icon icon="ic:round-plus" color="black" width="22" class="mr-1" />
-						<div class="hidden md:block">Create</div>
+						<div class="hidden md:block">{$LL.ENTITYLIST_Create()}</div>
 					</button>
 				{:else if entryButton == 'publish'}
 					<button
@@ -265,10 +258,13 @@
 						on:click={() => {
 							publishEntry();
 						}}
-						use:tooltip={{ content: 'Publish ' + collection.name, position: 'bottom' }}
+						use:tooltip={{
+							content: $LL.ENTITYLIST_Publish() + ' ' + collection.name,
+							position: 'bottom'
+						}}
 					>
 						<Icon icon="bi:hand-thumbs-up-fill" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">Publish</div>
+						<div class="hidden md:block">{$LL.ENTITYLIST_Publish()}</div>
 					</button>
 				{:else if entryButton == 'unpublish'}
 					<button
@@ -276,10 +272,13 @@
 						on:click={() => {
 							unpublishEntry();
 						}}
-						use:tooltip={{ content: 'Unpublish ' + collection.name, position: 'bottom' }}
+						use:tooltip={{
+							content: $LL.ENTITYLIST_Unpublish() + ' ' + collection.name,
+							position: 'bottom'
+						}}
 					>
 						<Icon icon="bi:pause-circle" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">Unpublish</div>
+						<div class="hidden md:block">{$LL.ENTITYLIST_Unpublish()}</div>
 					</button>
 				{:else if entryButton == 'schedule'}
 					<button
@@ -287,10 +286,13 @@
 						on:click={() => {
 							scheduleEntry();
 						}}
-						use:tooltip={{ content: 'Schedule ' + collection.name, position: 'bottom' }}
+						use:tooltip={{
+							content: $LL.ENTITYLIST_Schedule() + ' ' + collection.name,
+							position: 'bottom'
+						}}
 					>
 						<Icon icon="bi:clock" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">Schedule</div>
+						<div class="hidden md:block">{$LL.ENTITYLIST_Schedule()}</div>
 					</button>
 				{:else if entryButton == 'clone'}
 					<button
@@ -298,10 +300,13 @@
 						on:click={() => {
 							cloneEntry();
 						}}
-						use:tooltip={{ content: 'Clone ' + collection.name, position: 'bottom' }}
+						use:tooltip={{
+							content: $LL.ENTITYLIST_Clone() + ' ' + collection.name,
+							position: 'bottom'
+						}}
 					>
 						<Icon icon="bi:clipboard-data-fill" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">Clone</div>
+						<div class="hidden md:block">{$LL.ENTITYLIST_Clone()}</div>
 					</button>
 				{:else if entryButton == 'delete' || deleteMode}
 					<button
@@ -309,10 +314,13 @@
 						on:click={() => {
 							deleteEntry();
 						}}
-						use:tooltip={{ content: 'Delete ' + collection.name, position: 'bottom' }}
+						use:tooltip={{
+							content: $LL.ENTITYLIST_Delete() + ' ' + collection.name,
+							position: 'bottom'
+						}}
 					>
 						<Icon icon="bi:trash3-fill" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">Delete</div>
+						<div class="hidden md:block">{$LL.ENTITYLIST_Delete()}</div>
 					</button>
 				{/if}
 
@@ -338,7 +346,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-lime-600 via-lime-500 to-lime-400 text-lg font-bold text-gray-800"
 								>
 									<Icon icon="ic:round-plus" width="22" />
-									Create
+									{$LL.ENTITYLIST_Create()}
 								</button>
 							</li>{/if}
 						{#if entryButton != 'publish'}
@@ -350,7 +358,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-blue-700 via-blue-600 to-blue-500 text-lg font-bold text-white"
 								>
 									<Icon icon="bi:hand-thumbs-up-fill" width="20" />
-									Publish
+									{$LL.ENTITYLIST_Publish()}
 								</button>
 							</li>
 						{/if}
@@ -363,7 +371,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-200 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:pause-circle" width="20" />
-									Unpublish
+									{$LL.ENTITYLIST_Unpublish()}
 								</button>
 							</li>
 						{/if}
@@ -376,7 +384,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-pink-600 via-pink-500 to-pink-400 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:clock" width="20" />
-									Schedule
+									{$LL.ENTITYLIST_Schedule()}
 								</button>
 							</li>
 						{/if}
@@ -389,7 +397,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:clipboard-data-fill" width="20" />
-									Clone
+									{$LL.ENTITYLIST_Clone()}
 								</button>
 							</li>
 						{/if}
@@ -402,7 +410,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-red-700  via-red-600 to-red-500 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:trash3-fill" width="20" />
-									Delete
+									{$LL.ENTITYLIST_Delete()}
 								</button>
 							</li>
 						{/if}
@@ -473,7 +481,7 @@
 							{#each collection.fields as field}
 								{((tmp_entry = flattenData(entry, $language)), '')}
 								{#await field?.display?.(tmp_entry[field.title], field, tmp_entry)}
-									<td class="">Loading...</td>
+									<td class="">{$LL.ENTITYLIST_Loading()}</td>
 								{:then display}
 									{((entry.displays = {}), '')}
 									<td class="">{@html (entry.displays[field.title] = display)}</td>
@@ -489,17 +497,25 @@
 
 <div class="flex items-center justify-between  border-gray-200 p-2 ">
 	<div class="flex flex-1 items-center justify-between">
+		<!-- Pagecounter -->
 		<div class="hidden text-sm text-gray-700 dark:text-gray-400 sm:block">
-			Showing <span class="font-semibold text-gray-900 dark:text-white">{(paging.page  - 1) * paging.entryLength+1}</span>
-			to
-			<span class="font-semibold text-gray-900 dark:text-white">{paging.entryLength * paging.page > paging.totalCount?paging.totalCount:paging.entryLength * paging.page}</span>
-			of
+			{$LL.ENTITYLIST_Showing()}
 			<span class="font-semibold text-gray-900 dark:text-white"
-				>{paging.totalCount}
-			</span>
-			Entries
+				>{(paging.page - 1) * paging.entryLength + 1}</span
+			>
+			{$LL.ENTITYLIST_to()}
+			<span class="font-semibold text-gray-900 dark:text-white"
+				>{paging.entryLength * paging.page > paging.totalCount
+					? paging.totalCount
+					: paging.entryLength * paging.page}</span
+			>
+			{$LL.ENTITYLIST_of()}
+			<span class="font-semibold text-gray-900 dark:text-white">{paging.totalCount} </span>
+			<!-- TODO Correct Translation for Pluralization -->
+			{$LL.ENTITYLIST_Entries()}
 		</div>
 
+		<!-- itemsPerPage -->
 		<span class="relative rounded-md">
 			<button
 				use:menu={{ menu: 'pageItems' }}
@@ -519,41 +535,51 @@
 							value={length}
 							on:click={() => changeItemsPerPage(length)}
 						>
-							{length} Entries
+							{length}
+							{$LL.ENTITYLIST_EntriesItems()}
 						</li>
 					{/each}
 				</ul>
 			</nav>
 		</span>
 
+		<!-- Pagination -->
 		<div class="dark:text-white">
 			<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+				<!-- Previous -->
 				<div
-					on:click={()=>{paging.page>1 && (paging.page--,refresh(collection) )} }
+					on:click={() => {
+						paging.page > 1 && (paging.page--, refresh(collection));
+					}}
 					class="relative inline-flex items-center rounded-l-md border border-gray-500 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 				>
-					<span class="sr-only">Previous</span>
+					<span class="sr-only">{$LL.ENTITYLIST_Previous()}</span>
 					<Icon icon="mdi:chevron-left" width="24" />
 				</div>
+
+				<!-- pages -->
 				{#each Array(totalPages) as _, i}
 					<div
 						on:click={() => {
-							paging.page = i+1;
+							paging.page = i + 1;
 							refresh(collection);
 						}}
-						class:active = {paging.page == i+1}
+						class:active={paging.page == i + 1}
 						aria-current="page"
-						class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
+						class="relative inline-flex items-center border border-gray-500 px-4 py-2 text-sm font-medium text-gray-500  hover:bg-gray-500 hover:text-white focus:z-20 active:text-black "
 					>
-						{i+1}
+						{i + 1}
 					</div>
 				{/each}
 
+				<!-- Next -->
 				<div
-				on:click={()=>{paging.page<totalPages && (paging.page++,refresh(collection) )} }
+					on:click={() => {
+						paging.page < totalPages && (paging.page++, refresh(collection));
+					}}
 					class="relative inline-flex items-center rounded-r-md border border-gray-500 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20"
 				>
-					<span class="sr-only">Next</span>
+					<span class="sr-only">{$LL.ENTITYLIST_Next()}</span>
 					<Icon icon="mdi:chevron-right" width="24" />
 				</div>
 			</nav>
@@ -583,10 +609,5 @@
 		padding: 5px;
 		text-align: left;
 		width: 220px;
-	}
-	.active{
-		background:rgb(11, 236, 11);
-		color:white
-		/* style this as you want */
 	}
 </style>
