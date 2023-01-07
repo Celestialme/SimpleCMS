@@ -34,6 +34,7 @@ You can preview the production build with `npm run preview`.
 import pkg from './package.json' assert { type: 'json' };
 
 let env: {
+	SiteNAME: string;
 	LANGUAGE: string;
 	translations: { [key: string]: string };
 	HOST: string;
@@ -49,6 +50,7 @@ let env: {
 	};
 	MAPBOX_API_TOKEN: string;
 } = {
+	SiteNAME: 'SimpleCMS',
 	LANGUAGE: 'en',
 	translations: { en: 'English', de: 'German' },
 

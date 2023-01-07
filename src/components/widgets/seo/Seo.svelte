@@ -3,7 +3,12 @@
 	import env from '@root/env';
 
 	import { ProgressRadial } from '@skeletonlabs/skeleton';
+
+	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
+
+	// typesafe-i18n
+	import LL from '../../../i18n/i18n-svelte';
 
 	export let field: any = undefined;
 	export let value = '';
@@ -54,7 +59,7 @@
 		// Check if the title is more than 50 characters
 		if (title.length > 50) {
 			suggestions.push({
-				text: 'Your title is more than 50 characters. Perfect!',
+				text: $LL.WIDGET_Seo_Suggetion_TitlePerfect(),
 				impact: 3
 			});
 			count += 3;
@@ -62,7 +67,7 @@
 		// Check if the title is more than 30 characters
 		else if (title.length > 30) {
 			suggestions.push({
-				text: 'Your title is more than 30 characters. Try 50+. Good!',
+				text: $LL.WIDGET_Seo_Suggetion_TitleGood(),
 				impact: 2
 			});
 			count += 2;
@@ -70,7 +75,7 @@
 		// Otherwise, the title is less than 30 characters
 		else {
 			suggestions.push({
-				text: 'Your title is too short. Make sure your title is at least 50 characters. Bad!',
+				text: $LL.WIDGET_Seo_Suggetion_TitleBad(),
 				impact: 1
 			});
 			count += 1;
@@ -79,7 +84,7 @@
 		// Check if the description is between 120 and 165 characters
 		if (description.length >= 120 && description.length <= 165) {
 			suggestions.push({
-				text: 'Your description is between 120 and 165 characters. Perfect!',
+				text: $LL.WIDGET_Seo_Suggetion_DescriptionPerfect(),
 				impact: 3
 			});
 			count += 3;
@@ -87,7 +92,7 @@
 		// Check if the description is more than 90 characters
 		else if (description.length > 90) {
 			suggestions.push({
-				text: 'Your description is more than 90 characters. Good!',
+				text: $LL.WIDGET_Seo_Suggetion_DescriptionGood(),
 				impact: 2
 			});
 			count += 2;
@@ -95,7 +100,7 @@
 		// Otherwise, the description is less than 90 characters
 		else {
 			suggestions.push({
-				text: 'Your description is less than 90 characters. Bad!',
+				text: $LL.WIDGET_Seo_Suggetion_DescriptionBad(),
 				impact: 1
 			});
 			count += 1;
@@ -105,13 +110,13 @@
 		const sentences = description.split('.');
 		if (sentences.length >= 2 && sentences.length <= 4) {
 			suggestions.push({
-				text: 'Your description is 2 to 4 sentences long. Perfect!',
+				text: $LL.WIDGET_Seo_Suggetion_SentencePerfect(),
 				impact: 3
 			});
 			count += 3;
 		} else {
 			suggestions.push({
-				text: 'Your descripton is only 1 sentence long. Make sure your description is 2 to 4 sentences long.',
+				text: $LL.WIDGET_Seo_Suggetion_SentenceBad(),
 				impact: 1
 			});
 			count += 1;
@@ -120,13 +125,13 @@
 		// Check if the title uses numbers
 		if (/\d/.test(title)) {
 			suggestions.push({
-				text: 'Your title uses numbers. Good!',
+				text: $LL.WIDGET_Seo_Suggetion_NumberPerfect(),
 				impact: 3
 			});
 			count += 3;
 		} else {
 			suggestions.push({
-				text: 'Your title does not use numbers. The use of numbers in your title can increase your CTR.',
+				text: $LL.WIDGET_Seo_Suggetion_NumberBad(),
 				impact: 1
 			});
 			count += 1;
@@ -198,7 +203,9 @@
 		for (const word of powerWords) {
 			if (title.toLowerCase().includes(word)) {
 				suggestions.push({
-					text: `Your title has the Power Word ${word}. Perfect!`,
+					text: $LL.WIDGET_Seo_Suggetion_PowerWordTitle(),
+					// TODO: Add Variable  ${word} to translation
+					// text: `Your title has the Power Word ${word}. Perfect!`,
 					impact: 3
 				});
 				count += 3;
@@ -210,7 +217,9 @@
 		for (const word of powerWords) {
 			if (description.toLowerCase().includes(word)) {
 				suggestions.push({
-					text: `Your description uses the Power Word ${word}. Perfect!`,
+					text: $LL.WIDGET_Seo_Suggetion_PowerWordDescription(),
+					// TODO: Add Variable   ${word} to translation
+					// text: `Your description uses the Power Word ${word}. Perfect!`,
 					impact: 3
 				});
 				count += 3;
@@ -243,7 +252,9 @@
 		for (const keyword of ctaKeywords) {
 			if (title.toLowerCase().includes(keyword)) {
 				suggestions.push({
-					text: `Your title has the CTA keyword "${keyword}". Good!`,
+					text: $LL.WIDGET_Seo_Suggetion_ctaKeywordsTitle(),
+					// TODO: Add Variable ${keyword to translation
+					// text: `Your title has the CTA keyword "${keyword}". Good!`,
 					impact: 3
 				});
 				count += 3;
@@ -255,7 +266,9 @@
 		for (const keyword of ctaKeywords) {
 			if (description.toLowerCase().includes(keyword)) {
 				suggestions.push({
-					text: `Your description uses the CTA keyword "${keyword}". Good!`,
+					text: $LL.WIDGET_Seo_Suggetion_ctaKeywordsDescription(),
+					// TODO: Add Variable ${keyword to translation
+					// text: `Your description uses the CTA keyword "${keyword}". Good!`,
 					impact: 3
 				});
 				count += 3;
@@ -279,9 +292,13 @@
 			: 'input-label red'}
 	>
 		<div class="flex justify-between">
-			<div class="text-black dark:text-white">Title:</div>
+			<div class="text-black dark:text-white">{$LL.WIDGET_Seo_Suggetion_Title()}</div>
 			<div>
-				Character: {title.length} - Desktop: {titleCharacterWidth}/600px Mobile: {titleCharacterWidth}/654px
+				{$LL.WIDGET_Seo_Suggetion_Character()}
+				{title.length}
+				{$LL.WIDGET_Seo_Suggetion_WidthDesktop()}
+				{titleCharacterWidth}/600px {$LL.WIDGET_Seo_Suggetion_WidthMobile()}
+				{titleCharacterWidth}/654px
 			</div>
 		</div>
 	</label>
@@ -289,7 +306,7 @@
 		id="title-input"
 		type="text"
 		class="rounded-md"
-		placeholder="SEO Titel"
+		placeholder={$LL.WIDGET_Seo_Suggetion_SeoTitle()}
 		required
 		bind:value={title}
 		on:input={handleTitleChange}
@@ -308,16 +325,20 @@
 			: 'input-label red'}
 	>
 		<div class="flex justify-between">
-			<div class="text-black dark:text-white">Description:</div>
+			<div class="text-black dark:text-white">{$LL.WIDGET_Seo_Suggetion_Description()}</div>
 			<div>
-				Character: {description.length} - Desktop: {descriptionCharacterWidth}/970px Mobile: {descriptionCharacterWidth}/981px
+				{$LL.WIDGET_Seo_Suggetion_Character()}
+				{description.length}
+				{$LL.WIDGET_Seo_Suggetion_WidthDesktop()}
+				{descriptionCharacterWidth}/970px {$LL.WIDGET_Seo_Suggetion_WidthMobile()}
+				{descriptionCharacterWidth}/981px
 			</div>
 		</div>
 	</label>
 	<textarea
 		id="description-input"
 		name="description-input"
-		placeholder="SEO Description"
+		placeholder={$LL.WIDGET_Seo_Suggetion_SeoDescription()}
 		rows="2"
 		cols="50"
 		bind:value={description}
@@ -328,7 +349,8 @@
 
 <div class="dark:boder-white mt-2 border-y border-gray-500 dark:border-white dark:bg-transparent">
 	<h2 class="mb-1 pt-2 text-center text-2xl text-black underline dark:text-white">
-		SimpleCMS SEO Preview
+		{env.SiteNAME}
+		{$LL.WIDGET_Seo_Suggetion_SeoPreview()}
 	</h2>
 	<p class="text-md px-4 !text-gray-500">https://.....</p>
 	<h3 class="px-4 font-semibold text-blue-700">{title}</h3>
@@ -337,7 +359,7 @@
 
 <!-- Mobile -->
 <div class="md:hidden">
-	<h3 class="mb-2 text-center ">List of Suggestions:</h3>
+	<h3 class="mb-2 text-center ">{$LL.WIDGET_Seo_Suggetion_ListOfSuggestion()}</h3>
 	<div class="flex">
 		<ProgressRadial
 			value={progress}
@@ -362,8 +384,7 @@
 				</div>
 			</div>
 			<p class="mt-1 hidden text-justify sm:block">
-				Optimize title & description for Google search results, to improve the visual appeal to
-				brings more clicks to your website
+				{$LL.WIDGET_Seo_Suggetion_Text()}
 			</p>
 		</div>
 	</div>
@@ -380,7 +401,7 @@
 		>
 		<div class="mb-2">
 			<div class="mb-2 flex items-center justify-between lg:justify-start lg:gap-5">
-				<h3 class="">List of Suggestions:</h3>
+				<h3 class="">{$LL.WIDGET_Seo_Suggetion_ListOfSuggestion()}</h3>
 
 				<div class="flex items-center gap-2">
 					<Icon icon="mdi:close-octagon" color="red" width="24" />
@@ -397,8 +418,7 @@
 				</div>
 			</div>
 			<p>
-				Optimize title & description for Google search results, to improve the visual appeal to
-				brings more clicks to your website
+				{$LL.WIDGET_Seo_Suggetion_Text()}
 			</p>
 		</div>
 	</div>

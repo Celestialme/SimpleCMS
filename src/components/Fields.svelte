@@ -3,7 +3,10 @@
 	import env from '@root/env';
 	import type { Schema } from '@src/collections/types';
 	import { onMount } from 'svelte';
+
+	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
+
 	export let root: boolean = true; // if field is not nested. eg. not part of menu's fields
 	export let fields: Array<any> = [];
 	export let value: any = undefined;
@@ -27,8 +30,8 @@
 		class="section relative my-2  {!field.field.width ? 'w-full' : 'max-md:!w-full'}"
 		style={field.field.width && `width:${field.field.width.replace('%', '') * 1 - 1}%`}
 	>
-		<div class=" relative flex font-bold capitalize">
-			<p class="font-bold">
+		<div class="relative flex">
+			<p class="font-semibold">
 				{field.field.title}
 
 				{#if field.field.required}

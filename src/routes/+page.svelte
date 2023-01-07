@@ -20,11 +20,9 @@
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
 
-	//typesafe-i18n
-	// import type { LayoutLoad } from './$types'
-	// import { setLocale } from './i18n/i18n-svelte';
-	// setLocale();
-	// import LL from './i18n/i18n-svelte';
+	// typesafe-i18n
+	import { setLocale } from '../i18n/i18n-svelte';
+	import LL from '../i18n/i18n-svelte';
 
 	import SimpleCmsLogo from '@src/components/icons/SimpleCMS_Logo.svelte';
 
@@ -107,7 +105,6 @@
 
 <div class="body">
 	<Alerts />
-
 	<div class="relative flex">
 		<!-- This secures all without access -->
 		{#if valid}
@@ -168,13 +165,13 @@
 								<input
 									on:keyup={updateFilter}
 									on:focus={() => (switchSideBar = !switchSideBar)}
-									placeholder="Search ..."
+									placeholder={$LL.SBL_Search()}
 									class="relative z-10 h-10 w-10 cursor-pointer rounded-full border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12"
 								/>
 							{:else}
 								<input
 									on:keyup={updateFilter}
-									placeholder="Search ..."
+									placeholder={$LL.SBL_Search()}
 									class="relative z-10 h-10  w-full  cursor-pointer rounded-md border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-gray-600/50 dark:text-white"
 								/>
 							{/if}
@@ -214,18 +211,21 @@
 								<a
 									href="/user"
 									class="flex-col"
-									use:tooltip={{ content: 'Admin User', position: 'right' }}
+									use:tooltip={{ content: $LL.SBL_Admin_User(), position: 'right' }}
 								>
 									<Avatar src={avatarSrc || '/Default_User.svg'} class=" border border-gray-400" />
-									<div class="text-center text-[9px] text-gray-400 dark:text-white">Admin</div>
+									<div class="text-center text-[9px] text-gray-400 dark:text-white">
+										{$LL.SBL_Admin()}
+									</div>
 								</a>
 
 								<!-- System Language desktop -->
 								<span class="relative">
 									<!-- Trigger: apply the 'use:menu' action and supply the unique menu ID -->
+
 									<button
 										use:menu={{ menu: 'system-language' }}
-										use:tooltip={{ content: 'System Language', position: 'right' }}
+										use:tooltip={{ content: $LL.SBL_SystemLanguage(), position: 'right' }}
 										class="text-gray-500 dark:text-white">Eng</button
 									>
 									
@@ -235,8 +235,12 @@
 										data-menu="system-language"
 									>
 										<ul class="divide-y-2">
-											<li><button> English </button></li>
-											<li><button> Deutsch </button></li>
+											<li>
+												<button on:click={() => setLocale('en')}>{$LL.SBL_English()} </button>
+											</li>
+											<li>
+												<button on:click={() => setLocale('de')}>{$LL.SBL_German()} </button>
+											</li>
 										</ul>
 									</nav>
 								</span>
@@ -257,7 +261,9 @@
 
 							<div class="flex justify-center p-1 pb-2">
 								<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-									<span class="badge badge-filled-primary">Version: {env.PKG.VERSION}</span>
+									<span class="badge badge-filled-primary"
+										>{$LL.SBL_Version()}: {env.PKG.VERSION}</span
+									>
 								</a>
 							</div>
 						</div>
@@ -269,13 +275,13 @@
 							<a
 								href="/user"
 								class="flex-col"
-								use:tooltip={{ content: 'Admin', position: 'right' }}
+								use:tooltip={{ content: $LL.SBL_Admin_User(), position: 'right' }}
 							>
 								<Avatar
 									src={avatarSrc || '/Default_User.svg'}
 									class="m-auto border border-gray-400"
 								/>
-								<div class="text-[9px] text-gray-400 dark:text-white">Admin</div>
+								<div class="text-[9px] text-gray-400 dark:text-white">{$LL.SBL_Admin()}</div>
 							</a>
 
 							<!-- System Language Mobile -->
@@ -283,7 +289,7 @@
 								<!-- Trigger: apply the 'use:menu' action and supply the unique menu ID -->
 								<button
 									use:menu={{ menu: 'system-language' }}
-									use:tooltip={{ content: 'System Language', position: 'right' }}
+									use:tooltip={{ content: $LL.SBL_SystemLanguage(), position: 'right' }}
 									class="text-gray-500 dark:text-white">Eng</button
 								>
 
@@ -293,8 +299,10 @@
 									data-menu="system-language"
 								>
 									<ul class="divide-y-2">
-										<li><a href="/">English</a></li>
-										<li><a href="/">German</a></li>
+										<li>
+											<button on:click={() => setLocale('en')}>{$LL.SBL_Admin()}</button>
+										</li>
+										<li><button on:click={() => setLocale('de')}>{$LL.SBL_German()}</button></li>
 									</ul>
 								</nav>
 							</span>
@@ -304,7 +312,10 @@
 									on:click={toggleTheme}
 									id="theme-toggle"
 									class="btn rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-									use:tooltip={{ content: 'Switch', position: 'right' }}
+									use:tooltip={{
+										content: `Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`,
+										position: 'right'
+									}}
 								>
 									<Icon icon="bi:sun" width="16" id="theme-toggle-light-icon" />
 									<Icon icon="bi:moon-fill" width="16" id="theme-toggle-dark-icon" />
@@ -312,7 +323,7 @@
 							</div>
 
 							<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-								<span class="badge badge-filled-primary">Ver. {env.PKG.VERSION}</span>
+								<span class="badge badge-filled-primary">{$LL.SBL_Ver()} {env.PKG.VERSION}</span>
 							</a>
 						</div>
 					{/if}
@@ -341,7 +352,7 @@
 				class="fixed h-[65px] w-full border-b-2 border-gray-800 bg-white text-center shadow dark:border-white dark:bg-gray-800 md:relative md:h-full md:w-[200px] md:border-none md:px-2"
 			>
 				<!-- Save button with progressbar -->
-
+				<!-- TODO - Trans Tooltip -->
 				<button
 					on:click={() => submit()}
 					use:tooltip={{ content: 'Save {collection?.name}', position: 'right' }}
@@ -349,10 +360,10 @@
 				>
 					<div class=" flex items-center justify-center text-xl uppercase">
 						<Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />
-						Save
+						{$LL.SBL_Save()}
 					</div>
 					{#if required}
-						<!-- progress bar -->
+						<!-- progress bar sidebar-->
 						<div
 							class="relative mx-auto mt-1 hidden h-2 w-[90%] rounded-full bg-gray-500 px-4 md:block"
 						>
@@ -370,8 +381,10 @@
 				</button>
 
 				{#if required}
-					<!-- progress bar -->
-					<div class="relative mx-auto mt-1 h-2 w-[80%] rounded-full bg-gray-500 px-4 md:hidden">
+					<!-- progress bar top -->
+					<div
+						class="relative mx-auto mt-1 h-2 w-[70%] max-w-[300px] rounded-full bg-gray-500 px-4 md:hidden"
+					>
 						<div
 							class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-blue-500"
 							style="width: 50%"

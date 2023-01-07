@@ -6,6 +6,9 @@
 	import CMSLogo from './icons/Logo.svelte';
 	import { goto } from '$app/navigation';
 
+	// typesafe-i18n
+	import LL from '../../../i18n/i18n-svelte';
+
 	export let show: boolean = false;
 
 	let showPassword: boolean = false;
@@ -26,20 +29,20 @@
 
 		if (!emailRegex.test(email)) {
 			errorStatus.email.status = true;
-			errorStatus.email.msg = 'Please type valid Email';
+			errorStatus.email.msg = $LL.LOGIN_emailmsg_valid();
 			error = true;
 		}
 		if (!/\.\w+$/.test(email)) {
-			errorStatus.email.msg = 'Email should be ending with domain (eg .com)';
+			errorStatus.email.msg = $LL.LOGIN_emailmsg_domain();
 		}
 		if (!email.includes('@')) {
-			errorStatus.email.msg = 'Email should contain @ symbol';
+			errorStatus.email.msg = $LL.LOGIN_emailmsg_at();
 		}
 		if (!email) {
-			errorStatus.email.msg = 'Email field should not be empty';
+			errorStatus.email.msg = $LL.LOGIN_emailmsg_empty();
 		}
 		if (!password) {
-			errorStatus.password.msg = 'Password field should not be empty';
+			errorStatus.password.msg = $LL.LOGIN_passwordmsg_empty();
 			errorStatus.password.status = true;
 			error = true;
 		}
@@ -70,7 +73,10 @@
 		<div bind:this={form} class="mx-auto mt-[15%] mb-[5%] w-full p-4 lg:w-1/2">
 			<div class="mb-8 flex flex-row gap-2">
 				<CMSLogo className="w-10" fill="red" />
-				<h1 class="text-2xl font-bold text-black lg:text-3xl">SimpleCMS Sign In</h1>
+				<h1 class="text-2xl font-bold text-black lg:text-3xl">
+					{env.SiteNAME}
+					{$LL.LOGIN_SignIn()}
+				</h1>
 			</div>
 
 			<form>
@@ -89,7 +95,7 @@
 					<label
 						for="floating_email"
 						class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
-						>Email Address</label
+						>{$LL.LOGIN_EmailAddress()}</label
 					>
 					{#if errorStatus.email.status}
 						<div class="absolute top-11 left-0 text-xs text-red-500">{errorStatus.email.msg}</div>
@@ -131,7 +137,7 @@
 					<label
 						for="floating_password"
 						class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
-						>Password</label
+						>{$LL.LOGIN_Password()}</label
 					>
 
 					<div class="absolute top-2 right-2" on:click={() => (showPassword = !showPassword)}>
@@ -152,13 +158,13 @@
 
 			<div class="buttons">
 				<button on:click={signin} class="btn btn-sm  mt-4 rounded-lg border bg-gray-700 text-white "
-					>Sign In</button
+					>{$LL.LOGIN_SignIn()}</button
 				>
 
 				<button
 					on:click={() => (forgot = true)}
 					class="btn btn-sm  mt-4 ml-4 rounded-lg border border-gray-700  text-gray-700 "
-					>Forgotten Password</button
+					>{$LL.LOGIN_ForgottenPassword()}</button
 				>
 			</div>
 		</div>
@@ -166,7 +172,7 @@
 		<form class="mx-auto w-full p-4 lg:w-1/2">
 			<div class="mb-8 flex flex-row gap-2">
 				<CMSLogo className="w-10" fill="red" />
-				<h1 class="text-3xl font-bold text-black ">Forgotten Password</h1>
+				<h1 class="text-3xl font-bold text-black ">{$LL.LOGIN_ForgottenPassword()}</h1>
 			</div>
 
 			<!-- Email field -->
@@ -185,7 +191,7 @@
 				<label
 					for="floating_email"
 					class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
-					>Email Address</label
+					>{$LL.LOGIN_EmailAddress()}</label
 				>
 
 				{#if errorStatus.email.status}
@@ -197,7 +203,7 @@
 			<button
 				type="submit"
 				class="btn btn-sm text-whitebtn-base mt-4 rounded-lg border bg-gray-600 text-white"
-				>Send Password Reset Email</button
+				>{$LL.LOGIN_SendResetMail()}</button
 			>
 		</form>
 	{/if}

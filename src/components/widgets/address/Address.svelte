@@ -1,6 +1,9 @@
 <script lang="ts">
 	import env from '@root/env';
 
+	// typesafe-i18n
+	import LL from '../../../i18n/i18n-svelte';
+
 	// Skeleton
 	import { menu } from '@skeletonlabs/skeleton';
 
@@ -63,15 +66,19 @@
 				id="search"
 				name="search"
 				autocomplete="search"
-				placeholder="Search in Map ..."
+				placeholder={$LL.WIDGET_Address_SearchMap()}
 				class="rounded-md"
 			/>
 
 			<button class="btn btn-filled-primary btn-base rounded-md text-white"
-				><Icon icon="bi:map" width="16" class="mr-2 " /> Get from Address</button
+				><Icon icon="bi:map" width="16" class="mr-2 " />{$LL.WIDGET_Address_GetAddress()}</button
 			>
 			<button class="btn btn-filled-primary btn-base rounded-md text-white"
-				><Icon icon="bi:pin-map" width="16" class="mr-2 " />Get from Map</button
+				><Icon
+					icon="bi:pin-map"
+					width="16"
+					class="mr-2 "
+				/>{$LL.WIDGET_Address_GetAddress()}</button
 			>
 		</div>
 		<!-- TODO: MAP Not working yet  -->
@@ -85,7 +92,7 @@
 		/>
 	</div>
 
-	<label for="name">Geocoordinates</label>
+	<label for="name">{$LL.WIDGET_Address_Geocoordinates()}</label>
 	<div class="flex justify-center gap-2 ">
 		<input
 			required
@@ -93,7 +100,7 @@
 			id="latitude"
 			name="latitude"
 			autocomplete="latitude"
-			placeholder="Latitude"
+			placeholder={$LL.WIDGET_Address_Latitude()}
 			class="rounded-md"
 		/>
 
@@ -103,55 +110,55 @@
 			id="longitude"
 			name="longitude"
 			autocomplete="longitude"
-			placeholder="Longitude"
+			placeholder={$LL.WIDGET_Address_Longitude()}
 			class="rounded-md"
 		/>
 	</div>
 	<br />
 
 	<form>
-		<label for="name">Name</label>
+		<label for="name">{$LL.WIDGET_Address_Name()}</label>
 		<input
 			required
 			type="text"
 			id="name"
 			name="name"
 			autocomplete="name"
-			placeholder="Name"
+			placeholder={$LL.WIDGET_Address_Name()}
 			class="rounded-md"
 		/>
 
-		<label for="street-address">Street address</label>
+		<label for="street-address">{$LL.WIDGET_Address_Street()}</label>
 		<input
 			type="text"
 			id="street-address"
 			name="street-address"
 			autocomplete="street-address"
-			placeholder="Street address"
+			placeholder={$LL.WIDGET_Address_Street()}
 			required
 			enterkeyhint="next"
 			class="rounded-md"
 		/>
 
-		<label for="postal-code">ZIP or Postal Code</label>
+		<label for="postal-code">{$LL.WIDGET_Address_Zip()}</label>
 		<input
 			required
 			type="text"
 			id="postal-code"
 			name="postal-code"
-			placeholder="ZIP or Postal Code"
+			placeholder={$LL.WIDGET_Address_Zip()}
 			autocomplete="postal-code"
 			enterkeyhint="next"
 			class="rounded-md"
 		/>
 
-		<label for="city">City</label>
+		<label for="city">{$LL.WIDGET_Address_City()}</label>
 		<input
 			required
 			type="text"
 			id="city"
 			name="city"
-			placeholder="City"
+			placeholder={$LL.WIDGET_Address_City()}
 			autocomplete="city"
 			enterkeyhint="next"
 			class="rounded-md"
@@ -164,7 +171,7 @@
 				on:keyup={searchCountry}
 				use:menu={{ menu: 'country' }}
 				id="country"
-				placeholder="Search Country ..."
+				placeholder={$LL.WIDGET_Address_SearchCountry()}
 				class="btn btn-base relative w-full rounded-md bg-gray-300 pl-10 text-left text-white dark:bg-gray-600 "
 			/>
 

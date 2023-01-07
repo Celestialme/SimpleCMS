@@ -15,17 +15,729 @@ export type Translations = RootTranslation
 
 type RootTranslation = {
 	/**
-	 * H​i​ ​{​n​a​m​e​}​!​ ​P​l​e​a​s​e​ ​l​e​a​v​e​ ​a​ ​s​t​a​r​ ​i​f​ ​y​o​u​ ​l​i​k​e​ ​t​h​i​s​ ​p​r​o​j​e​c​t​:​ ​h​t​t​p​s​:​/​/​g​i​t​h​u​b​.​c​o​m​/​i​v​a​n​h​o​f​e​r​/​t​y​p​e​s​a​f​e​-​i​1​8​n
+	 * H​i​ ​{​n​a​m​e​}​!​ ​T​r​a​n​s​l​a​t​i​o​n​ ​i​t​ ​w​o​r​k​s​!
 	 * @param {string} name
 	 */
 	HI: RequiredParams<'name'>
+	/**
+	 * S​e​a​r​c​h​ ​.​.​.
+	 */
+	SBL_Search: string
+	/**
+	 * A​d​m​i​n
+	 */
+	SBL_Admin: string
+	/**
+	 * A​d​m​i​n​ ​U​s​e​r
+	 */
+	SBL_Admin_User: string
+	/**
+	 * S​y​s​t​e​m​ ​L​a​n​g​u​a​g​e
+	 */
+	SBL_SystemLanguage: string
+	/**
+	 * E​n​g​l​i​s​h
+	 */
+	SBL_English: string
+	/**
+	 * G​e​r​m​a​n
+	 */
+	SBL_German: string
+	/**
+	 * S​w​i​t​c​h​ ​t​o
+	 */
+	SBL_isDark: string
+	/**
+	 * L​i​g​h​t
+	 */
+	SBL_Light: string
+	/**
+	 * D​a​r​k
+	 */
+	SBL_Dark: string
+	/**
+	 * M​o​d​e
+	 */
+	SBL_Mode: string
+	/**
+	 * V​e​r​s​i​o​n
+	 */
+	SBL_Version: string
+	/**
+	 * V​e​r​.
+	 */
+	SBL_Ver: string
+	/**
+	 * S​a​v​e
+	 */
+	SBL_Save: string
+	/**
+	 * P​a​g​e​ ​N​o​t​ ​F​o​u​n​d
+	 */
+	ERROR_Pagenotfound: string
+	/**
+	 * W​e​ ​a​r​e​ ​s​o​r​r​y​,​ ​s​o​m​e​t​h​i​n​g​ ​w​e​n​t​ ​w​r​o​n​g​.
+	 */
+	ERROR_Wrong: string
+	/**
+	 * G​o​ ​t​o​ ​F​r​o​n​t​ ​P​a​g​e
+	 */
+	ERROR_GoHome: string
+	/**
+	 * U​s​e​r​ ​P​r​o​f​i​l​e
+	 */
+	USER_Profile: string
+	/**
+	 * S​i​g​n​ ​I​n
+	 */
+	LOGIN_SignIn: string
+	/**
+	 * S​i​g​n​ ​U​p
+	 */
+	LOGIN_SignUp: string
+	/**
+	 * P​l​e​a​s​e​ ​t​y​p​e​ ​v​a​l​i​d​ ​E​m​a​i​l
+	 */
+	LOGIN_emailmsg_valid: string
+	/**
+	 * E​m​a​i​l​ ​s​h​o​u​l​d​ ​b​e​ ​e​n​d​i​n​g​ ​w​i​t​h​ ​d​o​m​a​i​n​ ​(​e​g​ ​.​c​o​m​)
+	 */
+	LOGIN_emailmsg_domain: string
+	/**
+	 * E​m​a​i​l​ ​s​h​o​u​l​d​ ​c​o​n​t​a​i​n​ ​@​ ​s​y​m​b​o​l
+	 */
+	LOGIN_emailmsg_at: string
+	/**
+	 * E​m​a​i​l​ ​f​i​e​l​d​ ​s​h​o​u​l​d​ ​n​o​t​ ​b​e​ ​e​m​p​t​y
+	 */
+	LOGIN_emailmsg_empty: string
+	/**
+	 * P​a​s​s​w​o​r​d​ ​f​i​e​l​d​ ​s​h​o​u​l​d​ ​n​o​t​ ​b​e​ ​e​m​p​t​y
+	 */
+	LOGIN_passwordmsg_empty: string
+	/**
+	 * P​a​s​s​w​o​r​d​s​ ​D​o​e​s​ ​n​o​t​ ​M​a​t​c​h
+	 */
+	LOGIN_passwordmsg_confirm: string
+	/**
+	 * E​m​a​i​l​ ​A​d​d​r​e​s​s
+	 */
+	LOGIN_EmailAddress: string
+	/**
+	 * P​a​s​s​w​o​r​d
+	 */
+	LOGIN_Password: string
+	/**
+	 * C​o​n​f​i​r​m​ ​P​a​s​s​w​o​r​d
+	 */
+	LOGIN_ConfirmPassword: string
+	/**
+	 * F​o​r​g​o​t​t​e​n​ ​P​a​s​s​w​o​r​d
+	 */
+	LOGIN_ForgottenPassword: string
+	/**
+	 * S​e​n​d​ ​P​a​s​s​w​o​r​d​ ​R​e​s​e​t​ ​E​m​a​i​l
+	 */
+	LOGIN_SendResetMail: string
+	/**
+	 * C​r​e​a​t​e
+	 */
+	ENTITYLIST_Create: string
+	/**
+	 * P​u​b​l​i​s​h
+	 */
+	ENTITYLIST_Publish: string
+	/**
+	 * U​n​p​u​b​l​i​s​h
+	 */
+	ENTITYLIST_Unpublish: string
+	/**
+	 * S​c​h​e​d​u​l​e
+	 */
+	ENTITYLIST_Schedule: string
+	/**
+	 * C​l​o​n​e
+	 */
+	ENTITYLIST_Clone: string
+	/**
+	 * D​e​l​e​t​e
+	 */
+	ENTITYLIST_Delete: string
+	/**
+	 * S​e​a​r​c​h
+	 */
+	ENTITYLIST_Search: string
+	/**
+	 * L​o​a​d​i​n​g​.​.​.
+	 */
+	ENTITYLIST_Loading: string
+	/**
+	 * S​h​o​w​i​n​g
+	 */
+	ENTITYLIST_Showing: string
+	/**
+	 * t​o
+	 */
+	ENTITYLIST_to: string
+	/**
+	 * o​f
+	 */
+	ENTITYLIST_of: string
+	/**
+	 * E​n​t​r​i​e​s
+	 */
+	ENTITYLIST_Entries: string
+	/**
+	 * E​n​t​r​i​e​s
+	 */
+	ENTITYLIST_EntriesItems: string
+	/**
+	 * P​r​e​v​i​o​u​s
+	 */
+	ENTITYLIST_Previous: string
+	/**
+	 * N​e​x​t
+	 */
+	ENTITYLIST_Next: string
+	/**
+	 * C​r​e​a​t​e
+	 */
+	FORM_Create: string
+	/**
+	 * C​l​o​s​e​ ​M​e​n​u
+	 */
+	FORM_CloseMenu: string
+	/**
+	 * C​l​o​s​e​ ​w​i​t​h​o​u​t​ ​s​a​v​i​n​g
+	 */
+	FORM_TT_Closes: string
+	/**
+	 * R​e​q​u​i​r​e​d
+	 */
+	FORM_Required: string
+	/**
+	 * C​o​l​l​e​c​t​i​o​n​s
+	 */
+	Collections: string
+	/**
+	 * M​e​d​i​a
+	 */
+	Media: string
+	/**
+	 * S​e​a​r​c​h​ ​i​n​ ​M​a​p​ ​.​.​.
+	 */
+	WIDGET_Address_SearchMap: string
+	/**
+	 * G​e​t​ ​f​r​o​m​ ​A​d​d​r​e​s​s
+	 */
+	WIDGET_Address_GetAddress: string
+	/**
+	 * G​e​t​ ​f​r​o​m​ ​A​d​d​r​e​s​s
+	 */
+	WIDGET_Address_GetMap: string
+	/**
+	 * G​e​o​c​o​o​r​d​i​n​a​t​e​s
+	 */
+	WIDGET_Address_Geocoordinates: string
+	/**
+	 * L​a​t​i​t​u​d​e
+	 */
+	WIDGET_Address_Latitude: string
+	/**
+	 * L​o​n​g​i​t​u​d​e
+	 */
+	WIDGET_Address_Longitude: string
+	/**
+	 * N​a​m​e
+	 */
+	WIDGET_Address_Name: string
+	/**
+	 * S​t​r​e​e​t​ ​a​d​d​r​e​s​s
+	 */
+	WIDGET_Address_Street: string
+	/**
+	 * Z​I​P​ ​o​r​ ​P​o​s​t​a​l​ ​C​o​d​e
+	 */
+	WIDGET_Address_Zip: string
+	/**
+	 * C​i​t​y
+	 */
+	WIDGET_Address_City: string
+	/**
+	 * S​e​a​r​c​h​ ​C​o​u​n​t​r​y​ ​.​.​.
+	 */
+	WIDGET_Address_SearchCountry: string
+	/**
+	 * C​h​o​s​e​ ​e​x​i​s​t​i​n​g​.​.​.
+	 */
+	WIDGET_Relation_ChoseExisting: string
+	/**
+	 * E​d​i​t
+	 */
+	WIDGET_Relation_Edit: string
+	/**
+	 * A​d​d​ ​N​e​w
+	 */
+	WIDGET_Relation_AddNew: string
+	/**
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​i​s​ ​m​o​r​e​ ​t​h​a​n​ ​5​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​P​e​r​f​e​c​t​!
+	 */
+	WIDGET_Seo_Suggetion_TitlePerfect: string
+	/**
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​i​s​ ​m​o​r​e​ ​t​h​a​n​ ​3​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​T​r​y​ ​5​0​+​.​ ​G​o​o​d​!
+	 */
+	WIDGET_Seo_Suggetion_TitleGood: string
+	/**
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​i​s​ ​t​o​o​ ​s​h​o​r​t​.​ ​M​a​k​e​ ​s​u​r​e​ ​y​o​u​r​ ​t​i​t​l​e​ ​i​s​ ​a​t​ ​l​e​a​s​t​ ​5​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​B​a​d​!
+	 */
+	WIDGET_Seo_Suggetion_TitleBad: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​b​e​t​w​e​e​n​ ​1​2​0​ ​a​n​d​ ​1​6​5​ ​c​h​a​r​a​c​t​e​r​s​.​ ​P​e​r​f​e​c​t​!
+	 */
+	WIDGET_Seo_Suggetion_DescriptionPerfect: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​m​o​r​e​ ​t​h​a​n​ ​9​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​G​o​o​d​!
+	 */
+	WIDGET_Seo_Suggetion_DescriptionGood: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​l​e​s​s​ ​t​h​a​n​ ​9​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​B​a​d​!
+	 */
+	WIDGET_Seo_Suggetion_DescriptionBad: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​2​ ​t​o​ ​4​ ​s​e​n​t​e​n​c​e​s​ ​l​o​n​g​.​ ​P​e​r​f​e​c​t​!
+	 */
+	WIDGET_Seo_Suggetion_SentencePerfect: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​o​n​ ​i​s​ ​o​n​l​y​ ​1​ ​s​e​n​t​e​n​c​e​ ​l​o​n​g​.​ ​M​a​k​e​ ​s​u​r​e​ ​y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​2​ ​t​o​ ​4​ ​s​e​n​t​e​n​c​e​s​ ​l​o​n​g​.
+	 */
+	WIDGET_Seo_Suggetion_SentenceBad: string
+	/**
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​u​s​e​s​ ​n​u​m​b​e​r​s​.​ ​P​e​r​f​e​c​t​!
+	 */
+	WIDGET_Seo_Suggetion_NumberPerfect: string
+	/**
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​d​o​e​s​ ​n​o​t​ ​u​s​e​ ​n​u​m​b​e​r​s​.​ ​T​h​e​ ​u​s​e​ ​o​f​ ​n​u​m​b​e​r​s​ ​i​n​ ​y​o​u​r​ ​t​i​t​l​e​ ​c​a​n​ ​i​n​c​r​e​a​s​e​ ​y​o​u​r​ ​C​T​R​.
+	 */
+	WIDGET_Seo_Suggetion_NumberBad: string
+	/**
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​h​a​s​ ​t​h​e​ ​P​o​w​e​r​ ​W​o​r​d​ ​w​o​r​d​ ​P​e​r​f​e​c​t​!
+	 */
+	WIDGET_Seo_Suggetion_PowerWordTitle: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​u​s​e​s​ ​t​h​e​ ​P​o​w​e​r​ ​W​o​r​d​ ​w​o​r​d​.​ ​P​e​r​f​e​c​t​!
+	 */
+	WIDGET_Seo_Suggetion_PowerWordDescription: string
+	/**
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​h​a​s​ ​t​h​e​ ​C​T​A​ ​k​e​y​w​o​r​d​ ​k​e​y​w​o​r​d​.​ ​G​o​o​d​!
+	 */
+	WIDGET_Seo_Suggetion_ctaKeywordsTitle: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​u​s​e​s​ ​t​h​e​ ​C​T​A​ ​k​e​y​w​o​r​d​ ​k​e​y​w​o​r​d​.​ ​G​o​o​d​!
+	 */
+	WIDGET_Seo_Suggetion_ctaKeywordsDescription: string
+	/**
+	 * T​i​t​l​e​:
+	 */
+	WIDGET_Seo_Suggetion_Title: string
+	/**
+	 * C​h​a​r​a​c​t​e​r​:
+	 */
+	WIDGET_Seo_Suggetion_Character: string
+	/**
+	 * -​ ​D​e​s​k​t​o​p​:
+	 */
+	WIDGET_Seo_Suggetion_WidthDesktop: string
+	/**
+	 * M​o​b​i​l​e​:​ 
+	 */
+	WIDGET_Seo_Suggetion_WidthMobile: string
+	/**
+	 * S​E​O​ ​T​i​t​l​e​:​ 
+	 */
+	WIDGET_Seo_Suggetion_SeoTitle: string
+	/**
+	 * D​e​s​c​r​i​p​t​i​o​n​:
+	 */
+	WIDGET_Seo_Suggetion_Description: string
+	/**
+	 * S​E​O​ ​D​e​s​c​r​i​p​t​i​o​n
+	 */
+	WIDGET_Seo_Suggetion_SeoDescription: string
+	/**
+	 * S​E​O​ ​P​r​e​v​i​e​w
+	 */
+	WIDGET_Seo_Suggetion_SeoPreview: string
+	/**
+	 * L​i​s​t​ ​o​f​ ​S​u​g​g​e​s​t​i​o​n​s​:
+	 */
+	WIDGET_Seo_Suggetion_ListOfSuggestion: string
+	/**
+	 * O​p​t​i​m​i​z​e​ ​t​i​t​l​e​ ​&​ ​d​e​s​c​r​i​p​t​i​o​n​ ​f​o​r​ ​G​o​o​g​l​e​ ​s​e​a​r​c​h​ ​r​e​s​u​l​t​s​,​ ​t​o​ ​i​m​p​r​o​v​e​ ​t​h​e​ ​v​i​s​u​a​l​ ​a​p​p​e​a​l​ ​t​o​ ​b​r​i​n​g​s​ ​m​o​r​e​ ​c​l​i​c​k​s​ ​t​o​ ​y​o​u​r​ ​w​e​b​s​i​t​e​.
+	 */
+	WIDGET_Seo_Suggetion_Text: string
 }
 
 export type TranslationFunctions = {
 	/**
-	 * Hi {name}! Please leave a star if you like this project: https://github.com/ivanhofer/typesafe-i18n
+	 * Hi {name}! Translation it works!
 	 */
 	HI: (arg: { name: string }) => LocalizedString
+	/**
+	 * Search ...
+	 */
+	SBL_Search: () => LocalizedString
+	/**
+	 * Admin
+	 */
+	SBL_Admin: () => LocalizedString
+	/**
+	 * Admin User
+	 */
+	SBL_Admin_User: () => LocalizedString
+	/**
+	 * System Language
+	 */
+	SBL_SystemLanguage: () => LocalizedString
+	/**
+	 * English
+	 */
+	SBL_English: () => LocalizedString
+	/**
+	 * German
+	 */
+	SBL_German: () => LocalizedString
+	/**
+	 * Switch to
+	 */
+	SBL_isDark: () => LocalizedString
+	/**
+	 * Light
+	 */
+	SBL_Light: () => LocalizedString
+	/**
+	 * Dark
+	 */
+	SBL_Dark: () => LocalizedString
+	/**
+	 * Mode
+	 */
+	SBL_Mode: () => LocalizedString
+	/**
+	 * Version
+	 */
+	SBL_Version: () => LocalizedString
+	/**
+	 * Ver.
+	 */
+	SBL_Ver: () => LocalizedString
+	/**
+	 * Save
+	 */
+	SBL_Save: () => LocalizedString
+	/**
+	 * Page Not Found
+	 */
+	ERROR_Pagenotfound: () => LocalizedString
+	/**
+	 * We are sorry, something went wrong.
+	 */
+	ERROR_Wrong: () => LocalizedString
+	/**
+	 * Go to Front Page
+	 */
+	ERROR_GoHome: () => LocalizedString
+	/**
+	 * User Profile
+	 */
+	USER_Profile: () => LocalizedString
+	/**
+	 * Sign In
+	 */
+	LOGIN_SignIn: () => LocalizedString
+	/**
+	 * Sign Up
+	 */
+	LOGIN_SignUp: () => LocalizedString
+	/**
+	 * Please type valid Email
+	 */
+	LOGIN_emailmsg_valid: () => LocalizedString
+	/**
+	 * Email should be ending with domain (eg .com)
+	 */
+	LOGIN_emailmsg_domain: () => LocalizedString
+	/**
+	 * Email should contain @ symbol
+	 */
+	LOGIN_emailmsg_at: () => LocalizedString
+	/**
+	 * Email field should not be empty
+	 */
+	LOGIN_emailmsg_empty: () => LocalizedString
+	/**
+	 * Password field should not be empty
+	 */
+	LOGIN_passwordmsg_empty: () => LocalizedString
+	/**
+	 * Passwords Does not Match
+	 */
+	LOGIN_passwordmsg_confirm: () => LocalizedString
+	/**
+	 * Email Address
+	 */
+	LOGIN_EmailAddress: () => LocalizedString
+	/**
+	 * Password
+	 */
+	LOGIN_Password: () => LocalizedString
+	/**
+	 * Confirm Password
+	 */
+	LOGIN_ConfirmPassword: () => LocalizedString
+	/**
+	 * Forgotten Password
+	 */
+	LOGIN_ForgottenPassword: () => LocalizedString
+	/**
+	 * Send Password Reset Email
+	 */
+	LOGIN_SendResetMail: () => LocalizedString
+	/**
+	 * Create
+	 */
+	ENTITYLIST_Create: () => LocalizedString
+	/**
+	 * Publish
+	 */
+	ENTITYLIST_Publish: () => LocalizedString
+	/**
+	 * Unpublish
+	 */
+	ENTITYLIST_Unpublish: () => LocalizedString
+	/**
+	 * Schedule
+	 */
+	ENTITYLIST_Schedule: () => LocalizedString
+	/**
+	 * Clone
+	 */
+	ENTITYLIST_Clone: () => LocalizedString
+	/**
+	 * Delete
+	 */
+	ENTITYLIST_Delete: () => LocalizedString
+	/**
+	 * Search
+	 */
+	ENTITYLIST_Search: () => LocalizedString
+	/**
+	 * Loading...
+	 */
+	ENTITYLIST_Loading: () => LocalizedString
+	/**
+	 * Showing
+	 */
+	ENTITYLIST_Showing: () => LocalizedString
+	/**
+	 * to
+	 */
+	ENTITYLIST_to: () => LocalizedString
+	/**
+	 * of
+	 */
+	ENTITYLIST_of: () => LocalizedString
+	/**
+	 * Entries
+	 */
+	ENTITYLIST_Entries: () => LocalizedString
+	/**
+	 * Entries
+	 */
+	ENTITYLIST_EntriesItems: () => LocalizedString
+	/**
+	 * Previous
+	 */
+	ENTITYLIST_Previous: () => LocalizedString
+	/**
+	 * Next
+	 */
+	ENTITYLIST_Next: () => LocalizedString
+	/**
+	 * Create
+	 */
+	FORM_Create: () => LocalizedString
+	/**
+	 * Close Menu
+	 */
+	FORM_CloseMenu: () => LocalizedString
+	/**
+	 * Close without saving
+	 */
+	FORM_TT_Closes: () => LocalizedString
+	/**
+	 * Required
+	 */
+	FORM_Required: () => LocalizedString
+	/**
+	 * Collections
+	 */
+	Collections: () => LocalizedString
+	/**
+	 * Media
+	 */
+	Media: () => LocalizedString
+	/**
+	 * Search in Map ...
+	 */
+	WIDGET_Address_SearchMap: () => LocalizedString
+	/**
+	 * Get from Address
+	 */
+	WIDGET_Address_GetAddress: () => LocalizedString
+	/**
+	 * Get from Address
+	 */
+	WIDGET_Address_GetMap: () => LocalizedString
+	/**
+	 * Geocoordinates
+	 */
+	WIDGET_Address_Geocoordinates: () => LocalizedString
+	/**
+	 * Latitude
+	 */
+	WIDGET_Address_Latitude: () => LocalizedString
+	/**
+	 * Longitude
+	 */
+	WIDGET_Address_Longitude: () => LocalizedString
+	/**
+	 * Name
+	 */
+	WIDGET_Address_Name: () => LocalizedString
+	/**
+	 * Street address
+	 */
+	WIDGET_Address_Street: () => LocalizedString
+	/**
+	 * ZIP or Postal Code
+	 */
+	WIDGET_Address_Zip: () => LocalizedString
+	/**
+	 * City
+	 */
+	WIDGET_Address_City: () => LocalizedString
+	/**
+	 * Search Country ...
+	 */
+	WIDGET_Address_SearchCountry: () => LocalizedString
+	/**
+	 * Chose existing...
+	 */
+	WIDGET_Relation_ChoseExisting: () => LocalizedString
+	/**
+	 * Edit
+	 */
+	WIDGET_Relation_Edit: () => LocalizedString
+	/**
+	 * Add New
+	 */
+	WIDGET_Relation_AddNew: () => LocalizedString
+	/**
+	 * Your title is more than 50 characters. Perfect!
+	 */
+	WIDGET_Seo_Suggetion_TitlePerfect: () => LocalizedString
+	/**
+	 * Your title is more than 30 characters. Try 50+. Good!
+	 */
+	WIDGET_Seo_Suggetion_TitleGood: () => LocalizedString
+	/**
+	 * Your title is too short. Make sure your title is at least 50 characters. Bad!
+	 */
+	WIDGET_Seo_Suggetion_TitleBad: () => LocalizedString
+	/**
+	 * Your description is between 120 and 165 characters. Perfect!
+	 */
+	WIDGET_Seo_Suggetion_DescriptionPerfect: () => LocalizedString
+	/**
+	 * Your description is more than 90 characters. Good!
+	 */
+	WIDGET_Seo_Suggetion_DescriptionGood: () => LocalizedString
+	/**
+	 * Your description is less than 90 characters. Bad!
+	 */
+	WIDGET_Seo_Suggetion_DescriptionBad: () => LocalizedString
+	/**
+	 * Your description is 2 to 4 sentences long. Perfect!
+	 */
+	WIDGET_Seo_Suggetion_SentencePerfect: () => LocalizedString
+	/**
+	 * Your descripton is only 1 sentence long. Make sure your description is 2 to 4 sentences long.
+	 */
+	WIDGET_Seo_Suggetion_SentenceBad: () => LocalizedString
+	/**
+	 * Your title uses numbers. Perfect!
+	 */
+	WIDGET_Seo_Suggetion_NumberPerfect: () => LocalizedString
+	/**
+	 * Your title does not use numbers. The use of numbers in your title can increase your CTR.
+	 */
+	WIDGET_Seo_Suggetion_NumberBad: () => LocalizedString
+	/**
+	 * Your title has the Power Word word Perfect!
+	 */
+	WIDGET_Seo_Suggetion_PowerWordTitle: () => LocalizedString
+	/**
+	 * Your description uses the Power Word word. Perfect!
+	 */
+	WIDGET_Seo_Suggetion_PowerWordDescription: () => LocalizedString
+	/**
+	 * Your title has the CTA keyword keyword. Good!
+	 */
+	WIDGET_Seo_Suggetion_ctaKeywordsTitle: () => LocalizedString
+	/**
+	 * Your description uses the CTA keyword keyword. Good!
+	 */
+	WIDGET_Seo_Suggetion_ctaKeywordsDescription: () => LocalizedString
+	/**
+	 * Title:
+	 */
+	WIDGET_Seo_Suggetion_Title: () => LocalizedString
+	/**
+	 * Character:
+	 */
+	WIDGET_Seo_Suggetion_Character: () => LocalizedString
+	/**
+	 * - Desktop:
+	 */
+	WIDGET_Seo_Suggetion_WidthDesktop: () => LocalizedString
+	/**
+	 * Mobile: 
+	 */
+	WIDGET_Seo_Suggetion_WidthMobile: () => LocalizedString
+	/**
+	 * SEO Title: 
+	 */
+	WIDGET_Seo_Suggetion_SeoTitle: () => LocalizedString
+	/**
+	 * Description:
+	 */
+	WIDGET_Seo_Suggetion_Description: () => LocalizedString
+	/**
+	 * SEO Description
+	 */
+	WIDGET_Seo_Suggetion_SeoDescription: () => LocalizedString
+	/**
+	 * SEO Preview
+	 */
+	WIDGET_Seo_Suggetion_SeoPreview: () => LocalizedString
+	/**
+	 * List of Suggestions:
+	 */
+	WIDGET_Seo_Suggetion_ListOfSuggestion: () => LocalizedString
+	/**
+	 * Optimize title & description for Google search results, to improve the visual appeal to brings more clicks to your website.
+	 */
+	WIDGET_Seo_Suggetion_Text: () => LocalizedString
 }
 
 export type Formatters = {}

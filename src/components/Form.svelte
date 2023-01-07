@@ -4,6 +4,9 @@
 	import type { Schema } from '@src/collections/types';
 	import Fields from './Fields.svelte';
 
+	// typesafe-i18n
+	import LL from '../i18n/i18n-svelte';
+
 	// Skeleton
 	import { tooltip } from '@skeletonlabs/skeleton';
 	import { menu } from '@skeletonlabs/skeleton';
@@ -26,7 +29,9 @@
 <div class="fields text-dark overflow-y-auto rounded bg-white p-3 dark:bg-gray-800 dark:text-white">
 	<div class="relative mb-5 flex justify-start overflow-visible font-bold ">
 		<div class="flex w-full flex-col">
-			<div class="mb-2 text-sm capitalize text-gray-500 dark:text-gray-300">Create</div>
+			<div class="mb-2 text-sm capitalize text-gray-500 dark:text-gray-300">
+				{$LL.FORM_Create()}
+			</div>
 			<div
 				class="-mt-2 flex items-center justify-start text-sm font-bold uppercase dark:text-white md:text-xl xl:text-2xl "
 			>
@@ -58,6 +63,7 @@
 				</ul>
 			</nav>
 		</span>
+		<!-- TODO Translate tooltip -->
 		<button
 			on:click={() => {
 				showFields = false;
@@ -66,7 +72,7 @@
 			use:tooltip={{ content: 'Close without saving ', position: 'bottom' }}
 			class="btn absolute right-0 dark:text-white"
 		>
-			<span class="sr-only">Close menu</span>
+			<span class="sr-only">{$LL.FORM_CloseMenu()}</span>
 			<Icon icon="material-symbols:close" width="26" />
 		</button>
 	</div>
@@ -79,12 +85,12 @@
 		use:tooltip={{ content: 'Close without saving ', position: 'bottom' }}
 		class="btn absolute right-0 dark:text-white"
 	>
-		<span class="sr-only">Close menu</span>
+		<span class="sr-only">{$LL.FORM_CloseMenu()}</span>
 		<Icon icon="material-symbols:close" width="26" />
 	</button>
 
 	{#if fields.some((field) => field.field.required)}
-		<div class="text-md -mt-3 text-center text-red-500">* Required</div>
+		<div class="text-md -mt-3 text-center text-red-500">* {$LL.FORM_Required()}</div>
 	{/if}
 	<Fields {collection} {fields} />
 </div>

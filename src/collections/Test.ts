@@ -40,7 +40,7 @@ let schema: Schema = {
 			},
 			fields: [
 				widgets.SelectList({
-					title: 'prefix',
+					title: 'Prefix',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Prefix',
 					width: '33%'
@@ -48,7 +48,7 @@ let schema: Schema = {
 				}),
 
 				widgets.Text({
-					title: 'first',
+					title: 'First',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter First Name',
 					required: true,
@@ -56,16 +56,16 @@ let schema: Schema = {
 				}),
 
 				widgets.Text({
-					title: 'middle',
+					title: 'Middle',
 					icon: 'ri:t-box-line',
-					placeholder: 'Middle Name (ReadOnly)',
+					placeholder: 'Middle  (ReadOnly)',
 					required: false,
 					readonly: true,
 					width: '33%'
 				}),
 
 				widgets.Text({
-					title: 'last',
+					title: 'Last',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Last Name',
 					required: true,
@@ -117,7 +117,7 @@ let schema: Schema = {
 
 		widgets.RichText({ title: 'Description' }),
 
-		// widgets.Address({ title: 'Address' }),
+		widgets.Address({ title: 'Address' }),
 
 		widgets.Url({
 			title: 'url',

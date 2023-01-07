@@ -1,4 +1,7 @@
 <script lang="ts">
+	// typesafe-i18n
+	import LL from '../../../../i18n/i18n-svelte';
+
 	export let show = true;
 </script>
 
@@ -20,7 +23,7 @@
 			/>
 		</svg>
 	</div>
-	<p class="text-center font-semibold uppercase text-white">Sign Up</p>
+	<p class="text-center font-semibold uppercase text-white">{$LL.LOGIN_SignUp()}</p>
 </div>
 
 <style>
