@@ -57,3 +57,4 @@ body{
 .menu :where(li:not(.menu-title)) > :where(*:not(ul)) {
     display: flex;
 }
+

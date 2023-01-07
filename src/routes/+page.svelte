@@ -10,7 +10,7 @@
 	import axios from 'axios';
 	import env from '@root/env';
 	import { goto } from '$app/navigation';
-
+	import ToolTip from '@src/components/ToolTip.svelte';
 	// skeleton
 	import { Avatar } from '@skeletonlabs/skeleton';
 	let avatarSrc = '';
@@ -228,7 +228,7 @@
 										use:tooltip={{ content: 'System Language', position: 'right' }}
 										class="text-gray-500 dark:text-white">Eng</button
 									>
-
+									
 									<!-- Menu: set a matching 'data-menu-[menuId]' attribute -->
 									<nav
 										class="list-nav card w-40 bg-gray-500 p-2 shadow-xl dark:border"
@@ -243,17 +243,15 @@
 
 								<button
 									on:click={toggleTheme}
-									class="btn rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-									use:tooltip={{
-										content: `Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`,
-										position: 'right'
-									}}
+									class="btn relative rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+									
 								>
-									{#if $is_dark}
-										<Icon icon="bi:sun" width="16" />
-									{:else}
-										<Icon icon="bi:moon-fill" width="16" />
-									{/if}
+								{#if $is_dark}
+								<Icon icon="bi:sun" width="16" />
+								{:else}
+								<Icon icon="bi:moon-fill" width="16" />
+								{/if}
+								<ToolTip position="right" text={`Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`} />
 								</button>
 							</div>
 

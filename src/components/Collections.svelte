@@ -7,6 +7,7 @@
 
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
+	import ToolTip from './ToolTip.svelte';
 
 	export let filterCollections: string;
 	export let fields: Array<any>;
@@ -24,12 +25,7 @@
 		node.style.maxHeight = '0px';
 		node.style.transition = ' 0.5s';
 	}
-	function setOverflowY(e: MouseEvent, state: boolean) {
-		let node: HTMLDivElement = e.target as HTMLDivElement;
-		state
-			? setTimeout(() => (node.style.overflowY = 'auto'))
-			: setTimeout(() => (node.style.overflowY = 'hidden'));
-	}
+
 
 	$: filtered =
 		data &&
@@ -54,16 +50,12 @@
 	<div
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
-			expanded[index] ? setOverflowY(e, true) : setOverflowY(e, false);
 		}}
-		use:tooltip={{
-			content: item.category,
-			position: 'right',
-			width: switchSideBar ? '100px' : '0px'
-		}}
-		class="arrow relative h-[40px] cursor-pointer overflow-visible rounded-sm bg-gray-500 py-2 text-center last:mb-1"
+	
+		class="arrow relative h-[40px] cursor-pointer overflow-visible rounded-sm bg-gray-500 py-2 text-center last:mb-1 tooltip_right"
 		class:arrow_up={expanded[index]}
 	>
+		<ToolTip position="right" text={item.category} active={!switchSideBar}/>
 		<Icon
 			icon={item.icon}
 			width="24"
