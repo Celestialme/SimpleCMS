@@ -5,7 +5,6 @@
 	export let text_color: string = 'white';
     export let active  = true
 	
-	let node: HTMLDivElement;
 	let show = false;
 	function setup(node: HTMLElement) {
 		if (!node.parentElement) return;
@@ -18,11 +17,10 @@
 			show = false;
 		});
 	}
-	$: node?.style?.setProperty('--background-color', background_color);
-	$: node?.style?.setProperty('--text-color', text_color);
+
 </script>
 
-<div use:setup hidden={!show || !active} class={position+ " "+ $$props.class}>
+<div use:setup hidden={!show || !active} class={position+ " "+ $$props.class || ""} style = {`--background-color:${background_color};--text-color:${text_color}`}>
 	{text}
 </div>
 
