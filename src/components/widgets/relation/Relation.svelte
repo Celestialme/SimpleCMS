@@ -5,12 +5,10 @@
 	import { getFieldsData, language } from '@src/stores/store';
 
 	import DropDown from '@src/components/DropDown.svelte';
+	import ToolTip from '@src/components/ToolTip.svelte';
 
 	// typesafe-i18n
-	import LL from '../../../i18n/i18n-svelte';
-
-	// Skeleton
-	import { tooltip } from '@skeletonlabs/skeleton';
+	import LL from '@src/i18n/i18n-svelte';
 
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
@@ -71,7 +69,6 @@
 			{selectedField || display || $LL.WIDGET_Relation_ChoseExisting()}
 		</p>
 		<button
-			use:tooltip={{ content: $LL.WIDGET_Relation_Edit(), position: 'bottom' }}
 			on:click={() => {
 				value = null;
 				widgetValue = null;
@@ -80,13 +77,23 @@
 			}}
 			class="btn"><Icon icon="bi:pencil-fill" width="22" /></button
 		>
+		<ToolTip
+			text={$LL.WIDGET_Relation_Edit()}
+			position="bottom"
+			class="bg-gray-500 text-black dark:text-white"
+		/>
 		<button
-			use:tooltip={{ content: $LL.WIDGET_Relation_AddNew(), position: 'bottom' }}
 			on:click={() => {
 				expanded = !expanded;
 				selected = null;
 			}}
-			class="btn mr-1"><Icon icon="ic:baseline-plus" width="22" /></button
+			class="btn mr-1"
+			><Icon icon="ic:baseline-plus" width="22" />
+			<ToolTip
+				text={$LL.WIDGET_Relation_AddNew()}
+				position="bottom"
+				class="bg-gray-500 text-black dark:text-white"
+			/></button
 		>
 	</div>
 

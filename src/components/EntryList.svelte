@@ -6,11 +6,12 @@
 	import DeleteIcon from './icons/DeleteIcon.svelte';
 	import { never } from '@src/utils/utils_svelte';
 
+	import ToolTip from '@src/components/ToolTip.svelte';
+
 	// typesafe-i18n
-	import LL from '../i18n/i18n-svelte';
+	import LL from '@src/i18n/i18n-svelte';
 
 	// Skeleton
-	import { tooltip } from '@skeletonlabs/skeleton';
 	import { menu } from '@skeletonlabs/skeleton';
 
 	// Icons from https://icon-sets.iconify.design/
@@ -253,12 +254,13 @@
 						on:click={() => {
 							showFields = true;
 						}}
-						use:tooltip={{
-							content: $LL.ENTITYLIST_Create() + ' ' + collection.name,
-							position: 'bottom'
-						}}
 						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-lime-600 via-lime-500 to-lime-400 px-2 py-2 text-xl font-bold text-black md:ml-auto md:w-[150px]"
 					>
+						<ToolTip
+							text="{$LL.ENTITYLIST_Create()} {collection.name}"
+							position="bottom"
+							class="bg-gray-500 text-black dark:text-white"
+						/>
 						<Icon icon="ic:round-plus" color="black" width="22" class="mr-1" />
 						<div class="hidden md:block">{$LL.ENTITYLIST_Create()}</div>
 					</button>
@@ -268,11 +270,12 @@
 						on:click={() => {
 							publishEntry();
 						}}
-						use:tooltip={{
-							content: $LL.ENTITYLIST_Publish() + ' ' + collection.name,
-							position: 'bottom'
-						}}
 					>
+						<ToolTip
+							text="{$LL.ENTITYLIST_Publish()} {collection.name}"
+							position="bottom"
+							class="bg-gray-500 text-black dark:text-white"
+						/>
 						<Icon icon="bi:hand-thumbs-up-fill" color="white" width="22" class="mr-1" />
 						<div class="hidden md:block">{$LL.ENTITYLIST_Publish()}</div>
 					</button>
@@ -282,11 +285,11 @@
 						on:click={() => {
 							unpublishEntry();
 						}}
-						use:tooltip={{
-							content: $LL.ENTITYLIST_Unpublish() + ' ' + collection.name,
-							position: 'bottom'
-						}}
-					>
+						><ToolTip
+							text="{$LL.ENTITYLIST_Unpublish()} {collection.name}"
+							position="bottom"
+							class="bg-gray-500 text-black dark:text-white"
+						/>
 						<Icon icon="bi:pause-circle" color="white" width="22" class="mr-1" />
 						<div class="hidden md:block">{$LL.ENTITYLIST_Unpublish()}</div>
 					</button>
@@ -296,11 +299,11 @@
 						on:click={() => {
 							scheduleEntry();
 						}}
-						use:tooltip={{
-							content: $LL.ENTITYLIST_Schedule() + ' ' + collection.name,
-							position: 'bottom'
-						}}
-					>
+						><ToolTip
+							text="{$LL.ENTITYLIST_Schedule()} {collection.name}"
+							position="bottom"
+							class="bg-gray-500 text-black dark:text-white"
+						/>
 						<Icon icon="bi:clock" color="white" width="22" class="mr-1" />
 						<div class="hidden md:block">{$LL.ENTITYLIST_Schedule()}</div>
 					</button>
@@ -310,11 +313,11 @@
 						on:click={() => {
 							cloneEntry();
 						}}
-						use:tooltip={{
-							content: $LL.ENTITYLIST_Clone() + ' ' + collection.name,
-							position: 'bottom'
-						}}
-					>
+						><ToolTip
+							text="{$LL.ENTITYLIST_Clone()} {collection.name}"
+							position="bottom"
+							class="bg-gray-500 text-black dark:text-white"
+						/>
 						<Icon icon="bi:clipboard-data-fill" color="white" width="22" class="mr-1" />
 						<div class="hidden md:block">{$LL.ENTITYLIST_Clone()}</div>
 					</button>
@@ -324,11 +327,11 @@
 						on:click={() => {
 							deleteEntry();
 						}}
-						use:tooltip={{
-							content: $LL.ENTITYLIST_Delete() + ' ' + collection.name,
-							position: 'bottom'
-						}}
-					>
+						><ToolTip
+							text="{$LL.ENTITYLIST_Delete()} {collection.name}"
+							position="bottom"
+							class="bg-gray-500 text-black dark:text-white"
+						/>
 						<Icon icon="bi:trash3-fill" color="white" width="22" class="mr-1" />
 						<div class="hidden md:block">{$LL.ENTITYLIST_Delete()}</div>
 					</button>
