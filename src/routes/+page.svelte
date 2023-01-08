@@ -10,19 +10,20 @@
 	import axios from 'axios';
 	import env from '@root/env';
 	import { goto } from '$app/navigation';
+
 	import ToolTip from '@src/components/ToolTip.svelte';
+
 	// skeleton
 	import { Avatar } from '@skeletonlabs/skeleton';
 	let avatarSrc = '';
 	import { menu } from '@skeletonlabs/skeleton';
-	import { tooltip } from '@skeletonlabs/skeleton';
 
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
 
 	// typesafe-i18n
-	import { setLocale } from '../i18n/i18n-svelte';
-	import LL from '../i18n/i18n-svelte';
+	import { setLocale } from '@src/i18n/i18n-svelte';
+	import LL from '@src/i18n/i18n-svelte';
 
 	import SimpleCmsLogo from '@src/components/icons/SimpleCMS_Logo.svelte';
 
@@ -208,11 +209,13 @@
 						<!-- Sidebar left footer Desktop -->
 						<div class="mt-auto border-t border-gray-500 pt-2 ">
 							<div class="my-1 flex items-center justify-between">
-								<a
-									href="/user"
-									class="flex-col"
-									use:tooltip={{ content: $LL.SBL_Admin_User(), position: 'right' }}
-								>
+								<a href="/user" class="flex-col">
+									<ToolTip
+										text={$LL.SBL_Admin_User()}
+										position="right"
+										class="bg-gray-500 text-black dark:text-white"
+									/>
+
 									<Avatar src={avatarSrc || '/Default_User.svg'} class=" border border-gray-400" />
 									<div class="text-center text-[9px] text-gray-400 dark:text-white">
 										{$LL.SBL_Admin()}
@@ -221,14 +224,17 @@
 
 								<!-- System Language desktop -->
 								<span class="relative">
-									<!-- Trigger: apply the 'use:menu' action and supply the unique menu ID -->
-
 									<button
 										use:menu={{ menu: 'system-language' }}
-										use:tooltip={{ content: $LL.SBL_SystemLanguage(), position: 'right' }}
-										class="text-gray-500 dark:text-white">Eng</button
+										class="text-gray-500 dark:text-white"
 									>
-									
+										<ToolTip
+											text={$LL.SBL_SystemLanguage()}
+											position="right"
+											class="bg-gray-500 text-black dark:text-white"
+										/>Eng</button
+									>
+
 									<!-- Menu: set a matching 'data-menu-[menuId]' attribute -->
 									<nav
 										class="list-nav card w-40 bg-gray-500 p-2 shadow-xl dark:border"
@@ -248,14 +254,17 @@
 								<button
 									on:click={toggleTheme}
 									class="btn relative rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-									
 								>
-								{#if $is_dark}
-								<Icon icon="bi:sun" width="16" />
-								{:else}
-								<Icon icon="bi:moon-fill" width="16" />
-								{/if}
-								<ToolTip position="right" text={`Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`} />
+									{#if $is_dark}
+										<Icon icon="bi:sun" width="16" />
+									{:else}
+										<Icon icon="bi:moon-fill" width="16" />
+									{/if}
+									<ToolTip
+										position="right"
+										text={`Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`}
+										class="bg-gray-500 text-black dark:text-white"
+									/>
 								</button>
 							</div>
 
@@ -272,11 +281,12 @@
 						<div
 							class="absolute bottom-0 mt-2 flex-col border-t border-gray-500 pb-5 pt-2 text-center"
 						>
-							<a
-								href="/user"
-								class="flex-col"
-								use:tooltip={{ content: $LL.SBL_Admin_User(), position: 'right' }}
-							>
+							<a href="/user" class="flex-col">
+								<ToolTip
+									text={$LL.SBL_Admin_User()}
+									position="right"
+									class="bg-gray-500 text-black dark:text-white"
+								/>
 								<Avatar
 									src={avatarSrc || '/Default_User.svg'}
 									class="m-auto border border-gray-400"
@@ -287,11 +297,14 @@
 							<!-- System Language Mobile -->
 							<span class="relative">
 								<!-- Trigger: apply the 'use:menu' action and supply the unique menu ID -->
-								<button
-									use:menu={{ menu: 'system-language' }}
-									use:tooltip={{ content: $LL.SBL_SystemLanguage(), position: 'right' }}
-									class="text-gray-500 dark:text-white">Eng</button
+								<button use:menu={{ menu: 'system-language' }} class="text-gray-500 dark:text-white"
+									>Eng</button
 								>
+								<ToolTip
+									text={$LL.SBL_SystemLanguage()}
+									position="right"
+									class="bg-gray-500 text-black dark:text-white"
+								/>
 
 								<!-- Menu: set a matching 'data-menu-[menuId]' attribute -->
 								<nav
@@ -300,7 +313,7 @@
 								>
 									<ul class="divide-y-2">
 										<li>
-											<button on:click={() => setLocale('en')}>{$LL.SBL_Admin()}</button>
+											<button on:click={() => setLocale('en')}>{$LL.SBL_English()}</button>
 										</li>
 										<li><button on:click={() => setLocale('de')}>{$LL.SBL_German()}</button></li>
 									</ul>
@@ -310,15 +323,18 @@
 							<div class="-ml-2">
 								<button
 									on:click={toggleTheme}
-									id="theme-toggle"
-									class="btn rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-									use:tooltip={{
-										content: `Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`,
-										position: 'right'
-									}}
+									class="btn relative rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
 								>
-									<Icon icon="bi:sun" width="16" id="theme-toggle-light-icon" />
-									<Icon icon="bi:moon-fill" width="16" id="theme-toggle-dark-icon" />
+									{#if $is_dark}
+										<Icon icon="bi:sun" width="16" />
+									{:else}
+										<Icon icon="bi:moon-fill" width="16" />
+									{/if}
+									<ToolTip
+										position="right"
+										text={`Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`}
+										class="bg-gray-500 text-black dark:text-white"
+									/>
 								</button>
 							</div>
 
@@ -352,12 +368,15 @@
 				class="fixed h-[65px] w-full border-b-2 border-gray-800 bg-white text-center shadow dark:border-white dark:bg-gray-800 md:relative md:h-full md:w-[200px] md:border-none md:px-2"
 			>
 				<!-- Save button with progressbar -->
-				<!-- TODO - Trans Tooltip -->
 				<button
 					on:click={() => submit()}
-					use:tooltip={{ content: 'Save {collection?.name}', position: 'right' }}
 					class="w-full max-w-[150px] rounded-lg bg-gradient-to-br from-lime-400 via-lime-500 to-lime-600 px-4 py-2 font-bold hover:bg-lime-500 focus:bg-lime-500 active:bg-lime-600 md:mt-2 md:max-w-[350px]"
 				>
+					<ToolTip
+						position="right"
+						text="{$LL.SBL_Save()} {collection?.name}"
+						class="bg-gray-500 text-black dark:text-white"
+					/>
 					<div class=" flex items-center justify-center text-xl uppercase">
 						<Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />
 						{$LL.SBL_Save()}

@@ -8,7 +8,7 @@
 	import Icon from '@iconify/svelte';
 
 	// typesafe-i18n
-	import LL from '../../../i18n/i18n-svelte';
+	import LL from '@src/i18n/i18n-svelte';
 
 	export let field: any = undefined;
 	export let value = '';

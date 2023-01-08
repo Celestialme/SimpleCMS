@@ -2,12 +2,10 @@
 	import type { Schema } from '@src/collections/types';
 	import { shape_fields } from '@src/utils/utils_svelte';
 
-	// skeleton
-	import { tooltip } from '@skeletonlabs/skeleton';
+	import ToolTip from '@src/components/ToolTip.svelte';
 
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
-	import ToolTip from './ToolTip.svelte';
 
 	export let filterCollections: string;
 	export let fields: Array<any>;
@@ -25,7 +23,6 @@
 		node.style.maxHeight = '0px';
 		node.style.transition = ' 0.5s';
 	}
-
 
 	$: filtered =
 		data &&
@@ -51,11 +48,10 @@
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
 		}}
-	
-		class="arrow relative h-[40px] cursor-pointer overflow-visible rounded-sm bg-gray-500 py-2 text-center last:mb-1 tooltip_right"
+		class="arrow tooltip_right relative h-[40px] cursor-pointer overflow-visible rounded-sm bg-gray-500 py-2 text-center last:mb-1"
 		class:arrow_up={expanded[index]}
 	>
-		<ToolTip position="right" text={item.category} active={!switchSideBar}/>
+		<ToolTip position="right" text={item.category} active={!switchSideBar} />
 		<Icon
 			icon={item.icon}
 			width="24"

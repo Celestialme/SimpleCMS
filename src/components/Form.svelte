@@ -4,11 +4,12 @@
 	import type { Schema } from '@src/collections/types';
 	import Fields from './Fields.svelte';
 
+	import ToolTip from '@src/components/ToolTip.svelte';
+
 	// typesafe-i18n
-	import LL from '../i18n/i18n-svelte';
+	import LL from '@src/i18n/i18n-svelte';
 
 	// Skeleton
-	import { tooltip } from '@skeletonlabs/skeleton';
 	import { menu } from '@skeletonlabs/skeleton';
 
 	// Icons from https://icon-sets.iconify.design/
@@ -63,15 +64,18 @@
 				</ul>
 			</nav>
 		</span>
-		<!-- TODO Translate tooltip -->
 		<button
 			on:click={() => {
 				showFields = false;
 				$entryData = new Set();
 			}}
-			use:tooltip={{ content: 'Close without saving ', position: 'bottom' }}
 			class="btn absolute right-0 dark:text-white"
 		>
+			<ToolTip
+				text={$LL.FORM_CloseMenu()}
+				position="bottom"
+				class="bg-gray-500 text-black dark:text-white"
+			/>
 			<span class="sr-only">{$LL.FORM_CloseMenu()}</span>
 			<Icon icon="material-symbols:close" width="26" />
 		</button>
@@ -82,9 +86,13 @@
 			showFields = false;
 			$entryData = new Set();
 		}}
-		use:tooltip={{ content: 'Close without saving ', position: 'bottom' }}
 		class="btn absolute right-0 dark:text-white"
 	>
+		<ToolTip
+			text={$LL.FORM_CloseMenu()}
+			position="bottom"
+			class="bg-gray-500 text-black dark:text-white"
+		/>
 		<span class="sr-only">{$LL.FORM_CloseMenu()}</span>
 		<Icon icon="material-symbols:close" width="26" />
 	</button>
