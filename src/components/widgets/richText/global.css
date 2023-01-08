@@ -19,24 +19,33 @@
    line-height: 20px;
    font-weight: 400;
  }
+
  
  .editor-shell .editor-container {
-   background: #fff;
+   background: white;
    position: relative;
    cursor: text;
    display: block;
-   border-bottom-left-radius: 10px;
-   border-bottom-right-radius: 10px;
-   text-align: left;
+   border-bottom-left-radius: 5px;
+   border-bottom-right-radius: 5px;
+   text-align: left;  
+   border: 1px solid lightgray;
+   border-top: none;   
  }
+
+ .dark .editor-shell .editor-container  {
+  background: rgb(31 41 55 / var(--tw-bg-opacity));
+}
+ 
+
  
  .editor-shell .editor-container.tree-view {
    border-radius: 0;
  }
  
  .editor-shell .editor-container.plain-text {
-   border-top-left-radius: 10px;
-   border-top-right-radius: 10px;
+   border-top-left-radius: 5px;
+   border-top-right-radius: 5px;
  }
  
  .test-recorder-output {
@@ -1081,12 +1090,13 @@
  .toolbar {
    display: flex;
    margin-bottom: 1px;
-   background: #fff;
+   background: whitesmoke;
    padding: 4px;
-   border-top-left-radius: 10px;
-   border-top-right-radius: 10px;
+   border-top-left-radius: 5px;
+   border-top-right-radius: 5px;
    vertical-align: middle;
    overflow: auto;
+   border: 1px solid lightgray;
  }
  
  .toolbar button.toolbar-item {

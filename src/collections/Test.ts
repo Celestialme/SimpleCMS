@@ -27,7 +27,7 @@ let schema: Schema = {
 					},
 					{
 						text: entry.middle,
-						labelColor: 'blue',
+						labelColor: 'red',
 						textColor: 'yellow'
 					},
 					{

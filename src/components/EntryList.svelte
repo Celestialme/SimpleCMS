@@ -4,6 +4,7 @@
 	import { entryData, language } from '@src/stores/store';
 	import { onMount } from 'svelte';
 	import DeleteIcon from './icons/DeleteIcon.svelte';
+	import { never } from '@src/utils/utils_svelte';
 
 	// typesafe-i18n
 	import LL from '../i18n/i18n-svelte';
@@ -14,8 +15,6 @@
 
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
-
-	import { never, any } from '@src/utils/utils_svelte';
 
 	export let showFields = false;
 	export let collection: any = undefined;
@@ -30,6 +29,7 @@
 	let deleteAll = false;
 	let open = false;
 	let tmp_entry: any;
+
 	$: process_deleteAll(deleteAll);
 	$: deleteMode = Object.values(deleteMap).includes(true);
 	let refresh_deleteMap = (_: any) => {
@@ -65,6 +65,7 @@
 		await axios.delete(`${env.HOST}:${env.PORT}/api/${collection.name}`, { data: formData });
 		refresh(collection);
 	}
+
 	let filter: any = '';
 	let filtered_entryList = [...entryList];
 	$: {
@@ -75,6 +76,7 @@
 
 		filter;
 	}
+
 	//$: console.log(filtered_entryList);
 	function process_deleteAll(deleteAll: boolean) {
 		if (deleteAll) {
@@ -88,29 +90,37 @@
 		}
 	}
 
+	// Publish selected Content
 	export async function publishEntry() {
 		alert('publish added soon');
 	}
+
+	// Unpublish selected Content
 	export async function unpublishEntry() {
 		alert('unpublish added soon');
 	}
+
+	// Schedule selected Content to be published/unpublished
 	export async function scheduleEntry() {
 		alert('schedule added soon');
 	}
+
+	// Clone selected Content
 	export async function cloneEntry() {
 		alert('clone added soon');
 	}
 
 	export let toggleSideBar = false;
 	import { flattenData } from '@src/utils/utils';
-	// Is not really stored on page reload
 
+	// Is not really stored on page reload
 	function changeItemsPerPage(newValue: number) {
 		paging.entryLength = newValue;
 		// refresh itemsPerPage??
 		refresh(collection);
 	}
 
+	// Define initial Pagination & ItemsPerPage
 	let paging = { page: 1, entryLength: 10, totalCount: 0, lengthList: [10, 25, 50, 100, 500] };
 
 	// sort and filter
@@ -515,7 +525,7 @@
 			{$LL.ENTITYLIST_Entries()}
 		</div>
 
-		<!-- itemsPerPage -->
+		<!-- ItemsPerPage -->
 		<span class="relative rounded-md">
 			<button
 				use:menu={{ menu: 'pageItems' }}

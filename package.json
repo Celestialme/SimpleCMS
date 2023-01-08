@@ -19,10 +19,11 @@
 	},
 	"devDependencies": {
 		"@beyonk/svelte-mapbox": "^8.2.0",
-		"@playwright/test": "^1.29.1",
+		"@playwright/test": "^1.29.2",
 		"@popperjs/core": "^2.11.6",
 		"@skeletonlabs/skeleton": "^0.86.9",
 		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/adapter-node": "^1.1.0",
 		"@sveltejs/kit": "next",
 		"@tailwindcss/forms": "^0.5.3",
 		"@tailwindcss/line-clamp": "^0.4.2",
@@ -41,9 +42,9 @@
 		"eslint-plugin-svelte3": "^4.0.0",
 		"madge": "^5.0.1",
 		"npm-run-all": "^4.1.5",
-		"postcss": "^8.4.20",
+		"postcss": "^8.4.21",
 		"postcss-load-config": "^4.0.1",
-		"prettier": "^2.8.1",
+		"prettier": "^2.8.2",
 		"prettier-plugin-svelte": "^2.9.0",
 		"prettier-plugin-tailwindcss": "^0.2.1",
 		"svelte": "^3.55.0",
@@ -68,11 +69,11 @@
 		"flag-icons": "^6.6.6",
 		"lucia-auth": "^0.4.3",
 		"mapbox-gl": "^2.12.0",
-		"mongoose": "^6.8.2",
+		"mongoose": "^6.8.3",
 		"multer": "^1.4.5-lts.1",
 		"svelecte": "^3.13.0",
 		"svelte-lexical": "^0.1.4",
-		"svelte-tel-input": "^0.14.2",
+		"svelte-tel-input": "^1.0.1",
 		"typesafe-i18n": "^5.18.1"
 	}
 }
