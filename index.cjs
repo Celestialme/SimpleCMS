@@ -1,5 +1,9 @@
 // Plesk Passanager 
-async function loadApp() {
-    const { app } = await import("./index.js");
-}
-loadApp()
+
+import("./index.js");
+
+
+// async function loadApp() {
+//     const { app } = await import("./index.js");
+// }
+// loadApp()

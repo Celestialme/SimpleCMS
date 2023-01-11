@@ -48,7 +48,9 @@ let env: {
 	PKG: {
 		VERSION: string;
 	};
+	GEOLOCATION: string;
 	MAPBOX_API_TOKEN: string;
+	GOOGLE_API_TOKEN: string;
 } = {
 	SiteNAME: 'SimpleCMS',
 	LANGUAGE: 'en',
@@ -58,8 +60,14 @@ let env: {
 	HOST: 'http://127.0.0.1',
 	PORT: 3501,
 
-	//for Mapbox API
+	// Geolocation - longitude, latitude
+	GEOLOCATION: 'your-geolocation',
+
+	// for Mapbox API - Only use one map Api
 	MAPBOX_API_TOKEN: "your api key here",
+
+	// for Goolge Map API - Only use one map Api
+	// GOOGLE_API_TOKEN: 'your api key here',
 
 	// for mongodb......for Atlas use DB_HOST:"mongodb+srv://XXXX",
 	DB_URL: 'xxxx:27017',

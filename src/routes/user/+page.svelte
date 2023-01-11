@@ -6,7 +6,7 @@
 	import CMSLogo from '../../components/icons/SimpleCMS_Logo.svelte';
 
 	// typesafe-i18n
-	import LL from '../i18n/i18n-svelte';
+	import LL from '@src/i18n/i18n-svelte';
 
 	let showPassword: boolean = false;
 	let forgot: boolean = false;

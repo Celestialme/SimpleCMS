@@ -10,27 +10,6 @@
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
 
-	//https://github.com/beyonk-adventures/svelte-mapbox
-	import { Map, Geocoder, Marker, controls } from '@beyonk/svelte-mapbox';
-
-	const { GeolocateControl, NavigationControl, ScaleControl } = controls;
-
-	let mapComponent;
-	let lng = 69;
-	let lat = 69;
-	let zoom = 19;
-	// Usage of methods like setCenter and flyto
-	function onReady() {
-		mapComponent.setCenter([lng, lat], zoom); // zoom is optional
-		mapComponent.flyTo({ center: [lng, lat] }); // documentation (https://docs.mapbox.com/mapbox-gl-js/example/flyto)
-	}
-
-	// Define this to handle `eventname` events - see [GeoLocate Events](https://docs.mapbox.com/mapbox-gl-js/api/markers/#geolocatecontrol-events)
-	function eventHandler(e) {
-		const data = e.detail;
-		// do something with `data`, it's the result returned from the mapbox event
-	}
-
 	export let field: any = undefined;
 	export let value = '';
 
@@ -40,6 +19,8 @@
 	// https://stefangabos.github.io/world_countries/
 	import countries from './countries.json';
 	import '/node_modules/flag-icons/css/flag-icons.min.css';
+
+	//import Svelecte from '@src/svelecte';
 
 	let selectedCountry = '';
 
@@ -55,21 +36,79 @@
 			country.en.toLowerCase().includes(query.toLowerCase())
 		);
 	}
+
+	// Mapbox
+	// TODO hide improve Mapbox add Geolocation
+
+	import { setContext } from 'svelte';
+	import { mapboxgl, key } from './mapboxgl.js';
+
+	import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+	import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+
+	import MapboxLanguage from '@mapbox/mapbox-gl-language';
+	const language = new MapboxLanguage();
+
+	const geocoder = new MapboxGeocoder({
+		accessToken: mapboxgl.accessToken,
+		mapboxgl: mapboxgl
+	});
+
+	setContext(key, {
+		getMap: () => map
+	});
+
+	let map;
+
+	function initMap(container) {
+		map = new mapboxgl.Map({
+			container: container, // container ID
+			// Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+			style: 'mapbox://styles/mapbox/streets-v12', // style URL
+			center: [6.6054765, 51.3395072], // starting position [lng, lat]  - TODO  Change to environment variable
+			zoom: 10 // starting zoom
+		});
+
+		// Add the search control to the map.
+		// TODO: display admin user language
+		map.addControl(language);
+
+		// Add the search control to the map.
+		// TODO: display admin user language
+		map.addControl(
+			new MapboxGeocoder({
+				accessToken: mapboxgl.accessToken,
+				mapboxgl: mapboxgl
+			})
+		);
+
+		map.on('load', () => {
+			// Create a default Marker and add it to the map.
+			//TODO: Mark postion is wrong & Change to environment variable
+			var marker = new mapboxgl.Marker().setLngLat([6.6054765, 51.3395072]).addTo(map);
+		});
+
+		// Add geolocate control to the map.
+		map.addControl(
+			new mapboxgl.GeolocateControl({
+				positionOptions: {
+					enableHighAccuracy: true
+				},
+				// When active the map will receive updates to the device's location as it changes.
+				trackUserLocation: true,
+				// Draw an arrow next to the location dot to indicate which direction the device is heading.
+				showUserHeading: true
+			})
+		);
+	}
 </script>
 
 <address>
-	<div class="mb-2 rounded-md bg-red-500 text-center  text-white">
-		<div class=" my-2 flex justify-between  gap-2 px-1 pt-1">
-			<input
-				required
-				type="text"
-				id="search"
-				name="search"
-				autocomplete="search"
-				placeholder={$LL.WIDGET_Address_SearchMap()}
-				class="rounded-md"
-			/>
-
+	<!-- TODO: MAP geocoding 
+		allow user to switch maps-->
+	Mapbox needs more work
+	<div use:initMap class="max-h-[550px] w-full">
+		<div class="mb-1 flex justify-between  gap-2 ">
 			<button class="btn btn-filled-primary btn-base rounded-md text-white"
 				><Icon icon="bi:map" width="16" class="mr-2 " />{$LL.WIDGET_Address_GetAddress()}</button
 			>
@@ -81,15 +120,6 @@
 				/>{$LL.WIDGET_Address_GetAddress()}</button
 			>
 		</div>
-		<!-- TODO: MAP Not working yet  -->
-		Mapbox not displaying yet
-		<Map
-			accessToken={env.MAPBOX_API_TOKEN}
-			bind:this={mapComponent}
-			on:recentre={(e) => console.log(e.detail.center.lat, e.detail.center.lng)}
-			on:ready={onReady}
-			options={{ scrollZoom: false }}
-		/>
 	</div>
 
 	<label for="name">{$LL.WIDGET_Address_Geocoordinates()}</label>
@@ -163,6 +193,14 @@
 			enterkeyhint="next"
 			class="rounded-md"
 		/>
+		<!-- <label for="country">Select a country</label>
+		<Svelecte
+			{selectedCountry}
+			inputId="country"
+			bind:readSelection={value}
+			bind:value
+			placeholder={$LL.WIDGET_Address_SearchCountry()}
+		/> -->
 
 		<!-- Dropdown Country with search -->
 		<label class="relative mt-3">
