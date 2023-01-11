@@ -1,6 +1,7 @@
 <script>
-	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
-	import '../app.css';
+	//import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
+	import '../Theme.postcss';
+	import '../app.postcss';
 
 	// Store for Languages
 	import { language } from '@src/stores/store';
