@@ -210,19 +210,19 @@
 				use:menu={{ menu: 'country' }}
 				id="country"
 				placeholder={$LL.WIDGET_Address_SearchCountry()}
-				class="btn btn-base relative w-full rounded-md bg-gray-300 pl-10 text-left text-white dark:bg-gray-600 "
+				class="btn btn-base relative w-full rounded-md bg-surface-300 pl-10 text-left text-white dark:bg-surface-600 "
 			/>
 
 			<Icon
 				icon="ic:baseline-search"
 				height="24"
-				class="absolute top-3 left-2 text-slate-500 dark:text-gray-400"
+				class="absolute top-3 left-2 text-slate-500 dark:text-surface-400"
 			/>
 			<nav
 				class="list-nav card absolute top-0 left-0 max-h-40 overflow-auto p-4 shadow-xl"
 				data-menu="country"
 			>
-				<ul class=" divide-y divide-gray-500">
+				<ul class=" divide-y divide-surface-500">
 					<!-- add system-language -->
 					{#each filteredCountries as country}
 						<li

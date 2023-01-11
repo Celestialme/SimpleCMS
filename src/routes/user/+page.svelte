@@ -17,5 +17,5 @@
 <div class="mb-8 flex flex-row gap-2">
 	<CMSLogo className="w-10" fill="red" />
 
-	<h1 class="text-3xl font-bold dark:text-red-500">SimpleCMS - {$LL.USER_Profile()}</h1>
+	<h1 class="text-3xl font-bold dark:text-error-500">SimpleCMS - {$LL.USER_Profile()}</h1>
 </div>

@@ -347,13 +347,15 @@
 	/>
 </div>
 
-<div class="dark:boder-white mt-2 border-y border-gray-500 dark:border-white dark:bg-transparent">
+<div
+	class="dark:boder-white mt-2 border-y border-surface-500 dark:border-white dark:bg-transparent"
+>
 	<h2 class="mb-1 pt-2 text-center text-2xl text-black underline dark:text-white">
-		{env.SiteNAME}
+		{env.SITENAME}
 		{$LL.WIDGET_Seo_Suggetion_SeoPreview()}
 	</h2>
-	<p class="text-md px-4 !text-gray-500">https://.....</p>
-	<h3 class="px-4 font-semibold text-blue-700">{title}</h3>
+	<p class="text-md px-4 !text-surface-500">https://.....</p>
+	<h3 class="px-4 font-semibold text-tertiary-700">{title}</h3>
 	<p class=" mb-2 px-4 pb-4 text-lg text-black">{description}</p>
 </div>
 
@@ -370,15 +372,20 @@
 		<div class="flex flex-col justify-start">
 			<div class="gap sm:flex sm:gap-4">
 				<div class="flex justify-center gap-2 ">
-					<Icon icon="mdi:close-octagon" color="red" width="24" />
+					<Icon icon="mdi:close-octagon" class="text-error-500" width="24" />
 					<span class="flex-auto">0 - 49</span>
 				</div>
 				<div class="flex justify-center gap-2">
-					<span><Icon icon="bi:hand-thumbs-up-fill" width="24" class="text-blue-500" /></span>
+					<span><Icon icon="bi:hand-thumbs-up-fill" width="24" class="text-tertiary-500" /></span>
 					<span class="flex-auto">50 - 79</span>
 				</div>
 				<div class="flex justify-center gap-2 ">
-					<span><Icon icon="material-symbols:check-circle-outline" color="green" width="24" /></span
+					<span
+						><Icon
+							icon="material-symbols:check-circle-outline"
+							class="text-success-500"
+							width="24"
+						/></span
 					>
 					<span class="flex-auto">80 - 100</span>
 				</div>
@@ -404,15 +411,20 @@
 				<h3 class="">{$LL.WIDGET_Seo_Suggetion_ListOfSuggestion()}</h3>
 
 				<div class="flex items-center gap-2">
-					<Icon icon="mdi:close-octagon" color="red" width="24" />
+					<Icon icon="mdi:close-octagon" class="text-error-500" width="24" />
 					<span class="flex-auto">0 - 49</span>
 				</div>
 				<div class="flex items-center gap-2">
-					<span><Icon icon="bi:hand-thumbs-up-fill" width="24" class="text-blue-500" /></span>
+					<span><Icon icon="bi:hand-thumbs-up-fill" width="24" class="text-tertiary-500" /></span>
 					<span class="flex-auto">50 - 79</span>
 				</div>
 				<div class="flex items-center gap-2">
-					<span><Icon icon="material-symbols:check-circle-outline" color="green" width="24" /></span
+					<span
+						><Icon
+							icon="material-symbols:check-circle-outline"
+							class="text-success-500"
+							width="24"
+						/></span
 					>
 					<span class="flex-auto">80 - 100</span>
 				</div>
@@ -429,11 +441,11 @@
 		<li class="flex items-start p-1">
 			<div class="mr-4 flex-none">
 				{#if suggestion.impact === 3}
-					<Icon icon="material-symbols:check-circle-outline" color="green" width="24" />
+					<Icon icon="material-symbols:check-circle-outline" class="text-success-500" width="24" />
 				{:else if suggestion.impact === 2}
-					<Icon icon="bi:hand-thumbs-up-fill" width="24" class="text-blue-500" />
+					<Icon icon="bi:hand-thumbs-up-fill" width="24" class="text-tertiary-500" />
 				{:else}
-					<Icon icon="mdi:close-octagon" color="red" width="24" />
+					<Icon icon="mdi:close-octagon" class="text-error-500" width="24" />
 				{/if}
 			</div>
 			<span class="flex-auto">{suggestion.text}</span>

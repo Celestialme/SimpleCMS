@@ -58,7 +58,9 @@
 </script>
 
 {#if !expanded}
-	<div class="flex items-center justify-center gap-1 rounded-lg bg-gray-200  dark:bg-gray-500">
+	<div
+		class="flex items-center justify-center gap-1 rounded-lg bg-surface-200  dark:bg-surface-500"
+	>
 		<p
 			on:click={async () => {
 				!dropDownData.length && (dropDownData = await find({}, field.relation));
@@ -80,7 +82,7 @@
 		<ToolTip
 			text={$LL.WIDGET_Relation_Edit()}
 			position="bottom"
-			class="bg-gray-500 text-black dark:text-white"
+			class="bg-surface-500 text-black dark:text-white"
 		/>
 		<button
 			on:click={() => {
@@ -92,7 +94,7 @@
 			<ToolTip
 				text={$LL.WIDGET_Relation_AddNew()}
 				position="bottom"
-				class="bg-gray-500 text-black dark:text-white"
+				class="bg-surface-500 text-black dark:text-white"
 			/></button
 		>
 	</div>

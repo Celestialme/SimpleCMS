@@ -7,10 +7,10 @@
 </script>
 
 {#if $page}
-	<main class="flex h-screen w-full flex-col items-center justify-center bg-gray-800">
+	<main class="flex h-screen w-full flex-col items-center justify-center bg-surface-800">
 		<SimpleCmsLogo fill="red" className="h-20" />
 		<h1 class=" mb-4 text-9xl font-extrabold tracking-widest text-white">{$page.status}</h1>
-		<div class="absolute rotate-12 rounded bg-red-600 px-2 text-sm text-white">
+		<div class="absolute rotate-12 rounded bg-error-600 px-2 text-sm text-white">
 			{$page.url}
 			{$LL.ERROR_Pagenotfound()}
 		</div>
@@ -23,7 +23,7 @@
 		<a
 			href="/"
 			data-sveltekit-preload-data="tap"
-			class="relative mt-5 block rounded-xl bg-gradient-to-br from-red-700 via-red-600 to-red-700 px-8 py-4 font-bold uppercase !text-white shadow-xl"
+			class="relative mt-5 block rounded-xl bg-gradient-to-br from-error-700 via-error-600 to-error-700 px-8 py-4 font-bold uppercase !text-white shadow-xl"
 			>{$LL.ERROR_GoHome()}</a
 		>
 	</main>

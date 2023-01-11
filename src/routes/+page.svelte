@@ -118,7 +118,7 @@
 					id="sidebarLeft"
 					in:fly={{ x: -200, duration: 500 }}
 					out:fly={{ x: -200, duration: 500 }}
-					class="+ mr-2 flex h-screen resize-x flex-col rounded-r-md bg-white px-2 shadow-xl dark:bg-gray-800 {switchSideBar
+					class="+ mr-2 flex h-screen resize-x flex-col rounded-r-md bg-white px-2 shadow-xl dark:bg-surface-800 {switchSideBar
 						? 'w-[225px]'
 						: 'w-[80px]'}"
 				>
@@ -126,7 +126,7 @@
 						<!-- hamburger -->
 						<div class="flex items-center md:hidden">
 							<button
-								class="btn btn-sm mt-2 -ml-2 "
+								class="btn btn-sm mt-2 -ml-2 text-white "
 								on:click={() => (toggleSideBar = !toggleSideBar)}
 							>
 								<span>
@@ -142,7 +142,7 @@
 
 					<!-- sidebar collapse button -->
 					<button
-						class="absolute top-2 -right-2 mr-1 rounded-full border-4 border-gray-300 text-gray-500 hover:cursor-pointer hover:bg-red-600 dark:border-gray-900 dark:text-white hover:dark:bg-black hover:dark:text-red-600"
+						class="absolute top-2 -right-2 mr-1 rounded-full border-4 border-surface-300 text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:border-surface-900 dark:text-white hover:dark:bg-black hover:dark:text-error-600"
 						on:click={() => (switchSideBar = !switchSideBar)}
 					>
 						{#if !switchSideBar}
@@ -167,13 +167,13 @@
 									on:keyup={updateFilter}
 									on:focus={() => (switchSideBar = !switchSideBar)}
 									placeholder={$LL.SBL_Search()}
-									class="relative z-10 h-10 w-10 cursor-pointer rounded-full border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-gray-600/50 dark:text-white md:mt-0 md:h-12"
+									class="relative z-10 h-10 w-10 cursor-pointer rounded-full border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-surface-600/50 dark:text-white md:mt-0 md:h-12"
 								/>
 							{:else}
 								<input
 									on:keyup={updateFilter}
 									placeholder={$LL.SBL_Search()}
-									class="relative z-10 h-10  w-full  cursor-pointer rounded-md border border-gray-700 bg-gray-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-gray-600/50 dark:text-white"
+									class="relative z-10 h-10  w-full cursor-pointer rounded-md border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-surface-600/50 dark:text-white"
 								/>
 							{/if}
 
@@ -207,17 +207,20 @@
 
 					{#if switchSideBar}
 						<!-- Sidebar left footer Desktop -->
-						<div class="mt-auto border-t border-gray-500 pt-2 ">
+						<div class="mt-auto border-t border-surface-500 pt-2 ">
 							<div class="my-1 flex items-center justify-between">
 								<a href="/user" class="flex-col">
 									<ToolTip
 										text={$LL.SBL_Admin_User()}
 										position="right"
-										class="bg-gray-500 text-black dark:text-white"
+										class="bg-surface-500 text-black dark:text-white"
 									/>
 
-									<Avatar src={avatarSrc || '/Default_User.svg'} class=" border border-gray-400" />
-									<div class="text-center text-[9px] text-gray-400 dark:text-white">
+									<Avatar
+										src={avatarSrc || '/Default_User.svg'}
+										class=" border border-surface-400"
+									/>
+									<div class="text-center text-[9px] text-surface-400 dark:text-white">
 										{$LL.SBL_Admin()}
 									</div>
 								</a>
@@ -226,18 +229,18 @@
 								<span class="relative">
 									<button
 										use:menu={{ menu: 'system-language' }}
-										class="text-gray-500 dark:text-white"
+										class="text-surface-500 dark:text-white"
 									>
 										<ToolTip
 											text={$LL.SBL_SystemLanguage()}
 											position="right"
-											class="bg-gray-500 text-black dark:text-white"
+											class="bg-surface-500 text-black dark:text-white"
 										/>Eng</button
 									>
 
 									<!-- Menu: set a matching 'data-menu-[menuId]' attribute -->
 									<nav
-										class="list-nav card w-40 bg-gray-500 p-2 shadow-xl dark:border"
+										class="list-nav card w-40 bg-surface-500 p-2 shadow-xl dark:border"
 										data-menu="system-language"
 									>
 										<ul class="divide-y-2">
@@ -253,7 +256,7 @@
 
 								<button
 									on:click={toggleTheme}
-									class="btn relative rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+									class="btn btn-sm relative rounded p-2.5 text-sm text-surface-500 hover:bg-surface-100 focus:outline-none focus:ring-4 focus:ring-surface-200 dark:text-surface-400 dark:hover:bg-surface-700 dark:focus:ring-surface-700"
 								>
 									{#if $is_dark}
 										<Icon icon="bi:sun" width="16" />
@@ -263,14 +266,14 @@
 									<ToolTip
 										position="right"
 										text={`Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`}
-										class="bg-gray-500 text-black dark:text-white"
+										class="bg-surface-500 text-black dark:text-white"
 									/>
 								</button>
 							</div>
 
 							<div class="flex justify-center p-1 pb-2">
 								<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-									<span class="badge badge-filled-primary"
+									<span class="badge badge-filled-primary rounded-xl"
 										>{$LL.SBL_Version()}: {env.PKG.VERSION}</span
 									>
 								</a>
@@ -279,36 +282,37 @@
 					{:else}
 						<!-- Sidebar left footer mobile -->
 						<div
-							class="absolute bottom-0 mt-2 flex-col border-t border-gray-500 pb-5 pt-2 text-center"
+							class="absolute bottom-0 mt-2 flex-col border-t border-surface-500 pb-5 pt-2 text-center"
 						>
 							<a href="/user" class="flex-col">
 								<ToolTip
 									text={$LL.SBL_Admin_User()}
 									position="right"
-									class="bg-gray-500 text-black dark:text-white"
+									class="bg-surface-500 text-black dark:text-white"
 								/>
 								<Avatar
 									src={avatarSrc || '/Default_User.svg'}
-									class="m-auto border border-gray-400"
+									class="m-auto border border-surface-400"
 								/>
-								<div class="text-[9px] text-gray-400 dark:text-white">{$LL.SBL_Admin()}</div>
+								<div class="text-[9px] text-surface-400 dark:text-white">{$LL.SBL_Admin()}</div>
 							</a>
 
 							<!-- System Language Mobile -->
 							<span class="relative">
 								<!-- Trigger: apply the 'use:menu' action and supply the unique menu ID -->
-								<button use:menu={{ menu: 'system-language' }} class="text-gray-500 dark:text-white"
-									>Eng</button
+								<button
+									use:menu={{ menu: 'system-language' }}
+									class="text-surface-500 dark:text-white">Eng</button
 								>
 								<ToolTip
 									text={$LL.SBL_SystemLanguage()}
 									position="right"
-									class="bg-gray-500 text-black dark:text-white"
+									class="bg-surface-500 text-black dark:text-white"
 								/>
 
 								<!-- Menu: set a matching 'data-menu-[menuId]' attribute -->
 								<nav
-									class="list-nav card w-40 bg-gray-500 p-2 shadow-xl dark:border"
+									class="list-nav card mt-2 w-40 bg-surface-500 p-2 shadow-xl dark:border"
 									data-menu="system-language"
 								>
 									<ul class="divide-y-2">
@@ -323,7 +327,7 @@
 							<div class="-ml-2">
 								<button
 									on:click={toggleTheme}
-									class="btn relative rounded-lg p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+									class="btn btn-sm relative rounded p-2.5 text-sm text-surface-500 hover:bg-surface-100 focus:outline-none focus:ring-4 focus:ring-surface-200 dark:text-surface-400 dark:hover:bg-surface-700 dark:focus:ring-surface-700"
 								>
 									{#if $is_dark}
 										<Icon icon="bi:sun" width="16" />
@@ -333,13 +337,15 @@
 									<ToolTip
 										position="right"
 										text={`Switch to ${$is_dark ? 'Light' : 'Dark'} Mode`}
-										class="bg-gray-500 text-black dark:text-white"
+										class="bg-surface-500 text-black dark:text-white"
 									/>
 								</button>
 							</div>
 
 							<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-								<span class="badge badge-filled-primary">{$LL.SBL_Ver()} {env.PKG.VERSION}</span>
+								<span class="badge badge-filled-primary mt-2 rounded-xl"
+									>{$LL.SBL_Ver()} {env.PKG.VERSION}</span
+								>
 							</a>
 						</div>
 					{/if}
@@ -365,17 +371,17 @@
 		{/if}
 		{#if showFields}
 			<div
-				class="fixed h-[65px] w-full border-b-2 border-gray-800 bg-white text-center shadow dark:border-white dark:bg-gray-800 md:relative md:h-full md:w-[200px] md:border-none md:px-2"
+				class="fixed h-[65px] w-full border-b-2 border-surface-800 bg-white text-center shadow dark:border-white dark:bg-surface-800 md:relative md:h-full md:w-[200px] md:border-none md:px-2"
 			>
 				<!-- Save button with progressbar -->
 				<button
 					on:click={() => submit()}
-					class="w-full max-w-[150px] rounded-lg bg-gradient-to-br from-lime-400 via-lime-500 to-lime-600 px-4 py-2 font-bold hover:bg-lime-500 focus:bg-lime-500 active:bg-lime-600 md:mt-2 md:max-w-[350px]"
+					class="w-full max-w-[150px] rounded-lg bg-gradient-to-br from-primary-400 via-primary-500 to-primary-600 px-4 py-2 font-bold hover:bg-primary-500 focus:bg-primary-500 active:bg-primary-600 md:mt-2 md:max-w-[350px]"
 				>
 					<ToolTip
 						position="right"
 						text="{$LL.SBL_Save()} {collection?.name}"
-						class="bg-gray-500 text-black dark:text-white"
+						class="bg-surface-500 text-black dark:text-white"
 					/>
 					<div class=" flex items-center justify-center text-xl uppercase">
 						<Icon icon="ph:floppy-disk-back" color="dark" width="30" class="mr-1" />
@@ -384,10 +390,10 @@
 					{#if required}
 						<!-- progress bar sidebar-->
 						<div
-							class="relative mx-auto mt-1 hidden h-2 w-[90%] rounded-full bg-gray-500 px-4 md:block"
+							class="relative mx-auto mt-1 hidden h-2 w-[90%] rounded-full bg-surface-500 px-4 md:block"
 						>
 							<div
-								class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-blue-500"
+								class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-tertiary-500"
 								style="width: 50%"
 							/>
 							<div
@@ -402,10 +408,10 @@
 				{#if required}
 					<!-- progress bar top -->
 					<div
-						class="relative mx-auto mt-1 h-2 w-[70%] max-w-[300px] rounded-full bg-gray-500 px-4 md:hidden"
+						class="relative mx-auto mt-1 h-2 w-[70%] max-w-[300px] rounded-full bg-surface-500 px-4 md:hidden"
 					>
 						<div
-							class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-blue-500"
+							class="absolute bottom-0 left-0 mt-4 h-2 w-full rounded bg-tertiary-500"
 							style="width: 50%"
 						/>
 						<div

@@ -35,7 +35,7 @@
 				{field.field.title}
 
 				{#if field.field.required}
-					<span class="ml-1 pb-3 text-red-500">*</span>
+					<span class="ml-1 pb-3 text-error-500">*</span>
 				{/if}
 			</p>
 
@@ -43,7 +43,7 @@
 				{#if field.field.localization}
 					<div class="flex items-center gap-1 px-2">
 						<Icon icon="bi:translate" color="dark" width="18" class="text-sm" />
-						<div class="text-xs font-normal text-red-500">{env.translations[$language]}</div>
+						<div class="text-xs font-normal text-error-500">{env.translations[$language]}</div>
 					</div>
 				{/if}
 				{#if field.field.icon}

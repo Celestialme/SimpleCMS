@@ -25,7 +25,6 @@
 	:global(html, body, body > div, .body) {
 		width: 100vw;
 		height: 100vh;
-		background-color: #3c3c3c;
 		overflow: hidden;
 	}
 </style>

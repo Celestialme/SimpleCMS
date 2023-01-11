@@ -48,7 +48,7 @@
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
 		}}
-		class="arrow tooltip_right relative h-[40px] cursor-pointer overflow-visible rounded-sm bg-gray-500 py-2 text-center last:mb-1"
+		class="arrow tooltip_right relative h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center last:mb-1"
 		class:arrow_up={expanded[index]}
 	>
 		<ToolTip position="right" text={item.category} active={!switchSideBar} />
@@ -66,7 +66,7 @@
 		<!-- Show Collection Group Childern -->
 		{#each item.collections as _collection}
 			<p
-				class="relative cursor-pointer border-b border-gray-400 bg-white p-0 text-center text-black last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-gray-600"
+				class="relative cursor-pointer border-b border-surface-200 bg-white p-0 text-center text-black last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400"
 				on:click={async () => {
 					fields = await shape_fields(_collection.fields);
 					category = item.category;
@@ -79,13 +79,13 @@
 						<Icon
 							icon={_collection.icon}
 							width="24"
-							class="absolute top-[50%] left-0 ml-2 -translate-y-[50%] text-red-700 "
+							class="absolute top-[50%] left-0 ml-2 -translate-y-[50%] text-error-600 "
 						/>
 						{_collection.name}
 					</div>
 				{:else}
 					<div class="flex flex-col py-1 ">
-						<Icon icon={_collection.icon} width="24" class="m-auto text-red-700 " />
+						<Icon icon={_collection.icon} width="24" class="m-auto text-error-600 " />
 						<div class="overflow-clip truncate text-clip text-[9px]">
 							{_collection.name}
 						</div>

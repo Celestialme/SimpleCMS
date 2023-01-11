@@ -39,7 +39,7 @@ let schema: Schema = {
 			},
 			fields: [
 				widgets.Text({
-					title: 'first',
+					title: 'First',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter First Name',
 					required: true,
@@ -48,7 +48,7 @@ let schema: Schema = {
 				}),
 
 				widgets.Text({
-					title: 'middle',
+					title: 'Middle',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Last Name',
 					required: false,
@@ -56,7 +56,7 @@ let schema: Schema = {
 					width: '70%'
 				}),
 				widgets.Text({
-					title: 'last',
+					title: 'Last',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Last Name',
 					required: false,

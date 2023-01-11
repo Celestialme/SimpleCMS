@@ -77,7 +77,7 @@
 			<CMSLogo className="w-10" fill="red" />
 
 			<h1 class="text-2xl font-bold text-white lg:text-3xl">
-				{env.SiteNAME}
+				{env.SITENAME}
 				{$LL.LOGIN_SignUp()}
 			</h1>
 		</div>
@@ -91,18 +91,18 @@
 					color={errorStatus.email.status ? 'red' : 'base'}
 					type="email"
 					name="floating_email"
-					class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+					class="border-surfce-300 text-surfce-900 peer block w-full appearance-none rounded-none border-0 border-b-2 !bg-transparent py-2.5 px-0 text-sm focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-600 dark:text-white dark:focus:border-tertiary-500"
 					placeholder=" "
 					required
 				/>
 				<label
 					for="floating_email"
-					class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
+					class="text-surfce-500 absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-tertiary-600 dark:text-surface-400 peer-focus:dark:text-tertiary-500"
 					>{$LL.LOGIN_EmailAddress()}</label
 				>
 
 				{#if errorStatus.email.status}
-					<div class="absolute top-11 left-0 text-xs text-red-500">{errorStatus.email.msg}</div>
+					<div class="absolute top-11 left-0 text-xs text-error-500">{errorStatus.email.msg}</div>
 				{/if}
 			</div>
 
@@ -120,7 +120,7 @@
 						name="floating_password"
 						autocomplete="current-password"
 						id="floating_password"
-						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-surface-300 !bg-transparent py-2.5 px-0 text-sm text-surface-900 focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-600 dark:text-white dark:focus:border-tertiary-500"
 						placeholder=" "
 						required
 					/>{:else}
@@ -132,13 +132,13 @@
 						name="floating_password"
 						autocomplete="current-password"
 						id="floating_password"
-						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-surface-300 !bg-transparent py-2.5 px-0 text-sm text-surface-900 focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-600 dark:text-white dark:focus:border-tertiary-500"
 						placeholder=" "
 						required
 					/>{/if}
 				<label
 					for="floating_password"
-					class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
+					class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-surface-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-tertiary-600 dark:text-surface-400 peer-focus:dark:text-tertiary-500"
 					>{$LL.LOGIN_Password()}</label
 				>
 
@@ -146,12 +146,14 @@
 					{#if showPassword}
 						<Icon icon="bi:eye-fill" color="base" width="24" />
 					{:else}
-						<Icon icon="bi:eye-slash-fill" color="gray" width="24" />
+						<Icon icon="bi:eye-slash-fill" class="text-surface-500" width="24" />
 					{/if}
 				</div>
 
 				{#if errorStatus.password.status}
-					<div class="absolute top-11 left-0 text-xs text-red-500">{errorStatus.password.msg}</div>
+					<div class="absolute top-11 left-0 text-xs text-error-500">
+						{errorStatus.password.msg}
+					</div>
 				{/if}
 			</div>
 
@@ -168,7 +170,7 @@
 						type="text"
 						name="repeat_password"
 						id="floating_repeat_password"
-						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-surface-300 !bg-transparent py-2.5 px-0 text-sm text-surface-900 focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-600 dark:text-white dark:focus:border-tertiary-500"
 						placeholder=" "
 						required
 					/>
@@ -180,13 +182,13 @@
 						type="password"
 						name="repeat_password"
 						id="floating_repeat_password"
-						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-gray-300 !bg-transparent py-2.5 px-0 text-sm text-gray-900 focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-600 dark:text-white dark:focus:border-blue-500"
+						class="peer block w-full appearance-none rounded-none border-0 border-b-2 border-surface-300 !bg-transparent py-2.5 px-0 text-sm text-surface-900 focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-600 dark:text-white dark:focus:border-tertiary-500"
 						placeholder=" "
 						required
 					/>{/if}
 				<label
 					for="floating_repeat_password"
-					class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-blue-600 dark:text-gray-400 peer-focus:dark:text-blue-500"
+					class="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm text-surface-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-tertiary-600 dark:text-surface-400 peer-focus:dark:text-tertiary-500"
 					>{$LL.LOGIN_ConfirmPassword()}</label
 				>
 
@@ -194,18 +196,18 @@
 					{#if showPassword}
 						<Icon icon="bi:eye-fill" color="base" width="24" />
 					{:else}
-						<Icon icon="bi:eye-slash-fill" color="gray" width="24" />
+						<Icon icon="bi:eye-slash-fill" class="text-surface-500" width="24" />
 					{/if}
 				</div>
 
 				{#if errorStatus.confirm.status}
-					<div class="absolute top-11 left-0 text-xs text-red-500">{errorStatus.confirm.msg}</div>
+					<div class="absolute top-11 left-0 text-xs text-error-500">{errorStatus.confirm.msg}</div>
 				{/if}
 			</div>
 		</form>
 
 		<!-- TODO Skeleton Css not working -->
-		<button on:click={signup} class="btn btn-sm mt-4 rounded-md  bg-white text-black"
+		<button on:click={signup} class="btn btn-sm mt-4 rounded-md bg-white text-black"
 			>{$LL.LOGIN_SignUp()}</button
 		>
 	</div>

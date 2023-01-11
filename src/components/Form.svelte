@@ -27,10 +27,12 @@
 	let open = false;
 </script>
 
-<div class="fields text-dark overflow-y-auto rounded bg-white p-3 dark:bg-gray-800 dark:text-white">
+<div
+	class="fields text-dark overflow-y-auto rounded bg-white p-3 dark:bg-surface-800 dark:text-white"
+>
 	<div class="relative mb-5 flex justify-start overflow-visible font-bold ">
 		<div class="flex w-full flex-col">
-			<div class="mb-2 text-sm capitalize text-gray-500 dark:text-gray-300">
+			<div class="mb-2 text-sm capitalize text-surface-400 dark:text-surface-300">
 				{$LL.FORM_Create()}
 			</div>
 			<div
@@ -43,7 +45,7 @@
 		<span class="absolute right-14">
 			<button
 				use:menu={{ menu: 'ContentLang' }}
-				class="btn btn-sm btn-filled-surface  flex items-center justify-center rounded-lg uppercase"
+				class="btn btn-sm btn-filled-surface flex items-center justify-center rounded-lg uppercase text-white"
 			>
 				<Icon icon="bi:translate" color="dark" width="22" class="mr-1 md:mr-1" />
 				{$language}
@@ -74,7 +76,7 @@
 			<ToolTip
 				text={$LL.FORM_CloseMenu()}
 				position="bottom"
-				class="bg-gray-500 text-black dark:text-white"
+				class="bg-surface-500 text-black dark:text-white"
 			/>
 			<span class="sr-only">{$LL.FORM_CloseMenu()}</span>
 			<Icon icon="material-symbols:close" width="26" />
@@ -91,14 +93,14 @@
 		<ToolTip
 			text={$LL.FORM_CloseMenu()}
 			position="bottom"
-			class="bg-gray-500 text-black dark:text-white"
+			class="bg-surface-500 text-black dark:text-white"
 		/>
 		<span class="sr-only">{$LL.FORM_CloseMenu()}</span>
 		<Icon icon="material-symbols:close" width="26" />
 	</button>
 
 	{#if fields.some((field) => field.field.required)}
-		<div class="text-md -mt-3 text-center text-red-500">* {$LL.FORM_Required()}</div>
+		<div class="text-md -mt-3 text-center text-error-500">* {$LL.FORM_Required()}</div>
 	{/if}
 	<Fields {collection} {fields} />
 </div>
