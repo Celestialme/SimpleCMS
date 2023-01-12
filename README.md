@@ -66,7 +66,8 @@ let env: {
 	// for Mapbox API - Only use one map Api
 	MAPBOX_API_TOKEN: "your api key here",
 
-	// for Goolge Map API - Only use one map Api
+	// for Goolge Cloud API
+	// Required for Google Maps & for Youtube
 	// GOOGLE_API_TOKEN: 'your api key here',
 
 	// for mongodb......for Atlas use DB_HOST:"mongodb+srv://XXXX",

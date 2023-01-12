@@ -7,7 +7,9 @@
 	//value is File when used inside imageArray, is dbObject when shown from entrylist.
 	export let value: any = {};
 	export let widgetValue: FileList;
+
 	$: console.log(widgetValue);
+
 	function setFile(node: HTMLInputElement) {
 		node.onchange = (e) => (widgetValue = (e.target as HTMLInputElement).files as FileList);
 		if (!value) return;
@@ -38,7 +40,7 @@
 	class="w-full cursor-pointer rounded-lg border border-surface-300 bg-surface-50 text-sm text-surface-900 focus:outline-none dark:border-surface-600 dark:bg-surface-700 dark:text-surface-400 dark:placeholder-surface-400"
 	type="file"
 />
-<!-- TODO:Add DropZone -->
+<!-- TODO: Add DropZone for better User experiance-->
 <FileDropzone />
 
 {#if widgetValue}

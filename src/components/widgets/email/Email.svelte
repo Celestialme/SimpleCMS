@@ -6,6 +6,7 @@
 	$: widgetValue = value;
 </script>
 
+<!-- TODO: validation of EMAIL -->
 <input
 	bind:value
 	type="email"

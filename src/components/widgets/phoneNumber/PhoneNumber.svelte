@@ -15,6 +15,7 @@
 	$: widgetValue = value;
 </script>
 
+<!-- TODO: validation number and display Country Code -->
 <TelInput
 	{country}
 	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}

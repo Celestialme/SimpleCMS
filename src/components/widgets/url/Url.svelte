@@ -6,6 +6,7 @@
 	$: widgetValue = value;
 </script>
 
+<!-- TODO:Add URL validation -->
 <input
 	bind:value
 	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}

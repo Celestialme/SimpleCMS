@@ -16,6 +16,7 @@ import Group from './group';
 import SelectList from './selectList';
 import Address from './address';
 import Seo from './seo';
+import Youtube from './youtube';
 
 export type Widgets = {
 	Address: typeof Address;
@@ -36,6 +37,7 @@ export type Widgets = {
 	Text: typeof Text;
 	Url: typeof Url;
 	Seo: typeof Seo;
+	Youtube: typeof Youtube;
 };
 
 let widgets: Widgets = {
@@ -96,6 +98,8 @@ let widgets: Widgets = {
 	// Upload - allows local file and image upload
 	//Upload
 	// Url - Link to internal / External hyperlinks
-	Url
+	Url,
+	// Youtube - Url to youtube video, grabbing Thumbnail and video information
+	Youtube
 } as const;
 export default widgets;

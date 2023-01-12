@@ -46,15 +46,16 @@
 	}
 
 	// Function to analyze the title and  description
-	let count = 0;
+	let score = 0;
+
+	// Display correct Radialdial score based on 3 points per function
 	let progress = 0;
-	$: progress = (count / 8) * 100;
+	$: progress = Math.round((score / (9 * 3)) * 100);
 
 	let suggestions = analyze(title, description);
 
 	function analyze(title: string, description: string) {
 		let suggestions: any = [];
-		// console.log(count);
 
 		// Check if the title is more than 50 characters
 		if (title.length > 50) {
@@ -62,7 +63,7 @@
 				text: $LL.WIDGET_Seo_Suggetion_TitlePerfect(),
 				impact: 3
 			});
-			count += 3;
+			score += 3;
 		}
 		// Check if the title is more than 30 characters
 		else if (title.length > 30) {
@@ -70,7 +71,7 @@
 				text: $LL.WIDGET_Seo_Suggetion_TitleGood(),
 				impact: 2
 			});
-			count += 2;
+			score += 2;
 		}
 		// Otherwise, the title is less than 30 characters
 		else {
@@ -78,7 +79,7 @@
 				text: $LL.WIDGET_Seo_Suggetion_TitleBad(),
 				impact: 1
 			});
-			count += 1;
+			score += 1;
 		}
 
 		// Check if the description is between 120 and 165 characters
@@ -87,7 +88,7 @@
 				text: $LL.WIDGET_Seo_Suggetion_DescriptionPerfect(),
 				impact: 3
 			});
-			count += 3;
+			score += 3;
 		}
 		// Check if the description is more than 90 characters
 		else if (description.length > 90) {
@@ -95,7 +96,7 @@
 				text: $LL.WIDGET_Seo_Suggetion_DescriptionGood(),
 				impact: 2
 			});
-			count += 2;
+			score += 2;
 		}
 		// Otherwise, the description is less than 90 characters
 		else {
@@ -103,7 +104,7 @@
 				text: $LL.WIDGET_Seo_Suggetion_DescriptionBad(),
 				impact: 1
 			});
-			count += 1;
+			score += 1;
 		}
 
 		// Check if the meta description is 2 to 4 sentences long
@@ -113,13 +114,13 @@
 				text: $LL.WIDGET_Seo_Suggetion_SentencePerfect(),
 				impact: 3
 			});
-			count += 3;
+			score += 3;
 		} else {
 			suggestions.push({
 				text: $LL.WIDGET_Seo_Suggetion_SentenceBad(),
 				impact: 1
 			});
-			count += 1;
+			score += 1;
 		}
 
 		// Check if the title uses numbers
@@ -128,13 +129,13 @@
 				text: $LL.WIDGET_Seo_Suggetion_NumberPerfect(),
 				impact: 3
 			});
-			count += 3;
+			score += 3;
 		} else {
 			suggestions.push({
 				text: $LL.WIDGET_Seo_Suggetion_NumberBad(),
 				impact: 1
 			});
-			count += 1;
+			score += 1;
 		}
 
 		// Check if the title has a power word
@@ -208,7 +209,7 @@
 					// text: `Your title has the Power Word ${word}. Perfect!`,
 					impact: 3
 				});
-				count += 3;
+				score += 3;
 				break;
 			}
 		}
@@ -222,7 +223,7 @@
 					// text: `Your description uses the Power Word ${word}. Perfect!`,
 					impact: 3
 				});
-				count += 3;
+				score += 3;
 				break;
 			}
 		}
@@ -257,7 +258,7 @@
 					// text: `Your title has the CTA keyword "${keyword}". Good!`,
 					impact: 3
 				});
-				count += 3;
+				score += 3;
 				break;
 			}
 		}
@@ -271,10 +272,11 @@
 					// text: `Your description uses the CTA keyword "${keyword}". Good!`,
 					impact: 3
 				});
-				count += 3;
+				score += 3;
 				break;
 			}
 		}
+		console.log(score);
 
 		return suggestions;
 	}

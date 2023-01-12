@@ -12,6 +12,6 @@
 	shape_fields(field.fields).then((data) => (fields = data));
 </script>
 
-<div class="flex flex-wrap   justify-between">
+<div class="flex flex-wrap  justify-between">
 	<Fields {collection} {fields} bind:fieldsValue={_fieldsValue} {value} />
 </div>

@@ -1,5 +1,5 @@
 import type { Display } from '../types';
-import type { Url_Params, Url_Field } from './types';
+import type { Youtube_Params, Youtube_Field } from './types';
 
 export default ({
 	// Accept parameters from collection
@@ -7,9 +7,8 @@ export default ({
 	icon,
 	placeholder,
 	required,
-	localization,
 	display
-}: Url_Params) => {
+}: Youtube_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
 	let field = {
@@ -18,15 +17,14 @@ export default ({
 		icon,
 		placeholder,
 		required,
-		localization,
 		display
-	} as Url_Field;
+	} as Youtube_Field;
 
 	field.schema[title] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore
-		return (await import('./Url.svelte')).default;
+		return (await import('./Youtube.svelte')).default;
 	};
 	return field;
 };

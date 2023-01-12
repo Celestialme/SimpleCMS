@@ -6,6 +6,7 @@
 	$: widgetValue = value;
 </script>
 
+<!-- TODO:Add Number validation & Int.Number Formating(typesave-i18n?) -->
 <input
 	bind:value
 	type="number"

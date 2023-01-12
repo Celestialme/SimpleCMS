@@ -119,6 +119,11 @@ let schema: Schema = {
 
 		widgets.Address({ title: 'Address' }),
 
+		widgets.Date({ title: 'Date' }),
+
+		// isse with dayjs
+		// widgets.DateRange({ title: 'DateRange' }),
+
 		widgets.Url({
 			title: 'url',
 			icon: 'carbon:character-whole-number',
