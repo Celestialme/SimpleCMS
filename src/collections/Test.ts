@@ -125,11 +125,18 @@ let schema: Schema = {
 		// widgets.DateRange({ title: 'DateRange' }),
 
 		widgets.Url({
-			title: 'url',
+			title: 'Url',
 			icon: 'carbon:character-whole-number',
 			placeholder: 'Enter Website',
 			required: true,
 			localization: true
+		}),
+
+		widgets.Youtube({
+			title: 'Youtube',
+			icon: 'bi:youtube',
+			placeholder: 'Enter Youtube URL',
+			required: true
 		}),
 
 		widgets.Seo({

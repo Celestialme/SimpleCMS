@@ -1,5 +1,7 @@
 export let DB = {};
 
+// takes an array of fields and creates a schema by combining
+// each field's individual schema and deleting the "widget" property.
 export let fieldsToSchema = (fields: Array<any>) => {
 	let schema: any = {};
 	for (let field of fields) {
@@ -14,6 +16,9 @@ import fs from 'fs';
 import schemas from '../collections';
 import type { Schema } from '../collections/types';
 import env from '../../env';
+
+// takes in a "req" object and processes any files associated with the request,
+// it saves them to a specified file path using the "fs" library.
 export function saveFiles(req: any) {
 	let files: any = {};
 	let schema = schemas.find((schema) => schema.name === req.params.endpoint);
@@ -30,6 +35,8 @@ export function saveFiles(req: any) {
 	}
 	return files;
 }
+
+// finds field title that matches the fieldname and returns that field
 function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
 	for (let field of schema.fields) {
 		if (field.title == fieldname) {
@@ -46,6 +53,7 @@ function _findFieldByTitle(schema: any, fieldname: string, found = { val: false 
 	}
 }
 
+// takes an object and recursively parses any values that can be converted to JSON
 export function parse(obj: any) {
 	for (let key in obj) {
 		try {
@@ -65,6 +73,7 @@ export function parse(obj: any) {
 	return obj;
 }
 
+// find a specific document in a specified collection by ID
 export async function findById(id: string, collection: Schema) {
 	if (!id || !collection) return;
 	return (
@@ -72,6 +81,7 @@ export async function findById(id: string, collection: Schema) {
 	).data;
 }
 
+// find a specific document in a specified collection
 export async function find(query: object, collection: Schema) {
 	let _query = JSON.stringify(query);
 	return (
@@ -81,12 +91,14 @@ export async function find(query: object, collection: Schema) {
 	).data;
 }
 
+// exports an object with a "Content-Type" of "multipart/form-data"
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
 	}
 };
 
+// takes an array of objects and creates an HTML string.
 export function format(
 	value: Array<{
 		label?: string;
@@ -108,6 +120,7 @@ export function format(
 	return html;
 }
 
+// iterates over each key, it checks the type of the value of the current key in the specified language
 export function flattenData(data: any, language: string) {
 	if (!data) return [];
 	return Object.keys(data).reduce((acc: any, x) => {

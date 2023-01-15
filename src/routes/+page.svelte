@@ -152,10 +152,12 @@
 						{/if}
 					</button>
 
-					<a href="/" class="1 mt-2 flex cursor-pointer items-center justify-start">
+					<a href="/" class="1 mt-2 flex cursor-pointer items-center justify-start !no-underline ">
 						<SimpleCmsLogo fill="red" className="h-8 ml-[10px] " />
 						{#if switchSideBar}
-							<span class="ml-2 mt-1 text-2xl font-bold text-black dark:text-white">SimpleCMS</span>
+							<span class="ml-2 mt-1 text-2xl font-bold text-black dark:text-white"
+								>{env.SITENAME}</span
+							>
 						{/if}
 					</a>
 
@@ -273,7 +275,7 @@
 
 							<div class="flex justify-center p-1 pb-2">
 								<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-									<span class="badge badge-filled-primary rounded-xl"
+									<span class="badge badge-filled-primary rounded-xl text-black"
 										>{$LL.SBL_Version()}: {env.PKG.VERSION}</span
 									>
 								</a>
@@ -343,7 +345,7 @@
 							</div>
 
 							<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-								<span class="badge badge-filled-primary mt-2 rounded-xl"
+								<span class="badge badge-filled-primary mt-2 rounded-xl text-black"
 									>{$LL.SBL_Ver()} {env.PKG.VERSION}</span
 								>
 							</a>

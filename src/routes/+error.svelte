@@ -7,7 +7,9 @@
 </script>
 
 {#if $page}
-	<main class="flex h-screen w-full flex-col items-center justify-center bg-surface-800">
+	<main
+		class="flex h-screen w-full flex-col items-center justify-center bg-gradient-to-t from-surface-900 via-surface-700 to-surface-900"
+	>
 		<SimpleCmsLogo fill="red" className="h-20" />
 		<h1 class=" mb-4 text-9xl font-extrabold tracking-widest text-white">{$page.status}</h1>
 		<div class="absolute rotate-12 rounded bg-error-600 px-2 text-sm text-white">
