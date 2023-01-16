@@ -1,27 +1,19 @@
 <script lang="ts">
-	import dayjs from 'dayjs';
-	import { Datepicker } from 'svelte-calendar';
-
-	// TODO: Allow User/System to define Date formate
-	let format = 'ddd, MMMM D, YYYY';
+	import { date } from 'typesafe-i18n/formatters';
+	import { language } from '@src/stores/store';
 
 	export let field: any = undefined;
 	export let value = '';
 
 	export let widgetValue;
 	$: widgetValue = value;
+
+	// TODO: Allow User/System to define Date formate
+	let format = 'ddd, MMMM D, YYYY';
+
+	// Use the language variable to determine the desired date format
+	//$: format = date.formats[language];
 </script>
 
 <!-- TODO: Enhance Date entry -->
-<!-- <Datepicker bind:store let:key let:send let:receive>
-	<button in:receive|local={{ key }} out:send|local={{ key }}>
-		{#if $store?.hasChosen}
-			{dayjs($store.selected).format('ddd MMM D, YYYY')}
-		{:else}
-			Pick a Date
-		{/if}
-	</button>
-</Datepicker> -->
-
-<Datepicker {format} />
-<input type="date" bind:value={format} class="rounded-md" />
+<input type="date" bind:value class="rounded-md" />

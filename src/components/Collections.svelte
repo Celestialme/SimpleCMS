@@ -48,7 +48,7 @@
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
 		}}
-		class="arrow tooltip_right relative h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center last:mb-1"
+		class="arrow tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center"
 		class:arrow_up={expanded[index]}
 	>
 		<ToolTip position="right" text={item.category} active={!switchSideBar} />

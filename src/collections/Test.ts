@@ -8,7 +8,7 @@ let schema: Schema = {
 	// See for possible Icons https://icon-sets.iconify.design/
 	name: 'Test Widgets',
 	icon: 'bi:device-ssd-fill',
-	status:"published",
+	status: 'published',
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [
@@ -18,20 +18,15 @@ let schema: Schema = {
 				return format([
 					{
 						label: 'Prefix',
-						text: entry.prefix,
+						text: entry.Prefix,
 						newLine: true // not working
 					},
 					{
 						label: 'Name',
-						text: entry.first
+						text: entry.First
 					},
 					{
-						text: entry.middle,
-						labelColor: 'red',
-						textColor: 'yellow'
-					},
-					{
-						text: entry.last,
+						text: entry.Last,
 						labelColor: 'blue',
 						textColor: 'green',
 						newLine: true // not working
@@ -108,9 +103,9 @@ let schema: Schema = {
 		widgets.Group({
 			db_fieldName: 'Test 2nd Group',
 			fields: [
-				widgets.Radio({ db_fieldName: 'Radio', color: 'red', required: true,width:"50%" }),
+				widgets.Radio({ db_fieldName: 'Radio', color: 'red', required: true, width: '50%' }),
 
-				widgets.Checkbox({ db_fieldName: 'Checkbox', color: 'green',width:"50%", required: true })
+				widgets.Checkbox({ db_fieldName: 'Checkbox', color: 'green', width: '50%', required: true })
 			]
 		}),
 
