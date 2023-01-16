@@ -3,7 +3,7 @@ import type { Display } from '../types';
 export type Radio_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
-	title: string;
+	db_fieldName: string;
 	icon: string | undefined;
 	color: string | undefined;
 	width: string | undefined;
@@ -11,7 +11,7 @@ export type Radio_Field = {
 	display: Display;
 };
 export type Radio_Params = {
-	title: string;
+	db_fieldName: string;
 	icon?: string;
 	color?: string;
 	width?: string;

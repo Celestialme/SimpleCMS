@@ -254,7 +254,7 @@
 						on:click={() => {
 							showFields = true;
 						}}
-						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 px-2 py-2 text-xl font-bold text-black md:ml-auto md:w-[150px]"
+						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 px-2 py-2 text-xl font-bold text-black md:ml-auto md:w-[150px]"
 					>
 						<ToolTip
 							text="{$LL.ENTITYLIST_Create()} {collection.name}"
@@ -281,7 +281,7 @@
 					</button>
 				{:else if entryButton == 'unpublish'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-warning-600 via-warning-500 to-warning-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-warning-600 via-warning-500 to-warning-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							unpublishEntry();
 						}}
@@ -295,7 +295,7 @@
 					</button>
 				{:else if entryButton == 'schedule'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-pink-700 via-pink-500 to-pink-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-pink-700 via-pink-500 to-pink-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							scheduleEntry();
 						}}
@@ -309,7 +309,7 @@
 					</button>
 				{:else if entryButton == 'clone'}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-surface-500 via-surface-400 to-surface-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-surface-500 via-surface-400 to-surface-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							cloneEntry();
 						}}
@@ -323,7 +323,7 @@
 					</button>
 				{:else if entryButton == 'delete' || deleteMode}
 					<button
-						class="flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-error-600 via-error-500 to-error-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-error-600 via-error-500 to-error-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							deleteEntry();
 						}}
@@ -453,7 +453,7 @@
 								}}
 								class="flex items-center justify-start gap-1"
 							>
-								{field.title}
+								{field.db_fieldName}
 
 								<!-- {#if (sort = field.name)} -->
 								{#if !sort}
@@ -495,11 +495,11 @@
 						{#key $language}
 							{#each collection.fields as field}
 								{((tmp_entry = flattenData(entry, $language)), '')}
-								{#await field?.display?.(tmp_entry[field.title], field, tmp_entry)}
+								{#await field?.display?.(tmp_entry[field.db_fieldName], field, tmp_entry)}
 									<td class="">{$LL.ENTITYLIST_Loading()}</td>
 								{:then display}
 									{((entry.displays = {}), '')}
-									<td class="">{@html (entry.displays[field.title] = display)}</td>
+									<td class="">{@html (entry.displays[field.db_fieldName] = display)}</td>
 								{/await}
 							{/each}
 						{/key}

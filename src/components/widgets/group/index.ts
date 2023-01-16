@@ -1,7 +1,7 @@
 import type { Display } from '../types';
 import type { Group_Field, Group_Params } from './type';
-let widget = ({ title, fields, required, display }: Group_Params) => {
-	let field = { schema: {}, title, fields, required, display } as Group_Field;
+let widget = ({ db_fieldName, fields, required, display }: Group_Params) => {
+	let field = { schema: {}, db_fieldName, fields, required, display } as Group_Field;
 
 	field.widget = async () => {
 		// @ts-ignore

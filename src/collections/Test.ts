@@ -8,12 +8,12 @@ let schema: Schema = {
 	// See for possible Icons https://icon-sets.iconify.design/
 	name: 'Test Widgets',
 	icon: 'bi:device-ssd-fill',
-
+	status:"published",
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [
 		widgets.Group({
-			title: 'User',
+			db_fieldName: 'User',
 			display: async (data: any, field: any, entry: any) => {
 				return format([
 					{
@@ -40,7 +40,7 @@ let schema: Schema = {
 			},
 			fields: [
 				widgets.SelectList({
-					title: 'Prefix',
+					db_fieldName: 'Prefix',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Prefix',
 					width: '100%'
@@ -48,7 +48,7 @@ let schema: Schema = {
 				}),
 
 				widgets.Text({
-					title: 'First',
+					db_fieldName: 'First',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter First Name',
 					required: true,
@@ -56,7 +56,7 @@ let schema: Schema = {
 				}),
 
 				widgets.Text({
-					title: 'Middle',
+					db_fieldName: 'Middle',
 					icon: 'ri:t-box-line',
 					placeholder: 'Middle  (ReadOnly)',
 					required: false,
@@ -65,7 +65,7 @@ let schema: Schema = {
 				}),
 
 				widgets.Text({
-					title: 'Last',
+					db_fieldName: 'Last',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Last Name',
 					required: true,
@@ -75,7 +75,7 @@ let schema: Schema = {
 		}),
 
 		widgets.Text({
-			title: 'Full Text option',
+			db_fieldName: 'Full Text option',
 			icon: 'carbon:character-whole-number',
 			prefix: '€',
 			suffix: 'cent',
@@ -88,44 +88,43 @@ let schema: Schema = {
 		}),
 
 		widgets.Email({
-			title: 'Email',
+			db_fieldName: 'Email',
 			icon: 'carbon:character-whole-number',
 			placeholder: 'Enter Email',
 			required: true
 		}),
 		widgets.Number({
-			title: 'Number',
+			db_fieldName: 'Number',
 			icon: 'carbon:character-whole-number',
 			required: true
 		}),
 
 		widgets.PhoneNumber({
-			title: 'Phone Number',
+			db_fieldName: 'Phone Number',
 			icon: 'material-symbols:perm-phone-msg',
 			required: true
 		}),
 
 		widgets.Group({
-			title: 'Test 2nd Group',
-
+			db_fieldName: 'Test 2nd Group',
 			fields: [
-				widgets.Radio({ title: 'Radio', color: 'red', required: true,width:"50%" }),
+				widgets.Radio({ db_fieldName: 'Radio', color: 'red', required: true,width:"50%" }),
 
-				widgets.Checkbox({ title: 'Checkbox', color: 'green',width:"50%", required: true })
+				widgets.Checkbox({ db_fieldName: 'Checkbox', color: 'green',width:"50%", required: true })
 			]
 		}),
 
-		widgets.RichText({ title: 'Description' }),
+		widgets.RichText({ db_fieldName: 'Description' }),
 
-		widgets.Address({ title: 'Address' }),
+		widgets.Address({ db_fieldName: 'Address' }),
 
-		widgets.Date({ title: 'Date' }),
+		widgets.Date({ db_fieldName: 'Date' }),
 
 		// isse with dayjs
 		// widgets.DateRange({ title: 'DateRange' }),
 
 		widgets.Url({
-			title: 'Url',
+			db_fieldName: 'Url',
 			icon: 'carbon:character-whole-number',
 			placeholder: 'Enter Website',
 			required: true,
@@ -133,14 +132,14 @@ let schema: Schema = {
 		}),
 
 		widgets.Youtube({
-			title: 'Youtube',
+			db_fieldName: 'Youtube',
 			icon: 'bi:youtube',
 			placeholder: 'Enter Youtube URL',
 			required: true
 		}),
 
 		widgets.Seo({
-			title: 'Basic Seo',
+			db_fieldName: 'Basic Seo',
 			icon: 'icon-park-outline:seo',
 			localization: true,
 			required: true
@@ -149,5 +148,5 @@ let schema: Schema = {
 };
 export default schema;
 
-// widgets.DateRange({ title: "DateRange Not working", required: true }),
-// widgets.Date({ title: "DateNot working", required: true }),
+// widgets.DateRange({ db_fieldName: "DateRange Not working", required: true }),
+// widgets.Date({ db_fieldName: "DateNot working", required: true }),

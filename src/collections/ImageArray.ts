@@ -7,21 +7,22 @@ let schema: Schema = {
 	// collection Name and Icon
 	name: 'Image Array',
 	icon: 'bi:images',
-
+	status:"published",
 	// collection fields from available widgets
 	fields: [
 		widgets.ImageArray({
-			title: 'ImageArray',
+			db_fieldName: 'ImageArray',
 			imageUploadTitle: 'Multi Image Array',
 			fields: [
-				widgets.ImageUpload({ title: 'Multi Image Array', path: 'media/image_array' }),
+				widgets.ImageUpload({ db_fieldName: 'Multi Image Array', path: 'media/image_array' }),
 
-				widgets.Text({ title: 'Name', icon: 'ri:t-box-line', localization: true }),
-				widgets.Text({ title: 'Alt-Text', icon: 'ic:outline-loyalty', localization: true }),
-				widgets.Text({ title: 'Alt-Title', icon: 'ri:t-box-line', localization: true }),
+				widgets.Text({ db_fieldName: 'Name', icon: 'ri:t-box-line', localization: true }),
+				widgets.Text({ db_fieldName: 'Alt-Text', icon: 'ic:outline-loyalty', localization: true }),
+				widgets.Text({ db_fieldName: 'Alt-Title', icon: 'ri:t-box-line', localization: true }),
 
 				widgets.Relation({
-					title: 'Relation to Posts',
+					
+					db_fieldName: 'Relation to Posts',
 					icon: 'mdi:relation-many-to-one',
 					relation: Posts,
 					display: async (data: any, field: any, entry: any) => {

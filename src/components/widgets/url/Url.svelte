@@ -9,7 +9,7 @@
 <!-- TODO:Add URL validation -->
 <input
 	bind:value
-	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}
+	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.db_fieldName}
 	type="url"
 	id="website"
 	autocomplete="off"

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Field } from './types';
+	import type { ImageArray_Field } from './types';
 	import Fields from '@src/components/Fields.svelte';
 	import { saveSimpleData, shape_fields } from '@src/utils/utils_svelte';
 	import { entryData } from '@src/stores/store';
@@ -7,7 +7,7 @@
 	// Skeleton
 	import { FileDropzone } from '@skeletonlabs/skeleton';
 
-	export let field: Field;
+	export let field: ImageArray_Field;
 	export let collection: any;
 	// export let value: any;
 
@@ -48,7 +48,7 @@
 {:else}
 	<input
 		bind:files
-		name={field.title}
+		name={field.db_fieldName}
 		multiple
 		class="block w-full cursor-pointer rounded-lg border border-surface-300 bg-surface-50 text-sm text-surface-900 focus:outline-none dark:border-surface-600 dark:bg-surface-700 dark:text-surface-400 dark:placeholder-surface-400"
 		type="file"

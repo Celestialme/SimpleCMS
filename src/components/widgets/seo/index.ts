@@ -2,7 +2,7 @@ import type { Seo_Field, Seo_Params } from './types';
 
 let widget = ({
 	// accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	required,
 	localization,
@@ -14,14 +14,14 @@ let widget = ({
 		};
 	let field = {
 		schema: {},
-		title,
+		db_fieldName,
 		icon,
 		required,
 		localization,
 		display
 	} as Seo_Field;
 
-	field.schema[title] = { String: String };
+	field.schema[db_fieldName] = { String: String };
 
 	field.widget = async () => {
 		// @ts-ignore

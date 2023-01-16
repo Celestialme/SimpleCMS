@@ -3,7 +3,7 @@ import type { Display } from '../types';
 export type Text_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
-	title: string;
+	db_fieldName: string;
 	icon: string | undefined;
 	placeholder: string | undefined;
 	count: string | undefined;
@@ -18,7 +18,7 @@ export type Text_Field = {
 	display: Display;
 };
 export type Text_Params = {
-	title: string;
+	db_fieldName: string;
 	icon?: string;
 	placeholder?: string;
 	count?: string;

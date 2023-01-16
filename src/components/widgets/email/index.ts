@@ -3,7 +3,7 @@ import type { Email_Field, Email_Params } from "./type";
 
 let widget = ({
 	// Accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	placeholder,
 	required,
@@ -12,9 +12,9 @@ let widget = ({
 }: Email_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field  = { schema: {}, title, icon, placeholder, required, localization, display } as Email_Field;
+	let field  = { schema: {}, db_fieldName, icon, placeholder, required, localization, display } as Email_Field;
 
-	field.schema[title] = "string";
+	field.schema[db_fieldName] = "string";
 
 	field.widget = async () => {
 		// @ts-ignore

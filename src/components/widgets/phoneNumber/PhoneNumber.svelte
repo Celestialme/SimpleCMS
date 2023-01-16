@@ -18,7 +18,7 @@
 <!-- TODO: validation number and display Country Code -->
 <TelInput
 	{country}
-	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}
+	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.db_fieldName}
 	bind:value
 	class="rounded-md"
 />

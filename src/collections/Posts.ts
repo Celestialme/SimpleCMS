@@ -9,28 +9,29 @@ let schema: Schema = {
 	// See for possible Icons https://icon-sets.iconify.design/
 	name: 'Posts',
 	icon: 'bi:card-text',
-
+	status:"published",
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [
 		widgets.Group({
-			title: 'User',
+			db_fieldName: 'User',
 			display: async (data: any, field: any, entry: any) => {
+				console.log(entry)
 				return format([
 					{
 						label: 'Name',
-						text: entry.first,
+						text: entry.First,
 
 						newLine: true
 					},
 					{
-						text: entry.middle,
+						text: entry.Middle,
 						labelColor: 'blue',
 						textColor: 'yellow',
 						newLine: false
 					},
 					{
-						text: entry.last,
+						text: entry.Last,
 						labelColor: 'blue',
 						textColor: 'green',
 						newLine: false
@@ -39,7 +40,7 @@ let schema: Schema = {
 			},
 			fields: [
 				widgets.Text({
-					title: 'First',
+					db_fieldName: 'First',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter First Name',
 					required: true,
@@ -48,7 +49,7 @@ let schema: Schema = {
 				}),
 
 				widgets.Text({
-					title: 'Middle',
+					db_fieldName: 'Middle',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Last Name',
 					required: false,
@@ -56,7 +57,7 @@ let schema: Schema = {
 					width: '70%'
 				}),
 				widgets.Text({
-					title: 'Last',
+					db_fieldName: 'Last',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Last Name',
 					required: false,
@@ -68,5 +69,5 @@ let schema: Schema = {
 };
 export default schema;
 
-// widgets.DateRange({ title: "DateRange Not working", required: true }),
-// widgets.Date({ title: "DateNot working", required: true }),
+// widgets.DateRange({ db_fieldName: "DateRange Not working", required: true }),
+// widgets.Date({ db_fieldName: "DateNot working", required: true }),

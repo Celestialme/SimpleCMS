@@ -3,7 +3,7 @@ import type { Display } from '../types';
 export type Email_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
-    title: string;
+    db_fieldName: string;
     icon: string | undefined;
     placeholder: string | undefined;
     required: boolean | undefined;
@@ -12,7 +12,7 @@ export type Email_Field = {
 };
 export type Email_Params = {
 	// Defines type of collections
-	title: string;
+	db_fieldName: string;
 	icon?: string;
 	placeholder?: string;
 	required?: boolean;

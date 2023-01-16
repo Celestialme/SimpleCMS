@@ -1,12 +1,12 @@
 import type { Display } from '../types';
 
 let widget =  ({
-	title,
+	db_fieldName,
 	required,
 	localization,
 	display
 }: {
-	title: string;
+	db_fieldName: string;
 	required?: boolean;
 	localization?: boolean;
 	display?: Display;
@@ -14,12 +14,12 @@ let widget =  ({
 	if (!display) display = (data: any, field: any, entry: any) => data;
 	let field: any = {
 		schema: {},
-		title,
+		db_fieldName,
 		required,
 		localization,
 		display
 	};
-	field.schema[title] = 'string';
+	field.schema[db_fieldName] = 'string';
 	field.widget = async () => {
 		// @ts-ignore
 		return (await import('./RichText.svelte')).default;

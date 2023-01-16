@@ -3,7 +3,7 @@ import type { Display } from "../types";
 
 export type Relation_Params={
 	// Defines type of collections
-	title: string;
+	db_fieldName: string;
 	icon?: string;
 	required?: boolean;
 	relation: Schema;
@@ -14,7 +14,7 @@ export type Relation_Params={
 export type Relation_Field ={
     widget: () => {};
     schema: {[Key: string]: any};
-    title: string;
+    db_fieldName: string;
     icon: string | undefined;
     strict: boolean;
     required: boolean | undefined;

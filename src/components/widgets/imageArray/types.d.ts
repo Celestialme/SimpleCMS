@@ -3,7 +3,7 @@ import type {Widgets} from "@src/components/widgets"
 export type ImageArray_Field =  {
     widget: () => {};
     schema: {[Key: string]: any};
-    title: string;
+    db_fieldName: string;
     imageUploadTitle: string;
     icon: string | undefined;
     upload: boolean;
@@ -17,7 +17,7 @@ type x= Omit<Widgets,"ImageArray">
 export type ImageArray_Params = {
     
         // Defines type of collections
-        title: string;
+        db_fieldName: string;
         imageUploadTitle:string,
         icon?: string;
         required?: boolean;

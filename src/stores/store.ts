@@ -14,3 +14,4 @@ export let is_dark: Writable<boolean> = writable(
 credentials.subscribe((val) => {
 	window.localStorage.setItem('credentials', JSON.stringify(val));
 });
+

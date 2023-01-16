@@ -3,7 +3,7 @@ import type { Display } from '../types';
 
 export type MegaMenu_Params = {
 	// Defines type of collections
-	title: string;
+	db_fieldName: string;
 	menu: object;
 	required?: boolean;
 	localization?: boolean;
@@ -13,7 +13,7 @@ export type MegaMenu_Params = {
 export type MegaMenu_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
-	title: string;
+	db_fieldName: string;
 	menu: object;
 	strict: boolean;
 	required: boolean | undefined;

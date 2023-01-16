@@ -3,7 +3,7 @@ import type { Youtube_Params, Youtube_Field } from './types';
 
 export default ({
 	// Accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	placeholder,
 	required,
@@ -13,14 +13,14 @@ export default ({
 
 	let field = {
 		schema: {},
-		title,
+		db_fieldName,
 		icon,
 		placeholder,
 		required,
 		display
 	} as Youtube_Field;
 
-	field.schema[title] = 'string';
+	field.schema[db_fieldName] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore

@@ -33,7 +33,7 @@
 			//creating parent
 			data.children = [];
 			data = JSON.stringify(data);
-			formData[field.title] = data;
+			formData[field.db_fieldName] = data;
 		} else {
 			!Array.isArray($MenuCurrentChild.children) && ($MenuCurrentChild.children = []);
 			if (editing) {
@@ -45,7 +45,7 @@
 				data = JSON.stringify(data); //adding children to child
 				$MenuCurrentChild.children.push(data);
 			}
-			formData[field.title] = JSON.stringify(value);
+			formData[field.db_fieldName] = JSON.stringify(value);
 		}
 		if (root) return formData;
 	};

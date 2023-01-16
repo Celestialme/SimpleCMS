@@ -4,15 +4,15 @@ import type { Date_Field, Date_Params } from "./types";
 
 let widget =  ({
 	// Defines type of collections
-	title,
+	db_fieldName,
 	icon,
 	required,
 	display,
 }: Date_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field = { schema: {}, title, icon, required, display } as Date_Field;
-	field.schema[title] = "string";
+	let field = { schema: {}, db_fieldName, icon, required, display } as Date_Field;
+	field.schema[db_fieldName] = "string";
 
 	field.widget = async () => {
 		// @ts-ignore

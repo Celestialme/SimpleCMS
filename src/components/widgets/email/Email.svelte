@@ -11,6 +11,6 @@
 	bind:value
 	type="email"
 	id="email"
-	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}
+	placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.db_fieldName}
 	class="input w-full rounded-md"
 />

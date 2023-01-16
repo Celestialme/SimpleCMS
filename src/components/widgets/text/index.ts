@@ -1,7 +1,7 @@
 import type { Text_Field, Text_Params } from './types';
 let widget = ({
 	// accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	placeholder,
 	count,
@@ -21,7 +21,7 @@ let widget = ({
 		};
 	let field = {
 		schema: {},
-		title,
+		db_fieldName,
 		icon,
 		placeholder,
 		count,
@@ -35,7 +35,7 @@ let widget = ({
 		width,
 		display
 	} as Text_Field;
-	field.schema[title] = { String: String };
+	field.schema[db_fieldName] = { String: String };
 	field.widget = async () => {
 		// @ts-ignore
 		return (await import('./Text.svelte')).default;

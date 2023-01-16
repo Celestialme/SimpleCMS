@@ -3,7 +3,7 @@ import type { Display } from '../types';
 export type Checkbox_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
-	title: string;
+	db_fieldName: string;
 	icon: string | undefined;
 	color: string | undefined;
 	width: string | undefined;
@@ -12,7 +12,7 @@ export type Checkbox_Field = {
 };
 export type Checkbox_Params = {
 	// Defines type of collections
-	title: string;
+	db_fieldName: string;
 	icon?: string;
 	color?: string;
 	width?: string;

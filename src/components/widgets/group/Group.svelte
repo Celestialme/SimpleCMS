@@ -2,7 +2,7 @@
 	import Fields from '@src/components/Fields.svelte';
 	import { shape_fields } from '@src/utils/utils_svelte';
 
-	export let field = { title: '', fields: [] };
+	export let field = { db_fieldName: '', fields: [] };
 	export let collection: any;
 	export let value: any;
 

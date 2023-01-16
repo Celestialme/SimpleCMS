@@ -70,11 +70,12 @@ export async function saveData(
 ) {
 	let oldData_id = doc_id || (get(entryData) as any)?._id;
 	//if formData object is empty then:
-
+	formData.append('status', collection.status);
 	if (!formData.entries().next().value) {
 		return { data: 404 };
 	} else if (oldData_id && !insert) {
 		formData.append('_id', oldData_id);
+		
 		return await axios.patch(`${env.HOST}:${env.PORT}/api/${collection.name}`, formData, config);
 	} else {
 		return await axios.post(`${env.HOST}:${env.PORT}/api/${collection.name}`, formData, config);

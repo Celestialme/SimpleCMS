@@ -17,6 +17,6 @@
 		color={field.color}
 	/>
 	<label class="form-check-label inline-block " for="flexRadioDefault2">
-		{field.title}
+		{field.db_fieldName}
 	</label>
 </div>

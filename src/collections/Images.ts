@@ -7,14 +7,14 @@ let schema: Schema = {
 	// See for possible Icons https://icon-sets.iconify.design/
 	name: 'Images',
 	icon: 'bi:card-image',
-
+	status:"published",
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [
-		widgets.Text({ title: 'Name', icon: 'ri:t-box-line', placeholder: 'Enter Image Name' }),
+		widgets.Text({ db_fieldName: 'Name', icon: 'ri:t-box-line', placeholder: 'Enter Image Name' }),
 
 		widgets.Relation({
-			title: 'Relationship to Posts',
+			db_fieldName: 'Relationship to Posts',
 			icon: 'ri:t-box-line',
 			relation: Posts,
 			display: async (data: any, field: any, entry: any) => {

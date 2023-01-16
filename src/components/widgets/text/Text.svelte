@@ -36,9 +36,9 @@
 
 		<input
 			type="text"
-			name={field.title}
-			id={field.title}
-			placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.title}
+			name={field.db_fieldName}
+			id={field.db_fieldName}
+			placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.db_fieldName}
 			minlength={field.minlength}
 			maxlength={field.maxlength}
 			required={field.required}

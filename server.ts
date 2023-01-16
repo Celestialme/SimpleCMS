@@ -166,6 +166,7 @@ app.post('/api/:endpoint', async (req, res) => {
 			req.body[key] = JSON.parse(req.body[key]);
 		} catch (e) {}
 	}
+	console.log(req.body);
 	let collection = collections[req.params.endpoint];
 	if (!collection) return 'collection not found!!';
 	let files = saveFiles(req);

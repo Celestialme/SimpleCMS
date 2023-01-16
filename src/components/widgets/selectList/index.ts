@@ -3,7 +3,7 @@ import type { SelectList_Field, SelectList_Params } from './type';
 
 let widget = ({
 	// Accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	placeholder,
 	required,
@@ -16,7 +16,7 @@ let widget = ({
 
 	let field = {
 		schema: {},
-		title,
+		db_fieldName,
 		icon,
 		placeholder,
 		required,
@@ -26,7 +26,7 @@ let widget = ({
 		display
 	} as SelectList_Field;
 
-	field.schema[title] = 'string';
+	field.schema[db_fieldName] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore

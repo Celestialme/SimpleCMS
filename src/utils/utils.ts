@@ -39,7 +39,7 @@ export function saveFiles(req: any) {
 // finds field title that matches the fieldname and returns that field
 function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
 	for (let field of schema.fields) {
-		if (field.title == fieldname) {
+		if (field.db_fieldName == fieldname) {
 			console.log(field);
 			found.val = true;
 
@@ -123,14 +123,16 @@ export function format(
 // iterates over each key, it checks the type of the value of the current key in the specified language
 export function flattenData(data: any, language: string) {
 	if (!data) return [];
-	return Object.keys(data).reduce((acc: any, x) => {
+	return  Object.keys(data).reduce((acc: any, x) => {
 		acc[x] =
-			typeof data[x] != 'string' && data[x] !== null
+		data[x] && data[x].constructor == Object && (data[x][language] || data[x][env.LANGUAGE])
 				? data[x][language] || data[x][env.LANGUAGE]
 				: data[x];
 
 		return acc;
 	}, {});
+
+	 
 }
 
 // Replaces the locale slug in a URL.

@@ -5,7 +5,7 @@ import type { Display } from '../types';
 import type { Relation_Params, Relation_Field } from './types';
 let widget = ({
 	// Accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	required,
 	relation,
@@ -25,7 +25,7 @@ let widget = ({
 
 	let field = {
 		schema: {},
-		title,
+		db_fieldName,
 		icon,
 		strict: false,
 		required,
@@ -34,7 +34,7 @@ let widget = ({
 		rawDisplay: display
 	} as Relation_Field;
 
-	field.schema[title] = 'string';
+	field.schema[db_fieldName] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore

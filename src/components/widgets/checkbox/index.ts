@@ -2,7 +2,7 @@ import type { Checkbox_Field, Checkbox_Params } from './types';
 
 let widget = ({
 	// accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	color,
 	required,
@@ -11,9 +11,9 @@ let widget = ({
 }: Checkbox_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field = { schema: {}, title, icon, color, required, width, display } as Checkbox_Field;
+	let field = { schema: {}, db_fieldName, icon, color, required, width, display } as Checkbox_Field;
 
-	field.schema[title] = 'string';
+	field.schema[db_fieldName] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore

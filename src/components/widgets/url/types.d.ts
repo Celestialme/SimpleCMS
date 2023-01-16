@@ -3,7 +3,7 @@ import type { Display } from "../types";
 export type Url_Field =  {
 	widget: () => {};
     schema: {[Key: string]: any};
-    title: string;
+    db_fieldName: string;
     icon: string | undefined;
     placeholder: string | undefined;
     required: boolean | undefined;
@@ -11,7 +11,7 @@ export type Url_Field =  {
     display: Display;
 };
 export type Url_Params = {
-	title: string;
+	db_fieldName: string;
 	icon?: string;
 	placeholder?: string;
 	required?: boolean;

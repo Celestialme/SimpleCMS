@@ -11,21 +11,21 @@ let schema: Schema = {
 	name: 'Menu',
 	icon: 'bi:menu-button-wide',
 	strict: false,
-
+	status:"published",
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [
 		widgets.MegaMenu({
-			title: 'Menus',
+			db_fieldName: 'Menus',
 			menu: [
 				{
-					fields: [widgets.Text({ title: 'Name', icon: 'ri:t-box-line' })]
+					fields: [widgets.Text({ db_fieldName: 'Name', icon: 'ri:t-box-line' })]
 				},
 				{
 					fields: [
-						widgets.Text({ title: 'Name', icon: 'ri:t-box-line' }),
+						widgets.Text({ db_fieldName: 'Name', icon: 'ri:t-box-line' }),
 						widgets.Relation({
-							title: 'bla_name',
+							db_fieldName: 'bla_name',
 							icon: 'ri:t-box-line',
 							relation: Posts,
 							display: (data: any, field: any, entry: any) => {
@@ -37,16 +37,16 @@ let schema: Schema = {
 				},
 				{
 					fields: [
-						widgets.Text({ title: 'Name', icon: 'ri:t-box-line' }),
-						widgets.Text({ title: 'Img', icon: 'bi:card-image' }),
-						widgets.Text({ title: 'Address' })
+						widgets.Text({ db_fieldName: 'Name', icon: 'ri:t-box-line' }),
+						widgets.Text({ db_fieldName: 'Img', icon: 'bi:card-image' }),
+						widgets.Text({ db_fieldName: 'Address' })
 					]
 				},
 				{
 					fields: [
-						widgets.Text({ title: 'Name', icon: 'ri:t-box-line' }),
-						widgets.Text({ title: 'Img', icon: 'bi:card-image' }),
-						widgets.Text({ title: 'Address' })
+						widgets.Text({ db_fieldName: 'Name', icon: 'ri:t-box-line' }),
+						widgets.Text({ db_fieldName: 'Img', icon: 'bi:card-image' }),
+						widgets.Text({ db_fieldName: 'Address' })
 					]
 				}
 			]

@@ -3,7 +3,7 @@ import type { Number_Field, Number_Params } from "./types";
 
 let widget = ({
 	// Accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	placeholder,
 	required,
@@ -11,9 +11,9 @@ let widget = ({
 }:Number_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field = { schema: {}, title, icon, placeholder, required, display } as Number_Field;
+	let field = { schema: {}, db_fieldName, icon, placeholder, required, display } as Number_Field;
 
-	field.schema[title] = "string";
+	field.schema[db_fieldName] = "string";
 
 	field.widget = async () => {
 		// @ts-ignore

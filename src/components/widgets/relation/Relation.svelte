@@ -42,7 +42,7 @@
 		} else {
 			widgetValue = selected._id;
 		}
-		obj[field.title] = widgetValue;
+		obj[field.db_fieldName] = widgetValue;
 	};
 	let _ = async (_language: string) => {
 		if (value && typeof value == 'string') {

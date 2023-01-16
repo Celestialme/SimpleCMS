@@ -32,7 +32,7 @@
 	>
 		<div class="relative flex">
 			<p class="font-semibold">
-				{field.field.title}
+				{field.field.db_fieldName}
 
 				{#if field.field.required}
 					<span class="ml-1 pb-3 text-error-500">*</span>
@@ -58,9 +58,9 @@
 			<svelte:component
 				this={field.widget}
 				{collection}
-				bind:widgetValue={fieldsValue[field.field.title]}
+				bind:widgetValue={fieldsValue[field.field.db_fieldName]}
 				{root}
-				value={value ? value?.[field.field.title] : $entryData?.[field.field.title] || null}
+				value={value ? value?.[field.field.db_fieldName] : $entryData?.[field.field.db_fieldName] || null}
 				field={field.field}
 			/>
 		{/if}

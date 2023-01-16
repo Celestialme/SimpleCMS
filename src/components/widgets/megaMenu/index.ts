@@ -2,7 +2,7 @@ import type { Display } from '../types';
 import type { MegaMenu_Field, MegaMenu_Params } from './types';
 let widget =  ({
 	// Accept parameters from collection
-	title,
+	db_fieldName,
 	menu,
 	required,
 	localization,
@@ -14,9 +14,9 @@ let widget =  ({
 		return data.Name[get(language)]
 	};
 
-	let field = { schema: {}, title, menu, strict: false, required, localization, display } as MegaMenu_Field;
+	let field = { schema: {}, db_fieldName, menu, strict: false, required, localization, display } as MegaMenu_Field;
 
-	field.schema[title] = {};
+	field.schema[db_fieldName] = {};
 
 	field.widget = async () => {
 		// @ts-ignore

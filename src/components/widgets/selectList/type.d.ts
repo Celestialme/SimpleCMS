@@ -3,7 +3,7 @@ import type { Display } from '../types';
 export type SelectList_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
-	title: string;
+	db_fieldName: string;
 	icon: string | undefined;
 	placeholder: string | undefined;
 	required: boolean | undefined;
@@ -14,7 +14,7 @@ export type SelectList_Field = {
 };
 export type SelectList_Params = {
 	// Defines type of collections
-	title: string;
+	db_fieldName: string;
 	icon?: string;
 	placeholder?: string;
 	required?: boolean;

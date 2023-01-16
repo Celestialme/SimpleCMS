@@ -3,7 +3,7 @@ import type { Url_Params, Url_Field } from './types';
 
 export default ({
 	// Accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	placeholder,
 	required,
@@ -14,7 +14,7 @@ export default ({
 
 	let field = {
 		schema: {},
-		title,
+		db_fieldName,
 		icon,
 		placeholder,
 		required,
@@ -22,7 +22,7 @@ export default ({
 		display
 	} as Url_Field;
 
-	field.schema[title] = 'string';
+	field.schema[db_fieldName] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore
