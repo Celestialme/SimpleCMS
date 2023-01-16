@@ -33,14 +33,14 @@
 		return characterWidth;
 	}
 
-	function handleTitleChange(event: { target: { value: string } }) {
-		title = event.target.value;
+	function handleTitleChange(event: Event) {
+		title = (event.target as HTMLInputElement).value;
 		titleCharacterWidth = calculateCharacterWidth(title, 16, 'Arial');
 		suggestions = analyze(title, description);
 	}
 
-	function handleDescriptionChange(event: { target: { value: string } }) {
-		description = event.target.value;
+	function handleDescriptionChange(event: Event) {
+		description = (event.target as HTMLInputElement).value;
 		descriptionCharacterWidth = calculateCharacterWidth(description, 14, 'Arial');
 		suggestions = analyze(title, description);
 	}
@@ -50,11 +50,21 @@
 
 	// Display correct Radialdial score based on 3 points per function
 	let progress = 0;
-	$: progress = Math.round((score / (9 * 3)) * 100);
-
+	$: progress = Math.round((score / (8 * 3)) * 100);
+	
 	let suggestions = analyze(title, description);
 
 	function analyze(title: string, description: string) {
+		let scores = {
+			title_score :0,
+			description_score:0,
+			sentences_score:0,
+			title_numbers_score:0,
+			title_power_words_score:0,
+			description_power_words_score:0,
+			title_CTA_score:0,
+			description_CTA_score:0
+		}
 		let suggestions: any = [];
 
 		// Check if the title is more than 50 characters
@@ -63,7 +73,8 @@
 				text: $LL.WIDGET_Seo_Suggetion_TitlePerfect(),
 				impact: 3
 			});
-			score += 3;
+			scores.title_score = 3
+		
 		}
 		// Check if the title is more than 30 characters
 		else if (title.length > 30) {
@@ -71,15 +82,18 @@
 				text: $LL.WIDGET_Seo_Suggetion_TitleGood(),
 				impact: 2
 			});
-			score += 2;
+			
+			scores.title_score = 2
+			
 		}
 		// Otherwise, the title is less than 30 characters
-		else {
+		else if(title.length > 0){
 			suggestions.push({
 				text: $LL.WIDGET_Seo_Suggetion_TitleBad(),
 				impact: 1
 			});
-			score += 1;
+			scores.title_score = 1
+			
 		}
 
 		// Check if the description is between 120 and 165 characters
@@ -88,7 +102,7 @@
 				text: $LL.WIDGET_Seo_Suggetion_DescriptionPerfect(),
 				impact: 3
 			});
-			score += 3;
+			scores.description_score=3
 		}
 		// Check if the description is more than 90 characters
 		else if (description.length > 90) {
@@ -96,31 +110,35 @@
 				text: $LL.WIDGET_Seo_Suggetion_DescriptionGood(),
 				impact: 2
 			});
-			score += 2;
+			
+			scores.description_score=2
 		}
 		// Otherwise, the description is less than 90 characters
-		else {
+		else if (description.length > 0){
 			suggestions.push({
 				text: $LL.WIDGET_Seo_Suggetion_DescriptionBad(),
 				impact: 1
 			});
-			score += 1;
+			scores.description_score=1
+			
 		}
 
 		// Check if the meta description is 2 to 4 sentences long
-		const sentences = description.split('.');
+		const sentences = description.split('.').filter(x=>x.length>1);
 		if (sentences.length >= 2 && sentences.length <= 4) {
 			suggestions.push({
 				text: $LL.WIDGET_Seo_Suggetion_SentencePerfect(),
 				impact: 3
 			});
-			score += 3;
-		} else {
+			scores.sentences_score = 3
+			
+		} else if(sentences.length > 0){
 			suggestions.push({
 				text: $LL.WIDGET_Seo_Suggetion_SentenceBad(),
 				impact: 1
 			});
-			score += 1;
+			scores.sentences_score = 0
+			
 		}
 
 		// Check if the title uses numbers
@@ -129,13 +147,14 @@
 				text: $LL.WIDGET_Seo_Suggetion_NumberPerfect(),
 				impact: 3
 			});
-			score += 3;
+			scores.title_numbers_score =3
+			
 		} else {
 			suggestions.push({
 				text: $LL.WIDGET_Seo_Suggetion_NumberBad(),
 				impact: 1
 			});
-			score += 1;
+			scores.title_numbers_score =0
 		}
 
 		// Check if the title has a power word
@@ -209,7 +228,7 @@
 					// text: `Your title has the Power Word ${word}. Perfect!`,
 					impact: 3
 				});
-				score += 3;
+				scores.title_power_words_score =3
 				break;
 			}
 		}
@@ -223,7 +242,8 @@
 					// text: `Your description uses the Power Word ${word}. Perfect!`,
 					impact: 3
 				});
-				score += 3;
+				scores.description_power_words_score =3
+				
 				break;
 			}
 		}
@@ -258,7 +278,7 @@
 					// text: `Your title has the CTA keyword "${keyword}". Good!`,
 					impact: 3
 				});
-				score += 3;
+				scores.title_CTA_score = 3
 				break;
 			}
 		}
@@ -272,12 +292,12 @@
 					// text: `Your description uses the CTA keyword "${keyword}". Good!`,
 					impact: 3
 				});
-				score += 3;
+				scores.description_CTA_score = 3
+			
 				break;
 			}
 		}
-		console.log(score);
-
+		score = Object.values(scores).reduce((acc,x)=>acc+x)
 		return suggestions;
 	}
 </script>

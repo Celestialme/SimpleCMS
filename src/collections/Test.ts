@@ -43,7 +43,7 @@ let schema: Schema = {
 					title: 'Prefix',
 					icon: 'ri:t-box-line',
 					placeholder: 'Enter Prefix',
-					width: '33%'
+					width: '100%'
 					// options : ('Mr.', 'Ms.', 'Mrs.', 'Dr.');
 				}),
 
@@ -109,9 +109,9 @@ let schema: Schema = {
 			title: 'Test 2nd Group',
 
 			fields: [
-				widgets.Radio({ title: 'Radio', color: 'red', required: true }),
+				widgets.Radio({ title: 'Radio', color: 'red', required: true,width:"50%" }),
 
-				widgets.Checkbox({ title: 'Checkbox', color: 'green', required: true })
+				widgets.Checkbox({ title: 'Checkbox', color: 'green',width:"50%", required: true })
 			]
 		}),
 

@@ -21,7 +21,7 @@
 		"@beyonk/svelte-mapbox": "^8.2.0",
 		"@playwright/test": "^1.29.2",
 		"@popperjs/core": "^2.11.6",
-		"@skeletonlabs/skeleton": "^0.92.2",
+		"@skeletonlabs/skeleton": "0.86.9",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/adapter-node": "^1.1.3",
 		"@sveltejs/kit": "next",
