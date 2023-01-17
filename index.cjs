@@ -1,6 +1,6 @@
 // Plesk Passanager 
 
-import("./index.js");
+import("./build/index.js");
 
 
 // async function loadApp() {

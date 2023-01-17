@@ -7,7 +7,7 @@
 
 <div
 	class:hide={!show}
-	class="icon  dark:text-dark  absolute  left-[50%]  top-[50%] z-20 translate-x-[-50%] translate-y-[-50%] cursor-pointer"
+	class="icon  dark:text-dark  absolute  left-[50%]  top-[50%] translate-x-[-50%] translate-y-[-50%] cursor-pointer"
 >
 	<div class="relative w-max rounded-full border-4 border-[#2b2f31] p-3">
 		<svg

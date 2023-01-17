@@ -7,11 +7,11 @@
 	let background: 'white' | '#242728' = 'white';
 </script>
 
-<div class="body" style="background:{background}">
+<div class="body" style="background:{background} ">
 	<Signin {active} on:click={() => (active = 0)} on:pointerenter={() => (background = '#242728')} />
 	<SignUp {active} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} />
 	{#if active == undefined}
-		<RoundLogo />
+		<div class="z-30"><RoundLogo /></div>
 	{/if}
 </div>
 

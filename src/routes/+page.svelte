@@ -211,7 +211,7 @@
 						<!-- Sidebar left footer Desktop -->
 						<div class="mt-auto border-t border-surface-500 pt-2 ">
 							<div class="my-1 flex items-center justify-between">
-								<a href="/user" class="flex-col relative">
+								<a href="/user" class="relative flex-col">
 									<ToolTip
 										text={$LL.SBL_Admin_User()}
 										position="right"

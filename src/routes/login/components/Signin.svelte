@@ -10,7 +10,7 @@
 	class:hover={active == undefined || active == 1}
 	on:click
 	on:pointerenter
-	class="relative flex flex-col items-center justify-center gap-3 "
+	class="relative flex flex-col items-center justify-center gap-3"
 >
 	<SigninForm show={active == 0} />
 
