@@ -40,7 +40,7 @@ let schema: Schema = {
 			fields: [
 				widgets.SelectList({
 					db_fieldName: 'Prefix',
-					label: get(LL).COLLECTION_TEST_Prefix(),
+					// label: '{$LL.COLLECTION_TEST_Prefix()}',
 					icon: 'ri:t-box-line',
 					placeholder: get(LL).COLLECTION_TEST_Prefix_placeholder(),
 					width: '100%'
@@ -49,7 +49,7 @@ let schema: Schema = {
 
 				widgets.Text({
 					db_fieldName: 'First',
-					label: get(LL).COLLECTION_TEST_First(),
+					// label: '{$LL.COLLECTION_TEST_First()}',
 					icon: 'ri:t-box-line',
 					placeholder: get(LL).COLLECTION_TEST_First_placeholder(),
 					required: true,
@@ -58,7 +58,7 @@ let schema: Schema = {
 
 				widgets.Text({
 					db_fieldName: 'Middle',
-					label: get(LL).COLLECTION_TEST_Middle(),
+					// label: '{$LL.COLLECTION_TEST_Middle()}',
 					icon: 'ri:t-box-line',
 					placeholder: get(LL).COLLECTION_TEST_Middle_placeholder(),
 					required: false,
@@ -68,7 +68,7 @@ let schema: Schema = {
 
 				widgets.Text({
 					db_fieldName: 'Last',
-					label: get(LL).COLLECTION_TEST_Last(),
+					// label: '{$LL.COLLECTION_TEST_Last()}',
 					icon: 'ri:t-box-line',
 					placeholder: get(LL).COLLECTION_TEST_Last_placeholder(),
 					required: true,

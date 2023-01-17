@@ -4,6 +4,7 @@ export type Radio_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
 	db_fieldName: string;
+	label: string;
 	icon: string | undefined;
 	color: string | undefined;
 	width: string | undefined;
@@ -12,6 +13,7 @@ export type Radio_Field = {
 };
 export type Radio_Params = {
 	db_fieldName: string;
+	label?: string;
 	icon?: string;
 	color?: string;
 	width?: string;

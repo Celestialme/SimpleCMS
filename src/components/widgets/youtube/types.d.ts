@@ -4,6 +4,7 @@ export type Youtube_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
 	db_fieldName: string;
+	label: string;
 	icon: string | undefined;
 	placeholder: string | undefined;
 	required: boolean | undefined;
@@ -11,6 +12,7 @@ export type Youtube_Field = {
 };
 export type Youtube_Params = {
 	db_fieldName: string;
+	label?: string;
 	icon?: string;
 	placeholder?: string;
 	required?: boolean;
