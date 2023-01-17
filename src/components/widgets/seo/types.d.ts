@@ -4,6 +4,7 @@ export type Seo_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
 	db_fieldName: string;
+	label: string;
 	icon: string | undefined;
 	color: string | undefined;
 	required: boolean | undefined;
@@ -12,6 +13,7 @@ export type Seo_Field = {
 };
 export type Seo_Params = {
 	db_fieldName: string;
+	label?: string;
 	icon?: string;
 	color?: string;
 	required?: boolean;

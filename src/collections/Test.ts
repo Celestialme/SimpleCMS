@@ -17,7 +17,7 @@ let schema: Schema = {
 	fields: [
 		widgets.Group({
 			db_fieldName: 'User',
-			// label: {$LL.COLLECTION_TEST_User()},
+			label: '{$LL.COLLECTION_TEST_User()}',
 			display: async (data: any, field: any, entry: any) => {
 				return format([
 					{
@@ -41,7 +41,7 @@ let schema: Schema = {
 			fields: [
 				widgets.SelectList({
 					db_fieldName: 'Prefix',
-					// label: '{$LL.COLLECTION_TEST_Prefix()}',
+					label: '{$LL.COLLECTION_TEST_Prefix()}',
 					icon: 'ri:t-box-line',
 					placeholder: '{$LL.COLLECTION_TEST_Prefix_placeholder()}',
 					width: '100%'
@@ -50,7 +50,7 @@ let schema: Schema = {
 
 				widgets.Text({
 					db_fieldName: 'First',
-					// label: '{$LL.COLLECTION_TEST_First()}',
+					label: '{$LL.COLLECTION_TEST_First()}',
 					icon: 'ri:t-box-line',
 					placeholder: '{$LL.COLLECTION_TEST_First_placeholder()}',
 					required: true,
@@ -59,7 +59,7 @@ let schema: Schema = {
 
 				widgets.Text({
 					db_fieldName: 'Middle',
-					// label: '{$LL.COLLECTION_TEST_Middle()}',
+					label: '{$LL.COLLECTION_TEST_Middle()}',
 					icon: 'ri:t-box-line',
 					placeholder: '{$LL.COLLECTION_TEST_Middle_placeholder()}',
 					required: false,
@@ -69,7 +69,7 @@ let schema: Schema = {
 
 				widgets.Text({
 					db_fieldName: 'Last',
-					// label: '{$LL.COLLECTION_TEST_Last()}',
+					label: '{$LL.COLLECTION_TEST_Last()}',
 					icon: 'ri:t-box-line',
 					placeholder: '{$LL.COLLECTION_TEST_Last_placeholder()}',
 					required: true,
