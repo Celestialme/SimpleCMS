@@ -4,6 +4,7 @@ export type Text_Field = {
 	widget: () => {};
 	schema: { [Key: string]: any };
 	db_fieldName: string;
+	label: string | undefined;
 	icon: string | undefined;
 	placeholder: string | undefined;
 	count: string | undefined;
@@ -19,6 +20,7 @@ export type Text_Field = {
 };
 export type Text_Params = {
 	db_fieldName: string;
+	label?:string;
 	icon?: string;
 	placeholder?: string;
 	count?: string;

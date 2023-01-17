@@ -1,6 +1,6 @@
 import widgets from '../components/widgets';
 import { format } from '@src/utils/utils';
-
+import {get} from "svelte/store"
 import type { Schema } from './types';
 
 // typesafe-i18n
@@ -17,11 +17,10 @@ let schema: Schema = {
 	fields: [
 		widgets.Group({
 			db_fieldName: 'User',
-			// label: {$LL.COLLECTION_TEST_User()},
+			label: get(LL).COLLECTION_TEST_User(),
 			display: async (data: any, field: any, entry: any) => {
 				return format([
 					{
-						// label: {$LL.COLLECTION_TEST_Prefix()},
 						label: 'Prefix',
 						text: entry.Prefix,
 						newLine: true // not working
@@ -41,27 +40,27 @@ let schema: Schema = {
 			fields: [
 				widgets.SelectList({
 					db_fieldName: 'Prefix',
-					// label: '{$LL.COLLECTION_TEST_Prefix()}',
+					label: get(LL).COLLECTION_TEST_Prefix(),
 					icon: 'ri:t-box-line',
-					placeholder: '{$LL.COLLECTION_TEST_Prefix_placeholder()}',
+					placeholder: get(LL).COLLECTION_TEST_Prefix_placeholder(),
 					width: '100%'
 					// options : ('Mr.', 'Ms.', 'Mrs.', 'Dr.');
 				}),
 
 				widgets.Text({
 					db_fieldName: 'First',
-					// label: '{$LL.COLLECTION_TEST_First()}',
+					label: get(LL).COLLECTION_TEST_First(),
 					icon: 'ri:t-box-line',
-					placeholder: '{$LL.COLLECTION_TEST_First_placeholder()}',
+					placeholder: get(LL).COLLECTION_TEST_First_placeholder(),
 					required: true,
 					width: '33%'
 				}),
 
 				widgets.Text({
 					db_fieldName: 'Middle',
-					// label: '{$LL.COLLECTION_TEST_Middle()}',
+					label: get(LL).COLLECTION_TEST_Middle(),
 					icon: 'ri:t-box-line',
-					placeholder: '{$LL.COLLECTION_TEST_Middle_placeholder()}',
+					placeholder: get(LL).COLLECTION_TEST_Middle_placeholder(),
 					required: false,
 					readonly: true,
 					width: '33%'
@@ -69,9 +68,9 @@ let schema: Schema = {
 
 				widgets.Text({
 					db_fieldName: 'Last',
-					// label: '{$LL.COLLECTION_TEST_Last()}',
+					label: get(LL).COLLECTION_TEST_Last(),
 					icon: 'ri:t-box-line',
-					placeholder: '{$LL.COLLECTION_TEST_Last_placeholder()}',
+					placeholder: get(LL).COLLECTION_TEST_Last_placeholder(),
 					required: true,
 					width: '33%'
 				})
@@ -97,11 +96,11 @@ let schema: Schema = {
 			placeholder: 'Enter Email',
 			required: true
 		}),
-		widgets.Number({
-			db_fieldName: 'Number',
-			icon: 'carbon:character-whole-number',
-			required: true
-		}),
+		// widgets.Number({
+		// 	db_fieldName: 'Number',
+		// 	icon: 'carbon:character-whole-number',
+		// 	required: true
+		// }),
 
 		widgets.PhoneNumber({
 			db_fieldName: 'Phone Number',
