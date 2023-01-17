@@ -28,6 +28,9 @@ export const auth = lucia({
 // MongoDB database - set up a connection using the Mongoose library
 import mongoose from 'mongoose';
 
+// Turn off strict mode for query filters. Default in Mongodb 7
+mongoose.set('strictQuery', false);
+
 // use for mongodb Atalas
 // mongoose.connect(`mongodb+srv://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}/${env.DB_NAME}?retryWrites=true&w=majority`);
 
@@ -38,9 +41,6 @@ mongoose.connect(env.DB_HOST, {
 	pass: env.DB_PASSWORD,
 	dbName: env.DB_NAME
 });
-
-// Turn off strict mode for query filters. Default in Mongodb 7
-mongoose.set('strictQuery', false);
 
 // Store Mongoose models representing each collection in the database
 let collections: { [Key: string]: mongoose.Model<any> } = {};

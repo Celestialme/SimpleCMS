@@ -44,22 +44,22 @@ const en: BaseTranslation = {
 	LOGIN_ForgottenPassword: 'Forgotten Password',
 	LOGIN_SendResetMail: 'Send Password Reset Email',
 
-	// EntityList
-	ENTITYLIST_Create: 'Create',
-	ENTITYLIST_Publish: 'Publish',
-	ENTITYLIST_Unpublish: 'Unpublish',
-	ENTITYLIST_Schedule: 'Schedule',
-	ENTITYLIST_Clone: 'Clone',
-	ENTITYLIST_Delete: 'Delete',
-	ENTITYLIST_Search: 'Search',
-	ENTITYLIST_Loading: 'Loading...',
-	ENTITYLIST_Showing: 'Showing',
-	ENTITYLIST_to: 'to',
-	ENTITYLIST_of: 'of',
-	ENTITYLIST_Entries: 'Entries',
-	ENTITYLIST_EntriesItems: 'Entries',
-	ENTITYLIST_Previous: 'Previous',
-	ENTITYLIST_Next: 'Next',
+	// Entry List
+	ENTRYLIST_Create: 'Create',
+	ENTRYLIST_Publish: 'Publish',
+	ENTRYLIST_Unpublish: 'Unpublish',
+	ENTRYLIST_Schedule: 'Schedule',
+	ENTRYLIST_Clone: 'Clone',
+	ENTRYLIST_Delete: 'Delete',
+	ENTRYLIST_Search: 'Search',
+	ENTRYLIST_Loading: 'Loading...',
+	ENTRYLIST_Showing: 'Showing',
+	ENTRYLIST_to: 'to',
+	ENTRYLIST_of: 'of',
+	ENTRYLIST_Entries: 'Entries',
+	ENTRYLIST_EntriesItems: 'Entries',
+	ENTRYLIST_Previous: 'Previous',
+	ENTRYLIST_Next: 'Next',
 
 	// Fields
 
@@ -74,6 +74,16 @@ const en: BaseTranslation = {
 	// Collections
 	Collections: 'Collections',
 	Media: 'Media',
+
+	COLLECTION_TEST_User: 'User',
+	COLLECTION_TEST_Prefix: 'Prefix',
+	COLLECTION_TEST_Prefix_placeholder: 'Enter Prefix',
+	COLLECTION_TEST_First: 'First',
+	COLLECTION_TEST_First_placeholder: 'Enter First Name',
+	COLLECTION_TEST_Middle: 'Middle',
+	COLLECTION_TEST_Middle_placeholder: 'Middle  (ReadOnly)',
+	COLLECTION_TEST_Last: 'Last',
+	COLLECTION_TEST_Last_placeholder: 'Enter Last Name',
 
 	// Widgets
 	WIDGET_Address_SearchMap: 'Search in Map ...',

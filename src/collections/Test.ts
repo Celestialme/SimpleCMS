@@ -3,6 +3,9 @@ import { format } from '@src/utils/utils';
 
 import type { Schema } from './types';
 
+// typesafe-i18n
+import LL from '@src/i18n/i18n-svelte';
+
 let schema: Schema = {
 	// Collection Name & Icon (optional) shown on Sidebar
 	// See for possible Icons https://icon-sets.iconify.design/
@@ -14,9 +17,11 @@ let schema: Schema = {
 	fields: [
 		widgets.Group({
 			db_fieldName: 'User',
+			// label: {$LL.COLLECTION_TEST_User()},
 			display: async (data: any, field: any, entry: any) => {
 				return format([
 					{
+						// label: {$LL.COLLECTION_TEST_Prefix()},
 						label: 'Prefix',
 						text: entry.Prefix,
 						newLine: true // not working
@@ -36,24 +41,27 @@ let schema: Schema = {
 			fields: [
 				widgets.SelectList({
 					db_fieldName: 'Prefix',
+					// label: '{$LL.COLLECTION_TEST_Prefix()}',
 					icon: 'ri:t-box-line',
-					placeholder: 'Enter Prefix',
+					placeholder: '{$LL.COLLECTION_TEST_Prefix_placeholder()}',
 					width: '100%'
 					// options : ('Mr.', 'Ms.', 'Mrs.', 'Dr.');
 				}),
 
 				widgets.Text({
 					db_fieldName: 'First',
+					// label: '{$LL.COLLECTION_TEST_First()}',
 					icon: 'ri:t-box-line',
-					placeholder: 'Enter First Name',
+					placeholder: '{$LL.COLLECTION_TEST_First_placeholder()}',
 					required: true,
 					width: '33%'
 				}),
 
 				widgets.Text({
 					db_fieldName: 'Middle',
+					// label: '{$LL.COLLECTION_TEST_Middle()}',
 					icon: 'ri:t-box-line',
-					placeholder: 'Middle  (ReadOnly)',
+					placeholder: '{$LL.COLLECTION_TEST_Middle_placeholder()}',
 					required: false,
 					readonly: true,
 					width: '33%'
@@ -61,8 +69,9 @@ let schema: Schema = {
 
 				widgets.Text({
 					db_fieldName: 'Last',
+					// label: '{$LL.COLLECTION_TEST_Last()}',
 					icon: 'ri:t-box-line',
-					placeholder: 'Enter Last Name',
+					placeholder: '{$LL.COLLECTION_TEST_Last_placeholder()}',
 					required: true,
 					width: '33%'
 				})

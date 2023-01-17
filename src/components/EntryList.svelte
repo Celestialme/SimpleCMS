@@ -192,7 +192,7 @@
 			<div class="relative mx-auto w-max">
 				<input
 					on:keyup={search}
-					placeholder="{$LL.ENTITYLIST_Search()} {collection.name} ..."
+					placeholder="{$LL.ENTRYLIST_Search()} {collection.name} ..."
 					class="relative z-10 mt-[2px] h-10 w-10 cursor-pointer rounded-full border border-surface-500 bg-surface-200/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-md dark:bg-surface-500/50 dark:text-white md:mt-0 md:h-12 md:w-full "
 				/>
 				<!-- searchIcon -->
@@ -254,15 +254,15 @@
 						on:click={() => {
 							showFields = true;
 						}}
-						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 px-2 py-2 text-xl font-bold text-black md:ml-auto md:w-[150px]"
+						class="relative flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 px-2 py-2 text-xl font-bold text-black md:ml-auto md:w-[150px]"
 					>
 						<ToolTip
-							text="{$LL.ENTITYLIST_Create()} {collection.name}"
+							text="{$LL.ENTRYLIST_Create()} {collection.name}"
 							position="bottom"
 							class="bg-surface-500 text-black dark:text-white"
 						/>
 						<Icon icon="ic:round-plus" color="black" width="22" class="mr-1" />
-						<div class="hidden md:block">{$LL.ENTITYLIST_Create()}</div>
+						<div class="hidden md:block">{$LL.ENTRYLIST_Create()}</div>
 					</button>
 				{:else if entryButton == 'publish'}
 					<button
@@ -272,68 +272,68 @@
 						}}
 					>
 						<ToolTip
-							text="{$LL.ENTITYLIST_Publish()} {collection.name}"
+							text="{$LL.ENTRYLIST_Publish()} {collection.name}"
 							position="bottom"
 							class="bg-surface-500 text-black dark:text-white"
 						/>
 						<Icon icon="bi:hand-thumbs-up-fill" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">{$LL.ENTITYLIST_Publish()}</div>
+						<div class="hidden md:block">{$LL.ENTRYLIST_Publish()}</div>
 					</button>
 				{:else if entryButton == 'unpublish'}
 					<button
-						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-warning-600 via-warning-500 to-warning-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="relative flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-warning-600 via-warning-500 to-warning-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							unpublishEntry();
 						}}
 						><ToolTip
-							text="{$LL.ENTITYLIST_Unpublish()} {collection.name}"
+							text="{$LL.ENTRYLIST_Unpublish()} {collection.name}"
 							position="bottom"
 							class="bg-surface-500 text-black dark:text-white"
 						/>
 						<Icon icon="bi:pause-circle" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">{$LL.ENTITYLIST_Unpublish()}</div>
+						<div class="hidden md:block">{$LL.ENTRYLIST_Unpublish()}</div>
 					</button>
 				{:else if entryButton == 'schedule'}
 					<button
-						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-pink-700 via-pink-500 to-pink-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="relative flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-pink-700 via-pink-500 to-pink-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							scheduleEntry();
 						}}
 						><ToolTip
-							text="{$LL.ENTITYLIST_Schedule()} {collection.name}"
+							text="{$LL.ENTRYLIST_Schedule()} {collection.name}"
 							position="bottom"
 							class="bg-surface-500 text-black dark:text-white"
 						/>
 						<Icon icon="bi:clock" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">{$LL.ENTITYLIST_Schedule()}</div>
+						<div class="hidden md:block">{$LL.ENTRYLIST_Schedule()}</div>
 					</button>
 				{:else if entryButton == 'clone'}
 					<button
-						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-surface-500 via-surface-400 to-surface-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="relative flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-surface-500 via-surface-400 to-surface-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							cloneEntry();
 						}}
 						><ToolTip
-							text="{$LL.ENTITYLIST_Clone()} {collection.name}"
+							text="{$LL.ENTRYLIST_Clone()} {collection.name}"
 							position="bottom"
 							class="bg-surface-500 text-black dark:text-white"
 						/>
 						<Icon icon="bi:clipboard-data-fill" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">{$LL.ENTITYLIST_Clone()}</div>
+						<div class="hidden md:block">{$LL.ENTRYLIST_Clone()}</div>
 					</button>
 				{:else if entryButton == 'delete' || deleteMode}
 					<button
-						class="flex relative w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-error-600 via-error-500 to-error-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
+						class="relative flex w-[60px] items-center justify-center rounded-l-full border-r-2 border-white bg-gradient-to-br from-error-600 via-error-500 to-error-300 px-2 py-2 text-xl font-bold text-white md:ml-auto md:w-[150px]"
 						on:click={() => {
 							deleteEntry();
 						}}
 						><ToolTip
-							text="{$LL.ENTITYLIST_Delete()} {collection.name}"
+							text="{$LL.ENTRYLIST_Delete()} {collection.name}"
 							position="bottom"
 							class="bg-surface-500 text-black dark:text-white"
 						/>
 						<Icon icon="bi:trash3-fill" color="white" width="22" class="mr-1" />
-						<div class="hidden md:block">{$LL.ENTITYLIST_Delete()}</div>
+						<div class="hidden md:block">{$LL.ENTRYLIST_Delete()}</div>
 					</button>
 				{/if}
 
@@ -359,7 +359,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 text-lg font-bold text-surface-800"
 								>
 									<Icon icon="ic:round-plus" width="22" />
-									{$LL.ENTITYLIST_Create()}
+									{$LL.ENTRYLIST_Create()}
 								</button>
 							</li>{/if}
 						{#if entryButton != 'publish'}
@@ -371,7 +371,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-tertiary-700 via-tertiary-600 to-tertiary-500 text-lg font-bold text-white"
 								>
 									<Icon icon="bi:hand-thumbs-up-fill" width="20" />
-									{$LL.ENTITYLIST_Publish()}
+									{$LL.ENTRYLIST_Publish()}
 								</button>
 							</li>
 						{/if}
@@ -384,7 +384,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-warning-600 via-warning-500 to-warning-300 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:pause-circle" width="20" />
-									{$LL.ENTITYLIST_Unpublish()}
+									{$LL.ENTRYLIST_Unpublish()}
 								</button>
 							</li>
 						{/if}
@@ -397,7 +397,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-pink-700 via-pink-500 to-pink-300 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:clock" width="20" />
-									{$LL.ENTITYLIST_Schedule()}
+									{$LL.ENTRYLIST_Schedule()}
 								</button>
 							</li>
 						{/if}
@@ -410,7 +410,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-surface-500 via-surface-400 to-surface-300 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:clipboard-data-fill" width="20" />
-									{$LL.ENTITYLIST_Clone()}
+									{$LL.ENTRYLIST_Clone()}
 								</button>
 							</li>
 						{/if}
@@ -423,7 +423,7 @@
 									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-error-600 via-error-500 to-error-300 text-lg font-bold text-white "
 								>
 									<Icon icon="bi:trash3-fill" width="20" />
-									{$LL.ENTITYLIST_Delete()}
+									{$LL.ENTRYLIST_Delete()}
 								</button>
 							</li>
 						{/if}
@@ -435,17 +435,15 @@
 
 	<!-- Show Collection Table -->
 	<div class="table-container max-h-[80vh] overflow-auto shadow-xl">
-		<table class="table-hover fixed_header inline-block">
+		<table class="table-hover fixed_header inline-block ">
 			<thead class="sticky top-0">
-				<tr
-					class="border-b-2 border-black bg-surface-600 dark:border-white dark:bg-surface-500 dark:bg-inherit"
-				>
+				<tr class="border-b-2 border-black bg-surface-600 dark:border-white dark:bg-surface-500  ">
 					<th><DeleteIcon bind:checked={deleteAll} /></th>
 
-					<th class={never('text-white')}>#</th>
+					<th class={never('text-white ')}>#</th>
 
 					{#each collection.fields as field}
-						<th class={never('text-white')}>
+						<th class={never('text-white ')}>
 							<div
 								on:click={() => {
 									sort = field.name;
@@ -496,7 +494,7 @@
 							{#each collection.fields as field}
 								{((tmp_entry = flattenData(entry, $language)), '')}
 								{#await field?.display?.(tmp_entry[field.db_fieldName], field, tmp_entry)}
-									<td class="">{$LL.ENTITYLIST_Loading()}</td>
+									<td class="">{$LL.ENTRYLIST_Loading()}</td>
 								{:then display}
 									{((entry.displays = {}), '')}
 									<td class="">{@html (entry.displays[field.db_fieldName] = display)}</td>
@@ -514,20 +512,20 @@
 	<div class="flex flex-1 items-center justify-between">
 		<!-- Pagecounter -->
 		<div class="hidden text-sm text-surface-700 dark:text-surface-400 sm:block">
-			{$LL.ENTITYLIST_Showing()}
+			{$LL.ENTRYLIST_Showing()}
 			<span class="font-semibold text-surface-900 dark:text-white"
 				>{(paging.page - 1) * paging.entryLength + 1}</span
 			>
-			{$LL.ENTITYLIST_to()}
+			{$LL.ENTRYLIST_to()}
 			<span class="font-semibold text-surface-900 dark:text-white"
 				>{paging.entryLength * paging.page > paging.totalCount
 					? paging.totalCount
 					: paging.entryLength * paging.page}</span
 			>
-			{$LL.ENTITYLIST_of()}
+			{$LL.ENTRYLIST_of()}
 			<span class="font-semibold text-surface-900 dark:text-white">{paging.totalCount} </span>
 			<!-- TODO Correct Translation for Pluralization -->
-			{$LL.ENTITYLIST_Entries()}
+			{$LL.ENTRYLIST_Entries()}
 		</div>
 
 		<!-- ItemsPerPage -->
@@ -551,7 +549,7 @@
 							on:click={() => changeItemsPerPage(length)}
 						>
 							{length}
-							{$LL.ENTITYLIST_EntriesItems()}
+							{$LL.ENTRYLIST_EntriesItems()}
 						</li>
 					{/each}
 				</ul>
@@ -568,7 +566,7 @@
 					}}
 					class="relative inline-flex items-center rounded-l-md border border-surface-400 px-2 py-2 text-sm font-medium text-surface-400 hover:bg-surface-50 focus:z-20"
 				>
-					<span class="sr-only">{$LL.ENTITYLIST_Previous()}</span>
+					<span class="sr-only">{$LL.ENTRYLIST_Previous()}</span>
 					<Icon icon="mdi:chevron-left" width="24" />
 				</div>
 
@@ -594,7 +592,7 @@
 					}}
 					class="relative inline-flex items-center rounded-r-md border border-surface-400 px-2 py-2 text-sm font-medium text-surface-400 hover:bg-surface-50 focus:z-20"
 				>
-					<span class="sr-only">{$LL.ENTITYLIST_Next()}</span>
+					<span class="sr-only">{$LL.ENTRYLIST_Next()}</span>
 					<Icon icon="mdi:chevron-right" width="24" />
 				</div>
 			</nav>

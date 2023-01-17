@@ -34,9 +34,10 @@ You can preview the production build with `npm run preview`.
 import pkg from './package.json' assert { type: 'json' };
 
 let env: {
-	SiteNAME: string;
+	SITENAME: string;
 	LANGUAGE: string;
 	translations: { [key: string]: string };
+	LANGUAGESYSTEM: string;
 	HOST: string;
 	PORT: number;
 	DB_URL: string;
@@ -48,29 +49,27 @@ let env: {
 	PKG: {
 		VERSION: string;
 	};
-	GEOLOCATION: string;
 	MAPBOX_API_TOKEN: string;
 	GOOGLE_API_TOKEN: string;
 } = {
-	SiteNAME: 'SimpleCMS',
-	LANGUAGE: 'en',
+	SITENAME: 'SimpleCMS',
+
+	LANGUAGE: 'en', // defines default language
 	translations: { en: 'English', de: 'German' },
 
-	// for express
-	HOST: 'http://127.0.0.1',
-	PORT: 3501,
+	LANGUAGESYSTEM: 'en', // defines default System language
 
-	// Geolocation - longitude, latitude
-	GEOLOCATION: 'your-geolocation',
+	//for express
+	HOST: 'http://localhost',
+	PORT: 3501,
 
 	// for Mapbox API - Only use one map Api
 	MAPBOX_API_TOKEN: "your api key here",
-
 	// for Goolge Cloud API
 	// Required for Google Maps & for Youtube
 	// GOOGLE_API_TOKEN: 'your api key here',
 
-	// for mongodb......for Atlas use DB_HOST:"mongodb+srv://XXXX",
+// for mongodb......for Atlas use DB_HOST:"mongodb+srv://XXXX",
 	DB_URL: 'xxxx:27017',
 	DB_NAME: 'SimpleCMS',
 	DB_USER: 'username',
@@ -86,5 +85,4 @@ let env: {
 env.API = `${env.HOST}:${env.PORT}/api`;
 
 export default env;
-
 ```

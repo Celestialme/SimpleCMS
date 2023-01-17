@@ -44,22 +44,22 @@ const de: Translation = {
 	LOGIN_ForgottenPassword: 'Kennwort vergessen',
 	LOGIN_SendResetMail: 'Kennwortrücksetzungs-E-Mail senden',
 
-	// EntityList
-	ENTITYLIST_Create: 'Erstellen',
-	ENTITYLIST_Publish: 'Publizieren',
-	ENTITYLIST_Unpublish: 'Archivieren',
-	ENTITYLIST_Schedule: 'Planen',
-	ENTITYLIST_Clone: 'Kopieren',
-	ENTITYLIST_Delete: 'Löschen',
-	ENTITYLIST_Search: 'Suchen',
-	ENTITYLIST_Loading: 'Laden ...',
-	ENTITYLIST_Showing: 'Es werden',
-	ENTITYLIST_to: 'bis',
-	ENTITYLIST_of: 'von',
-	ENTITYLIST_Entries: 'Einträgen angezeigt',
-	ENTITYLIST_EntriesItems: 'Einträge',
-	ENTITYLIST_Previous: 'Zurück',
-	ENTITYLIST_Next: 'Weiter',
+	// Entry List
+	ENTRYLIST_Create: 'Erstellen',
+	ENTRYLIST_Publish: 'Publizieren',
+	ENTRYLIST_Unpublish: 'Archivieren',
+	ENTRYLIST_Schedule: 'Planen',
+	ENTRYLIST_Clone: 'Kopieren',
+	ENTRYLIST_Delete: 'Löschen',
+	ENTRYLIST_Search: 'Suchen',
+	ENTRYLIST_Loading: 'Laden ...',
+	ENTRYLIST_Showing: 'Es werden',
+	ENTRYLIST_to: 'bis',
+	ENTRYLIST_of: 'von',
+	ENTRYLIST_Entries: 'Einträgen angezeigt',
+	ENTRYLIST_EntriesItems: 'Einträge',
+	ENTRYLIST_Previous: 'Zurück',
+	ENTRYLIST_Next: 'Weiter',
 
 	// Fields
 
@@ -69,9 +69,20 @@ const de: Translation = {
 	FORM_TT_Closes: 'Schließen ohne Speichern',
 	FORM_Required: 'Erforderlich',
 	// Alert
+
 	// Collections
 	Collections: 'Sammlungen',
 	Media: 'Medien',
+
+	COLLECTION_TEST_User: 'Benutzer',
+	COLLECTION_TEST_Prefix: 'Präfix',
+	COLLECTION_TEST_Prefix_placeholder: 'Präfix eingeben',
+	COLLECTION_TEST_First: 'Vornamen',
+	COLLECTION_TEST_First_placeholder: 'Vornamen eingeben',
+	COLLECTION_TEST_Middle: 'Mittel',
+	COLLECTION_TEST_Middle_placeholder: 'Mittel (Schreibgeschützt)',
+	COLLECTION_TEST_Last: 'Nachname',
+	COLLECTION_TEST_Last_placeholder: 'Nachname eingeben',
 
 	// Widgets
 	WIDGET_Address_SearchMap: 'Suche in Karte ...',

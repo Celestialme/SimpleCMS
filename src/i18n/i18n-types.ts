@@ -142,63 +142,63 @@ type RootTranslation = {
 	/**
 	 * C​r​e​a​t​e
 	 */
-	ENTITYLIST_Create: string
+	ENTRYLIST_Create: string
 	/**
 	 * P​u​b​l​i​s​h
 	 */
-	ENTITYLIST_Publish: string
+	ENTRYLIST_Publish: string
 	/**
 	 * U​n​p​u​b​l​i​s​h
 	 */
-	ENTITYLIST_Unpublish: string
+	ENTRYLIST_Unpublish: string
 	/**
 	 * S​c​h​e​d​u​l​e
 	 */
-	ENTITYLIST_Schedule: string
+	ENTRYLIST_Schedule: string
 	/**
 	 * C​l​o​n​e
 	 */
-	ENTITYLIST_Clone: string
+	ENTRYLIST_Clone: string
 	/**
 	 * D​e​l​e​t​e
 	 */
-	ENTITYLIST_Delete: string
+	ENTRYLIST_Delete: string
 	/**
 	 * S​e​a​r​c​h
 	 */
-	ENTITYLIST_Search: string
+	ENTRYLIST_Search: string
 	/**
 	 * L​o​a​d​i​n​g​.​.​.
 	 */
-	ENTITYLIST_Loading: string
+	ENTRYLIST_Loading: string
 	/**
 	 * S​h​o​w​i​n​g
 	 */
-	ENTITYLIST_Showing: string
+	ENTRYLIST_Showing: string
 	/**
 	 * t​o
 	 */
-	ENTITYLIST_to: string
+	ENTRYLIST_to: string
 	/**
 	 * o​f
 	 */
-	ENTITYLIST_of: string
+	ENTRYLIST_of: string
 	/**
 	 * E​n​t​r​i​e​s
 	 */
-	ENTITYLIST_Entries: string
+	ENTRYLIST_Entries: string
 	/**
 	 * E​n​t​r​i​e​s
 	 */
-	ENTITYLIST_EntriesItems: string
+	ENTRYLIST_EntriesItems: string
 	/**
 	 * P​r​e​v​i​o​u​s
 	 */
-	ENTITYLIST_Previous: string
+	ENTRYLIST_Previous: string
 	/**
 	 * N​e​x​t
 	 */
-	ENTITYLIST_Next: string
+	ENTRYLIST_Next: string
 	/**
 	 * C​r​e​a​t​e
 	 */
@@ -223,6 +223,42 @@ type RootTranslation = {
 	 * M​e​d​i​a
 	 */
 	Media: string
+	/**
+	 * U​s​e​r
+	 */
+	COLLECTION_TEST_User: string
+	/**
+	 * P​r​e​f​i​x
+	 */
+	COLLECTION_TEST_Prefix: string
+	/**
+	 * E​n​t​e​r​ ​P​r​e​f​i​x
+	 */
+	COLLECTION_TEST_Prefix_placeholder: string
+	/**
+	 * F​i​r​s​t
+	 */
+	COLLECTION_TEST_First: string
+	/**
+	 * E​n​t​e​r​ ​F​i​r​s​t​ ​N​a​m​e
+	 */
+	COLLECTION_TEST_First_placeholder: string
+	/**
+	 * M​i​d​d​l​e
+	 */
+	COLLECTION_TEST_Middle: string
+	/**
+	 * M​i​d​d​l​e​ ​ ​(​R​e​a​d​O​n​l​y​)
+	 */
+	COLLECTION_TEST_Middle_placeholder: string
+	/**
+	 * L​a​s​t
+	 */
+	COLLECTION_TEST_Last: string
+	/**
+	 * E​n​t​e​r​ ​L​a​s​t​ ​N​a​m​e
+	 */
+	COLLECTION_TEST_Last_placeholder: string
 	/**
 	 * S​e​a​r​c​h​ ​i​n​ ​M​a​p​ ​.​.​.
 	 */
@@ -505,63 +541,63 @@ export type TranslationFunctions = {
 	/**
 	 * Create
 	 */
-	ENTITYLIST_Create: () => LocalizedString
+	ENTRYLIST_Create: () => LocalizedString
 	/**
 	 * Publish
 	 */
-	ENTITYLIST_Publish: () => LocalizedString
+	ENTRYLIST_Publish: () => LocalizedString
 	/**
 	 * Unpublish
 	 */
-	ENTITYLIST_Unpublish: () => LocalizedString
+	ENTRYLIST_Unpublish: () => LocalizedString
 	/**
 	 * Schedule
 	 */
-	ENTITYLIST_Schedule: () => LocalizedString
+	ENTRYLIST_Schedule: () => LocalizedString
 	/**
 	 * Clone
 	 */
-	ENTITYLIST_Clone: () => LocalizedString
+	ENTRYLIST_Clone: () => LocalizedString
 	/**
 	 * Delete
 	 */
-	ENTITYLIST_Delete: () => LocalizedString
+	ENTRYLIST_Delete: () => LocalizedString
 	/**
 	 * Search
 	 */
-	ENTITYLIST_Search: () => LocalizedString
+	ENTRYLIST_Search: () => LocalizedString
 	/**
 	 * Loading...
 	 */
-	ENTITYLIST_Loading: () => LocalizedString
+	ENTRYLIST_Loading: () => LocalizedString
 	/**
 	 * Showing
 	 */
-	ENTITYLIST_Showing: () => LocalizedString
+	ENTRYLIST_Showing: () => LocalizedString
 	/**
 	 * to
 	 */
-	ENTITYLIST_to: () => LocalizedString
+	ENTRYLIST_to: () => LocalizedString
 	/**
 	 * of
 	 */
-	ENTITYLIST_of: () => LocalizedString
+	ENTRYLIST_of: () => LocalizedString
 	/**
 	 * Entries
 	 */
-	ENTITYLIST_Entries: () => LocalizedString
+	ENTRYLIST_Entries: () => LocalizedString
 	/**
 	 * Entries
 	 */
-	ENTITYLIST_EntriesItems: () => LocalizedString
+	ENTRYLIST_EntriesItems: () => LocalizedString
 	/**
 	 * Previous
 	 */
-	ENTITYLIST_Previous: () => LocalizedString
+	ENTRYLIST_Previous: () => LocalizedString
 	/**
 	 * Next
 	 */
-	ENTITYLIST_Next: () => LocalizedString
+	ENTRYLIST_Next: () => LocalizedString
 	/**
 	 * Create
 	 */
@@ -586,6 +622,42 @@ export type TranslationFunctions = {
 	 * Media
 	 */
 	Media: () => LocalizedString
+	/**
+	 * User
+	 */
+	COLLECTION_TEST_User: () => LocalizedString
+	/**
+	 * Prefix
+	 */
+	COLLECTION_TEST_Prefix: () => LocalizedString
+	/**
+	 * Enter Prefix
+	 */
+	COLLECTION_TEST_Prefix_placeholder: () => LocalizedString
+	/**
+	 * First
+	 */
+	COLLECTION_TEST_First: () => LocalizedString
+	/**
+	 * Enter First Name
+	 */
+	COLLECTION_TEST_First_placeholder: () => LocalizedString
+	/**
+	 * Middle
+	 */
+	COLLECTION_TEST_Middle: () => LocalizedString
+	/**
+	 * Middle  (ReadOnly)
+	 */
+	COLLECTION_TEST_Middle_placeholder: () => LocalizedString
+	/**
+	 * Last
+	 */
+	COLLECTION_TEST_Last: () => LocalizedString
+	/**
+	 * Enter Last Name
+	 */
+	COLLECTION_TEST_Last_placeholder: () => LocalizedString
 	/**
 	 * Search in Map ...
 	 */
