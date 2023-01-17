@@ -4,7 +4,7 @@ import type { Display } from '../types';
 export type Relation_Params = {
 	// Defines type of collections
 	db_fieldName: string;
-	label: string;
+	label?: string;
 	icon?: string;
 	required?: boolean;
 	relation: Schema;

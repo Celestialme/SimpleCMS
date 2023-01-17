@@ -4,7 +4,7 @@ import type { Display } from '../types';
 export type MegaMenu_Params = {
 	// Defines type of collections
 	db_fieldName: string;
-	label: string;
+	label?: string;
 	menu: object;
 	required?: boolean;
 	localization?: boolean;
