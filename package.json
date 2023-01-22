@@ -75,7 +75,7 @@
 		"mongoose": "^6.8.3",
 		"multer": "^1.4.5-lts.1",
 		"svelecte": "^3.13.2",
-		"svelte-lexical": "^0.1.4",
+		"svelte-lexical": "^0.1.6",
 		"svelte-tel-input": "^1.1.1",
 		"typesafe-i18n": "^5.19.1"
 	}
