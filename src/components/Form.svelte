@@ -1,64 +1,115 @@
 <script lang="ts">
+	import { entryData, getFieldsData, language } from '@src/stores/store';
+	import env from '@root/env';
+	import type { Schema } from '@src/collections/types';
+	import Fields from './Fields.svelte';
+
+	import ToolTip from '@src/components/ToolTip.svelte';
+
+	// typesafe-i18n
+	import LL from '@src/i18n/i18n-svelte';
+
+	// Skeleton
+	import { menu } from '@skeletonlabs/skeleton';
+
+	// Icons from https://icon-sets.iconify.design/
+	import Icon from '@iconify/svelte';
+
 	export let fields: Array<any> = [];
 	export let collection: Schema | undefined = undefined;
 	export let showFields: boolean = true;
-	import { prevFormData, getFieldsData } from '@src/stores/store';
-	import type { Schema } from '@src/collections/types';
-	import { Button, Chevron, CloseButton, Dropdown, DropdownItem, Tooltip } from 'flowbite-svelte';
-	import Fields from './Fields.svelte';
-	import Icon from '@iconify/svelte';
 
 	$: {
 		$getFieldsData = new Set();
 		collection;
 	}
-	let language = 'English';
-	let languages = ['English', 'German'];
+
 	let open = false;
 </script>
 
-<div class="fields text-dark dark:text-white bg-white dark:bg-gray-800 p-3 rounded">
-	<div class="flex justify-start mb-5 font-bold relative">
-		<Icon icon={collection?.icon} color="dark" width="24" class="mr-1" />Create {collection?.name}
-		<Button pill={true} size="xs" color="light" class="absolute px-6 py-1 right-10 hover:bg-gray-100 dark:hover:bg-gray-700"
-			><Icon icon="bi:translate" color="dark" width="22" class="mr-1" />
-			<Chevron>{language}</Chevron></Button
+<div
+	class="fields text-dark overflow-y-auto rounded bg-white p-3 dark:bg-surface-800 dark:text-white"
+>
+	<div class="relative mb-5 flex justify-start overflow-visible font-bold ">
+		<div class="flex w-full flex-col">
+			<div class="mb-2 text-sm capitalize text-surface-400 dark:text-surface-300">
+				{$LL.FORM_Create()}
+			</div>
+			<div
+				class="-mt-2 flex items-center justify-start text-sm font-bold uppercase dark:text-white md:text-xl xl:text-2xl "
+			>
+				<span> <Icon icon={collection?.icon} width="24" class="mr-2" /></span>{collection?.name}
+			</div>
+		</div>
+
+		<span class="absolute right-14">
+			<button
+				use:menu={{ menu: 'ContentLang' }}
+				class="btn btn-sm btn-filled-surface flex items-center justify-center rounded-lg uppercase text-white"
+			>
+				<Icon icon="bi:translate" color="dark" width="22" class="mr-1 md:mr-1" />
+				{$language}
+				<Icon icon="mdi:chevron-down" width="24" />
+			</button>
+			<nav class="list-nav card w-40 border p-4 shadow-xl" data-menu="ContentLang">
+				<ul class="divide-y">
+					{#each Object.keys(env.translations).filter((data) => $language != data) as _language}
+						<li
+							on:click={() => {
+								$language = _language;
+								open = false;
+							}}
+						>
+							{env.translations[_language]}
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		</span>
+		<button
+			on:click={() => {
+				showFields = false;
+				$entryData = new Set();
+			}}
+			class="btn absolute right-0 dark:text-white"
 		>
-		<Dropdown bind:open>
-			{#each languages as _language}
-				<DropdownItem
-					on:click={() => {
-						language = _language;
-						open = false;
-					}}>{_language}</DropdownItem
-				>
-			{/each}
-		</Dropdown>
-		<Tooltip placement="bottom" color="gray">Current Content Language</Tooltip>
-		<CloseButton class="absolute dark:text-white right-0" on:click={() => (showFields = false)} />
-		<Tooltip placement="right" color="!dark">Close without saving</Tooltip>
+			<ToolTip
+				text={$LL.FORM_CloseMenu()}
+				position="bottom"
+				class="bg-surface-500 text-black dark:text-white"
+			/>
+			<span class="sr-only">{$LL.FORM_CloseMenu()}</span>
+			<Icon icon="material-symbols:close" width="26" />
+		</button>
 	</div>
+
+	<button
+		on:click={() => {
+			showFields = false;
+			$entryData = new Set();
+		}}
+		class="btn absolute right-0 dark:text-white"
+	>
+		<ToolTip
+			text={$LL.FORM_CloseMenu()}
+			position="bottom"
+			class="bg-surface-500 text-black dark:text-white"
+		/>
+		<span class="sr-only">{$LL.FORM_CloseMenu()}</span>
+		<Icon icon="material-symbols:close" width="26" />
+	</button>
+
 	{#if fields.some((field) => field.field.required)}
-		<div class="text-red-500 text-xs -mt-3">* Required</div>
+		<div class="text-md -mt-3 text-center text-error-500">* {$LL.FORM_Required()}</div>
 	{/if}
 	<Fields {collection} {fields} />
-
-	<form on:submit|preventDefault enctype="multipart/form-data">
-		<div class="my-2">
-			<button
-				><Button class="w-full" submit gradient color="lime"
-					><Icon icon="ph:floppy-disk-back" color="dark" width="24" class="mr-1" />SAVE</Button
-				><Tooltip placement="bottom" color="green">Save {collection?.name}</Tooltip></button
-			>
-		</div>
-	</form>
 </div>
 
 <style>
 	:global(.fields .title) {
 		color: white;
 	}
-	button {
-		width: min(70%, 200px);
+	.fields {
+		max-height: calc(100vh - 50px);
 	}
 </style>

@@ -1,31 +1,32 @@
-import type { Display } from "../types";
+import type { Display } from '../types';
+import type { Url_Params, Url_Field } from './types';
 
 export default ({
 	// Accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	placeholder,
 	required,
 	localization,
-	display,
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	placeholder?: string;
-	required?: boolean;
-	localization?: boolean;
-	display?: Display;
-}) => {
+	display
+}: Url_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, placeholder, required, localization, display };
+	let field = {
+		schema: {},
+		db_fieldName,
+		icon,
+		placeholder,
+		required,
+		localization,
+		display
+	} as Url_Field;
 
-	field.schema[title] = "string";
+	field.schema[db_fieldName] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore
-		return (await import("./Url.svelte")).default;
+		return (await import('./Url.svelte')).default;
 	};
 	return field;
 };

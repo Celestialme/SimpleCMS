@@ -1,8 +1,12 @@
 <script lang="ts">
-	import { prevFormData, getFieldsData } from '@src/stores/store';
+	import { entryData, getFieldsData, language } from '@src/stores/store';
+	import env from '@root/env';
 	import type { Schema } from '@src/collections/types';
 	import { onMount } from 'svelte';
+
+	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
+
 	export let root: boolean = true; // if field is not nested. eg. not part of menu's fields
 	export let fields: Array<any> = [];
 	export let value: any = undefined;
@@ -16,21 +20,30 @@
 	onMount(async () => {
 		$getFieldsData.add(getData);
 	});
+	// $: console.log(fieldsValue.width);
 </script>
 
 {#each fields as field, index}
-	<div bind:this={inputFields[index]} class="section my-2 relative">
-		<div class=" font-bold flex capitalize relative">
-			<p class=" font-bold">
-				{field.field.title}
+	<!-- width does not seam to apply -->
+	<div
+		bind:this={inputFields[index]}
+		class="section relative my-2  {!field.field.width ? 'w-full' : 'max-md:!w-full'}"
+		style={field.field.width && `width:${field.field.width.replace('%', '') * 1 - 1}%`}
+	>
+		<div class="relative flex">
+			<p class="font-semibold">
+				{field.field.db_fieldName}
+
 				{#if field.field.required}
-					<span class="text-red-500 ml-1 pb-3">*</span>
+					<span class="ml-1 pb-3 text-error-500">*</span>
 				{/if}
 			</p>
+
 			<div class="absolute right-0 flex gap-4">
 				{#if field.field.localization}
-					<div class="flex items-center px-2 gap-1">
+					<div class="flex items-center gap-1 px-2">
 						<Icon icon="bi:translate" color="dark" width="18" class="text-sm" />
+						<div class="text-xs font-normal text-error-500">{env.translations[$language]}</div>
 					</div>
 				{/if}
 				{#if field.field.icon}
@@ -40,13 +53,14 @@
 				{/if}
 			</div>
 		</div>
+		<!-- display all widget fields -->
 		{#if field.widget}
 			<svelte:component
 				this={field.widget}
 				{collection}
-				bind:widgetValue={fieldsValue[field.field.title]}
+				bind:widgetValue={fieldsValue[field.field.db_fieldName]}
 				{root}
-				value={value ? value?.[field.field.title] : $prevFormData?.[field.field.title] || ''}
+				value={value ? value?.[field.field.db_fieldName] : $entryData?.[field.field.db_fieldName] || null}
 				field={field.field}
 			/>
 		{/if}

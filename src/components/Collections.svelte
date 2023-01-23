@@ -1,8 +1,12 @@
 <script lang="ts">
-	import Icon from '@iconify/svelte';
 	import type { Schema } from '@src/collections/types';
 	import { shape_fields } from '@src/utils/utils_svelte';
-	import { Tooltip } from 'flowbite-svelte';
+
+	import ToolTip from '@src/components/ToolTip.svelte';
+
+	// Icons from https://icon-sets.iconify.design/
+	import Icon from '@iconify/svelte';
+
 	export let filterCollections: string;
 	export let fields: Array<any>;
 	export let collection: Schema;
@@ -10,6 +14,7 @@
 	export let showFields: boolean;
 	export let category: string = '';
 	export let switchSideBar = true;
+
 	let expanded: any = {};
 
 	function setHeight(node: HTMLDivElement) {
@@ -18,12 +23,6 @@
 		node.style.maxHeight = '0px';
 		node.style.transition = ' 0.5s';
 	}
-	function setOverflowY(e: MouseEvent, state: boolean) {
-		let node: HTMLDivElement = e.target as HTMLDivElement;
-		state
-			? setTimeout(() => (node.style.overflowY = 'auto'))
-			: setTimeout(() => (node.style.overflowY = 'hidden'));
-	}
 
 	$: filtered =
 		data &&
@@ -31,7 +30,7 @@
 			category: category.category,
 			icon: category.icon,
 			collections: category.collections.filter((collection: any) =>
-				collection.name.includes(filterCollections)
+				collection.name.toLowerCase().includes(filterCollections)
 			)
 		}));
 	$: {
@@ -43,30 +42,31 @@
 	}
 </script>
 
+<!-- Show Collection Group Names -->
 {#each filtered as item, index}
 	<div
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
-			expanded[index] ? setOverflowY(e, true) : setOverflowY(e, false);
 		}}
-		class="relative overflow-visible rounded py-2 bg-gray-500 cursor-pointer text-center arrow h-[40px]"
+		class="arrow tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center"
 		class:arrow_up={expanded[index]}
 	>
-
-	<Icon icon={item.icon} width="24" class="mr-2 absolute top-[50%] left-0 -translate-y-[50%] ml-2" />
-
+		<ToolTip position="right" text={item.category} active={!switchSideBar} />
+		<Icon
+			icon={item.icon}
+			width="24"
+			class="absolute top-[50%] left-0 mr-2 ml-2 -translate-y-[50%]"
+		/>
 		{#if switchSideBar}
-			<div class="name">{item.category}</div>			
+			<div class="name">{item.category}</div>
 		{/if}
 	</div>
-	{#if !switchSideBar}
-			<Tooltip placement="right">{item.category}</Tooltip>
-		{/if}
 
-	<div use:setHeight class="overflow-hidden" class:expand={expanded[index]}>
+	<div use:setHeight class="overflow-hidden " class:expand={expanded[index]}>
+		<!-- Show Collection Group Childern -->
 		{#each item.collections as _collection}
 			<p
-				class="text-black cursor-pointer py-2 text-center bg-white hover:bg-[#65dfff] hover:text-white relative border-b"
+				class="relative cursor-pointer border-b border-surface-200 bg-white p-0 text-center text-black last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400"
 				on:click={async () => {
 					fields = await shape_fields(_collection.fields);
 					category = item.category;
@@ -75,26 +75,23 @@
 				}}
 			>
 				{#if switchSideBar}
-					<div class="h-[40px] flex justify-center items-center">
+					<div class="flex h-[40px] items-center justify-center">
 						<Icon
 							icon={_collection.icon}
 							width="24"
-							class="text-red-700 h-40px absolute top-[50%] left-0 -translate-y-[50%] ml-2 "
+							class="absolute top-[50%] left-0 ml-2 -translate-y-[50%] text-error-600 "
 						/>
 						{_collection.name}
 					</div>
 				{:else}
 					<div class="flex flex-col py-1 ">
-						<Icon icon={_collection.icon} width="24" class="text-red-700 m-auto " />
-						<div class="text-[9px] text-clip truncate overflow-clip">
+						<Icon icon={_collection.icon} width="24" class="m-auto text-error-600 " />
+						<div class="overflow-clip truncate text-clip text-[9px]">
 							{_collection.name}
 						</div>
 					</div>
 				{/if}
 			</p>
-			{#if !switchSideBar}
-				<Tooltip placement="right" class="absolute">{_collection.name}</Tooltip>
-			{/if}
 		{/each}
 	</div>
 {/each}
@@ -117,6 +114,7 @@
 		margin-right: 10px;
 		transition: transform 0.1s ease-in;
 	}
+
 	.arrow_up::after {
 		transform: rotate(225deg);
 	}

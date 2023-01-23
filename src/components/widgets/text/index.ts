@@ -1,43 +1,46 @@
-import type { Display } from '../types';
-
-export default ({
-	title,
+import type { Text_Field, Text_Params } from './types';
+let widget = ({
+	// accept parameters from collection
+	db_fieldName,
 	icon,
 	placeholder,
 	count,
+	minlength,
+	maxlength,
 	prefix,
 	suffix,
 	required,
+	readonly,
 	localization,
+	width,
 	display
-}: {
-	title: string;
-	icon?: string;
-	placeholder?: string;
-	count?: string;
-	prefix?: string;
-	suffix?: string;
-	required?: boolean;
-	localization?: boolean;
-	display?: Display;
-}) => {
-	if (!display) display = (data: any, field: any, entry: any) => data;
-	let field: any = {
+}: Text_Params) => {
+	if (!display)
+		display = async (data: any, field: any, entry: any) => {
+			return data || 'No Value';
+		};
+	let field = {
 		schema: {},
-		title,
+		db_fieldName,
 		icon,
 		placeholder,
 		count,
+		minlength,
+		maxlength,
 		prefix,
 		suffix,
 		required,
+		readonly,
 		localization,
+		width,
 		display
-	};
-	field.schema[title] = 'string';
+	} as Text_Field;
+	field.schema[db_fieldName] = { String: String };
 	field.widget = async () => {
 		// @ts-ignore
 		return (await import('./Text.svelte')).default;
 	};
 	return field;
 };
+
+export default widget;

@@ -1,29 +1,25 @@
-import type { Display } from "../types";
+import type { Radio_Field, Radio_Params } from './types';
 
-export default ({
+let widget = ({
 	// accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	color,
+	width,
 	required,
-	display,
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	color?: string;
-	required?: boolean;
-	display?: Display;
-}) => {
+	display
+}: Radio_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, color, required, display };
+	let field = { schema: {}, db_fieldName, icon, color, width, required, display } as Radio_Field;
 
-	field.schema[title] = "string";
+	field.schema[db_fieldName] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore
-		return (await import("./Radio.svelte")).default;
+		return (await import('./Radio.svelte')).default;
 	};
 	return field;
 };
+
+export default widget;

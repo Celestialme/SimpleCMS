@@ -1,29 +1,25 @@
-import type { Display } from "../types";
+import type { Checkbox_Field, Checkbox_Params } from './types';
 
-export default ({
+let widget = ({
 	// accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	color,
 	required,
-	display,
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	color?: string;
-	required?: boolean;
-	display?: Display;
-}) => {
+	width,
+	display
+}: Checkbox_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, color, required, display };
+	let field = { schema: {}, db_fieldName, icon, color, required, width, display } as Checkbox_Field;
 
-	field.schema[title] = "string";
+	field.schema[db_fieldName] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore
-		return (await import("./Checkbox.svelte")).default;
+		return (await import('./Checkbox.svelte')).default;
 	};
 	return field;
 };
+
+export default widget;

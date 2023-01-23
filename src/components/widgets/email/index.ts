@@ -1,27 +1,20 @@
 import type { Display } from "../types";
+import type { Email_Field, Email_Params } from "./type";
 
-export default ({
+let widget = ({
 	// Accept parameters from collection
-	title,
+	db_fieldName,
 	icon,
 	placeholder,
 	required,
 	localization,
 	display,
-}: {
-	// Defines type of collections
-	title: string;
-	icon?: string;
-	placeholder?: string;
-	required?: boolean;
-	localization?: boolean;
-	display?: Display;
-}) => {
+}: Email_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
-	let field: any = { schema: {}, title, icon, placeholder, required, localization, display };
+	let field  = { schema: {}, db_fieldName, icon, placeholder, required, localization, display } as Email_Field;
 
-	field.schema[title] = "string";
+	field.schema[db_fieldName] = "string";
 
 	field.widget = async () => {
 		// @ts-ignore
@@ -29,3 +22,5 @@ export default ({
 	};
 	return field;
 };
+
+export default widget

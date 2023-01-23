@@ -1,37 +1,60 @@
 <script lang="ts">
-  import Fields from "@src/components/Fields.svelte";
-  import { saveSimpleData, shape_fields } from "@src/utils/utils_svelte";
-  import { prevFormData } from "@src/stores/store";
-  export let field = { title: "", fields: [] };
-  export let collection: any;
-  export let value: any;
-  let _fieldsValue:any = [];
-  let fields:any
-  let files: any = [];
-  let getData = async () => {
-    for (let i = 0; i < files.length; i++) {
-      let fieldsData = _fieldsValue[i];
-      await saveSimpleData(collection, fieldsData);
-    }
-    if(!files.length){ // if no files currently beeing chosen, means we are editing, should update.
-      let fieldsData = _fieldsValue;
-      await saveSimpleData(collection, fieldsData);
-    }
-  };
-  shape_fields(field.fields).then(data=>fields=data);
+	import type { ImageArray_Field } from './types';
+	import Fields from '@src/components/Fields.svelte';
+	import { saveSimpleData, shape_fields } from '@src/utils/utils_svelte';
+	import { entryData } from '@src/stores/store';
+
+	// Skeleton
+	import { FileDropzone } from '@skeletonlabs/skeleton';
+
+	export let field: ImageArray_Field;
+	export let collection: any;
+	// export let value: any;
+
+	let _fieldsValue: any = [];
+	let fields: any;
+	let files: any = [];
+	$: console.log(_fieldsValue);
+	let getData = async () => {
+		for (let i = 0; i < files.length; i++) {
+			let fieldsData = _fieldsValue[i];
+			await saveSimpleData(collection, fieldsData);
+		}
+		if (!files.length) {
+			// if no files currently being chosen, means we are editing, should update.
+			let fieldsData = _fieldsValue;
+			await saveSimpleData(collection, fieldsData);
+		}
+	};
+
+	shape_fields(field.fields).then((data) => (fields = data));
 </script>
 
 {#if files.length > 0}
-  {#each files as file,index}
-  <div class="p-[20px] my-4 rounded-lg border-2 border-[#8cccff] relative">
-    <Fields {getData} {collection} root={false} {fields} bind:fieldsValue = {_fieldsValue[index]} value={{"Multi Image Array":file}} />
-  </div>
-  {/each}
-{:else if $prevFormData}
-
-<Fields {getData} {collection} {fields} bind:fieldsValue = {_fieldsValue} value={value} />
+	{#each files as file, index}
+		<div class="relative my-4 rounded-lg border-2 border-[#8cccff] p-[20px]">
+			<Fields
+				{getData}
+				{collection}
+				root={false}
+				{fields}
+				bind:fieldsValue={_fieldsValue[index]}
+				value={{ [field.imageUploadTitle]: file }}
+			/>
+		</div>
+	{/each}
+{:else if $entryData}
+	<Fields {getData} {collection} {fields} bind:fieldsValue={_fieldsValue} value={$entryData} />
 {:else}
-  <input bind:files name={field.title} multiple class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file" />
+	<input
+		bind:files
+		name={field.db_fieldName}
+		multiple
+		class="block w-full cursor-pointer rounded-lg border border-surface-300 bg-surface-50 text-sm text-surface-900 focus:outline-none dark:border-surface-600 dark:bg-surface-700 dark:text-surface-400 dark:placeholder-surface-400"
+		type="file"
+	/>
+
+	<FileDropzone bind:files />
 {/if}
 
 <style>
