@@ -51,6 +51,7 @@ module.exports = {
 	  },
   
 	  },
-	plugins: [require('@skeletonlabs/skeleton/tailwind/theme.cjs'),
-],
+	  plugins: [
+		require('@skeletonlabs/skeleton/tailwind/skeleton.cjs')],
+
 }

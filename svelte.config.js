@@ -5,7 +5,10 @@ import preprocess from "svelte-preprocess";
 const config = {
 	
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		alias: {
+			$i18n: 'src/i18n',
+		},
 	},
 
 	// Consult https://github.com/sveltejs/svelte-preprocess
