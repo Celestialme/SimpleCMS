@@ -46,7 +46,7 @@
 			entryList = [];
 			({ entryList, totalCount: paging.totalCount } = await axios
 				.get(
-					`${env.HOST}:${env.PORT}/api/${collection.name}?page=${paging.page}&length=${paging.entryLength}`
+					`/api/${collection.name}?page=${paging.page}&length=${paging.entryLength}`
 				)
 				.then((data) => data.data));
 			totalPages = Math.ceil(paging.totalCount / paging.entryLength);
@@ -71,7 +71,7 @@
 					if (deleteList.length == 0) return;
 					let formData = new FormData();
 					formData.append('ids', JSON.stringify(deleteList));
-					await axios.delete(`${env.HOST}:${env.PORT}/api/${collection.name}`, { data: formData });
+					await axios.delete(`/api/${collection.name}`, { data: formData });
 					refresh(collection);
 				}
 			},
