@@ -1,16 +1,22 @@
 <script lang="ts">
 	//@ts-ignore
-	import { RichTextComposer, PlainTextPlugin } from 'svelte-lexical/src/index';
+	import { RichTextComposer, PlainTextPlugin, LexicalEditor } from 'svelte-lexical';
 	//@ts-ignore
 	import PlaygroundEditorTheme from './PlaygroundEditorTheme';
 	import './global.css';
+	import { onMount } from 'svelte';
 
-	// let editorState: never[] = [];
-	// const json = editorState.toJSON();
-	// console.log(json);
+	let composerComponent: RichTextComposer;
+
+	// onMount(()=> {
+    // 	const editor: LexicalEditor = composerComponent.getEditor();
+	// 	editor.registerUpdateListener(({editorState}) => {
+    //   		console.log(JSON.stringify(editorState));
+	// 	});
+	// });
 </script>
 
 <!-- TODO: save Data to Mongodb -->
-<RichTextComposer theme={PlaygroundEditorTheme}>
+<RichTextComposer theme={PlaygroundEditorTheme} bind:this={composerComponent}>
 	<PlainTextPlugin />
 </RichTextComposer>
