@@ -1,5 +1,5 @@
 import type { Display } from '../types';
-import type { Youtube_Params, Youtube_Field } from './types';
+import type { RemoteVideo_Params, RemoteVideo_Field } from './types';
 
 export default ({
 	// Accept parameters from collection
@@ -8,7 +8,7 @@ export default ({
 	placeholder,
 	required,
 	display
-}: Youtube_Params) => {
+}: RemoteVideo_Params) => {
 	if (!display) display = (data: any, field: any, entry: any) => data;
 
 	let field = {
@@ -18,13 +18,13 @@ export default ({
 		placeholder,
 		required,
 		display
-	} as Youtube_Field;
+	} as RemoteVideo_Field;
 
 	field.schema[db_fieldName] = 'string';
 
 	field.widget = async () => {
 		// @ts-ignore
-		return (await import('./Youtube.svelte')).default;
+		return (await import('./RemoteVideo.svelte')).default;
 	};
 	return field;
 };

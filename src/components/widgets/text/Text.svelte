@@ -38,7 +38,9 @@
 			type="text"
 			name={field.db_fieldName}
 			id={field.db_fieldName}
-			placeholder={field.placeholder && field.placeholder !== '' ? field.placeholder : field.db_fieldName}
+			placeholder={field.placeholder && field.placeholder !== ''
+				? field.placeholder
+				: field.db_fieldName}
 			minlength={field.minlength}
 			maxlength={field.maxlength}
 			required={field.required}
@@ -46,14 +48,14 @@
 			bind:value={widgetValue[_language]}
 			class="{field.prefix
 				? 'pl-7'
-				: ''} block w-full rounded-md border-surface-300 pr-12 read-only:border-2 read-only:border-error-600 read-only:bg-surface-300 read-only:placeholder-surface-900 read-only:dark:bg-surface-500 read-only:dark:placeholder-white sm:text-sm"
+				: ''} block w-full  border-surface-300 pr-12 read-only:border-2 read-only:border-error-600 read-only:bg-surface-300 read-only:placeholder-surface-900 read-only:dark:bg-surface-500 read-only:dark:placeholder-white sm:text-sm"
 		/>
 		<!-- why is this not working ?
 			right-[calc(#suffix - 12px)] 
 		-->
 		{#if field.count}
 			{#if field.suffix}
-				<div class=" absolute inset-y-0 right-9  flex items-center">
+				<div class=" absolute inset-y-0 right-9 flex items-center">
 					<span class="badge mr-1 border bg-white text-surface-600 ">
 						<!-- {charCount}/{field.count} -->
 						{field.count}

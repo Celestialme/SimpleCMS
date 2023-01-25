@@ -109,7 +109,19 @@
 
 /* Applied to body with `<body data-theme="skeleton">` */
 /* Created with: https://csshero.org/mesher/ */
+
 [data-theme='skeleton'] {
+	/* prettier-ignore */
+	background-color:hsla(219,13%,91%,1);
+	background-image: radial-gradient(at 41% 61%, hsla(217, 13%, 91%, 1) 0px, transparent 50%),
+		radial-gradient(at 65% 38%, hsla(218, 13%, 91%, 1) 0px, transparent 50%),
+		radial-gradient(at 82% 79%, hsla(219, 13%, 91%, 1) 0px, transparent 50%),
+		radial-gradient(at 25% 19%, hsla(219, 13%, 91%, 1) 0px, transparent 50%),
+		radial-gradient(at 0% 99%, hsla(129, 0%, 13%, 1) 0px, transparent 50%),
+		radial-gradient(at 100% 1%, hsla(89, 0%, 13%, 1) 0px, transparent 50%);
+}
+
+.dark [data-theme='skeleton'] {
 	/* prettier-ignore */
 	background-color:hsla(0,0%,13%,1);
 	background-image: radial-gradient(at 54% 48%, hsla(268, 0%, 13%, 1) 0px, transparent 50%),

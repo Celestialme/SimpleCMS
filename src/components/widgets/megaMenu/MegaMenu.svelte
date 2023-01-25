@@ -60,7 +60,7 @@
 						on:click={() => {
 							(depth = 0), (showLevelContent = !showLevelContent);
 						}}
-						class="btn btn-sm btn-filled-primary ml-auto rounded text-xl text-black"
+						class="btn btn-sm variant-filled-primary ml-auto rounded text-xl text-black"
 					>
 						<Icon icon="ic:baseline-plus" width="22" />
 					</button>

@@ -1,6 +1,6 @@
 import widgets from '../components/widgets';
 import { format } from '@src/utils/utils';
-import {get} from "svelte/store"
+import { get } from 'svelte/store';
 import type { Schema } from './types';
 
 // typesafe-i18n
@@ -134,10 +134,10 @@ let schema: Schema = {
 			localization: true
 		}),
 
-		widgets.Youtube({
-			db_fieldName: 'Youtube',
+		widgets.RemoteVideo({
+			db_fieldName: 'remoteVideo',
 			icon: 'bi:youtube',
-			placeholder: 'Enter Youtube URL',
+			placeholder: 'Enter Video URL',
 			required: true
 		}),
 

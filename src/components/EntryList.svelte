@@ -45,9 +45,7 @@
 		refresh = async (collection: any) => {
 			entryList = [];
 			({ entryList, totalCount: paging.totalCount } = await axios
-				.get(
-					`/api/${collection.name}?page=${paging.page}&length=${paging.entryLength}`
-				)
+				.get(`/api/${collection.name}?page=${paging.page}&length=${paging.entryLength}`)
 				.then((data) => data.data));
 			totalPages = Math.ceil(paging.totalCount / paging.entryLength);
 			deleteMap = {};
@@ -261,14 +259,15 @@
 				data-menu="ContentLang"
 			>
 				<ul class="divide-y">
-					{#each Object.keys(env.translations).filter((data) => $language != data) as _language}
+					{#each Object.keys(env.TRANSLATIONS).filter((data) => $language != data) as _language}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							on:click={() => {
 								$language = _language;
 								open = false;
 							}}
 						>
-							{env.translations[_language]}
+							{env.TRANSLATIONS[_language]}
 						</li>
 					{/each}
 				</ul>
@@ -467,9 +466,9 @@
 	</div>
 
 	<!-- Show Collection Table -->
-	<div class="table-container max-h-[80vh] overflow-auto shadow-xl">
+	<div class="table-container max-h-[80vh] overflow-auto shadow-xl bg-white dark:bg-surface-800 ">
 		<table class="table-hover fixed_header inline-block ">
-			<thead class="sticky top-0">
+			<thead class="sticky top-0 ">
 				<tr class="border-b-2 border-black bg-surface-600 dark:border-white dark:bg-surface-500  ">
 					<th><DeleteIcon bind:checked={deleteAll} /></th>
 
@@ -477,6 +476,7 @@
 
 					{#each collection.fields as field}
 						<th class={never('text-white ')}>
+							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<div
 								on:click={() => {
 									sort = field.name;
@@ -576,6 +576,7 @@
 			>
 				<ul class="divide-y">
 					{#each paging.lengthList as length}
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<li
 							class="-mx-2 transition duration-150 ease-in-out hover:bg-surface-700 focus:bg-surface-700 focus:outline-none focus:ring-0 active:bg-surface-700 dark:text-black hover:dark:text-white"
 							value={length}
@@ -593,6 +594,7 @@
 		<div class="dark:text-white">
 			<nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
 				<!-- Previous -->
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div
 					on:click={() => {
 						paging.page > 1 && (paging.page--, refresh(collection));
@@ -605,6 +607,7 @@
 
 				<!-- pages -->
 				{#each Array(totalPages) as _, i}
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
 						on:click={() => {
 							paging.page = i + 1;
@@ -619,6 +622,7 @@
 				{/each}
 
 				<!-- Next -->
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<div
 					on:click={() => {
 						paging.page < totalPages && (paging.page++, refresh(collection));

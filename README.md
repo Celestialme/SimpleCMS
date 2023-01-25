@@ -36,7 +36,7 @@ import pkg from './package.json' assert { type: 'json' };
 let env: {
 	SITENAME: string;
 	LANGUAGE: string;
-	translations: { [key: string]: string };
+	TRANSLATIONS: { [key: string]: string };
 	LANGUAGESYSTEM: string;
 	HOST: string;
 	PORT: number;
@@ -51,11 +51,15 @@ let env: {
 	};
 	MAPBOX_API_TOKEN: string;
 	GOOGLE_API_TOKEN: string;
+	YOUTUBE_API_KEY: string;
+	VIMEO_API_KEY: string;
+	TWITCH_API_KEY: string;
+	TIKTOK_API_KEY: string;
 } = {
 	SITENAME: 'SimpleCMS',
 
 	LANGUAGE: 'en', // defines default language
-	translations: { en: 'English', de: 'German' },
+	TRANSLATIONS: { en: 'English', de: 'German' },
 
 	LANGUAGESYSTEM: 'en', // defines default System language
 
@@ -63,11 +67,13 @@ let env: {
 	HOST: 'http://localhost',
 	PORT: 3501,
 
-	// for Mapbox API - Only use one map Api
-	MAPBOX_API_TOKEN: "your api key here",
-	// for Goolge Cloud API
-	// Required for Google Maps & for Youtube
-	// GOOGLE_API_TOKEN: 'your api key here',
+	// YOUR API_KEYs
+	MAPBOX_API_TOKEN: '',
+	GOOGLE_API_TOKEN: '',
+	YOUTUBE_API_KEY: '',
+	VIMEO_API_KEY: '',
+	TWITCH_API_KEY: '',
+	TIKTOK_API_KEY: '',
 
 // for mongodb......for Atlas use DB_HOST:"mongodb+srv://XXXX",
 	DB_URL: 'xxxx:27017',

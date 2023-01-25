@@ -109,10 +109,10 @@
 	Mapbox needs more work
 	<div use:initMap class="max-h-[550px] w-full">
 		<div class="mb-1 flex justify-between  gap-2 ">
-			<button class="btn btn-filled-primary btn-base rounded-md text-white"
+			<button class="btn variant-filled-primary btn-base rounded-md text-white"
 				><Icon icon="bi:map" width="16" class="mr-2 " />{$LL.WIDGET_Address_GetAddress()}</button
 			>
-			<button class="btn btn-filled-primary btn-base rounded-md text-white"
+			<button class="btn variant-filled-primary btn-base rounded-md text-white"
 				><Icon
 					icon="bi:pin-map"
 					width="16"

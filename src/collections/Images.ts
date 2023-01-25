@@ -1,13 +1,13 @@
 import Posts from './Posts';
 import widgets from '../components/widgets';
 import type { Schema } from './types';
-import env from '../../env';
+import env from '@root/env';
 let schema: Schema = {
 	// Collection Name & Icon (optional) shown on Sidebar
 	// See for possible Icons https://icon-sets.iconify.design/
 	name: 'Images',
 	icon: 'bi:card-image',
-	status:"published",
+	status: 'published',
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [

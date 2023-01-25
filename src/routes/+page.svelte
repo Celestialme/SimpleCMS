@@ -292,7 +292,7 @@
 
 							<div class="flex justify-center p-1 pb-2">
 								<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-									<span class="badge badge-filled-primary rounded-xl text-black"
+									<span class="badge variant-filled-primary rounded-xl text-black"
 										>{$LL.SBL_Version()}: {env.PKG.VERSION}</span
 									>
 								</a>
@@ -362,7 +362,7 @@
 							</div>
 
 							<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-								<span class="badge badge-filled-primary mt-2 rounded-xl text-black"
+								<span class="badge variant-filled-primary mt-2 rounded-xl text-black"
 									>{$LL.SBL_Ver()} {env.PKG.VERSION}</span
 								>
 							</a>
