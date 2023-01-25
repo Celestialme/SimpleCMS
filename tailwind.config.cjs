@@ -54,7 +54,7 @@ module.exports = {
 	  },
 	  plugins: [
 		// other existing plugins above...
-
+		require('@tailwindcss/forms'),
 		// Keep any existing plugins present and append the following:
 		...require("@skeletonlabs/skeleton/tailwind/skeleton.cjs")(),
 

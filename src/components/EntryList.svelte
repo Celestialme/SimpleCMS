@@ -15,6 +15,9 @@
 	import { menu } from '@skeletonlabs/skeleton';
 	import { Modal, modalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
+	import { InputChip } from '@skeletonlabs/skeleton';
+
+	let defaultDisplay = ['ID', 'Status', 'Label', 'User', 'Email'];
 
 	// Icons from https://icon-sets.iconify.design/
 	import Icon from '@iconify/svelte';
@@ -96,13 +99,13 @@
 	function triggerConfirm(): void {
 		const confirm: ModalSettings = {
 			type: 'confirm',
-			title: '{$LL.ENTRYLIST_Delete_confirm_title()}',
-			body: '{$LL.ENTRYLIST_Delete_confirm_body()}',
+			title: $LL.ENTRYLIST_Delete_title(),
+			body: $LL.ENTRYLIST_Delete_body(),
 			// TRUE if confirm pressed, FALSE if cancel pressed
 			response: (r: boolean) => console.log('response:', r),
 			// Optionally override the button text
-			buttonTextCancel: '{$LL.ENTRYLIST_Delete_confirm_cancel()}',
-			buttonTextConfirm: '{$LL.ENTRYLIST_Delete_confirm_confirm()}'
+			buttonTextCancel: $LL.ENTRYLIST_Delete_cancel(),
+			buttonTextConfirm: $LL.ENTRYLIST_Delete_confirm()
 		};
 		modalStore.trigger(confirm);
 	}
@@ -224,7 +227,7 @@
 				<input
 					on:keyup={search}
 					placeholder="{$LL.ENTRYLIST_Search()} {collection.name} ..."
-					class="relative z-10 mt-[2px] h-10 w-10 cursor-pointer rounded-full border border-surface-500 bg-surface-200/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-md dark:bg-surface-500/50 dark:text-white md:mt-0 md:h-12 md:w-full "
+					class="relative z-10 mt-[2px] h-10 w-10 cursor-pointer !rounded-full border border-surface-500 bg-surface-200/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-md dark:bg-surface-500/50 dark:text-white md:mt-0 md:h-12 md:w-full "
 				/>
 				<!-- searchIcon -->
 				<svg
@@ -378,7 +381,7 @@
 				>
 
 				<nav
-					class="list-nav card mt-14 mr-1 w-52 border bg-surface-600 p-2 shadow-xl dark:border-none dark:bg-surface-300"
+					class="card list-nav mt-14 mr-1 w-52 bg-surface-600 p-2 shadow-xl dark:border-none dark:bg-surface-300"
 					data-menu="entrySelect"
 				>
 					<ul>
@@ -388,10 +391,10 @@
 									on:click={() => {
 										entryButton = 'create';
 									}}
-									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 text-lg font-bold text-surface-800"
+									class="btn btn-base w-full bg-gradient-to-br from-primary-600 via-primary-500 to-primary-400 font-bold text-white"
 								>
-									<Icon icon="ic:round-plus" width="22" />
-									{$LL.ENTRYLIST_Create()}
+									<span><Icon icon="ic:round-plus" width="22" /></span>
+									<span class="text-xl font-bold">{$LL.ENTRYLIST_Create()}</span>
 								</button>
 							</li>{/if}
 						{#if entryButton != 'publish'}
@@ -400,10 +403,10 @@
 									on:click={() => {
 										entryButton = 'publish';
 									}}
-									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-tertiary-700 via-tertiary-600 to-tertiary-500 text-lg font-bold text-white"
+									class="btn btn-base w-full bg-gradient-to-br from-tertiary-700 via-tertiary-600 to-tertiary-500 font-bold text-white"
 								>
-									<Icon icon="bi:hand-thumbs-up-fill" width="20" />
-									{$LL.ENTRYLIST_Publish()}
+									<span><Icon icon="bi:hand-thumbs-up-fill" width="20" /></span>
+									<span class="text-xl font-bold">{$LL.ENTRYLIST_Publish()}</span>
 								</button>
 							</li>
 						{/if}
@@ -413,10 +416,10 @@
 									on:click={() => {
 										entryButton = 'unpublish';
 									}}
-									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-warning-600 via-warning-500 to-warning-300 text-lg font-bold text-white "
+									class="btn btn-base w-full bg-gradient-to-br from-warning-600 via-warning-500 to-warning-300 font-bold text-white "
 								>
-									<Icon icon="bi:pause-circle" width="20" />
-									{$LL.ENTRYLIST_Unpublish()}
+									<span><Icon icon="bi:pause-circle" width="20" /></span>
+									<span class="text-xl font-bold">{$LL.ENTRYLIST_Unpublish()}</span>
 								</button>
 							</li>
 						{/if}
@@ -426,10 +429,10 @@
 									on:click={() => {
 										entryButton = 'schedule';
 									}}
-									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-pink-700 via-pink-500 to-pink-300 text-lg font-bold text-white "
+									class="btn btn-base w-full bg-gradient-to-br from-pink-700 via-pink-500 to-pink-300 font-bold text-white "
 								>
-									<Icon icon="bi:clock" width="20" />
-									{$LL.ENTRYLIST_Schedule()}
+									<span><Icon icon="bi:clock" width="20" /></span>
+									<span class="text-xl font-bold">{$LL.ENTRYLIST_Schedule()}</span>
 								</button>
 							</li>
 						{/if}
@@ -439,10 +442,10 @@
 									on:click={() => {
 										entryButton = 'clone';
 									}}
-									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-surface-500 via-surface-400 to-surface-300 text-lg font-bold text-white "
+									class="btn btn-base w-full bg-gradient-to-br from-surface-500 via-surface-400 to-surface-300 font-bold text-white "
 								>
-									<Icon icon="bi:clipboard-data-fill" width="20" />
-									{$LL.ENTRYLIST_Clone()}
+									<span><Icon icon="bi:clipboard-data-fill" width="20" /></span>
+									<span class="text-xl font-bold">{$LL.ENTRYLIST_Clone()}</span>
 								</button>
 							</li>
 						{/if}
@@ -452,10 +455,10 @@
 									on:click={() => {
 										entryButton = 'delete';
 									}}
-									class="btn flex w-full items-center justify-center gap-1 rounded-md border bg-gradient-to-br from-error-600 via-error-500 to-error-300 text-lg font-bold text-white "
+									class="btn btn-base w-full bg-gradient-to-br from-error-600 via-error-500 to-error-300 text-white"
 								>
-									<Icon icon="bi:trash3-fill" width="20" />
-									{$LL.ENTRYLIST_Delete()}
+									<span><Icon icon="bi:trash3-fill" width="20" /></span>
+									<span class="text-xl font-bold">{$LL.ENTRYLIST_Delete()}</span>
 								</button>
 							</li>
 						{/if}
@@ -465,7 +468,14 @@
 		</div>
 	</div>
 
+	<!-- TODO: Link to Colletion widgetValue -->
+	<InputChip
+		label="Display Columns"
+		placeholder="Add more Columns..."
+		bind:value={defaultDisplay}
+	/>
 	<!-- Show Collection Table -->
+	<!-- TODO: Add Sort/Filter -->
 	<div class="table-container max-h-[80vh] overflow-auto shadow-xl bg-white dark:bg-surface-800 ">
 		<table class="table-hover fixed_header inline-block ">
 			<thead class="sticky top-0 ">
