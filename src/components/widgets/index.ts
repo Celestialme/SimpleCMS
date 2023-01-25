@@ -16,7 +16,7 @@ import Group from './group';
 import SelectList from './selectList';
 import Address from './address';
 import Seo from './seo';
-import Youtube from './youtube';
+import RemoteVideo from './remoteVideo';
 
 export type Widgets = {
 	Address: typeof Address;
@@ -37,7 +37,7 @@ export type Widgets = {
 	Text: typeof Text;
 	Url: typeof Url;
 	Seo: typeof Seo;
-	Youtube: typeof Youtube;
+	RemoteVideo: typeof RemoteVideo;
 };
 
 let widgets: Widgets = {
@@ -81,6 +81,8 @@ let widgets: Widgets = {
 	//Range,
 	// Relation - assign relationships to other collections
 	Relation,
+	// RemoteVideo - for youtube/vimeo/Twich/tiktok, grabbing Thumbnail and video Title
+	RemoteVideo,
 	// Rich Text - fully extensible Lexical Rich Text editor
 	RichText,
 	// Row - used for admin field layout, no effect on data shape
@@ -98,8 +100,6 @@ let widgets: Widgets = {
 	// Upload - allows local file and image upload
 	//Upload
 	// Url - Link to internal / External hyperlinks
-	Url,
-	// Youtube - Url to youtube video, grabbing Thumbnail and video information
-	Youtube
+	Url
 } as const;
 export default widgets;

@@ -1,7 +1,7 @@
 import { get } from 'svelte/store';
 import { entryData, getFieldsData, language } from '@src/stores/store';
 import axios from 'axios';
-import env from '../../env';
+import env from '@root/env';
 import type { Schema } from '@src/collections/types';
 import { config } from './utils';
 export async function shape_fields(fields: Array<any>) {
@@ -75,7 +75,7 @@ export async function saveData(
 		return { data: 404 };
 	} else if (oldData_id && !insert) {
 		formData.append('_id', oldData_id);
-		
+
 		return await axios.patch(`/api/${collection.name}`, formData, config);
 	} else {
 		return await axios.post(`/api/${collection.name}`, formData, config);
@@ -84,7 +84,7 @@ export async function saveData(
 
 export function any(input: any) {
 	return input as any;
-  }
-export function never(input: any){
+}
+export function never(input: any) {
 	return input as never;
 }

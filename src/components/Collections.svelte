@@ -66,7 +66,7 @@
 		<!-- Show Collection Group Childern -->
 		{#each item.collections as _collection}
 			<p
-				class="relative cursor-pointer border-b border-surface-200 bg-white p-0 text-center text-black last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400"
+				class="relative cursor-pointer border-b border-surface-200 bg-white p-0 text-center text-black last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white"
 				on:click={async () => {
 					fields = await shape_fields(_collection.fields);
 					category = item.category;

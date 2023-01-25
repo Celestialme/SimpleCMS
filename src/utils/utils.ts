@@ -15,11 +15,11 @@ import axios from 'axios';
 import fs from 'fs';
 import schemas from '../collections';
 import type { Schema } from '../collections/types';
-import env from '../../env';
+import env from '@root/env';
 import {Blob} from 'buffer';
 // takes in a "req" object and processes any files associated with the request,
 // it saves them to a specified file path using the "fs" library.
-export function saveFiles(data: FormData,collection:string) {
+export function saveFiles(data: FormData, collection: string) {
 	let files: any = {};
 	let _files:Array<any> = []
 	let schema = schemas.find((schema) => schema.name === collection);
@@ -85,19 +85,13 @@ export function parse(obj: any) {
 // find a specific document in a specified collection by ID
 export async function findById(id: string, collection: Schema) {
 	if (!id || !collection) return;
-	return (
-		await axios.get(`/api/findById?collection=${collection.name}&id=${id}`)
-	).data;
+	return (await axios.get(`/api/findById?collection=${collection.name}&id=${id}`)).data;
 }
 
 // find a specific document in a specified collection
 export async function find(query: object, collection: Schema) {
 	let _query = JSON.stringify(query);
-	return (
-		await axios.get(
-			`/api/find?collection=${collection.name}&query=${_query}`
-		)
-	).data;
+	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
 }
 
 // exports an object with a "Content-Type" of "multipart/form-data"
@@ -132,16 +126,14 @@ export function format(
 // iterates over each key, it checks the type of the value of the current key in the specified language
 export function flattenData(data: any, language: string) {
 	if (!data) return [];
-	return  Object.keys(data).reduce((acc: any, x) => {
+	return Object.keys(data).reduce((acc: any, x) => {
 		acc[x] =
-		data[x] && data[x].constructor == Object && (data[x][language] || data[x][env.LANGUAGE])
+			data[x] && data[x].constructor == Object && (data[x][language] || data[x][env.LANGUAGE])
 				? data[x][language] || data[x][env.LANGUAGE]
 				: data[x];
 
 		return acc;
 	}, {});
-
-	 
 }
 
 // Replaces the locale slug in a URL.

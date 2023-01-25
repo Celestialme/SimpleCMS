@@ -6,8 +6,8 @@
 	--theme-font-family-heading: system-ui;
 	--theme-font-color-base: 0 0 0;
 	--theme-font-color-dark: 255 255 255;
-	--theme-rounded-base: 9999px;
-	--theme-rounded-container: 8px;
+	--theme-rounded-base: 4px;
+	--theme-rounded-container: 2px;
 	--theme-border-base: 1px;
 	/* =~= Theme On-X Colors =~= */
 	--on-primary: 255 255 255;
@@ -34,7 +34,7 @@
 	--color-secondary-100: 225 225 225; /* ⬅ #e1e1e1 */
 	--color-secondary-200: 218 218 218; /* ⬅ #dadada */
 	--color-secondary-300: 196 196 196; /* ⬅ #c4c4c4 */
-	--color-secondary-400: 151 151 151; /*  ⬅ #979797 */
+	--color-secondary-400: 151 151 151; /* ⬅ #979797 */
 	--color-secondary-500: 107 107 107; /* ⬅ #6b6b6b */
 	--color-secondary-600: 96 96 96; /* ⬅ #606060 */
 	--color-secondary-700: 80 80 80; /* ⬅ #505050 */
@@ -109,7 +109,15 @@
 
 /* Applied to body with `<body data-theme="skeleton">` */
 /* Created with: https://csshero.org/mesher/ */
+
 [data-theme='skeleton'] {
+	/* prettier-ignore */
+	background-color:hsla(219,13%,95%,1);
+	background-image: radial-gradient(at 41% 61%, hsla(217, 13%, 95%, 1) 0px, transparent 40%),
+		radial-gradient(at 0% 100%, hsla(129, 0%, 13%, 1) 0px, transparent 20%);
+}
+
+.dark [data-theme='skeleton'] {
 	/* prettier-ignore */
 	background-color:hsla(0,0%,13%,1);
 	background-image: radial-gradient(at 54% 48%, hsla(268, 0%, 13%, 1) 0px, transparent 50%),

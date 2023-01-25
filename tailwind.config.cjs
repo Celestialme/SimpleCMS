@@ -1,13 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
 	darkMode: 'class',
-	content: ['./src/**/*.{html,js,svelte,ts}', require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')],
+
+	content: [
+		'./src/**/*.{html,js,svelte,ts}', 
+		require('path').join(require.resolve('@skeletonlabs/skeleton'), 
+		'../**/*.{html,js,svelte,ts}')],
+
 	theme: {
 		extend: {},
 	
 		screens: {
 		  // Start with default and use xs/sm/md/lg/xl/2xl 
-	
 		  'xs': '360px',
 		  // => @media (min-width: 360px) { ... }
 	
@@ -26,9 +30,7 @@ module.exports = {
 		  '2xl': '1536px',
 		  // => @media (min-width: 1536px) { ... }
 	  
-	
   //----------------- max-width------------------------------------------------
-  
 		
 		  'max-xs': {max:'360px'},
 		  // => @media (min-width: 360px) { ... }
@@ -47,11 +49,14 @@ module.exports = {
 	
 		  'max-2xl': {max:'1536px'},
 		  // => @media (min-width: 1536px) { ... }
-	  
 	  },
   
 	  },
 	  plugins: [
-		require('@skeletonlabs/skeleton/tailwind/skeleton.cjs')],
+		// other existing plugins above...
+		require('@tailwindcss/forms'),
+		// Keep any existing plugins present and append the following:
+		...require("@skeletonlabs/skeleton/tailwind/skeleton.cjs")(),
 
+	],
 }

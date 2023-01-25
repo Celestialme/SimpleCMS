@@ -159,13 +159,23 @@
 
 					<!-- sidebar collapse button -->
 					<button
-						class="absolute top-2 -right-2 mr-1 rounded-full border-4 border-surface-300 text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:border-surface-900 dark:text-white hover:dark:bg-black hover:dark:text-error-600"
+						class="absolute top-2 -right-2 mr-1 rounded-full border-2 border-surface-300"
 						on:click={() => (switchSideBar = !switchSideBar)}
 					>
 						{#if !switchSideBar}
-							<Icon icon="bi:arrow-left-circle-fill" width="30" class="rotate-180" />
+							<!-- Icon Collpased -->
+							<Icon
+								icon="bi:arrow-left-circle-fill"
+								width="30"
+								class="rotate-180 rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600  "
+							/>
 						{:else}
-							<Icon icon="bi:arrow-left-circle-fill" width="30" />
+							<!-- Icon expanded -->
+							<Icon
+								icon="bi:arrow-left-circle-fill"
+								width="30"
+								class="rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
+							/>
 						{/if}
 					</button>
 
@@ -178,7 +188,7 @@
 						{/if}
 					</a>
 
-					<!-- Search Collections  perhap overflow is better? -->
+					<!-- Search Collections perhap overflow is better? -->
 					<div class="mx-auto my-2 max-w-full">
 						<div class="relative mx-auto ">
 							{#if !switchSideBar}
@@ -186,13 +196,13 @@
 									on:keyup={updateFilter}
 									on:focus={() => (switchSideBar = !switchSideBar)}
 									placeholder={$LL.SBL_Search()}
-									class="relative z-10 h-10 w-10 cursor-pointer rounded-full border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-surface-600/50 dark:text-white md:mt-0 md:h-12"
+									class="relative z-10 h-10 w-10 cursor-pointer !rounded-full border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:w-full focus:cursor-text focus:rounded-sm dark:bg-surface-600/50 dark:text-white md:mt-0 md:h-12"
 								/>
 							{:else}
 								<input
 									on:keyup={updateFilter}
 									placeholder={$LL.SBL_Search()}
-									class="relative z-10 h-10  w-full cursor-pointer rounded-md border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-surface-600/50 dark:text-white"
+									class="relative z-10 h-10 w-full cursor-pointer rounded-md border border-surface-700 bg-surface-300/50 pl-12 text-black shadow-xl outline-none focus:cursor-text dark:bg-surface-600/50 dark:text-white"
 								/>
 							{/if}
 
@@ -292,7 +302,7 @@
 
 							<div class="flex justify-center p-1 pb-2">
 								<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-									<span class="badge badge-filled-primary rounded-xl text-black"
+									<span class="badge variant-filled-primary rounded-xl text-black"
 										>{$LL.SBL_Version()}: {env.PKG.VERSION}</span
 									>
 								</a>
@@ -362,7 +372,7 @@
 							</div>
 
 							<a href="https://github.com/Celestialme/SimpleCMS" target="blank">
-								<span class="badge badge-filled-primary mt-2 rounded-xl text-black"
+								<span class="badge variant-filled-primary mt-2 rounded-xl text-black"
 									>{$LL.SBL_Ver()} {env.PKG.VERSION}</span
 								>
 							</a>

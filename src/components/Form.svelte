@@ -45,7 +45,7 @@
 		<span class="absolute right-14">
 			<button
 				use:menu={{ menu: 'ContentLang' }}
-				class="btn btn-sm btn-filled-surface flex items-center justify-center rounded-lg uppercase text-white"
+				class="btn btn-sm variant-filled-surface flex items-center justify-center rounded-lg uppercase text-white"
 			>
 				<Icon icon="bi:translate" color="dark" width="22" class="mr-1 md:mr-1" />
 				{$language}
@@ -53,14 +53,14 @@
 			</button>
 			<nav class="list-nav card w-40 border p-4 shadow-xl" data-menu="ContentLang">
 				<ul class="divide-y">
-					{#each Object.keys(env.translations).filter((data) => $language != data) as _language}
+					{#each Object.keys(env.TRANSLATIONS).filter((data) => $language != data) as _language}
 						<li
 							on:click={() => {
 								$language = _language;
 								open = false;
 							}}
 						>
-							{env.translations[_language]}
+							{env.TRANSLATIONS[_language]}
 						</li>
 					{/each}
 				</ul>
