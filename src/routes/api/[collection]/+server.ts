@@ -32,16 +32,18 @@ export const POST:RequestHandler = async ({ params,request }) => {
   let collection = collections[params.collection];
   let data = await request.formData();
   let body:any = {}
-	for (let key in data.keys()) {
-    console.log(true)
+	for (let key of data.keys()) {
+    console.log(key)
 		try {
 			body[key] = JSON.parse(data.get(key) as string);
 		} catch (e) {}
 	}
 	if (!collection) return  new Response('collection not found!!');
 	let files = saveFiles(data,params.collection);
+  console.log(body,files)
 	return new Response(	JSON.stringify(await collection.insertMany({ ...body, ...files }))    );
 }
+
 export const DELETE:RequestHandler = async ({ params,request }) => {
   let collection = collections[params.collection];
   let data = await request.formData();

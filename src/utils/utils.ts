@@ -16,16 +16,23 @@ import fs from 'fs';
 import schemas from '../collections';
 import type { Schema } from '../collections/types';
 import env from '../../env';
-
+import {Blob} from 'buffer';
 // takes in a "req" object and processes any files associated with the request,
 // it saves them to a specified file path using the "fs" library.
 export function saveFiles(data: FormData,collection:string) {
 	let files: any = {};
+	let _files:Array<any> = []
 	let schema = schemas.find((schema) => schema.name === collection);
-	let _files = (data.getAll("file") as any) || [];
+	for(let value of data.values()){
+		if(value instanceof Blob){
+			_files.push(value);
+		}
+	}
 	console.log(_files);
 	for (let file of _files) {
 		let { buffer, fieldname, ...meta } = file;
+		console.log(fieldname)
+		console.log(buffer)
 		files[fieldname as keyof typeof files] = meta;
 		let path = _findFieldByTitle(schema, fieldname).path;
 
