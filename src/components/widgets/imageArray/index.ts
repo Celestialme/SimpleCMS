@@ -15,18 +15,17 @@ import type { ImageArray_Field, ImageArray_Params } from './types';
 	if (!display)
 		display = async (data: any, field: any, entry: any) =>
 			`<img class='max-w-[200px] inline-block' src="${uploader.path}/${
-				entry[uploader.db_fieldName].originalname
+				entry[uploader.db_fieldName].name
 			}" />`;
 
 	let field = { schema: {}, db_fieldName,imageUploadTitle, icon, upload: true, fields, required, display } as ImageArray_Field;
 
 	field.schema[db_fieldName] = {
-		originalname: 'string',
-		encoding: 'string',
-		mimetype: 'string',
-		size: 'number',
-		filename: 'string',
-		alt: 'string'
+		
+		size:Number,
+		name:String,
+		type:String,
+		lastModified:Number
 	};
 
 	field.widget = async () => {

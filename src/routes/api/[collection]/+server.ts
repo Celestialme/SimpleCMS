@@ -40,7 +40,7 @@ export const POST:RequestHandler = async ({ params,request }) => {
 	}
 	if (!collection) return  new Response('collection not found!!');
 	let files = saveFiles(data,params.collection);
-  console.log(body,files)
+  console.log({ ...body, ...files })
 	return new Response(	JSON.stringify(await collection.insertMany({ ...body, ...files }))    );
 }
 

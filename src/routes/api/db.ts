@@ -23,8 +23,10 @@ for (let schema of schemas) {
 	const schema_object = new mongoose.Schema(
 		{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
 		{
+			 typeKey: '$type',
 			strict: schema.strict || false,
-			timestamps: { currentTime: () => Date.now() }
+			timestamps: { currentTime: () => Date.now() },
+			 
 		}
 	);
 	collections[schema.name] = mongoose.model(schema.name, schema_object);

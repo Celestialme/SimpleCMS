@@ -23,22 +23,24 @@ export function saveFiles(data: FormData,collection:string) {
 	let files: any = {};
 	let _files:Array<any> = []
 	let schema = schemas.find((schema) => schema.name === collection);
-	for(let value of data.values()){
-		if(value instanceof Blob){
-			_files.push(value);
+	for(let [fieldname,fieldData] of data.entries()){
+		
+		console.log(fieldData);
+		if(fieldData instanceof Blob){
+			_files.push({blob:fieldData,fieldname});
 		}
 	}
-	console.log(_files);
+	
 	for (let file of _files) {
-		let { buffer, fieldname, ...meta } = file;
-		console.log(fieldname)
-		console.log(buffer)
-		files[fieldname as keyof typeof files] = meta;
+		let { blob, fieldname} = file;
+		
+		files[fieldname as keyof typeof files] = {name:blob.name,size:blob.size,type:blob.type,lastModified:blob.lastModified}
 		let path = _findFieldByTitle(schema, fieldname).path;
 
 		if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
-
-		fs.writeFileSync(path + '/' + meta.originalname, buffer);
+		 (blob as Blob).arrayBuffer().then(arrayBuffer=>{
+			 fs.writeFileSync(path + '/' + blob.name,Buffer.from(arrayBuffer));
+		 })
 	}
 	return files;
 }
@@ -47,7 +49,7 @@ export function saveFiles(data: FormData,collection:string) {
 function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
 	for (let field of schema.fields) {
 		if (field.db_fieldName == fieldname) {
-			console.log(field);
+			
 			found.val = true;
 
 			return field;

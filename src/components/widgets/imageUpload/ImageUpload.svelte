@@ -8,19 +8,19 @@
 	export let value: any = {};
 	export let widgetValue: FileList;
 
-	$: console.log(widgetValue);
+
 
 	function setFile(node: HTMLInputElement) {
 		node.onchange = (e) => (widgetValue = (e.target as HTMLInputElement).files as FileList);
 		if (!value) return;
-
-		if (value.type) {
+		console.log(value)
+		if (value instanceof File) {
 			let fileList = new DataTransfer();
 			fileList.items.add(value);
 			widgetValue = node.files = fileList.files;
 		} else {
 			axios
-				.get(`${field.path}/${value.originalname}`, { responseType: 'blob' })
+				.get(`${field.path}/${value.name}`, { responseType: 'blob' })
 				.then(({ data }) => {
 					let fileList = new DataTransfer();
 					let file = new File([data], value.originalname, {
@@ -41,7 +41,7 @@
 	type="file"
 />
 <!-- TODO: Add DropZone for better User experiance-->
-<FileDropzone />
+<!-- <FileDropzone /> -->
 
 {#if widgetValue}
 	<img src={URL.createObjectURL(widgetValue[0])} alt="" />
