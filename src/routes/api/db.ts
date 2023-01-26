@@ -5,6 +5,7 @@ import { fieldsToSchema } from '@src/utils/utils';
 import lucia, { generateRandomString } from 'lucia-auth';
 import adapter from '@lucia-auth/adapter-mongoose';
 import { user, session } from '@src/collections/Auth';
+
 mongoose.set('strictQuery', false);
 mongoose.connect(env.DB_HOST, {
 	authSource: 'admin',
@@ -29,14 +30,14 @@ for (let schema of schemas) {
 			 
 		}
 	);
-	collections[schema.name] = mongoose.model(schema.name, schema_object);
+	collections[schema.name] = mongoose.models[schema.name]?mongoose.model(schema.name): mongoose.model(schema.name, schema_object);
 }
 
 
 
 
-mongoose.model('user', new mongoose.Schema({ ...user }, { _id: false }));
-mongoose.model('session', new mongoose.Schema({ ...session }, { _id: false }));
+!mongoose.models["user"] && mongoose.model('user', new mongoose.Schema({ ...user }, { _id: false }));
+!mongoose.models["session"] && mongoose.model('session', new mongoose.Schema({ ...session }, { _id: false }));
 const auth = lucia({
 	adapter: adapter(mongoose),
 	env: 'DEV',

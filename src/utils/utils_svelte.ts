@@ -16,16 +16,16 @@ export async function shape_fields(fields: Array<any>) {
 
 export async function saveFormData(collection: Schema) {
 	let formData = new FormData();
-
+	
 	for (let getData of get(getFieldsData)) {
 		let data = await getData();
-
+		
 		for (let key in data) {
-			console.log(data[key]);
+		
 			if (data[key] instanceof FileList) {
 				for (let _key in data[key]) {
 					// for multiple files
-					console.log(data[key]);
+				
 					formData.append(key, data[key][_key]);
 				}
 			} else if (typeof data[key] === 'object') {
@@ -68,16 +68,18 @@ export async function saveData(
 	doc_id?: string,
 	insert?: boolean
 ) {
+	
 	let oldData_id = doc_id || (get(entryData) as any)?._id;
 	//if formData object is empty then:
-	formData.append('status', collection.status);
+	
 	if (!formData.entries().next().value) {
 		return { data: 404 };
 	} else if (oldData_id && !insert) {
 		formData.append('_id', oldData_id);
-
+		formData.append('status', collection.status);
 		return await axios.patch(`/api/${collection.name}`, formData, config);
 	} else {
+		formData.append('status', collection.status);
 		return await axios.post(`/api/${collection.name}`, formData, config);
 	}
 }

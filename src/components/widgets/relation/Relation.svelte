@@ -68,7 +68,7 @@
 			}}
 			class="w-full cursor-pointer text-center text-black"
 		>
-			{selectedField || display || $LL.WIDGET_Relation_ChoseExisting()}
+			{selectedField || display || $LL.WIDGET_Relation_ChoseExisting() || 'choose existing'}
 		</p>
 		<button
 			on:click={() => {

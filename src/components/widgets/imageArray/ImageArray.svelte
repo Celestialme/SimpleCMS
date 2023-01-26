@@ -16,11 +16,14 @@
 	let files: any = [];
 	$: console.log(_fieldsValue);
 	let getData = async () => {
+		console.log(files.length)
 		for (let i = 0; i < files.length; i++) {
+
 			let fieldsData = _fieldsValue[i];
 			await saveSimpleData(collection, fieldsData);
 		}
 		if (!files.length) {
+			
 			// if no files currently being chosen, means we are editing, should update.
 			let fieldsData = _fieldsValue;
 			await saveSimpleData(collection, fieldsData);

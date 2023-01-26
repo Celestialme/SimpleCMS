@@ -26,7 +26,8 @@ let schema: Schema = {
 					icon: 'mdi:relation-many-to-one',
 					relation: Posts,
 					display: async (data: any, field: any, entry: any) => {
-						return data.name[env.LANGUAGE];
+						
+						return data.First;
 					}
 				})
 			]

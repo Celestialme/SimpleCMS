@@ -23,7 +23,7 @@
 				.get(`${field.path}/${value.name}`, { responseType: 'blob' })
 				.then(({ data }) => {
 					let fileList = new DataTransfer();
-					let file = new File([data], value.originalname, {
+					let file = new File([data], value.name, {
 						type: value.mimetype
 					});
 					fileList.items.add(file);

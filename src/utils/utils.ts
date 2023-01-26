@@ -25,7 +25,6 @@ export function saveFiles(data: FormData, collection: string) {
 	let schema = schemas.find((schema) => schema.name === collection);
 	for(let [fieldname,fieldData] of data.entries()){
 		
-		console.log(fieldData);
 		if(fieldData instanceof Blob){
 			_files.push({blob:fieldData,fieldname});
 		}

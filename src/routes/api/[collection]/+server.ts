@@ -20,11 +20,18 @@ export  const GET:RequestHandler  = async ({ params ,url }) => {
 export const PATCH:RequestHandler = async ({ params,request }) => {
   let collection = collections[params.collection];
   let data = await request.formData();
-	let [ _id, ...formData ] = [data.get("_id"), data.get("formData")]
-	console.log(formData);
+  let formData:any={};
+  for (let key of data.keys()) {
+		try {
+			formData[key] = JSON.parse(data.get(key) as string);
+		} catch (e) {
+      formData[key] = data.get(key) as string
+    }
+	}
+	let _id = data.get("_id")
 	formData = parse(formData);
-	console.log(formData);
 	let files = saveFiles(data,params.collection);
+  
 	return new Response(	JSON.stringify(await collection.updateOne({ _id }, { ...formData, ...files }, { upsert: true })));
 }
 
@@ -33,14 +40,15 @@ export const POST:RequestHandler = async ({ params,request }) => {
   let data = await request.formData();
   let body:any = {}
 	for (let key of data.keys()) {
-    console.log(key)
 		try {
 			body[key] = JSON.parse(data.get(key) as string);
-		} catch (e) {}
+		} catch (e) {
+      body[key] = data.get(key) as string
+    }
 	}
 	if (!collection) return  new Response('collection not found!!');
 	let files = saveFiles(data,params.collection);
-  console.log({ ...body, ...files })
+
 	return new Response(	JSON.stringify(await collection.insertMany({ ...body, ...files }))    );
 }
 
