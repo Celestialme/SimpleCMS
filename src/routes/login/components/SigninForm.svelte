@@ -7,10 +7,9 @@
 	import { goto } from '$app/navigation';
 
 	// typesafe-i18n
-	import LL from '../../../i18n/i18n-svelte';
-
+	
+	import LL, {setLocale} from '@src/i18n/i18n-svelte';
 	export let show: boolean = false;
-
 	let showPassword: boolean = false;
 	let forgot: boolean = false;
 	let email = '';
