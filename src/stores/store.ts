@@ -22,6 +22,5 @@ credentials.subscribe((val) => {
 });
 loadAllLocales()
 systemLanguage.subscribe((val) => {
-	alert(val)
 	setLocale(val as Locales);
 })
