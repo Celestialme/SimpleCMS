@@ -12,8 +12,8 @@
 
 <div class="container">
 	{#if $mode == 'view'}
-		<Button on:click={() => mode.set('edit')}>Create</Button>
-	{:else if $mode == 'edit'}
+		<Button on:click={() => mode.set('create')}>Create</Button>
+	{:else if ['edit', 'create'].includes($mode)}
 		<Button on:click={saveData}>Save</Button>
 	{/if}
 </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import axios from 'axios';
-	import { credentials } from '@src/stores/store';
+	import { credentials } from '@src/stores/load';
 	import SigninIcon from './icons/SigninIcon.svelte';
 	export let active: undefined | 0 | 1 = undefined;
 	import LL from '@src/i18n/i18n-svelte';
