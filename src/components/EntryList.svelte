@@ -7,16 +7,18 @@
 	import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
-	let refresh = async (collection: any) => {
+	let refresh = async (collection: typeof $collection) => {
 		data = undefined;
 		data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as { entryList: [any]; totalCount: number };
-		tableData = data.entryList.map((entry) => {
-			let obj: { [key: string]: any } = {};
-			for (let field of collection.fields) {
-				obj[field.label] = entry[field.label].en;
-			}
-			return obj;
-		});
+		tableData = await Promise.all(
+			data.entryList.map(async (entry) => {
+				let obj: { [key: string]: any } = {};
+				for (let field of collection.fields) {
+					obj[field.label] = await field.display(entry[field.label].en, field, entry);
+				}
+				return obj;
+			})
+		);
 		options.update((options) => ({
 			...options,
 			data: tableData,
@@ -63,7 +65,7 @@
 			>
 				{#each row.getVisibleCells() as cell}
 					<td>
-						<svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
+						{@html cell.getValue()}
 					</td>
 				{/each}
 			</tr>

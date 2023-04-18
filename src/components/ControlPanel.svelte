@@ -3,9 +3,18 @@
 	import Button from './system/buttons/Button.svelte';
 	import { collection, collectionValue, mode } from '@src/stores/store';
 	import { config, obj2formData } from '@src/utils/utils';
+	import { entryValue } from '@src/stores/widgetStore';
 	async function saveData() {
 		let formData = obj2formData($collectionValue);
-		await axios.post(`/api/${$collection.name}`, formData, config);
+		switch ($mode) {
+			case 'create':
+				await axios.post(`/api/${$collection.name}`, formData, config);
+				break;
+			case 'edit':
+				formData.append('_id', $entryValue._id);
+				await axios.patch(`/api/${$collection.name}`, formData, config);
+				break;
+		}
 		mode.set('view');
 	}
 </script>

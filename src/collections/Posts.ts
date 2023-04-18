@@ -3,7 +3,10 @@ let schema = {
 	name: 'posts1',
 	fields: [
 		widgets.Text({
-			label: 'text'
+			label: 'text',
+			display: async (data, field, entry) => {
+				return data;
+			}
 		})
 	]
 };
