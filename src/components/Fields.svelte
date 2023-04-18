@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { collection, collectionValue } from '@src/stores/store';
+	import { collectionValue } from '@src/stores/store';
+	import { collection } from '@src/stores/load';
 	collection.subscribe((value) => {
 		$collectionValue = {};
 	});

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import axios from 'axios';
 	import Button from './system/buttons/Button.svelte';
-	import { collection, collectionValue, mode } from '@src/stores/store';
+	import { collectionValue, mode } from '@src/stores/store';
+	import { collection } from '@src/stores/load';
 	import { config, obj2formData } from '@src/utils/utils';
 	import { entryValue } from '@src/stores/widgetStore';
 	async function saveData() {

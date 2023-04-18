@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { collection, mode } from '@src/stores/store';
+	import { mode } from '@src/stores/store';
+	import { collection } from '@src/stores/load';
 	import { categories } from '@src/collections';
 	let expanded: any = {};
 	function setHeight(node: HTMLDivElement) {
