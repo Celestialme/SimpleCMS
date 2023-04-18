@@ -14,7 +14,7 @@
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
 				for (let field of collection.fields) {
-					obj[field.label] = await field.display(entry[field.label].en, field, entry);
+					obj[field.label] = await field.display(entry[field.label]?.en || entry[field.label], field, entry);
 				}
 				return obj;
 			})

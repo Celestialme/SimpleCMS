@@ -28,7 +28,7 @@ let env: {
 	LANGUAGE: 'en', // defines default language
 	TRANSLATIONS: { en: 'English', de: 'German' },
 
-	SYSTEMLANGUAGE: 'en', // defines default System language
+	SYSTEMLANGUAGE: 'de', // defines default System language
 
 	//for express
 	HOST: 'http://localhost',
@@ -42,7 +42,7 @@ let env: {
 	TWITCH_API_KEY: '',
 	TIKTOK_API_KEY: '',
 
-// for mongodb......for Atlas use DB_HOST:"mongodb+srv://XXXX",
+	// for mongodb......for Atlas use DB_HOST:"mongodb+srv://XXXX",
 	DB_URL: 'xxxx:27017',
 	DB_NAME: 'test',
 	DB_USER: 'celestialme',

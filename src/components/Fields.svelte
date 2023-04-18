@@ -4,6 +4,7 @@
 		$collectionValue = {};
 	});
 	export let fields: typeof $collection.fields | undefined = undefined;
+	let asAny = (value: any) => value;
 </script>
 
 <div class="container">
@@ -12,7 +13,7 @@
 			{#key $collection}
 				<div>
 					<p>{field.label}</p>
-					<svelte:component this={field.widget} {field} bind:fieldValue={$collectionValue[field.label]} />
+					<svelte:component this={asAny(field.widget)} field={asAny(field)} bind:fieldValue={$collectionValue[field.label]} />
 				</div>
 			{/key}
 		{/if}

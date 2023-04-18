@@ -12,8 +12,7 @@ let widget = ({ label, db_fieldName, display }: Params) => {
 		label,
 		db_fieldName
 	};
-
 	return field;
 };
-
+export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

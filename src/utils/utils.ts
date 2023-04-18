@@ -54,11 +54,12 @@ export function saveFiles(data: FormData, collection: string) {
 // finds field title that matches the fieldname and returns that field
 function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
 	for (let field of schema.fields) {
-		if (field.db_fieldName == fieldname) {
+		console.log('field is ', field.db_fieldName, field.label);
+		if (field.db_fieldName == fieldname || field.label == fieldname) {
 			found.val = true;
 
 			return field;
-		} else if (field.fields.length > 0) {
+		} else if (field.fields && field.fields.length > 0) {
 			return _findFieldByTitle(field, fieldname, found);
 		}
 	}

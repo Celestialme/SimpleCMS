@@ -7,6 +7,10 @@ let schema = {
 			display: async (data, field, entry) => {
 				return data;
 			}
+		}),
+		widgets.ImageUpload({
+			label: 'image',
+			path: 'media/images'
 		})
 	]
 };
