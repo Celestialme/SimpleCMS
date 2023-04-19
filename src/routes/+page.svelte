@@ -2,12 +2,13 @@
 	import { goto } from '$app/navigation';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
-	import { mode } from '@src/stores/store';
+	import { collectionValue, mode } from '@src/stores/store';
 	import { credentials } from '@src/stores/load';
 	import Drawer from '@src/components/system/drawer/Drawer.svelte';
 	import Fields from '@src/components/Fields.svelte';
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
+	import { collection } from '@src/collections';
 	onMount(() => {
 		axios
 			.post(
@@ -26,6 +27,9 @@
 					goto('/login');
 				}
 			});
+	});
+	collection.subscribe((value) => {
+		$collectionValue = {};
 	});
 </script>
 

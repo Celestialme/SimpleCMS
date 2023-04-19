@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { mode } from '@src/stores/store';
-	import { collection } from '@src/stores/load';
-	import { entryValue } from '@src/stores/widgetStore';
+	import { collection } from '@src/collections';
+	import { mode, entryValue } from '@src/stores/store';
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
 	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel } from '@tanstack/svelte-table';

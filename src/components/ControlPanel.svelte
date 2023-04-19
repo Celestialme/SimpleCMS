@@ -1,21 +1,9 @@
 <script lang="ts">
-	import axios from 'axios';
 	import Button from './system/buttons/Button.svelte';
 	import { collectionValue, mode } from '@src/stores/store';
-	import { collection } from '@src/stores/load';
-	import { config, obj2formData } from '@src/utils/utils';
-	import { entryValue } from '@src/stores/widgetStore';
+	import { saveFormData } from '@src/utils/utils';
 	async function saveData() {
-		let formData = obj2formData($collectionValue);
-		switch ($mode) {
-			case 'create':
-				await axios.post(`/api/${$collection.name}`, formData, config);
-				break;
-			case 'edit':
-				formData.append('_id', $entryValue._id);
-				await axios.patch(`/api/${$collection.name}`, formData, config);
-				break;
-		}
+		await saveFormData($collectionValue);
 		mode.set('view');
 	}
 </script>

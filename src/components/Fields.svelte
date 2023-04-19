@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { collection } from '@src/collections';
 	import { collectionValue } from '@src/stores/store';
-	import { collection } from '@src/stores/load';
-	collection.subscribe((value) => {
-		$collectionValue = {};
-	});
+	import { getFieldName } from '@src/utils/utils';
 	export let fields: typeof $collection.fields | undefined = undefined;
 	let asAny = (value: any) => value;
+	export let root = true; // if Fields is not part of any widget.
+	export let fieldsData = {};
+	$: if (root) $collectionValue = fieldsData;
 </script>
 
 <div class="container">
@@ -14,7 +15,7 @@
 			{#key $collection}
 				<div>
 					<p>{field.label}</p>
-					<svelte:component this={asAny(field.widget)} field={asAny(field)} bind:fieldValue={$collectionValue[field.label]} />
+					<svelte:component this={asAny(field.widget)} field={asAny(field)} bind:fieldData={fieldsData[getFieldName(field)]} {...$$props} />
 				</div>
 			{/key}
 		{/if}

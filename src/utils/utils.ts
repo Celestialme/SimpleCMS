@@ -1,28 +1,39 @@
 import fs from 'fs';
-import schemas from '../collections';
+import schemas, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import axios from 'axios';
+import { get } from 'svelte/store';
+import { entryValue, mode } from '@src/stores/store';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
 	}
 };
 
-export const obj2formData = (obj: any) => {
+export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	const formData = new FormData();
-	for (const key in obj) {
-		if (obj[key] instanceof FileList) {
-			for (let _key in obj[key]) {
+	let data = {};
+	for (let key in getData) {
+		let value = await getData[key]();
+		if (!value) continue;
+		data[key] = value;
+	}
+	for (const key in data) {
+		if (data[key] instanceof FileList) {
+			for (let _key in data[key]) {
 				// for multiple files
-				console.log(obj[key]);
-				formData.append(key, obj[key][_key]);
+				console.log(data[key]);
+				formData.append(key, data[key][_key]);
 			}
-		} else if (typeof obj[key] === 'object') {
-			formData.append(key, JSON.stringify(obj[key]));
+		} else if (typeof data[key] === 'object') {
+			formData.append(key, JSON.stringify(data[key]));
 		} else {
-			formData.append(key, obj[key]);
+			formData.append(key, data[key]);
 		}
+	}
+	if (!formData.entries().next().value) {
+		return null;
 	}
 	return formData;
 };
@@ -101,4 +112,24 @@ export let fieldsToSchema = (fields: Array<any>) => {
 export async function find(query: object, collection: Schema) {
 	let _query = JSON.stringify(query);
 	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
+}
+
+export function getFieldName(field: any) {
+	return (field?.db_fieldName || field?.label) as string;
+}
+export async function saveFormData(data) {
+	let $mode = get(mode);
+	let $collection = get(collection);
+	let $entryValue = get(entryValue);
+	let formData = data instanceof FormData ? data : await col2formData(data);
+	if (!formData) return;
+	switch ($mode) {
+		case 'create':
+			await axios.post(`/api/${$collection.name}`, formData, config);
+			break;
+		case 'edit':
+			formData.append('_id', $entryValue._id);
+			await axios.patch(`/api/${$collection.name}`, formData, config);
+			break;
+	}
 }

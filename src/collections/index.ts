@@ -1,3 +1,5 @@
+import { writable } from 'svelte/store';
+import ImageArray from './imageArray';
 import Posts from './Posts';
 import Posts2 from './Posts2';
 import Posts3 from './Posts3';
@@ -11,9 +13,10 @@ let categories = [
 	{
 		name: 'posts',
 		icon: 'bi:images',
-		collections: [Posts]
+		collections: [Posts, ImageArray]
 	}
 ];
 export { categories };
-
-export default categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+export default collections;
+export let collection = writable(collections?.[0]); // current collection
