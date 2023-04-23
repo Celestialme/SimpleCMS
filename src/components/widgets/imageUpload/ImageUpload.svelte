@@ -1,11 +1,11 @@
 <script lang="ts">
 	import axios from 'axios';
 	import type { FieldType } from './';
-	import { entryValue, mode } from '@src/stores/store';
+	import { entryData, mode } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 	export let field: FieldType | undefined;
 	let _data: FileList;
-	export const fieldData = async () => _data;
+	export const WidgetData = async () => _data;
 	export let file: File | undefined = undefined; // pass file directly from imageArray
 	console.log(file);
 	let fieldName = getFieldName(field);
@@ -17,10 +17,10 @@
 			fileList.items.add(file);
 			_data = node.files = fileList.files;
 		} else if ($mode === 'edit') {
-			axios.get(`${field?.path}/${$entryValue[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
+			axios.get(`${field?.path}/${$entryData[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
 				let fileList = new DataTransfer();
-				let file = new File([data], $entryValue[fieldName].name, {
-					type: $entryValue[fieldName].mimetype
+				let file = new File([data], $entryData[fieldName].name, {
+					type: $entryData[fieldName].mimetype
 				});
 				fileList.items.add(file);
 				_data = node.files = fileList.files;

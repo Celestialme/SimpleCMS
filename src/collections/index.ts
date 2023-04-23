@@ -3,6 +3,7 @@ import ImageArray from './imageArray';
 import Posts from './Posts';
 import Posts2 from './Posts2';
 import Posts3 from './Posts3';
+import Menu from './Menu';
 
 let categories = [
 	{
@@ -13,7 +14,7 @@ let categories = [
 	{
 		name: 'posts',
 		icon: 'bi:images',
-		collections: [Posts, ImageArray]
+		collections: [Posts, ImageArray, Menu]
 	}
 ];
 export { categories };

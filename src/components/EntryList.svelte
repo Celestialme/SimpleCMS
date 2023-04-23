@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { collection } from '@src/collections';
-	import { mode, entryValue } from '@src/stores/store';
+	import { mode, entryData } from '@src/stores/store';
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
 	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel } from '@tanstack/svelte-table';
@@ -59,7 +59,7 @@
 		{#each $table.getRowModel().rows as row, index}
 			<tr
 				on:click={() => {
-					entryValue.set(data?.entryList[index]);
+					entryData.set(data?.entryList[index]);
 					mode.set('edit');
 				}}
 			>

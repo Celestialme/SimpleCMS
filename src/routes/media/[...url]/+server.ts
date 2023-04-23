@@ -1,4 +1,4 @@
-import type { RequestHandler } from '../$types';
+import type { RequestHandler } from './$types';
 import fs from 'fs';
 import mime from 'mime-types';
 export const GET: RequestHandler = async ({ params }) => {

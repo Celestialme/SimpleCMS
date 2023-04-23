@@ -4,7 +4,7 @@ import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import axios from 'axios';
 import { get } from 'svelte/store';
-import { entryValue, mode } from '@src/stores/store';
+import { entryData, mode } from '@src/stores/store';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -120,7 +120,7 @@ export function getFieldName(field: any) {
 export async function saveFormData(data) {
 	let $mode = get(mode);
 	let $collection = get(collection);
-	let $entryValue = get(entryValue);
+	let $entryData = get(entryData);
 	let formData = data instanceof FormData ? data : await col2formData(data);
 	if (!formData) return;
 	switch ($mode) {
@@ -128,8 +128,17 @@ export async function saveFormData(data) {
 			await axios.post(`/api/${$collection.name}`, formData, config);
 			break;
 		case 'edit':
-			formData.append('_id', $entryValue._id);
+			formData.append('_id', $entryData._id);
 			await axios.patch(`/api/${$collection.name}`, formData, config);
 			break;
 	}
+}
+
+export async function extractData(fieldsData: any) {
+	// exracts data from fieldsData because FieldsData is async
+	let temp = {};
+	for (let key in fieldsData) {
+		temp[key] = await fieldsData[key]();
+	}
+	return temp;
 }

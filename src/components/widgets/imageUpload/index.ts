@@ -9,7 +9,7 @@ let widget = ({ label, db_fieldName, display, path = '' }: Params) => {
 	let field = {
 		widget: ImageUpload,
 		display,
-		schema: { [db_fieldName || label]: { String: String } },
+		schema: { [db_fieldName || label]: { size: Number, name: String, type: String, lastModified: Number } },
 		label,
 		db_fieldName,
 		path

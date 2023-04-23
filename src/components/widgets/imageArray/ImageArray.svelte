@@ -6,7 +6,7 @@
 	export let field: any;
 	let _fieldsValue: any = [];
 	let files: any = [];
-	export const fieldData = async () => {
+	export const WidgetData = async () => {
 		console.log(files.length);
 		for (let i = 0; i < files.length; i++) {
 			let fieldsData = _fieldsValue[i];
