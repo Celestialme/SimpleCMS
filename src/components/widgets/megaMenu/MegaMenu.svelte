@@ -11,7 +11,7 @@
 	export const WidgetData = async () => _data;
 	let showFields = false;
 	let depth = 0;
-	let _data: { [key: string]: any; children: any[] } = $mode == 'create' ? {} : value;
+	let _data: { [key: string]: any; children: any[] } = $mode == 'create' ? null : value;
 	let fieldsData = {};
 	let saveMode = $mode;
 	async function saveLayer() {
