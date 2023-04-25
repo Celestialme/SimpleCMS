@@ -3,6 +3,8 @@
 	import SignIn from './components/SignIn.svelte';
 	import SignUp from './components/SignUp.svelte';
 	import RoundLogo from './components/icons/RoundLogo.svelte';
+	export let data: any;
+	console.log(data);
 	let active: undefined | 0 | 1 = undefined;
 	let background: 'white' | '#242728' = 'white';
 </script>

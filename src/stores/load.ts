@@ -4,9 +4,8 @@ import { setLocale } from '@src/i18n/i18n-svelte';
 import type { Locales } from '@src/i18n/i18n-types';
 import { loadAllLocales } from '@src/i18n/i18n-util.sync';
 import { writable, type Writable } from 'svelte/store';
-export let credentials: Writable<{ username: string; session: string }> = writable(
-	browser && JSON.parse(globalThis.localStorage.getItem('credentials') || '{"username":null,"session":null}')
-);
+export let credentials: Writable<{ username: string }> = writable();
+
 export let systemLanguage: Writable<string> = writable(env.SYSTEMLANGUAGE);
 
 credentials.subscribe((val) => {
