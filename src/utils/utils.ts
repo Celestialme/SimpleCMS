@@ -111,27 +111,35 @@ export let fieldsToSchema = (fields: Array<any>) => {
 };
 
 export async function find(query: object, collection: Schema) {
+	if (!collection) return;
 	let _query = JSON.stringify(query);
 	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
+}
+export async function findById(id: string, collection: Schema) {
+	if (!id || !collection) return;
+	return (await axios.get(`/api/find?collection=${collection.name}&id=${id}`)).data;
 }
 
 export function getFieldName(field: any) {
 	return (field?.db_fieldName || field?.label) as string;
 }
-export async function saveFormData(data) {
-	let $mode = get(mode);
-	let $collection = get(collection);
+
+export async function saveFormData({ data, _collection, _mode, id }: { data: any; _collection?: Schema; _mode?: 'edit' | 'create'; id?: string }) {
+	console.log(data);
+	let $mode = _mode || get(mode);
+	let $collection = _collection || get(collection);
 	let $entryData = get(entryData);
 	let formData = data instanceof FormData ? data : await col2formData(data);
+	if (_mode === 'edit' && !id) {
+		throw new Error('ID is required for edit mode.');
+	}
 	if (!formData) return;
 	switch ($mode) {
 		case 'create':
-			await axios.post(`/api/${$collection.name}`, formData, config);
-			break;
+			return await axios.post(`/api/${$collection.name}`, formData, config).then((res) => res.data);
 		case 'edit':
-			formData.append('_id', $entryData._id);
-			await axios.patch(`/api/${$collection.name}`, formData, config);
-			break;
+			formData.append('_id', id || $entryData._id);
+			return await axios.patch(`/api/${$collection.name}`, formData, config).then((res) => res.data);
 	}
 }
 

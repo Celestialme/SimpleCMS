@@ -48,11 +48,3 @@ async function signIn(email: string, password: string, cookies: Cookies) {
 
 	return new Response(JSON.stringify({ userername: user.username, session: session.sessionId, status: 200 }));
 }
-// async function validate(sessionID: string | null, cookies: Cookies) {
-// 	if (!sessionID) {
-// 		return new Response(JSON.stringify({ status: 404 }));
-// 	}
-// 	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
-// 	if (!resp) return new Response(JSON.stringify({ status: 404 }));
-// 	return new Response(JSON.stringify({ user: resp.user.username, session: resp.session?.sessionId, status: 200 }));
-// }

@@ -4,6 +4,7 @@
 	export let label = '';
 	export let labelClass = '';
 	export let inputClass = '';
+	export let placeholder = '';
 	const handleInput = (e: Event) => {
 		value = (e.target as HTMLInputElement).value;
 	};
@@ -13,7 +14,7 @@
 	{#if label}
 		<label for="input" class={labelClass}>{label}</label>
 	{/if}
-	<input {type} on:input={handleInput} id="input" class={inputClass} {value} />
+	<input {type} on:input={handleInput} id="input" class={inputClass} {value} {placeholder} />
 </div>
 
 <style>

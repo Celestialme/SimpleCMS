@@ -1,5 +1,6 @@
 import widgets from '../components/widgets';
-let schema = {
+import type { Schema } from './types';
+let schema: Schema = {
 	name: 'images',
 	fields: [
 		widgets.ImageArray({
