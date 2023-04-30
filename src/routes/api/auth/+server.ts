@@ -6,11 +6,13 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	let email = formData.get('email') as string;
 	let password = formData.get('password') as string;
 	let authType = formData.get('authType') as 'signIn' | 'signUp';
-	let sessionID = formData.get('sessionID') as string | null;
+
 	if (authType == 'signIn') {
 		return await signIn(email, password, cookies);
 	} else if (authType == 'signUp') {
 		return await signUp(email, password, cookies);
+	} else if (authType == 'signOut') {
+		return await signOut(cookies);
 	} else {
 		return new Response('', { status: 404 });
 	}
@@ -47,4 +49,15 @@ async function signIn(email: string, password: string, cookies: Cookies) {
 	});
 
 	return new Response(JSON.stringify({ userername: user.username, session: session.sessionId, status: 200 }));
+}
+
+async function signOut(cookies: Cookies) {
+	let res = cookies.get('credentials');
+	if (!res) return new Response(JSON.stringify({ status: 404 }));
+	let sessionID = JSON.parse(res).session;
+	if (!sessionID) return new Response(JSON.stringify({ status: 404 }));
+	await auth.invalidateSession(sessionID);
+	cookies.delete('credentials');
+
+	return new Response(JSON.stringify({ status: 200 }));
 }
