@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from './system/buttons/Button.svelte';
-	import { collectionValue, mode } from '@src/stores/store';
+	import { collectionValue, mode, deleteEntry } from '@src/stores/store';
 	import { saveFormData } from '@src/utils/utils';
 	async function saveData() {
 		await saveFormData({ data: $collectionValue });
@@ -13,6 +13,8 @@
 		<Button on:click={() => mode.set('create')}>Create</Button>
 	{:else if ['edit', 'create'].includes($mode)}
 		<Button on:click={saveData}>Save</Button>
+	{:else if $mode == 'delete'}
+		<Button on:click={$deleteEntry}>Delete</Button>
 	{/if}
 </div>
 
