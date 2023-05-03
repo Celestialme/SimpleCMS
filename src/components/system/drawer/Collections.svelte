@@ -3,12 +3,6 @@
 	import { mode } from '@src/stores/store';
 	import { categories } from '@src/collections';
 	let expanded: any = {};
-	function setHeight(node: HTMLDivElement) {
-		let height = node.clientHeight;
-		node.style.setProperty('--height', (height <= 300 ? height : 300) + 'px');
-		node.style.maxHeight = '0px';
-		node.style.transition = ' 0.5s';
-	}
 </script>
 
 {#each categories as category, index}
@@ -21,24 +15,45 @@
 	>
 		<p>{category.name}</p>
 	</div>
-	<div class:expand={expanded[index]} use:setHeight class="overflow-hidden">
-		{#each category.collections as _collection}
-			<p
-				class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
-				on:click={(e) => {
-					mode.set('view');
-					$collection = _collection;
-				}}
-			>
-				{_collection.name}
-			</p>
-		{/each}
+	<div class:expand={expanded[index]} class="wrapper">
+		<div class={expanded[index] ? 'delayed-overflow' : 'overflow-hidden'}>
+			{#each category.collections as _collection}
+				<p
+					class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
+					on:click={(e) => {
+						mode.set('view');
+						$collection = _collection;
+					}}
+				>
+					{_collection.name}
+				</p>
+			{/each}
+		</div>
 	</div>
 {/each}
 
 <style>
+	.wrapper {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.2s ease-out;
+		max-height: 100px;
+	}
 	.expand {
-		max-height: var(--height) !important;
+		grid-template-rows: 1fr;
+	}
+	.delayed-overflow {
+		overflow: hidden;
+		animation: overflow 0s ease-out forwards;
+		animation-delay: 0.2s;
+	}
+	@keyframes overflow {
+		0% {
+			overflow: hidden;
+		}
+		100% {
+			overflow: auto;
+		}
 	}
 	.arrow::after {
 		content: '';
