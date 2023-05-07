@@ -4,6 +4,7 @@
 	import Button from '../buttons/Button.svelte';
 	import Collections from './Collections.svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	async function signOut() {
 		let resp = (
 			await axios.post(
@@ -18,7 +19,7 @@
 		).data;
 		if (resp.status == 200) {
 			$credentials = resp;
-			goto('/login');
+			goto(`${$page.params.language}/login`);
 		}
 	}
 </script>
