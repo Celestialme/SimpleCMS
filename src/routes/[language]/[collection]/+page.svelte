@@ -9,14 +9,24 @@
 	import type { LayoutServerData } from '../../$types';
 	import { page } from '$app/stores';
 	import type { Schema } from '@src/collections/types';
+	import { goto } from '$app/navigation';
 	export let data: LayoutServerData;
+	let ForwardBackward: boolean = false; // if using browser history
 	collection.set(collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
 	console.log(data);
 	credentials.set(data.credentials);
-
+	globalThis.onpopstate = async () => {
+		ForwardBackward = true;
+		collection.set(collections.find((x) => x.name === $page.params.collection) as Schema);
+	};
 	collection.subscribe((_) => {
 		$collectionValue = {};
-		globalThis.history.pushState({}, '', `/${$page.params.language}/${$collection.name}`);
+
+		// globalThis.history.pushState({}, '', `/${$page.params.language}/${$collection.name}`);
+		if (!ForwardBackward) {
+			goto(`/${$page.params.language}/${$collection.name}`);
+		}
+		ForwardBackward = false;
 	});
 </script>
 

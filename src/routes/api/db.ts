@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import env from '@root/env';
+import { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } from '$env/static/private';
 import schemas from '@src/collections';
 import lucia, { type Session, type User } from 'lucia-auth';
 import adapter from '@lucia-auth/adapter-mongoose';
@@ -7,11 +7,11 @@ import { session, key, UserSchema } from '@src/collections/Auth';
 import { sveltekit } from 'lucia-auth/middleware';
 import { fieldsToSchema } from '@src/utils/utils';
 mongoose
-	.connect(env.DB_HOST, {
+	.connect(DB_HOST, {
 		authSource: 'admin',
-		user: env.DB_USER,
-		pass: env.DB_PASSWORD,
-		dbName: env.DB_NAME
+		user: DB_USER,
+		pass: DB_PASSWORD,
+		dbName: DB_NAME
 	})
 	.then(() => console.log('---------------------connected-----------------------'));
 mongoose.set('strictQuery', false);
