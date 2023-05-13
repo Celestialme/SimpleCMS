@@ -3,15 +3,16 @@
 	import SignIn from './components/SignIn.svelte';
 	import SignUp from './components/SignUp.svelte';
 	import RoundLogo from './components/icons/RoundLogo.svelte';
-	export let data: any;
+	import type { PageData } from './$types';
+	export let data: PageData;
 	console.log(data);
 	let active: undefined | 0 | 1 = undefined;
 	let background: 'white' | '#242728' = 'white';
 </script>
 
 <div class="body" style="background:{background} ">
-	<SignIn {active} on:click={() => (active = 0)} on:pointerenter={() => (background = '#242728')} />
-	<SignUp {active} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} />
+	<SignIn {active} formSchema={data.loginForm} on:click={() => (active = 0)} on:pointerenter={() => (background = '#242728')} />
+	<SignUp {active} formSchema={data.signUpForm} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} />
 	{#if active == undefined}
 		<div class="z-30"><RoundLogo /></div>
 	{/if}

@@ -21,8 +21,6 @@
 	};
 	collection.subscribe((_) => {
 		$collectionValue = {};
-
-		// globalThis.history.pushState({}, '', `/${$page.params.language}/${$collection.name}`);
 		if (!ForwardBackward) {
 			goto(`/${$page.params.language}/${$collection.name}`);
 		}

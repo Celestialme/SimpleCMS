@@ -1,20 +1,20 @@
 <script lang="ts">
-	export let type: 'text' | 'password' = 'text';
-	export let value = '';
+	export let type: 'text' | 'password' | 'email' = 'text';
 	export let label = '';
 	export let labelClass = '';
 	export let inputClass = '';
 	export let placeholder = '';
-	const handleInput = (e: Event) => {
-		value = (e.target as HTMLInputElement).value;
-	};
+	export let value = '';
+	function typeAction(node: HTMLInputElement) {
+		node.type = type;
+	}
 </script>
 
 <div>
 	{#if label}
 		<label for="input" class={labelClass}>{label}</label>
 	{/if}
-	<input {type} on:input={handleInput} id="input" class={inputClass} {value} {placeholder} />
+	<input use:typeAction id="input" class={inputClass} bind:value {placeholder} {...$$props} />
 </div>
 
 <style>
