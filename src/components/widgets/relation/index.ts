@@ -3,11 +3,11 @@ import Relation from './Relation.svelte';
 import type { Params } from './types';
 let widget = ({ label, db_fieldName, display, relation }: Params) => {
 	if (!display) {
-		display = async (data) => {
+		display = async (data, field, entry, contentLanguage) => {
 			if (typeof data == 'string') {
 				data = await findById(data, relation);
 			}
-			return data?.text?.en;
+			return data?.text[contentLanguage];
 		};
 	}
 

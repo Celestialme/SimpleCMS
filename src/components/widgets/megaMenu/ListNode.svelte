@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
+	import { contentLanguage } from '@src/stores/load';
 
 	export let self: { [key: string]: any; children: any[] };
 	export let level = 0;
@@ -14,7 +15,7 @@
 	{#if self.children?.length > 0}
 		<div class="arrow" class:expanded />
 	{/if}
-	{self?.Header?.en}
+	{self?.Header[$contentLanguage]}
 	{#if level < maxDepth}
 		<button
 			on:click={() => {

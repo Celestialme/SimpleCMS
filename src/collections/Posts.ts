@@ -4,8 +4,9 @@ let schema = {
 	fields: [
 		widgets.Text({
 			label: 'text',
+			translated: false,
 			display: async (data, field, entry) => {
-				return data;
+				return data.translated;
 			}
 		}),
 		widgets.ImageUpload({

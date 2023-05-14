@@ -1,6 +1,6 @@
 import widgets from '../components/widgets';
 import type { Schema } from './types';
-let schema: Schema = {
+let schema = {
 	name: 'images',
 	fields: [
 		widgets.ImageArray({
@@ -13,7 +13,8 @@ let schema: Schema = {
 				}),
 				widgets.Text({
 					label: 'title',
-					db_fieldName: 'title'
+					db_fieldName: 'title',
+					translated: false
 				})
 			]
 		})

@@ -10,8 +10,8 @@ let widget = ({
 	label
 }: Params) => {
 	if (!display)
-		display = async (data: any, field: any, entry: any) => {
-			return data.Header.en;
+		display = async (data, field, entry, contentLanguage) => {
+			return data.Header[contentLanguage];
 		};
 
 	let field: Params = { widget: MegaMenu, schema: {}, db_fieldName, menu, display, label };

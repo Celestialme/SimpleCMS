@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
+	import { contentLanguage } from '@src/stores/load';
 	import { extractData, find, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
@@ -50,7 +51,7 @@
 		} else {
 			data = await extractData(fieldsData);
 		}
-		display = await field?.display(data, field, $entryData);
+		display = await field?.display(data, field, $entryData, $contentLanguage);
 	})(expanded);
 </script>
 

@@ -6,6 +6,7 @@
 	import { writable } from 'svelte/store';
 	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel } from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
+	import { contentLanguage } from '@src/stores/load';
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
 	let deleteMap: any = {};
@@ -17,7 +18,7 @@
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
 				for (let field of collection.fields) {
-					obj[field.label] = await field.display(entry[field.label]?.en || entry[field.label], field, entry);
+					obj[field.label] = await field.display?.(entry[field.label], field, entry, $contentLanguage);
 				}
 				obj._id = entry._id;
 				return obj;

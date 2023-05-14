@@ -9,5 +9,5 @@ export type Params = {
 	schema?: any;
 	widget?: any;
 	fields: Widgets;
-	display?: (data: any, field: any, entry: any) => Promise<any>;
+	display?: DISPLAY;
 };

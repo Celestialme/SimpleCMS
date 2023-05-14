@@ -4,5 +4,5 @@ export type Params = {
 	db_fieldName?: string;
 	label: string;
 	menu: any[];
-	display?: Display;
+	display?: DISPLAY;
 };
