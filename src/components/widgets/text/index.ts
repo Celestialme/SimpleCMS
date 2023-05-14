@@ -1,11 +1,24 @@
-import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
 import Text from './Text.svelte';
 import type { Params } from './types';
-let widget = ({ label, db_fieldName, display, translated = false }: Params) => {
+let widget = ({
+	label,
+	db_fieldName,
+	icon,
+	placeholder,
+	count,
+	minlength,
+	maxlength,
+	prefix,
+	suffix,
+	required,
+	readonly,
+	disabled,
+	localization,
+	width,
+	display
+}: Params) => {
 	if (!display) {
-		display = async (data, field, entry, contentLanguage) => {
-			return translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGE] || 'NO entry';
-		};
+		display = async (data) => data;
 	}
 
 	let field = {
@@ -14,7 +27,19 @@ let widget = ({ label, db_fieldName, display, translated = false }: Params) => {
 		schema: { [db_fieldName || label]: { String: String } },
 		label,
 		db_fieldName,
-		translated
+		// extras
+		icon,
+		placeholder,
+		count,
+		minlength,
+		maxlength,
+		prefix,
+		suffix,
+		required,
+		readonly,
+		disabled,
+		localization,
+		width
 	};
 	return field;
 };

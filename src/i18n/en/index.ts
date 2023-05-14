@@ -1,16 +1,11 @@
 import type { BaseTranslation } from '../i18n-types';
 
 const en: BaseTranslation = {
-	// Test
-	HI: 'Hi {name:string}! Translation it works!',
-
 	// SideBar left
 	SBL_Search: 'Search ...',
 	SBL_Admin: 'Admin',
 	SBL_Admin_User: 'Admin User',
 	SBL_SystemLanguage: 'System Language',
-	SBL_English: 'English',
-	SBL_German: 'German',
 	SBL_isDark: 'Switch to',
 	SBL_Light: 'Light',
 	SBL_Dark: 'Dark',
@@ -19,6 +14,12 @@ const en: BaseTranslation = {
 	SBL_Ver: 'Ver.',
 	SBL_Save: 'Save',
 	SBL_Save_message: 'Data saved successfully',
+	SBL_SignOut: 'Sign Out',
+
+	// Collections
+	CollectionCategory_Content: 'Content',
+	CollectionCategory_Menu: 'Menu',
+	CollectionCategory_Media: 'Media',
 
 	// SideBar Right
 
@@ -27,23 +28,83 @@ const en: BaseTranslation = {
 	ERROR_Wrong: 'We are sorry, something went wrong.',
 	ERROR_GoHome: 'Go to Front Page',
 
-	// User
+	//LOADING
+	LOADING_Wait: 'Please Wait',
+	LOADING_Loading: 'Loading...',
+
+	// USER
+	USER_Setting: 'User Settings',
+	USER_ID: 'User ID',
+	USER_Username: 'Username',
+	USER_FirstName: 'First Name',
+	USER_LastName: 'Last Name',
+	USER_Email: 'Email',
+	USER_Password: 'Password',
+	USER_NewPassword: 'New Password:',
+	USER_Edit: 'Edit User Settings',
+	USER_Fail: 'Email already in use',
+	USER_Delete: 'Delete User',
 	USER_Profile: 'User Profile',
+	USER_Edit_Avatar: 'Edit Avatar',
+	USER_Role: 'Role',
+	USER_Generate: 'Email User Registion token',
+	USER_ListShow: 'Show User List',
+	USER_ListCollapse: 'Collapse User List',
+	USER_EmailToken: 'Email User Registion token',
+	USER_AdminArea: 'Admin Area:',
+
+	// Tanstack
+	TANSTACK_UserList: 'List of User:',
+	TANSTACK_Column: 'Columns',
+	TANSTACK_Toggle: 'Toggle All',
+	TANSTACK_Filter: 'Facets Filters',
+	TANSTACK_Export: 'XML Export',
+	TANSTACK_Page: 'Page',
+	TANSTACK_of: 'of',
+	TANSTACK_Total: 'Total',
+	TANSTACK_Row: 'Row',
+	TANSTACK_Rows: 'Rows',
 
 	// Login
 	LOGIN_SignIn: 'Sign In',
 	LOGIN_SignUp: 'Sign Up',
-	LOGIN_emailmsg_valid: 'Please type valid Email',
-	LOGIN_emailmsg_domain: 'Email should be ending with domain (eg .com)',
-	LOGIN_emailmsg_at: 'Email should contain @ symbol',
-	LOGIN_emailmsg_empty: 'Email field should not be empty',
-	LOGIN_passwordmsg_empty: 'Password field should not be empty',
-	LOGIN_passwordmsg_confirm: 'Passwords Does not Match',
+	LOGIN_Required: '* Required',
+	LOGIN_Username: 'Username',
 	LOGIN_EmailAddress: 'Email Address',
 	LOGIN_Password: 'Password',
+	LOGIN_Token: 'Registration Token',
 	LOGIN_ConfirmPassword: 'Confirm Password',
 	LOGIN_ForgottenPassword: 'Forgotten Password',
 	LOGIN_SendResetMail: 'Send Password Reset Email',
+	LOGIN_ResetPassword: 'Reset Password',
+	LOGIN_ResetPasswordSave: 'Save New Password',
+	LOGIN_SignInSuccess: 'Signed In Successfully',
+
+	LOGIN_ZOD_Username_string: 'Username is required',
+	LOGIN_ZOD_Username_regex: 'Name can only contain letters, digits and @$!%*#',
+	LOGIN_ZOD_Username_min: 'Name must be at least 2 characters',
+	LOGIN_ZOD_Username_max: 'Name can only be 24 characters',
+	LOGIN_ZOD_Email_string: 'Email is required',
+	LOGIN_ZOD_Email_email: 'Email must be a valid email',
+	LOGIN_ZOD_Password_string: 'Password is required',
+	LOGIN_ZOD_Password_regex: 'Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.',
+	LOGIN_ZOD_Confirm_password_string: 'Confirm Password is required',
+	LOGIN_ZOD_Confirm_password_regex:
+		'Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.',
+	LOGIN_ZOD_Token_string: 'Auth Token is required',
+	LOGIN_ZOD_Password_match: 'Password & Confirm password must match',
+
+	LOGIN_ZOD_General_Unkown: 'Unknown error occurred',
+	LOGIN_ZOD_General_Error: 'Invalid input',
+	LOGIN_ZOD_Email_Error_inUse: 'Email already in use',
+	LOGIN_ZOD_Email_Error_send: 'Error sending mail',
+	LOGIN_ZOD_Email_Error_Signup: 'LOGIN_ZOD_Signup_unkown',
+	LOGIN_ZOD_Email_Error_SignupKey: 'Incorrect email or password.',
+	LOGIN_ZOD_Token_Error: 'Token is wrong!',
+	LOGIN_ZOD_Token_Expired: 'Token has expired!',
+	LOGIN_ZOD_Forgotton_Error: 'No account under this email',
+	LOGIN_ZOD_Forgotton_email:
+		'Hi there,<br><br>We received a request to reset your password. Your password reset token is:<br><br>{token:string}<br> <br>Please follow the link below to reset your password:<br>{link:string}<br><br>If you did not request this reset, please disregard this message.<br><br>Best regards,<br>The Support Team',
 
 	// Entry List
 	ENTRYLIST_Create: 'Create',
@@ -58,13 +119,19 @@ const en: BaseTranslation = {
 	ENTRYLIST_Delete_confirm: 'Confirm',
 	ENTRYLIST_Search: 'Search',
 	ENTRYLIST_Loading: 'Loading...',
-	ENTRYLIST_Showing: 'Showing',
-	ENTRYLIST_to: 'to',
-	ENTRYLIST_of: 'of',
-	ENTRYLIST_Entries: 'Entries',
-	ENTRYLIST_EntriesItems: 'Entries',
-	ENTRYLIST_Previous: 'Previous',
-	ENTRYLIST_Next: 'Next',
+	ENTRYLIST_Modal_title_Create: 'Please Confirm Content Creation',
+	ENTRYLIST_Modal_body_Create: 'Are you sure you wish to Create this content?',
+	ENTRYLIST_Modal_title_Publish: 'Please Confirm Content Publication',
+	ENTRYLIST_Modal_body_Publish: 'Are you sure you wish to Publish this content?',
+	ENTRYLIST_Modal_title_Unpublish: 'Please Confirm Content Unpublish',
+	ENTRYLIST_Modal_body_Unpublish: 'Are you sure you wish to Unpublish this content?',
+	ENTRYLIST_Modal_title_Schedule: 'Please Confirm Content Schedule',
+	ENTRYLIST_Modal_body_Schedule: 'Are you sure you wish to Schedule this content?',
+	ENTRYLIST_Modal_title_Clone: 'Please Confirm Content Clone',
+	ENTRYLIST_Modal_body_Clone: 'Are you sure you wish to Clone this content?',
+	ENTRYLIST_Modal_title_Delete: 'Please Confirm Content Delete',
+	ENTRYLIST_Modal_body_Delete: 'Are you sure you wish to Delete this content?',
+	ENTRYLIST_Modal_Cancel: 'Cancel',
 
 	// Fields
 
@@ -82,6 +149,7 @@ const en: BaseTranslation = {
 
 	COLLECTION_TEST_User: 'User',
 	COLLECTION_TEST_Prefix: 'Prefix',
+	COLLECTION_TEST_Prefix_data: ['Mr.', 'Ms.', 'Mrs.', 'Dr.'],
 	COLLECTION_TEST_Prefix_placeholder: 'Enter Prefix',
 	COLLECTION_TEST_First: 'First',
 	COLLECTION_TEST_First_placeholder: 'Enter First Name',
@@ -89,6 +157,9 @@ const en: BaseTranslation = {
 	COLLECTION_TEST_Middle_placeholder: 'Middle  (ReadOnly)',
 	COLLECTION_TEST_Last: 'Last',
 	COLLECTION_TEST_Last_placeholder: 'Enter Last Name',
+
+	COLLECTION_TEST_Full_Text_Option: 'Full Text Option',
+	COLLECTION_TEST_Full_Text_Option_Placeholder: 'Enter full text',
 
 	// Widgets
 	WIDGET_Address_SearchMap: 'Search in Map ...',
@@ -109,19 +180,15 @@ const en: BaseTranslation = {
 
 	WIDGET_Seo_Suggetion_TitlePerfect: 'Your title is more than 50 characters. Perfect!',
 	WIDGET_Seo_Suggetion_TitleGood: 'Your title is more than 30 characters. Try 50+. Good!',
-	WIDGET_Seo_Suggetion_TitleBad:
-		'Your title is too short. Make sure your title is at least 50 characters. Bad!',
-	WIDGET_Seo_Suggetion_DescriptionPerfect:
-		'Your description is between 120 and 165 characters. Perfect!',
+	WIDGET_Seo_Suggetion_TitleBad: 'Your title is too short. Make sure your title is at least 50 characters. Bad!',
+	WIDGET_Seo_Suggetion_DescriptionPerfect: 'Your description is between 120 and 165 characters. Perfect!',
 	WIDGET_Seo_Suggetion_DescriptionGood: 'Your description is more than 90 characters. Good!',
 	WIDGET_Seo_Suggetion_DescriptionBad: 'Your description is less than 90 characters. Bad!',
 	WIDGET_Seo_Suggetion_SentencePerfect: 'Your description is 2 to 4 sentences long. Perfect!',
-	WIDGET_Seo_Suggetion_SentenceBad:
-		'Your descripton is only 1 sentence long. Make sure your description is 2 to 4 sentences long.',
+	WIDGET_Seo_Suggetion_SentenceBad: 'Your descripton is only 1 sentence long. Make sure your description is 2 to 4 sentences long.',
 
 	WIDGET_Seo_Suggetion_NumberPerfect: 'Your title uses numbers. Perfect!',
-	WIDGET_Seo_Suggetion_NumberBad:
-		'Your title does not use numbers. The use of numbers in your title can increase your CTR.',
+	WIDGET_Seo_Suggetion_NumberBad: 'Your title does not use numbers. The use of numbers in your title can increase your CTR.',
 	WIDGET_Seo_Suggetion_PowerWordTitle: `Your title has the Power Word word Perfect!`,
 	WIDGET_Seo_Suggetion_PowerWordDescription: `Your description uses the Power Word word. Perfect!`,
 	WIDGET_Seo_Suggetion_ctaKeywordsTitle: `Your title has the CTA keyword keyword. Good!`,
@@ -136,7 +203,90 @@ const en: BaseTranslation = {
 	WIDGET_Seo_Suggetion_SeoPreview: 'SEO Preview',
 	WIDGET_Seo_Suggetion_ListOfSuggestion: 'SEO Suggestions:',
 	WIDGET_Seo_Suggetion_Text:
-		'Optimize title & description for Google search results, to improve the visual appeal to brings more clicks to your website.'
+		'Optimize title & description for Google search results, to improve the visual appeal to brings more clicks to your website.',
+
+	WIDGET_SEO_PowerWords: [
+		'amazing',
+		'attractive',
+		'become',
+		'best',
+		'boost',
+		'breaking',
+		'breaking news',
+		'cheap',
+		'discover',
+		'direct',
+		'easy',
+		'exclusive',
+		'fresh',
+		'full',
+		'free',
+		'free trial',
+		'gain',
+		'get',
+		'grow',
+		'hurry',
+		'happiness',
+		'health',
+		'hot',
+		'improve',
+		'improvement',
+		'innovative',
+		'instant',
+		'join',
+		'latest',
+		'limited',
+		'limited time',
+		'love',
+		'new',
+		'newsworthy',
+		'powerful',
+		'popular',
+		'proven',
+		'quality',
+		'quick',
+		'revolutionary',
+		'save',
+		'sale',
+		'safety',
+		'sign up',
+		'special',
+		'special offer',
+		'solutions',
+		'success',
+		'support',
+		'today',
+		'trending',
+		'trust',
+		'urgent',
+		'viral',
+		'when',
+		'winner',
+		'worldwide',
+		'wealth'
+	],
+	WIDGET_SEO_ctaKeywords: [
+		'Act',
+		'Buy',
+		'Call',
+		'Click',
+		'Contact',
+		'Discover',
+		'Download',
+		'Find',
+		'Get',
+		'Join',
+		'Learn',
+		'Order',
+		'Register',
+		'Request',
+		'See',
+		'Sell',
+		'Sign-up',
+		'Subscribe',
+		'Try',
+		'View'
+	]
 };
 
 export default en;

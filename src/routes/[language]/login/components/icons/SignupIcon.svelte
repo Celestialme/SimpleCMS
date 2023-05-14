@@ -5,7 +5,10 @@
 	export let show = true;
 </script>
 
-<div class:hide={!show} class="icon dark:text-dark absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] cursor-pointer">
+<div
+	class:hide={!show}
+	class="icon dark:text-dark pointer-events-none absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] cursor-pointer"
+>
 	<div class="relative w-max rounded-full border-4 border-white p-3">
 		<svg class="aspect-square h-12" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 50 50" fill="#FFFFFF">
 			<path

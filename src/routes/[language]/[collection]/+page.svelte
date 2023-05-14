@@ -10,7 +10,9 @@
 	import { page } from '$app/stores';
 	import type { Schema } from '@src/collections/types';
 	import { goto } from '$app/navigation';
+
 	export let data: LayoutServerData;
+
 	let ForwardBackward: boolean = false; // if using browser history
 	collection.set(collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
 	console.log(data);
@@ -30,7 +32,7 @@
 
 <div class="flex">
 	<Drawer />
-	<div class="flex-grow overflow-auto max-h-screen">
+	<div class="max-h-screen flex-grow overflow-auto">
 		{#if $mode == 'view' || $mode == 'delete'}
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}

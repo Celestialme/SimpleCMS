@@ -1,7 +1,16 @@
 import widgets from '../components/widgets';
 import type { Schema } from './types';
-let schema = {
-	name: 'images',
+
+let schema: Schema = {
+	// Collection Name required
+	name: 'imagearray',
+
+	// Optional & Icon , status, slug
+	// See for possible Icons https://icon-sets.iconify.design/
+	icon: 'bi:images',
+
+	// Defined Fields that are used in Collection
+	// Inspect Widget fields for possible options
 	fields: [
 		widgets.ImageArray({
 			label: 'images',
@@ -13,11 +22,11 @@ let schema = {
 				}),
 				widgets.Text({
 					label: 'title',
-					db_fieldName: 'title',
-					translated: false
+					db_fieldName: 'title'
 				})
 			]
 		})
 	]
 };
+
 export default schema;

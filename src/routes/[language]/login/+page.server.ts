@@ -6,10 +6,12 @@ import { loginSchema, signUpSchema } from './formSchemas';
 import { auth } from '@src/routes/api/db';
 export const actions: Actions = {
 	signIn: async (event) => {
+		//Function for handling the sign-up form submission and user creation
+
 		let signInForm = await superValidate(null, loginSchema);
 
 		const form = await event.request.formData();
-		const email = form.get('email') as string;
+		const email = (form.get('email') as string).toLowerCase();
 		const password = form.get('password') as string;
 		let resp = await signIn(email, password, event.cookies);
 		if (resp) {
@@ -21,7 +23,7 @@ export const actions: Actions = {
 	signUp: async (event) => {
 		let signUpForm = await superValidate(null, signUpSchema);
 		const form = await event.request.formData();
-		const email = form.get('email') as string;
+		const email = (form.get('email') as string).toLowerCase();
 		const password = form.get('password') as string;
 		let resp = await signUp(email, password, event.cookies);
 		console.log(signUpForm);
@@ -54,6 +56,7 @@ async function signIn(email: string, password: string, cookies: Cookies) {
 	return true;
 }
 
+//Function for creating a new user account and creating a session.
 async function signUp(email: string, password: string, cookies: Cookies) {
 	let user = await auth
 		.createUser({

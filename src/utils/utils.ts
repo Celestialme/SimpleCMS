@@ -6,12 +6,15 @@ import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
+
+// Configuration object for axios requests
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
 	}
 };
 
+// Converts data to FormData object
 export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	const formData = new FormData();
 	let data = {};
@@ -39,6 +42,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	return formData;
 };
 
+// Saves files to disk and returns file information
 export function saveFiles(data: FormData, collection: string) {
 	let files: any = {};
 	let _files: Array<any> = [];
@@ -100,6 +104,7 @@ export function parse(obj: any) {
 	return obj;
 }
 
+// Converts fields to schema object
 export let fieldsToSchema = (fields: Array<any>) => {
 	// removes widget, so it does not set up in db
 	let schema: any = {};
@@ -110,22 +115,27 @@ export let fieldsToSchema = (fields: Array<any>) => {
 	return schema;
 };
 
+// Finds documents in collection that match query
 export async function find(query: object, collection: Schema) {
 	if (!collection) return;
 	let _query = JSON.stringify(query);
 	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
 }
+
+// Finds document in collection with specified ID
 export async function findById(id: string, collection: Schema) {
 	if (!id || !collection) return;
 	return (await axios.get(`/api/find?collection=${collection.name}&id=${id}`)).data;
 }
 
+// Returns field's database field name or label
 export function getFieldName(field: any) {
 	return (field?.db_fieldName || field?.label) as string;
 }
 
+// Saves FormData to database
 export async function saveFormData({ data, _collection, _mode, id }: { data: any; _collection?: Schema; _mode?: 'edit' | 'create'; id?: string }) {
-	console.log(data);
+	//console.log(data);
 	let $mode = _mode || get(mode);
 	let $collection = _collection || get(collection);
 	let $entryData = get(entryData);
@@ -141,6 +151,43 @@ export async function saveFormData({ data, _collection, _mode, id }: { data: any
 			formData.append('_id', id || $entryData._id);
 			return await axios.patch(`/api/${$collection.name}`, formData, config).then((res) => res.data);
 	}
+}
+
+// Clone FormData to database
+export async function cloneData(data) {
+	let $collection = get(collection);
+	let formData = data instanceof FormData ? data : await col2formData(data);
+	if (!formData) return;
+	await axios.post(`/api/${$collection.name}`, formData, config);
+}
+
+// Publish FormData to database
+export async function publishData(id) {
+	let $collection = get(collection);
+	await axios.patch(`/api/${$collection.name}/${id}`, { published: true });
+}
+
+// Unpublish FormData to database
+export async function unpublishData(id) {
+	let $collection = get(collection);
+	await axios.patch(`/api/${$collection.name}/${id}`, { published: false });
+}
+
+// Schedule FormData to databas
+export async function scheduleData(id, date) {
+	let $collection = get(collection);
+	await axios.patch(`/api/${$collection.name}/${id}`, { publishDate: date });
+}
+
+// Delete FormData
+export async function deleteData(id) {
+	let $collection = get(collection);
+	await axios.delete(`/api/${$collection.name}/${id}`);
+}
+
+// Cancel FormData Creation
+export function handleCancel() {
+	mode.set('view');
 }
 
 export async function extractData(fieldsData: any) {
@@ -160,3 +207,21 @@ export async function validate(auth: Auth, sessionID: string | null) {
 	if (!resp) return { user: null, status: 404 };
 	return { user: resp.user.username, status: 200 };
 }
+
+// Replaces the locale slug in a URL.
+//
+// If the `full` argument is set to `true`, the full URL is returned as a string.
+// e.g. https://mywebsite.com/en/blog/article-1 => https://mywebsite.com/de/blog/article-1
+//
+// Otherwise (default) the URL relative to the base is returned.
+// e.g. https://mywebsite.com/en/blog/article-1 => /de/blog/article-1
+export const replaceLocaleInUrl = (url: URL, locale: string, full = false): string => {
+	const [, , ...rest] = url.pathname.split('/');
+	const new_pathname = `/${[locale, ...rest].join('/')}`;
+	if (!full) {
+		return `${new_pathname}${url.search}`;
+	}
+	const newUrl = new URL(url.toString());
+	newUrl.pathname = new_pathname;
+	return newUrl.toString();
+};

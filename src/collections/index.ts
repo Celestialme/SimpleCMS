@@ -1,24 +1,29 @@
 import { writable } from 'svelte/store';
 import ImageArray from './imageArray';
-import Posts from './Posts';
-import Posts2 from './Posts2';
-import Posts3 from './Posts3';
 import Menu from './Menu';
+import Posts from './Posts';
+import Names from './Names';
+import Posts3 from './Posts3';
 import Relation from './Relation';
 
 let categories = [
 	{
 		name: 'Collections',
 		icon: 'bi:collection',
-		collections: [Posts2, Posts3]
+		collections: [Posts, Names, Posts3, Relation]
 	},
 	{
-		name: 'posts',
+		name: 'Menus',
+		icon: 'bi:menu-button-wide',
+		collections: [Menu]
+	},
+	{
+		name: 'Images',
 		icon: 'bi:images',
-		collections: [Posts, ImageArray, Menu, Relation]
+		collections: [ImageArray]
 	}
 ];
 export { categories };
-let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+let collections = categories.map((x) => x.collections).reduce((x, acc) => [].concat(x, acc)); // returns all collections
 export default collections;
 export let collection = writable(collections?.[0]); // current collection

@@ -1,8 +1,10 @@
+/* Write your global styles here, in PostCSS syntax */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+	@import './theme.postcss';
 	.wiggle {
 		animation: wiggle 0.3s forwards;
 	}

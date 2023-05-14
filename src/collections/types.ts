@@ -1,6 +1,8 @@
 export interface Schema {
 	name: string;
 	icon?: string;
+	slug?: string;
 	fields: Array<any>;
-	status?: 'published' | 'unpublished' | 'draft';
+	strict?: boolean;
+	status?: 'published' | 'unpublished' | 'draft' | 'schedule' | 'cloned';
 }
