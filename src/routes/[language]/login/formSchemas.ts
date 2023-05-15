@@ -4,15 +4,7 @@ import LL from '@src/i18n/i18n-svelte.js';
 
 export let loginSchema = z.object({
 	email: z.string({ required_error: 'Email is required' }).email({ message: 'Invalid email address' }),
-	password: z
-		.string({ required_error: 'Password is required' })
-		.min(8)
-		.refine((value) => value.match(/[A-Z]/), { message: 'Password must contain at least one uppercase letter' }),
-	confirm_password: z
-		.string({ required_error: get(LL).LOGIN_ZOD_Confirm_password_string() })
-		.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-			message: get(LL).LOGIN_ZOD_Confirm_password_regex()
-		})
+	password: z.string({ required_error: 'Password is required' }).min(4)
 });
 
 export let signUpSchema = z.object({
