@@ -4,7 +4,7 @@ import LL from '@src/i18n/i18n-svelte.js';
 
 export let loginSchema = z.object({
 	email: z.string({ required_error: 'Email is required' }).email({ message: 'Invalid email address' }),
-	password: z.string().min(4)
+	password: z.string({ required_error: 'Password is required' }).min(4)
 });
 
 export let signUpSchema = z.object({
