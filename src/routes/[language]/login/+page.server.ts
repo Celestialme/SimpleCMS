@@ -7,7 +7,6 @@ import { auth } from '@src/routes/api/db';
 export const actions: Actions = {
 	signIn: async (event) => {
 		//Function for handling the sign-up form submission and user creation
-
 		let signInForm = await superValidate(null, loginSchema);
 
 		const form = await event.request.formData();
@@ -20,12 +19,15 @@ export const actions: Actions = {
 			return { form: signInForm };
 		}
 	},
+
 	signUp: async (event) => {
 		let signUpForm = await superValidate(null, signUpSchema);
 		const form = await event.request.formData();
+		const username = form.get('username') as string;
 		const email = (form.get('email') as string).toLowerCase();
 		const password = form.get('password') as string;
-		let resp = await signUp(email, password, event.cookies);
+		const confirm_password = form.get('password') as string;
+		let resp = await signUp(username, email, password, confirm_password, event.cookies);
 		console.log(signUpForm);
 		if (resp) {
 			throw redirect(303, '/');
@@ -57,7 +59,11 @@ async function signIn(email: string, password: string, cookies: Cookies) {
 }
 
 //Function for creating a new user account and creating a session.
-async function signUp(email: string, password: string, cookies: Cookies) {
+async function signUp(username: string, email: string, password: string, confirm_password: string, cookies: Cookies) {
+	if (password !== confirm_password) {
+		return false;
+	}
+
 	let user = await auth
 		.createUser({
 			primaryKey: {
@@ -66,10 +72,13 @@ async function signUp(email: string, password: string, cookies: Cookies) {
 				password: password
 			},
 			attributes: {
-				username: 'Admin'
+				username: username
 			}
 		})
-		.catch((e) => null);
+		.catch((e) => {
+			console.log(e);
+			return null;
+		});
 	console.log(user);
 	if (!user) return false;
 	const session = await auth.createSession(user.userId);

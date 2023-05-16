@@ -71,6 +71,7 @@
 				icon="mdi:user-circle"
 				iconColor="white"
 				textColor="white"
+				inputClass="text-white"
 			/>
 			{#if $errors.username}<span class="text-xs text-error-500">{$errors.username}</span>{/if}
 
@@ -84,6 +85,7 @@
 				icon="mdi:email"
 				iconColor="white"
 				textColor="white"
+				inputClass="text-white"
 			/>
 			{#if $errors.email}<span class="text-xs text-error-500">{$errors.email}</span>{/if}
 
@@ -99,6 +101,7 @@
 				iconColor="white"
 				textColor="white"
 				showPasswordBackgroundColor="dark"
+				inputClass="text-white"
 			/>
 			{#if $errors.password}<span class="text-xs text-error-500">{$errors.password}</span>{/if}
 
@@ -107,12 +110,13 @@
 				name="confirm_password"
 				type="password"
 				required
-				bind:value={$form.password}
+				bind:value={$form.confirm_password}
 				label={$LL.LOGIN_ConfirmPassword()}
 				icon="mdi:password"
 				iconColor="white"
 				textColor="white"
 				showPasswordBackgroundColor="dark"
+				inputClass="text-white"
 			/>
 			{#if $errors.confirm_password}<span class="text-xs text-error-500">{$errors.confirm_password}</span>{/if}
 
@@ -127,6 +131,7 @@
 					icon="mdi:key-chain"
 					iconColor="white"
 					textColor="white"
+					inputClass="text-white"
 				/>
 				{#if $errors.token}<span class="text-xs text-error-500">{$errors.token}</span>{/if}
 			{/if}
