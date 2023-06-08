@@ -15,8 +15,17 @@ export const saveEditedImage: Writable<boolean> = writable(false);
 // Store toggleLeftSidebar status
 export const toggleLeftSidebar: Writable<boolean> = writable(true);
 
+// Store toggleRightSidebar status
+export const toggleRightSidebar: Writable<boolean> = writable(false);
+
+// Store toggleFooterSidebar status
+export const toggleFooterSidebar: Writable<boolean> = writable(false);
+
 // Store switchSideBar status
-export const switchSideBar = writable(true);
+export const switchSideBar: Writable<boolean> = writable(true);
 
 // Store detault SystemLanguage
 export const systemLanguage: Writable<string> = writable('en');
+
+// Store to Check First User Exist
+export const firstuserExist = writable(false);

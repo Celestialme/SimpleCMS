@@ -4,8 +4,6 @@
 	import { extractData, find, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
-	import Button from '@src/components/system/buttons/Button.svelte';
-	import Icon from '@iconify/svelte';
 
 	export let field: FieldType | undefined;
 	let fieldName = getFieldName(field);
@@ -61,29 +59,39 @@
 {#if !expanded && !showDropDown}
 	<div class="flex">
 		<p on:click={openDropDown}>{selected?.display || display || 'select new'}</p>
-		<Button
+
+		<button
+			type="button"
 			on:click={() => {
 				expanded = !expanded;
 				entryMode = 'edit';
 				fieldsData = {};
 				selected = undefined;
 			}}
-			iconLeft="bi:pencil-fill"
-		/>
-		<Button
+			class="btn-icon variant-ghost-surface"
+		>
+			<iconify-icon icon="bi:pencil-fill" width="24" />
+		</button>
+
+		<button
+			type="button"
 			on:click={() => {
 				expanded = !expanded;
 				entryMode = 'create';
 				fieldsData = {};
 				selected = undefined;
 			}}
-			iconLeft="ic:baseline-plus"
-			btnClass="mr-1"
-		/>
+			class="btn-icon variant-ghost-surface"
+		>
+			<iconify-icon icon="ic:baseline-plus" width="24" />
+		</button>
 	</div>
 {:else if !expanded && showDropDown}
 	<DropDown {dropDownData} {field} bind:selected bind:showDropDown />
 {:else}
 	<Fields fields={field?.relation.fields} root={false} bind:fieldsData customData={relation_entry} />
-	<Button on:click={() => (expanded = false)}>Save</Button>
+
+	<button type="button" on:click={() => (expanded = false)} class="btn variant-filled-primary">
+		<iconify-icon icon="material-symbols:save" width="24" />Save
+	</button>
 {/if}

@@ -10,7 +10,7 @@ const en: BaseTranslation = {
 	SBL_Light: 'Light',
 	SBL_Dark: 'Dark',
 	SBL_Mode: 'Mode',
-	SBL_Version: 'Version',
+	SBL_Version: 'Ver.',
 	SBL_Ver: 'Ver.',
 	SBL_Save: 'Save',
 	SBL_Save_message: 'Data saved successfully',

@@ -49,7 +49,7 @@ type RootTranslation = {
 	 */
 	SBL_Mode: string
 	/**
-	 * V​e​r​s​i​o​n
+	 * V​e​r​.
 	 */
 	SBL_Version: string
 	/**
@@ -1048,7 +1048,7 @@ export type TranslationFunctions = {
 	 */
 	SBL_Mode: () => LocalizedString
 	/**
-	 * Version
+	 * Ver.
 	 */
 	SBL_Version: () => LocalizedString
 	/**

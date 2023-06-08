@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
-	import { mode, entryData, deleteEntry, toggleLeftSidebar } from '@src/stores/store';
+	import { mode, entryData, deleteEntry, toggleLeftSidebar, switchSideBar } from '@src/stores/store';
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
 	import DeleteIcon from './DeleteIcon.svelte';
 
-	export let switchSideBar = false;
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -28,9 +27,7 @@
 		getPaginationRowModel
 	} from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions, SortDirection, FilterFn } from '@tanstack/table-core/src/types';
-	import Button from './system/buttons/Button.svelte';
-	//import FloatingInput from './system/inputs/floatingInput';
-	import AnimatedHamburger from './AnimatedHamburger.svelte';
+
 	import FloatingInput from './system/inputs/floatingInput.svelte';
 	import EntryListMultiButton from './EntryList_MultiButton.svelte';
 
@@ -233,13 +230,16 @@
 	};
 </script>
 
-<div class="my-2 mr-2 flex items-center justify-between dark:text-white">
-	<div class="flex items-center">
-		{#if !switchSideBar && $toggleLeftSidebar}
-			<AnimatedHamburger width="40" />
+<div class="mb-2 mr-2 flex items-center justify-between dark:text-white">
+	<div class="ml-2 flex items-center">
+		{#if $toggleLeftSidebar === true}
+			<button on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon"
+				><iconify-icon icon="mingcute:menu-fill" width="24" /></button
+			>
 		{/if}
+
 		<!-- Collection type with icon -->
-		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : ''}">
+		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : 'ml-1'}">
 			{#if categories}<div class="mb-2 text-xs capitalize text-surface-500 dark:text-surface-300">
 					{categories[0].name}
 				</div>{/if}
@@ -256,38 +256,38 @@
 
 	<div class="relative">
 		<!-- Expanding Search -->
-		<!-- TODO: Expand transtion not working -->
 		{#if searchShow}
-			<div class="absolute right-28 top-0 flex w-full items-center">
+			<div class="variant-ghost-surface btn-group absolute -right-28 top-0 flex items-center justify-end">
+				<button type="button" on:click={() => (searchShow = !searchShow)} class="w-12 border-r border-surface-500">
+					<iconify-icon icon="ic:outline-search-off" width="24" />
+				</button>
 				<input
 					type="text"
 					placeholder="Search..."
-					class="w-full cursor-pointer rounded border-0 border-b border-gray-300 bg-gray-800 px-2 text-black outline-none transition-all duration-500 ease-in-out focus:border-blue-500 dark:text-white"
+					class="h-12 w-64 cursor-pointer rounded border-0 bg-gray-800 text-black outline-none transition-all duration-500 ease-in-out focus:border-blue-500 dark:text-white"
 					on:blur={() => (searchShow = false)}
 					on:keydown={(e) => e.key === 'Enter' && (searchShow = false)}
 				/>
-				<!-- TODO: rounded-left-0 not working-->
-				<Button btnClass="rounded-left-0" iconLeft="ic:outline-search-off" on:click={() => (searchShow = !searchShow)} />
 			</div>
 		{:else}
-			<Button btnClass="circular-btn w-10 h-10 !p-0" iconLeft="material-symbols:search-rounded" on:click={() => (searchShow = !searchShow)} />
-		{/if}
+			<button type="button" on:click={() => (searchShow = !searchShow)} class="btn-icon variant-filled-surface"
+				><iconify-icon icon="material-symbols:search-rounded" width="24" /></button
+			>{/if}
+
 		<!-- Filter -->
-		<Button iconLeft="material-symbols:filter-list-rounded" on:click={() => (filterShow = !filterShow)} />
+		<button type="button" on:click={() => (filterShow = !filterShow)} class="btn-icon variant-filled-surface"
+			><iconify-icon icon="material-symbols:filter-list-rounded" width="24" /></button
+		>
 
 		<!-- Column Order & Visility -->
 		<!-- Column Order/ Sort-->
-		<Button iconLeft="fluent:column-triple-edit-24-regular" on:click={() => (columnShow = !columnShow)}>
-			<!-- {$LL.TANSTACK_Column()} -->
-		</Button>
+		<button type="button" on:click={() => (columnShow = !columnShow)} class="btn-icon variant-filled-surface"
+			><iconify-icon icon="fluent:column-triple-edit-24-regular" width="24" /><!-- {$LL.TANSTACK_Column()} --></button
+		>
 
 		<!-- Spacing/Density  -->
-		<Button
-			iconLeft={density === 'compact'
-				? 'material-symbols:align-space-even-rounded'
-				: density === 'normal'
-				? 'material-symbols:align-space-around-rounded'
-				: 'material-symbols:align-space-between-rounded'}
+		<button
+			type="button"
 			on:click={() => {
 				// Update the density variable
 				if (density === 'compact') {
@@ -301,8 +301,18 @@
 				//TODO: Refresh the table data not working
 				//refresh($collection);
 			}}
-		/>
+			class="btn-icon variant-filled-surface"
+			><iconify-icon
+				icon={density === 'compact'
+					? 'material-symbols:align-space-even-rounded'
+					: density === 'normal'
+					? 'material-symbols:align-space-around-rounded'
+					: 'material-symbols:align-space-between-rounded'}
+				width="24"
+			/><!-- {$LL.TANSTACK_Column()} -->
+		</button>
 	</div>
+
 	<!-- MultiButton -->
 	<EntryListMultiButton />
 </div>
@@ -451,7 +461,7 @@
 		<select
 			value={$table.getState().pagination.pageSize}
 			on:change={setPageSize}
-			class="select text-dark hidden max-w-[100px] rounded py-2 text-sm dark:bg-gray-800 dark:text-white sm:block"
+			class="text-dark select hidden max-w-[100px] rounded py-2 text-sm dark:bg-gray-800 dark:text-white sm:block"
 		>
 			{#each [10, 25, 50, 100, 500] as pageSize}
 				<option value={pageSize}>
@@ -461,8 +471,9 @@
 		</select>
 
 		<!-- next/previous pages -->
-		<div class="mt-2 inline-flex transition duration-150 ease-in-out">
+		<div class="btn-group variant-ghost mt-2 inline-flex transition duration-150 ease-in-out">
 			<button
+				type="button"
 				class=""
 				aria-label="Go to First Page"
 				on:click={() => setCurrentPage(0)}
@@ -473,6 +484,7 @@
 			</button>
 
 			<button
+				type="button"
 				class=""
 				aria-label="Go to Previous Page"
 				on:click={() => setCurrentPage($table.getState().pagination.pageIndex - 1)}
@@ -501,6 +513,8 @@
 			</div>
 
 			<button
+				type="button"
+				class=""
 				aria-label="Go to Next Page"
 				on:click={() => setCurrentPage($table.getState().pagination.pageIndex + 1)}
 				class:is-disabled={!$table.getCanNextPage()}
@@ -510,6 +524,8 @@
 			</button>
 
 			<button
+				type="button"
+				class=""
 				aria-label="Go to Last Page"
 				on:click={() => setCurrentPage($table.getPageCount() - 1)}
 				class:is-disabled={!$table.getCanNextPage()}

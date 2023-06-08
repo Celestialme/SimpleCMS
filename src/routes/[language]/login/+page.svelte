@@ -74,7 +74,9 @@
 			</div>
 		</div>
 		<!-- TODO:fix Language switcher -->
-		<div class="absolute bottom-1/4 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform cursor-pointer items-center justify-center">
+		<div
+			class="absolute bottom-1/4 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform cursor-pointer items-center justify-center rounded-full border-2 border-[#242728] bg-white p-2 dark:text-black"
+		>
 			EN<!-- <LocaleSwitcher /> -->
 		</div>
 	{/if}

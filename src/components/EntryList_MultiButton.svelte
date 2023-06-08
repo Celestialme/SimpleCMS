@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { mode } from '@src/stores/store';
+	import { mode, switchSideBar, toggleRightSidebar } from '@src/stores/store';
 
-	console.log('mode', mode);
+	//console.log('mode', mode);
 
 	const dispatch = createEventDispatcher();
 
@@ -98,10 +98,15 @@
 		<ul class="w-90 absolute right-12 top-12 z-10 divide-y-2 rounded-md bg-gray-800 py-1 text-white shadow-lg ring-1 ring-black ring-opacity-5">
 			{#if listboxValue !== 'create'}
 				<li>
+					<!-- TODO: FIX Sidebar & RightSidebar Toggle -->
 					<button
 						class="w-full px-4 py-2 text-left hover:bg-green-600 focus:bg-green-600 focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('create')}
-						on:click={() => mode.set('create')}
+						on:click={() => {
+							mode.set('create');
+							switchSideBar.update((value) => !value);
+							toggleRightSidebar.update((value) => !value);
+						}}
 					>
 						<span class="flex items-center">
 							<iconify-icon icon="ic:round-plus" width="24" />

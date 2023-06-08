@@ -1,21 +1,20 @@
 <script lang="ts">
 	import type { FieldType } from './';
 
-	import Input from '@src/components/system/inputs/Input.svelte';
 	import { mode, entryData } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 
 	export let field: FieldType | undefined;
+	console.log('field', field);
+
 	let fieldName = getFieldName(field);
+	//console.log('fieldName', fieldName);
 
 	export let value = $entryData[fieldName];
-	//console.log(value);
 
 	let _data = $mode == 'create' ? {} : value;
-	//console.log(_data);
-	//console.log($mode);
 
 	export const WidgetData = async () => _data;
 </script>
 
-<Input type="text" bind:value={_data['en']} />
+<input type="text" class="input variant-ghost-surface w-full" bind:value={_data['en']} />

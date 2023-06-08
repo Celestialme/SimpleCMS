@@ -4,7 +4,6 @@
 	import SignupIcon from './icons/SignupIcon.svelte';
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
 
-	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { PageData } from '../$types';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 
@@ -15,12 +14,17 @@
 
 	import { signUpSchema } from '../formSchemas';
 
+	import { firstuserExist } from '@src/stores/store';
+	let firstUserExists;
+	firstuserExist.subscribe((value) => {
+		firstUserExists = value;
+	});
+	//console.log('firstuserExist', firstuserExist);
+
 	export let active: undefined | 0 | 1 = undefined;
 	export let formSchema: PageData['signUpForm'];
 
 	let userExists = false;
-	// TODO grabd this data from Database
-	let firstUserExists = false;
 
 	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
 		validators: signUpSchema,
@@ -54,7 +58,13 @@
 
 			<h1 class="text-3xl font-bold text-white lg:text-4xl">
 				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
-				<div class="lg:-mt-1">{$LL.LOGIN_SignUp()}</div>
+				<div class="lg:-mt-1">
+					{$LL.LOGIN_SignUp()}
+					{#if !firstUserExists}- Admin User
+					{:else}
+						- New User
+					{/if}
+				</div>
 			</h1>
 		</div>
 
@@ -138,7 +148,7 @@
 
 			{#if userExists}<span class="text-xs text-error-500">User already exists</span>{/if}
 
-			<Button backgroundColor="white" btnClass="mt-6 ml-2">{$LL.LOGIN_SignUp()}</Button>
+			<button class="btn variant-filled ml-2 mt-4 font-bold uppercase">{$LL.LOGIN_SignUp()}</button>
 		</form>
 	</div>
 

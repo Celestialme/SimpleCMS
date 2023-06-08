@@ -10,7 +10,7 @@ const de: Translation = {
 	SBL_Light: 'Hell',
 	SBL_Dark: 'Dunkel',
 	SBL_Mode: 'Modus',
-	SBL_Version: 'Version',
+	SBL_Version: 'Ver.',
 	SBL_Ver: 'Ver.',
 	SBL_Save: 'Speichern',
 	SBL_Save_message: 'Daten erfolgreich gespeichert',

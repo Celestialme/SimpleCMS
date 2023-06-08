@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { collectionValue, mode } from '@src/stores/store';
 	import { credentials } from '@src/stores/load';
-	import Drawer from '@src/components/system/drawer/Drawer.svelte';
+
 	import Fields from '@src/components/Fields.svelte';
-	import ControlPanel from '@src/components/ControlPanel.svelte';
+
 	import EntryList from '@src/components/EntryList.svelte';
 	import collections, { collection } from '@src/collections';
 	import type { LayoutServerData } from '../../$types';
@@ -31,7 +31,6 @@
 </script>
 
 <div class="flex">
-	<Drawer />
 	<div class="max-h-screen flex-grow overflow-auto">
 		{#if $mode == 'view' || $mode == 'delete'}
 			<EntryList />
@@ -39,5 +38,4 @@
 			<Fields />
 		{/if}
 	</div>
-	<ControlPanel />
 </div>

@@ -6,7 +6,6 @@ import ImageArray from './ImageArray.svelte';
 let widget = ({
 	// Accept parameters from collection
 	db_fieldName,
-
 	icon,
 	fields,
 	required,

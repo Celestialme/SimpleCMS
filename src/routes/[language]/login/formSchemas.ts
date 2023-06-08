@@ -7,6 +7,7 @@ export let loginSchema = z.object({
 	password: z.string({ required_error: 'Password is required' }).min(4)
 });
 
+//TODO: fix TOKEN for other user than first
 export let signUpSchema = z.object({
 	username: z
 		.string({ required_error: get(LL).LOGIN_ZOD_Username_string() })
@@ -28,6 +29,6 @@ export let signUpSchema = z.object({
 	// .refine((val: string, ctx) => val === ctx.parent.password, {
 	// 	message: 'Passwords must match'
 	// }),
-	token: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1)
+	//token: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1)
 	// terms: z.boolean({ required_error: 'Confirm Terms' })
 });

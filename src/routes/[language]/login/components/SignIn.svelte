@@ -5,8 +5,6 @@
 	import { credentials } from '@src/stores/load';
 	import SigninIcon from './icons/SigninIcon.svelte';
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
-	import Input from '@src/components/system/inputs/Input.svelte';
-	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { PageData } from '../$types';
 	import { loginSchema } from '../formSchemas';
 	import { PUBLIC_SITENAME } from '$env/static/public';
@@ -41,6 +39,7 @@
 	let formElement: HTMLFormElement;
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <section
 	on:click
 	on:pointerenter
@@ -77,6 +76,7 @@
 					{...$constraints.email}
 					icon="mdi:email"
 					iconColor="black"
+					textColor="black"
 				/>
 				{#if $errors.email}<span class="invalid text-xs text-error-500">{$errors.email}</span>{/if}
 
@@ -90,19 +90,19 @@
 					label={$LL.LOGIN_Password()}
 					icon="mdi:lock"
 					iconColor="black"
+					textColor="black"
 				/>
 				{#if $errors.password}<span class="invalid text-xs text-error-500">{$errors.password}</span>{/if}
 
-				<div>
-					<Button backgroundColor="black" btnClass="mt-6 ml-2">{$LL.LOGIN_SignIn()}</Button>
-					<Button
-						backgroundColor="white"
-						size="sm"
-						btnClass="ml-5 border border-black !rounded-lg"
+				<div class="ml-1 mt-4 flex items-center justify-between">
+					<button type="button" class="btn variant-filled-surface">{$LL.LOGIN_SignIn()}</button>
+					<button
+						type="button"
+						class="variant-ringed-surface btn text-black"
 						on:click={() => {
 							forgot = true;
 							resetPW = false;
-						}}>{$LL.LOGIN_ForgottenPassword()}</Button
+						}}>{$LL.LOGIN_ForgottenPassword()}</button
 					>
 				</div>
 			{:else if resetPW && forgot}
@@ -117,6 +117,7 @@
 					label={$LL.LOGIN_Password()}
 					icon="mdi:lock"
 					iconColor="black"
+					textColor="black"
 				/>
 				{#if $errors.password}<span class="invalid text-xs text-error-500">{$errors.password}</span>{/if}
 
@@ -129,13 +130,14 @@
 					label={$LL.LOGIN_ConfirmPassword()}
 					icon="mdi:lock"
 					iconColor="black"
+					textColor="black"
 				/>
 				{#if $errors.confirm_password}<span class="invalid text-xs text-error-500">{$errors.confirm_password}</span>{/if}
 
 				<!-- Password field -->
 				<FloatingInput type="password" bind:value={$form.password} bind:showPassword label={$LL.LOGIN_Token()} icon="mdi:lock" iconColor="black" />
 
-				<Button backgroundColor="black" btnClass="mt-6 ml-2">{$LL.LOGIN_ResetPasswordSave()}</Button>
+				<button type="button" class="btn variant-filled-surface ml-2 mt-6">{$LL.LOGIN_ResetPasswordSave()}</button>
 			{:else}
 				<!-- Forgotten Password -->
 				<!-- Email field -->
@@ -147,20 +149,20 @@
 					label={$LL.LOGIN_EmailAddress()}
 					icon="mdi:email"
 					iconColor="black"
+					textColor="black"
 				/>
 				{#if $errors.email}<span class="invalid text-xs text-error-500">{$errors.email}</span>{/if}
 
-				<div>
-					<Button backgroundColor="black" btnClass="mt-6 ml-2">{$LL.LOGIN_SendResetMail()}</Button>
-					<Button
-						backgroundColor="black"
-						btnClass="circular-btn mt-6 ml-2"
-						iconLeft="mdi:arrow-left-circle"
+				<div class="mt-4 flex items-center justify-between">
+					<button type="button" class="btn variant-filled-surface">{$LL.LOGIN_SendResetMail()}</button>
+					<button
+						type="button"
+						class="btn-icon variant-filled-surface"
 						on:click={() => {
 							forgot = false;
 							resetPW = false;
-						}}
-					/>
+						}}><iconify-icon icon="mdi:arrow-left-circle" width="38" /></button
+					>
 				</div>
 			{/if}
 		</form>

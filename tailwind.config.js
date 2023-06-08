@@ -1,7 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 
 export default {
-	content: ['./src/**/*.{html,js,svelte,ts}'],
+	
+	darkMode: 'class',
+
+	content: [
+		'./src/**/*.{html,js,svelte,ts}',
+		// Path for the Skeleton NPM package and files:
+		require('path').join(require.resolve(
+			'@skeletonlabs/skeleton'),
+			'../**/*.{html,js,svelte,ts}'
+		)
+	],
 	theme: {
 		extend: {
 			screens: {
@@ -27,6 +37,7 @@ export default {
 	plugins: [
 		require('@tailwindcss/forms'),
 		require('prettier-plugin-tailwindcss'),
-		...require('./src/utils/skeleton-tailwind-plugin/skeleton.cjs')({ intellisense: false })
+		// The Skeleton plugin to the end of this list
+		...require('@skeletonlabs/skeleton/tailwind/skeleton.cjs')()
 	]
 };

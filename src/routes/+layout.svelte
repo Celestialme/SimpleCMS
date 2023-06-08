@@ -1,10 +1,21 @@
 <script lang="ts">
-	import '../app.css';
+	// Your selected Skeleton theme:
+	//import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
 	import '../theme.postcss';
+	// This contains the bulk of Skeletons required styles:
+	// NOTE: this will be renamed skeleton.css in the v2.x release.
+	import '@skeletonlabs/skeleton/styles/skeleton.css';
+
+	// Finally, your application's global stylesheet (sometimes labeled 'app.css')
+	import '../app.css';
 
 	// Icons from https://icon-sets.iconify.design/
 	import 'iconify-icon';
+
+	//required for popups to function
+	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
+	import { storePopup } from '@skeletonlabs/skeleton';
+	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 </script>
 
-<!-- This needs the the 4x sidebards -->
 <slot />
