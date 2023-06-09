@@ -17,4 +17,4 @@
 	export const WidgetData = async () => _data;
 </script>
 
-<input type="text" class="input variant-ghost-surface w-full" bind:value={_data['en']} />
+<input type="text" class="variant-ghost-surface input w-full" bind:value={_data['en']} />

@@ -47,6 +47,7 @@
 	};
 
 	// Lucia
+	// TODO: Fix User DATA
 	// $: user = data.user;
 	// $: avatarSrc = user?.avatar;
 	$: avatarSrc = 'test';
@@ -91,15 +92,12 @@
 dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-300 flex flex-col z-10 
 {$switchSideBar ? 'w-[215px]' : 'w-fit'}
 {$toggleLeftSidebar ? 'hidden' : 'block'}"
-	slotSidebarRight="h-screen relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-800 text-center {$toggleRightSidebar
-		? 'hidden'
-		: 'block'}"
-	slotPageHeader="bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-800 text-center px-1 h-10 border-b relative hidden {$toggleFooterSidebar
-		? 'hidden'
-		: 'block'} "
-	slotPageFooter="bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-800 text-center px-1 h-10 border-t relative hidden {$toggleFooterSidebar
-		? 'hidden'
-		: 'block'} "
+	slotSidebarRight="h-screen relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-800 text-center 
+	{$toggleRightSidebar ? 'hidden' : 'block'}"
+	slotPageHeader="bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-800 text-center px-1 h-10 border-b relative hidden 
+	{toggleFooterSidebar ? 'hidden' : 'block'}"
+	slotPageFooter="bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-800 text-center px-1 h-10 border-t relative hidden 
+	{$toggleFooterSidebar ? 'hidden' : 'block'}"
 >
 	<svelte:fragment slot="sidebarLeft">
 		<!-- Corporate Identity -->
@@ -111,9 +109,9 @@ dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-
 			</a>
 		{:else}
 			<div class="flex justify-start gap-1.5">
-				<button on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1"
-					><iconify-icon icon="mingcute:menu-fill" width="24" /></button
-				>
+				<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
+					<iconify-icon icon="mingcute:menu-fill" width="24" />
+				</button>
 
 				<a href="/" class="flex pt-2 !no-underline">
 					<SimpleCmsLogo fill="red" className="h-9  mr-2" />
@@ -164,13 +162,13 @@ dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-
 			<div class="{$switchSideBar ? 'grid-cols-3 grid-rows-3' : 'grid-cols-2 grid-rows-2'} grid items-center justify-center overflow-hidden">
 				<!-- Avatar with user settings -->
 				<div class={$switchSideBar ? 'order-1 row-span-2' : 'order-1'}>
-					<div class="md:row-span-2">
+					<button class="btn-icon hover:bg-surface-500 md:row-span-2">
 						<div
 							on:click={() => !$page.url.href.includes('user') && goto('/user')}
 							on:keypress={() => !$page.url.href.includes('user') && goto('/user')}
 							class="relative cursor-pointer flex-col !no-underline"
 						>
-							<Avatar src={avatarSrc ? '/api/media/' + avatarSrc : '/Default_User.svg'} class="mx-auto {$switchSideBar ? 'w-[50px]' : 'w-[35px]'}" />
+							<Avatar src={avatarSrc ? '/api/media/' + avatarSrc : '/Default_User.svg'} class="mx-auto {$switchSideBar ? 'w-[40px]' : 'w-[35px]'}" />
 							<div class="text-center text-[9px] text-black dark:text-white">
 								{#if $switchSideBar}
 									<!-- {#if user?.username}
@@ -179,13 +177,13 @@ dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-
 								{/if}
 							</div>
 						</div>
-					</div>
+					</button>
 				</div>
 
 				<!-- System Language i18n Handeling -->
 				<!-- TODO: Fix Tooltip overflow -->
 				<div class={$switchSideBar ? 'order-3 row-span-2' : 'order-2'}>
-					<div use:popup={SystemLanguageTooltip} class="btn-icon overflow-visible md:row-span-2">
+					<button use:popup={SystemLanguageTooltip} class="btn-icon font-bold hover:bg-surface-500 hover:text-white md:row-span-2">
 						EN<!-- <LocaleSwitcher user={user?._id} /> -->
 
 						<!-- Popup Tooltip with the arrow element -->
@@ -193,20 +191,16 @@ dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-
 							{$LL.SBL_SystemLanguage()}
 							<div class="arrow variant-filled-secondary" />
 						</div>
-					</div>
+					</button>
 				</div>
 
 				<!-- light/dark mode switch -->
-				<div class="{$switchSideBar ? 'order-2' : 'order-3'} ">
-					<button
-						use:popup={SwitchThemeSettings}
-						on:click={toggleTheme}
-						class="btn btn-sm relative p-2 text-sm text-surface-500 hover:bg-surface-100 focus:outline-none dark:text-white dark:hover:bg-surface-700 dark:focus:ring-surface-700"
-					>
+				<div class="{$switchSideBar ? 'order-2' : 'order-3'}  ">
+					<button use:popup={SwitchThemeSettings} on:click={toggleTheme} class="btn-icon hover:bg-surface-500 hover:text-white">
 						{#if !$modeCurrent}
-							<iconify-icon icon="bi:sun" width="16" />
+							<iconify-icon icon="bi:sun" width="22" />
 						{:else}
-							<iconify-icon icon="bi:moon-fill" width="16" />
+							<iconify-icon icon="bi:moon-fill" width="22" />
 						{/if}
 
 						<!-- TODO: tooltip overflow -->
@@ -221,13 +215,8 @@ dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-
 
 				<!-- Lucia Sign Out -->
 				<div class={$switchSideBar ? 'order-4' : 'order-4'}>
-					<button
-						use:popup={SignOutTooltip}
-						on:click={signOut}
-						type="submit"
-						value="Sign out"
-						class="btn btn-sm uppercase hover:bg-surface-100 focus:outline-none dark:text-white dark:hover:bg-surface-700 dark:focus:ring-surface-700 md:text-xs"
-						><iconify-icon icon="uil:signout" width="24" /></button
+					<button use:popup={SignOutTooltip} on:click={signOut} type="submit" value="Sign out" class="btn-icon hover:bg-surface-500 hover:text-white"
+						><iconify-icon icon="uil:signout" width="26" /></button
 					>
 
 					<div class="card variant-filled-secondary z-10 p-2" data-popup="SignOut">
@@ -237,28 +226,32 @@ dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-
 				</div>
 
 				<!-- Collection Builder -->
-				<div class="{$switchSideBar ? 'order-5' : 'order-6'} ">
-					<a use:popup={BuilderTooltip} href="/builder">
-						<iconify-icon icon="material-symbols:build-circle" width="28" />
-					</a>
+				<div class={$switchSideBar ? 'order-5' : 'order-6'}>
+					<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
+						<a use:popup={BuilderTooltip} href="/builder">
+							<iconify-icon icon="material-symbols:build-circle" width="32" />
+						</a>
 
-					<div class="card variant-filled-secondary z-10 p-2" data-popup="Builder">
-						Collection Builder
-						<div class="arrow variant-filled-secondary" />
-					</div>
+						<div class="card variant-filled-secondary z-10 p-2" data-popup="Builder">
+							Collection Builder
+							<div class="arrow variant-filled-secondary" />
+						</div>
+					</button>
 				</div>
 
 				<!-- Github discussions -->
-				<div class="{$switchSideBar ? 'order-7' : 'order-7 hidden'} ">
-					<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
-						<iconify-icon icon="grommet-icons:github" width="26" />
-					</a>
+				<div class={$switchSideBar ? 'order-7' : 'order-7 hidden'}>
+					<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
+						<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
+							<iconify-icon icon="grommet-icons:github" width="30" />
+						</a>
+					</button>
 				</div>
 
 				<!-- CMS Version -->
 				<div class={$switchSideBar ? 'order-6' : 'order-5'}>
 					<a href="https://github.com/Rar9/SimpleCMS/" target="blank">
-						<span class="{$switchSideBar ? 'py-1' : 'py-0'} badge variant-filled-primary rounded-xl text-black"
+						<span class="{$switchSideBar ? 'py-1' : 'py-0'} badge variant-filled-primary rounded-xl text-black hover:text-white"
 							>{#if $switchSideBar}{$LL.SBL_Version()}{/if}{pkg}</span
 						>
 					</a>

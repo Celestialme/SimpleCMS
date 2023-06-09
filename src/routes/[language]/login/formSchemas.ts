@@ -25,7 +25,7 @@ export let signUpSchema = z.object({
 		.string({ required_error: get(LL).LOGIN_ZOD_Confirm_password_string() })
 		.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
 			message: get(LL).LOGIN_ZOD_Confirm_password_regex()
-		}),
+		})
 	// .refine((val: string, ctx) => val === ctx.parent.password, {
 	// 	message: 'Passwords must match'
 	// }),

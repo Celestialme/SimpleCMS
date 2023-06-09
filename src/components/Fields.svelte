@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections';
-	import { collectionValue, mode, language } from '@src/stores/store';
-	import { cloneData, deleteData, getFieldName, handleCancel } from '@src/utils/utils';
-	import { toggleLeftSidebar, toggleRightSidebar } from '@src/stores/store';
+	import { collectionValue, mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, language } from '@src/stores/store';
+	import { cloneData, deleteData, getFieldName } from '@src/utils/utils';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -14,19 +13,37 @@
 	export let fieldsData = {};
 	export let customData = {};
 
-	export let switchSideBar = false;
-
 	$: if (root) $collectionValue = fieldsData;
-	// console.log(customData);
+
+	// a function to undo the changes made by handleButtonClick
+	function handleCancel() {
+		mode.set('view');
+		// get the current window width
+		let width = window.innerWidth;
+		// use the custom screens
+		if (width <= 567) {
+			// use toggleLeftSidebar for mobile
+			toggleLeftSidebar.update((value) => !value);
+			toggleRightSidebar.update((value) => !value);
+		} else if (width >= 568 && width <= 767) {
+			// use switchSideBar for md
+			switchSideBar.update((value) => !value);
+			toggleRightSidebar.update((value) => !value);
+		} else if (width > 768) {
+			// use toggleRightSidebar for xl and above
+			toggleRightSidebar.update((value) => !value);
+		}
+	}
 </script>
 
 <header class="bg-surface-1200 relative flex w-full items-center justify-between border-b p-2 border-secondary-600-300-token dark:bg-surface-700">
 	<div class="flex items-center justify-start">
-		{#if !switchSideBar && $toggleLeftSidebar}
-			<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1"
-				><iconify-icon icon="mingcute:menu-fill" width="24" /></button
-			>
+		{#if $toggleLeftSidebar === true}
+			<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
+				<iconify-icon icon="mingcute:menu-fill" width="24" />
+			</button>
 		{/if}
+
 		<!-- Collection type with icon -->
 		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : 'ml-1'}">
 			{#if categories}
@@ -63,7 +80,7 @@
 			<option value="EN">EN</option>
 		</select>
 
-		<button type="button" on:click={handleCancel} class="btn-icon variant-ghost-surface">
+		<button type="button" on:click={handleCancel} class="variant-ghost-surface btn-icon">
 			<iconify-icon icon="material-symbols:close" width="24" />
 		</button>
 	</div>

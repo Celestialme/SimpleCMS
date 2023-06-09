@@ -16,7 +16,7 @@ export const saveEditedImage: Writable<boolean> = writable(false);
 export const toggleLeftSidebar: Writable<boolean> = writable(true);
 
 // Store toggleRightSidebar status
-export const toggleRightSidebar: Writable<boolean> = writable(false);
+export const toggleRightSidebar: Writable<boolean> = writable(true);
 
 // Store toggleFooterSidebar status
 export const toggleFooterSidebar: Writable<boolean> = writable(false);
@@ -28,4 +28,10 @@ export const switchSideBar: Writable<boolean> = writable(true);
 export const systemLanguage: Writable<string> = writable('en');
 
 // Store to Check First User Exist
-export const firstuserExist = writable(false);
+export const firstuserExist: Writable<boolean> = writable(false);
+
+//tanstack header filters
+export const searchShow: Writable<string> = writable('');
+export const filterShow: Writable<boolean> = writable(false);
+export const columnShow: Writable<boolean> = writable(false);
+export const density: Writable<string> = writable('normal');

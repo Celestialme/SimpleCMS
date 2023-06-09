@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import { mode, switchSideBar, toggleRightSidebar } from '@src/stores/store';
-
-	//console.log('mode', mode);
+	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar } from '@src/stores/store';
 
 	const dispatch = createEventDispatcher();
 
@@ -14,6 +12,21 @@
 		mode.set('view');
 		dispatch(listboxValue);
 		dropdownOpen = false;
+		// get the current window width
+		let width = window.innerWidth;
+		// use the custom screens
+		if (width <= 567) {
+			// use toggleLeftSidebar for mobile
+			toggleLeftSidebar.update((value) => !value);
+			toggleRightSidebar.update((value) => !value);
+		} else if (width >= 568 && width <= 767) {
+			// use switchSideBar for md
+			switchSideBar.update((value) => !value);
+			toggleRightSidebar.update((value) => !value);
+		} else if (width > 768) {
+			// do nothing for xl
+			toggleRightSidebar.update((value) => !value);
+		}
 	}
 
 	function handleOptionClick(value: string) {
@@ -73,11 +86,14 @@
 			iconValue
 		};
 	}
+
+	// a reactive statement that runs whenever mode.set is updated
+	//$: if (mode.set === “create”) { switchSideBar.update((value) => !value); toggleRightSidebar.update((value) => !value); }
 </script>
 
 <div class="relative inline-flex rounded-md shadow">
 	<button
-		class={`inline-block rounded-l-full px-1 pl-4 font-medium uppercase leading-normal text-black transition duration-150 ease-in-out dark:text-white ${buttonClass}`}
+		class={`inline-block w-[130px] rounded-l-full px-1 pl-2 font-medium uppercase leading-normal text-black transition duration-150 ease-in-out dark:text-white ${buttonClass}`}
 		on:click|preventDefault={handleButtonClick}
 		on:click={() => mode.set(listboxValue)}
 	>
@@ -86,27 +102,25 @@
 			<span class="ml-2">{actionname}</span>
 		</span>
 	</button>
+
 	<div class="border-l-2 border-white" />
+
 	<button
-		class="inline-block rounded-r bg-gray-700 px-3 py-2 text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-gray-600 focus:bg-gray-600 focus:outline-none focus:ring-0 active:bg-gray-700"
+		class="inline-block rounded-r bg-surface-700 px-2 py-2 text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-gray-600 focus:bg-gray-600 focus:outline-none focus:ring-0 active:bg-gray-700"
 		on:click|preventDefault={() => (dropdownOpen = !dropdownOpen)}
 	>
 		<iconify-icon icon="mdi:chevron-down" width="24" />
 	</button>
 
 	{#if dropdownOpen}
-		<ul class="w-90 absolute right-12 top-12 z-10 divide-y-2 rounded-md bg-gray-800 py-1 text-white shadow-lg ring-1 ring-black ring-opacity-5">
+		<ul class="absolute right-1 top-12 z-10 w-[90%] divide-y-2 rounded-md bg-surface-800 py-1 text-white shadow-lg ring-1 ring-black ring-opacity-5">
 			{#if listboxValue !== 'create'}
 				<li>
 					<!-- TODO: FIX Sidebar & RightSidebar Toggle -->
 					<button
 						class="w-full px-4 py-2 text-left hover:bg-green-600 focus:bg-green-600 focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('create')}
-						on:click={() => {
-							mode.set('create');
-							switchSideBar.update((value) => !value);
-							toggleRightSidebar.update((value) => !value);
-						}}
+						on:click={() => mode.set('create')}
 					>
 						<span class="flex items-center">
 							<iconify-icon icon="ic:round-plus" width="24" />
@@ -178,7 +192,7 @@
 			{#if listboxValue !== 'delete'}
 				<li>
 					<button
-						class="w-full px-4 py-2 text-left hover:bg-red-600 focus:bg-red-600 focus:outline-none"
+						class="w-full px-4 py-2 text-left hover:bg-error-600 focus:bg-error-600 focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('delete')}
 						on:click={() => mode.set('delete')}
 					>

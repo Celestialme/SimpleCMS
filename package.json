@@ -22,6 +22,7 @@
 		"@tailwindcss/forms": "^0.5.3",
 		"@tailwindcss/typography": "^0.5.9",
 		"@types/mime-types": "^2.1.1",
+		"@types/nodemailer": "^6.4.8",
 		"autoprefixer": "^10.4.14",
 		"cssnano": "^6.0.1",
 		"npm-run-all": "^4.1.5",
@@ -43,13 +44,14 @@
 	"dependencies": {
 		"@floating-ui/dom": "^1.2.9",
 		"@lucia-auth/adapter-mongoose": "^2.0.0",
-		"@tanstack/svelte-table": "^8.9.1",
+		"@tanstack/svelte-table": "^8.9.2",
 		"axios": "^1.4.0",
 		"buffer": "^6.0.3",
 		"iconify-icon": "^1.0.7",
 		"lucia-auth": "^1.7.1",
 		"mime-types": "^2.1.35",
-		"mongoose": "^7.2.2",
+		"mongoose": "^7.2.3",
+		"nodemailer": "^6.9.3",
 		"svelte-email": "^0.0.4",
 		"typesafe-i18n": "^5.24.3"
 	}

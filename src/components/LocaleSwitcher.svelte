@@ -83,9 +83,8 @@
 <!-- seach autocomplete dowpdown if more than 3 languages -->
 {#if showAutocomplete}
 	<div class="relative">
-		
 		<input
-			class="rounded-full  bg-gray-800 uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring-2 active:ring-blue-300"
+			class="rounded-full bg-gray-800 uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring-2 active:ring-blue-300"
 			placeholder={$locale}
 			on:input={handleInput}
 			bind:value={input}

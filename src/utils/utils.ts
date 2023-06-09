@@ -185,11 +185,6 @@ export async function deleteData(id) {
 	await axios.delete(`/api/${$collection.name}/${id}`);
 }
 
-// Cancel FormData Creation
-export function handleCancel() {
-	mode.set('view');
-}
-
 export async function extractData(fieldsData: any) {
 	// exracts data from fieldsData because FieldsData is async
 	let temp = {};

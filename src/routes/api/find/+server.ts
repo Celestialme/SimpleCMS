@@ -1,5 +1,6 @@
 import type { RequestHandler } from './$types';
 import { collections } from '@src/routes/api/db';
+
 export const GET: RequestHandler = async ({ url }) => {
 	let collection = collections[url.searchParams.get('collection') as string];
 	let id = url.searchParams.get('id') as string | null;

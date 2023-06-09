@@ -1,16 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 
 export default {
-	
 	darkMode: 'class',
 
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
 		// Path for the Skeleton NPM package and files:
-		require('path').join(require.resolve(
-			'@skeletonlabs/skeleton'),
-			'../**/*.{html,js,svelte,ts}'
-		)
+		require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
 		extend: {

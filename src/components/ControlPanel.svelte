@@ -16,7 +16,7 @@
 		<iconify-icon icon="mdi:pen" width="24" />Create
 	</button>
 {:else if ['edit', 'create'].includes($mode)}
-	<header class="mx-2 text-red-500">
+	<header class="mx-2 text-error-500">
 		<button type="button" on:click={saveData} class="btn variant-filled-primary w-full">
 			<iconify-icon icon="material-symbols:save" width="24" />Save {$collection.name}
 		</button>
@@ -35,7 +35,7 @@
 		<div class="footer-content text-sm">
 			<!-- TODO: Use real dates & revision -->
 			{#if $collection.status}
-				<div class="mb-2 text-red-500"><span>Status:</span><span class="uppercase">{$collection.status}</span></div>
+				<div class="mb-2 text-error-500"><span>Status:</span><span class="uppercase">{$collection.status}</span></div>
 			{/if}
 			<div><span>Created:</span><span>{$collection.created}</span></div>
 			<div><span>Updated:</span><span>{$collection.updated}</span></div>

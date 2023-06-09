@@ -68,7 +68,7 @@
 				fieldsData = {};
 				selected = undefined;
 			}}
-			class="btn-icon variant-ghost-surface"
+			class="variant-ghost-surface btn-icon"
 		>
 			<iconify-icon icon="bi:pencil-fill" width="24" />
 		</button>
@@ -81,7 +81,7 @@
 				fieldsData = {};
 				selected = undefined;
 			}}
-			class="btn-icon variant-ghost-surface"
+			class="variant-ghost-surface btn-icon"
 		>
 			<iconify-icon icon="ic:baseline-plus" width="24" />
 		</button>

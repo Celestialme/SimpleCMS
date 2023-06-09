@@ -1,12 +1,11 @@
 <script lang="ts">
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
-
-	// show/hide Left Sidebar
-	import AnimatedHamburger from '@src/components/AnimatedHamburger.svelte';
-	import Avatar from '@src/components/system/avatar/Avatar.svelte';
-
 	import { toggleLeftSidebar } from '@src/stores/store';
+
+	//skeleton
+	import { Avatar } from '@skeletonlabs/skeleton';
+
 	export let switchSideBar = false;
 
 	let view = 'grid';
@@ -232,7 +231,9 @@
 
 <div class="align-centre mb-2 mr-1 flex dark:text-white">
 	{#if !switchSideBar && $toggleLeftSidebar}
-		<AnimatedHamburger />
+		<button on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
+			<iconify-icon icon="mingcute:menu-fill" width="24" />
+		</button>
 	{/if}
 
 	<h1 class={!$toggleLeftSidebar ? 'ml-2' : ''}>Media Gallery</h1>
@@ -335,7 +336,7 @@
 				/>
 			</section>
 
-			<footer class="card-footer bg-surface-500 rounded-sm text-center font-bold text-white">SimpleCMS</footer>
+			<footer class="card-footer rounded-sm bg-surface-500 text-center font-bold text-white">SimpleCMS</footer>
 		</div>
 		<!-- {/each} -->
 	</div>
@@ -349,7 +350,7 @@
 		</div>
 
 		<!-- chip column order -->
-		<div class="bg-surface-700 flex flex-col justify-center rounded-md text-center">
+		<div class="flex flex-col justify-center rounded-md bg-surface-700 text-center">
 			<div class="font-semibold">Drag & Drop columns & Click to hide</div>
 			<!-- toggle all -->
 			<!-- TODO place into section row will kill dnd action-->
@@ -364,7 +365,7 @@
 				{$LL.TANSTACK_Toggle()}
 			</label>
 			<section
-				class="bg-surface-700 flex justify-center rounded-md p-2"
+				class="flex justify-center rounded-md bg-surface-700 p-2"
 				use:dndzone={{ items, flipDurationMs }}
 				on:consider={handleDndConsider}
 				on:finalize={handleDndFinalize}
