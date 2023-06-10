@@ -64,22 +64,7 @@
 
 <svelte:window on:popstate={handlePopStateEvent} />
 
-<!-- {#if isLoginPage}
-	<button
-		class="btn btn-sm rounded-full border border-white variant-filled-surface justify-between uppercase"
-		use:popup={languageSettings}
-	>
-		{LanguageLabel}
-	</button>
-{:else}
-	<button
-		class="btn btn-sm rounded-full variant-filled-ghost justify-between uppercase"
-		use:popup={languageSettings}
-	>
-		{LanguageLabel}
-	</button>
-{/if} -->
-
+<!-- TODO: MODIFY for Sidebarleft -->
 <!-- seach autocomplete dowpdown if more than 3 languages -->
 {#if showAutocomplete}
 	<div class="relative">

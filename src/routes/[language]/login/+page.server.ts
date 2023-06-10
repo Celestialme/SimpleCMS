@@ -26,6 +26,46 @@ export const actions: Actions = {
 		}
 	},
 
+		// Function for handling the Forgottn Pasword
+		// TODO: Correct logic to check if Email exand to trigger Send Email new paswword
+		PWForgotten: async (event) => {
+			let pwforgottenForm = await superValidate(null, forgotForm);
+	
+			const form = await event.request.formData();
+			const email = (form.get('email') as string).toLowerCase();
+				
+			let resp = await pwforgotten(email, event.cookies);
+	
+			console.log('pwforgottenForm', pwforgottenForm);
+	
+			if (resp) {
+				throw redirect(303, '/');
+			} else {
+				return { form: pwforgottenForm };
+			}
+		},
+
+
+		// Function for handling the RESET 
+		// TODO: Correct logic to check reset PW with Recived Token and to set new password
+		PWReset: async (event) => {
+			let pwresetForm = await superValidate(null, resetForm);
+	
+			const form = await event.request.formData();
+			const email = (form.get('email') as string).toLowerCase();
+			const password = form.get('password') as string;
+	
+			let resp = await signIn(email, password, event.cookies);
+	
+			console.log('pwresetForm', pwresetForm);
+	
+			if (resp) {
+				throw redirect(303, '/');
+			} else {
+				return { form: pwresetForm };
+			}
+		},
+
 	//Function for handling the sign-up form submission and user creation
 	//TODO: Check if user Exists
 	signUp: async (event) => {

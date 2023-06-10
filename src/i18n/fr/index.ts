@@ -75,6 +75,7 @@ const fr: Translation = {
 	LOGIN_Token: "Jeton d'inscription",
 	LOGIN_ConfirmPassword: 'Confirmer le mot de passe',
 	LOGIN_ForgottenPassword: 'Mot de passe oublié',
+	LOGIN_ForgottenPassword_text: 'Ne vous inquiétez pas. Nous vous aiderons à récupérer votre mot de passe.',
 	LOGIN_SendResetMail: 'Envoyer un e-mail de réinitialisation du mot de passe',
 	LOGIN_ResetPassword: 'Réinitialiser le mot de passe',
 	LOGIN_ResetPasswordSave: 'Enregistrer le nouveau mot de passe',

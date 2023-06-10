@@ -75,10 +75,12 @@ const en: BaseTranslation = {
 	LOGIN_Token: 'Registration Token',
 	LOGIN_ConfirmPassword: 'Confirm Password',
 	LOGIN_ForgottenPassword: 'Forgotten Password',
+	LOGIN_ForgottenPassword_text: 'Do not worry. We will help you Recover your Password.',
 	LOGIN_SendResetMail: 'Send Password Reset Email',
 	LOGIN_ResetPassword: 'Reset Password',
 	LOGIN_ResetPasswordSave: 'Save New Password',
 	LOGIN_SignInSuccess: 'Signed In Successfully',
+
 
 	LOGIN_ZOD_Username_string: 'Username is required',
 	LOGIN_ZOD_Username_regex: 'Name can only contain letters, digits and @$!%*#',

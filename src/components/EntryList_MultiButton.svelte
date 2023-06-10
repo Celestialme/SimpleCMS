@@ -93,6 +93,7 @@
 
 <div class="relative inline-flex rounded-md shadow">
 	<button
+		type="button"
 		class={`inline-block w-[130px] rounded-l-full px-1 pl-2 font-medium uppercase leading-normal text-black transition duration-150 ease-in-out dark:text-white ${buttonClass}`}
 		on:click|preventDefault={handleButtonClick}
 		on:click={() => mode.set(listboxValue)}
@@ -106,6 +107,7 @@
 	<div class="border-l-2 border-white" />
 
 	<button
+		type="button"
 		class="inline-block rounded-r bg-surface-700 px-2 py-2 text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-gray-600 focus:bg-gray-600 focus:outline-none focus:ring-0 active:bg-gray-700"
 		on:click|preventDefault={() => (dropdownOpen = !dropdownOpen)}
 	>
@@ -118,6 +120,7 @@
 				<li>
 					<!-- TODO: FIX Sidebar & RightSidebar Toggle -->
 					<button
+						type="button"
 						class="w-full px-4 py-2 text-left hover:bg-green-600 focus:bg-green-600 focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('create')}
 						on:click={() => mode.set('create')}
@@ -133,6 +136,7 @@
 			{#if listboxValue !== 'publish'}
 				<li>
 					<button
+						type="button"
 						class="w-full px-4 py-2 text-left hover:bg-blue-600 focus:bg-blue-600 focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('publish')}
 						on:click={() => mode.set('publish')}
@@ -147,6 +151,7 @@
 			{#if listboxValue !== 'unpublish'}
 				<li>
 					<button
+						type="button"
 						class="w-full px-4 py-2 text-left hover:bg-yellow-600 focus:bg-yellow-600 focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('unpublish')}
 						on:click={() => mode.set('unpublish')}
@@ -162,6 +167,7 @@
 			{#if listboxValue !== 'schedule'}
 				<li>
 					<button
+						type="button"
 						class="w-full px-4 py-2 text-left hover:bg-pink-600 focus:bg-pink-600 focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('schedule')}
 						on:click={() => mode.set('schedule')}
@@ -177,6 +183,7 @@
 			{#if listboxValue !== 'clone'}
 				<li>
 					<button
+						type="button"
 						class="w-full px-4 py-2 text-left hover:bg-gray-600 focus:bg-gray-600 focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('clone')}
 						on:click={() => mode.set('clone')}
@@ -192,6 +199,7 @@
 			{#if listboxValue !== 'delete'}
 				<li>
 					<button
+						type="button"
 						class="w-full px-4 py-2 text-left hover:bg-error-600 focus:bg-error-600 focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('delete')}
 						on:click={() => mode.set('delete')}

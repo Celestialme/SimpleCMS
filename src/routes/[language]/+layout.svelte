@@ -13,10 +13,9 @@
 
 	systemLanguage.set($page.params.language);
 
+	//skeleton
 	import { AppShell, AppBar, Avatar, Modal, ProgressBar, Toast, toastStore, setModeUserPrefers, setModeCurrent } from '@skeletonlabs/skeleton';
-
 	import { modeOsPrefers, modeUserPrefers, modeCurrent } from '@skeletonlabs/skeleton';
-
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
@@ -121,6 +120,7 @@ dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-
 
 		<!-- sidebar collapse button -->
 		<button
+			type="button"
 			class="absolute -right-3 top-2 flex items-center justify-center !rounded-full border-2 border-surface-300"
 			on:click={() => switchSideBar.update((value) => !value)}
 		>

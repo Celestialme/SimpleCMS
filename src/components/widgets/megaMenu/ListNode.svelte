@@ -18,6 +18,7 @@
 	{self?.Header[$contentLanguage]}
 	{#if level < maxDepth}
 		<button
+			type="button"
 			on:click={() => {
 				depth = level + 1;
 				showFields = true;
@@ -27,6 +28,7 @@
 		>
 	{/if}
 	<button
+		type="button"
 		on:click={() => {
 			$currentChild = self;
 			$mode = 'edit';

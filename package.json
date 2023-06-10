@@ -48,7 +48,7 @@
 		"axios": "^1.4.0",
 		"buffer": "^6.0.3",
 		"iconify-icon": "^1.0.7",
-		"lucia-auth": "^1.7.1",
+		"lucia-auth": "^1.8.0",
 		"mime-types": "^2.1.35",
 		"mongoose": "^7.2.3",
 		"nodemailer": "^6.9.3",

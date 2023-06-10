@@ -75,6 +75,7 @@ const de: Translation = {
 	LOGIN_Token: 'Anmeldungs Token',
 	LOGIN_ConfirmPassword: 'Passwort bestätigen',
 	LOGIN_ForgottenPassword: 'Kennwort vergessen',
+	LOGIN_ForgottenPassword_text: 'Machen Sie sich keine Sorgen. Wir helfen Ihnen, Ihr Passwort wiederzufinden.',
 	LOGIN_SendResetMail: 'E-Mail Passwort senden',
 	LOGIN_ResetPassword: 'Passwort zurücksetzen',
 	LOGIN_ResetPasswordSave: 'Neues Password speichern',

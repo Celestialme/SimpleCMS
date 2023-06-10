@@ -6,7 +6,7 @@
 	import SigninIcon from './icons/SigninIcon.svelte';
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
 	import type { PageData } from '../$types';
-	import { loginSchema } from '../formSchemas';
+	import { loginFormSchema, forgotFormSchema, resetFormSchema } from '../formSchemas';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import CMSLogo from './icons/Logo.svelte';
 	// typesafe-i18n
@@ -19,23 +19,88 @@
 
 	let showPassword = false;
 
-	export let formSchema: PageData['loginForm'];
-	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
-		validators: loginSchema,
+	export let loginFormSchema: PageData['loginForm'];
+	let {
+		form: loginForm,
+		constraints,
+		allErrors,
+		errors,
+		enhance: loginEnhance
+	} = superForm(loginFormSchema, {
+		validators: loginFormSchema,
+		// other options
 		defaultValidator: 'keep',
 		applyAction: true,
 		taintedMessage: '',
 		clearOnSubmit: 'none',
+
+		onSubmit: ({ cancel }) => {
+			// handle login form submission
+			// if ($allErrors.length > 0) cancel();
+		},
+
+		onResult: ({ result, cancel }) => {
+			if (result.type == 'redirect') return;
+			cancel();
+
+			// add wiggle animation to form element
+			formElement.classList.add('wiggle');
+			// console.log('formElement', formElement);
+			setTimeout(() => formElement.classList.remove('wiggle'), 300);
+		}
+	});
+
+	export let forgotFormSchema: PageData['forgotForm'];
+	let { form: forgotForm, enhance: forgotEnhance } = superForm(forgotFormSchema, {
+		validators: forgotFormSchema,
+		// other options
+		defaultValidator: 'keep',
+		applyAction: true,
+		taintedMessage: '',
+		clearOnSubmit: 'none',
+
 		onSubmit: ({ cancel }) => {
 			// if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
-			if (result.type == 'redirect') return;
+			// handle forgot form result
+			// update variables to display reset form
+			if (result.type == 'redirect') {
+				resetPW = true;
+			}
 			cancel();
+
+			// add wiggle animation to form element
 			formElement.classList.add('wiggle');
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 		}
 	});
+
+	export let resetFormSchema: PageData['resetForm'];
+	let { form: resetForm, enhance: resetEnhance } = superForm(resetFormSchema, {
+		validators: resetFormSchema,
+		// other options
+		defaultValidator: 'keep',
+		applyAction: true,
+		taintedMessage: '',
+		clearOnSubmit: 'none',
+
+		onSubmit: ({ cancel }) => {
+			// if ($allErrors.length > 0) cancel();
+		},
+		onResult: ({ result, cancel }) => {
+			if (result.type == 'redirect') {
+				forgot = false;
+				resetPW = false;
+			}
+			cancel();
+
+			// add wiggle animation to form element
+			formElement.classList.add('wiggle');
+			setTimeout(() => formElement.classList.remove('wiggle'), 300);
+		}
+	});
+
 	let formElement: HTMLFormElement;
 </script>
 
@@ -43,6 +108,7 @@
 <section
 	on:click
 	on:pointerenter
+	on:keydown
 	class="hover relative flex items-center"
 	class:active={active == 0}
 	class:inactive={active !== undefined && active !== 0}
@@ -65,8 +131,8 @@
 		</div>
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
-		<form method="post" action="?/signIn" use:enhance bind:this={formElement} class="flex w-full flex-col" class:hide={active != 0}>
-			{#if !forgot && !resetPW}
+		{#if !forgot && !resetPW}
+			<form method="post" action="?/signIn" use:enhance={loginEnhance} bind:this={formElement} class="flex w-full flex-col" class:hide={active != 0}>
 				<!-- Email field -->
 				<FloatingInput
 					name="email"
@@ -95,7 +161,7 @@
 				{#if $errors.password}<span class="invalid text-xs text-error-500">{$errors.password}</span>{/if}
 
 				<div class="ml-1 mt-4 flex items-center justify-between">
-					<button type="button" class="btn variant-filled-surface">{$LL.LOGIN_SignIn()}</button>
+					<button type="submit" class="btn variant-filled-surface">{$LL.LOGIN_SignIn()}</button>
 					<button
 						type="button"
 						class="variant-ringed-surface btn text-black"
@@ -105,9 +171,12 @@
 						}}>{$LL.LOGIN_ForgottenPassword()}</button
 					>
 				</div>
-			{:else if resetPW && forgot}
-				<!-- Reset Password -->
+			</form>
+		{/if}
 
+		{#if resetPW && forgot}
+			<!-- Reset Password -->
+			<form method="post" action="?/reset" use:enhance={resetEnhance} bind:this={formElement} class="flex w-full flex-col">
 				<!-- Password field -->
 				<FloatingInput
 					name="password"
@@ -137,9 +206,16 @@
 				<!-- Password field -->
 				<FloatingInput type="password" bind:value={$form.password} bind:showPassword label={$LL.LOGIN_Token()} icon="mdi:lock" iconColor="black" />
 
-				<button type="button" class="btn variant-filled-surface ml-2 mt-6">{$LL.LOGIN_ResetPasswordSave()}</button>
-			{:else}
-				<!-- Forgotten Password -->
+				<button type="submit" class="btn variant-filled-surface ml-2 mt-6">{$LL.LOGIN_ResetPasswordSave()}</button>
+			</form>
+		{/if}
+
+		{#if forgot && !resetPW}
+			<!-- Forgotten Password -->
+			<form method="post" action="?/forgot" use:enhance={forgotEnhance} bind:this={formElement} class="flex w-full flex-col">
+				<div class="  mb-2 text-center text-sm text-black">
+					<p>{$LL.LOGIN_ForgottenPassword_text()}</p>
+				</div>
 				<!-- Email field -->
 				<FloatingInput
 					name="email"
@@ -154,7 +230,8 @@
 				{#if $errors.email}<span class="invalid text-xs text-error-500">{$errors.email}</span>{/if}
 
 				<div class="mt-4 flex items-center justify-between">
-					<button type="button" class="btn variant-filled-surface">{$LL.LOGIN_SendResetMail()}</button>
+					<button type="submit" class="btn variant-filled-surface">{$LL.LOGIN_SendResetMail()}</button>
+
 					<button
 						type="button"
 						class="btn-icon variant-filled-surface"
@@ -164,8 +241,8 @@
 						}}><iconify-icon icon="mdi:arrow-left-circle" width="38" /></button
 					>
 				</div>
-			{/if}
-		</form>
+			</form>
+		{/if}
 	</div>
 
 	<SigninIcon show={active == 1 || active == undefined} />
@@ -193,5 +270,26 @@
 		border-top-right-radius: 5% 50%;
 		border-bottom-right-radius: 5% 50%;
 		width: calc(var(--width) + 10%);
+	}
+
+	:global(.wiggle) {
+		animation: wiggle 0.3s forwards;
+	}
+	@keyframes wiggle {
+		0% {
+			transform: translateX(0);
+		}
+		25% {
+			transform: translateX(150px);
+		}
+		50% {
+			transform: translateX(-75px);
+		}
+		75% {
+			transform: translateX(200px);
+		}
+		100% {
+			transform: translateX(0px);
+		}
 	}
 </style>

@@ -2,9 +2,31 @@ import { z } from 'zod';
 import { get } from 'svelte/store';
 import LL from '@src/i18n/i18n-svelte.js';
 
-export let loginSchema = z.object({
+// SignIN Schemas
+export let loginFormSchema = z.object({
 	email: z.string({ required_error: 'Email is required' }).email({ message: 'Invalid email address' }),
 	password: z.string({ required_error: 'Password is required' }).min(4)
+});
+
+// TODO: Check if this schema grabs
+export let forgotFormSchema = z.object({
+	email: z.string({ required_error: 'Email is required' }).email({ message: 'Invalid email address' })
+});
+
+// TODO: Check if this schema grabs
+export let resetFormSchema = z.object({
+	email: z.string({ required_error: 'Email is required' }).email({ message: 'Invalid email address' }),
+	token: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1),
+	password: z
+		.string({ required_error: get(LL).LOGIN_ZOD_Password_string() })
+		.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+			message: get(LL).LOGIN_ZOD_Password_regex()
+		}),
+	confirm_password: z
+		.string({ required_error: get(LL).LOGIN_ZOD_Confirm_password_string() })
+		.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+			message: get(LL).LOGIN_ZOD_Confirm_password_regex()
+		})
 });
 
 //TODO: fix TOKEN for other user than first

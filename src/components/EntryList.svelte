@@ -6,6 +6,10 @@
 	import { writable } from 'svelte/store';
 	import DeleteIcon from './DeleteIcon.svelte';
 
+	import Loading from './Loading.svelte';
+	let isLoading = true;
+	let loadingTimer: any; // recommended time of around 200-300ms
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -40,6 +44,10 @@
 
 	// This function refreshes the data displayed in a table by fetching new data from an API endpoint and updating the tableData and options variables.
 	let refresh = async (collection: typeof $collection) => {
+		loadingTimer = setTimeout(() => {
+			isLoading = true;
+		}, 400);
+
 		data = undefined;
 		data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as { entryList: [any]; totalCount: number };
 		tableData = await Promise.all(
@@ -61,6 +69,9 @@
 		}));
 		deleteMap = {};
 		deleteAll = false;
+
+		clearTimeout(loadingTimer);
+		isLoading = false;
 	};
 
 	const setSorting = (updater: (arg0: any) => any) => {
@@ -214,6 +225,10 @@
 	}
 
 	$deleteEntry = async () => {
+		loadingTimer = setTimeout(() => {
+			isLoading = true;
+		}, 400);
+
 		let deleteList: Array<string> = [];
 		for (let item in deleteMap) {
 			//console.log(tableData[item]);
@@ -225,6 +240,9 @@
 		await axios.delete(`/api/${$collection.name}`, { data: formData });
 		refresh($collection);
 		mode.set('view');
+
+		clearTimeout(loadingTimer);
+		isLoading = false;
 	};
 </script>
 
@@ -307,6 +325,9 @@
 {/if}
 
 <!-- Tanstack Table -->
+{#if isLoading}
+	<Loading />
+{/if}
 <div class="table-container px-2">
 	<table class="table-hover table {$density === 'compact' ? 'table-compact' : $density === 'normal' ? '' : 'table-comfortable'}">
 		<thead class="!text-primary">

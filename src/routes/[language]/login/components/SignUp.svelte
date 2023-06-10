@@ -47,6 +47,7 @@
 <section
 	on:click
 	on:pointerenter
+	on:keydown
 	class="hover relative flex items-center"
 	class:active={active == 1}
 	class:inactive={active !== undefined && active !== 1}
@@ -60,9 +61,11 @@
 				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
 				<div class="lg:-mt-1">
 					{$LL.LOGIN_SignUp()}
-					{#if !firstUserExists}- Admin User
+					{#if !firstUserExists}
+						as Admin
 					{:else}
-						- New User
+						<!-- TODO: Grab token user Role -->
+						as User
 					{/if}
 				</div>
 			</h1>
@@ -148,7 +151,7 @@
 
 			{#if userExists}<span class="text-xs text-error-500">User already exists</span>{/if}
 
-			<button class="btn variant-filled ml-2 mt-4 font-bold uppercase">{$LL.LOGIN_SignUp()}</button>
+			<button type="submit" class="btn variant-filled ml-2 mt-4 font-bold uppercase">{$LL.LOGIN_SignUp()}</button>
 		</form>
 	</div>
 

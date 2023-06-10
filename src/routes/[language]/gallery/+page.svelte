@@ -231,7 +231,7 @@
 
 <div class="align-centre mb-2 mr-1 flex dark:text-white">
 	{#if !switchSideBar && $toggleLeftSidebar}
-		<button on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
+		<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
 			<iconify-icon icon="mingcute:menu-fill" width="24" />
 		</button>
 	{/if}
@@ -345,8 +345,8 @@
 		<!-- refresh -->
 		<div class="mb-4 flex items-center justify-center gap-3">
 			<div>{$table.getRowModel().rows.length} Rows</div>
-			<button on:click={() => rerender()}>Force Rerender</button>
-			<button on:click={() => refreshData()}>Refresh Data</button>
+			<button type="button" on:click={() => rerender()}>Force Rerender</button>
+			<button type="button" on:click={() => refreshData()}>Refresh Data</button>
 		</div>
 
 		<!-- chip column order -->

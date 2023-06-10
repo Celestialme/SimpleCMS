@@ -2,7 +2,7 @@
 	import { theme } from '../stores/themeStore';
 	import { fade } from 'svelte/transition';
 
-	let currentTheme;
+	let currentTheme: string;
 
 	// subscribe to changes in the theme store
 	const unsubscribe = theme.subscribe((value) => {
