@@ -1,14 +1,17 @@
 <script lang="ts">
+	import type { PageData } from '../$types';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { goto } from '$app/navigation';
-	import axios, { toFormData } from 'axios';
-	import { credentials } from '@src/stores/load';
+	import { loginFormSchema, forgotFormSchema, resetFormSchema } from '../formSchemas';
+
+	// import { goto } from '$app/navigation';
+	// import axios, { toFormData } from 'axios';
+	// import { credentials } from '@src/stores/load';
+
 	import SigninIcon from './icons/SigninIcon.svelte';
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
-	import type { PageData } from '../$types';
-	import { loginFormSchema, forgotFormSchema, resetFormSchema } from '../formSchemas';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import CMSLogo from './icons/Logo.svelte';
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -19,20 +22,17 @@
 
 	let showPassword = false;
 
-	export let loginFormSchema: PageData['loginForm'];
-	let {
-		form: loginForm,
-		constraints,
-		allErrors,
-		errors,
-		enhance: loginEnhance
-	} = superForm(loginFormSchema, {
+	export let FormSchemaLogin: PageData['loginForm'];
+	const { form, constraints, allErrors, errors, enhance, delayed } = superForm(FormSchemaLogin, {
 		validators: loginFormSchema,
+		// Clear form on success.
+		resetForm: true,
+		// Prevent page invalidation, which would clear the other form when the load function executes again.
+		invalidateAll: false,
 		// other options
 		defaultValidator: 'keep',
 		applyAction: true,
 		taintedMessage: '',
-		clearOnSubmit: 'none',
 
 		onSubmit: ({ cancel }) => {
 			// handle login form submission
@@ -50,14 +50,23 @@
 		}
 	});
 
-	export let forgotFormSchema: PageData['forgotForm'];
-	let { form: forgotForm, enhance: forgotEnhance } = superForm(forgotFormSchema, {
+	export let FormSchemaForgot: PageData['loginForm'];
+	const {
+		form: forgotForm,
+		constraints: forgotConstraints,
+		allErrors: forgotAllErrors,
+		errors: forgotErrors,
+		enhance: forgotEnhance
+	} = superForm(FormSchemaForgot, {
 		validators: forgotFormSchema,
+		// Clear form on success.
+		resetForm: true,
+		// Prevent page invalidation, which would clear the other form when the load function executes again.
+		invalidateAll: false,
 		// other options
 		defaultValidator: 'keep',
 		applyAction: true,
 		taintedMessage: '',
-		clearOnSubmit: 'none',
 
 		onSubmit: ({ cancel }) => {
 			// if ($allErrors.length > 0) cancel();
@@ -76,14 +85,23 @@
 		}
 	});
 
-	export let resetFormSchema: PageData['resetForm'];
-	let { form: resetForm, enhance: resetEnhance } = superForm(resetFormSchema, {
+	export let FormSchemaReset: PageData['loginForm'];
+	const {
+		form: resetForm,
+		constraints: resetConstraints,
+		allErrors: resetAllErrors,
+		errors: resetErrors,
+		enhance: resetEnhance
+	} = superForm(FormSchemaReset, {
 		validators: resetFormSchema,
+		// Clear form on success.
+		resetForm: true,
+		// Prevent page invalidation, which would clear the other form when the load function executes again.
+		invalidateAll: false,
 		// other options
 		defaultValidator: 'keep',
 		applyAction: true,
 		taintedMessage: '',
-		clearOnSubmit: 'none',
 
 		onSubmit: ({ cancel }) => {
 			// if ($allErrors.length > 0) cancel();
@@ -132,7 +150,7 @@
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
 		{#if !forgot && !resetPW}
-			<form method="post" action="?/signIn" use:enhance={loginEnhance} bind:this={formElement} class="flex w-full flex-col" class:hide={active != 0}>
+			<form method="post" action="?/signIn" use:enhance bind:this={formElement} class="flex w-full flex-col" class:hide={active != 0}>
 				<!-- Email field -->
 				<FloatingInput
 					name="email"
@@ -161,7 +179,12 @@
 				{#if $errors.password}<span class="invalid text-xs text-error-500">{$errors.password}</span>{/if}
 
 				<div class="ml-1 mt-4 flex items-center justify-between">
-					<button type="submit" class="btn variant-filled-surface">{$LL.LOGIN_SignIn()}</button>
+					<button type="submit" class="btn variant-filled-surface">
+						{$LL.LOGIN_SignIn()}
+					</button>
+					<!-- Loading indicators -->
+					{#if $delayed}<span class="delayed">Working...</span>{/if}
+
 					<button
 						type="button"
 						class="variant-ringed-surface btn text-black"
@@ -176,7 +199,7 @@
 
 		{#if resetPW && forgot}
 			<!-- Reset Password -->
-			<form method="post" action="?/reset" use:enhance={resetEnhance} bind:this={formElement} class="flex w-full flex-col">
+			<form method="post" action="?/resetPW" use:resetEnhance bind:this={formElement} class="flex w-full flex-col">
 				<!-- Password field -->
 				<FloatingInput
 					name="password"
@@ -206,13 +229,17 @@
 				<!-- Password field -->
 				<FloatingInput type="password" bind:value={$form.password} bind:showPassword label={$LL.LOGIN_Token()} icon="mdi:lock" iconColor="black" />
 
-				<button type="submit" class="btn variant-filled-surface ml-2 mt-6">{$LL.LOGIN_ResetPasswordSave()}</button>
+				<button type="submit" class="btn variant-filled-surface ml-2 mt-6">
+					{$LL.LOGIN_ResetPasswordSave()}
+				</button>
+				<!-- Loading indicators -->
+				{#if $delayed}<span class="delayed">Working...</span>{/if}
 			</form>
 		{/if}
 
 		{#if forgot && !resetPW}
 			<!-- Forgotten Password -->
-			<form method="post" action="?/forgot" use:enhance={forgotEnhance} bind:this={formElement} class="flex w-full flex-col">
+			<form method="post" action="?/forgot" use:forgotEnhance bind:this={formElement} class="flex w-full flex-col">
 				<div class="  mb-2 text-center text-sm text-black">
 					<p>{$LL.LOGIN_ForgottenPassword_text()}</p>
 				</div>
@@ -231,6 +258,8 @@
 
 				<div class="mt-4 flex items-center justify-between">
 					<button type="submit" class="btn variant-filled-surface">{$LL.LOGIN_SendResetMail()}</button>
+					<!-- Loading indicators -->
+					{#if $delayed}<span class="delayed">Working...</span>{/if}
 
 					<button
 						type="button"

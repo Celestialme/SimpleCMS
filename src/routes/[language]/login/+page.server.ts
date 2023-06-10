@@ -1,15 +1,16 @@
 import { fail, type Actions, type Cookies, redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 import { superValidate } from 'sveltekit-superforms/server';
-import type { PageServerLoad } from './$types';
-import { loginSchema, signUpSchema } from './formSchemas';
+import { loginFormSchema, forgotFormSchema, resetFormSchema, signUpSchema } from './formSchemas';
+
 import { auth } from '@src/routes/api/db';
 
 // actions for signing in and signing up a user with form data
 export const actions: Actions = {
 	//Function for handling the sign-in form submission and user authentication
 	signIn: async (event) => {
-		let signInForm = await superValidate(null, loginSchema);
+		let signInForm = await superValidate(null, loginFormSchema);
 
 		const form = await event.request.formData();
 		const email = (form.get('email') as string).toLowerCase();
@@ -26,45 +27,45 @@ export const actions: Actions = {
 		}
 	},
 
-		// Function for handling the Forgottn Pasword
-		// TODO: Correct logic to check if Email exand to trigger Send Email new paswword
-		PWForgotten: async (event) => {
-			let pwforgottenForm = await superValidate(null, forgotForm);
-	
-			const form = await event.request.formData();
-			const email = (form.get('email') as string).toLowerCase();
-				
-			let resp = await pwforgotten(email, event.cookies);
-	
-			console.log('pwforgottenForm', pwforgottenForm);
-	
-			if (resp) {
-				throw redirect(303, '/');
-			} else {
-				return { form: pwforgottenForm };
-			}
-		},
+	// Function for handling the Forgotten Password
+	// TODO: Correct logic to check if Email exand to trigger Send Email new paswword
+	forgotPW: async (event) => {
+		let pwforgottenForm = await superValidate(null, forgotFormSchema);
 
+		const form = await event.request.formData();
+		const email = (form.get('email') as string).toLowerCase();
 
-		// Function for handling the RESET 
-		// TODO: Correct logic to check reset PW with Recived Token and to set new password
-		PWReset: async (event) => {
-			let pwresetForm = await superValidate(null, resetForm);
-	
-			const form = await event.request.formData();
-			const email = (form.get('email') as string).toLowerCase();
-			const password = form.get('password') as string;
-	
-			let resp = await signIn(email, password, event.cookies);
-	
-			console.log('pwresetForm', pwresetForm);
-	
-			if (resp) {
-				throw redirect(303, '/');
-			} else {
-				return { form: pwresetForm };
-			}
-		},
+		let resp = await forgotPW(email, event.cookies);
+
+		console.log('pwforgottenForm', pwforgottenForm);
+
+		if (resp) {
+			throw redirect(303, '/');
+		} else {
+			return { form: pwforgottenForm };
+		}
+	},
+
+	// Function for handling the RESET
+	// TODO: Correct logic to check reset PW with Recived Token and to set new password
+	resetPW: async (event) => {
+		let pwresetForm = await superValidate(null, resetFormSchema);
+
+		const form = await event.request.formData();
+		const email = (form.get('email') as string).toLowerCase();
+		const password = form.get('password') as string;
+		const token = form.get('token') as string;
+
+		let resp = await resetPW(email, password, token, event.cookies);
+
+		console.log('pwresetForm', pwresetForm);
+
+		if (resp) {
+			throw redirect(303, '/');
+		} else {
+			return { form: pwresetForm };
+		}
+	},
 
 	//Function for handling the sign-up form submission and user creation
 	//TODO: Check if user Exists
@@ -92,7 +93,7 @@ export const actions: Actions = {
 // load and validate login and sign up forms
 export const load: PageServerLoad = async (event) => {
 	await event.parent();
-	let loginForm = await superValidate(event, loginSchema);
+	let loginForm = await superValidate(event, loginFormSchema);
 	let signUpForm = await superValidate(event, signUpSchema);
 	return {
 		loginForm,
@@ -100,7 +101,7 @@ export const load: PageServerLoad = async (event) => {
 	};
 };
 
-// sign in user with email and password, create session and set cookie
+// signIn user with email and password, create session and set cookie
 async function signIn(email: string, password: string, cookies: Cookies) {
 	let key = await auth.useKey('email', email, password).catch(() => null);
 	console.log(key);

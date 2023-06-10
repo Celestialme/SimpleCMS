@@ -81,7 +81,6 @@ const en: BaseTranslation = {
 	LOGIN_ResetPasswordSave: 'Save New Password',
 	LOGIN_SignInSuccess: 'Signed In Successfully',
 
-
 	LOGIN_ZOD_Username_string: 'Username is required',
 	LOGIN_ZOD_Username_regex: 'Name can only contain letters, digits and @$!%*#',
 	LOGIN_ZOD_Username_min: 'Name must be at least 2 characters',
