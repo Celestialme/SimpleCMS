@@ -7,7 +7,7 @@
 	import '@skeletonlabs/skeleton/styles/skeleton.css';
 
 	// Finally, your application's global stylesheet (sometimes labeled 'app.css')
-	import '../app.css';
+	import '../app.postcss';
 
 	// Icons from https://icon-sets.iconify.design/
 	import 'iconify-icon';

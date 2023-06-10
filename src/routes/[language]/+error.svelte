@@ -56,7 +56,7 @@
 	</main>
 {/if}
 
-<style>
+<style lang="postcss">
 	@keyframes rotation {
 		0% {
 			transform: rotate(0turn);

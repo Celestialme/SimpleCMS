@@ -17,7 +17,7 @@
 	<input use:typeAction id="input" class={inputClass} bind:value {placeholder} {...$$props} />
 </div>
 
-<style>
+<style lang="postcss">
 	div {
 		min-width: 280px;
 		margin: 5px;

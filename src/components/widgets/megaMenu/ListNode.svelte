@@ -58,7 +58,7 @@
 	</ul>
 {/if}
 
-<style>
+<style lang="postcss">
 	.header {
 		position: relative;
 	}

@@ -1,4 +1,7 @@
 <script lang="ts">
+	// typesafe-i18n
+	import LL from '@src/i18n/i18n-svelte';
+
 	import { createEventDispatcher } from 'svelte';
 	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar } from '@src/stores/store';
 
@@ -43,34 +46,33 @@
 
 		switch (listboxValue) {
 			case 'create':
-				actionname = 'Create';
-				buttonClass =
-					'bg-gradient-to-br from-green-700 via-green-600 to-green-500 dark:bg-gradient-to-br dark:from-green-700 dark:via-green-600 dark:to-green-400 text-white hover:from-green-800 hover:via-green-700 hover:to-green-600 focus:from-green-800 focus:via-green-700 focus:to-green-600';
+				actionname = $LL.ENTRYLIST_Create();
+				buttonClass = 'gradient-primary';
 				iconValue = 'ic:round-plus';
 				break;
 			case 'publish':
-				actionname = 'Publish';
-				buttonClass = 'bg-blue-600 hover:bg-blue-600 focus:bg-blue-600 text-white';
+				actionname = $LL.ENTRYLIST_Publish();
+				buttonClass = 'gradient-tertiary';
 				iconValue = 'bi:hand-thumbs-up-fill';
 				break;
 			case 'unpublish':
-				actionname = 'Unpublish';
-				buttonClass = 'bg-yellow-600 hover:bg-yellow-700 focus:bg-yellow-700 text-white';
+				actionname = $LL.ENTRYLIST_Unpublish();
+				buttonClass = 'gradient-yellow';
 				iconValue = 'bi:pause-circle';
 				break;
 			case 'schedule':
-				actionname = 'Schedule';
-				buttonClass = 'bg-pink-500 hover:bg-pink-600 focus:bg-pink-600 text-white';
+				actionname = $LL.ENTRYLIST_Schedule();
+				buttonClass = 'gradient-pink';
 				iconValue = 'bi:clock';
 				break;
 			case 'clone':
-				actionname = 'Clone';
-				buttonClass = 'bg-gray-500 hover:bg-gray-600 focus:bg-gray-600 text-white';
+				actionname = $LL.ENTRYLIST_Clone();
+				buttonClass = 'gradient-secondary';
 				iconValue = 'bi:clipboard-data-fill';
 				break;
 			case 'delete':
-				actionname = 'Delete';
-				buttonClass = 'bg-red-500 hover:bg-red-600 focus:bg-red-600 text-white';
+				actionname = $LL.ENTRYLIST_Delete();
+				buttonClass = 'gradient-error';
 				iconValue = 'bi:trash3-fill';
 				break;
 			default:
@@ -94,13 +96,13 @@
 <div class="relative inline-flex rounded-md shadow">
 	<button
 		type="button"
-		class={`inline-block w-[130px] rounded-l-full px-1 pl-2 font-medium uppercase leading-normal text-black transition duration-150 ease-in-out dark:text-white ${buttonClass}`}
+		class={`inline-block w-[60px] rounded-l-full px-1 pl-3 font-medium uppercase leading-normal text-black transition duration-150 ease-in-out dark:text-white md:w-[135px] ${buttonClass}`}
 		on:click|preventDefault={handleButtonClick}
 		on:click={() => mode.set(listboxValue)}
 	>
 		<span class="flex items-center">
 			<iconify-icon icon={iconValue} width="24" />
-			<span class="ml-2">{actionname}</span>
+			<span class="ml-2 hidden md:block">{actionname}</span>
 		</span>
 	</button>
 
@@ -115,13 +117,15 @@
 	</button>
 
 	{#if dropdownOpen}
-		<ul class="absolute right-1 top-12 z-10 w-[90%] divide-y-2 rounded-md bg-surface-800 py-1 text-white shadow-lg ring-1 ring-black ring-opacity-5">
+		<ul
+			class="absolute right-0 top-12 z-10 divide-y-2 rounded-md bg-surface-800 py-1 text-white shadow-lg ring-1 ring-black ring-opacity-5 md:w-[90%]"
+		>
 			{#if listboxValue !== 'create'}
 				<li>
 					<!-- TODO: FIX Sidebar & RightSidebar Toggle -->
 					<button
 						type="button"
-						class="w-full px-4 py-2 text-left hover:bg-green-600 focus:bg-green-600 focus:outline-none"
+						class="gradient-primary-hover gradient-primary-focus w-full px-4 py-2 text-left focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('create')}
 						on:click={() => mode.set('create')}
 					>
@@ -137,7 +141,7 @@
 				<li>
 					<button
 						type="button"
-						class="w-full px-4 py-2 text-left hover:bg-blue-600 focus:bg-blue-600 focus:outline-none"
+						class="gradient-tertiary-hover gradient-tertiary-focus w-full px-4 py-2 text-left focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('publish')}
 						on:click={() => mode.set('publish')}
 					>
@@ -152,7 +156,7 @@
 				<li>
 					<button
 						type="button"
-						class="w-full px-4 py-2 text-left hover:bg-yellow-600 focus:bg-yellow-600 focus:outline-none"
+						class="gradient-yellow-hover gradient-yellow-focus w-full px-4 py-2 text-left focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('unpublish')}
 						on:click={() => mode.set('unpublish')}
 					>
@@ -168,7 +172,7 @@
 				<li>
 					<button
 						type="button"
-						class="w-full px-4 py-2 text-left hover:bg-pink-600 focus:bg-pink-600 focus:outline-none"
+						class="gradient-pink-hover gradient-pink-focus w-full px-4 py-2 text-left focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('schedule')}
 						on:click={() => mode.set('schedule')}
 					>
@@ -184,7 +188,7 @@
 				<li>
 					<button
 						type="button"
-						class="w-full px-4 py-2 text-left hover:bg-gray-600 focus:bg-gray-600 focus:outline-none"
+						class="gradient-secondary-hover gradient-secondary-focus w-full px-4 py-2 text-left focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('clone')}
 						on:click={() => mode.set('clone')}
 					>
@@ -200,7 +204,7 @@
 				<li>
 					<button
 						type="button"
-						class="w-full px-4 py-2 text-left hover:bg-error-600 focus:bg-error-600 focus:outline-none"
+						class="gradient-error-hover gradient-error-focus w-full px-4 py-2 text-left focus:outline-none"
 						on:click|preventDefault={() => handleOptionClick('delete')}
 						on:click={() => mode.set('delete')}
 					>

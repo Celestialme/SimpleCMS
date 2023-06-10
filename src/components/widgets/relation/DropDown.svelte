@@ -31,7 +31,7 @@
 	{/each}
 </div>
 
-<style>
+<style lang="postcss">
 	.item {
 		cursor: pointer;
 		user-select: none;

@@ -87,15 +87,15 @@
 
 <!-- TODO: Fix Right And mobile Version of sidebars -->
 <AppShell
-	slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-800 dark:via-surface-700
+	slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-300 flex flex-col z-10 
 {$switchSideBar ? 'w-[215px]' : 'w-fit'}
 {$toggleLeftSidebar ? 'hidden' : 'block'}"
-	slotSidebarRight="h-screen relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-800 text-center 
+	slotSidebarRight="h-screen relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center 
 	{$toggleRightSidebar ? 'hidden' : 'block'}"
-	slotPageHeader="bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-800 text-center px-1 h-10 border-b relative hidden 
+	slotPageHeader="bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-b relative hidden 
 	{toggleFooterSidebar ? 'hidden' : 'block'}"
-	slotPageFooter="bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-800 text-center px-1 h-10 border-t relative hidden 
+	slotPageFooter="bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-t relative hidden 
 	{$toggleFooterSidebar ? 'hidden' : 'block'}"
 >
 	<svelte:fragment slot="sidebarLeft">
@@ -108,7 +108,7 @@ dark:to-surface-500 text-center h-screen relative border-r !px-2 border-surface-
 			</a>
 		{:else}
 			<div class="flex justify-start gap-1.5">
-				<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
+				<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
 					<iconify-icon icon="mingcute:menu-fill" width="24" />
 				</button>
 

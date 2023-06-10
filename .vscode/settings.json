@@ -12,5 +12,15 @@
 	"[svelte]": {
 		"editor.defaultFormatter": "svelte.svelte-vscode"
 	},
-	"inlang.userId": "c47b1f63-d8ea-4031-b367-e63f56994d49"
+	"inlang.userId": "c47b1f63-d8ea-4031-b367-e63f56994d49",
+	"cSpell.words": [
+		"cssnano",
+		"iconify",
+		"simplecms",
+		"skeletonlabs",
+		"superforms",
+		"tailwindcss",
+		"tanstack",
+		"typesafe"
+	]
 }

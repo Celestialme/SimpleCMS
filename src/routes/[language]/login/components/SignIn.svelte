@@ -277,7 +277,7 @@
 	<SigninIcon show={active == 1 || active == undefined} />
 </section>
 
-<style>
+<style lang="postcss">
 	.hide {
 		transition: 0s;
 		opacity: 0;

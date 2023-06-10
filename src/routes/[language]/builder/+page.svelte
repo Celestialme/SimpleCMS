@@ -488,7 +488,7 @@
 	{/each}</Modal
 >
 
-<style>
+<style lang="postcss">
 	.options-table {
 		display: grid;
 		grid-template-columns: max-content 1fr;

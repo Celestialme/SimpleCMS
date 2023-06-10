@@ -20,7 +20,7 @@
 	<p class="text-center font-semibold uppercase text-white">{$LL.LOGIN_SignUp()}</p>
 </div>
 
-<style>
+<style lang="postcss">
 	.hide {
 		animation: _hide 0.5s forwards;
 	}
