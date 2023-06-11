@@ -12,7 +12,6 @@ const pkg = JSON.parse(json);
 
 /** @type {import('vite').UserConfig} */
 const config = {
-
 	plugins: [sveltekit()],
 
 	server: { fs: { allow: ['static', '.'] } },

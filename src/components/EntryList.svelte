@@ -4,7 +4,7 @@
 	import { mode, entryData, deleteEntry, toggleLeftSidebar, searchShow, filterShow, columnShow, density } from '@src/stores/store';
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
-	import DeleteIcon from './DeleteIcon.svelte';
+	import TanstackIcons from './TanstackIcons.svelte';
 
 	import Loading from './Loading.svelte';
 	let isLoading = true;
@@ -334,7 +334,11 @@
 			{#each $table.getHeaderGroups() as headerGroup}
 				<tr class="divide-x divide-surface-400 border-b">
 					<th class="!w-6">
-						<DeleteIcon bind:checked={deleteAll} />
+						<TanstackIcons bind:checked={deleteAll} />
+						<!-- <TanstackIcons bind:cross={unpublishAll} />
+						<TanstackIcons bind:checked={publishAll} />						
+						<TanstackIcons bind:checked={cloneAll} />
+						<TanstackIcons bind:checked={scheduleAll} /> -->
 					</th>
 
 					{#each headerGroup.headers as header}
@@ -389,7 +393,11 @@
 				>
 					<!-- TODO: Fix divide-y not applying -->
 					<td class="!w-6 !divide-x !divide-y !divide-surface-500">
-						<DeleteIcon bind:checked={deleteMap[index]} />
+						<TanstackIcons bind:checked={deleteAll} />
+						<!-- <TanstackIcons bind:cross={unpublishAll} />
+						<TanstackIcons bind:checked={publishAll} />						
+						<TanstackIcons bind:checked={cloneAll} />
+						<TanstackIcons bind:checked={scheduleAll} /> -->
 					</td>
 
 					{#each row.getVisibleCells() as cell}

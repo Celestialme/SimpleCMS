@@ -65,7 +65,7 @@
 <svelte:window on:popstate={handlePopStateEvent} />
 
 <!-- TODO: MODIFY for Sidebarleft -->
-<!-- seach autocomplete dowpdown if more than 3 languages -->
+<!-- search autocomplete dropdown if more than 3 languages -->
 {#if showAutocomplete}
 	<div class="relative">
 		<input
