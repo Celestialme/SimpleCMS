@@ -11,7 +11,7 @@
 	let expanded = false;
 </script>
 
-<div on:click={() => (expanded = !expanded)} class="header" style="margin-left:{20 * level}px">
+<div on:keydown on:click={() => (expanded = !expanded)} class="header" style="margin-left:{20 * level}px">
 	{#if self.children?.length > 0}
 		<div class="arrow" class:expanded />
 	{/if}
@@ -48,6 +48,7 @@
 					level={level + 1}
 					bind:depth
 					bind:showFields
+					on:keydown
 					on:click={() => {
 						depth = level;
 						showFields = true;

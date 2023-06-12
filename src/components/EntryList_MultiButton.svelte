@@ -15,21 +15,22 @@
 		mode.set('view');
 		dispatch(listboxValue);
 		dropdownOpen = false;
-		// get the current window width
-		let width = window.innerWidth;
+		// get the current window widthlet width = window.innerWidth;
 		// use the custom screens
 		if (width <= 567) {
 			// use toggleLeftSidebar for mobile
 			toggleLeftSidebar.update((value) => !value);
-			toggleRightSidebar.update((value) => !value);
+			toggleHeaderSidebar.update((value) => !value);
+			toggleFooterSidebar.update((value) => !value);
 		} else if (width >= 568 && width <= 767) {
 			// use switchSideBar for md
 			switchSideBar.update((value) => !value);
 			toggleRightSidebar.update((value) => !value);
 		} else if (width > 768) {
-			// do nothing for xl
+			// use toggleRightSidebar for xl and above
 			toggleRightSidebar.update((value) => !value);
 		}
+	
 	}
 
 	function handleOptionClick(value: string) {

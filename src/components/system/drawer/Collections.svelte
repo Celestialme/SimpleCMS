@@ -43,11 +43,11 @@
 						{#if $switchSideBar}
 							<!-- switchSideBar expanded -->
 							<div
-								class="-mx-4 flex flex-row items-center py-1 pl-3 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
-								on:click={(e) => {
-									mode.set('view');
-									$collection = _collection;
-								}}
+							          	class="-mx-4 flex flex-row items-center py-1 pl-3 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
+							on:keydown	on:click={(e) => {
+							          		mode.set('view');
+							          		$collection = _collection;
+							          	}}
 							>
 								<iconify-icon icon={_collection.icon} width="24" class="px-2 py-1 text-red-600" />
 								<p class="mr-auto text-center capitalize">{_collection.name}</p>
@@ -55,11 +55,11 @@
 						{:else}
 							<!-- switchSideBar collapsed -->
 							<div
-								class="-mx-4 flex flex-col items-center py-1 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
-								on:click={(e) => {
-									mode.set('view');
-									$collection = _collection;
-								}}
+							          	class="-mx-4 flex flex-col items-center py-1 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
+							on:keydown	on:click={(e) => {
+							          		mode.set('view');
+							          		$collection = _collection;
+							          	}}
 							>
 								<p class="text-xs capitalize">{_collection.name}</p>
 								<iconify-icon icon={_collection.icon} width="24" class="text-red-600" />
@@ -75,7 +75,7 @@
 		<div
 			class="relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-[#363b4e] py-2 text-white"
 			class:arrow_up={expanded[index]}
-			on:click={(e) => {
+			on:keydown on:click={(e) => {
 				expanded[index] = !expanded[index];
 			}}
 		>
@@ -94,13 +94,13 @@
 			<div class={expanded[index] ? 'delayed-overflow' : 'overflow-hidden'}>
 				{#each category.collections as _collection}
 					<div
-						class="{$switchSideBar
-							? 'h-[40px]'
-							: 'h-fit '} relative flex cursor-pointer items-center border-b border-gray-200 bg-[#777a89] text-center capitalize text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-gray-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white"
-						on:click={(e) => {
-							mode.set('view');
-							$collection = _collection;
-						}}
+					          	class="{$switchSideBar
+					          		? 'h-[40px]'
+					          		: 'h-fit '} relative flex cursor-pointer items-center border-b border-gray-200 bg-[#777a89] text-center capitalize text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-gray-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white"
+					on:keydown	on:click={(e) => {
+					          		mode.set('view');
+					          		$collection = _collection;
+					          	}}
 					>
 						{#if $switchSideBar}
 							

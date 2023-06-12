@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleFooterSidebar } from '@src/stores/store';
+	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar,toggleHeaderSidebar, toggleFooterSidebar  } from '@src/stores/store';
 	import { systemLanguage } from '@src/stores/load';
 	import axios from 'axios';
 	import { credentials } from '@src/stores/load';
@@ -94,7 +94,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 	slotSidebarRight="h-full relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center 
 	{$toggleRightSidebar ? 'hidden' : 'block'}"
 	slotPageHeader="bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-b relative hidden 
-	{toggleFooterSidebar ? 'hidden' : 'block'}"
+	{toggleHeaderSidebar ? 'hidden' : 'block'}"
 	slotPageFooter="bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-t relative hidden 
 	{$toggleFooterSidebar ? 'hidden' : 'block'}"
 >

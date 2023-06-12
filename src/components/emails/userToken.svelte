@@ -11,13 +11,13 @@
 	interface EmailProps {
 		username?: string;
 		email?: string;
-		sitename?: string;
+		// sitename?: string;
 		role?: string;
 		token?: string;
 		expires_at?: string;
 	}
 	export let email: EmailProps['email'];
-	export let sitename: EmailProps['sitename'];
+	// export let sitename: EmailProps['sitename'];
 	export let role: EmailProps['role'];
 	export let token: EmailProps['token'];
 	export let expires_at: EmailProps['token'];
@@ -131,7 +131,7 @@
 				</Link>
 			</Section>
 
-			<Text style={paragraph}>You have recieved an Access Token to create a new user for {PUBLIC_SITENAME}</Text>
+			<Text style={paragraph}>You have received an Access Token to create a new user for {PUBLIC_SITENAME}</Text>
 			<Section style={review}>
 				<Column style={label}>
 					<Text style={paragraph}>Email:</Text>

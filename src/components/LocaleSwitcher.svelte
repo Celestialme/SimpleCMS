@@ -79,11 +79,11 @@
 			<div class="absolute z-10 rounded-md bg-white shadow-lg">
 				{#each filteredLocales as l}
 					<div
-						class="cursor-pointer px-4 py-2 uppercase hover:bg-gray-100"
-						on:click={() => {
-							switchLocale(l);
-							input = '';
-						}}
+					          	class="cursor-pointer px-4 py-2 uppercase hover:bg-gray-100"
+					on:keydown	on:click={() => {
+					          		switchLocale(l);
+					          		input = '';
+					          	}}
 					>
 						{l}
 					</div>

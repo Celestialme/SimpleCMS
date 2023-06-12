@@ -107,7 +107,7 @@ This FloatingInput component has the following properties:
 		<iconify-icon
 			icon={showPassword ? 'bi:eye-fill' : 'bi:eye-slash-fill'}
 			class={`absolute right-0 ${showPasswordBackgroundColor === 'light' ? 'text-gray-700' : 'text-gray-300'}`}
-			width="24"
+			width="24" on:keydown 
 			on:click|preventDefault={togglePasswordVisibility}
 		/>
 	{/if}

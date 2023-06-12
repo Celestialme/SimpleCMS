@@ -5,6 +5,7 @@
 	"explorer.compactFolders": false,
 	"workbench.tree.indent": 12,
 	"workbench.tree.renderIndentGuides": "always",
+	"prettier.prettierPath": "./node_modules/prettier", 
 	"prettier.useTabs": true,
 	"prettier.printWidth": 100,
 	"prettier.bracketSameLine": true,
@@ -12,6 +13,5 @@
 	"[svelte]": {
 		"editor.defaultFormatter": "svelte.svelte-vscode"
 	},
-	"inlang.userId": "c47b1f63-d8ea-4031-b367-e63f56994d49",
 	"cSpell.words": ["cssnano", "iconify", "simplecms", "skeletonlabs", "superforms", "tailwindcss", "tanstack", "typesafe"]
 }

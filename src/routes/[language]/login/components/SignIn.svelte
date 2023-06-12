@@ -16,7 +16,7 @@
 	import LL from '@src/i18n/i18n-svelte';
 
 	export let active: undefined | 0 | 1 = undefined;
-	export let show = false;
+	export const show = false;
 	export let forgot = false;
 	export let resetPW = false;
 

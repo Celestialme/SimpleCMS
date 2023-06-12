@@ -7,7 +7,7 @@
 
 	export let field: FieldType | undefined;
 	let fieldName = getFieldName(field);
-	export let value = $entryData[fieldName];
+	export const value = $entryData[fieldName];
 	export let expanded = false;
 
 	let dropDownData: any;
@@ -58,7 +58,7 @@
 
 {#if !expanded && !showDropDown}
 	<div class="flex">
-		<p on:click={openDropDown}>{selected?.display || display || 'select new'}</p>
+		<p on:keydown on:click={openDropDown}>{selected?.display || display || 'select new'}</p>
 
 		<button
 			type="button"
@@ -68,7 +68,7 @@
 				fieldsData = {};
 				selected = undefined;
 			}}
-			class="variant-ghost-surface btn-icon"
+			class="btn-icon variant-ghost-surface"
 		>
 			<iconify-icon icon="bi:pencil-fill" width="24" />
 		</button>
@@ -81,7 +81,7 @@
 				fieldsData = {};
 				selected = undefined;
 			}}
-			class="variant-ghost-surface btn-icon"
+			class="btn-icon variant-ghost-surface"
 		>
 			<iconify-icon icon="ic:baseline-plus" width="24" />
 		</button>

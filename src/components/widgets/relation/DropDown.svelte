@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Input from '@src/components/system/inputs/Input.svelte';
 	import type { FieldType } from '.';
 	import { entryData } from '@src/stores/store';
 	export let dropDownData: any[] = [];
@@ -16,10 +15,10 @@
 	$: filtered = options.filter((item) => item.display.includes(search));
 </script>
 
-<Input inputClass="w-full" placeholder="search..." bind:value={search} />
+<input class="input w-full" placeholder="search..." bind:value={search} />
 <div class="overflow-auto">
 	{#each filtered as option}
-		<p
+		<p on:keydown
 			on:click={() => {
 				selected = option;
 				showDropDown = false;

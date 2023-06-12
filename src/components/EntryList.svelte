@@ -250,7 +250,7 @@
 	<!-- Row 1 for Mobile -->
 	<div class="flex items-center justify-between">
 		{#if $toggleLeftSidebar === true}
-			<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
@@ -270,7 +270,7 @@
 		</div>
 	</div>
 
-	<button type="button" on:click={() => (mobileExpand = !mobileExpand)} class="btn-icon variant-ghost-surface sm:hidden">
+	<button type="button" on:keydown on:click={() => (mobileExpand = !mobileExpand)} class="btn-icon variant-ghost-surface sm:hidden">
 		<iconify-icon icon="gridicons:dropdown" width="30" />
 	</button>
 
@@ -308,16 +308,16 @@
 			<!-- Show/hide Columns via chips -->
 			<div class="flex flex-wrap items-center justify-center">
 				{#each $table.getAllLeafColumns() as column}
-					<span
-						class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
-						on:click={column.getToggleVisibilityHandler()}
-						on:keypress
-					>
-						{#if column.getIsVisible()}
-							<span><iconify-icon icon="fa:check" /></span>
-						{/if}
-						<span class="capitalize">{column.id}</span>
-					</span>
+				          	<span
+				          		class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
+				on:keydown		on:click={column.getToggleVisibilityHandler()}
+				          		on:keypress
+				          	>
+				          		{#if column.getIsVisible()}
+				          			<span><iconify-icon icon="fa:check" /></span>
+				          		{/if}
+				          		<span class="capitalize">{column.id}</span>
+				          	</span>
 				{/each}
 			</div>
 		</div>
@@ -345,9 +345,9 @@
 						<th class="">
 							{#if !header.isPlaceholder}
 								<div
-									class:cursor-pointer={header.column.getCanSort()}
-									class:select-none={header.column.getCanSort()}
-									on:click={header.column.getToggleSortingHandler()}
+								          	class:cursor-pointer={header.column.getCanSort()}
+								          	class:select-none={header.column.getCanSort()}
+								on:keydown	on:click={header.column.getToggleSortingHandler()}
 								>
 									<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
 									{#if header.column.getIsSorted() === 'asc'}
@@ -383,22 +383,22 @@
 		</thead>
 
 		<tbody>
-			{#each $table.getRowModel().rows as row, index}
-				<tr
-					class="divide-x divide-surface-400"
-					on:click={() => {
-						entryData.set(data?.entryList[index]);
-						mode.set('edit');
-					}}
-				>
-					<!-- TODO: Fix divide-y not applying -->
-					<td class="!w-6 !divide-x !divide-y !divide-surface-500">
-						<TanstackIcons bind:checked={deleteAll} />
-						<!-- <TanstackIcons bind:cross={unpublishAll} />
-						<TanstackIcons bind:checked={publishAll} />						
-						<TanstackIcons bind:checked={cloneAll} />
-						<TanstackIcons bind:checked={scheduleAll} /> -->
-					</td>
+		          	{#each $table.getRowModel().rows as row, index}
+		          		<tr
+		          			class="divide-x divide-surface-400"
+		on:keydown			on:click={() => {
+		          				entryData.set(data?.entryList[index]);
+		          				mode.set('edit');
+		          			}}
+		          		>
+		          			<!-- TODO: Fix divide-y not applying -->
+		          			<td class="!w-6 !divide-x !divide-y !divide-surface-500">
+		          				<TanstackIcons bind:checked={deleteMap[index]} />
+		          				<!-- <TanstackIcons bind:cross={unpublishMap[index]} />
+		          				<TanstackIcons bind:checked={publishMap[index]} />						
+		          				<TanstackIcons bind:checked={cloneMap[index]} />
+		          				<TanstackIcons bind:checked={scheduleMap[index]} /> -->
+		          			</td>
 
 					{#each row.getVisibleCells() as cell}
 						<td>
@@ -462,23 +462,23 @@
 		<!-- next/previous pages -->
 		<div class="btn-group variant-ghost inline-flex transition duration-150 ease-in-out [&>*+*]:border-surface-500">
 			<button
-				type="button"
-				class="w-6"
-				aria-label="Go to First Page"
-				on:click={() => setCurrentPage(0)}
-				class:is-disabled={!$table.getCanPreviousPage()}
-				disabled={!$table.getCanPreviousPage()}
+			          	type="button"
+			          	class="w-6"
+			          	aria-label="Go to First Page"
+			on:keydown	on:click={() => setCurrentPage(0)}
+			          	class:is-disabled={!$table.getCanPreviousPage()}
+			          	disabled={!$table.getCanPreviousPage()}
 			>
 				<iconify-icon icon="material-symbols:first-page" width="24" />
 			</button>
 
 			<button
-				type="button"
-				class="w-6"
-				aria-label="Go to Previous Page"
-				on:click={() => setCurrentPage($table.getState().pagination.pageIndex - 1)}
-				class:is-disabled={!$table.getCanPreviousPage()}
-				disabled={!$table.getCanPreviousPage()}
+			          	type="button"
+			          	class="w-6"
+			          	aria-label="Go to Previous Page"
+			on:keydown	on:click={() => setCurrentPage($table.getState().pagination.pageIndex - 1)}
+			          	class:is-disabled={!$table.getCanPreviousPage()}
+			          	disabled={!$table.getCanPreviousPage()}
 			>
 				<iconify-icon icon="material-symbols:chevron-left" width="24" />
 			</button>
@@ -502,23 +502,23 @@
 			</div>
 
 			<button
-				type="button"
-				class="w-6"
-				aria-label="Go to Next Page"
-				on:click={() => setCurrentPage($table.getState().pagination.pageIndex + 1)}
-				class:is-disabled={!$table.getCanNextPage()}
-				disabled={!$table.getCanNextPage()}
+			          	type="button"
+			          	class="w-6"
+			          	aria-label="Go to Next Page"
+			on:keydown	on:click={() => setCurrentPage($table.getState().pagination.pageIndex + 1)}
+			          	class:is-disabled={!$table.getCanNextPage()}
+			          	disabled={!$table.getCanNextPage()}
 			>
 				<iconify-icon icon="material-symbols:chevron-right" width="24" />
 			</button>
 
 			<button
-				type="button"
-				class="w-6"
-				aria-label="Go to Last Page"
-				on:click={() => setCurrentPage($table.getPageCount() - 1)}
-				class:is-disabled={!$table.getCanNextPage()}
-				disabled={!$table.getCanNextPage()}
+			          	type="button"
+			          	class="w-6"
+			          	aria-label="Go to Last Page"
+			on:keydown	on:click={() => setCurrentPage($table.getPageCount() - 1)}
+			          	class:is-disabled={!$table.getCanNextPage()}
+			          	disabled={!$table.getCanNextPage()}
 			>
 				<iconify-icon icon="material-symbols:last-page" width="24" />
 			</button>

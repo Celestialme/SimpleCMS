@@ -243,7 +243,7 @@
 
 				<!-- Collection Name -->
 				<div class=" mb-4 ml-1.5 flex items-center gap-4">
-					<label class="relative"
+					<label for="name" class="relative"
 						>Name: <span class="text-error-500">*</span>
 						<iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-2" />
 					</label>
@@ -267,7 +267,7 @@
 
 					<!-- Collection Description -->
 					<div class="mb-3 flex items-center gap-4">
-						<label class="relative">Description: </label>
+						<label for="description" class="relative">Description: </label>
 
 						<textarea
 							id="description"
@@ -281,7 +281,7 @@
 
 					<!-- iconify icon -->
 					<div class="mb-4 flex items-center gap-4">
-						<label class="">Icon: <iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-1" /></label>
+						<label for="icon" class="">Icon: <iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-1" /></label>
 						<input
 							type="text"
 							id="icon"
@@ -314,7 +314,7 @@
 								{#each icons as icon}
 									<div class="relative flex flex-col items-center">
 										<span class="iconify" data-icon={icon} data-inline="false" />
-										<iconify-icon {icon} width="24" on:click={() => selectIcon(icon)} class="hover:cursor-pointer hover:text-primary-500" />
+										<iconify-icon {icon} width="24" on:keydown on:click={() => selectIcon(icon)} class="hover:cursor-pointer hover:text-primary-500" />
 									</div>
 								{/each}
 							</div>
@@ -323,9 +323,9 @@
 							<!-- TODO Button Click will close popup -->
 							<div class="mt-6 flex justify-between">
 								<!-- Disable the previous button if the start index is zero -->
-								<button disabled={start === 0} on:click={prevPage} class="btn btn-sm variant-filled-primary">Previous</button>
+								<button disabled={start === 0} on:keydown on:click={prevPage} class="btn btn-sm variant-filled-primary">Previous</button>
 								<!-- Disable the next button if there are less than 50 icons in the current page -->
-								<button disabled={icons.length < 50} on:click={nextPage} class="btn btn-sm variant-filled-primary">Next</button>
+								<button disabled={icons.length < 50} on:keydown  on:click={nextPage} class="btn btn-sm variant-filled-primary">Next</button>
 							</div>
 						</div>
 						<div class="arrow bg-surface-100-800-token" />
@@ -346,7 +346,7 @@
 
 					<!-- slug -->
 					<div class="mb-4 flex items-center gap-4">
-						<label class="relative">
+						<label for="slug" class="relative">
 							Slug:
 							<iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-1" />
 						</label>
@@ -409,7 +409,7 @@
 					</div>
 
 					<div class="text-center">
-						<button class="btn variant-filled-primary my-3" on:click={onAddWidgetClick}>Add more Fields</button>
+						<button class="btn variant-filled-primary my-3" on:keydown on:click={onAddWidgetClick}>Add more Fields</button>
 					</div>
 				</div>
 
@@ -443,7 +443,7 @@
 			<div class="options-table">
 				{#each Object.keys(widgetList[0][selectedWidgets[index].widget]({})).filter((key) => key !== 'widget' && key !== 'display' && key !== 'schema') as option}
 					{#if option === 'label'}
-						<label>{option}: <span class="text-error-500">*</span></label>
+						<label for={option} >{option}: <span class="text-error-500">*</span></label>
 						<input
 							type="text"
 							required
@@ -455,7 +455,7 @@
 							on:input={checkInputWidget}
 						/>
 					{:else}
-						<label>{option}:</label>
+						<label for={option} >{option}:</label>
 
 						{#if option === 'minlength' || option === 'maxlength' || option === 'count'}
 							<input
@@ -482,7 +482,7 @@
 				{/each}
 			</div>
 			<div class="text-center">
-				<button class="btn variant-filled-primary my-3" on:click={onAddWidgetClick}>Add Another Widget Input</button>
+				<button class="btn variant-filled-primary my-3" on:keydown on:click={onAddWidgetClick}>Add Another Widget Input</button>
 			</div>
 		{/if}
 	{/each}</Modal

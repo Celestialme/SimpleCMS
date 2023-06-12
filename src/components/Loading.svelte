@@ -46,11 +46,11 @@
 			transform: rotateZ(0deg);
 		}
 	}
-	#text {
-		color: white;
-		font-family: Arial;
-		font-size: 20px;
-		position: relative;
-		top: -857px;
-	}
+	/*#text {*/
+	/*	color: white;*/
+	/*	font-family: Arial;*/
+	/*	font-size: 20px;*/
+	/*	position: relative;*/
+	/*	top: -857px;*/
+	/*}*/
 </style>

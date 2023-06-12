@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections';
-	import { collectionValue, mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, language } from '@src/stores/store';
+	import { collectionValue, mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleHeaderSidebar, toggleFooterSidebar, language } from '@src/stores/store';
 	import { cloneData, deleteData, getFieldName } from '@src/utils/utils';
 
 	// typesafe-i18n
@@ -24,7 +24,8 @@
 		if (width <= 567) {
 			// use toggleLeftSidebar for mobile
 			toggleLeftSidebar.update((value) => !value);
-			toggleRightSidebar.update((value) => !value);
+			toggleHeaderSidebar.update((value) => !value);
+			toggleFooterSidebar.update((value) => !value);
 		} else if (width >= 568 && width <= 767) {
 			// use switchSideBar for md
 			switchSideBar.update((value) => !value);
