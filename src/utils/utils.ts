@@ -186,7 +186,7 @@ export async function deleteData(id) {
 }
 
 export async function extractData(fieldsData: any) {
-	// exracts data from fieldsData because FieldsData is async
+	// extracts data from fieldsData because FieldsData is async
 	let temp = {};
 	for (let key in fieldsData) {
 		temp[key] = await fieldsData[key]();

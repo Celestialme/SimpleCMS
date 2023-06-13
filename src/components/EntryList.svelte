@@ -308,16 +308,17 @@
 			<!-- Show/hide Columns via chips -->
 			<div class="flex flex-wrap items-center justify-center">
 				{#each $table.getAllLeafColumns() as column}
-				          	<span
-				          		class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
-				on:keydown		on:click={column.getToggleVisibilityHandler()}
-				          		on:keypress
-				          	>
-				          		{#if column.getIsVisible()}
-				          			<span><iconify-icon icon="fa:check" /></span>
-				          		{/if}
-				          		<span class="capitalize">{column.id}</span>
-				          	</span>
+					<span
+						class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
+						on:keydown
+						on:click={column.getToggleVisibilityHandler()}
+						on:keypress
+					>
+						{#if column.getIsVisible()}
+							<span><iconify-icon icon="fa:check" /></span>
+						{/if}
+						<span class="capitalize">{column.id}</span>
+					</span>
 				{/each}
 			</div>
 		</div>
@@ -328,6 +329,7 @@
 {#if isLoading}
 	<Loading />
 {/if}
+
 <div class="table-container px-2">
 	<table class="table-hover table {$density === 'compact' ? 'table-compact' : $density === 'normal' ? '' : 'table-comfortable'}">
 		<thead class="!text-primary">
@@ -345,9 +347,10 @@
 						<th class="">
 							{#if !header.isPlaceholder}
 								<div
-								          	class:cursor-pointer={header.column.getCanSort()}
-								          	class:select-none={header.column.getCanSort()}
-								on:keydown	on:click={header.column.getToggleSortingHandler()}
+									class:cursor-pointer={header.column.getCanSort()}
+									class:select-none={header.column.getCanSort()}
+									on:keydown
+									on:click={header.column.getToggleSortingHandler()}
 								>
 									<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
 									{#if header.column.getIsSorted() === 'asc'}
@@ -383,22 +386,23 @@
 		</thead>
 
 		<tbody>
-		          	{#each $table.getRowModel().rows as row, index}
-		          		<tr
-		          			class="divide-x divide-surface-400"
-		on:keydown			on:click={() => {
-		          				entryData.set(data?.entryList[index]);
-		          				mode.set('edit');
-		          			}}
-		          		>
-		          			<!-- TODO: Fix divide-y not applying -->
-		          			<td class="!w-6 !divide-x !divide-y !divide-surface-500">
-		          				<TanstackIcons bind:checked={deleteMap[index]} />
-		          				<!-- <TanstackIcons bind:cross={unpublishMap[index]} />
+			{#each $table.getRowModel().rows as row, index}
+				<tr
+					class="divide-x divide-surface-400"
+					on:keydown
+					on:click={() => {
+						entryData.set(data?.entryList[index]);
+						mode.set('edit');
+					}}
+				>
+					<!-- TODO: Fix divide-y not applying -->
+					<td class="!w-6 !divide-x !divide-y !divide-surface-500">
+						<TanstackIcons bind:checked={deleteMap[index]} />
+						<!-- <TanstackIcons bind:cross={unpublishMap[index]} />
 		          				<TanstackIcons bind:checked={publishMap[index]} />						
 		          				<TanstackIcons bind:checked={cloneMap[index]} />
 		          				<TanstackIcons bind:checked={scheduleMap[index]} /> -->
-		          			</td>
+					</td>
 
 					{#each row.getVisibleCells() as cell}
 						<td>
@@ -425,9 +429,9 @@
 	</table>
 
 	<!-- Pagination -->
-	<div class="my-3 flex items-center justify-around text-gray-400">
+	<div class="my-3 flex items-center justify-around text-surface-500">
 		<!-- show & count rows -->
-		<div class="hidden text-sm text-gray-400 md:block">
+		<div class="hidden text-sm text-surface-500 dark:text-surface-400 md:block">
 			{$LL.TANSTACK_Page()}
 			<span class="text-black dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
 			{$LL.TANSTACK_of()}
@@ -450,7 +454,7 @@
 		<select
 			value={$table.getState().pagination.pageSize}
 			on:change={setPageSize}
-			class="text-dark select hidden max-w-[100px] rounded py-2 text-sm dark:bg-gray-800 dark:text-white sm:block"
+			class="select variant-ghost hidden max-w-[100px] rounded py-2 text-sm text-surface-500 dark:text-white sm:block"
 		>
 			{#each [10, 25, 50, 100, 500] as pageSize}
 				<option value={pageSize}>
@@ -460,25 +464,27 @@
 		</select>
 
 		<!-- next/previous pages -->
-		<div class="btn-group variant-ghost inline-flex transition duration-150 ease-in-out [&>*+*]:border-surface-500">
+		<div class="btn-group variant-ghost inline-flex text-surface-500 transition duration-150 ease-in-out dark:text-white [&>*+*]:border-surface-500">
 			<button
-			          	type="button"
-			          	class="w-6"
-			          	aria-label="Go to First Page"
-			on:keydown	on:click={() => setCurrentPage(0)}
-			          	class:is-disabled={!$table.getCanPreviousPage()}
-			          	disabled={!$table.getCanPreviousPage()}
+				type="button"
+				class="w-6"
+				aria-label="Go to First Page"
+				on:keydown
+				on:click={() => setCurrentPage(0)}
+				class:is-disabled={!$table.getCanPreviousPage()}
+				disabled={!$table.getCanPreviousPage()}
 			>
 				<iconify-icon icon="material-symbols:first-page" width="24" />
 			</button>
 
 			<button
-			          	type="button"
-			          	class="w-6"
-			          	aria-label="Go to Previous Page"
-			on:keydown	on:click={() => setCurrentPage($table.getState().pagination.pageIndex - 1)}
-			          	class:is-disabled={!$table.getCanPreviousPage()}
-			          	disabled={!$table.getCanPreviousPage()}
+				type="button"
+				class="w-6"
+				aria-label="Go to Previous Page"
+				on:keydown
+				on:click={() => setCurrentPage($table.getState().pagination.pageIndex - 1)}
+				class:is-disabled={!$table.getCanPreviousPage()}
+				disabled={!$table.getCanPreviousPage()}
 			>
 				<iconify-icon icon="material-symbols:chevron-left" width="24" />
 			</button>
@@ -493,32 +499,34 @@
 					min={0}
 					max={$table.getPageCount() - 1}
 					on:change={handleCurrPageInput}
-					class="input w-16 text-black dark:bg-gray-800 dark:text-white"
+					class="variant-ghost-surface w-14 border-0"
 				/>
 				<span class="pl-2">
 					{' '}{$LL.TANSTACK_of()}{' '}
-					<span class="text-black dark:text-white">{$table.getPageCount()}</span>
+					<span class="">{$table.getPageCount()}</span>
 				</span>
 			</div>
 
 			<button
-			          	type="button"
-			          	class="w-6"
-			          	aria-label="Go to Next Page"
-			on:keydown	on:click={() => setCurrentPage($table.getState().pagination.pageIndex + 1)}
-			          	class:is-disabled={!$table.getCanNextPage()}
-			          	disabled={!$table.getCanNextPage()}
+				type="button"
+				class="w-6"
+				aria-label="Go to Next Page"
+				on:keydown
+				on:click={() => setCurrentPage($table.getState().pagination.pageIndex + 1)}
+				class:is-disabled={!$table.getCanNextPage()}
+				disabled={!$table.getCanNextPage()}
 			>
 				<iconify-icon icon="material-symbols:chevron-right" width="24" />
 			</button>
 
 			<button
-			          	type="button"
-			          	class="w-6"
-			          	aria-label="Go to Last Page"
-			on:keydown	on:click={() => setCurrentPage($table.getPageCount() - 1)}
-			          	class:is-disabled={!$table.getCanNextPage()}
-			          	disabled={!$table.getCanNextPage()}
+				type="button"
+				class="w-6"
+				aria-label="Go to Last Page"
+				on:keydown
+				on:click={() => setCurrentPage($table.getPageCount() - 1)}
+				class:is-disabled={!$table.getCanNextPage()}
+				disabled={!$table.getCanNextPage()}
 			>
 				<iconify-icon icon="material-symbols:last-page" width="24" />
 			</button>

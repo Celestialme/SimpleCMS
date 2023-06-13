@@ -1,6 +1,15 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections';
-	import { collectionValue, mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleHeaderSidebar, toggleFooterSidebar, language } from '@src/stores/store';
+	import {
+		collectionValue,
+		mode,
+		switchSideBar,
+		toggleLeftSidebar,
+		toggleRightSidebar,
+		toggleHeaderSidebar,
+		toggleFooterSidebar,
+		language
+	} from '@src/stores/store';
 	import { cloneData, deleteData, getFieldName } from '@src/utils/utils';
 
 	// typesafe-i18n
@@ -40,7 +49,7 @@
 <header class="bg-surface-1200 relative flex w-full items-center justify-between border-b p-2 border-secondary-600-300-token dark:bg-surface-700">
 	<div class="flex items-center justify-start">
 		{#if $toggleLeftSidebar === true}
-			<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
+			<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
@@ -53,14 +62,14 @@
 				</div>
 			{/if}
 
-			<div class="-mt-2 flex justify-start text-sm font-bold dark:text-white md:text-2xl lg:text-xl">
+			<div class="-mt-2 flex items-center justify-start text-sm font-bold dark:text-white md:justify-center md:text-2xl lg:text-xl">
 				{#if $collection.icon}
 					<span><iconify-icon icon={$collection.icon} width="24" class="mr-1 text-red-500 sm:mr-2" /></span>
 				{/if}
 
 				{#if $collection.name || $mode}
-					<div class="-mt-1 flex">
-						<span class="capitalize">{$mode}:</span>
+					<div class="-mt-1 flex-col space-y-1">
+						<span class="capitalize text-primary-500">{$mode}:</span>
 						<span class="ml-1 uppercase">{$collection.name}</span>
 					</div>
 				{/if}
@@ -68,12 +77,12 @@
 		</div>
 	</div>
 
-	<div class="flex items-center justify-end gap-4">
+	<div class="flex items-center justify-end gap-1 sm:gap-4">
 		<button type="button" on:click={deleteData} class="variant-filled-error btn-icon">
 			<iconify-icon icon="icomoon-free:bin" width="24" />
 		</button>
 
-		<button type="button" on:click={cloneData} class="btn-icon variant-filled-secondary">
+		<button type="button" on:click={cloneData} class="h btn-icon variant-filled-secondary">
 			<iconify-icon icon="fa-solid:clone" width="24" />
 		</button>
 
@@ -81,7 +90,7 @@
 			<option value="EN">EN</option>
 		</select>
 
-		<button type="button" on:click={handleCancel} class="variant-ghost-surface btn-icon">
+		<button type="button" on:click={handleCancel} class="btn-icon variant-ghost-surface">
 			<iconify-icon icon="material-symbols:close" width="24" />
 		</button>
 	</div>
