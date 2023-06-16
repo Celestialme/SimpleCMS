@@ -10,7 +10,7 @@
 	}
 </script>
 
-<div>
+<div class="w-full">
 	{#if label}
 		<label for="input" class={labelClass}>{label}</label>
 	{/if}
