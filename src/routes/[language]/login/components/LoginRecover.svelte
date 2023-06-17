@@ -12,6 +12,7 @@
 	export let active: number | undefined;
 	export let loginRecover: boolean;
 	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
+		id: 'recover',
 		validators: recoverSchema,
 		defaultValidator: 'keep',
 		applyAction: true,
@@ -27,7 +28,7 @@
 </script>
 
 <form method="post" action="?/recover" use:enhance class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2" class:hide={active != 0}>
-	<div class="mb-1 flex flex-row gap-2">
+	<div class="mb-6 flex flex-row gap-2">
 		<CMSLogo className="w-12" fill="red" />
 
 		<h1 class="text-3xl font-bold text-black lg:text-4xl">
@@ -39,7 +40,7 @@
 	{#if $errors.email}<span class="invalid">{$errors.email}</span>{/if}
 
 	<div class=" flex gap-2 mt-10 items-center">
-		<Button class="bg-gray-500  text-white">{$LL.LOGIN_SendResetMail()}</Button>
+		<Button on:click={() => (loginRecover = false)}>{$LL.LOGIN_SendResetMail()}</Button>
 		<button
 			on:click={() => {
 				loginRecover = false;

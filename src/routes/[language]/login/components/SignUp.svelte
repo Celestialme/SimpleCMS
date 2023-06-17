@@ -13,6 +13,7 @@
 	let userExists = false;
 	let firstUserExists = false;
 	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
+		id: 'signup',
 		validators: signUpSchema,
 		defaultValidator: 'clear',
 		applyAction: true,
@@ -38,7 +39,7 @@
 	class:hover={active == undefined || active == 0}
 >
 	<form method="post" action="?/signUp" use:enhance class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2" class:hide={active != 1}>
-		<div class="mb-4 flex flex-row gap-2">
+		<div class="mb-6 flex flex-row gap-2">
 			<CMSLogo className="w-12" fill="red" />
 
 			<h1 class="text-3xl font-bold text-white lg:text-4xl">

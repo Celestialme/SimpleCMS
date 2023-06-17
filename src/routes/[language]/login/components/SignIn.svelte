@@ -14,6 +14,7 @@
 	export let recoverFormSchema: PageData['recoverForm'];
 	let loginRecover = false;
 	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
+		id: 'signin',
 		validators: loginSchema,
 		defaultValidator: 'keep',
 		applyAction: true,
@@ -50,7 +51,7 @@
 			class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2"
 			class:hide={active != 0}
 		>
-			<div class="mb-1 flex flex-row gap-2">
+			<div class="mb-6 flex flex-row gap-2">
 				<CMSLogo className="w-12" fill="red" />
 
 				<h1 class="text-3xl font-bold text-black lg:text-4xl">
@@ -64,13 +65,15 @@
 			<FloatingInput name="password" type="password" bind:value={$form.password} {...$constraints.password} label={$LL.LOGIN_Password()} />
 			{#if $errors.password}<span class="invalid">{$errors.password}</span>{/if}
 			<div class="mt-5 flex gap-2">
-				<Button class="bg-gray-500 mt-10 text-white">{$LL.LOGIN_SignIn()}</Button>
+				<Button>{$LL.LOGIN_SignIn()}</Button>
 				<Button
 					on:click={(e) => {
 						e.preventDefault();
 						loginRecover = true;
 					}}
-					class="mt-10 bg-white text-red-500">{$LL.LOGIN_ForgottenPassword()}</Button
+					bgColor="white"
+					border="1px solid gray"
+					textColor="#ff3535">{$LL.LOGIN_ForgottenPassword()}</Button
 				>
 			</div>
 		</form>
