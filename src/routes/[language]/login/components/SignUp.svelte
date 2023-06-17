@@ -79,7 +79,7 @@
 		{#if $errors.password}<span class="invalid">{$errors.password}</span>{/if}
 		{#if $errors.password}<span class="text-white">{$errors.password}</span>{/if}
 		{#if userExists}<span class="text-white">User already exists</span>{/if}
-		<Button btnClass="mt-10">{$LL.LOGIN_SignUp()}</Button>
+		<Button class="bg-white mt-10">{$LL.LOGIN_SignUp()}</Button>
 	</form>
 	<SignupIcon show={active == 0 || active == undefined} />
 </section>

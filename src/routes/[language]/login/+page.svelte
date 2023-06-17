@@ -11,7 +11,13 @@
 </script>
 
 <div class="body" style="background:{background} ">
-	<SignIn {active} formSchema={data.loginForm} on:click={() => (active = 0)} on:pointerenter={() => (background = '#242728')} />
+	<SignIn
+		{active}
+		formSchema={data.loginForm}
+		recoverSchema={data.recoverForm}
+		on:click={() => (active = 0)}
+		on:pointerenter={() => (background = '#242728')}
+	/>
 	<SignUp {active} formSchema={data.signUpForm} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} />
 	{#if active == undefined}
 		<div class="z-30"><RoundLogo /></div>

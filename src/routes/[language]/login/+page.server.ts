@@ -2,7 +2,7 @@ import { fail, type Actions, type Cookies, redirect } from '@sveltejs/kit';
 
 import { superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
-import { loginSchema, signUpSchema } from './formSchemas';
+import { loginSchema, signUpSchema, recoverSchema } from './formSchemas';
 import { auth } from '@src/routes/api/db';
 export const actions: Actions = {
 	signIn: async (event) => {
@@ -12,6 +12,18 @@ export const actions: Actions = {
 		const email = form.get('email') as string;
 		const password = form.get('password') as string;
 		let resp = await signIn(email, password, event.cookies);
+		if (resp) {
+			throw redirect(303, '/');
+		} else {
+			return { form: signInForm };
+		}
+	},
+	recover: async (event) => {
+		let signInForm = await superValidate(null, loginSchema);
+
+		const form = await event.request.formData();
+		const email = form.get('email') as string;
+		let resp = await recover(email, event.cookies);
 		if (resp) {
 			throw redirect(303, '/');
 		} else {
@@ -35,10 +47,12 @@ export const actions: Actions = {
 export const load: PageServerLoad = async (event) => {
 	await event.parent();
 	let loginForm = await superValidate(event, loginSchema);
+	let recoverForm = await superValidate(event, recoverSchema);
 	let signUpForm = await superValidate(event, signUpSchema);
 	return {
 		loginForm,
-		signUpForm
+		signUpForm,
+		recoverForm
 	};
 };
 
@@ -74,4 +88,9 @@ async function signUp(email: string, password: string, cookies: Cookies) {
 		path: '/'
 	});
 	return true;
+}
+async function recover(email: string, cookies: Cookies) {
+	console.log(email);
+	//TODO recover login here
+	return false;
 }
