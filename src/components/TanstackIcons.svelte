@@ -1,12 +1,28 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
+
+	const dispatch = createEventDispatcher();
+
 	export let cross = false;
 	export let checked = false;
+	export let listboxValue = '';
+
+	$: if (['create', 'publish'].includes(listboxValue)) {
+		cross = false;
+		checked = true;
+	} else {
+		cross = true;
+		checked = false;
+	}
 </script>
 
 <div
 	class="flex h-[26px] w-[26px] items-center justify-center rounded-md border-2 border-surface-800 dark:border-surface-400 {$$props.class}"
 	on:keydown
-	on:click|stopPropagation={() => (checked = !checked)}
+	on:click|stopPropagation={() => {
+		checked = !checked;
+		dispatch('iconClick');
+	}}
 >
 	{#if checked}
 		<!--Red Cross icon 3d-->

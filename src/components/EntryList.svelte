@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
-	import { mode, entryData, deleteEntry, toggleLeftSidebar, searchShow, filterShow, columnShow, density } from '@src/stores/store';
+	import { mode, entryData, deleteEntry, toggleLeftSidebar } from '@src/stores/store';
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
 	import TanstackIcons from './TanstackIcons.svelte';
@@ -15,9 +15,19 @@
 
 	import TanstackFilter from './TanstackFilter.svelte';
 
-	// function toggleInput() {
-	// 	showInput.update((value) => !value);
-	// }
+	let searchValue = '';
+	let searchShow = false;
+	let filterShow = false;
+	let columnShow = false;
+
+	// Retrieve density from local storage or set to 'normal' if it doesn't exist
+	let density = localStorage.getItem('density') || 'normal';
+
+	// Update density and save to local storage
+	function updateDensity(newDensity) {
+		density = newDensity;
+		localStorage.setItem('density', newDensity);
+	}
 
 	import {
 		createSvelteTable,
@@ -39,8 +49,6 @@
 	let columnOrder: never[] = [];
 	let columnVisibility = {};
 	let globalFilter = '';
-
-	let mobileExpand = false;
 
 	// This function refreshes the data displayed in a table by fetching new data from an API endpoint and updating the tableData and options variables.
 	let refresh = async (collection: typeof $collection) => {
@@ -270,12 +278,12 @@
 		</div>
 	</div>
 
-	<button type="button" on:keydown on:click={() => (mobileExpand = !mobileExpand)} class="btn-icon variant-ghost-surface sm:hidden">
+	<button type="button" on:keydown on:click={() => (searchShow = !searchShow)} class="btn-icon variant-ghost-surface sm:hidden">
 		<iconify-icon icon="gridicons:dropdown" width="30" />
 	</button>
 
-	<div class="relative flex hidden items-center justify-center gap-2 sm:block">
-		<TanstackFilter {$searchShow} {$filterShow} {$columnShow} {$density} />
+	<div class="relative hidden items-center justify-center gap-2 sm:flex">
+		<TanstackFilter bind:searchValue bind:filterShow bind:columnShow bind:density {updateDensity} />
 	</div>
 
 	<!-- MultiButton -->
@@ -284,11 +292,11 @@
 
 <!-- Row 2 for Mobile  / Center on desktop -->
 <!-- TODO:add  expand transition -->
-<div class="relative flex items-center justify-center gap-2 bg-surface-800 py-2 {!mobileExpand ? 'hidden' : 'block'}">
-	<TanstackFilter {$searchShow} {$filterShow} {$columnShow} {$density} />
+<div class="relative flex h-14 items-center justify-center gap-1 py-2 dark:bg-surface-800 sm:gap-2 {!searchShow ? 'hidden' : 'block'} sm:hidden">
+	<TanstackFilter bind:searchValue bind:filterShow bind:columnShow bind:density {updateDensity} />
 </div>
 
-{#if $columnShow}
+{#if columnShow}
 	<div class="flex flex-col dark:text-white md:flex-row md:flex-wrap md:items-center md:justify-center">
 		<!-- toggle all -->
 		<div class="mb-2 flex items-center md:mb-0 md:mr-4">
@@ -331,7 +339,7 @@
 {/if}
 
 <div class="table-container px-2">
-	<table class="table-hover table {$density === 'compact' ? 'table-compact' : $density === 'normal' ? '' : 'table-comfortable'}">
+	<table class="table-hover table {density === 'compact' ? 'table-compact' : density === 'normal' ? '' : 'table-comfortable'}">
 		<thead class="!text-primary">
 			{#each $table.getHeaderGroups() as headerGroup}
 				<tr class="divide-x divide-surface-400 border-b">
@@ -364,21 +372,25 @@
 					{/each}
 				</tr>
 
-				{#if $filterShow}
+				{#if filterShow}
+					<!-- TODO: match filter width to column width -->
 					<tr class="divide-x divide-surface-400 capitalize">
-						{#each headerGroup.headers as header}
-							<th>
-								<!-- Add your filter input here -->
-								<FloatingInput
-									type="text"
-									icon="material-symbols:search-rounded"
-									label="Filter ..."
-									on:input={(e) => {
-										// Update filter value for this column
-										header.column.setFilter(e.target.value);
-									}}
-								/>
-							</th>
+						{#each headerGroup.headers as header, index}
+							{#if index !== 0}
+								<th>
+									<FloatingInput
+										type="text"
+										icon="material-symbols:search-rounded"
+										label="Filter ..."
+										on:input={(e) => {
+											// Update filter value for this column
+											header.column.setFilter(e.target.value);
+										}}
+									/>
+								</th>
+							{:else}
+								<th />
+							{/if}
 						{/each}
 					</tr>
 				{/if}
@@ -565,42 +577,3 @@
 		</div>
 	</div>
 </div>
-
-<style lang="postcss">
-	/* th,
-	td {
-		min-width: 120px;
-		text-align: left;
-		cursor: pointer;
-	}	
-	thead th:first-of-type {
-		border-top-left-radius: 3px;
-	}
-	thead th:last-of-type {
-		border-top-right-radius: 3px;
-	}
-	tbody tr:last-of-type td:first-of-type {
-		border-bottom-left-radius: 3px;
-	}
-	tbody tr:last-of-type td:last-of-type {
-		border-bottom-right-radius: 3px;
-	}
-	table {
-		min-width: calc(100% - 10px);
-		margin: auto;
-		color: white;
-	}
-	thead {
-		position: sticky;
-		top: 0;
-		background-color: #3d4a5c;
-		font-size: 16px;
-	}
-	tbody {
-		background-color: #202832;
-		font-size: 14px;
-	}
-	tbody tr:hover {
-		background-color: #274b6f;
-	} */
-</style>
