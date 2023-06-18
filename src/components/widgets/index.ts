@@ -3,7 +3,7 @@
 // import Currency from './currency';
 // import Date from './date';
 // import DateRange from './dateRange';
-// import Email from './email';
+import Email from './email';
 // import Group from './group';
 import ImageArray from './imageArray';
 // import ImageEditor from './imageEditor';
@@ -32,7 +32,7 @@ let widgets = {
 	// DateRange - date with start / Finish timestamps
 	//DateRange,
 	// Email - validates the entry is a properly formatted email
-	//Email,
+	Email,
 	// Group - nest fields within an object with condition & tabs
 	//Group,
 	// ImageUpload - allows image upload with editor
@@ -42,7 +42,7 @@ let widgets = {
 	// Image Editor - Crop / Blur / Rotation and Save upload to Webp
 	//ImageEditor,
 	//ImageEditorPage,
-	// MegaMenu - Flexible Menu with possible hierarchie
+	// MegaMenu - Flexible Menu with possible hierarchy
 	MegaMenu,
 	// Number - field that enforces that its value be a number
 	//Number,
@@ -52,13 +52,13 @@ let widgets = {
 	//Radio,
 	// Relation - assign relationships to other collections
 	Relation,
-	// RemoteVideo - for youtube/vimeo(/Twich/tiktok), grabbing Title/Duration,Dimention,User
+	// RemoteVideo - for youtube/vimeo(/Twitch/ticktock), grabbing Title/Duration,Dimention,User
 	//RemoteVideo,
 	// Rich Text - fully extensible Lexical Rich Text editor
 	//RichText,
-	// SelectList - dropdown / picklist style value selector
+	// SelectList - dropdown / pick list style value selector
 	//SelectList,
-	// Seo - Basic Seo Title /Descritption with preview
+	// Seo - Basic Seo Title /Description with preview
 	//Seo,
 	// Text - simple text input
 	Text

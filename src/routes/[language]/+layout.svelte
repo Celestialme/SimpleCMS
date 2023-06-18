@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar,toggleHeaderSidebar, toggleFooterSidebar  } from '@src/stores/store';
+	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleHeaderSidebar, toggleFooterSidebar } from '@src/stores/store';
 	import { systemLanguage } from '@src/stores/load';
 	import axios from 'axios';
 	import { credentials } from '@src/stores/load';
@@ -86,6 +86,14 @@
 </script>
 
 <!-- TODO: Fix Right And mobile Version of sidebars -->
+<!-- <div class="flex flex-col">
+	<div>toggleLeftSidebar={$toggleLeftSidebar}</div>
+	<div>switchSideBar={$switchSideBar}</div>
+	<div>toggleRightSidebar={$toggleRightSidebar}</div>
+	<div>toggleHeaderSidebar={$toggleHeaderSidebar}</div>
+	<div>toggleFooterSidebar={$toggleFooterSidebar}</div>
+</div> -->
+
 <AppShell
 	slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10 
@@ -108,7 +116,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 			</a>
 		{:else}
 			<div class="flex justify-start gap-1.5">
-				<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
+				<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
 					<iconify-icon icon="mingcute:menu-fill" width="24" />
 				</button>
 
@@ -180,7 +188,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 					</button>
 				</div>
 
-				<!-- System Language i18n Handeling -->
+				<!-- System Language i18n Handling -->
 				<!-- TODO: Fix Tooltip overflow -->
 				<div class={$switchSideBar ? 'order-3 row-span-2' : 'order-2'}>
 					<button use:popup={SystemLanguageTooltip} class="btn-icon font-bold hover:bg-surface-500 hover:text-white md:row-span-2">
@@ -267,8 +275,10 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 	</svelte:fragment>
 
 	<svelte:fragment slot="pageHeader">
+		<div>pageHeader</div>
+
 		{#if $mode == 'edit' || $mode == 'create'}
-			mobile sidabar
+			mobile sidebar header
 		{/if}
 	</svelte:fragment>
 
@@ -277,9 +287,11 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 	<slot />
 	<!-- ---- / ---- -->
 
-	<svelte:fragment slot="pageFooter"
-		>{#if $mode == 'edit' || $mode == 'create'}
-			mobile sidabar
+	<svelte:fragment slot="pageFooter">
+		<div>pageFooter</div>
+
+		{#if $mode == 'edit' || $mode == 'create'}
+			mobile sidebar footer
 		{/if}
 	</svelte:fragment>
 </AppShell>

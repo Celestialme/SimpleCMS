@@ -219,8 +219,9 @@
 
 	//workaround for svelte-table bug
 	let flexRender = flexRenderBugged as (...args: Parameters<typeof flexRenderBugged>) => any;
+
 	function process_deleteAll(deleteAll: boolean) {
-		// triggerConfirm = true;
+		console.log('process_deleteAll called with deleteAll:', deleteAll);
 		if (deleteAll) {
 			for (let item in tableData) {
 				deleteMap[item] = true;
@@ -230,6 +231,7 @@
 				deleteMap[item] = false;
 			}
 		}
+		console.log('deleteMap after process_deleteAll:', deleteMap);
 	}
 
 	$deleteEntry = async () => {
@@ -252,13 +254,19 @@
 		clearTimeout(loadingTimer);
 		isLoading = false;
 	};
+
+	$: {
+		console.log('deleteMap:', deleteMap);
+		console.log('deleteAll:', deleteAll);
+	}
 </script>
 
+<!-- TanstackHeader -->
 <div class="m-2 flex justify-between dark:text-white">
 	<!-- Row 1 for Mobile -->
 	<div class="flex items-center justify-between">
 		{#if $toggleLeftSidebar === true}
-			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
@@ -278,7 +286,7 @@
 		</div>
 	</div>
 
-	<button type="button" on:keydown on:click={() => (searchShow = !searchShow)} class="btn-icon variant-ghost-surface sm:hidden">
+	<button type="button" on:keydown on:click={() => (searchShow = !searchShow)} class="variant-ghost-surface btn-icon sm:hidden">
 		<iconify-icon icon="gridicons:dropdown" width="30" />
 	</button>
 
@@ -297,12 +305,12 @@
 </div>
 
 {#if columnShow}
-	<div class="flex flex-col dark:text-white md:flex-row md:flex-wrap md:items-center md:justify-center">
+	<div class="flex items-center justify-center dark:text-white md:flex-wrap">
 		<!-- toggle all -->
 		<div class="mb-2 flex items-center md:mb-0 md:mr-4">
 			<label>
 				<input
-					class="input"
+					class="checkbox"
 					id="toggle-all"
 					checked={$table.getIsAllColumnsVisible()}
 					on:change={(e) => {
@@ -317,7 +325,7 @@
 			<div class="flex flex-wrap items-center justify-center">
 				{#each $table.getAllLeafColumns() as column}
 					<span
-						class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
+						class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-1 my-1"
 						on:keydown
 						on:click={column.getToggleVisibilityHandler()}
 						on:keypress
@@ -407,9 +415,8 @@
 						mode.set('edit');
 					}}
 				>
-					<!-- TODO: Fix divide-y not applying -->
-					<td class="!w-6 !divide-x !divide-y !divide-surface-500">
-						<TanstackIcons bind:checked={deleteMap[index]} />
+					<td>
+						<TanstackIcons bind:checked={deleteMap[index]} class="ml-1" />
 						<!-- <TanstackIcons bind:cross={unpublishMap[index]} />
 		          				<TanstackIcons bind:checked={publishMap[index]} />						
 		          				<TanstackIcons bind:checked={cloneMap[index]} />
@@ -440,7 +447,7 @@
 		</tfoot> -->
 	</table>
 
-	<!-- Pagination -->
+	<!-- Pagination Desktop -->
 	<div class="my-3 flex items-center justify-around text-surface-500">
 		<!-- show & count rows -->
 		<div class="hidden text-sm text-surface-500 dark:text-surface-400 md:block">
@@ -463,17 +470,20 @@
 		</div>
 
 		<!-- number of pages -->
-		<select
-			value={$table.getState().pagination.pageSize}
-			on:change={setPageSize}
-			class="select variant-ghost hidden max-w-[100px] rounded py-2 text-sm text-surface-500 dark:text-white sm:block"
-		>
-			{#each [10, 25, 50, 100, 500] as pageSize}
-				<option value={pageSize}>
-					{pageSize} Rows
-				</option>
-			{/each}
-		</select>
+		{#if $table.getPrePaginationRowModel().rows.length > 10}
+			<!-- number of pages -->
+			<select
+				value={$table.getState().pagination.pageSize}
+				on:change={setPageSize}
+				class="select variant-ghost hidden max-w-[100px] rounded py-2 text-sm text-surface-500 dark:text-white sm:block"
+			>
+				{#each [10, 25, 50, 100, 500].filter((pageSize) => pageSize <= $table.getPrePaginationRowModel().rows.length) as pageSize}
+					<option value={pageSize}>
+						{pageSize} Rows
+					</option>
+				{/each}
+			</select>
+		{/if}
 
 		<!-- next/previous pages -->
 		<div class="btn-group variant-ghost inline-flex text-surface-500 transition duration-150 ease-in-out dark:text-white [&>*+*]:border-surface-500">
@@ -545,16 +555,19 @@
 		</div>
 	</div>
 
+	<!-- Pagination Mobile-->
 	<div class="flex flex-col items-center justify-center gap-2 md:hidden">
-		<!-- number of pages -->
-		<select value={$table.getState().pagination.pageSize} on:change={setPageSize} class="select max-w-[100px] text-sm sm:hidden">
-			{#each [10, 25, 50, 100, 500] as pageSize}
-				<option value={pageSize}>
-					{pageSize}
-					{$LL.TANSTACK_Rows()}
-				</option>
-			{/each}
-		</select>
+		{#if $table.getPrePaginationRowModel().rows.length > 10}
+			<!-- number of pages -->
+			<select value={$table.getState().pagination.pageSize} on:change={setPageSize} class="select max-w-[100px] text-sm sm:hidden">
+				{#each [10, 25, 50, 100, 500].filter((pageSize) => pageSize <= $table.getPrePaginationRowModel().rows.length) as pageSize}
+					<option value={pageSize}>
+						{pageSize}
+						{$LL.TANSTACK_Rows()}
+					</option>
+				{/each}
+			</select>
+		{/if}
 
 		<!-- Pagination -->
 		<div class="text-sm text-gray-400">
@@ -577,3 +590,17 @@
 		</div>
 	</div>
 </div>
+
+<style lang="postcss">
+	.table tbody td {
+		@apply !py-1.5;
+	}
+
+	.table-compact tbody td {
+		@apply !py-0.5;
+	}
+
+	.table-comfortable tbody td {
+		@apply !py-3.5;
+	}
+</style>

@@ -18,7 +18,7 @@ let schema: Schema = {
 			fields: [
 				widgets.ImageUpload({
 					label: 'image',
-					path: 'media/images'
+					path: 'mediafiles/images'
 				}),
 				widgets.Text({
 					label: 'title',

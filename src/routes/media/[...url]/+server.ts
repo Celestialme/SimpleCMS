@@ -6,9 +6,9 @@ import sharp from 'sharp';
 //handles GET requests for media files
 export const GET: RequestHandler = async ({ params }) => {
 	try {
-		await fs.promises.mkdir('./media', { recursive: true });
+		await fs.promises.mkdir('./mediafiles', { recursive: true });
 		const sanitizedUrl = params.url.replace(/[^a-zA-Z0-9_.]/g, '');
-		const data = await fs.promises.readFile(`./media/${sanitizedUrl}`);
+		const data = await fs.promises.readFile(`./mediafiles/${sanitizedUrl}`);
 		const mimeType = mime.lookup(sanitizedUrl) as string;
 		if (mimeType.startsWith('image/')) {
 			const avifData = await sharp(data).avif().toBuffer();

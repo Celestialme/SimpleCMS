@@ -5,12 +5,13 @@ import Posts from './Posts';
 import Names from './Names';
 import Posts3 from './Posts3';
 import Relation from './Relation';
+import WidgetTest from './WidgetTest';
 
 let categories = [
 	{
 		name: 'Collections',
 		icon: 'bi:collection',
-		collections: [Posts, Names, Posts3, Relation]
+		collections: [Posts, Names, Posts3, Relation, WidgetTest]
 	},
 	{
 		name: 'Menus',

@@ -185,7 +185,7 @@ type RootTranslation = {
 	 */
 	TANSTACK_Column: string
 	/**
-	 * T​o​g​g​l​e​ ​A​l​l
+	 * A​l​l
 	 */
 	TANSTACK_Toggle: string
 	/**
@@ -1188,7 +1188,7 @@ export type TranslationFunctions = {
 	 */
 	TANSTACK_Column: () => LocalizedString
 	/**
-	 * Toggle All
+	 * All
 	 */
 	TANSTACK_Toggle: () => LocalizedString
 	/**

@@ -56,7 +56,7 @@ const es: Translation = {
 	// Tanstack
 	TANSTACK_UserList: 'Lista de usuarios:',
 	TANSTACK_Column: 'Columnas',
-	TANSTACK_Toggle: 'Alternar todos',
+	TANSTACK_Toggle: 'Todo',
 	TANSTACK_Filter: 'Filtro de facetas',
 	TANSTACK_Export: 'Exportación XML',
 	TANSTACK_Page: 'Página',

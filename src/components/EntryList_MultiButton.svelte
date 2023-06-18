@@ -3,49 +3,70 @@
 	import LL from '@src/i18n/i18n-svelte';
 
 	import { createEventDispatcher } from 'svelte';
-	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar } from '@src/stores/store';
+	import {
+		mode,
+		switchSideBar,
+		toggleLeftSidebar,
+		toggleRightSidebar,
+		toggleHeaderSidebar,
+		toggleFooterSidebar,
+		storeListboxValue
+	} from '@src/stores/store';
 
 	const dispatch = createEventDispatcher();
 
-	let listboxValue = 'create';
 	let dropdownOpen = false;
-	let { actionname, buttonClass, iconValue } = getButtonAndIconValues(listboxValue);
+	let { actionname, buttonClass, iconValue } = getButtonAndIconValues($storeListboxValue);
+	// get the current window width
+	let width = window.innerWidth;
+
+	window.addEventListener('resize', () => {
+		width = window.innerWidth;
+	});
 
 	function handleButtonClick() {
 		mode.set('view');
-		dispatch(listboxValue);
+		dispatch($storeListboxValue);
 		dropdownOpen = false;
-		// get the current window widthlet width = window.innerWidth;
+		// get the current window width let width = window.innerWidth;
 		// use the custom screens
 		if (width <= 567) {
-			// use toggleLeftSidebar for mobile
-			toggleLeftSidebar.update((value) => !value);
-			toggleHeaderSidebar.update((value) => !value);
-			toggleFooterSidebar.update((value) => !value);
+			// For mobile toggle Header/Footer Sidebars
+			toggleLeftSidebar.set(true);
+			switchSideBar.set(true);
+			toggleHeaderSidebar.set(false);
+			toggleFooterSidebar.set(false);
+			toggleRightSidebar.set(true);
 		} else if (width >= 568 && width <= 767) {
 			// use switchSideBar for md
-			switchSideBar.update((value) => !value);
-			toggleRightSidebar.update((value) => !value);
+			toggleLeftSidebar.set(false);
+			switchSideBar.set(false);
+			toggleHeaderSidebar.set(true);
+			toggleFooterSidebar.set(true);
+			toggleRightSidebar.set(false);
 		} else if (width > 768) {
 			// use toggleRightSidebar for xl and above
-			toggleRightSidebar.update((value) => !value);
+			toggleLeftSidebar.set(false);
+			switchSideBar.set(true);
+			toggleHeaderSidebar.set(false);
+			toggleFooterSidebar.set(false);
+			toggleRightSidebar.set(false);
 		}
-	
 	}
-
 	function handleOptionClick(value: string) {
-		listboxValue = value;
+		storeListboxValue.set(value);
+		console.log('storeListboxValue:', $storeListboxValue);
 
-		({ actionname, buttonClass, iconValue } = getButtonAndIconValues(listboxValue));
+		({ actionname, buttonClass, iconValue } = getButtonAndIconValues($storeListboxValue));
 		dropdownOpen = false;
 	}
 
-	function getButtonAndIconValues(listboxValue: string) {
+	function getButtonAndIconValues(storeListboxValue: string) {
 		let actionname = '';
 		let buttonClass = '';
 		let iconValue = '';
 
-		switch (listboxValue) {
+		switch (storeListboxValue) {
 			case 'create':
 				actionname = $LL.ENTRYLIST_Create();
 				buttonClass = 'gradient-primary';
@@ -83,6 +104,8 @@
 				break;
 		}
 
+		console.log('storeListboxValue:', storeListboxValue);
+
 		return {
 			actionname,
 			buttonClass: `btn ${buttonClass} rounded-none w-36 justify-between`,
@@ -94,12 +117,12 @@
 	//$: if (mode.set === “create”) { switchSideBar.update((value) => !value); toggleRightSidebar.update((value) => !value); }
 </script>
 
-<div class="relative inline-flex rounded-md shadow">
+<div class="relative inline-flex rounded-md">
 	<button
 		type="button"
 		class={`inline-block w-[60px] rounded-l-full px-1 pl-3 font-medium uppercase leading-normal text-black transition duration-150 ease-in-out dark:text-white md:w-[135px] ${buttonClass}`}
 		on:click|preventDefault={handleButtonClick}
-		on:click={() => mode.set(listboxValue)}
+		on:click={() => mode.set($storeListboxValue)}
 	>
 		<span class="flex items-center">
 			<iconify-icon icon={iconValue} width="24" />
@@ -119,9 +142,9 @@
 
 	{#if dropdownOpen}
 		<ul
-			class="absolute right-0 top-12 z-10 divide-y-2 rounded-md bg-surface-800 py-1 text-white shadow-lg ring-1 ring-black ring-opacity-5 md:w-[90%]"
+			class="absolute right-0 top-12 z-20 divide-y-2 rounded-sm border bg-surface-800 py-1 text-white shadow-lg ring-1 ring-black ring-opacity-5 md:w-[90%]"
 		>
-			{#if listboxValue !== 'create'}
+			{#if $storeListboxValue !== 'create'}
 				<li>
 					<!-- TODO: FIX Sidebar & RightSidebar Toggle -->
 					<button
@@ -138,7 +161,7 @@
 				</li>
 			{/if}
 
-			{#if listboxValue !== 'publish'}
+			{#if $storeListboxValue !== 'publish'}
 				<li>
 					<button
 						type="button"
@@ -153,7 +176,7 @@
 					</button>
 				</li>
 			{/if}
-			{#if listboxValue !== 'unpublish'}
+			{#if $storeListboxValue !== 'unpublish'}
 				<li>
 					<button
 						type="button"
@@ -169,7 +192,7 @@
 				</li>
 			{/if}
 
-			{#if listboxValue !== 'schedule'}
+			{#if $storeListboxValue !== 'schedule'}
 				<li>
 					<button
 						type="button"
@@ -185,7 +208,7 @@
 				</li>
 			{/if}
 
-			{#if listboxValue !== 'clone'}
+			{#if $storeListboxValue !== 'clone'}
 				<li>
 					<button
 						type="button"
@@ -201,7 +224,7 @@
 				</li>
 			{/if}
 
-			{#if listboxValue !== 'delete'}
+			{#if $storeListboxValue !== 'delete'}
 				<li>
 					<button
 						type="button"

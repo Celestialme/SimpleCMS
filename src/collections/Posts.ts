@@ -26,7 +26,7 @@ let schema = {
 		}),
 		widgets.ImageUpload({
 			label: 'image',
-			path: 'media/images'
+			path: 'mediafiles/images'
 		})
 	]
 };

@@ -1,4 +1,6 @@
 <script>
+	// import { language } from '@src/stores/store';
+
 	export let searchShow = false;
 	export let searchValue = '';
 	export let filterShow = false;
@@ -8,16 +10,16 @@
 </script>
 
 <!-- Expanding Search -->
-
 {#if searchShow}
 	<div class="btn-group variant-ghost-surface absolute left-1/2 top-0 flex -translate-x-1/2 transform items-center justify-end">
 		<button type="button" on:click={() => (searchShow = !searchShow)} class="w-12 border-r border-surface-500">
 			<iconify-icon icon="ic:outline-search-off" width="24" />
 		</button>
+		<!-- TODO: Improve input put css to match btn-group -->
 		<input
 			type="text"
 			placeholder="Search..."
-			class="varient-ghost-surface input !h-12 w-64 outline-none transition-all duration-500 ease-in-out"
+			class="varient-ghost-surface input h-12 w-64 outline-none transition-all duration-500 ease-in-out"
 			bind:value={searchValue}
 			on:blur={() => (searchShow = false)}
 			on:keydown={(e) => e.key === 'Enter' && (searchShow = false)}
@@ -35,7 +37,7 @@
 		<iconify-icon icon="material-symbols:filter-list-rounded" width="24" />
 	</button>
 
-	<!-- Column Order & Visility -->
+	<!-- Column Order & Visibility -->
 	<!-- Column Order/ Sort-->
 	<button type="button" on:click={() => (columnShow = !columnShow)} class="btn-icon variant-ghost-surface">
 		<iconify-icon icon="fluent:column-triple-edit-24-regular" width="24" />
@@ -50,7 +52,7 @@
 			if (density === 'compact') {
 				updateDensity('normal');
 			} else if (density === 'normal') {
-				updateDensity('relaxed');
+				updateDensity('comfortable');
 			} else {
 				updateDensity('compact');
 			}
@@ -63,10 +65,13 @@
 				? 'material-symbols:align-space-around-rounded'
 				: 'material-symbols:align-space-between-rounded'}
 			width="24"
-		/><!-- {$LL.TANSTACK_Column()} -->
+		/>
 	</button>
-
-	<select class="variant-ghost-surface rounded text-white">
+	<!-- TODO: Display Database available language and show translation Status -->
+	<!-- TODO: Show translation Status -->
+	<!-- TODO: Change Dropdown color -->
+	<select class="variant-ghost-surface rounded border-surface-500 text-white">
 		<option value="EN">EN</option>
+		<option value="DE">DE</option>
 	</select>
 {/if}

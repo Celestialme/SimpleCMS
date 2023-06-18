@@ -56,7 +56,7 @@ const en: BaseTranslation = {
 	// Tanstack
 	TANSTACK_UserList: 'List of User:',
 	TANSTACK_Column: 'Columns',
-	TANSTACK_Toggle: 'Toggle All',
+	TANSTACK_Toggle: 'All',
 	TANSTACK_Filter: 'Facets Filters',
 	TANSTACK_Export: 'XML Export',
 	TANSTACK_Page: 'Page',

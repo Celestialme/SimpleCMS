@@ -1,19 +1,25 @@
 <script>
 	import { createEventDispatcher } from 'svelte';
+	import { storeListboxValue } from '@src/stores/store';
 
 	const dispatch = createEventDispatcher();
 
 	export let cross = false;
 	export let checked = false;
-	export let listboxValue = '';
 
-	$: if (['create', 'publish'].includes(listboxValue)) {
+	$: if (['create', 'publish'].includes($storeListboxValue)) {
 		cross = false;
-		checked = true;
 	} else {
 		cross = true;
+	}
+	$: if (['create', 'publish'].includes($storeListboxValue)) {
+		checked = true;
+	} else {
 		checked = false;
 	}
+
+	console.log('checked in TanstackIcons:', checked);
+	console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
 </script>
 
 <div
@@ -24,7 +30,7 @@
 		dispatch('iconClick');
 	}}
 >
-	{#if checked}
+	{#if checked && !cross}
 		<!--Red Cross icon 3d-->
 		<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 224 224">
 			<mask id="a" width="224" height="224" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:alpha">
@@ -90,7 +96,7 @@
 				</linearGradient>
 			</defs>
 		</svg>
-	{:else if cross}
+	{:else if cross && !checked}
 		<!--Green Check icon 3d-->
 		<svg xmlns="http://www.w3.org/2000/svg" baseProfile="basic" viewBox="0 0 600 600">
 			<defs>

@@ -1,4 +1,4 @@
-import Text from './Text.svelte';
+import Email from './Email.svelte';
 import type { Params } from './types';
 
 const widget = ({
@@ -7,16 +7,8 @@ const widget = ({
 	// extras
 	icon,
 	placeholder,
-	count,
-	minlength,
-	maxlength,
-	prefix,
-	suffix,
 	required,
-	readonly,
-	disabled,
 	localization,
-	width,
 	display
 }: Params) => {
 	if (!display) {
@@ -24,7 +16,7 @@ const widget = ({
 	}
 
 	const field = {
-		widget: Text,
+		widget: Email,
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,
@@ -32,16 +24,8 @@ const widget = ({
 		// extras
 		icon,
 		placeholder,
-		count,
-		minlength,
-		maxlength,
-		prefix,
-		suffix,
 		required,
-		readonly,
-		disabled,
-		localization,
-		width
+		localization
 	};
 	return field;
 };
