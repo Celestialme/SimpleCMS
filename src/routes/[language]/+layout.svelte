@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleHeaderSidebar, toggleFooterSidebar } from '@src/stores/store';
+	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleHeaderSidebar, toggleFooterSidebar, language } from '@src/stores/store';
 	import { systemLanguage } from '@src/stores/load';
 	import axios from 'axios';
 	import { credentials } from '@src/stores/load';
@@ -172,8 +172,8 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				<div class={$switchSideBar ? 'order-1 row-span-2' : 'order-1'}>
 					<button class="btn-icon hover:bg-surface-500 md:row-span-2">
 						<div
-							on:click={() => !$page.url.href.includes('user') && goto('/user')}
-							on:keypress={() => !$page.url.href.includes('user') && goto('/user')}
+							on:click={() => !$page.url.href.includes('user') && goto('/{language}/user')}
+							on:keypress={() => !$page.url.href.includes('user') && goto('/{language}/user')}
 							class="relative cursor-pointer flex-col !no-underline"
 						>
 							<Avatar src={avatarSrc ? '/api/media/' + avatarSrc : '/Default_User.svg'} class="mx-auto {$switchSideBar ? 'w-[40px]' : 'w-[35px]'}" />
@@ -236,7 +236,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				<!-- Collection Builder -->
 				<div class={$switchSideBar ? 'order-5' : 'order-6'}>
 					<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
-						<a use:popup={BuilderTooltip} href="/builder">
+						<a use:popup={BuilderTooltip} href="/{language}/builder">
 							<iconify-icon icon="material-symbols:build-circle" width="32" />
 						</a>
 

@@ -3,7 +3,7 @@
 	import LL from '@src/i18n/i18n-svelte';
 
 	import { collection, categories } from '@src/collections';
-	import { mode, switchSideBar } from '@src/stores/store';
+	import { language, mode, switchSideBar } from '@src/stores/store';
 	// import Tooltip from '@src/components/system/tooltip/Tooltip.svelte';
 
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
@@ -79,7 +79,7 @@
 	<!-- Gallery -->
 	{#if $switchSideBar}
 		<!-- switchSideBar expanded -->
-		<a on:keydown href="/mediagallery" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
+		<a on:keydown href="/{language}/mediagallery" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-primary-600" />
 			<p class="mr-auto text-center uppercase">{$LL.Media()}</p>
 		</a>

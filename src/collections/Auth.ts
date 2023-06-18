@@ -54,3 +54,18 @@ export let key = {
 		default: null
 	}
 };
+
+// Define the schema for the SignUpToken model
+export let SignUpTokenSchema = {
+	_id: {
+		type: String // Set the type of the _id field to String
+	},
+
+	email: String, // The email address associated with the sign-up token
+	role: String, // The role associated with the sign-up token
+	resetRequestedAt: Date, // The date and time when the sign-up token was requested
+	resetToken: String, // The sign-up token value
+	expiresAt: Date // The date and time when the sign-up token expires
+
+	// { _id: false }, // Do not automatically generate the _id field
+};

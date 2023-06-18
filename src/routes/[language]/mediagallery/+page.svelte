@@ -229,14 +229,18 @@
 	console.log('items', items);
 </script>
 
-<div class="align-centre mb-2 mr-1 flex dark:text-white">
-	{#if !switchSideBar && $toggleLeftSidebar}
-		<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
-			<iconify-icon icon="mingcute:menu-fill" width="24" />
-		</button>
-	{/if}
-
-	<h1 class={!$toggleLeftSidebar ? 'ml-2' : ''}>Media Gallery</h1>
+<div class="align-centre mb-2 ml-2 mt-2 flex dark:text-white">
+	<div class="flex items-center justify-between">
+		{#if $toggleLeftSidebar === true}
+			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+				<iconify-icon icon="mingcute:menu-fill" width="24" />
+			</button>
+		{/if}
+		<!-- Title  with icon -->
+		<h1 class="{!$toggleLeftSidebar ? 'ml-2' : ''} h1 flex items-center gap-1">
+			<iconify-icon icon="bi:images" width="24" class="mr-1 text-red-500 sm:mr-2" /> Media Gallery
+		</h1>
+	</div>
 </div>
 
 <div class="mt-2 flex items-center justify-center gap-10 border-b border-gray-500 dark:text-white">
@@ -245,7 +249,8 @@
 		Display
 		<div class="flex divide-x divide-gray-500 p-2">
 			<div
-				class="px-2" on:keydown
+				class="px-2"
+				on:keydown
 				on:click={() => {
 					view = 'grid';
 				}}
@@ -259,7 +264,8 @@
 				<br />Grid
 			</div>
 			<div
-				class="px-2" on:keydown
+				class="px-2"
+				on:keydown
 				on:click={() => {
 					view = 'table';
 				}}
@@ -280,7 +286,8 @@
 		Image Size
 		<div class=" flex divide-x divide-gray-500 p-2">
 			<div
-				class="px-2" on:keydown
+				class="px-2"
+				on:keydown
 				on:click={() => {
 					size = 'small';
 				}}
@@ -294,7 +301,8 @@
 				<br />Small
 			</div>
 			<div
-				class="px-2" on:keydown 
+				class="px-2"
+				on:keydown
 				on:click={() => {
 					size = 'medium';
 				}}
@@ -308,7 +316,8 @@
 				<br />Medium
 			</div>
 			<div
-				class="px-2" on:keydown 
+				class="px-2"
+				on:keydown
 				on:click={() => {
 					size = 'large';
 				}}
@@ -346,7 +355,7 @@
 		<div class="mb-4 flex items-center justify-center gap-3">
 			<div>{$table.getRowModel().rows.length} Rows</div>
 			<button type="button" on:keydown on:click={() => rerender()}>Force Rerender</button>
-			<button type="button" on:keydown  on:click={() => refreshData()}>Refresh Data</button>
+			<button type="button" on:keydown on:click={() => refreshData()}>Refresh Data</button>
 		</div>
 
 		<!-- chip column order -->
@@ -403,9 +412,10 @@
 				<div class="flex flex-wrap items-center justify-center">
 					{#each $table.getAllLeafColumns() as column}
 						<span
-						          	class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
-						on:keydown	on:click={column.getToggleVisibilityHandler()}
-						          	on:keypress
+							class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
+							on:keydown
+							on:click={column.getToggleVisibilityHandler()}
+							on:keypress
 						>
 							{#if column.getIsVisible()}<span><iconify-icon icon="fa:check" /></span>{/if}
 							<span class="capitalize">{column.id}</span>
@@ -425,7 +435,8 @@
 									{#if !header.isPlaceholder}
 										<div
 											class:cursor-pointer={header.column.getCanSort()}
-											class:select-none={header.column.getCanSort()} on:keydown
+											class:select-none={header.column.getCanSort()}
+											on:keydown
 											on:click={header.column.getToggleSortingHandler()}
 										>
 											<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />

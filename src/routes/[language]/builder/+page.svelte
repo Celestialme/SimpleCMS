@@ -8,6 +8,10 @@
 	import * as widgets from '@src/components/widgets/index';
 	import axios from 'axios';
 
+	// typesafe-i18n
+	import LL from '@src/i18n/i18n-svelte';
+	import { toggleLeftSidebar, language } from '@src/stores/store';
+
 	// Json export
 	function onCompleteHandler(e: Event): void {
 		// Create an object containing the values of the collection builder
@@ -94,7 +98,6 @@
 	// -------------iconfy icons list----------------
 	// Import loadIcons function from Iconify Svelte library
 	import { loadIcons } from '@iconify/svelte';
-	import { language } from '@src/stores/store';
 
 	let icons = []; // array of icon names
 	let iconselected: any = '';
@@ -215,10 +218,21 @@
 	}
 </script>
 
+<div class="align-centre mb-2 ml-2 mt-2 flex dark:text-white">
+	<div class="flex items-center justify-between">
+		{#if $toggleLeftSidebar === true}
+			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+				<iconify-icon icon="mingcute:menu-fill" width="24" />
+			</button>
+		{/if}
+		<!-- Title  with icon -->
+		<h1 class="{!$toggleLeftSidebar ? 'ml-2' : ''} h1 flex items-center gap-1">
+			<iconify-icon icon="dashicons:welcome-widgets-menus" width="24" class="mr-1 text-red-500 sm:mr-2" /> Collection Builder
+		</h1>
+	</div>
+</div>
 <div class="m-2">
-	<h2 class="h2">Collection Builder <iconify-icon icon="dashicons:welcome-widgets-menus" width="24" /></h2>
 	<p>This builder will help you to setup a new Content Collection</p>
-	<div>how todo translations?</div>
 
 	<TabGroup on:complete={onCompleteHandler}>
 		<Tab bind:group={tabSet} name="tab1" value={0}>
@@ -239,7 +253,8 @@
 		<svelte:fragment slot="panel">
 			<!-- Edit -->
 			{#if tabSet === 0}
-				<div class="text-center text-xs text-error-500">* Required</div>
+				<div class="text-error-500">how todo translations?</div>
+				<div class="mb-2 text-center text-xs text-error-500">* Required</div>
 
 				<!-- Collection Name -->
 				<div class=" mb-4 ml-1.5 flex items-center gap-4">
@@ -314,7 +329,13 @@
 								{#each icons as icon}
 									<div class="relative flex flex-col items-center">
 										<span class="iconify" data-icon={icon} data-inline="false" />
-										<iconify-icon {icon} width="24" on:keydown on:click={() => selectIcon(icon)} class="hover:cursor-pointer hover:text-primary-500" />
+										<iconify-icon
+											{icon}
+											width="24"
+											on:keydown
+											on:click={() => selectIcon(icon)}
+											class="hover:cursor-pointer hover:text-primary-500"
+										/>
 									</div>
 								{/each}
 							</div>
@@ -325,7 +346,7 @@
 								<!-- Disable the previous button if the start index is zero -->
 								<button disabled={start === 0} on:keydown on:click={prevPage} class="btn btn-sm variant-filled-primary">Previous</button>
 								<!-- Disable the next button if there are less than 50 icons in the current page -->
-								<button disabled={icons.length < 50} on:keydown  on:click={nextPage} class="btn btn-sm variant-filled-primary">Next</button>
+								<button disabled={icons.length < 50} on:keydown on:click={nextPage} class="btn btn-sm variant-filled-primary">Next</button>
 							</div>
 						</div>
 						<div class="arrow bg-surface-100-800-token" />
@@ -360,6 +381,8 @@
 						/>
 					</div>
 				</div>
+
+				<button type="button" on:click={() => (tabSet = 1)} class="btn variant-filled-primary mt-2 justify-end">Next</button>
 
 				<!-- Manage Fields -->
 			{:else if tabSet === 1}
@@ -412,10 +435,14 @@
 						<button class="btn variant-filled-primary my-3" on:keydown on:click={onAddWidgetClick}>Add more Fields</button>
 					</div>
 				</div>
+				<div class="flex items-center justify-between">
+					<button type="button" on:click={() => (tabSet = 0)} class="btn variant-filled-secondary mt-2 justify-end">Previous</button>
+					<button type="button" class="btn variant-filled-primary mt-2 justify-end">Save</button>
+				</div>
 
-				<!-- Manage Permisions -->
+				<!-- Manage Permissions -->
 			{:else if tabSet === 2}
-				(tab panel 3 contents)
+				only if required (tab panel 3 contents)
 			{/if}
 		</svelte:fragment>
 	</TabGroup>
@@ -443,7 +470,7 @@
 			<div class="options-table">
 				{#each Object.keys(widgetList[0][selectedWidgets[index].widget]({})).filter((key) => key !== 'widget' && key !== 'display' && key !== 'schema') as option}
 					{#if option === 'label'}
-						<label for={option} >{option}: <span class="text-error-500">*</span></label>
+						<label for={option}>{option}: <span class="text-error-500">*</span></label>
 						<input
 							type="text"
 							required
@@ -455,7 +482,7 @@
 							on:input={checkInputWidget}
 						/>
 					{:else}
-						<label for={option} >{option}:</label>
+						<label for={option}>{option}:</label>
 
 						{#if option === 'minlength' || option === 'maxlength' || option === 'count'}
 							<input
