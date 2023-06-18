@@ -69,6 +69,7 @@
 		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : 'ml-1'}">
 			{#if categories}
 				<div class="mb-2 text-xs capitalize text-gray-400 dark:text-gray-300">
+					<span class="capitalize text-primary-500">{$mode}:</span>
 					{categories[0].name}
 				</div>
 			{/if}
@@ -80,7 +81,6 @@
 
 				{#if $collection.name || $mode}
 					<div class="-mt-1 flex-col space-y-1">
-						<span class="capitalize text-primary-500">{$mode}:</span>
 						<span class="ml-1 uppercase">{$collection.name}</span>
 					</div>
 				{/if}

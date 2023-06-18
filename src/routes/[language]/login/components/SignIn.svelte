@@ -45,7 +45,6 @@
 
 			// add wiggle animation to form element
 			formElement.classList.add('wiggle');
-			// console.log('formElement', formElement);
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 		}
 	});
@@ -154,7 +153,7 @@
 				<!-- Email field -->
 				<FloatingInput
 					name="email"
-					type="text"
+					type="email"
 					bind:value={$form.email}
 					label={$LL.LOGIN_EmailAddress()}
 					{...$constraints.email}
@@ -246,7 +245,7 @@
 				<!-- Email field -->
 				<FloatingInput
 					name="email"
-					type="text"
+					type="email"
 					bind:value={$form.email}
 					required
 					label={$LL.LOGIN_EmailAddress()}

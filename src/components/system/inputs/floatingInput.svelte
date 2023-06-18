@@ -49,8 +49,8 @@ This FloatingInput component has the following properties:
 	export let onInput: InputProps['onInput'] = (value) => {};
 	export let required: InputProps['required'] = false;
 	export let showPasswordBackgroundColor: InputProps['showPasswordBackgroundColor'] = 'light';
-	export let textColor: InputProps['textColor'] = '!text-red-500';
-	export let type: InputProps['type'] = 'text';
+	export let textColor: InputProps['textColor'] = '!text-error-500';
+	export let type: 'password' | 'text' | 'email' = 'text';
 	export let value: InputProps['value'] = '';
 
 	function getAutocompleteValue(label: string | undefined): string {

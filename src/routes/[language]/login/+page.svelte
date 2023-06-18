@@ -6,15 +6,31 @@
 	import Logo from './components/icons/Logo.svelte';
 	import LocaleSwitcher from '@src/components/LocaleSwitcher.svelte';
 	import type { PageData } from './$types';
+
 	export let data: PageData;
 	console.log(data);
+
 	let active: undefined | 0 | 1 = undefined;
 	let background: 'white' | '#242728' = 'white';
 </script>
 
 <div class="body" style="background:{background} ">
-	<SignIn {active} formSchema={data.loginForm} on:click={() => (active = 0)} on:pointerenter={() => (background = '#242728')} />
-	<SignUp {active} formSchema={data.signUpForm} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} />
+	<SignIn
+		{active}
+		FormSchemaLogin={data.loginForm}
+		FormSchemaForgot={data.loginForm}
+		FormSchemaReset={data.loginForm}
+		on:click={() => (active = 0)}
+		on:pointerenter={() => (background = '#242728')}
+	/>
+
+	<SignUp
+		{active}
+		FormSchemaSignUp={data.signUpForm}
+		FormSchemaSignUpOther={data.signUpForm}
+		on:click={() => (active = 1)}
+		on:pointerenter={() => (background = 'white')}
+	/>
 	{#if active == undefined}
 		<!-- CSS Logo -->
 		<div class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
