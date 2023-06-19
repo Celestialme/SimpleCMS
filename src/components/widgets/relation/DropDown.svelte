@@ -8,7 +8,7 @@
 	let search = '';
 	let options: Array<{ display: any; _id: any }> = [];
 	let filtered = options;
-	console.log(dropDownData);
+	//console.log(dropDownData);
 	Promise.all(dropDownData.map(async (item) => ({ display: await field?.display(item, field, $entryData), _id: item._id }))).then(
 		(res) => (options = res)
 	);
@@ -18,7 +18,8 @@
 <input class="input w-full" placeholder="search..." bind:value={search} />
 <div class="overflow-auto">
 	{#each filtered as option}
-		<p on:keydown
+		<p
+			on:keydown
 			on:click={() => {
 				selected = option;
 				showDropDown = false;

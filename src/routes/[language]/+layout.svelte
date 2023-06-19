@@ -13,6 +13,17 @@
 
 	systemLanguage.set($page.params.language);
 
+	let handleClick;
+
+	// update the handleClick function when the systemLanguage store value changes
+	$: handleClick = () => {
+		if (!$page.url.href.includes('user')) {
+			goto(`/${$systemLanguage}/user`);
+		}
+	};
+	// update the href value when the systemLanguage store value changes
+	$: href = `/${$systemLanguage}/builder`;
+
 	//skeleton
 	import { AppShell, AppBar, Avatar, Modal, ProgressBar, Toast, toastStore, setModeUserPrefers, setModeCurrent } from '@skeletonlabs/skeleton';
 	import { modeOsPrefers, modeUserPrefers, modeCurrent } from '@skeletonlabs/skeleton';
@@ -97,7 +108,7 @@
 <AppShell
 	slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10 
-{$switchSideBar ? 'w-[215px]' : 'w-fit'}
+{$switchSideBar ? 'w-[220px]' : 'w-fit'}
 {$toggleLeftSidebar ? 'hidden' : 'block'}"
 	slotSidebarRight="h-full relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center 
 	{$toggleRightSidebar ? 'hidden' : 'block'}"
@@ -171,11 +182,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				<!-- Avatar with user settings -->
 				<div class={$switchSideBar ? 'order-1 row-span-2' : 'order-1'}>
 					<button class="btn-icon hover:bg-surface-500 md:row-span-2">
-						<div
-							on:click={() => !$page.url.href.includes('user') && goto('/{language}/user')}
-							on:keypress={() => !$page.url.href.includes('user') && goto('/{language}/user')}
-							class="relative cursor-pointer flex-col !no-underline"
-						>
+						<div on:click={handleClick} on:keypress={handleClick} class="relative cursor-pointer flex-col !no-underline">
 							<Avatar src={avatarSrc ? '/api/media/' + avatarSrc : '/Default_User.svg'} class="mx-auto {$switchSideBar ? 'w-[40px]' : 'w-[35px]'}" />
 							<div class="text-center text-[9px] text-black dark:text-white">
 								{#if $switchSideBar}
@@ -236,7 +243,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				<!-- Collection Builder -->
 				<div class={$switchSideBar ? 'order-5' : 'order-6'}>
 					<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
-						<a use:popup={BuilderTooltip} href="/{language}/builder">
+						<a use:popup={BuilderTooltip} {href}>
 							<iconify-icon icon="material-symbols:build-circle" width="32" />
 						</a>
 

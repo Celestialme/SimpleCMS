@@ -10,7 +10,7 @@
 	let _data: FileList;
 	export const WidgetData = async () => _data;
 	export let file: File | undefined = undefined; // pass file directly from imageArray
-	console.log(file);
+	//console.log(file);
 
 	let fieldName = getFieldName(field);
 

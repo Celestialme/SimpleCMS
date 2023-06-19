@@ -8,7 +8,19 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	console.log(data);
+	//console.log(data);
+
+	import { locale } from '@src/i18n/i18n-svelte';
+	import { locales } from '@src/i18n/i18n-util';
+	import { replaceLocaleInUrl } from '@src/utils/utils';
+	//console.log('locales', locales);
+	let selectedLocale = $locale;
+
+	function handleLocaleChange(e) {
+		selectedLocale = e.target.value;
+		const newUrl = replaceLocaleInUrl(new URL(window.location.href), selectedLocale);
+		window.location.href = newUrl;
+	}
 
 	let active: undefined | 0 | 1 = undefined;
 	let background: 'white' | '#242728' = 'white';
@@ -91,9 +103,18 @@
 		</div>
 		<!-- TODO:fix Language switcher -->
 		<div
-			class="absolute bottom-1/4 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform cursor-pointer items-center justify-center rounded-full border-2 border-[#242728] bg-white p-2 dark:text-black"
+			class="absolute bottom-1/4 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform cursor-pointer items-center justify-center rounded-full dark:text-black"
 		>
-			EN
+			<select
+				class="rounded-full border-2 border-white bg-[#242728] uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring active:ring-blue-300"
+				bind:value={selectedLocale}
+				on:change={handleLocaleChange}
+			>
+				<option value={$locale} selected>{$locale}</option>
+				{#each locales.filter((l) => l !== $locale) as l}
+					<option value={l}>{l}</option>
+				{/each}
+			</select>
 			<!-- <LocaleSwitcher /> -->
 		</div>
 	{/if}

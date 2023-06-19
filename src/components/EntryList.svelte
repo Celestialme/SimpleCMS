@@ -221,7 +221,7 @@
 	let flexRender = flexRenderBugged as (...args: Parameters<typeof flexRenderBugged>) => any;
 
 	function process_deleteAll(deleteAll: boolean) {
-		console.log('process_deleteAll called with deleteAll:', deleteAll);
+		//console.log('process_deleteAll called with deleteAll:', deleteAll);
 		if (deleteAll) {
 			for (let item in tableData) {
 				deleteMap[item] = true;
@@ -231,7 +231,7 @@
 				deleteMap[item] = false;
 			}
 		}
-		console.log('deleteMap after process_deleteAll:', deleteMap);
+		//console.log('deleteMap after process_deleteAll:', deleteMap);
 	}
 
 	$deleteEntry = async () => {
@@ -255,10 +255,10 @@
 		isLoading = false;
 	};
 
-	$: {
-		console.log('deleteMap:', deleteMap);
-		console.log('deleteAll:', deleteAll);
-	}
+	// $: {
+	// 	console.log('deleteMap:', deleteMap);
+	// 	console.log('deleteAll:', deleteAll);
+	// }
 </script>
 
 <!-- TanstackHeader -->
@@ -266,7 +266,7 @@
 	<!-- Row 1 for Mobile -->
 	<div class="flex items-center justify-between">
 		{#if $toggleLeftSidebar === true}
-			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
+			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
@@ -286,7 +286,7 @@
 		</div>
 	</div>
 
-	<button type="button" on:keydown on:click={() => (searchShow = !searchShow)} class="variant-ghost-surface btn-icon sm:hidden">
+	<button type="button" on:keydown on:click={() => (searchShow = !searchShow)} class="btn-icon variant-ghost-surface sm:hidden">
 		<iconify-icon icon="gridicons:dropdown" width="30" />
 	</button>
 

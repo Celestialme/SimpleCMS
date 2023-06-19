@@ -205,8 +205,8 @@
 		});
 		$table.setColumnOrder(newOrder);
 
-		console.log('table', $table.setColumnOrder);
-		console.log('columnOrder2', columnOrder);
+		// console.log('table', $table.setColumnOrder);
+		// console.log('columnOrder2', columnOrder);
 		columnOrder = newOrder;
 		rerender();
 		table = createSvelteTable(options);
@@ -225,8 +225,8 @@
 			}
 		};
 	});
-	console.log('columnOrder', columnOrder);
-	console.log('items', items);
+	// console.log('columnOrder', columnOrder);
+	// console.log('items', items);
 </script>
 
 <div class="align-centre mb-2 ml-2 mt-2 flex dark:text-white">

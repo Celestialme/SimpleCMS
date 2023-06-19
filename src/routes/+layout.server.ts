@@ -6,10 +6,10 @@ import collections from '@src/collections';
 
 export async function load({ cookies, route, params }) {
 	// Log that the load function is being called
-	console.log('load function called');
+	//console.log('load function called');
 
 	// Log the route id
-	console.log('route.id:', route.id);
+	//console.log('route.id:', route.id);
 
 	// Parse the session data from the cookies
 	let session = JSON.parse(cookies.get('credentials') || '{"username":null,"session":null}') as { username: string; session: string };

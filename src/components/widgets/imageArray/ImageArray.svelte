@@ -9,10 +9,10 @@
 	let _fieldsValue: any = [];
 	let files: any = [];
 	export const WidgetData = async () => {
-		console.log(files.length);
+		//	console.log(files.length);
 		for (let i = 0; i < files.length; i++) {
 			let fieldsData = _fieldsValue[i];
-			console.log(fieldsData);
+			//console.log(fieldsData);
 			await saveFormData(fieldsData);
 		}
 		if (!files.length) {

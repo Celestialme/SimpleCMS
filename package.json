@@ -46,7 +46,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@floating-ui/dom": "^1.4.0",
+		"@floating-ui/dom": "^1.4.1",
 		"@lucia-auth/adapter-mongoose": "^2.0.0",
 		"@tanstack/svelte-table": "^8.9.2",
 		"axios": "^1.4.0",

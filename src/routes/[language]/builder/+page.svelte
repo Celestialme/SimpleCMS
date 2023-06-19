@@ -26,7 +26,7 @@
 		};
 
 		// Log the data object to the console
-		console.log(data);
+		//console.log(data);
 
 		// Convert the data object to a JSON string
 		const json = JSON.stringify(data);
@@ -122,10 +122,10 @@
 			const response = await axios.get(
 				`https://api.iconify.design/search?query=${encodeURIComponent(searchQuery)}&prefix=ic&limit=50&start=${start}`
 			);
-			console.log('response', response);
+			//console.log('response', response);
 			if (response.data && response.data.icons) {
 				icons = response.data.icons; // update icons array
-				console.log('icons', icons);
+				//console.log('icons', icons);
 
 				// Use loadIcons function to preload icons from API
 				loadIcons(icons.map((icon) => `${response.data.prefix}:${icon}`));

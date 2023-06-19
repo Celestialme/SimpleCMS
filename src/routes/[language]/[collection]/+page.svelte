@@ -19,7 +19,7 @@
 	// Set the value of the collection store to the collection object from the collections array that has a name property that matches the current page's collection parameter
 	collection.set(collections.find((x) => x.name === $page.params.collection) as Schema);
 
-	console.log(data);
+	//console.log(data);
 
 	// Set the value of the credentials store to the credentials property of the data variable
 	credentials.set(data.credentials);

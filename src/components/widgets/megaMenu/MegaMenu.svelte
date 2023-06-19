@@ -26,7 +26,7 @@
 			_data.children.push({ ...(await extractData(fieldsData)) });
 		}
 		_data = _data;
-		console.log(_data);
+		//console.log(_data);
 		showFields = false;
 		mode.set(saveMode);
 		depth = 0;

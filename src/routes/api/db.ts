@@ -9,6 +9,8 @@ import { fieldsToSchema } from '@src/utils/utils';
 import { dev } from '$app/environment';
 import { firstuserExist } from '@src/stores/store';
 
+//console.log('lucia', { UserSchema });
+
 // Turn off strict mode for query filters. Default in Mongodb 7
 mongoose.set('strictQuery', false);
 

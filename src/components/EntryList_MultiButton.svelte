@@ -55,7 +55,7 @@
 	}
 	function handleOptionClick(value: string) {
 		storeListboxValue.set(value);
-		console.log('storeListboxValue:', $storeListboxValue);
+		//console.log('storeListboxValue:', $storeListboxValue);
 
 		({ actionname, buttonClass, iconValue } = getButtonAndIconValues($storeListboxValue));
 		dropdownOpen = false;
@@ -104,7 +104,7 @@
 				break;
 		}
 
-		console.log('storeListboxValue:', storeListboxValue);
+		//console.log('storeListboxValue:', storeListboxValue);
 
 		return {
 			actionname,

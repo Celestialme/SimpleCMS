@@ -8,7 +8,7 @@
 	import { loadLocaleAsync } from '@src/i18n/i18n-util.async';
 	import { replaceLocaleInUrl } from '@src/utils/utils';
 
-	console.log('locales', locales);
+	//console.log('locales', locales);
 
 	const switchLocale = async (newLocale: Locales, updateHistoryState = true) => {
 		if (!newLocale || $locale === newLocale) return;
@@ -20,8 +20,10 @@
 		setLocale(newLocale);
 
 		// update `lang` attribute
-		document.querySelector('html').setAttribute('lang', newLocale);
-
+		const htmlElement = document.querySelector('html');
+		if (htmlElement) {
+			htmlElement.setAttribute('lang', newLocale);
+		}
 		if (updateHistoryState) {
 			// update url to reflect locale changes
 			history.pushState({ locale: newLocale }, '', replaceLocaleInUrl($page.url, newLocale));
