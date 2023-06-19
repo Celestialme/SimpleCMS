@@ -6,26 +6,65 @@
 	//skeleton
 	import { Avatar } from '@skeletonlabs/skeleton';
 
-	export let switchSideBar = false;
+	// Define the view, gridSize, and tableSize variables with the appropriate types
+	let view: 'grid' | 'table' = 'grid';
+	let gridSize: 'small' | 'medium' | 'large' = 'small';
+	let tableSize: 'small' | 'medium' | 'large' = 'small';
 
-	let view = 'grid';
-	let size: 'small' | 'medium' | 'large' = 'small';
+	// Get the user's preferred view, grid size, and table size from local storage or a cookie
+	let userPreference = getUserPreferenceFromLocalStorageOrCookie();
+	if (userPreference) {
+		let [preferredView, preferredGridSize, preferredTableSize] = userPreference.split('/');
+		view = preferredView as 'grid' | 'table';
+		gridSize = preferredGridSize as 'small' | 'medium' | 'large';
+		tableSize = preferredTableSize as 'small' | 'medium' | 'large';
+	}
+
+	// Define a function to store the user's preferred view, grid size, and table size
+	function storeUserPreference(view: 'grid' | 'table', gridSize: 'small' | 'medium' | 'large', tableSize: 'small' | 'medium' | 'large') {
+		// Store the view, grid size, and table size for the current user in local storage or a cookie
+		let userPreference = `${view}/${gridSize}/${tableSize}`;
+		localStorage.setItem('GalleryUserPreference', userPreference);
+	}
+
+	function getUserPreferenceFromLocalStorageOrCookie(): string | null {
+		return localStorage.getItem('GalleryUserPreference');
+	}
+
+	function handleClick() {
+		// Update the size of the currently displayed view
+		if (view === 'grid') {
+			// Update the size of the grid view
+			if (gridSize === 'small') {
+				gridSize = 'medium';
+			} else if (gridSize === 'medium') {
+				gridSize = 'large';
+			} else {
+				gridSize = 'small';
+			}
+		} else {
+			// Update the size of the table view
+			if (tableSize === 'small') {
+				tableSize = 'medium';
+			} else if (tableSize === 'medium') {
+				tableSize = 'large';
+			} else {
+				tableSize = 'small';
+			}
+		}
+
+		// Store the new sizes for the current user
+		let userPreference = `${view}/${gridSize}/${tableSize}`;
+		localStorage.setItem('GalleryUserPreference', userPreference);
+	}
 
 	// Refesh tanstack
-	$: if (size) {
+	$: if (tableSize) {
 		refreshData();
 	}
 
-	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
 	import { flip } from 'svelte/animate';
-
-	//let images: any = [];
-
-	// onMount(async () => {
-	// 	const res = await fetch('/gallery.json');
-	// 	images = await res.json();
-	// });
 
 	// tanstack table
 
@@ -48,7 +87,7 @@
 			cell: (info) =>
 				flexRender(Avatar, {
 					src: info.row.original.image,
-					width: `${size === 'small' ? 'w-6' : size === 'medium' ? 'w-10' : 'w-14'}`
+					width: `${tableSize === 'small' ? 'w-6' : tableSize === 'medium' ? 'w-10' : 'w-14'}`
 				})
 		},
 		{
@@ -80,6 +119,11 @@
 			image: '/SimpleCMS_Logo.svg',
 			name: 'SimpleCMS_Logo',
 			path: '/static/SimpleCMS_Logo'
+		},
+		{
+			image: '/SimpleCMS_Logo_Round.png',
+			name: 'SimpleCMS_Logo_Round',
+			path: '/static/SimpleCMS_Logo_Round'
 		}
 	];
 
@@ -165,6 +209,7 @@
 
 	//svelte-dnd-action
 	import { dndzone } from 'svelte-dnd-action';
+	import { Button } from 'svelte-email';
 	const flipDurationMs = 300;
 
 	// Update items array to be an array of column objects
@@ -227,290 +272,258 @@
 	});
 	// console.log('columnOrder', columnOrder);
 	// console.log('items', items);
+
+	let columnShow = false;
+
+	function searchGrid(searchValue) {
+		// Get the data displayed in the grid
+		let gridData = images;
+
+		// Filter the data based on the search value
+		let filteredData = gridData.filter((item) => {
+			return item.name.toLowerCase().includes(searchValue.toLowerCase());
+		});
+
+		// Update the data displayed in the grid with the filtered data
+		images = filteredData;
+	}
 </script>
 
-<div class="align-centre mb-2 ml-2 mt-2 flex dark:text-white">
-	<div class="flex items-center justify-between">
+<div class="align-centre m-2 mb-2 ml-2 mt-2 flex flex-col dark:text-white">
+	<div class="flex items-center">
+		<!-- hamburger -->
 		{#if $toggleLeftSidebar === true}
 			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
 		<!-- Title  with icon -->
-		<h1 class="{!$toggleLeftSidebar ? 'ml-2' : ''} h1 flex items-center gap-1">
+		<h1 class="h1 ml-2 flex items-center gap-1">
 			<iconify-icon icon="bi:images" width="24" class="mr-1 text-red-500 sm:mr-2" /> Media Gallery
 		</h1>
 	</div>
-</div>
 
-<div class="mt-2 flex items-center justify-center gap-10 border-b border-gray-500 dark:text-white">
-	<!-- Display Grid / Table -->
-	<div class="mr-2 flex flex-col p-2 text-center text-xs">
-		Display
-		<div class="flex divide-x divide-gray-500 p-2">
-			<div
-				class="px-2"
-				on:keydown
-				on:click={() => {
-					view = 'grid';
-				}}
-				on:keydown={(e) => {
-					if (e.key === 'Enter' || e.key === ' ') {
+	<div class="mb-2 flex items-center justify-between border-b-2">
+		{#if view === 'grid'}
+			<!-- TODO: add actual search -->
+			<!-- search input grid -->
+			<div class="btn-group variant-filled-surface ml-2">
+				<input type="text" class="input" placeholder="Search Grid..." />
+				<button type="submit" class="btn">
+					<iconify-icon icon="material-symbols:search" width="24" />
+				</button>
+			</div>
+		{:else}
+			<!-- search input tanstack -->
+			<div class="btn-group variant-filled-surface ml-2">
+				<input type="text" class="input" placeholder="Search Table..." />
+				<button type="submit" class="btn">
+					<iconify-icon icon="material-symbols:search" width="24" />
+				</button>
+			</div>
+
+			<button type="submit" on:keydown on:click={() => (columnShow = !columnShow)} class="btn-icon variant-ghost-surface">
+				<iconify-icon icon="gridicons:dropdown" width="24" />
+			</button>
+		{/if}
+		<!-- Display Grid / Table -->
+		<div class="mr-2 flex flex-col p-2 text-center text-xs">
+			Display
+			<div class="flex divide-x divide-gray-500 p-2">
+				<div
+					class="px-2"
+					on:keydown
+					on:click={() => {
 						view = 'grid';
-					}
-				}}
-			>
-				<iconify-icon icon="material-symbols:grid-view-rounded" height="40" style={`color: ${view === 'grid' ? 'white' : 'grey'}`} />
-				<br />Grid
-			</div>
-			<div
-				class="px-2"
-				on:keydown
-				on:click={() => {
-					view = 'table';
-				}}
-				on:keydown={(e) => {
-					if (e.key === 'Enter' || e.key === ' ') {
-						view = 'table';
-					}
-				}}
-			>
-				<iconify-icon icon="material-symbols:list-alt-outline" height="40" style={`color: ${view === 'table' ? 'white' : 'grey'}`} />
-				<br />Table
-			</div>
-		</div>
-	</div>
-
-	<!-- switch between small, medium, and large images -->
-	<div class="mr-2 flex flex-col p-2 text-center text-xs">
-		Image Size
-		<div class=" flex divide-x divide-gray-500 p-2">
-			<div
-				class="px-2"
-				on:keydown
-				on:click={() => {
-					size = 'small';
-				}}
-				on:keydown={(e) => {
-					if (e.key === 'Enter' || e.key === ' ') {
-						size = 'small';
-					}
-				}}
-			>
-				<iconify-icon icon="material-symbols:background-grid-small-sharp" height="40" style={`color: ${size === 'small' ? 'white' : 'grey'}`} />
-				<br />Small
-			</div>
-			<div
-				class="px-2"
-				on:keydown
-				on:click={() => {
-					size = 'medium';
-				}}
-				on:keydown={(e) => {
-					if (e.key === 'Enter' || e.key === ' ') {
-						size = 'medium';
-					}
-				}}
-			>
-				<iconify-icon icon="material-symbols:grid-on-sharp" height="40" style={`color: ${size === 'medium' ? 'white' : 'grey'}`} />
-				<br />Medium
-			</div>
-			<div
-				class="px-2"
-				on:keydown
-				on:click={() => {
-					size = 'large';
-				}}
-				on:keydown={(e) => {
-					if (e.key === 'Enter' || e.key === ' ') {
-						size = 'large';
-					}
-				}}
-			>
-				<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: ${size === 'large' ? 'white' : 'grey'}`} /><br />Large
-			</div>
-		</div>
-	</div>
-</div>
-
-{#if view === 'grid'}
-	<div class={`grid grid-cols-${size === 'small' ? '3' : size === 'medium' ? '2' : '4'} mt-2 gap-4 px-1`}>
-		<!-- {#each images as image} -->
-		<div class="card rounded-sm shadow-2xl">
-			<section class="p-4">
-				<img
-					class={`h-full w-full object-cover ${size === 'small' ? 'h-32' : size === 'medium' ? 'h-48' : 'h-64'}`}
-					src="/SimpleCMS_Logo_Round.png"
-					alt="alt"
-				/>
-			</section>
-
-			<footer class="card-footer rounded-sm bg-surface-500 text-center font-bold text-white">SimpleCMS</footer>
-		</div>
-		<!-- {/each} -->
-	</div>
-{:else}
-	<div class="p-2">
-		<!-- refresh -->
-		<div class="mb-4 flex items-center justify-center gap-3">
-			<div>{$table.getRowModel().rows.length} Rows</div>
-			<button type="button" on:keydown on:click={() => rerender()}>Force Rerender</button>
-			<button type="button" on:keydown on:click={() => refreshData()}>Refresh Data</button>
-		</div>
-
-		<!-- chip column order -->
-		<div class="flex flex-col justify-center rounded-md bg-surface-700 text-center">
-			<div class="font-semibold">Drag & Drop columns & Click to hide</div>
-			<!-- toggle all -->
-			<!-- TODO place into section row will kill dnd action-->
-			<label class="mr-3">
-				<input
-					checked={$table.getIsAllColumnsVisible()}
-					on:change={(e) => {
-						console.info($table.getToggleAllColumnsVisibilityHandler()(e));
+						storeUserPreference(view, gridSize, tableSize);
 					}}
-					type="checkbox"
-				/>{' '}
-				{$LL.TANSTACK_Toggle()}
-			</label>
-			<section
-				class="flex justify-center rounded-md bg-surface-700 p-2"
-				use:dndzone={{ items, flipDurationMs }}
-				on:consider={handleDndConsider}
-				on:finalize={handleDndFinalize}
-			>
-				{#each items as item (item.id)}
-					<div
-						class="chip {$table.getIsAllColumnsVisible()
-							? 'variant-filled-secondary'
-							: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
-						animate:flip={{ duration: flipDurationMs }}
-					>
-						{#if $table.getIsAllColumnsVisible()}
-							<span><iconify-icon icon="fa:check" /></span>
-						{/if}
-						<span class="ml-2 capitalize">{item.name}</span>
-					</div>
-				{/each}
-			</section>
-		</div>
-		<div class="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-center">
-			<!-- toggle all -->
-			<div class="mb-2 flex items-center md:mb-0 md:mr-4">
-				<label>
-					<input
-						checked={$table.getIsAllColumnsVisible()}
-						on:change={(e) => {
-							console.info($table.getToggleAllColumnsVisibilityHandler()(e));
-						}}
-						type="checkbox"
-					/>{' '}
-					{$LL.TANSTACK_Toggle()}
-				</label>
-
-				<!-- Show/hide Columns via chips -->
-				<div class="flex flex-wrap items-center justify-center">
-					{#each $table.getAllLeafColumns() as column}
-						<span
-							class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
-							on:keydown
-							on:click={column.getToggleVisibilityHandler()}
-							on:keypress
-						>
-							{#if column.getIsVisible()}<span><iconify-icon icon="fa:check" /></span>{/if}
-							<span class="capitalize">{column.id}</span>
-						</span>
-					{/each}
+					on:keydown={(e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							view = 'grid';
+							storeUserPreference(view, gridSize, tableSize);
+						}
+					}}
+				>
+					<iconify-icon icon="material-symbols:grid-view-rounded" height="40" style={`color: ${view === 'grid' ? 'white' : 'grey'}`} />
+					<br />Grid
+				</div>
+				<div
+					class="px-2"
+					on:keydown
+					on:click={() => {
+						view = 'table';
+						storeUserPreference(view, gridSize, tableSize);
+					}}
+					on:keydown={(e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							view = 'table';
+							storeUserPreference(view, gridSize, tableSize);
+						}
+					}}
+				>
+					<iconify-icon icon="material-symbols:list-alt-outline" height="40" style={`color: ${view === 'table' ? 'white' : 'grey'}`} />
+					<br />Table
 				</div>
 			</div>
 		</div>
 
-		<div class="table-container">
-			<table>
-				<thead>
-					{#each $table.getHeaderGroups() as headerGroup}
-						<tr class="divide-x">
-							{#each headerGroup.headers as header}
-								<th colSpan={header.colSpan} class="text-center">
-									{#if !header.isPlaceholder}
-										<div
-											class:cursor-pointer={header.column.getCanSort()}
-											class:select-none={header.column.getCanSort()}
-											on:keydown
-											on:click={header.column.getToggleSortingHandler()}
-										>
-											<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
-											{#if header.column.getIsSorted() === 'asc'}
-												<iconify-icon icon="material-symbols:arrow-upward-rounded" width="16" />
-											{:else if header.column.getIsSorted() === 'desc'}
-												<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
-											{/if}
-										</div>
-									{/if}
-								</th>
-							{/each}
-						</tr>
-					{/each}
-				</thead>
-				<tbody>
-					{#each $table.getRowModel().rows.slice(0, 20) as row}
-						<tr>
-							{#each row.getVisibleCells() as cell}
-								<td>
-									<svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
-								</td>
-							{/each}
-						</tr>
-					{/each}
-				</tbody>
-			</table>
+		<!-- switch between small, medium, and large images -->
+		<div class="mr-2 flex flex-col p-2 text-center text-xs">
+			Size
+			<div class="flex divide-x divide-gray-500 p-2">
+				{#if (view === 'grid' && gridSize === 'small') || (view === 'table' && tableSize === 'small')}
+					<button type="button" class="px-2" on:click={handleClick}>
+						<iconify-icon icon="material-symbols:background-grid-small-sharp" height="40" style={`color: white`} />
+						<br />Small
+					</button>
+				{:else if (view === 'grid' && gridSize === 'medium') || (view === 'table' && tableSize === 'medium')}
+					<button type="button" class="px-2" on:click={handleClick}>
+						<iconify-icon icon="material-symbols:grid-on-sharp" height="40" style={`color: white`} />
+						<br />Medium
+					</button>
+				{:else}
+					<button type="button" class="px-2" on:click={handleClick}>
+						<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: white`} /><br />Large
+					</button>
+				{/if}
+			</div>
 		</div>
 	</div>
-{/if}
 
-<style lang="postcss">
-	th,
-	td {
-		min-width: 120px;
-		text-align: center;
-		cursor: pointer;
-	}
-	thead th:first-of-type {
-		border-top-left-radius: 4px;
-	}
-	thead th:last-of-type {
-		border-top-right-radius: 4px;
-	}
-	tbody tr:last-of-type td:first-of-type {
-		border-bottom-left-radius: 4px;
-	}
-	tbody tr:last-of-type td:last-of-type {
-		border-bottom-right-radius: 4px;
-	}
-	thead th,
-	td {
-		padding: 5px 0;
-	}
-	tbody tr:nth-child(2n + 1) {
-		padding: 5px 0;
-		background-color: #2c3844;
-	}
-	table {
-		min-width: calc(100% - 10px);
-		margin: auto;
-		color: white;
-	}
-	thead {
-		position: sticky;
-		top: 0;
-		background-color: #3d4a5c;
-		font-size: 16px;
-	}
-	tbody {
-		background-color: #202832;
-		font-size: 18px;
-	}
-	tbody tr:hover {
-		background-color: #274b6f;
-	}
-</style>
+	{#if view === 'grid'}
+		<div class="ml-2 mt-2 flex flex-wrap gap-4 px-1">
+			{#each defaultData as image}
+				<div class="card xl:w-1/7 flex w-full flex-col rounded-sm shadow-2xl sm:w-1/2 md:w-1/4 lg:w-1/5">
+					<section class="flex flex-grow items-center p-2">
+						<img
+							class={`mx-auto h-full w-full rounded-sm object-cover ${
+								gridSize === 'small'
+									? 'md:w32 w-22 md:h-22 h-32 lg:h-28 lg:w-28'
+									: gridSize === 'medium'
+									? 'h-48 w-48 md:h-64 md:w-64 lg:h-80 lg:w-80'
+									: 'h-64 w-64 md:h-80 md:w-80 lg:h-96 lg:w-96'
+							}`}
+							src={image.image}
+							alt={image.name}
+						/>
+					</section>
+
+					<footer class="card-footer sm:text-md break-all rounded-sm bg-surface-500 text-center text-xs font-bold text-white md:text-base">
+						{image.name}
+					</footer>
+				</div>
+			{/each}
+		</div>
+	{:else}
+		<div class="p-2">
+			{#if columnShow}
+				<!-- chip column order -->
+				<div class="flex flex-col justify-center rounded-md bg-surface-700 text-center">
+					<div class="font-semibold">Drag & Drop columns & Click to hide</div>
+					<!-- toggle all -->
+					<!-- TODO place into section row will kill dnd action-->
+					<label class="mr-3">
+						<input
+							checked={$table.getIsAllColumnsVisible()}
+							on:change={(e) => {
+								console.info($table.getToggleAllColumnsVisibilityHandler()(e));
+							}}
+							type="checkbox"
+						/>{' '}
+						{$LL.TANSTACK_Toggle()}
+					</label>
+					<section
+						class="flex justify-center rounded-md bg-surface-700 p-2"
+						use:dndzone={{ items, flipDurationMs }}
+						on:consider={handleDndConsider}
+						on:finalize={handleDndFinalize}
+					>
+						{#each items as item (item.id)}
+							<div
+								class="chip {$table.getIsAllColumnsVisible()
+									? 'variant-filled-secondary'
+									: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
+								animate:flip={{ duration: flipDurationMs }}
+							>
+								{#if $table.getIsAllColumnsVisible()}
+									<span><iconify-icon icon="fa:check" /></span>
+								{/if}
+								<span class="ml-2 capitalize">{item.name}</span>
+							</div>
+						{/each}
+					</section>
+				</div>
+				<div class="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-center">
+					<!-- toggle all -->
+					<div class="mb-2 flex items-center md:mb-0 md:mr-4">
+						<label>
+							<input
+								checked={$table.getIsAllColumnsVisible()}
+								on:change={(e) => {
+									console.info($table.getToggleAllColumnsVisibilityHandler()(e));
+								}}
+								type="checkbox"
+							/>{' '}
+							{$LL.TANSTACK_Toggle()}
+						</label>
+
+						<!-- Show/hide Columns via chips -->
+						<div class="flex flex-wrap items-center justify-center">
+							{#each $table.getAllLeafColumns() as column}
+								<span
+									class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
+									on:keydown
+									on:click={column.getToggleVisibilityHandler()}
+									on:keypress
+								>
+									{#if column.getIsVisible()}<span><iconify-icon icon="fa:check" /></span>{/if}
+									<span class="capitalize">{column.id}</span>
+								</span>
+							{/each}
+						</div>
+					</div>
+				</div>
+			{/if}
+			<div class="table-container">
+				<table class="table-hover table">
+					<thead>
+						{#each $table.getHeaderGroups() as headerGroup}
+							<tr class="divide-x divide-surface-400 border-b">
+								{#each headerGroup.headers as header}
+									<th colSpan={header.colSpan} class="text-center">
+										{#if !header.isPlaceholder}
+											<div
+												class:cursor-pointer={header.column.getCanSort()}
+												class:select-none={header.column.getCanSort()}
+												on:keydown
+												on:click={header.column.getToggleSortingHandler()}
+											>
+												<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
+												{#if header.column.getIsSorted() === 'asc'}
+													<iconify-icon icon="material-symbols:arrow-upward-rounded" width="16" />
+												{:else if header.column.getIsSorted() === 'desc'}
+													<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
+												{/if}
+											</div>
+										{/if}
+									</th>
+								{/each}
+							</tr>
+						{/each}
+					</thead>
+					<tbody>
+						{#each $table.getRowModel().rows.slice(0, 20) as row}
+							<tr class="divide-x divide-surface-400">
+								{#each row.getVisibleCells() as cell}
+									<td>
+										<svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
+									</td>
+								{/each}
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	{/if}
+</div>
