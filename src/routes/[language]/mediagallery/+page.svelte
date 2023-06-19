@@ -104,7 +104,29 @@
 		}
 	];
 
+	// TODO: Grab mediaGallery data
+	// // Allow pdf and doc image previews
 	const defaultData: Images[] = [
+		{
+			image: '/Default_User.svg',
+			name: 'Default_User',
+			path: '/static/Default_User'
+		},
+		{
+			image: '/SimpleCMS_Logo_Round.png',
+			name: 'SimpleCMS_Logo_Round',
+			path: '/static/SimpleCMS_Logo_Round'
+		},
+		{
+			image: '/SimpleCMS_Logo.svg',
+			name: 'SimpleCMS_Logo',
+			path: '/static/SimpleCMS_Logo'
+		},
+		{
+			image: '/SimpleCMS_Logo_Round.png',
+			name: 'SimpleCMS_Logo_Round',
+			path: '/static/SimpleCMS_Logo_Round'
+		},
 		{
 			image: '/Default_User.svg',
 			name: 'Default_User',
@@ -289,7 +311,7 @@
 	}
 </script>
 
-<div class="align-centre m-2 mb-2 ml-2 mt-2 flex flex-col dark:text-white">
+<div class="m-2 flex flex-col gap-1">
 	<div class="flex items-center">
 		<!-- hamburger -->
 		{#if $toggleLeftSidebar === true}
@@ -302,34 +324,106 @@
 			<iconify-icon icon="bi:images" width="24" class="mr-1 text-red-500 sm:mr-2" /> Media Gallery
 		</h1>
 	</div>
-
+	<!-- Header block -->
 	<div class="mb-2 flex items-center justify-between border-b-2">
 		{#if view === 'grid'}
 			<!-- TODO: add actual search -->
 			<!-- search input grid -->
-			<div class="btn-group variant-filled-surface ml-2">
+			<div class="btn-group variant-filled-surface">
 				<input type="text" class="input" placeholder="Search Grid..." />
-				<button type="submit" class="btn">
+				<button type="submit" class="btn-icon">
 					<iconify-icon icon="material-symbols:search" width="24" />
 				</button>
 			</div>
 		{:else}
 			<!-- search input tanstack -->
-			<div class="btn-group variant-filled-surface ml-2">
-				<input type="text" class="input" placeholder="Search Table..." />
-				<button type="submit" class="btn">
-					<iconify-icon icon="material-symbols:search" width="24" />
+			<div class="flex items-center gap-2">
+				<div class="btn-group variant-filled-surface">
+					<input type="text" class="input" placeholder="Search Table..." />
+					<button type="submit" class="btn-icon">
+						<iconify-icon icon="material-symbols:search" width="24" />
+					</button>
+				</div>
+
+				<button type="submit" on:keydown on:click={() => (columnShow = !columnShow)} class="btn-icon variant-ghost-surface mr-1">
+					<iconify-icon icon="gridicons:dropdown" width="24" />
 				</button>
 			</div>
-
-			<button type="submit" on:keydown on:click={() => (columnShow = !columnShow)} class="btn-icon variant-ghost-surface">
-				<iconify-icon icon="gridicons:dropdown" width="24" />
-			</button>
 		{/if}
+
+		<!-- Mobile -->
+		<div class="flex items-center justify-center text-center text-xs sm:hidden">
+			<!-- Display Grid / Table -->
+			<div class="flex flex-col items-center">
+				Display
+				<div class="flex sm:divide-x sm:divide-gray-500">
+					{#if view === 'grid'}
+						<div
+							class="px-1"
+							on:keydown
+							on:click={() => {
+								view = 'table';
+								storeUserPreference(view, gridSize, tableSize);
+							}}
+							on:keydown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									view = 'table';
+									storeUserPreference(view, gridSize, tableSize);
+								}
+							}}
+						>
+							<iconify-icon icon="material-symbols:grid-view-rounded" height="40" style={`color: white`} />
+							<br />Table
+						</div>
+					{:else}
+						<div
+							class="px-1"
+							on:keydown
+							on:click={() => {
+								view = 'grid';
+								storeUserPreference(view, gridSize, tableSize);
+							}}
+							on:keydown={(e) => {
+								if (e.key === 'Enter' || e.key === ' ') {
+									view = 'grid';
+									storeUserPreference(view, gridSize, tableSize);
+								}
+							}}
+						>
+							<iconify-icon icon="material-symbols:list-alt-outline" height="40" style={`color: white`} />
+							<br />Grid
+						</div>
+					{/if}
+				</div>
+			</div>
+
+			<!-- switch between small, medium, and large images -->
+			<div class="flex flex-col items-center">
+				Size
+				<div class="flex divide-x divide-surface-500">
+					{#if (view === 'grid' && gridSize === 'small') || (view === 'table' && tableSize === 'small')}
+						<button type="button" class="px-1" on:click={handleClick}>
+							<iconify-icon icon="material-symbols:background-grid-small-sharp" height="40" style={`color: white`} />
+							<br />Small
+						</button>
+					{:else if (view === 'grid' && gridSize === 'medium') || (view === 'table' && tableSize === 'medium')}
+						<button type="button" class="px-1" on:click={handleClick}>
+							<iconify-icon icon="material-symbols:grid-on-sharp" height="40" style={`color: white`} />
+							<br />Medium
+						</button>
+					{:else}
+						<button type="button" class="px-1" on:click={handleClick}>
+							<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: white`} /><br />Large
+						</button>
+					{/if}
+				</div>
+			</div>
+		</div>
+		<!-- Desktop -->
 		<!-- Display Grid / Table -->
-		<div class="mr-2 flex flex-col p-2 text-center text-xs">
+		<div class="hidden flex-col items-center sm:flex">
 			Display
-			<div class="flex divide-x divide-gray-500 p-2">
+			<div class="flex divide-x divide-gray-500">
 				<div
 					class="px-2"
 					on:keydown
@@ -368,21 +462,21 @@
 		</div>
 
 		<!-- switch between small, medium, and large images -->
-		<div class="mr-2 flex flex-col p-2 text-center text-xs">
+		<div class="hidden flex-col items-center sm:flex">
 			Size
-			<div class="flex divide-x divide-gray-500 p-2">
+			<div class="flex divide-x divide-gray-500">
 				{#if (view === 'grid' && gridSize === 'small') || (view === 'table' && tableSize === 'small')}
-					<button type="button" class="px-2" on:click={handleClick}>
+					<button type="button" class="px-1 md:px-2" on:click={handleClick}>
 						<iconify-icon icon="material-symbols:background-grid-small-sharp" height="40" style={`color: white`} />
 						<br />Small
 					</button>
 				{:else if (view === 'grid' && gridSize === 'medium') || (view === 'table' && tableSize === 'medium')}
-					<button type="button" class="px-2" on:click={handleClick}>
+					<button type="button" class="px-1 md:px-2" on:click={handleClick}>
 						<iconify-icon icon="material-symbols:grid-on-sharp" height="40" style={`color: white`} />
 						<br />Medium
 					</button>
 				{:else}
-					<button type="button" class="px-2" on:click={handleClick}>
+					<button type="button" class="px-1 md:px-2" on:click={handleClick}>
 						<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: white`} /><br />Large
 					</button>
 				{/if}
@@ -391,24 +485,24 @@
 	</div>
 
 	{#if view === 'grid'}
-		<div class="ml-2 mt-2 flex flex-wrap gap-4 px-1">
+		<!-- TODO: center box with cards mx-auto is not working -->
+		<div class="mx-auto flex flex-wrap gap-2">
 			{#each defaultData as image}
-				<div class="card xl:w-1/7 flex w-full flex-col rounded-sm shadow-2xl sm:w-1/2 md:w-1/4 lg:w-1/5">
-					<section class="flex flex-grow items-center p-2">
+				<div class={`card ${gridSize === 'small' ? 'card-small' : gridSize === 'medium' ? 'card-medium' : 'card-large'}`}>
+					<header class="card-header" />
+					<section class="p-4 text-center">
 						<img
-							class={`mx-auto h-full w-full rounded-sm object-cover ${
-								gridSize === 'small'
-									? 'md:w32 w-22 md:h-22 h-32 lg:h-28 lg:w-28'
-									: gridSize === 'medium'
-									? 'h-48 w-48 md:h-64 md:w-64 lg:h-80 lg:w-80'
-									: 'h-64 w-64 md:h-80 md:w-80 lg:h-96 lg:w-96'
+							class={`inline-block object-cover object-center ${
+								gridSize === 'small' ? 'h-16 w-16' : gridSize === 'medium' ? 'h-40 w-40' : 'h-80 w-80'
 							}`}
 							src={image.image}
 							alt={image.name}
 						/>
 					</section>
-
-					<footer class="card-footer sm:text-md break-all rounded-sm bg-surface-500 text-center text-xs font-bold text-white md:text-base">
+					<footer
+						class={`card-footer mt-1 flex h-9 w-full items-center justify-center break-all rounded-sm bg-surface-600 p-0 text-center text-xs text-white`}
+						style={`max-width: ${gridSize === 'small' ? '6rem' : gridSize === 'medium' ? '12rem' : '24rem'}`}
+					>
 						{image.name}
 					</footer>
 				</div>
