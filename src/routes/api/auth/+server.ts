@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import type { Cookies } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { auth } from '@src/routes/api/db';
+import { UserSchema } from '@src/collections/Auth';
 
 // Define a POST request handler function
 export const POST: RequestHandler = async ({ request, cookies }) => {

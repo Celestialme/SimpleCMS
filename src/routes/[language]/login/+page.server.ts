@@ -2,23 +2,21 @@ import { fail, type Actions, type Cookies, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 import { superValidate } from 'sveltekit-superforms/server';
-import { loginFormSchema, forgotFormSchema, resetFormSchema, signUpSchema } from './formSchemas';
+import { loginFormSchema, forgotFormSchema, resetFormSchema, signUpFormSchema, signUpOtherFormSchema } from './formSchemas';
 
 import { auth } from '@src/routes/api/db';
+import mongoose from 'mongoose';
 
 // actions for signing in and signing up a user with form data
 export const actions: Actions = {
 	//Function for handling the sign-in form submission and user authentication
 	signIn: async (event) => {
-		let signInForm = await superValidate(null, loginFormSchema);
-
-		const form = await event.request.formData();
-		const email = (form.get('email') as string).toLowerCase();
-		const password = form.get('password') as string;
+		let signInForm = await superValidate(event, loginFormSchema);
+		//console.log('signInForm', signInForm);
+		const email = signInForm.data.email.toLocaleLowerCase();
+		const password = signInForm.data.password;
 
 		let resp = await signIn(email, password, event.cookies);
-
-		console.log('signInForm', signInForm);
 
 		if (resp) {
 			throw redirect(303, '/');
@@ -28,12 +26,11 @@ export const actions: Actions = {
 	},
 
 	// Function for handling the Forgotten Password
-	// TODO: Correct logic to check if Email exand to trigger Send Email new paswword
+	// TODO: Correct logic to check if Email expand to trigger Send Email new password
 	forgotPW: async (event) => {
-		let pwforgottenForm = await superValidate(null, forgotFormSchema);
+		let pwforgottenForm = await superValidate(event, forgotFormSchema);
 
-		const form = await event.request.formData();
-		const email = (form.get('email') as string).toLowerCase();
+		const email = pwforgottenForm.data.email.toLocaleLowerCase();
 
 		let resp = await forgotPW(email, event.cookies);
 
@@ -49,12 +46,11 @@ export const actions: Actions = {
 	// Function for handling the RESET
 	// TODO: Correct logic to check reset PW with Recived Token and to set new password
 	resetPW: async (event) => {
-		let pwresetForm = await superValidate(null, resetFormSchema);
+		let pwresetForm = await superValidate(event, resetFormSchema);
 
-		const form = await event.request.formData();
-		const email = (form.get('email') as string).toLowerCase();
-		const password = form.get('password') as string;
-		const token = form.get('token') as string;
+		const email = pwresetForm.data.email.toLocaleLowerCase();
+		const password = pwresetForm.data.password;
+		const token = pwresetForm.data.token;
 
 		let resp = await resetPW(email, password, token, event.cookies);
 
@@ -70,13 +66,12 @@ export const actions: Actions = {
 	//Function for handling the sign-up form submission and user creation
 	//TODO: Check if user Exists
 	signUp: async (event) => {
-		let signUpForm = await superValidate(null, signUpSchema);
+		let signUpForm = await superValidate(null, signUpFormSchema);
 
-		const form = await event.request.formData();
-		const username = form.get('username') as string;
-		const email = (form.get('email') as string).toLowerCase();
-		const password = form.get('password') as string;
-		const confirm_password = form.get('password') as string;
+		const username = signUpForm.data.username;
+		const email = signUpForm.data.email.toLocaleLowerCase();
+		const password = signUpForm.data.password;
+		const confirm_password = signUpForm.data.confirm_password;
 
 		let resp = await signUp(username, email, password, confirm_password, event.cookies);
 
@@ -93,18 +88,31 @@ export const actions: Actions = {
 // load and validate login and sign up forms
 export const load: PageServerLoad = async (event) => {
 	await event.parent();
+	// SignIn
 	let loginForm = await superValidate(event, loginFormSchema);
-	let signUpForm = await superValidate(event, signUpSchema);
+	let forgotForm = await superValidate(event, forgotFormSchema);
+	let resetForm = await superValidate(event, resetFormSchema);
+	// signup
+	let signUpForm = await superValidate(event, signUpFormSchema);
+	let signUpFormOther = await superValidate(event, signUpOtherFormSchema);
+	// check if first user exist
+	const firstUserExists = (await mongoose.models['auth_user'].countDocuments()) > 0;
+
 	return {
 		loginForm,
-		signUpForm
+		forgotForm,
+		resetForm,
+
+		signUpForm,
+		signUpFormOther,
+		firstUserExists
 	};
 };
 
 // signIn user with email and password, create session and set cookie
 async function signIn(email: string, password: string, cookies: Cookies) {
 	let key = await auth.useKey('email', email, password).catch(() => null);
-	console.log(key);
+	//console.log(key);
 	if (!key) return false;
 	const session = await auth.createSession(key.userId);
 	let user = await auth.getUser(key.userId);

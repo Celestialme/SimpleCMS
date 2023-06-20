@@ -30,7 +30,7 @@ export let resetFormSchema = z.object({
 });
 
 //TODO: fix TOKEN for other user than first
-export let signUpSchema = z.object({
+export let signUpFormSchema = z.object({
 	username: z
 		.string({ required_error: get(LL).LOGIN_ZOD_Username_string() })
 		.regex(/^[a-zA-Z0-9@$!%*#]+$/, { message: get(LL).LOGIN_ZOD_Username_regex() })
@@ -55,7 +55,7 @@ export let signUpSchema = z.object({
 });
 
 //TODO: fix TOKEN for other user than first
-export let signUpOtherSchema = z.object({
+export let signUpOtherFormSchema = z.object({
 	username: z
 		.string({ required_error: get(LL).LOGIN_ZOD_Username_string() })
 		.regex(/^[a-zA-Z0-9@$!%*#]+$/, { message: get(LL).LOGIN_ZOD_Username_regex() })

@@ -8,7 +8,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	//console.log(data);
+	console.log('PageData', data);
 
 	import { locale } from '@src/i18n/i18n-svelte';
 	import { locales } from '@src/i18n/i18n-util';
@@ -16,6 +16,7 @@
 	//console.log('locales', locales);
 	let selectedLocale = $locale;
 
+	// todo: disable for Systemlanguage
 	function handleLocaleChange(e) {
 		selectedLocale = e.target.value;
 		const newUrl = replaceLocaleInUrl(new URL(window.location.href), selectedLocale);
@@ -30,8 +31,8 @@
 	<SignIn
 		{active}
 		FormSchemaLogin={data.loginForm}
-		FormSchemaForgot={data.loginForm}
-		FormSchemaReset={data.loginForm}
+		FormSchemaForgot={data.forgotForm}
+		FormSchemaReset={data.resetForm}
 		on:click={() => (active = 0)}
 		on:pointerenter={() => (background = '#242728')}
 	/>
@@ -39,7 +40,8 @@
 	<SignUp
 		{active}
 		FormSchemaSignUp={data.signUpForm}
-		FormSchemaSignUpOther={data.signUpForm}
+		FormSchemaSignUpOther={data.signUpFormOther}
+		firstUserExists={data.firstUserExists}
 		on:click={() => (active = 1)}
 		on:pointerenter={() => (background = 'white')}
 	/>

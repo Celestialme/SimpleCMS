@@ -493,7 +493,7 @@
 					<section class="p-4 text-center">
 						<img
 							class={`inline-block object-cover object-center ${
-								gridSize === 'small' ? 'h-16 w-16' : gridSize === 'medium' ? 'h-40 w-40' : 'h-80 w-80'
+								gridSize === 'small' ? 'h-16 w-16' : gridSize === 'medium' ? 'h-36 w-36' : 'h-80 w-80'
 							}`}
 							src={image.image}
 							alt={image.name}

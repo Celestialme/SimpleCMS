@@ -7,7 +7,6 @@ import { session, key, UserSchema } from '@src/collections/Auth';
 import { sveltekit } from 'lucia-auth/middleware';
 import { fieldsToSchema } from '@src/utils/utils';
 import { dev } from '$app/environment';
-import { firstuserExist } from '@src/stores/store';
 
 //console.log('lucia', { UserSchema });
 
@@ -70,14 +69,3 @@ const auth = lucia({
 });
 
 export { collections, auth };
-
-// define a function to check if the first user exists and update the store value
-// TODO: check this firstuser as it should be "auth_users"???
-async function checkFirstUserExists() {
-	const firstUserExists = (await mongoose.models['auth_user'].countDocuments()) > 0;
-	// set the store value to the result of the query
-	firstuserExist.set(firstUserExists);
-}
-
-// call the function when the file is imported
-checkFirstUserExists();

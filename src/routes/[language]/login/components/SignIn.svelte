@@ -49,7 +49,7 @@
 		}
 	});
 
-	export let FormSchemaForgot: PageData['loginForm'];
+	export let FormSchemaForgot: PageData['forgotForm'];
 	const {
 		form: forgotForm,
 		constraints: forgotConstraints,
@@ -84,7 +84,7 @@
 		}
 	});
 
-	export let FormSchemaReset: PageData['loginForm'];
+	export let FormSchemaReset: PageData['resetForm'];
 	const {
 		form: resetForm,
 		constraints: resetConstraints,
@@ -203,27 +203,27 @@
 				<FloatingInput
 					name="password"
 					type="password"
-					bind:value={$form.password}
+					bind:value={$resetForm.password}
 					bind:showPassword
 					label={$LL.LOGIN_Password()}
 					icon="mdi:lock"
 					iconColor="black"
 					textColor="black"
 				/>
-				{#if $errors.password}<span class="invalid text-xs text-error-500">{$errors.password}</span>{/if}
+				{#if $resetErrors.password}<span class="invalid text-xs text-error-500">{$resetErrors.password}</span>{/if}
 
 				<!-- Password  Confirm field -->
 				<FloatingInput
 					name="confirm_password"
 					type="password"
-					bind:value={$form.confirm_password}
+					bind:value={$resetForm.confirm_password}
 					bind:showPassword
 					label={$LL.LOGIN_ConfirmPassword()}
 					icon="mdi:lock"
 					iconColor="black"
 					textColor="black"
 				/>
-				{#if $errors.confirm_password}<span class="invalid text-xs text-error-500">{$errors.confirm_password}</span>{/if}
+				{#if $resetErrors.confirm_password}<span class="invalid text-xs text-error-500">{$resetErrors.confirm_password}</span>{/if}
 
 				<!-- Password field -->
 				<FloatingInput type="password" bind:value={$form.password} bind:showPassword label={$LL.LOGIN_Token()} icon="mdi:lock" iconColor="black" />
@@ -246,14 +246,14 @@
 				<FloatingInput
 					name="email"
 					type="email"
-					bind:value={$form.email}
+					bind:value={$forgotForm.email}
 					required
 					label={$LL.LOGIN_EmailAddress()}
 					icon="mdi:email"
 					iconColor="black"
 					textColor="black"
 				/>
-				{#if $errors.email}<span class="invalid text-xs text-error-500">{$errors.email}</span>{/if}
+				{#if $forgotErrors.email}<span class="invalid text-xs text-error-500">{$forgotErrors.email}</span>{/if}
 
 				<div class="mt-4 flex items-center justify-between">
 					<button type="submit" class="btn variant-filled-surface">{$LL.LOGIN_SendResetMail()}</button>
