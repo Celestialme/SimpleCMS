@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { systemLanguage } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/load';
 
-	systemLanguage.set($page.params.language);
+	contentLanguage.set($page.params.language);
 </script>
 
 <slot />

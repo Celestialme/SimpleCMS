@@ -4,7 +4,7 @@ let schema = {
 	fields: [
 		widgets.Text({
 			label: 'text',
-			translated: false
+			translated: true
 		}),
 		widgets.Text({
 			label: 'text2',

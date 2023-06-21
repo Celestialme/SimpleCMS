@@ -14,7 +14,7 @@
 	<SignIn
 		{active}
 		formSchema={data.loginForm}
-		recoverSchema={data.recoverForm}
+		recoverFormSchema={data.recoverForm}
 		on:click={() => (active = 0)}
 		on:pointerenter={() => (background = '#242728')}
 	/>

@@ -36,7 +36,7 @@ export const actions: Actions = {
 		const email = form.get('email') as string;
 		const password = form.get('password') as string;
 		let resp = await signUp(email, password, event.cookies);
-		console.log(signUpForm);
+		console.log(email, password);
 		if (resp) {
 			throw redirect(303, '/');
 		} else {

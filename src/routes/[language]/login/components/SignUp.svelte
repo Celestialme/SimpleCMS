@@ -23,6 +23,8 @@
 			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
+			console.log(result);
+			console.log($errors);
 			if (result.type == 'redirect') return;
 			cancel();
 			userExists = true;
@@ -78,8 +80,18 @@
 			theme="dark"
 		/>
 		{#if $errors.password}<span class="invalid">{$errors.password}</span>{/if}
-		{#if $errors.password}<span class="text-white">{$errors.password}</span>{/if}
-		{#if userExists}<span class="text-white">User already exists</span>{/if}
+		<FloatingInput
+			iconClass="text-white"
+			inputClass="text-white"
+			name="confirmPassword"
+			type="password"
+			bind:value={$form.confirmPassword}
+			{...$constraints.confirmPassword}
+			label={'confirm password'}
+			theme="dark"
+		/>
+		{#if $errors.confirmPassword}<span class="invalid">{$errors.confirmPassword}</span>{/if}
+		{#if userExists}<span class="invalid">User already exists</span>{/if}
 		<Button class="bg-white mt-10">{$LL.LOGIN_SignUp()}</Button>
 	</form>
 	<SignupIcon show={active == 0 || active == undefined} />

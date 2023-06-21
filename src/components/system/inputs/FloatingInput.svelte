@@ -30,7 +30,7 @@
 
 <div class="container" class:dark={theme == 'dark'}>
 	<iconify-icon icon={leading_icon} class={iconClass} />
-	<input class={inputClass} bind:this={inputElement} use:initInput placeholder=" " type="text" {name} id="input" bind:value />
+	<input  class={inputClass} bind:this={inputElement} use:initInput placeholder=" " type="text" {name} id="input" bind:value />
 	<label for="input" class="text-xs text-gray-400"
 		>{label}
 		{#if required}
