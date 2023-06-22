@@ -1,7 +1,7 @@
 <script lang="ts">
 	import axios from 'axios';
 	import type { FieldType } from './';
-	import { entryData, mode } from '@src/stores/store';
+	//	import { entryData, mode } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 
 	import { FileDropzone } from '@skeletonlabs/skeleton';

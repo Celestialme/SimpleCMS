@@ -10,7 +10,7 @@ const fr: Translation = {
 	SBL_Light: 'Clair',
 	SBL_Dark: 'Sombre',
 	SBL_Mode: 'Mode',
-	SBL_Version: 'Version',
+	SBL_Version: 'Ver.',
 	SBL_Ver: 'Ver.',
 	SBL_Save: 'Enregistrer',
 	SBL_Save_message: 'Données enregistrées avec succès',

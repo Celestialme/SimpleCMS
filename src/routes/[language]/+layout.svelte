@@ -63,8 +63,20 @@
 	$: avatarSrc = '';
 
 	// typesafe-i18n
-	import LocaleSwitcher from '@src/components/LocaleSwitcher.svelte';
 	import LL from '@src/i18n/i18n-svelte';
+	import { locale } from '@src/i18n/i18n-svelte';
+	import { locales } from '@src/i18n/i18n-util';
+	import type { Locales } from '@src/i18n/i18n-types';
+	import { systemLanguage } from '@src/stores/load';
+	import { setLocale } from '@src/i18n/i18n-svelte';
+
+	let selectedLocale = (localStorage.getItem('selectedLanguage') || $systemLanguage) as Locales;
+
+	function handleLocaleChange(e) {
+		selectedLocale = e.target.value;
+		setLocale(selectedLocale);
+		localStorage.setItem('selectedLanguage', selectedLocale);
+	}
 
 	// @ts-expect-error reading from vite.config.jss
 	const pkg = __VERSION__;
@@ -76,7 +88,7 @@
 		setModeCurrent($modeCurrent);
 	};
 
-	//signout
+	//signOut
 	async function signOut() {
 		let resp = (
 			await axios.post(
@@ -91,7 +103,7 @@
 		).data;
 		if (resp.status == 200) {
 			$credentials = resp;
-			goto(`/${$page.params.language}/login`);
+			goto(`/login`);
 		}
 	}
 </script>
@@ -197,16 +209,19 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 
 				<!-- System Language i18n Handling -->
 				<!-- TODO: Fix Tooltip overflow -->
+				<!-- System Language i18n Handling -->
 				<div class={$switchSideBar ? 'order-3 row-span-2' : 'order-2'}>
-					<button use:popup={SystemLanguageTooltip} class="btn-icon font-bold hover:bg-surface-500 hover:text-white md:row-span-2">
-						EN<!-- <LocaleSwitcher user={user?._id} /> -->
-
-						<!-- Popup Tooltip with the arrow element -->
-						<div class="card variant-filled-secondary z-10 p-2" data-popup="SystemLanguage">
-							{$LL.SBL_SystemLanguage()}
-							<div class="arrow variant-filled-secondary" />
-						</div>
-					</button>
+					<div class="transform cursor-pointer items-center justify-center rounded-full dark:text-black">
+						<select
+							bind:value={selectedLocale}
+							on:change={handleLocaleChange}
+							class="rounded-full border-2 border-white bg-[#242728] uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring active:ring-blue-300"
+						>
+							{#each locales as locale}
+								<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
+							{/each}
+						</select>
+					</div>
 				</div>
 
 				<!-- light/dark mode switch -->

@@ -33,9 +33,9 @@ export async function load({ cookies, route, params }) {
 		};
 	} else {
 		// If the user is not authenticated and the current route is not the login route
-		if (route.id !== '/[language]/login') {
+		if (route.id !== '/login') {
 			// Redirect to the login route
-			throw redirect(302, `/${params.language || PUBLIC_SYSTEM_LANGUAGE}/login`);
+			throw redirect(302, `/login`);
 		}
 		// Return an empty username
 		return {

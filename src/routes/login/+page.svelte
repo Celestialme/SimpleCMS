@@ -11,16 +11,25 @@
 	console.log('PageData', data);
 
 	import { locale } from '@src/i18n/i18n-svelte';
+	//console.log('locale', $locale);
 	import { locales } from '@src/i18n/i18n-util';
-	import { replaceLocaleInUrl } from '@src/utils/utils';
+	import type { Locales } from '@src/i18n/i18n-types';
 	//console.log('locales', locales);
-	let selectedLocale = $locale;
+	import { systemLanguage } from '@src/stores/load';
+	//console.log('systemLanguage', $systemLanguage);
 
-	// todo: disable for System language
+	let selectedLocale = (localStorage.getItem('selectedLanguage') || $systemLanguage) as Locales;
+	setLocale(selectedLocale);
+	//console.log('selectedLocale', selectedLocale);
+
+	import { setLocale } from '@src/i18n/i18n-svelte';
+	//console.log('setLocale', setLocale);
+
 	function handleLocaleChange(e) {
 		selectedLocale = e.target.value;
-		const newUrl = replaceLocaleInUrl(new URL(window.location.href), selectedLocale);
-		window.location.href = newUrl;
+		setLocale(selectedLocale);
+		localStorage.setItem('selectedLanguage', selectedLocale);
+		console.log('selectedLocaleUpdated', selectedLocale);
 	}
 
 	let active: undefined | 0 | 1 = undefined;
@@ -108,13 +117,12 @@
 			class="absolute bottom-1/4 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform cursor-pointer items-center justify-center rounded-full dark:text-black"
 		>
 			<select
-				class="rounded-full border-2 border-white bg-[#242728] uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring active:ring-blue-300"
 				bind:value={selectedLocale}
 				on:change={handleLocaleChange}
+				class="rounded-full border-2 border-white bg-[#242728] uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring active:ring-blue-300"
 			>
-				<option value={$locale} selected>{$locale}</option>
-				{#each locales.filter((l) => l !== $locale) as l}
-					<option value={l}>{l}</option>
+				{#each locales as locale}
+					<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
 				{/each}
 			</select>
 		</div>

@@ -73,14 +73,14 @@
 				return obj;
 			})
 		);
+		const storedValue = localStorage.getItem(`TanstackConfiguration-${$collection.name}`);
+		const columns = storedValue ? JSON.parse(storedValue) : defaultColumns;
 		options.update((options) => ({
 			...options,
 			data: tableData,
-			columns: localStorage.getItem(`TanstackConfiguration-${$collection.name}`)
-				? JSON.parse(localStorage.getItem(`TanstackConfiguration-${$collection.name}`)).map((item) => {
-						return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
-				  })
-				: defaultColumns
+			columns: columns.map((item) => {
+				return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
+			})
 		}));
 		deleteMap = {};
 		deleteAll = false;
@@ -88,7 +88,7 @@
 		clearTimeout(loadingTimer);
 		isLoading = false;
 
-		// READ CONFIG FROM LOCALSTORAGE AND APPLY THE VISIBILITY
+		// READ CONFIG FROM LOCAL STORAGE AND APPLY THE VISIBILITY
 		if (localStorage.getItem(`TanstackConfiguration-${$collection.name}`)) {
 			JSON.parse(localStorage.getItem(`TanstackConfiguration-${$collection.name}`)).forEach((item) => {
 				getColumnByName(item.accessorKey)?.toggleVisibility(item.visible);
@@ -211,13 +211,13 @@
 		accessorKey: field.label
 	}));
 
+	const storedValue = localStorage.getItem(`TanstackConfiguration-${$collection.name}`);
+	const columns = storedValue ? JSON.parse(storedValue) : defaultColumns;
 	const options = writable<TableOptions<any>>({
 		data: tableData,
-		columns: localStorage.getItem(`TanstackConfiguration-${$collection.name}`)
-			? JSON.parse(localStorage.getItem(`TanstackConfiguration-${$collection.name}`)).map((item) => {
-					return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
-			  })
-			: defaultColumns,
+		columns: columns.map((item) => {
+			return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
+		}),
 		filterFns: {
 			fuzzy: fuzzyFilter
 		},
@@ -226,7 +226,6 @@
 			columnOrder,
 			globalFilter
 		},
-
 		onSortingChange: setSorting,
 		globalFilterFn: globalFilterFn,
 		getCoreRowModel: getCoreRowModel(),
