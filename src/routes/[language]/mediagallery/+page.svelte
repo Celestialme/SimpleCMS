@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { slide } from 'svelte/transition';
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 	import { toggleLeftSidebar } from '@src/stores/store';
@@ -34,6 +36,8 @@
 	function handleClick() {
 		// Update the size of the currently displayed view
 		if (view === 'grid') {
+			//Reset DND
+			view;
 			// Update the size of the grid view
 			if (gridSize === 'small') {
 				gridSize = 'medium';
@@ -104,53 +108,11 @@
 		}
 	];
 
-	// export let data;
+	export let data;
 	// console.log(data);
-	// TODO: Grab mediaGallery data
-	// // Allow pdf and doc image previews
 
-	const defaultData: Images[] = [
-		{
-			image: '/Default_User.svg',
-			name: 'Default_User',
-			path: '/static/Default_User'
-		},
-		{
-			image: '/SimpleCMS_Logo_Round.png',
-			name: 'SimpleCMS_Logo_Round',
-			path: '/static/SimpleCMS_Logo_Round'
-		},
-		{
-			image: '/SimpleCMS_Logo.svg',
-			name: 'SimpleCMS_Logo',
-			path: '/static/SimpleCMS_Logo'
-		},
-		{
-			image: '/SimpleCMS_Logo_Round.png',
-			name: 'SimpleCMS_Logo_Round',
-			path: '/static/SimpleCMS_Logo_Round'
-		},
-		{
-			image: '/Default_User.svg',
-			name: 'Default_User',
-			path: '/static/Default_User'
-		},
-		{
-			image: '/SimpleCMS_Logo_Round.png',
-			name: 'SimpleCMS_Logo_Round',
-			path: '/static/SimpleCMS_Logo_Round'
-		},
-		{
-			image: '/SimpleCMS_Logo.svg',
-			name: 'SimpleCMS_Logo',
-			path: '/static/SimpleCMS_Logo'
-		},
-		{
-			image: '/SimpleCMS_Logo_Round.png',
-			name: 'SimpleCMS_Logo_Round',
-			path: '/static/SimpleCMS_Logo_Round'
-		}
-	];
+	// TODO : Allow pdf and doc image previews
+	const defaultData: Images[] = data.body;
 
 	let columnOrder: never[] = [];
 	let columnVisibility = {};
@@ -203,7 +165,11 @@
 
 	const options = writable<TableOptions<Images>>({
 		data: defaultData,
-		columns: defaultColumns,
+		columns: localStorage.getItem('MediaTanstackConfiguration')
+			? JSON.parse(localStorage.getItem('MediaTanstackConfiguration')).map((item) => {
+					return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
+			  })
+			: defaultColumns,
 		state: {
 			columnOrder,
 			sorting
@@ -216,11 +182,16 @@
 	});
 
 	const refreshData = () => {
-		//console.info('refresh');
+		// console.info('refresh');
 		options.update((prev) => ({
 			...prev,
 			data: defaultData
 		}));
+		if (localStorage.getItem('MediaTanstackConfiguration')) {
+			JSON.parse(localStorage.getItem('MediaTanstackConfiguration')).forEach((item) => {
+				getColumnByName(item.accessorKey)?.toggleVisibility(item.visible);
+			});
+		}
 	};
 
 	const rerender = () => {
@@ -234,7 +205,7 @@
 
 	//svelte-dnd-action
 	import { dndzone } from 'svelte-dnd-action';
-	import { Button } from 'svelte-email';
+
 	const flipDurationMs = 300;
 
 	// Update items array to be an array of column objects
@@ -257,10 +228,6 @@
 			newOrder[item.id] = item.isVisible;
 		});
 
-		// const randomizeColumns = () => {
-		// 	$table.setColumnOrder((_updater) => $table.getAllLeafColumns().map((d) => d.id));
-		// };
-
 		items = items.map((item) => {
 			return {
 				...item,
@@ -273,10 +240,31 @@
 				}
 			};
 		});
+
 		$table.setColumnOrder(newOrder);
 
-		// console.log('table', $table.setColumnOrder);
-		// console.log('columnOrder2', columnOrder);
+		var remappedColumns = items.map((item) => {
+			return defaultColumns.find((col) => {
+				return col.accessorKey == item.id;
+			});
+		});
+		options.update((old) => {
+			return {
+				...old,
+				columns: remappedColumns
+			};
+		});
+		localStorage.setItem(
+			'MediaTanstackConfiguration',
+			JSON.stringify(
+				remappedColumns.map((item) => {
+					return {
+						...item,
+						visible: getColumnByName(item.accessorKey)?.getIsVisible()
+					};
+				})
+			)
+		);
 		columnOrder = newOrder;
 		rerender();
 		table = createSvelteTable(options);
@@ -312,6 +300,12 @@
 		// Update the data displayed in the grid with the filtered data
 		images = filteredData;
 	}
+
+	function getColumnByName(name) {
+		return $table.getAllLeafColumns().find((col) => {
+			return col.id == name;
+		});
+	}
 </script>
 
 <div class="m-2 flex flex-col gap-1">
@@ -340,7 +334,7 @@
 			</div>
 		{:else}
 			<!-- search input tanstack -->
-			<div class="flex items-center gap-2">
+			<div class="flex items-center gap-4">
 				<div class="btn-group variant-filled-surface">
 					<input type="text" class="input" placeholder="Search Table..." />
 					<button type="submit" class="btn-icon">
@@ -349,7 +343,7 @@
 				</div>
 
 				<button type="submit" on:keydown on:click={() => (columnShow = !columnShow)} class="btn-icon variant-ghost-surface mr-1">
-					<iconify-icon icon="gridicons:dropdown" width="24" />
+					<iconify-icon icon="material-symbols:filter-list-rounded" width="24" />
 				</button>
 			</div>
 		{/if}
@@ -488,7 +482,6 @@
 	</div>
 
 	{#if view === 'grid'}
-		<!-- TODO: center box with cards mx-auto is not working -->
 		<div class="mx-auto flex flex-wrap gap-2">
 			{#each defaultData as image}
 				<div class={`card ${gridSize === 'small' ? 'card-small' : gridSize === 'medium' ? 'card-medium' : 'card-large'}`}>
@@ -503,10 +496,13 @@
 						/>
 					</section>
 					<footer
-						class={`card-footer mt-1 flex h-9 w-full items-center justify-center break-all rounded-sm bg-surface-600 p-0 text-center text-xs text-white`}
+						class={`card-footer mt-1 flex h-14 w-full items-center justify-center break-all rounded-sm bg-surface-600 p-0 text-center text-xs text-white`}
 						style={`max-width: ${gridSize === 'small' ? '6rem' : gridSize === 'medium' ? '12rem' : '24rem'}`}
 					>
-						{image.name}
+						<div class="flex-col">
+							<div class="line-clamp-2 font-semibold text-primary-500">{image.name}</div>
+							<div class="line-clamp-1">{image.path}</div>
+						</div>
 					</footer>
 				</div>
 			{/each}
@@ -515,45 +511,12 @@
 		<div class="p-2">
 			{#if columnShow}
 				<!-- chip column order -->
-				<div class="flex flex-col justify-center rounded-md bg-surface-700 text-center">
-					<div class="font-semibold">Drag & Drop columns & Click to hide</div>
+				<div class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide>
+					<div class="text-primary-500">Drag & Drop Columns / Click to hide</div>
 					<!-- toggle all -->
-					<!-- TODO place into section row will kill dnd action-->
-					<label class="mr-3">
-						<input
-							checked={$table.getIsAllColumnsVisible()}
-							on:change={(e) => {
-								console.info($table.getToggleAllColumnsVisibilityHandler()(e));
-							}}
-							type="checkbox"
-						/>{' '}
-						{$LL.TANSTACK_Toggle()}
-					</label>
-					<section
-						class="flex justify-center rounded-md bg-surface-700 p-2"
-						use:dndzone={{ items, flipDurationMs }}
-						on:consider={handleDndConsider}
-						on:finalize={handleDndFinalize}
-					>
-						{#each items as item (item.id)}
-							<div
-								class="chip {$table.getIsAllColumnsVisible()
-									? 'variant-filled-secondary'
-									: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
-								animate:flip={{ duration: flipDurationMs }}
-							>
-								{#if $table.getIsAllColumnsVisible()}
-									<span><iconify-icon icon="fa:check" /></span>
-								{/if}
-								<span class="ml-2 capitalize">{item.name}</span>
-							</div>
-						{/each}
-					</section>
-				</div>
-				<div class="flex flex-col md:flex-row md:flex-wrap md:items-center md:justify-center">
-					<!-- toggle all -->
-					<div class="mb-2 flex items-center md:mb-0 md:mr-4">
-						<label>
+
+					<div class="flex w-full items-center justify-center">
+						<label class="mr-3">
 							<input
 								checked={$table.getIsAllColumnsVisible()}
 								on:change={(e) => {
@@ -563,21 +526,50 @@
 							/>{' '}
 							{$LL.TANSTACK_Toggle()}
 						</label>
-
-						<!-- Show/hide Columns via chips -->
-						<div class="flex flex-wrap items-center justify-center">
-							{#each $table.getAllLeafColumns() as column}
-								<span
-									class="chip {column.getIsVisible() ? 'variant-filled-secondary' : 'variant-ghost-secondary'} mx-2 my-1"
-									on:keydown
-									on:click={column.getToggleVisibilityHandler()}
-									on:keypress
+						<section
+							class="flex justify-center rounded-md bg-surface-700 p-2"
+							use:dndzone={{ items, flipDurationMs }}
+							on:consider={handleDndConsider}
+							on:finalize={handleDndFinalize}
+						>
+							{#each items as item (item.id)}
+								<div
+									class="chip {$table
+										.getAllLeafColumns()
+										.find((col) => {
+											return col.id == item.name;
+										})
+										.getIsVisible()
+										? 'variant-filled-secondary'
+										: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
+									animate:flip={{ duration: flipDurationMs }}
+									on:click={() => {
+										getColumnByName(item.name)?.toggleVisibility();
+										localStorage.setItem(
+											'MediaTanstackConfiguration',
+											JSON.stringify(
+												items.map((item) => {
+													return {
+														accessorKey: item.id,
+														visible: getColumnByName(item.id)?.getIsVisible()
+													};
+												})
+											)
+										);
+									}}
 								>
-									{#if column.getIsVisible()}<span><iconify-icon icon="fa:check" /></span>{/if}
-									<span class="capitalize">{column.id}</span>
-								</span>
+									{#if $table
+										.getAllLeafColumns()
+										.find((col) => {
+											return col.id == item.name;
+										})
+										.getIsVisible()}
+										<span><iconify-icon icon="fa:check" /></span>
+									{/if}
+									<span class="ml-2 capitalize">{item.name}</span>
+								</div>
 							{/each}
-						</div>
+						</section>
 					</div>
 				</div>
 			{/if}
