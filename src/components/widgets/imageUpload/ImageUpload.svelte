@@ -17,7 +17,7 @@
 			fileList.items.add(file);
 			_data = node.files = fileList.files;
 		} else if ($mode === 'edit') {
-			axios.get(`${field?.path}/${$entryData[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
+			axios.get(`/${field?.path}/${$entryData[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
 				let fileList = new DataTransfer();
 				let file = new File([data], $entryData[fieldName].name, {
 					type: $entryData[fieldName].mimetype

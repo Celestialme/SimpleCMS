@@ -2,6 +2,7 @@
 	import Input from '@src/components/system/inputs/Input.svelte';
 	import type { FieldType } from '.';
 	import { entryData } from '@src/stores/store';
+	import { contentLanguage } from '@src/stores/load';
 	export let dropDownData: any[] = [];
 	export let selected: { display: any; _id: any } | undefined = undefined;
 	export let field: FieldType | undefined;
@@ -10,7 +11,7 @@
 	let options: Array<{ display: any; _id: any }> = [];
 	let filtered = options;
 	console.log(dropDownData);
-	Promise.all(dropDownData.map(async (item) => ({ display: await field?.display(item, field, $entryData), _id: item._id }))).then(
+	Promise.all(dropDownData.map(async (item) => ({ display: await field?.display(item, field, $entryData, $contentLanguage), _id: item._id }))).then(
 		(res) => (options = res)
 	);
 	$: filtered = options.filter((item) => item.display.includes(search));

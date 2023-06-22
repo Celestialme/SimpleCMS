@@ -16,7 +16,7 @@ let widget = ({
 	let uploader = fields[0] as ImageUpload_Params;
 	if (!display)
 		display = async (data, field, entry, contentLanguage) =>
-			`<img class='max-w-[200px] inline-block' src="${uploader.path}/${entry[getFieldName(uploader)].name}" />`;
+			`<img class='max-w-[200px] inline-block' src="/${uploader.path}/${entry[getFieldName(uploader)].name}" />`;
 
 	let field = {
 		widget: ImageArray,

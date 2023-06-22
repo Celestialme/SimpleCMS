@@ -125,7 +125,6 @@ export function getFieldName(field: any) {
 }
 
 export async function saveFormData({ data, _collection, _mode, id }: { data: any; _collection?: Schema; _mode?: 'edit' | 'create'; id?: string }) {
-	console.log(data);
 	let $mode = _mode || get(mode);
 	let $collection = _collection || get(collection);
 	let $entryData = get(entryData);

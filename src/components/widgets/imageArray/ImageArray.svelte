@@ -11,12 +11,13 @@
 		for (let i = 0; i < files.length; i++) {
 			let fieldsData = _fieldsValue[i];
 			console.log(fieldsData);
-			await saveFormData(fieldsData);
+			debugger;
+			await saveFormData({ data: fieldsData });
 		}
 		if (!files.length) {
 			// if no files currently being chosen, means we are editing, should update.
 			let fieldsData = _fieldsValue;
-			await saveFormData(fieldsData);
+			await saveFormData({ data: fieldsData });
 		}
 	};
 </script>
