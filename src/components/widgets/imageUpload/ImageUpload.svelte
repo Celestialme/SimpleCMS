@@ -9,13 +9,13 @@
 	export let field: FieldType | undefined;
 	let _data: FileList;
 	export const WidgetData = async () => _data;
-	export let file: File | undefined = undefined; // pass file directly from imageArray
+	export const file: File | undefined = undefined; // pass file directly from imageArray
 	//console.log(file);
 
 	let fieldName = getFieldName(field);
 
 	// TODO: Save ad Webp only with all
-	async function onChangeHandler(e: Event): void {
+	async function onChangeHandler(e: Event): Promise<void> {
 		_data = (e.target as HTMLInputElement).files as FileList;
 		const file = _data[0];
 		const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9_.]/g, '');
@@ -42,7 +42,7 @@
 </FileDropzone>
 
 <!-- image preview -->
-<!-- TODO: add futher EXIF data for better media gallery search. -->
+<!-- TODO: add further EXIF data for better media gallery search. -->
 {#if _data}
 	<div class="flex flex-col items-center md:flex-row">
 		<div class="flex justify-center md:mr-4">

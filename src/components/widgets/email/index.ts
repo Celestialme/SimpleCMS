@@ -1,5 +1,5 @@
 import Email from './Email.svelte';
-import type { Params } from './types';
+import type { ParamsEMail } from './';
 
 const widget = ({
 	label,
@@ -10,7 +10,7 @@ const widget = ({
 	required,
 	localization,
 	display
-}: Params) => {
+}: ParamsEMail) => {
 	if (!display) {
 		display = async (data) => data;
 	}

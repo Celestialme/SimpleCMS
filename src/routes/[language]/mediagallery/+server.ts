@@ -1,9 +1,8 @@
-import type { RequestHandler } from '../$types';
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 
-export const get: RequestHandler = async () => {
+export function load({ params }) {
 	// Check if mediafiles directory exists
 	const mediaDir = path.resolve('./mediafiles');
 	if (!fs.existsSync(mediaDir)) {
@@ -50,4 +49,4 @@ export const get: RequestHandler = async () => {
 	return {
 		body: images
 	};
-};
+}

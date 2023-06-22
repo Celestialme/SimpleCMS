@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { FieldType } from './';
-
+	import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+	import { contentLanguage } from '@src/stores/load';
 	import { mode, entryData } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 
@@ -11,13 +12,17 @@
 	//console.log('fieldName', fieldName);
 
 	export let value = $entryData[fieldName];
+	//console.log(value);
 
 	let _data = $mode == 'create' ? {} : value;
+	// console.log($mode);
+	let _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGE;
+	// console.log(_data, $contentLanguage);
 
 	export const WidgetData = async () => _data;
 
 	// Reactive statement to update count
-	$: count = _data['en']?.length ?? 0;
+	$: count = _data[_language]?.length ?? 0;
 	const getBadgeClass = (length: number) => {
 		if (field?.minlength && length < field?.minlength) {
 			return 'bg-red-600 ';
@@ -51,7 +56,7 @@
 
 	<input
 		type="text"
-		bind:value={_data['en']}
+		bind:value={_data[_language]}
 		on:input={checkRequired}
 		name={field?.db_fieldName}
 		id={field?.db_fieldName}

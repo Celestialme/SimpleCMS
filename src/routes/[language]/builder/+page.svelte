@@ -95,7 +95,7 @@
 		autoUpdateSlug = false;
 	}
 
-	// -------------iconfy icons list----------------
+	// -------------iconify icons list----------------
 	// Import loadIcons function from Iconify Svelte library
 	import { loadIcons } from '@iconify/svelte';
 

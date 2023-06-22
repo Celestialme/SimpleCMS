@@ -34,7 +34,7 @@
 		{#each categories as category, index}
 			<AccordionItem regionPanel="divide-y divide-black my-0" class="divide-y rounded-md bg-surface-100 dark:bg-surface-300">
 				<svelte:fragment slot="lead">
-					<iconify-icon icon={category.icon} width="24" class="text-red-600" />
+					<iconify-icon icon={category.icon} width="24" class="text-error-500" />
 				</svelte:fragment>
 
 				<svelte:fragment slot="summary"

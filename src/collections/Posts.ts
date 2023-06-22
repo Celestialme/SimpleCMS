@@ -15,6 +15,7 @@ let schema = {
 	fields: [
 		widgets.Text({
 			label: 'test',
+			translated: true,
 			db_fieldName: 'dbtest',
 			required: true,
 			icon: 'ri:t-box-line',

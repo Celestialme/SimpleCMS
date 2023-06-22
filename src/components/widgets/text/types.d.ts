@@ -1,11 +1,12 @@
 export type Params = {
+	// default required parameters
 	label: string;
-	display?: (data: any, field: any, entry: any) => Promise<any>;
+	display?: DISPLAY;
 	db_fieldName?: string;
 	widget?: any;
 	schema?: any;
 
-	// extras
+	// Widget Specific parameters
 	icon?: string;
 	placeholder?: string;
 	count?: number;

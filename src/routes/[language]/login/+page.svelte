@@ -4,7 +4,7 @@
 	import SignIn from './components/SignIn.svelte';
 	import SignUp from './components/SignUp.svelte';
 	import Logo from './components/icons/Logo.svelte';
-	import LocaleSwitcher from '@src/components/LocaleSwitcher.svelte';
+	//import LocaleSwitcher from '@src/components/LocaleSwitcher.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -16,7 +16,7 @@
 	//console.log('locales', locales);
 	let selectedLocale = $locale;
 
-	// todo: disable for Systemlanguage
+	// todo: disable for System language
 	function handleLocaleChange(e) {
 		selectedLocale = e.target.value;
 		const newUrl = replaceLocaleInUrl(new URL(window.location.href), selectedLocale);
@@ -117,7 +117,6 @@
 					<option value={l}>{l}</option>
 				{/each}
 			</select>
-			<!-- <LocaleSwitcher /> -->
 		</div>
 	{/if}
 </div>

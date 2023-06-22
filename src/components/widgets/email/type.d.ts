@@ -1,4 +1,4 @@
-export type Params = {
+export type ParamsEMail = {
 	label: string;
 	display?: (data: any, field: any, entry: any) => Promise<any>;
 	db_fieldName?: string;

@@ -58,7 +58,7 @@
 		localStorage.setItem('GalleryUserPreference', userPreference);
 	}
 
-	// Refesh tanstack
+	// Refresh tanstack
 	$: if (tableSize) {
 		refreshData();
 	}
@@ -104,8 +104,11 @@
 		}
 	];
 
+	// export let data;
+	// console.log(data);
 	// TODO: Grab mediaGallery data
 	// // Allow pdf and doc image previews
+
 	const defaultData: Images[] = [
 		{
 			image: '/Default_User.svg',

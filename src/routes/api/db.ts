@@ -20,7 +20,7 @@ mongoose
 		pass: DB_PASSWORD,
 		dbName: DB_NAME
 	})
-	.then(() => console.log('---------------------Connection to database is succesfull! -----------------------'))
+	.then(() => console.log('---------------------Connection to database is successful! -----------------------'))
 	.catch((error) => console.error('Error connecting to database:', error));
 
 let collections: { [Key: string]: mongoose.Model<any> } = {};
@@ -34,7 +34,14 @@ for (let schema of schemas) {
 			timestamps: { currentTime: () => Date.now() }
 		}
 	);
-	collections[schema.name] = mongoose.models[schema.name] ? mongoose.model(schema.name) : mongoose.model(schema.name, schema_object);
+	// Check if a model with the same name already exists
+	if (mongoose.models[schema.name]) {
+		// If it does, retrieve the existing model
+		collections[schema.name] = mongoose.model(schema.name);
+	} else {
+		// If it doesn't, create a new model and assign it to the collections object
+		collections[schema.name] = mongoose.model(schema.name, schema_object);
+	}
 }
 
 !mongoose.models['auth_session'] && mongoose.model('auth_session', new mongoose.Schema({ ...session }, { _id: false }));

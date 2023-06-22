@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleHeaderSidebar, toggleFooterSidebar, language } from '@src/stores/store';
-	import { systemLanguage } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/load';
 	import axios from 'axios';
 	import { credentials } from '@src/stores/load';
 
@@ -11,18 +11,18 @@
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import Collections from '@src/components/system/drawer/Collections.svelte';
 
-	systemLanguage.set($page.params.language);
+	contentLanguage.set($page.params.language);
 
 	let handleClick;
 
 	// update the handleClick function when the systemLanguage store value changes
 	$: handleClick = () => {
 		if (!$page.url.href.includes('user')) {
-			goto(`/${$systemLanguage}/user`);
+			goto(`/${$contentLanguage}/user`);
 		}
 	};
 	// update the href value when the systemLanguage store value changes
-	$: href = `/${$systemLanguage}/builder`;
+	$: href = `/${$contentLanguage}/builder`;
 
 	//skeleton
 	import { AppShell, AppBar, Avatar, Modal, ProgressBar, Toast, toastStore, setModeUserPrefers, setModeCurrent } from '@skeletonlabs/skeleton';
@@ -60,7 +60,7 @@
 	// TODO: Fix User DATA
 	// $: user = data.user;
 	// $: avatarSrc = user?.avatar;
-	$: avatarSrc = '/images/Ausschnitt Werkzeugaufnahmen.jpg';
+	$: avatarSrc = '';
 
 	// typesafe-i18n
 	import LocaleSwitcher from '@src/components/LocaleSwitcher.svelte';
@@ -144,7 +144,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 			on:click={() => switchSideBar.update((value) => !value)}
 		>
 			{#if !switchSideBar}
-				<!-- Icon Collpased -->
+				<!-- Icon Collapsed -->
 				<iconify-icon
 					icon="bi:arrow-left-circle-fill"
 					width="30"
