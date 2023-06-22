@@ -19,7 +19,7 @@
 		).data;
 		if (resp.status == 200) {
 			$credentials = resp;
-			goto(`/${$page.params.language}/login`);
+			goto(`/login`);
 		}
 	}
 </script>

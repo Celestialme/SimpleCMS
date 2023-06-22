@@ -17,8 +17,8 @@ export async function load({ cookies, route, params }) {
 			credentials: { username: user.user }
 		};
 	} else {
-		if (route.id !== '/[language]/login') {
-			throw redirect(302, `/${params.language || PUBLIC_SYSTEM_LANGUAGE}/login`);
+		if (route.id !== '/login') {
+			throw redirect(302, `/login`);
 		}
 		return {
 			credentials: { username: user.user }
