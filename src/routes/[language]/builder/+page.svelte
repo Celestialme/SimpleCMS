@@ -2,8 +2,7 @@
 	// Collection Creation
 	import { TabGroup, Tab, Autocomplete, popup, Modal, modalStore } from '@skeletonlabs/skeleton';
 	import type { AutocompleteOption, PopupSettings, ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
-	import { flip } from 'svelte/animate';
-	import { dndzone } from 'svelte-dnd-action';
+	import VerticalList from '@src/components/VerticalList.svelte';
 
 	import * as widgets from '@src/components/widgets/index';
 	import axios from 'axios';
@@ -26,10 +25,10 @@
 		};
 
 		// Log the data object to the console
-		//console.log(data);
+		console.log('JSONoutput', data);
 
-		// Convert the data object to a JSON string
-		const json = JSON.stringify(data);
+		// Convert the datadata object to a JSON string
+		//const json = JSON.stringify(datadata);
 
 		// Create a Blob object from the JSON string
 		const blob = new Blob([json], { type: 'application/json' });
@@ -106,14 +105,14 @@
 
 	// icon popup
 	const popupIcon: PopupSettings = {
-		event: 'click',
+		event: 'focus-click',
 		target: 'popupIcon',
 		placement: 'bottom',
 		closeQuery: '' // prevent any element inside the popup from closing it
 	};
 
 	// function to fetch icons from Iconify API
-	async function searchIcons(query: string) {
+	async function searchIcons(query: string, event?: FocusEvent) {
 		loading = true;
 		try {
 			// Use search API query with prefix and limit parameters
@@ -191,9 +190,12 @@
 
 	// create a function to add a widget and push a new input value to the array
 	function onAddWidgetClick() {
-		modalStore.trigger(modal);
+		// modalStore.trigger(modal);
 		selectedWidgets = [...selectedWidgets, { widget: null, options: {}, input: '' }];
 		inputPopupWidgets.push('');
+
+		console.log(selectedWidgets);
+		console.log(inputPopupWidgets);
 	}
 
 	const modal: ModalSettings = {
@@ -216,6 +218,14 @@
 		// use widgetName as the index type
 		selectedWidgetoptions[widgetName[index]] = {};
 	}
+
+	// TODO: Widget data
+	let items = [
+		{ id: 1, name: 'Item 1', DBName: 'item1', widget: 'Text' },
+		{ id: 2, name: 'Item 2', DBName: 'item2', widget: 'Text2' },
+		{ id: 3, name: 'Item 3', DBName: 'item3', widget: 'Text3' }
+		// ...
+	];
 </script>
 
 <div class="align-centre mb-2 ml-2 mt-2 flex dark:text-white">
@@ -232,20 +242,26 @@
 	</div>
 </div>
 <div class="m-2">
-	<p>This builder will help you to setup a new Content Collection</p>
+	<p class="mb-2 hidden text-center sm:block">This builder will help you to setup a new Content Collection</p>
 
 	<TabGroup on:complete={onCompleteHandler}>
 		<Tab bind:group={tabSet} name="tab1" value={0}>
-			<iconify-icon icon="ic:baseline-edit" width="24" class="text-primary-500" />
-			Edit</Tab
+			<div class="flex items-center gap-1">
+				<iconify-icon icon="ic:baseline-edit" width="24" class="text-primary-500" />
+				Edit
+			</div></Tab
 		>
-		<Tab bind:group={tabSet} name="tab2" value={1}>
-			<iconify-icon icon="mdi:widgets-outline" width="24" class="text-primary-500" />
-			Manage Fields</Tab
+		<Tab bind:group={tabSet} name="tab2" value={1}
+			><div class="flex items-center gap-1">
+				<iconify-icon icon="mdi:widgets-outline" width="24" class="text-primary-500" />
+				Fields
+			</div></Tab
 		>
-		<Tab bind:group={tabSet} name="tab3" value={2}>
-			<iconify-icon icon="ic:twotone-shield" width="24" class="text-primary-500" />
-			Manage Permisions</Tab
+		<Tab bind:group={tabSet} name="tab3" value={2}
+			><div class="flex items-center gap-1">
+				<iconify-icon icon="ic:twotone-shield" width="24" class="text-primary-500" />
+				Permisions
+			</div></Tab
 		>
 
 		<!-- Tab Panels --->
@@ -253,11 +269,10 @@
 		<svelte:fragment slot="panel">
 			<!-- Edit -->
 			{#if tabSet === 0}
-				<div class="text-error-500">how todo translations?</div>
 				<div class="mb-2 text-center text-xs text-error-500">* Required</div>
 
 				<!-- Collection Name -->
-				<div class=" mb-4 ml-1.5 flex items-center gap-4">
+				<div class="mb-2 flex items-center gap-4 sm:mb-4 sm:ml-1.5">
 					<label for="name" class="relative"
 						>Name: <span class="text-error-500">*</span>
 						<iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-2" />
@@ -270,15 +285,18 @@
 						bind:value={name}
 						on:input={checkInputName}
 						placeholder="Collection Unique Name"
-						class="variant-filled-surface"
+						class="variant-filled-surface ml-1.5 w-full sm:ml-0 sm:w-auto"
 					/>
 					{#if name}
-						<p>Database Name: <span class="font-bold">{DBName}</span></p>
+						<p class="mb-3 hidden sm:block">Database Name: <span class="font-bold text-primary-500">{DBName}</span></p>
 					{/if}
 				</div>
+				{#if name}
+					<p class="mb-3 sm:hidden">Database Name: <span class="font-bold text-primary-500">{DBName}</span></p>
+				{/if}
 
-				<div class="border p-2">
-					<p class="mb-2 font-bold">Optional values:</p>
+				<div class="rounded-md border p-2">
+					<p class="mb-2 font-bold text-primary-500">Optional values:</p>
 
 					<!-- Collection Description -->
 					<div class="mb-3 flex items-center gap-4">
@@ -305,6 +323,7 @@
 							class="variant-filled-surface"
 							use:popup={popupIcon}
 							on:input={searchIcons}
+							on:focus={searchIcons}
 						/>
 
 						<!-- Display selected icon -->
@@ -382,62 +401,31 @@
 					</div>
 				</div>
 
-				<button type="button" on:click={() => (tabSet = 1)} class="btn variant-filled-primary mt-2 justify-end">Next</button>
+				<div class="flex justify-end">
+					<button type="button" on:click={() => (tabSet = 1)} class="btn variant-filled-primary mt-2">Next</button>
+				</div>
 
 				<!-- Manage Fields -->
 			{:else if tabSet === 1}
-				<h2>
-					<iconify-icon icon={iconselected} width="24" class="mr-1" /><span class="text-primary-500">{name}:</span>
-					Field Widgets Overview
+				<h2 class="mb-2 flex items-center">
+					<p>Field field for :</p>
+					<iconify-icon icon={iconselected} width="24" class="mx-1 text-primary-500" />
+					<div class="text-primary-500">{name}</div>
 				</h2>
-				<div class="bg-surface-500 text-center">
-					<p>Select as many widget inputs as you required to create you Collection Content Type</p>
-					<p>Drag & Drop your widget to sort these</p>
-
-					<!-- Responsive Container (recommended) -->
-					<div class="table-container">
-						<!-- Native Table Element -->
-						<table class="table-hover table text-left">
-							<thead>
-								<tr>
-									<th>Position</th>
-									<th>Name</th>
-									<th>DBName</th>
-									<th>Widget</th>
-									<td>Operations</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>1</td>
-									<td>First</td>
-									<td>textFrist</td>
-									<td>Text</td>
-									<td>edit</td>
-								</tr>
-								<tr>
-									<td>2</td>
-									<td>Middle</td>
-									<td>Text</td>
-									<td>edit</td>
-								</tr>
-								<tr>
-									<td>3</td>
-									<td>Last</td>
-									<td>Text</td>
-									<td>edit</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="text-center">
-						<button class="btn variant-filled-primary my-3" on:keydown on:click={onAddWidgetClick}>Add more Fields</button>
-					</div>
+				<div class="variant-outline-primary rounded-t-md p-2 text-center">
+					<p>Select as many widget inputs as you require to create your Collection</p>
+					<p class="mb-2">Drag & Drop your widgets fields to sort them</p>
 				</div>
-				<div class="flex items-center justify-between">
+
+				<!--dnd vertical row -->
+				<VerticalList {items} />
+
+				<div class=" border-t text-center border-surface-400-500-token">
+					<button class="btn variant-filled-tertiary mt-2" on:keydown on:click={onAddWidgetClick}>Add more Fields</button>
+				</div>
+				<div class=" flex items-center justify-between">
 					<button type="button" on:click={() => (tabSet = 0)} class="btn variant-filled-secondary mt-2 justify-end">Previous</button>
-					<button type="button" class="btn variant-filled-primary mt-2 justify-end">Save</button>
+					<button type="button" on:click={onCompleteHandler} class="btn variant-filled-primary mt-2 justify-end dark:text-black">Save</button>
 				</div>
 
 				<!-- Manage Permissions -->
@@ -512,8 +500,8 @@
 				<button class="btn variant-filled-primary my-3" on:keydown on:click={onAddWidgetClick}>Add Another Widget Input</button>
 			</div>
 		{/if}
-	{/each}</Modal
->
+	{/each}
+</Modal>
 
 <style lang="postcss">
 	.options-table {

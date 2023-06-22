@@ -207,21 +207,18 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 					</button>
 				</div>
 
-				<!-- System Language i18n Handling -->
 				<!-- TODO: Fix Tooltip overflow -->
 				<!-- System Language i18n Handling -->
-				<div class={$switchSideBar ? 'order-3 row-span-2' : 'order-2'}>
-					<div class="transform cursor-pointer items-center justify-center rounded-full dark:text-black">
-						<select
-							bind:value={selectedLocale}
-							on:change={handleLocaleChange}
-							class="rounded-full border-2 border-white bg-[#242728] uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring active:ring-blue-300"
-						>
-							{#each locales as locale}
-								<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
-							{/each}
-						</select>
-					</div>
+				<div class={$switchSideBar ? 'order-3 row-span-2  ' : 'order-2'}>
+					<select
+						bind:value={selectedLocale}
+						on:change={handleLocaleChange}
+						class="{$switchSideBar ? 'px-2.5 py-2' : 'px-2 py-1.5'} variant-filled-surface appearance-none rounded-full uppercase text-white"
+					>
+						{#each locales as locale}
+							<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
+						{/each}
+					</select>
 				</div>
 
 				<!-- light/dark mode switch -->
