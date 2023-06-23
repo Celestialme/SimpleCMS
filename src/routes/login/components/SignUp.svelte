@@ -6,15 +6,16 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { PageData } from '../$types';
 	export let formSchema: PageData['signUpForm'];
-	import { signUpSchema } from '../formSchemas';
+	import { signUpSchema } from '@src/utils/formSchemas';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import CMSLogo from './icons/Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
-	let userExists = false;
-	let firstUserExists = false;
+
+	let registerError;
+
 	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
 		id: 'signup',
-		validators: signUpSchema,
+		validators: (formSchema.data.token != null ? signUpSchema : signUpSchema.innerType().omit({ token: true })) as typeof signUpSchema,
 		defaultValidator: 'clear',
 		applyAction: true,
 		taintedMessage: '',
@@ -27,9 +28,12 @@
 			console.log($errors);
 			if (result.type == 'redirect') return;
 			cancel();
-			userExists = true;
+			if (result.type == 'success') {
+				registerError = result.data?.message;
+			}
 		}
 	});
+	let firstUserExists = $form.token != null;
 </script>
 
 <section
@@ -91,7 +95,20 @@
 			theme="dark"
 		/>
 		{#if $errors.confirmPassword}<span class="invalid">{$errors.confirmPassword}</span>{/if}
-		{#if userExists}<span class="invalid">User already exists</span>{/if}
+		{#if $form.token != null}
+			<FloatingInput
+				iconClass="text-white"
+				inputClass="text-white"
+				name="token"
+				type="password"
+				bind:value={$form.token}
+				{...$constraints.token}
+				label={'Token'}
+				theme="dark"
+			/>
+		{/if}
+		{#if $errors.token}<span class="invalid">{$errors.token}</span>{/if}
+		{#if registerError}<span class="invalid">{registerError}</span>{/if}
 		<Button class="bg-white mt-10">{$LL.LOGIN_SignUp()}</Button>
 	</form>
 	<SignupIcon show={active == 0 || active == undefined} />

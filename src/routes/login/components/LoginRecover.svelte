@@ -6,7 +6,7 @@
 	import LL from '@src/i18n/i18n-svelte';
 	import type { PageData } from '../$types';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { recoverSchema } from '../formSchemas';
+	import { recoverSchema } from '@src/utils/formSchemas';
 
 	export let formSchema: PageData['recoverForm'];
 	export let active: number | undefined;

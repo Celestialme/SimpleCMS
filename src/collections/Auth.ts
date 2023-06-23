@@ -1,10 +1,3 @@
-export let user = {
-	_id: {
-		type: String
-	},
-	username: String
-};
-
 export let session = {
 	_id: {
 		type: String

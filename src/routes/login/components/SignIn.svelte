@@ -5,7 +5,7 @@
 	import LL from '@src/i18n/i18n-svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { PageData } from '../$types';
-	import { loginSchema } from '../formSchemas';
+	import { loginSchema } from '@src/utils/formSchemas';
 	import CMSLogo from './icons/Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';

@@ -36,7 +36,7 @@
 		background-color: gray;
 		padding: 5px 40px;
 		color: white;
-
+		text-align: center;
 		user-select: none;
 		cursor: pointer;
 	}
