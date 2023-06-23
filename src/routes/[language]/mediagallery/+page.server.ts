@@ -2,6 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 
+//import { LuciaAuth } from 'lucia-auth';
+let hasPermission: boolean = true;
+
 export function load({ params }) {
 	// Check if media files directory exists
 	const mediaDir = path.resolve('./mediafiles');
@@ -54,12 +57,37 @@ export function load({ params }) {
 				thumbnail = `/path/to/your/icon/file.svg`;
 			}
 
-			return {
-				image: `/mediafiles/${collection || ''}/${file}`,
-				name: file,
-				path: `/mediafiles/${collection || ''}`,
-				thumbnail
-			};
+			//TODO: Add User Permission to see only own data files
+			// 	const user = await LuciaAuth.currentUser();
+			//  const hasPermission = user && user.canAccessMedia(collection);
+			// if (uploadedMedia) {
+			// 	const mediaId = uploadedMedia.find((media) => media.file === file);
+			// 	if (mediaId) {
+			// 		hasPermission = true;
+			// 	}
+			// } else {
+			// 	hasPermission = false;
+			// }
+
+			if (hasPermission) {
+				// The user can see all of the media files
+				return {
+					image: `/mediafiles/${collection || ''}/${file}`,
+					name: file,
+					path: `/mediafiles/${collection || ''}`,
+					thumbnail,
+					hasPermission
+				};
+			} else {
+				// The user cannot see all of the media files
+				return {
+					image: `/mediafiles/${collection || ''}/${file}`,
+					name: file,
+					path: `/mediafiles/${collection || ''}`,
+					thumbnail,
+					hasPermission: false
+				};
+			}
 		});
 	});
 

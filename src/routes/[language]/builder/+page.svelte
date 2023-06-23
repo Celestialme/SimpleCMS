@@ -111,6 +111,7 @@
 		closeQuery: '' // prevent any element inside the popup from closing it
 	};
 
+	//TODO: Update Search on Next/Previous event
 	// function to fetch icons from Iconify API
 	async function searchIcons(query: string, event?: FocusEvent) {
 		loading = true;
@@ -121,7 +122,13 @@
 			const response = await axios.get(
 				`https://api.iconify.design/search?query=${encodeURIComponent(searchQuery)}&prefix=ic&limit=50&start=${start}`
 			);
-			//console.log('response', response);
+			// console.log('response', response);
+			// const total = response.data.total;
+			// const limit = response.data.limit;
+			// const pages = Math.ceil(total / limit);
+
+			// console.log(`There are ${pages} pages of results.`);
+
 			if (response.data && response.data.icons) {
 				icons = response.data.icons; // update icons array
 				//console.log('icons', icons);
@@ -144,7 +151,7 @@
 
 	// reactive statement to update selected icon name on click
 	$: if (iconselected) {
-		console.log(`Selected icon: ${iconselected}`);
+		//console.log(`Selected icon: ${iconselected}`);
 	}
 
 	// Declare a variable for the start index and initialize it to 0
@@ -152,23 +159,27 @@
 
 	// Reactive statement to fetch icons whenever the start index changes
 	$: if (start >= 0) {
+		//console.log(`start: ${start}`);
 		searchIcons(searchQuery);
 	}
 
 	// Function to go to the next page of results by increasing the start index by 50
 	function nextPage() {
 		start += 50;
+		//console.log('startnextPage:', start);
+		searchIcons(searchQuery);
 	}
-
 	// Function to go to the previous page of results by decreasing the start index by 50
 	function prevPage() {
 		start -= 50;
+		//console.log('startprevPage:', start);
+		searchIcons(searchQuery);
 	}
 
 	// ------------widget builder ---------------
-
 	// create an array to store the input values for each widget
 	let inputPopupWidgets = [''];
+	console.log(inputPopupWidgets);
 	let popupSettings: PopupSettings = {
 		event: 'focus-click',
 		closeQuery: '',
@@ -189,23 +200,35 @@
 	let selectedWidgetoptions = {};
 
 	// create a function to add a widget and push a new input value to the array
-	function onAddWidgetClick() {
-		// modalStore.trigger(modal);
-		selectedWidgets = [...selectedWidgets, { widget: null, options: {}, input: '' }];
-		inputPopupWidgets.push('');
+	// function onAddWidgetClick() {
+	// 	// modalStore.trigger(modal);
+	// 	selectedWidgets = [...selectedWidgets, { widget: null, options: {}, input: '' }];
+	// 	inputPopupWidgets.push('');
 
-		console.log(selectedWidgets);
-		console.log(inputPopupWidgets);
+	// 	console.log(selectedWidgets);
+	// 	console.log(inputPopupWidgets);
+	// }
+
+	import ModalWidgetForm1 from './ModalWidgetForm1.svelte';
+	import ModalWidgetForm2 from './ModalWidgetForm2.svelte';
+
+	function onAddWidgetClick(): void {
+		// create an array of the modals to open
+		[1].forEach((dNum: number) => {
+			const modal: ModalSettings = {
+				type: 'prompt',
+				// target: `ModalWidgetForm${dNum}`
+				title: `Modal ${dNum}`,
+				body: `The modal body of ${dNum}.`,
+				value: 'Skeleton',
+				valueAttr: { type: 'text', minlength: 3, maxlength: 10, required: true },
+				// Returns the updated response value
+				response: (r: string) => console.log('response:', r)
+			};
+
+			modalStore.trigger(modal);
+		});
 	}
-
-	const modal: ModalSettings = {
-		type: 'confirm',
-		// Data
-		title: 'Please Confirm',
-		body: 'Are you sure you wish to proceed?',
-		// TRUE if confirm pressed, FALSE if cancel pressed
-		response: (r: boolean) => console.log('response:', r)
-	};
 
 	// create a function to handle the selection of a widget and update the input value in the array
 	function onPopupWidgetSelect(event: CustomEvent<AutocompleteOption>, index: number) {
@@ -341,12 +364,12 @@
 						<div>
 							<div class=" mb-2 border-b text-center">
 								<p class="text-primary-500">Select from Google Material Icons</p>
-								<!-- todo: display hover  -->
-								<iconify-icon {icon} width="30" class="text-error-500" />
+
+								<iconify-icon {icon} width="30" class="" />
 							</div>
 							<div class="grid grid-cols-5 gap-2">
 								{#each icons as icon}
-									<div class="relative flex flex-col items-center">
+									<button class="relative flex flex-col items-center">
 										<span class="iconify" data-icon={icon} data-inline="false" />
 										<iconify-icon
 											{icon}
@@ -355,7 +378,7 @@
 											on:click={() => selectIcon(icon)}
 											class="hover:cursor-pointer hover:text-primary-500"
 										/>
-									</div>
+									</button>
 								{/each}
 							</div>
 

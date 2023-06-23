@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
+	import { writable } from 'svelte/store';
+	import { flip } from 'svelte/animate';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -62,18 +64,8 @@
 		localStorage.setItem('GalleryUserPreference', userPreference);
 	}
 
-	// Refresh tanstack
-	$: if (tableSize) {
-		refreshData();
-	}
-
-	import { writable } from 'svelte/store';
-	import { flip } from 'svelte/animate';
-
 	// tanstack table
-
 	import { createSvelteTable, flexRender, getCoreRowModel, getSortedRowModel, getPaginationRowModel } from '@tanstack/svelte-table';
-
 	import type { ColumnDef, TableOptions, SortDirection, FilterFn } from '@tanstack/svelte-table';
 
 	type Images = {
@@ -82,6 +74,12 @@
 		path: string;
 	};
 
+	// Refresh tanstack
+	$: if (tableSize) {
+		refreshData();
+	}
+
+	// TODO: Apply Office  icons
 	// columns definition
 	const defaultColumns: ColumnDef<Images>[] = [
 		{
@@ -283,8 +281,6 @@
 			}
 		};
 	});
-	// console.log('columnOrder', columnOrder);
-	// console.log('items', items);
 
 	let columnShow = false;
 
@@ -355,8 +351,8 @@
 				Display
 				<div class="flex sm:divide-x sm:divide-gray-500">
 					{#if view === 'grid'}
-						<div
-							class="px-1"
+						<button
+							class="btn px-1"
 							on:keydown
 							on:click={() => {
 								view = 'table';
@@ -371,10 +367,10 @@
 						>
 							<iconify-icon icon="material-symbols:grid-view-rounded" height="40" style={`color: white`} />
 							<br />Table
-						</div>
+						</button>
 					{:else}
-						<div
-							class="px-1"
+						<button
+							class="btn px-1"
 							on:keydown
 							on:click={() => {
 								view = 'grid';
@@ -389,7 +385,7 @@
 						>
 							<iconify-icon icon="material-symbols:list-alt-outline" height="40" style={`color: white`} />
 							<br />Grid
-						</div>
+						</button>
 					{/if}
 				</div>
 			</div>
@@ -421,7 +417,7 @@
 		<div class="hidden flex-col items-center sm:flex">
 			Display
 			<div class="flex divide-x divide-gray-500">
-				<div
+				<button
 					class="px-2"
 					on:keydown
 					on:click={() => {
@@ -437,8 +433,8 @@
 				>
 					<iconify-icon icon="material-symbols:grid-view-rounded" height="40" style={`color: ${view === 'grid' ? 'white' : 'grey'}`} />
 					<br />Grid
-				</div>
-				<div
+				</button>
+				<button
 					class="px-2"
 					on:keydown
 					on:click={() => {
@@ -454,7 +450,7 @@
 				>
 					<iconify-icon icon="material-symbols:list-alt-outline" height="40" style={`color: ${view === 'table' ? 'white' : 'grey'}`} />
 					<br />Table
-				</div>
+				</button>
 			</div>
 		</div>
 
@@ -485,22 +481,32 @@
 		<div class="mx-auto flex flex-wrap gap-2">
 			{#each defaultData as image}
 				<div class={`card ${gridSize === 'small' ? 'card-small' : gridSize === 'medium' ? 'card-medium' : 'card-large'}`}>
-					<header class="card-header" />
+					<!-- <header class="card-header" /> -->
 					<section class="p-4 text-center">
-						<img
-							class={`inline-block object-cover object-center ${
-								gridSize === 'small' ? 'h-16 w-16' : gridSize === 'medium' ? 'h-36 w-36' : 'h-80 w-80'
-							}`}
-							src={image.image}
-							alt={image.name}
-						/>
+						{#if image.image.endsWith('.pdf')}
+							<iconify-icon icon="vscode-icons:file-type-pdf2" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
+						{:else if image.image.endsWith('.xlsx') || image.image.endsWith('.xls')}
+							<iconify-icon icon="vscode-icons:file-type-excel" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
+						{:else if image.image.endsWith('.docx') || image.image.endsWith('.doc')}
+							<iconify-icon icon="vscode-icons:file-type-word" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
+						{:else if image.image.endsWith('.jpg') || image.image.endsWith('.jpeg') || image.image.endsWith('.png') || image.image.endsWith('.svg') || image.image.endsWith('.webp') || image.image.endsWith('.avif')}
+							<img
+								class={`inline-block object-cover object-center ${
+									gridSize === 'small' ? 'h-16 w-16' : gridSize === 'medium' ? 'h-36 w-36' : 'h-80 w-80'
+								}`}
+								src={image.image}
+								alt={image.name}
+							/>
+						{:else}
+							<iconify-icon icon="noto-v1:question-mark" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
+						{/if}
 					</section>
 					<footer
 						class={`card-footer mt-1 flex h-14 w-full items-center justify-center break-all rounded-sm bg-surface-600 p-0 text-center text-xs text-white`}
 						style={`max-width: ${gridSize === 'small' ? '6rem' : gridSize === 'medium' ? '12rem' : '24rem'}`}
 					>
 						<div class="flex-col">
-							<div class="line-clamp-2 font-semibold text-primary-500">{image.name}</div>
+							<div class="mb-1 line-clamp-2 font-semibold text-primary-500">{image.name}</div>
 							<div class="line-clamp-1">{image.path}</div>
 						</div>
 					</footer>
@@ -533,7 +539,7 @@
 							on:finalize={handleDndFinalize}
 						>
 							{#each items as item (item.id)}
-								<div
+								<button
 									class="chip {$table
 										.getAllLeafColumns()
 										.find((col) => {
@@ -567,7 +573,7 @@
 										<span><iconify-icon icon="fa:check" /></span>
 									{/if}
 									<span class="ml-2 capitalize">{item.name}</span>
-								</div>
+								</button>
 							{/each}
 						</section>
 					</div>
@@ -581,7 +587,7 @@
 								{#each headerGroup.headers as header}
 									<th colSpan={header.colSpan} class="text-center">
 										{#if !header.isPlaceholder}
-											<div
+											<button
 												class:cursor-pointer={header.column.getCanSort()}
 												class:select-none={header.column.getCanSort()}
 												on:keydown
@@ -593,7 +599,7 @@
 												{:else if header.column.getIsSorted() === 'desc'}
 													<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
 												{/if}
-											</div>
+											</button>
 										{/if}
 									</th>
 								{/each}

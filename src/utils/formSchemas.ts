@@ -79,3 +79,8 @@ export let signUpOtherFormSchema = z.object({
 	token: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1)
 	// terms: z.boolean({ required_error: 'Confirm Terms' })
 });
+
+export let addUserSchema = z.object({
+	email: z.string().email(),
+	role: z.string()
+});

@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 import { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } from '$env/static/private';
 import schemas from '@src/collections';
+import { fieldsToSchema } from '@src/utils/utils';
+import { dev } from '$app/environment';
+
+// Lucia
 import lucia, { type Session, type User } from 'lucia-auth';
 import adapter from '@lucia-auth/adapter-mongoose';
 import { session, key, UserSchema } from '@src/collections/Auth';
 import { sveltekit } from 'lucia-auth/middleware';
-import { fieldsToSchema } from '@src/utils/utils';
-import { dev } from '$app/environment';
-
-//console.log('lucia', { UserSchema });
 
 // Turn off strict mode for query filters. Default in Mongodb 7
 mongoose.set('strictQuery', false);

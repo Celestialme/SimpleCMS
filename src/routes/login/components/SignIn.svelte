@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from '../$types';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { loginFormSchema, forgotFormSchema, resetFormSchema } from '../formSchemas';
+	import { loginFormSchema, forgotFormSchema, resetFormSchema } from '@src/utils/formSchemas';
 
 	// import { goto } from '$app/navigation';
 	// import axios, { toFormData } from 'axios';
@@ -35,11 +35,18 @@
 		taintedMessage: '',
 
 		onSubmit: ({ cancel }) => {
+			// Submit email as lowercase only
+			$form.email = $form.email.toLowerCase();
+
+			console.log('onSubmit:', form);
+
 			// handle login form submission
-			// if ($allErrors.length > 0) cancel();
+			if ($allErrors.length > 0) cancel();
 		},
 
 		onResult: ({ result, cancel }) => {
+			console.log('onResult', result);
+
 			if (result.type == 'redirect') return;
 			cancel();
 
@@ -68,7 +75,10 @@
 		taintedMessage: '',
 
 		onSubmit: ({ cancel }) => {
-			// if ($allErrors.length > 0) cancel();
+			// Submit email as lowercase only
+			$forgotForm.email = $forgotForm.email.toLowerCase();
+			// handle login form submission
+			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			// handle forgot form result
@@ -103,7 +113,8 @@
 		taintedMessage: '',
 
 		onSubmit: ({ cancel }) => {
-			// if ($allErrors.length > 0) cancel();
+			// handle login form submission
+			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			if (result.type == 'redirect') {
@@ -121,7 +132,7 @@
 	let formElement: HTMLFormElement;
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <section
 	on:click
 	on:pointerenter
@@ -186,7 +197,7 @@
 
 					<button
 						type="button"
-						class="variant-ringed-surface btn text-black"
+						class="btn variant-ringed-surface text-black"
 						on:click={() => {
 							forgot = true;
 							resetPW = false;

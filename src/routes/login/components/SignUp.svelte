@@ -12,7 +12,7 @@
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
-	import { signUpFormSchema, signUpOtherFormSchema } from '../formSchemas';
+	import { signUpFormSchema, signUpOtherFormSchema } from '@src/utils/formSchemas';
 
 	export let firstUserExists = false;
 	console.log('firstUserExists', firstUserExists);
@@ -24,6 +24,7 @@
 	export let FormSchemaSignUp: PageData['signUpForm'];
 	const { form, constraints, allErrors, errors, enhance } = superForm(FormSchemaSignUp, {
 		validators: signUpFormSchema,
+		//validators: (FormSchemaSignUp.data.token != null ? signUpFormSchema : signUpFormSchema.innerType().omit({ token: true })) as typeof signUpFormSchema,
 		// Clear form on success.
 		resetForm: true,
 		// Prevent page invalidation, which would clear the other form when the load function executes again.
@@ -34,6 +35,9 @@
 		taintedMessage: '',
 
 		onSubmit: ({ cancel }) => {
+			// Submit email as lowercase only
+			$form.email = $form.email.toLowerCase();
+
 			// handle login form submission
 			if ($allErrors.length > 0) cancel();
 		},
@@ -48,8 +52,14 @@
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 
 			userExists = true;
+
+			// 	if (result.type == 'success') {
+			// 		registerError = result.data?.message;
+			// 	}
 		}
 	});
+
+	// let firstUserExists = $form.token != null;
 
 	export let FormSchemaSignUpOther: PageData['signUpFormOther'];
 	const {
@@ -70,6 +80,9 @@
 		taintedMessage: '',
 
 		onSubmit: ({ cancel }) => {
+			// Submit email as lowercase only
+			$otherForm.email = $otherForm.email.toLowerCase();
+
 			// handle login form submission
 			if ($allErrors.length > 0) cancel();
 		},
@@ -88,8 +101,11 @@
 	});
 
 	let formElement: HTMLFormElement;
+
+	let UserRole = 'Creator';
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <section
 	on:click
 	on:pointerenter
@@ -105,13 +121,13 @@
 
 			<h1 class="text-3xl font-bold text-white lg:text-4xl">
 				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
-				<div class="lg:-mt-1">
+				<div class="break-words lg:-mt-1">
 					{$LL.LOGIN_SignUp()}
 					{#if !firstUserExists}
-						as Admin
+						: Admin
 					{:else}
-						<!-- TODO: Grab token User Role -->
-						as User XX
+						<!-- TODO: Grab User Role from Token  -->
+						{#if UserRole}: {UserRole}{:else}: New User{/if}
 					{/if}
 				</div>
 			</h1>

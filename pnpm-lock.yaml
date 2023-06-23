@@ -11,6 +11,9 @@ dependencies:
   '@lucia-auth/adapter-mongoose':
     specifier: ^2.0.0
     version: 2.0.0(lucia-auth@1.8.0)
+  '@lucia-auth/tokens':
+    specifier: ^1.0.2
+    version: 1.0.2(lucia-auth@1.8.0)
   '@tanstack/svelte-table':
     specifier: ^8.9.2
     version: 8.9.2(svelte@4.0.0)
@@ -54,10 +57,10 @@ devDependencies:
     version: 1.8.0
   '@sveltejs/adapter-node':
     specifier: ^1.2.4
-    version: 1.2.4(@sveltejs/kit@1.20.4)
+    version: 1.2.4(@sveltejs/kit@1.20.5)
   '@sveltejs/kit':
-    specifier: ^1.20.4
-    version: 1.20.4(svelte@4.0.0)(vite@4.3.9)
+    specifier: ^1.20.5
+    version: 1.20.5(svelte@4.0.0)(vite@4.3.9)
   '@tailwindcss/forms':
     specifier: ^0.5.3
     version: 0.5.3(tailwindcss@3.3.2)
@@ -114,7 +117,7 @@ devDependencies:
     version: 0.9.22(svelte@4.0.0)
   sveltekit-superforms:
     specifier: ^1.1.1
-    version: 1.1.1(@sveltejs/kit@1.20.4)(svelte@4.0.0)(zod@3.21.4)
+    version: 1.1.1(@sveltejs/kit@1.20.5)(svelte@4.0.0)(zod@3.21.4)
   tailwindcss:
     specifier: ^3.3.2
     version: 3.3.2
@@ -458,6 +461,14 @@ packages:
       lucia-auth: 1.8.0
     dev: false
 
+  /@lucia-auth/tokens@1.0.2(lucia-auth@1.8.0):
+    resolution: {integrity: sha512-gdhzw7CK+6V39+u/iGYauLblNoA+fhQzOUEkGJCrzA8Nth2VxOJQixTJxV6YATcy2PPYihJgIeU8GFhpkhYXig==}
+    peerDependencies:
+      lucia-auth: 1.x
+    dependencies:
+      lucia-auth: 1.8.0
+    dev: false
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -561,7 +572,7 @@ packages:
       svelte: 3.58.0
     dev: true
 
-  /@sveltejs/adapter-node@1.2.4(@sveltejs/kit@1.20.4):
+  /@sveltejs/adapter-node@1.2.4(@sveltejs/kit@1.20.5):
     resolution: {integrity: sha512-TNnhS+OKRZ9RKnC+ho5mlE2FJquI61i0v7yOXxBUSU3LAoYH2kwVVL8P8ecjefmZ8BOfM1V54pBnDODBU5CEaA==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
@@ -569,12 +580,12 @@ packages:
       '@rollup/plugin-commonjs': 24.1.0(rollup@3.25.1)
       '@rollup/plugin-json': 6.0.0(rollup@3.25.1)
       '@rollup/plugin-node-resolve': 15.1.0(rollup@3.25.1)
-      '@sveltejs/kit': 1.20.4(svelte@4.0.0)(vite@4.3.9)
+      '@sveltejs/kit': 1.20.5(svelte@4.0.0)(vite@4.3.9)
       rollup: 3.25.1
     dev: true
 
-  /@sveltejs/kit@1.20.4(svelte@4.0.0)(vite@4.3.9):
-    resolution: {integrity: sha512-MmAzIuMrP7A+8fqDVbxm6ekGHRHL/+Fk8sQPAzPG4G2TxUDtHdn/WcIxeEqHzARMf0OtGSC+VPyOSFuw2Cy2Mg==}
+  /@sveltejs/kit@1.20.5(svelte@4.0.0)(vite@4.3.9):
+    resolution: {integrity: sha512-8rJYZ2boRlO75lwpbpB+DlSzIwmTuamXTpVlDtw4dBk86o3UaDe/+Ro4xCsV/4FtTw2U8xPHyV83edAWbQHG0w==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
     requiresBuild: true
@@ -3819,14 +3830,14 @@ packages:
       magic-string: 0.30.0
       periscopic: 3.1.0
 
-  /sveltekit-superforms@1.1.1(@sveltejs/kit@1.20.4)(svelte@4.0.0)(zod@3.21.4):
+  /sveltekit-superforms@1.1.1(@sveltejs/kit@1.20.5)(svelte@4.0.0)(zod@3.21.4):
     resolution: {integrity: sha512-lD3ov06C/O8hD7mCzEQZ7CTsbHrh6kWhRP3njI9ZSwvG5DW6vhfi6Re/cyYy//cS0oMONI0xBieWyr9s24Y9jA==}
     peerDependencies:
       '@sveltejs/kit': 1.x
       svelte: 3.x
       zod: 3.x
     dependencies:
-      '@sveltejs/kit': 1.20.4(svelte@4.0.0)(vite@4.3.9)
+      '@sveltejs/kit': 1.20.5(svelte@4.0.0)(vite@4.3.9)
       svelte: 4.0.0
       zod: 3.21.4
     dev: true

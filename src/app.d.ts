@@ -2,6 +2,13 @@
 // for information about these interfaces
 // and what to do when importing types
 declare global {
+	/// <reference types="lucia" />
+	declare namespace Lucia {
+		type Auth = import('./lucia.js').Auth;
+		type DatabaseUserAttributes = {};
+		type DatabaseSessionAttributes = {};
+	}
+
 	namespace App {
 		// interface Error {}
 		// interface Locals {}

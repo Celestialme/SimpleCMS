@@ -32,6 +32,16 @@
 		console.log('selectedLocaleUpdated', selectedLocale);
 	}
 
+	let isFocused = false;
+
+	function handleFocus() {
+		isFocused = true;
+	}
+
+	function handleBlur() {
+		isFocused = false;
+	}
+
 	let active: undefined | 0 | 1 = undefined;
 	let background: 'white' | '#242728' = 'white';
 </script>
@@ -112,19 +122,40 @@
 				</div>
 			</div>
 		</div>
-		<!-- TODO:fix Language switcher -->
+
+		<!-- TODO: Fix Language switcher -->
 		<div
 			class="absolute bottom-1/4 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform cursor-pointer items-center justify-center rounded-full dark:text-black"
 		>
-			<select
-				bind:value={selectedLocale}
-				on:change={handleLocaleChange}
-				class="rounded-full border-2 border-white bg-[#242728] uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring active:ring-blue-300"
-			>
-				{#each locales as locale}
-					<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
-				{/each}
-			</select>
+			{#if locales.length > 5}
+				<!-- Autocomplete input -->
+				<input
+					type="text"
+					list="locales"
+					on:input={handleLocaleChange}
+					on:focus={handleFocus}
+					on:blur={handleBlur}
+					placeholder={selectedLocale}
+					class="{isFocused ? 'w-40' : 'w-20'} input rounded-full border-2 border-white bg-[#242728] uppercase text-white focus:ring-2"
+				/>
+
+				<datalist id="locales" class="w-full divide-y divide-white uppercase">
+					{#each locales as locale}
+						<option value={locale} class=" uppercase text-red-500">{locale}</option>
+					{/each}
+				</datalist>
+			{:else}
+				<!-- Dropdown select -->
+				<select
+					bind:value={selectedLocale}
+					on:change={handleLocaleChange}
+					class="rounded-full border-2 border-white bg-[#242728] uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring active:ring-blue-300"
+				>
+					{#each locales as locale}
+						<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
+					{/each}
+				</select>
+			{/if}
 		</div>
 	{/if}
 </div>
