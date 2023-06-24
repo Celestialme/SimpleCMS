@@ -221,3 +221,13 @@
 		</form>
 	</div>
 </div>
+
+<div class="border-2">
+	<p class="text-center text-white">Hello {data.credentials.username}</p>
+	<form method="post" action="?/addUser" use:enhance class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2">
+		<input bind:value={$form.email} name="email" type="email" label={$LL.LOGIN_EmailAddress()} class="input variant-ghost-surface" />
+		{#if registerError}<span class="invalid">{registerError}</span>{/if}
+		<DropDown items={['admin', 'user']} bind:selected={$form.role} />
+		<button class="btn variant-ghost-surface mt-10">Create</button>
+	</form>
+</div>

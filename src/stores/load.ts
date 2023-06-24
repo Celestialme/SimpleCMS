@@ -16,6 +16,7 @@ export let contentLanguage: Writable<string> = writable(PUBLIC_CONTENT_LANGUAGE)
 credentials.subscribe((val) => {
 	if (browser) globalThis.localStorage.setItem('credentials', JSON.stringify(val));
 });
+
 // Load all locales
 loadAllLocales();
 

@@ -153,6 +153,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 		<button
 			type="button"
 			class="absolute -right-3 top-2 flex items-center justify-center !rounded-full border-2 border-surface-300"
+			on:keydown
 			on:click={() => switchSideBar.update((value) => !value)}
 		>
 			{#if !switchSideBar}

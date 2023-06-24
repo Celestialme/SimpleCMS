@@ -4,6 +4,7 @@
 	import { extractData, find, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
+	import { contentLanguage } from '@src/stores/load';
 
 	export let field: FieldType | undefined;
 	let fieldName = getFieldName(field);
@@ -52,13 +53,13 @@
 		} else {
 			data = await extractData(fieldsData);
 		}
-		display = await field?.display(data, field, $entryData);
+		display = await field?.display(data, field, $entryData, $contentLanguage);
 	})(expanded);
 </script>
 
 {#if !expanded && !showDropDown}
 	<div class="flex">
-		<p on:keydown on:click={openDropDown}>{selected?.display || display || 'select new'}</p>
+		<button type="button" on:keydown on:click={openDropDown}>{selected?.display || display || 'select new'}</button>
 
 		<button
 			type="button"

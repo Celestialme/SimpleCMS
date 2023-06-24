@@ -18,7 +18,7 @@
 <input class="input w-full" placeholder="search..." bind:value={search} />
 <div class="overflow-auto">
 	{#each filtered as option}
-		<p
+		<button
 			on:keydown
 			on:click={() => {
 				selected = option;
@@ -27,7 +27,7 @@
 			class="item"
 		>
 			{option.display}
-		</p>
+		</button>
 	{/each}
 </div>
 

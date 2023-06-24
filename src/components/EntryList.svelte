@@ -429,7 +429,7 @@
 </div>
 
 {#if columnShow}
-	<div class="rounded-b-0 mx-2 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide>
+	<div class="rounded-b-0 mx-2 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide|global>
 		<div class="text-primary-500">Drag & Drop Columns / Click to hide</div>
 		<!-- toggle all -->
 		<div class="flex w-full items-center justify-center">
@@ -526,7 +526,7 @@
 									{/if}
 								</div>
 								{#if filterShow}
-									<div transition:slide>
+									<div transition:slide|global>
 										<FloatingInput
 											type="text"
 											icon="material-symbols:search-rounded"

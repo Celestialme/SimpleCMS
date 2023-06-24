@@ -517,7 +517,7 @@
 		<div class="p-2">
 			{#if columnShow}
 				<!-- chip column order -->
-				<div class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide>
+				<div class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide|global>
 					<div class="text-primary-500">Drag & Drop Columns / Click to hide</div>
 					<!-- toggle all -->
 
