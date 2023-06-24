@@ -89,7 +89,7 @@
 	</div>
 
 	<div class="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
-		<button type="button" on:click={deleteData} class="variant-filled-error btn-icon">
+		<button type="button" on:click={deleteData} class="btn-icon variant-filled-error">
 			<iconify-icon icon="icomoon-free:bin" width="24" />
 		</button>
 
@@ -106,6 +106,7 @@
 		</button>
 	</div>
 </header>
+text
 
 <div class="py-1 text-center text-xs text-error-500">* Required</div>
 <div class="m-2">

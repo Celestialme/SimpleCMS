@@ -1,7 +1,7 @@
 <script lang="ts">
 	import axios from 'axios';
 	import type { FieldType } from './';
-	//	import { entryData, mode } from '@src/stores/store';
+	import { entryData, mode } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 
 	import { FileDropzone } from '@skeletonlabs/skeleton';
@@ -17,19 +17,30 @@
 	// TODO: Save ad Webp only with all
 	async function onChangeHandler(e: Event): Promise<void> {
 		_data = (e.target as HTMLInputElement).files as FileList;
-		const file = _data[0];
-		const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9_.]/g, '');
-		const formData = new FormData();
-		formData.append('file', file, sanitizedFileName);
-		try {
-			await axios.post('/api/media', formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data'
-				}
+		if ($mode === 'edit') {
+			axios.get(`/${field?.path}/${$entryData[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
+				let fileList = new DataTransfer();
+				let file = new File([data], $entryData[fieldName].name, {
+					type: $entryData[fieldName].mimetype
+				});
+				fileList.items.add(file);
+				_data = fileList.files;
 			});
-			console.log('File uploaded successfully');
-		} catch (error) {
-			console.error('Error uploading file:', error);
+		} else {
+			const file = _data[0];
+			const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9_.]/g, '');
+			const formData = new FormData();
+			formData.append('file', file, sanitizedFileName);
+			try {
+				await axios.post('/api/media', formData, {
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
+				});
+				console.log('File uploaded successfully');
+			} catch (error) {
+				console.error('Error uploading file:', error);
+			}
 		}
 	}
 </script>
@@ -54,4 +65,9 @@
 			<p>MIME type: <span class="text-primary-500">{_data[0].type}</span></p>
 		</div>
 	</div>
+{/if}
+
+<!-- TODO: way is image not loading on edit? -->
+{#if _data && $mode === 'edit'}
+	<img src={URL.createObjectURL(_data[0])} alt="" />
 {/if}
