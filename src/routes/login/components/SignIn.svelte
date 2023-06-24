@@ -194,7 +194,7 @@
 					<button type="submit" class="btn variant-filled-surface">
 						{$LL.LOGIN_SignIn()}
 						<!-- Loading indicators -->
-						{#if $delayed}<img src="/spinner.svg" alt="Loading.." />{/if}
+						{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
 					</button>
 
 					<button
@@ -244,7 +244,7 @@
 				<button type="submit" class="btn variant-filled-surface ml-2 mt-6">
 					{$LL.LOGIN_ResetPasswordSave()}
 					<!-- Loading indicators -->
-					{#if $resetDelayed}<img src="/spinner.svg" alt="Loading.." />{/if}
+					{#if $resetDelayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
 				</button>
 			</form>
 		{/if}
@@ -271,7 +271,7 @@
 				<div class="mt-4 flex items-center justify-between">
 					<button type="submit" class="btn variant-filled-surface">{$LL.LOGIN_SendResetMail()}</button>
 					<!-- Loading indicators -->
-					{#if $forgotDelayed}<img src="/spinner.svg" alt="Loading.." />{/if}
+					{#if $forgotDelayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
 
 					<button
 						type="button"

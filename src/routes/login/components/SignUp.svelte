@@ -202,7 +202,7 @@
 				<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase"
 					>{$LL.LOGIN_SignUp()}
 					<!-- Loading indicators -->
-					{#if $delayed}<img src="/spinner.svg" alt="Loading.." />{/if}
+					{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
 				</button>
 			</form>
 		{:else}
@@ -288,7 +288,7 @@
 				<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase"
 					>{$LL.LOGIN_SignUp()}
 					<!-- Loading indicators -->
-					{#if $otherDelayed}<img src="/spinner.svg" alt="Loading.." />{/if}
+					{#if $otherDelayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
 				</button>
 			</form>
 		{/if}
