@@ -11,11 +11,12 @@ export const actions: Actions = {
 		let signInForm = await superValidate(event, loginSchema);
 		const email = signInForm.data.email;
 		const password = signInForm.data.password;
-		let resp = await signIn(email, password, event.cookies);
-		if (resp) {
+		const isToken = signInForm.data.isToken;
+		let resp = await signIn(email, password, isToken, event.cookies);
+		if (resp.status) {
 			throw redirect(303, '/');
 		} else {
-			return { form: signInForm };
+			return { form: signInForm, message: resp.message };
 		}
 	},
 	recover: async (event) => {
@@ -23,11 +24,8 @@ export const actions: Actions = {
 
 		const email = recoverForm.data.email;
 		let resp = await recover(email, event.cookies);
-		if (resp) {
-			throw redirect(303, '/');
-		} else {
-			return { form: recoverForm };
-		}
+
+		return { form: recoverForm, message: resp.message };
 	},
 	signUp: async (event) => {
 		let signUpForm = await superValidate(event, signUpSchema);
@@ -63,6 +61,7 @@ export const load: PageServerLoad = async (event) => {
 	let withToken = await superValidate(event, signUpSchema);
 
 	let signUpForm: typeof withToken = (await mongoose.models['auth_key'].countDocuments()) === 0 ? (withoutToken as any) : withToken;
+
 	return {
 		loginForm,
 		signUpForm,
@@ -70,15 +69,33 @@ export const load: PageServerLoad = async (event) => {
 	};
 };
 
-async function signIn(email: string, password: string, cookies: Cookies) {
-	let key = await auth.useKey('email', email, password).catch(() => null);
-	if (!key || !key.passwordDefined) return { status: false, message: 'Invalid Credentials' };
-	const session = await auth.createSession(key.userId);
-	let user = await auth.getUser(key.userId);
-	cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-		path: '/'
-	});
-	return { status: true };
+async function signIn(email: string, password: string, isToken: boolean, cookies: Cookies) {
+	if (!isToken) {
+		let key = await auth.useKey('email', email, password).catch(() => null);
+		if (!key || !key.passwordDefined) return { status: false, message: 'Invalid Credentials' };
+		const session = await auth.createSession(key.userId);
+		let user = await auth.getUser(key.userId);
+		cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
+			path: '/'
+		});
+		return { status: true };
+	} else {
+		let token = password;
+		let key = await auth.getKey('email', email).catch(() => null);
+		if (!key) return { status: false, message: 'user does not exist' };
+		const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
+		try {
+			await tokenHandler.validate(token, key.userId);
+			const session = await auth.createSession(key.userId);
+			let user = await auth.getUser(key.userId);
+			cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
+				path: '/'
+			});
+			return { status: true };
+		} catch (e) {
+			return { status: false, message: 'invalid token' };
+		}
+	}
 }
 
 async function signUp(email: string, password: string, cookies: Cookies) {
@@ -104,7 +121,7 @@ async function signUp(email: string, password: string, cookies: Cookies) {
 	return { status: true };
 }
 async function finishRegistration(email: string, password: string, token: string, cookies: Cookies) {
-	let key = await auth.useKey('email', email, password).catch(() => null);
+	let key = await auth.getKey('email', email).catch(() => null);
 	if (!key) return { status: false, message: 'user does not exist' };
 	const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
 	try {
@@ -122,7 +139,13 @@ async function finishRegistration(email: string, password: string, token: string
 	}
 }
 async function recover(email: string, cookies: Cookies) {
-	console.log(email);
-	//TODO recover login here
-	return { status: false };
+	const tokenHandler = passwordToken(auth as any, 'register', {
+		expiresIn: 60 * 60, // expiration in 1 hour,
+		length: 16 // default
+	});
+	let key = await auth.getKey('email', email).catch(() => null);
+	if (!key) return { status: false, message: 'user does not exist' };
+	let token = (await tokenHandler.issue(key.userId)).toString();
+	console.log(token);
+	return { status: true, message: 'token has been sent to email' };
 }

@@ -8,7 +8,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 	import { addUserSchema } from '@src/utils/formSchemas';
-	let registerError;
+	let response;
 	console.log(data);
 	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
 		id: 'addUser',
@@ -25,7 +25,7 @@
 		onResult: ({ result, cancel }) => {
 			cancel();
 			if (result.type == 'success') {
-				registerError = result.data?.message;
+				response = result.data?.message;
 			}
 		}
 	});
@@ -44,7 +44,7 @@
 			label={$LL.LOGIN_EmailAddress()}
 			theme="dark"
 		/>
-		{#if registerError}<span class="invalid">{registerError}</span>{/if}
+		{#if response}<span class="invalid">{response}</span>{/if}
 		<DropDown items={['admin', 'user']} bind:selected={$form.role} />
 		<Button class="bg-white mt-10">Create</Button>
 	</form>

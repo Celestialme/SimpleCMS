@@ -11,7 +11,7 @@
 	import CMSLogo from './icons/Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 
-	let registerError;
+	let response;
 
 	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
 		id: 'signup',
@@ -29,7 +29,7 @@
 			if (result.type == 'redirect') return;
 			cancel();
 			if (result.type == 'success') {
-				registerError = result.data?.message;
+				response = result.data?.message;
 			}
 		}
 	});
@@ -108,7 +108,7 @@
 			/>
 		{/if}
 		{#if $errors.token}<span class="invalid">{$errors.token}</span>{/if}
-		{#if registerError}<span class="invalid">{registerError}</span>{/if}
+		{#if response}<span class="invalid">{response}</span>{/if}
 		<Button class="bg-white mt-10">{$LL.LOGIN_SignUp()}</Button>
 	</form>
 	<SignupIcon show={active == 0 || active == undefined} />

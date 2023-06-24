@@ -11,6 +11,8 @@
 	export let formSchema: PageData['recoverForm'];
 	export let active: number | undefined;
 	export let loginRecover: boolean;
+
+	let response;
 	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
 		id: 'recover',
 		validators: recoverSchema,
@@ -22,6 +24,9 @@
 			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
+			if (result.type == 'success') {
+				response = result.data?.message;
+			}
 			cancel();
 		}
 	});
@@ -38,9 +43,9 @@
 	</div>
 	<FloatingInput name="email" type="email" bind:value={$form.email} label={$LL.LOGIN_EmailAddress()} {...$constraints.email} />
 	{#if $errors.email}<span class="invalid">{$errors.email}</span>{/if}
-
+	{#if response}<span class="invalid">{response}</span>{/if}
 	<div class=" flex gap-2 mt-10 items-center">
-		<Button on:click={() => (loginRecover = false)}>{$LL.LOGIN_SendResetMail()}</Button>
+		<Button>{$LL.LOGIN_SendResetMail()}</Button>
 		<button
 			on:click={() => {
 				loginRecover = false;

@@ -10,9 +10,11 @@
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import LoginRecover from './LoginRecover.svelte';
+	import CheckIcon from '@src/components/system/buttons/CheckIcon.svelte';
 	export let formSchema: PageData['loginForm'];
 	export let recoverFormSchema: PageData['recoverForm'];
 	let loginRecover = false;
+	let response;
 	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
 		id: 'signin',
 		validators: loginSchema,
@@ -20,11 +22,15 @@
 		applyAction: true,
 		taintedMessage: '',
 		clearOnSubmit: 'none',
+		dataType: 'json',
 		onSubmit: ({ cancel }) => {
 			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			if (result.type == 'redirect') return;
+			else if (result.type == 'success') {
+				response = result.data?.message;
+			}
 			cancel();
 			formElement.classList.add('wiggle');
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
@@ -62,8 +68,18 @@
 			<FloatingInput name="email" type="email" bind:value={$form.email} label={$LL.LOGIN_EmailAddress()} {...$constraints.email} />
 			{#if $errors.email}<span class="invalid">{$errors.email}</span>{/if}
 
-			<FloatingInput name="password" type="password" bind:value={$form.password} {...$constraints.password} label={$LL.LOGIN_Password()} />
+			<FloatingInput
+				name="password"
+				type="password"
+				bind:value={$form.password}
+				{...$constraints.password}
+				label={$form.isToken ? 'token' : $LL.LOGIN_Password()}
+			>
+				<CheckIcon bind:checked={$form.isToken} icon={'oi:lock-locked'} class="absolute right-[30px]" />
+			</FloatingInput>
+
 			{#if $errors.password}<span class="invalid">{$errors.password}</span>{/if}
+			{#if response}<span class="invalid">{response}</span>{/if}
 			<div class="mt-5 flex gap-2">
 				<Button>{$LL.LOGIN_SignIn()}</Button>
 				<Button

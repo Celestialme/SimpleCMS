@@ -1,7 +1,8 @@
 import { z } from 'zod';
 export let loginSchema = z.object({
 	email: z.string().email(),
-	password: z.string().min(4)
+	password: z.string().min(4),
+	isToken: z.boolean()
 });
 export let recoverSchema = z.object({
 	email: z.string().email()
