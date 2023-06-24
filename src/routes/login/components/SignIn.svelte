@@ -62,7 +62,8 @@
 		constraints: forgotConstraints,
 		allErrors: forgotAllErrors,
 		errors: forgotErrors,
-		enhance: forgotEnhance
+		enhance: forgotEnhance,
+		delayed: forgotDelayed
 	} = superForm(FormSchemaForgot, {
 		validators: forgotFormSchema,
 		// Clear form on success.
@@ -100,7 +101,8 @@
 		constraints: resetConstraints,
 		allErrors: resetAllErrors,
 		errors: resetErrors,
-		enhance: resetEnhance
+		enhance: resetEnhance,
+		delayed: resetDelayed
 	} = superForm(FormSchemaReset, {
 		validators: resetFormSchema,
 		// Clear form on success.
@@ -191,9 +193,9 @@
 				<div class="ml-1 mt-4 flex items-center justify-between">
 					<button type="submit" class="btn variant-filled-surface">
 						{$LL.LOGIN_SignIn()}
+						<!-- Loading indicators -->
+						{#if $delayed}<img src="/spinner.svg" alt="Loading.." />{/if}
 					</button>
-					<!-- Loading indicators -->
-					{#if $delayed}<span class="delayed">Working...</span>{/if}
 
 					<button
 						type="button"
@@ -241,9 +243,9 @@
 
 				<button type="submit" class="btn variant-filled-surface ml-2 mt-6">
 					{$LL.LOGIN_ResetPasswordSave()}
+					<!-- Loading indicators -->
+					{#if $resetDelayed}<img src="/spinner.svg" alt="Loading.." />{/if}
 				</button>
-				<!-- Loading indicators -->
-				{#if $delayed}<span class="delayed">Working...</span>{/if}
 			</form>
 		{/if}
 
@@ -269,7 +271,7 @@
 				<div class="mt-4 flex items-center justify-between">
 					<button type="submit" class="btn variant-filled-surface">{$LL.LOGIN_SendResetMail()}</button>
 					<!-- Loading indicators -->
-					{#if $delayed}<span class="delayed">Working...</span>{/if}
+					{#if $forgotDelayed}<img src="/spinner.svg" alt="Loading.." />{/if}
 
 					<button
 						type="button"

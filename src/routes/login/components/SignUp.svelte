@@ -22,7 +22,7 @@
 	let userExists = false;
 
 	export let FormSchemaSignUp: PageData['signUpForm'];
-	const { form, constraints, allErrors, errors, enhance } = superForm(FormSchemaSignUp, {
+	const { form, constraints, allErrors, errors, enhance, delayed } = superForm(FormSchemaSignUp, {
 		validators: signUpFormSchema,
 		//validators: (FormSchemaSignUp.data.token != null ? signUpFormSchema : signUpFormSchema.innerType().omit({ token: true })) as typeof signUpFormSchema,
 		// Clear form on success.
@@ -67,7 +67,8 @@
 		constraints: otherConstraints,
 		allErrors: otherAllErrors,
 		errors: otherErrors,
-		enhance: otherEnhance
+		enhance: otherEnhance,
+		delayed: otherDelayed
 	} = superForm(FormSchemaSignUpOther, {
 		validators: signUpOtherFormSchema,
 		// Clear form on success.
@@ -165,7 +166,7 @@
 				/>
 				{#if $errors.email}<span class="text-xs text-error-500">{$errors.email}</span>{/if}
 
-				<!-- TODO Check PW & Check to show hide PW together and have matiching PW -->
+				<!-- TODO Check PW & Check to show hide PW together and have matching PW -->
 				<!-- Password field -->
 				<FloatingInput
 					name="password"
@@ -198,7 +199,11 @@
 
 				{#if userExists}<span class="text-xs text-error-500">User already exists</span>{/if}
 
-				<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase">{$LL.LOGIN_SignUp()}</button>
+				<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase"
+					>{$LL.LOGIN_SignUp()}
+					<!-- Loading indicators -->
+					{#if $delayed}<img src="/spinner.svg" alt="Loading.." />{/if}
+				</button>
 			</form>
 		{:else}
 			<!-- TODO: Check if this repetition is really required for Registration Token -->
@@ -231,7 +236,7 @@
 				/>
 				{#if $otherErrors.email}<span class="text-xs text-error-500">{$otherErrors.email}</span>{/if}
 
-				<!-- TODO Check PW & Check to show hide PW together and have matiching PW -->
+				<!-- TODO Check PW & Check to show hide PW together and have matching PW -->
 				<!-- Password field -->
 				<FloatingInput
 					name="password"
@@ -268,19 +273,23 @@
 						name="token"
 						required
 						type="text"
-						bind:value={$otherForm.token}
+						bind:value={$otherForm.isToken}
 						label={$LL.LOGIN_Token()}
 						icon="mdi:key-chain"
 						iconColor="white"
 						textColor="white"
 						inputClass="text-white"
 					/>
-					{#if $otherErrors.token}<span class="text-xs text-error-500">{$otherErrors.token}</span>{/if}
+					{#if $otherErrors.isToken}<span class="text-xs text-error-500">{$otherErrors.isToken}</span>{/if}
 				{/if}
 
 				{#if userExists}<span class="text-xs text-error-500">User already exists</span>{/if}
 
-				<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase">{$LL.LOGIN_SignUp()}</button>
+				<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase"
+					>{$LL.LOGIN_SignUp()}
+					<!-- Loading indicators -->
+					{#if $otherDelayed}<img src="/spinner.svg" alt="Loading.." />{/if}
+				</button>
 			</form>
 		{/if}
 	</div>

@@ -76,8 +76,7 @@ export let signUpOtherFormSchema = z.object({
 	// .refine((val: string, ctx) => val === ctx.parent.password, {
 	// 	message: 'Passwords must match'
 	// }),
-	isToken: z.boolean()
-	//token: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1)
+	isToken: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1)
 	// terms: z.boolean({ required_error: 'Confirm Terms' })
 });
 
