@@ -52,7 +52,7 @@
 					{#each category.collections as _collection}
 						{#if $switchSideBar}
 							<!-- switchSideBar expanded -->
-							<button
+							<div
 								type="button"
 								class="-mx-4 flex flex-row items-center py-1 pl-3 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
 								on:keydown
@@ -63,10 +63,10 @@
 							>
 								<iconify-icon icon={_collection.icon} width="24" class="px-2 py-1 text-error-600" />
 								<p class="mr-auto text-center capitalize">{_collection.name}</p>
-							</button>
+							</div>
 						{:else}
 							<!-- switchSideBar collapsed -->
-							<button
+							<div
 								type="button"
 								class="-mx-4 flex flex-col items-center py-1 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
 								on:keydown
@@ -77,7 +77,7 @@
 							>
 								<p class="text-xs capitalize">{_collection.name}</p>
 								<iconify-icon icon={_collection.icon} width="24" class="text-error-600" />
-							</button>
+							</div>
 						{/if}
 					{/each}
 				</svelte:fragment>

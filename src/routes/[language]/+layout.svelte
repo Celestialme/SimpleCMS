@@ -5,6 +5,7 @@
 	import { contentLanguage } from '@src/stores/load';
 	import axios from 'axios';
 	import { credentials } from '@src/stores/load';
+	import { fly } from 'svelte/transition';
 
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
@@ -303,9 +304,15 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 	</svelte:fragment>
 
 	<!-- Router Slot -->
+	<Modal />
 	<Toast />
-	<slot />
-	<!-- ---- / ---- -->
+	<div class="m-2">
+		{#key $page.url}
+			<div in:fly={{ x: -200, duration: 200, delay: 200 }} out:fly={{ x: 200, duration: 200 }}>
+				<slot />
+			</div>
+		{/key}
+	</div>
 
 	<svelte:fragment slot="pageFooter">
 		<div>pageFooter</div>

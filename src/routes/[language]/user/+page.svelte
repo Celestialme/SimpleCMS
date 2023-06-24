@@ -1,5 +1,45 @@
 <script lang="ts">
 	import axios from 'axios';
+	import '@src/stores/load';
+	import { superForm } from 'sveltekit-superforms/client';
+	import { addUserSchema } from '@src/utils/formSchemas';
+
+	import { PUBLIC_USER_ROLES } from '$env/static/public';
+	const userRoles = PUBLIC_USER_ROLES.split(',');
+	let roles = userRoles.reduce((acc, role) => {
+		acc[role] = false;
+		return acc;
+	}, {});
+
+	function filter(role) {
+		roles[role] = !roles[role];
+	}
+
+	let response;
+	export let data: PageData;
+	console.log(data);
+
+	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
+		id: 'addUser',
+		validators: addUserSchema,
+		defaultValidator: 'clear',
+		applyAction: true,
+		taintedMessage: '',
+		dataType: 'json',
+
+		onSubmit: ({ cancel, data }) => {
+			console.log(data);
+			if ($allErrors.length > 0) cancel();
+		},
+		onResult: ({ result, cancel }) => {
+			cancel();
+			if (result.type == 'success') {
+				response = result.data?.message;
+			}
+		}
+	});
+	$form.role = 'User';
+	$form.expiresIn = '120';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -10,28 +50,16 @@
 	import type { PageData } from './$types';
 	import { invalidateAll } from '$app/navigation';
 
-	export let data: PageData;
+	//export let data: PageData;
 	const user = $page.data.user;
-
-	//TODO: Get Roles from allowed user
-	let roles: Record<string, boolean> = {
-		Admin: true,
-		Editor: false,
-		User: false,
-		Guest: false
-	};
-
-	function filter(role: string): void {
-		roles[role] = !roles[role];
-	}
 
 	// import UserList from './UserList/UserList.svelte';
 
 	// Skeleton
 	import { Avatar } from '@skeletonlabs/skeleton';
-	// import ModalEditAvatar from './ModalEditAvatar.svelte';
-	// import ModalEditForm from './ModalEditForm.svelte';
-	// import ModalTokenUser from './ModalTokenUser.svelte';
+	import ModalEditAvatar from './ModalEditAvatar.svelte';
+	import ModalEditForm from './ModalEditForm.svelte';
+	import ModalTokenUser from './ModalTokenUser.svelte';
 	import { modalStore } from '@skeletonlabs/skeleton';
 	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 
@@ -41,6 +69,7 @@
 	let id = user?._id;
 	let username = user?.username;
 	let role = user?.role;
+
 	let email = user?.email;
 	// TODO  Get hashed password
 	let password = 'hash-password';
@@ -92,10 +121,10 @@
 		const d: ModalSettings = {
 			type: 'component',
 			// NOTE: title, body, response, etc are supported!
-			title: 'Edit Avatar',
+			title: 'Edit your Avatar',
 			body: 'Upload new Avatar Image und then press Save.',
 			component: modalComponent,
-			// Pass abitrary data to the component
+			// Pass arbitrary data to the component
 			response: async (r: { dataURL: string }) => {
 				if (r) {
 					const formData = new FormData();
@@ -129,11 +158,6 @@
 		const modalComponent: ModalComponent = {
 			// Pass a reference to your custom component
 			ref: ModalTokenUser,
-			// Add your props as key/value pairs
-			// props: {
-			// 	background: 'bg-error-100-800-token',
-			// 	buttonTextConfirm: 'bg-error-500'
-			// },
 
 			// Provide default slot content as a template literal
 			slot: '<p>Edit Form</p>'
@@ -141,8 +165,8 @@
 		const d: ModalSettings = {
 			type: 'component',
 			// NOTE: title, body, response, etc are supported!
-			title: 'Generate New User Registration token',
-			body: 'Add User Email and select User Role & Duration, then press Send.',
+			title: 'Generate a New User Registration Token',
+			body: 'Add Users Email and select a Role & Validity, then press Send.',
 			component: modalComponent,
 
 			// Pass arbitrary data to the component
@@ -220,14 +244,44 @@
 			</div>
 		</form>
 	</div>
+	<!-- {#if user.role == "admin"} -->
+	<div class="border-td mt-2 flex flex-col">
+		<p class="h2 mb-4 text-center text-white">Admin Area</p>
+		<button on:click={modalTokenUser} class="btn-base gradient-primary w-30 btn order-2 mx-2 mb-2 text-white sm:order-2"
+			><iconify-icon icon="material-symbols:mail" color="white" width="18" class="mr-1" />{$LL.USER_EmailToken()}</button
+		>
+	</div>
 </div>
+<!-- {/if} -->
 
-<div class="border-2">
-	<p class="text-center text-white">Hello {data.credentials.username}</p>
-	<form method="post" action="?/addUser" use:enhance class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2">
-		<input bind:value={$form.email} name="email" type="email" label={$LL.LOGIN_EmailAddress()} class="input variant-ghost-surface" />
-		{#if registerError}<span class="invalid">{registerError}</span>{/if}
-		<DropDown items={['admin', 'user']} bind:selected={$form.role} />
-		<button class="btn variant-ghost-surface mt-10">Create</button>
+<div class="m-2 rounded-md border-2">
+	<p class="mb-4 text-center text-primary-500">Hello {data.credentials.username}</p>
+	<form method="post" action="?/addUser" use:enhance class=" m-2">
+		<div class="r label">
+			{$LL.LOGIN_EmailAddress()}
+			<input bind:value={$form.email} name="email" type="email" class="input variant-outline-surface" />
+		</div>
+		{#if response}<span class="text-xs text-error-500">{response}</span>{/if}
+
+		<label class="label">
+			<span>Select User Role</span>
+			<select class="select" bind:value={$form.role}>
+				{#each userRoles as role}
+					<option value={role}>{role}</option>
+				{/each}
+			</select>
+		</label>
+
+		<label class="label">
+			<span>Expires In:</span>
+			<select class="select" bind:value={$form.expiresIn}>
+				<option value="1">2hrs</option>
+				<option value="2">12hrs</option>
+				<option value="3">2days</option>
+			</select>
+		</label>
+
+		<!-- <DropDown items={['admin', 'user']} bind:selected={$form.role} /> -->
+		<button type="submit" class="primary btn variant-filled-primary m-2">Create</button>
 	</form>
 </div>
