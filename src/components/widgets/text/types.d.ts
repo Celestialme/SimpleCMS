@@ -5,6 +5,7 @@ export type Params = {
 	db_fieldName?: string;
 	widget?: any;
 	schema?: any;
+	translated: boolean;
 
 	// Widget Specific parameters
 	icon?: string;

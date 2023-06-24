@@ -1,12 +1,15 @@
 export type ParamsEMail = {
 	label: string;
-	display?: (data: any, field: any, entry: any) => Promise<any>;
+	display?: DISPLAY;
 	db_fieldName?: string;
 	widget?: any;
 	schema?: any;
-	// extras
+	translated: boolean;
+
+	// Widget Specific parameters
 	icon?: string;
 	placeholder?: string;
 	required?: boolean;
 	localization?: boolean;
+	width?: string;
 };

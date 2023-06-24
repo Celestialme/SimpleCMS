@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { FieldType } from './';
-
+	import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+	import { contentLanguage } from '@src/stores/load';
 	import { mode, entryData } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 
@@ -13,6 +14,7 @@
 	export let value = $entryData[fieldName];
 
 	let _data = $mode == 'create' ? {} : value;
+	let _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGE;
 
 	export const WidgetData = async () => _data;
 
@@ -28,7 +30,7 @@
 
 <input
 	type="email"
-	bind:value={_data['en']}
+	bind:value={_data[_language]}
 	on:input={checkRequired}
 	name={field?.db_fieldName}
 	id={field?.db_fieldName}
