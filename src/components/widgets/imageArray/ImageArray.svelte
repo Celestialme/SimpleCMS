@@ -2,10 +2,13 @@
 	import Fields from '@src/components/Fields.svelte';
 	import { mode } from '@src/stores/store';
 	import { saveFormData } from '@src/utils/utils';
+	import type { FieldType } from '.';
 
+	// sveltekit
 	import { FileDropzone } from '@skeletonlabs/skeleton';
 
-	export let field: any;
+	export let field: FieldType;
+
 	let _fieldsValue: any = [];
 	let files: any = [];
 

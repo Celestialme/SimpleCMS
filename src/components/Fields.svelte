@@ -93,9 +93,11 @@
 			<iconify-icon icon="icomoon-free:bin" width="24" />
 		</button>
 
-		<button type="button" on:click={cloneData} class="h btn-icon variant-filled-secondary">
-			<iconify-icon icon="fa-solid:clone" width="24" />
-		</button>
+		{#if $mode == 'edit'}
+			<button type="button" on:click={cloneData} class="h btn-icon variant-filled-secondary">
+				<iconify-icon icon="fa-solid:clone" width="24" />
+			</button>
+		{/if}
 
 		<select class="variant-ghost-surface rounded border-surface-500 text-white">
 			<option value="EN">EN</option>
@@ -106,7 +108,6 @@
 		</button>
 	</div>
 </header>
-text
 
 <div class="py-1 text-center text-xs text-error-500">* Required</div>
 <div class="m-2">

@@ -12,13 +12,16 @@ let schema = {
 	// Inspect Widget fields for possible options
 	fields: [
 		widgets.Text({
-			label: 'text'
+			label: 'text',
+			translated: false
 		}),
 		widgets.Text({
-			label: 'text2'
+			label: 'text2',
+			translated: false
 		}),
 		widgets.Text({
-			label: 'text3'
+			label: 'text3',
+			translated: false
 		})
 	]
 };

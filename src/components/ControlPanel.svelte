@@ -18,8 +18,10 @@
 
 		// a function to undo the changes made by handleButtonClick
 		mode.set('view');
+
 		// get the current window width
 		let width = window.innerWidth;
+
 		// use the custom screens
 		if (width <= 567) {
 			// For mobile toggle Header/Footer Sidebars
@@ -47,7 +49,6 @@
 </script>
 
 <!-- Desktop Right Sidebar -->
-
 {#if $mode == 'view'}
 	<button type="button" on:click={() => mode.set('create')} class=" btn variant-filled-primary mt-2">
 		<iconify-icon icon="mdi:pen" width="24" />Create
@@ -59,9 +60,11 @@
 				<iconify-icon icon="material-symbols:save" width="24" />
 				Save {$collection.name}
 			</button>
-			<!-- <button type="button" on:click={$deleteEntry} class="variant-filled-error btn mt-2 w-full">
-				<iconify-icon icon="icomoon-free:bin" width="24" />Delete {$collection.name}
-			</button> -->
+			{#if $mode == 'edit'}
+				<button type="button" on:click={$deleteEntry} class="btn variant-filled-error mt-2 w-full">
+					<iconify-icon icon="icomoon-free:bin" width="24" />Delete {$collection.name}
+				</button>
+			{/if}
 		</header>
 
 		<!-- TODO: Only show it used -->
@@ -86,7 +89,7 @@
 		</footer>
 	</div>
 {:else if $mode == 'delete'}
-	<button type="button" on:click={$deleteEntry} class="variant-filled-success btn">
+	<button type="button" on:click={$deleteEntry} class="btn variant-filled-success">
 		<iconify-icon icon="icomoon-free:bin" width="24" />Delete
 	</button>
 {/if}

@@ -12,11 +12,13 @@ let schema = {
 	fields: [
 		widgets.Text({
 			label: 'First Name',
+			translated: false,
 			icon: 'ri:t-box-line',
 			placeholder: 'Enter First Name'
 		}),
 		widgets.Text({
 			label: 'Last Name',
+			translated: false,
 			icon: 'ri:t-box-line'
 		})
 	]

@@ -7,4 +7,5 @@ export type Params = {
 	widget?: any;
 	schema?: any;
 	relation: Schema;
+	translated: boolean;
 };

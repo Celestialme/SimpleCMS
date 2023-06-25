@@ -13,6 +13,7 @@ let schema = {
 	// Inspect Widget fields for possible options
 	fields: [
 		widgets.Relation({
+			translated: false,
 			db_fieldName: 'relation',
 			label: 'Relation M2M to Posts',
 			relation: Posts

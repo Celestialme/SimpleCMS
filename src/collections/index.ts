@@ -1,4 +1,6 @@
 import { writable } from 'svelte/store';
+
+// List of Collections
 import ImageArray from './imageArray';
 import Menu from './Menu';
 import Posts from './Posts';
@@ -7,6 +9,7 @@ import Posts3 from './Posts3';
 import Relation from './Relation';
 import WidgetTest from './WidgetTest';
 
+// Display how Collections are sorted and displayed in Categories section
 let categories = [
 	{
 		name: 'Collections',

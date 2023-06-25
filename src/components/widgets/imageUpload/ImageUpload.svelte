@@ -1,6 +1,6 @@
 <script lang="ts">
 	import axios from 'axios';
-	import type { FieldType } from './';
+	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 
@@ -60,7 +60,16 @@
 			<img src={URL.createObjectURL(_data[0])} alt="" class="mt-4 h-60 rounded-md border" />
 		</div>
 		<div class="mt-2 text-center md:text-left">
-			<p>File name: <span class="text-primary-500">{_data[0].name}</span></p>
+			<p class="text-primary-500">Uploaded File:</p>
+			<p>Uploaded File: <span class="text-primary-500">{_data[0].name}</span></p>
+			<p>File size: <span class="text-primary-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
+			<p>MIME type: <span class="text-primary-500">{_data[0].type}</span></p>
+
+			<br />
+
+			<!-- image save as optimizes avif with sanitizedFileName -->
+			<p class="text-primary-500">Optimized once saved:</p>
+			<p>Uploaded File: <span class="text-primary-500">{_data[0].name}</span></p>
 			<p>File size: <span class="text-primary-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
 			<p>MIME type: <span class="text-primary-500">{_data[0].type}</span></p>
 		</div>

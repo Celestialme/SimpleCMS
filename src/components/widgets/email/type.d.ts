@@ -1,4 +1,5 @@
-export type ParamsEMail = {
+export type Params = {
+	// default required parameters
 	label: string;
 	display?: DISPLAY;
 	db_fieldName?: string;

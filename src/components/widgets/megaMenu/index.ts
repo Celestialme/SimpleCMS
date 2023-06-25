@@ -12,13 +12,13 @@ let widget = ({
 	label
 }: Params) => {
 	if (!display)
-		display = async (data: any, field: any, entry: any) => {
-			return data.Header.en;
+		display = async (data, field, entry, contentLanguage) => {
+			return data.Header[contentLanguage];
 		};
+	let widget: { widget: any } = { widget: MegaMenu };
+	let field: Params = { schema: {}, db_fieldName, menu, display, label };
 
-	let field: Params = { widget: MegaMenu, schema: {}, db_fieldName, menu, display, label };
-
-	return field;
+	return { ...field, ...widget };
 };
 
 export interface FieldType extends ReturnType<typeof widget> {}

@@ -15,16 +15,18 @@ let schema = {
 	fields: [
 		widgets.Text({
 			label: 'test',
-			translated: true,
+			translated: false,
 			db_fieldName: 'dbtest',
 			required: true,
 			icon: 'ri:t-box-line',
 			placeholder: 'Enter Test Placeholder',
 			localization: true,
+
 			display: async (data, field, entry) => {
-				return data;
+				return data.translated;
 			}
 		}),
+
 		widgets.ImageUpload({
 			label: 'image',
 			path: 'mediafiles/images'

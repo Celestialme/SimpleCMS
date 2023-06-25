@@ -1,6 +1,8 @@
 import { fail, type Actions, type Cookies, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
+import { passwordToken } from '@lucia-auth/tokens';
+
 import { superValidate } from 'sveltekit-superforms/server';
 import { loginFormSchema, forgotFormSchema, resetFormSchema, signUpFormSchema, signUpOtherFormSchema } from '@src/utils/formSchemas';
 
@@ -16,7 +18,7 @@ export const load: PageServerLoad = async (event) => {
 	let forgotForm = await superValidate(event, forgotFormSchema);
 	let resetForm = await superValidate(event, resetFormSchema);
 
-	// SignUP
+	// SignUp
 	let signUpForm = await superValidate(event, signUpFormSchema);
 	let signUpFormOther = await superValidate(event, signUpOtherFormSchema);
 
@@ -190,4 +192,35 @@ async function signUp(username: string, email: string, password: string, confirm
 		path: '/'
 	});
 	return true;
+}
+
+async function finishRegistration(email: string, password: string, token: string, cookies: Cookies) {
+	let key = await auth.getKey('email', email).catch(() => null);
+	if (!key) return { status: false, message: 'user does not exist' };
+	const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
+	try {
+		await tokenHandler.validate(token, key.userId);
+
+		await auth.updateKeyPassword('email', email, password);
+		const session = await auth.createSession(key.userId);
+		let user = await auth.getUser(key.userId);
+		cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
+			path: '/'
+		});
+		return { status: true };
+	} catch (e) {
+		return { status: false, message: 'invalid token' };
+	}
+}
+
+async function recover(email: string, cookies: Cookies) {
+	const tokenHandler = passwordToken(auth as any, 'register', {
+		expiresIn: 60 * 60, // expiration in 1 hour,
+		length: 16 // default
+	});
+	let key = await auth.getKey('email', email).catch(() => null);
+	if (!key) return { status: false, message: 'user does not exist' };
+	let token = (await tokenHandler.issue(key.userId)).toString();
+	console.log(token); // send token to user via email
+	return { status: true, message: 'token has been sent to email' };
 }

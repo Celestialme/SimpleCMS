@@ -27,8 +27,9 @@ let widget = ({
 		};
 	}
 
+	let widget: { widget: any } = { widget: Text };
+
 	let field = {
-		widget: Text,
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,
@@ -48,7 +49,8 @@ let widget = ({
 		localization,
 		width
 	};
-	return field;
+
+	return { ...field, ...widget };
 };
 
 export interface FieldType extends ReturnType<typeof widget> {}

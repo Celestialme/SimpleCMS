@@ -3,6 +3,7 @@ import type { Params as ImageUpload_Params } from '../imageUpload/types';
 import { getFieldName } from '@src/utils/utils.js';
 import type { Params } from './types';
 import ImageArray from './ImageArray.svelte';
+
 let widget = ({
 	// Accept parameters from collection
 	db_fieldName,
@@ -17,8 +18,9 @@ let widget = ({
 		display = async (data, field, entry, contentLanguage) =>
 			`<img class='max-w-[200px] inline-block' src="/${uploader.path}/${entry[getFieldName(uploader)].name}" />`;
 
+	let widget: { widget: any } = { widget: ImageArray };
+
 	let field = {
-		widget: ImageArray,
 		schema: { [db_fieldName || label]: { String: String } },
 		db_fieldName,
 		label,
@@ -29,7 +31,7 @@ let widget = ({
 		display
 	};
 
-	return field;
+	return { ...field, ...widget };
 };
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

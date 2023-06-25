@@ -2,6 +2,8 @@
 	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
 	import { mode, entryData, deleteEntry, toggleLeftSidebar } from '@src/stores/store';
+	import { contentLanguage } from '@src/stores/load';
+
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
 	import { flip } from 'svelte/animate';
@@ -67,7 +69,7 @@
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
 				for (let field of collection.fields) {
-					obj[field.label] = await field.display(entry[field.label]?.en || entry[field.label], field, entry);
+					obj[field.label] = await field.display?.(entry[field.label], field, entry, $contentLanguage);
 				}
 				obj._id = entry._id;
 				return obj;

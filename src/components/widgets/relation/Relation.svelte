@@ -6,7 +6,7 @@
 	import Fields from '@src/components/Fields.svelte';
 	import { contentLanguage } from '@src/stores/load';
 
-	export let field: FieldType | undefined;
+	export let field: FieldType;
 	let fieldName = getFieldName(field);
 	export const value = $entryData[fieldName];
 	export let expanded = false;

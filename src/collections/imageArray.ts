@@ -22,7 +22,8 @@ let schema: Schema = {
 				}),
 				widgets.Text({
 					label: 'title',
-					db_fieldName: 'title'
+					db_fieldName: 'title',
+					translated: false
 				})
 			]
 		})

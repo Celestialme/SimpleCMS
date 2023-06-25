@@ -19,8 +19,9 @@ let widget = ({
 		};
 	}
 
-	const field = {
-		widget: Email,
+	let widget: { widget: any } = { widget: Email };
+
+	let field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,
@@ -32,7 +33,9 @@ let widget = ({
 		required,
 		localization
 	};
-	return field;
+
+	return { ...field, ...widget };
 };
+
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;
