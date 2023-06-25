@@ -146,6 +146,6 @@ async function recover(email: string, cookies: Cookies) {
 	let key = await auth.getKey('email', email).catch(() => null);
 	if (!key) return { status: false, message: 'user does not exist' };
 	let token = (await tokenHandler.issue(key.userId)).toString();
-	console.log(token);
+	console.log(token); // send token to user via email
 	return { status: true, message: 'token has been sent to email' };
 }

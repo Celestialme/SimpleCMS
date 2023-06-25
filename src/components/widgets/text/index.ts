@@ -7,16 +7,15 @@ let widget = ({ label, db_fieldName, display, translated = false }: Params) => {
 			return translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGE] || 'NO entry';
 		};
 	}
-
+	let widget: { widget: any } = { widget: Text };
 	let field = {
-		widget: Text,
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,
 		db_fieldName,
 		translated
 	};
-	return field;
+	return { ...field, ...widget };
 };
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

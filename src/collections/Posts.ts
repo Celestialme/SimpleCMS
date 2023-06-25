@@ -5,6 +5,7 @@ let schema = {
 		widgets.Text({
 			label: 'text',
 			translated: false,
+
 			display: async (data, field, entry) => {
 				return data.translated;
 			}

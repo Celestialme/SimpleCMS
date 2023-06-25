@@ -17,9 +17,8 @@ let widget = ({
 	if (!display)
 		display = async (data, field, entry, contentLanguage) =>
 			`<img class='max-w-[200px] inline-block' src="/${uploader.path}/${entry[getFieldName(uploader)].name}" />`;
-
+	let widget: { widget: any } = { widget: ImageArray };
 	let field = {
-		widget: ImageArray,
 		schema: { [db_fieldName || label]: { String: String } },
 		db_fieldName,
 		label,
@@ -30,7 +29,7 @@ let widget = ({
 		display
 	};
 
-	return field;
+	return { ...field, ...widget };
 };
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

@@ -46,7 +46,7 @@ export const actions: Actions = {
 			length: 16 // default
 		});
 		let token = (await tokenHandler.issue(user.userId)).toString();
-		console.log(token);
+		console.log(token); // send token to user via email
 		return { form: addUserForm };
 	}
 };

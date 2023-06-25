@@ -3,7 +3,7 @@
 	import type { FieldType } from './';
 	import { entryData, mode } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
-	export let field: FieldType | undefined;
+	export let field: FieldType;
 	let _data: FileList;
 	export const WidgetData = async () => _data;
 	export let file: File | undefined = undefined; // pass file directly from imageArray
