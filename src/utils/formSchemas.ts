@@ -46,26 +46,27 @@ interface SignUpFormData {
 	confirm_password: string;
 }
 
-export let signUpFormSchema = z.object({
-	username: z
-		.string({ required_error: get(LL).LOGIN_ZOD_Username_string() })
-		.regex(/^[a-zA-Z0-9@$!%*#]+$/, { message: get(LL).LOGIN_ZOD_Username_regex() })
-		.min(2, { message: get(LL).LOGIN_ZOD_Username_min() })
-		.max(24, { message: get(LL).LOGIN_ZOD_Username_max() })
-		.trim(),
-	email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() }),
-	password: z
-		.string({ required_error: get(LL).LOGIN_ZOD_Password_string() })
-		.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-			message: get(LL).LOGIN_ZOD_Password_regex()
-		}),
-	confirm_password: z
-		.string({ required_error: get(LL).LOGIN_ZOD_Confirm_password_string() })
-		.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
-			message: get(LL).LOGIN_ZOD_Confirm_password_regex()
-		})
-});
-// .refine((data: SignUpFormData) => data.password === data.confirm_password, get(LL).LOGIN_ZOD_Password_match());
+export let signUpFormSchema = z
+	.object({
+		username: z
+			.string({ required_error: get(LL).LOGIN_ZOD_Username_string() })
+			.regex(/^[a-zA-Z0-9@$!%*#]+$/, { message: get(LL).LOGIN_ZOD_Username_regex() })
+			.min(2, { message: get(LL).LOGIN_ZOD_Username_min() })
+			.max(24, { message: get(LL).LOGIN_ZOD_Username_max() })
+			.trim(),
+		email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() }),
+		password: z
+			.string({ required_error: get(LL).LOGIN_ZOD_Password_string() })
+			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+				message: get(LL).LOGIN_ZOD_Password_regex()
+			}),
+		confirm_password: z
+			.string({ required_error: get(LL).LOGIN_ZOD_Confirm_password_string() })
+			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+				message: get(LL).LOGIN_ZOD_Confirm_password_regex()
+			})
+	})
+	.refine((data: SignUpFormData) => data.password === data.confirm_password, get(LL).LOGIN_ZOD_Password_match());
 
 // Sign Up Other Users with token------------------------------------
 interface SignUpOtherFormData {

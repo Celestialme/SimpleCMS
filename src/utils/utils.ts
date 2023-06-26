@@ -180,6 +180,7 @@ export async function scheduleData(id, date) {
 }
 
 // Delete FormData
+// TODO: move images/files to trash folder see [collection]/+sever.ts
 export async function deleteData(id) {
 	let $collection = get(collection);
 	await axios.delete(`/api/${$collection.name}/${id}`);

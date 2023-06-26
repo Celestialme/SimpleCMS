@@ -99,6 +99,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 };
 
 // Export an asynchronous function named DELETE that is a RequestHandler
+// TODO: deleted files to a trash folder and automatically removing files from the trash folder after 30 days
 export const DELETE: RequestHandler = async ({ params, request }) => {
 	// Retrieve the collection specified in the params object
 	let collection = collections[params.collection];
@@ -108,6 +109,14 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
 	// Get the value of the ids key from the form data and parse it as a JSON object
 	let ids = data.get('ids') as string;
 	ids = JSON.parse(ids);
+
+	// Move deleted files to trash folder
+	// for (const id of ids) {
+	// 	// Get the file path and name based on the collection and id
+
+	// 	// Move the file to the trash folder
+	// 	await fs.promises.rename(filePath, `./trash/${fileName}`);
+	// }
 
 	// Log the value of ids and its type to the console
 	// console.log(ids);

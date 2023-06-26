@@ -8,7 +8,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	console.log('PageData', data);
+	//console.log('PageData', data);
 
 	import { locale } from '@src/i18n/i18n-svelte';
 	//console.log('locale', $locale);
@@ -29,7 +29,7 @@
 		selectedLocale = e.target.value;
 		setLocale(selectedLocale);
 		localStorage.setItem('selectedLanguage', selectedLocale);
-		console.log('selectedLocaleUpdated', selectedLocale);
+		//console.log('selectedLocaleUpdated', selectedLocale);
 	}
 
 	let isFocused = false;

@@ -302,6 +302,22 @@
 			return col.id == name;
 		});
 	}
+
+	// TODO: Check if no mediafiles exist
+	import { onMount } from 'svelte';
+	let error = 'Disable Empty Check';
+
+	// onMount(async () => {
+	// 	const res = await fetch('/[language]/mediagallery');
+	// 	const data = await res.json();
+
+	// 	if (data.error) {
+	// 		let error =  (data.error);
+	// 	} else {
+	// 		// handle successful response
+	// 		let error = false;
+	// 	}
+	// });
 </script>
 
 <div class="m-2 flex flex-col gap-1">
@@ -476,149 +492,154 @@
 			</div>
 		</div>
 	</div>
-
-	{#if view === 'grid'}
-		<div class="mx-auto flex flex-wrap gap-2">
-			{#each defaultData as image}
-				<div class={`card ${gridSize === 'small' ? 'card-small' : gridSize === 'medium' ? 'card-medium' : 'card-large'}`}>
-					<!-- <header class="card-header" /> -->
-					<section class="p-4 text-center">
-						{#if image.image.endsWith('.pdf')}
-							<iconify-icon icon="vscode-icons:file-type-pdf2" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
-						{:else if image.image.endsWith('.xlsx') || image.image.endsWith('.xls')}
-							<iconify-icon icon="vscode-icons:file-type-excel" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
-						{:else if image.image.endsWith('.docx') || image.image.endsWith('.doc')}
-							<iconify-icon icon="vscode-icons:file-type-word" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
-						{:else if image.image.endsWith('.jpg') || image.image.endsWith('.jpeg') || image.image.endsWith('.png') || image.image.endsWith('.svg') || image.image.endsWith('.webp') || image.image.endsWith('.avif')}
-							<img
-								class={`inline-block object-cover object-center ${
-									gridSize === 'small' ? 'h-16 w-16' : gridSize === 'medium' ? 'h-36 w-36' : 'h-80 w-80'
-								}`}
-								src={image.image}
-								alt={image.name}
-							/>
-						{:else}
-							<iconify-icon icon="noto-v1:question-mark" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
-						{/if}
-					</section>
-					<footer
-						class={`card-footer mt-1 flex h-14 w-full items-center justify-center break-all rounded-sm bg-surface-600 p-0 text-center text-xs text-white`}
-						style={`max-width: ${gridSize === 'small' ? '6rem' : gridSize === 'medium' ? '12rem' : '24rem'}`}
-					>
-						<div class="flex-col">
-							<div class="mb-1 line-clamp-2 font-semibold text-primary-500">{image.name}</div>
-							<div class="line-clamp-1">{image.path}</div>
-						</div>
-					</footer>
-				</div>
-			{/each}
-		</div>
-	{:else}
-		<div class="p-2">
-			{#if columnShow}
-				<!-- chip column order -->
-				<div class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide|global>
-					<div class="text-primary-500">Drag & Drop Columns / Click to hide</div>
-					<!-- toggle all -->
-
-					<div class="flex w-full items-center justify-center">
-						<label class="mr-3">
-							<input
-								checked={$table.getIsAllColumnsVisible()}
-								on:change={(e) => {
-									console.info($table.getToggleAllColumnsVisibilityHandler()(e));
-								}}
-								type="checkbox"
-							/>{' '}
-							{$LL.TANSTACK_Toggle()}
-						</label>
-						<section
-							class="flex justify-center rounded-md bg-surface-700 p-2"
-							use:dndzone={{ items, flipDurationMs }}
-							on:consider={handleDndConsider}
-							on:finalize={handleDndFinalize}
-						>
-							{#each items as item (item.id)}
-								<button
-									class="chip {$table
-										.getAllLeafColumns()
-										.find((col) => {
-											return col.id == item.name;
-										})
-										.getIsVisible()
-										? 'variant-filled-secondary'
-										: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
-									animate:flip={{ duration: flipDurationMs }}
-									on:click={() => {
-										getColumnByName(item.name)?.toggleVisibility();
-										localStorage.setItem(
-											'MediaTanstackConfiguration',
-											JSON.stringify(
-												items.map((item) => {
-													return {
-														accessorKey: item.id,
-														visible: getColumnByName(item.id)?.getIsVisible()
-													};
-												})
-											)
-										);
-									}}
-								>
-									{#if $table
-										.getAllLeafColumns()
-										.find((col) => {
-											return col.id == item.name;
-										})
-										.getIsVisible()}
-										<span><iconify-icon icon="fa:check" /></span>
-									{/if}
-									<span class="ml-2 capitalize">{item.name}</span>
-								</button>
-							{/each}
+	{#if !error}
+		<!-- Render grid or table -->
+		{#if view === 'grid'}
+			<div class="mx-auto flex flex-wrap gap-2">
+				{#each defaultData as image}
+					<div class={`card ${gridSize === 'small' ? 'card-small' : gridSize === 'medium' ? 'card-medium' : 'card-large'}`}>
+						<!-- <header class="card-header" /> -->
+						<section class="p-4 text-center">
+							{#if image.image.endsWith('.pdf')}
+								<iconify-icon icon="vscode-icons:file-type-pdf2" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
+							{:else if image.image.endsWith('.xlsx') || image.image.endsWith('.xls')}
+								<iconify-icon icon="vscode-icons:file-type-excel" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
+							{:else if image.image.endsWith('.docx') || image.image.endsWith('.doc')}
+								<iconify-icon icon="vscode-icons:file-type-word" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
+							{:else if image.image.endsWith('.jpg') || image.image.endsWith('.jpeg') || image.image.endsWith('.png') || image.image.endsWith('.svg') || image.image.endsWith('.webp') || image.image.endsWith('.avif')}
+								<img
+									class={`inline-block object-cover object-center ${
+										gridSize === 'small' ? 'h-16 w-16' : gridSize === 'medium' ? 'h-36 w-36' : 'h-80 w-80'
+									}`}
+									src={image.image}
+									alt={image.name}
+								/>
+							{:else}
+								<iconify-icon icon="noto-v1:question-mark" width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'} />
+							{/if}
 						</section>
+						<footer
+							class={`card-footer mt-1 flex h-14 w-full items-center justify-center break-all rounded-sm bg-surface-600 p-0 text-center text-xs text-white`}
+							style={`max-width: ${gridSize === 'small' ? '6rem' : gridSize === 'medium' ? '12rem' : '24rem'}`}
+						>
+							<div class="flex-col">
+								<div class="mb-1 line-clamp-2 font-semibold text-primary-500">{image.name}</div>
+								<div class="line-clamp-1">{image.path}</div>
+							</div>
+						</footer>
 					</div>
-				</div>
-			{/if}
-			<div class="table-container">
-				<table class="table-hover table">
-					<thead>
-						{#each $table.getHeaderGroups() as headerGroup}
-							<tr class="divide-x divide-surface-400 border-b">
-								{#each headerGroup.headers as header}
-									<th colSpan={header.colSpan} class="text-center">
-										{#if !header.isPlaceholder}
-											<button
-												class:cursor-pointer={header.column.getCanSort()}
-												class:select-none={header.column.getCanSort()}
-												on:keydown
-												on:click={header.column.getToggleSortingHandler()}
-											>
-												<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
-												{#if header.column.getIsSorted() === 'asc'}
-													<iconify-icon icon="material-symbols:arrow-upward-rounded" width="16" />
-												{:else if header.column.getIsSorted() === 'desc'}
-													<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
-												{/if}
-											</button>
-										{/if}
-									</th>
-								{/each}
-							</tr>
-						{/each}
-					</thead>
-					<tbody>
-						{#each $table.getRowModel().rows.slice(0, 20) as row}
-							<tr class="divide-x divide-surface-400">
-								{#each row.getVisibleCells() as cell}
-									<td>
-										<svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
-									</td>
-								{/each}
-							</tr>
-						{/each}
-					</tbody>
-				</table>
+				{/each}
 			</div>
-		</div>
+		{:else}
+			<div class="p-2">
+				{#if columnShow}
+					<!-- chip column order -->
+					<div class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide|global>
+						<div class="text-primary-500">Drag & Drop Columns / Click to hide</div>
+						<!-- toggle all -->
+
+						<div class="flex w-full items-center justify-center">
+							<label class="mr-3">
+								<input
+									checked={$table.getIsAllColumnsVisible()}
+									on:change={(e) => {
+										console.info($table.getToggleAllColumnsVisibilityHandler()(e));
+									}}
+									type="checkbox"
+								/>{' '}
+								{$LL.TANSTACK_Toggle()}
+							</label>
+							<section
+								class="flex justify-center rounded-md bg-surface-700 p-2"
+								use:dndzone={{ items, flipDurationMs }}
+								on:consider={handleDndConsider}
+								on:finalize={handleDndFinalize}
+							>
+								{#each items as item (item.id)}
+									<button
+										class="chip {$table
+											.getAllLeafColumns()
+											.find((col) => {
+												return col.id == item.name;
+											})
+											.getIsVisible()
+											? 'variant-filled-secondary'
+											: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
+										animate:flip={{ duration: flipDurationMs }}
+										on:click={() => {
+											getColumnByName(item.name)?.toggleVisibility();
+											localStorage.setItem(
+												'MediaTanstackConfiguration',
+												JSON.stringify(
+													items.map((item) => {
+														return {
+															accessorKey: item.id,
+															visible: getColumnByName(item.id)?.getIsVisible()
+														};
+													})
+												)
+											);
+										}}
+									>
+										{#if $table
+											.getAllLeafColumns()
+											.find((col) => {
+												return col.id == item.name;
+											})
+											.getIsVisible()}
+											<span><iconify-icon icon="fa:check" /></span>
+										{/if}
+										<span class="ml-2 capitalize">{item.name}</span>
+									</button>
+								{/each}
+							</section>
+						</div>
+					</div>
+				{/if}
+				<div class="table-container">
+					<table class="table-hover table">
+						<thead>
+							{#each $table.getHeaderGroups() as headerGroup}
+								<tr class="divide-x divide-surface-400 border-b">
+									{#each headerGroup.headers as header}
+										<th colSpan={header.colSpan} class="text-center">
+											{#if !header.isPlaceholder}
+												<button
+													class:cursor-pointer={header.column.getCanSort()}
+													class:select-none={header.column.getCanSort()}
+													on:keydown
+													on:click={header.column.getToggleSortingHandler()}
+												>
+													<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
+													{#if header.column.getIsSorted() === 'asc'}
+														<iconify-icon icon="material-symbols:arrow-upward-rounded" width="16" />
+													{:else if header.column.getIsSorted() === 'desc'}
+														<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
+													{/if}
+												</button>
+											{/if}
+										</th>
+									{/each}
+								</tr>
+							{/each}
+						</thead>
+						<tbody>
+							{#each $table.getRowModel().rows.slice(0, 20) as row}
+								<tr class="divide-x divide-surface-400">
+									{#each row.getVisibleCells() as cell}
+										<td>
+											<svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
+										</td>
+									{/each}
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		{/if}
+	{:else}
+		<!-- Render error message -->
+		<p class="h2 text-center text-error-500">{error}</p>
 	{/if}
 </div>

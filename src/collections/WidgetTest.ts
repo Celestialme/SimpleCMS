@@ -29,7 +29,6 @@ let schema = {
 			label: get(LL).COLLECTION_TEST_Middle(),
 			icon: 'ri:t-box-line',
 			placeholder: get(LL).COLLECTION_TEST_Middle_placeholder(),
-			required: false,
 			readonly: true,
 			width: '13%'
 		}),
@@ -39,7 +38,7 @@ let schema = {
 			label: get(LL).COLLECTION_TEST_Last(),
 			icon: 'ri:t-box-line',
 			placeholder: get(LL).COLLECTION_TEST_Last_placeholder(),
-			required: true,
+
 			width: '53%',
 			translated: true,
 			disabled: true

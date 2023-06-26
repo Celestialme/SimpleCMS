@@ -38,14 +38,14 @@
 			// Submit email as lowercase only
 			$form.email = $form.email.toLowerCase();
 
-			console.log('onSubmit:', form);
+			//console.log('onSubmit:', form);
 
 			// handle login form submission
 			if ($allErrors.length > 0) cancel();
 		},
 
 		onResult: ({ result, cancel }) => {
-			console.log('onResult', result);
+			//console.log('onResult', result);
 
 			if (result.type == 'redirect') return;
 			cancel();
@@ -54,7 +54,7 @@
 			formElement.classList.add('wiggle');
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 
-			//userExists = true;
+			userExists = true;
 		}
 	});
 
