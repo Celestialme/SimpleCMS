@@ -17,7 +17,6 @@ let schema = {
 	fields: [
 		widgets.Text({
 			db_fieldName: 'First',
-			translated: false,
 			label: get(LL).COLLECTION_TEST_First(),
 			icon: 'ri:t-box-line',
 			placeholder: get(LL).COLLECTION_TEST_First_placeholder(),
@@ -27,7 +26,6 @@ let schema = {
 
 		widgets.Text({
 			db_fieldName: 'Middle',
-			translated: false,
 			label: get(LL).COLLECTION_TEST_Middle(),
 			icon: 'ri:t-box-line',
 			placeholder: get(LL).COLLECTION_TEST_Middle_placeholder(),
@@ -38,19 +36,17 @@ let schema = {
 
 		widgets.Text({
 			db_fieldName: 'Last',
-			translated: false,
 			label: get(LL).COLLECTION_TEST_Last(),
 			icon: 'ri:t-box-line',
 			placeholder: get(LL).COLLECTION_TEST_Last_placeholder(),
 			required: true,
 			width: '53%',
-			localization: true,
+			translated: true,
 			disabled: true
 		}),
 
 		widgets.Text({
 			db_fieldName: 'Full Text option',
-			translated: false,
 			label: get(LL).COLLECTION_TEST_Full_Text_Option(),
 			icon: 'carbon:character-whole-number',
 			// prefix: '€',
@@ -59,17 +55,16 @@ let schema = {
 			minlength: 2,
 			maxlength: 15,
 			placeholder: get(LL).COLLECTION_TEST_Full_Text_Option_Placeholder(),
-			localization: true,
-			required: true
-		}),
-
-		widgets.Email({
-			db_fieldName: 'Email',
-			translated: false,
-			icon: 'carbon:character-whole-number',
-			placeholder: 'Enter Email',
+			translated: true,
 			required: true
 		})
+
+		// widgets.Email({
+		// 	db_fieldName: 'Email',
+		// 	icon: 'carbon:character-whole-number',
+		// 	placeholder: 'Enter Email',
+		// 	required: true
+		// })
 	]
 };
 export default schema;

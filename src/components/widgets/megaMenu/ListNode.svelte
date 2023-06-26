@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
-	import { contentLanguage } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/store';
 
 	export let self: { [key: string]: any; children: any[] };
 	export let level = 0;

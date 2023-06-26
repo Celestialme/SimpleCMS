@@ -5,10 +5,10 @@ export type Params = {
 	db_fieldName?: string;
 	widget?: any;
 	schema?: any;
-	translated: boolean;
+	translated?: boolean;
+	icon?: string;
 
 	// Widget Specific parameters
-	icon?: string;
 	placeholder?: string;
 	count?: number;
 	minlength?: number;
@@ -18,6 +18,5 @@ export type Params = {
 	required?: boolean;
 	readonly?: boolean;
 	disabled?: boolean;
-	localization?: boolean;
 	width?: string;
 };

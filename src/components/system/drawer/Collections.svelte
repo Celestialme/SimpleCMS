@@ -3,10 +3,10 @@
 	import LL from '@src/i18n/i18n-svelte';
 
 	import { collection, categories } from '@src/collections';
-	import { language, mode, switchSideBar } from '@src/stores/store';
-	import { systemLanguage } from '@src/stores/load';
+	import { mode, switchSideBar } from '@src/stores/store';
+	import { systemLanguage } from '@src/stores/store';
 
-	let href;
+	let href: any;
 
 	// update the href value when the systemLanguage store value changes
 	$: href = `/${$systemLanguage}/mediagallery`;
@@ -17,10 +17,10 @@
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 
-	const popupHover: PopupSettings = {
+	const popupCollections: PopupSettings = {
 		event: 'hover',
 		target: 'popupHover',
-		placement: 'top'
+		placement: 'right'
 	};
 
 	let expanded: any = {};
@@ -34,15 +34,17 @@
 		{#each categories as category, index}
 			<AccordionItem regionPanel="divide-y divide-black my-0" class="divide-y rounded-md bg-surface-100 dark:bg-surface-300">
 				<svelte:fragment slot="lead">
-					<iconify-icon icon={category.icon} width="24" class="text-error-500" />
+					<!-- TODO: Tooltip not fully working -->
+					<iconify-icon icon={category.icon} width="24" class="text-error-500" use:popup={popupCollections} />
 				</svelte:fragment>
 
 				<svelte:fragment slot="summary"
 					>{#if $switchSideBar}
+						<!-- TODO: Translation not updating -->
 						<p>{category.name}</p>
 					{/if}
 					<div class="card variant-filled-secondary p-4" data-popup="popupHover">
-						<p>Hover Content</p>
+						<p>{category.name}</p>
 						<div class="arrow variant-filled-secondary" />
 					</div>
 				</svelte:fragment>
@@ -90,12 +92,12 @@
 		<!-- switchSideBar expanded -->
 		<a on:keydown {href} class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-primary-600" />
-			<p class="mr-auto text-center uppercase">{$LL.Media()}</p>
+			<p class="mr-auto text-center uppercase">{$LL.CollectionCategory_Media()}</p>
 		</a>
 	{:else}
 		<!-- switchSideBar collapsed -->
 		<a on:keydown {href} class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
-			<p class="text-xs uppercase">{$LL.Media()}</p>
+			<p class="text-xs uppercase">{$LL.CollectionCategory_Media()}</p>
 			<iconify-icon icon="bi:images" width="24" class="text-primary-600" />
 		</a>
 	{/if}

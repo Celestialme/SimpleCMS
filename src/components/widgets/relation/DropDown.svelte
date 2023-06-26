@@ -2,9 +2,11 @@
 	import type { FieldType } from '.';
 	import { entryData } from '@src/stores/store';
 	export let dropDownData: any[] = [];
+
 	export let selected: { display: any; _id: any } | undefined = undefined;
 	export let field: FieldType | undefined;
 	export let showDropDown = true;
+
 	let search = '';
 	let options: Array<{ display: any; _id: any }> = [];
 	let filtered = options;

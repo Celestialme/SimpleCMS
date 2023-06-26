@@ -1,12 +1,12 @@
 import Text from './Text.svelte';
 import type { Params } from './types';
-import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 
 let widget = ({
 	label,
 	db_fieldName,
 	display,
-	translated = false,
+	translated = false, // default no translation
 	// extras
 	icon,
 	placeholder,
@@ -18,12 +18,12 @@ let widget = ({
 	required,
 	readonly,
 	disabled,
-	localization,
 	width
 }: Params) => {
 	if (!display) {
 		display = async (data, field, entry, contentLanguage) => {
-			return translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGE] || 'NO entry';
+			const defaultContentLanguage = Object.keys(PUBLIC_CONTENT_LANGUAGES)[0];
+			return translated ? data[contentLanguage] || 'NO entry' : data[defaultContentLanguage] || 'NO entry';
 		};
 	}
 
@@ -46,7 +46,6 @@ let widget = ({
 		required,
 		readonly,
 		disabled,
-		localization,
 		width
 	};
 

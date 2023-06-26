@@ -33,6 +33,10 @@ type RootTranslation = {
 	 */
 	SBL_SystemLanguage: string
 	/**
+	 * U​s​e​r​ ​P​r​o​f​i​l​e
+	 */
+	SBL_User: string
+	/**
 	 * S​w​i​t​c​h​ ​t​o
 	 */
 	SBL_isDark: string
@@ -69,9 +73,9 @@ type RootTranslation = {
 	 */
 	SBL_SignOut: string
 	/**
-	 * C​o​n​t​e​n​t
+	 * C​o​l​l​e​c​t​i​o​n
 	 */
-	CollectionCategory_Content: string
+	CollectionCategory_Collection: string
 	/**
 	 * M​e​n​u
 	 */
@@ -478,14 +482,6 @@ type RootTranslation = {
 	 * R​e​q​u​i​r​e​d
 	 */
 	FORM_Required: string
-	/**
-	 * C​o​l​l​e​c​t​i​o​n​s
-	 */
-	Collections: string
-	/**
-	 * M​e​d​i​a
-	 */
-	Media: string
 	/**
 	 * U​s​e​r
 	 */
@@ -1036,6 +1032,10 @@ export type TranslationFunctions = {
 	 */
 	SBL_SystemLanguage: () => LocalizedString
 	/**
+	 * User Profile
+	 */
+	SBL_User: () => LocalizedString
+	/**
 	 * Switch to
 	 */
 	SBL_isDark: () => LocalizedString
@@ -1072,9 +1072,9 @@ export type TranslationFunctions = {
 	 */
 	SBL_SignOut: () => LocalizedString
 	/**
-	 * Content
+	 * Collection
 	 */
-	CollectionCategory_Content: () => LocalizedString
+	CollectionCategory_Collection: () => LocalizedString
 	/**
 	 * Menu
 	 */
@@ -1479,14 +1479,6 @@ export type TranslationFunctions = {
 	 * Required
 	 */
 	FORM_Required: () => LocalizedString
-	/**
-	 * Collections
-	 */
-	Collections: () => LocalizedString
-	/**
-	 * Media
-	 */
-	Media: () => LocalizedString
 	/**
 	 * User
 	 */

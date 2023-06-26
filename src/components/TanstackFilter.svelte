@@ -1,5 +1,14 @@
 <script>
-	// import { language } from '@src/stores/store';
+	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
+	import { contentLanguage } from '@src/stores/store';
+
+	// Manually parse the object from JSON string
+	let options = JSON.parse(PUBLIC_CONTENT_LANGUAGES.replace(/'/g, '"'));
+
+	function handleChange(event) {
+		const selectedLanguage = event.target.value.toLowerCase();
+		contentLanguage.set(selectedLanguage);
+	}
 
 	export let searchShow = false;
 	export let searchValue = '';
@@ -67,11 +76,18 @@
 			width="24"
 		/>
 	</button>
-	<!-- TODO: Display Database available language and show translation Status -->
+
 	<!-- TODO: Show translation Status -->
-	<!-- TODO: Change Dropdown color -->
-	<select class="variant-ghost-surface rounded border-surface-500 text-white">
-		<option value="EN">EN</option>
-		<option value="DE">DE</option>
+	<!-- Mobile -->
+	<select class="variant-ghost-surface rounded border-surface-500 text-white md:hidden" bind:value={$contentLanguage} on:change={handleChange}>
+		{#each Object.keys(options) as value}
+			<option {value}>{value.toUpperCase()}</option>
+		{/each}
+	</select>
+	<!-- Desktop -->
+	<select class="variant-ghost-surface hidden rounded border-surface-500 text-white md:block" bind:value={$contentLanguage} on:change={handleChange}>
+		{#each Object.entries(options) as [value, label]}
+			<option {value}>{label}</option>
+		{/each}
 	</select>
 {/if}

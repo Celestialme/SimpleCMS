@@ -15,7 +15,7 @@
 	import { signUpFormSchema, signUpOtherFormSchema } from '@src/utils/formSchemas';
 
 	export let firstUserExists = false;
-	console.log('firstUserExists', firstUserExists);
+	//console.log('firstUserExists', firstUserExists);
 
 	export let active: undefined | 0 | 1 = undefined;
 

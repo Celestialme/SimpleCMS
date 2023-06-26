@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { collectionValue, mode } from '@src/stores/store';
-	import { credentials } from '@src/stores/load';
+	import { credentials } from '@src/stores/store';
 
 	import Fields from '@src/components/Fields.svelte';
 

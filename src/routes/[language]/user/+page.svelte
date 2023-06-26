@@ -1,6 +1,6 @@
 <script lang="ts">
 	import axios from 'axios';
-	import '@src/stores/load';
+	import '@src/stores/store';
 	import { superForm } from 'sveltekit-superforms/client';
 	import { addUserSchema } from '@src/utils/formSchemas';
 
@@ -198,7 +198,7 @@
 	<div class="flex items-center">
 		<!-- hamburger -->
 		{#if $toggleLeftSidebar === true}
-			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}

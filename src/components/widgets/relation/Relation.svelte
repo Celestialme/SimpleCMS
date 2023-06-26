@@ -4,7 +4,7 @@
 	import { extractData, find, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
-	import { contentLanguage } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/store';
 
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
@@ -69,7 +69,7 @@
 				fieldsData = {};
 				selected = undefined;
 			}}
-			class="btn-icon variant-ghost-surface"
+			class="variant-ghost-surface btn-icon"
 		>
 			<iconify-icon icon="bi:pencil-fill" width="24" />
 		</button>
@@ -82,7 +82,7 @@
 				fieldsData = {};
 				selected = undefined;
 			}}
-			class="btn-icon variant-ghost-surface"
+			class="variant-ghost-surface btn-icon"
 		>
 			<iconify-icon icon="ic:baseline-plus" width="24" />
 		</button>

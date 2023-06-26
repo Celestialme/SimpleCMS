@@ -8,11 +8,20 @@
 		toggleRightSidebar,
 		toggleHeaderSidebar,
 		toggleFooterSidebar,
-		language
+		contentLanguage
 	} from '@src/stores/store';
+
 	import { cloneData, deleteData, getFieldName } from '@src/utils/utils';
 
-	import { PUBLIC_TRANSLATIONS } from '$env/static/public';
+	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
+
+	// Manually parse the object from JSON string
+	let options = JSON.parse(PUBLIC_CONTENT_LANGUAGES.replace(/'/g, '"'));
+
+	function handleChange(event) {
+		const selectedLanguage = event.target.value.toLowerCase();
+		contentLanguage.set(selectedLanguage);
+	}
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -89,20 +98,38 @@
 	</div>
 
 	<div class="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
+		<!-- Delete Content -->
 		<button type="button" on:click={deleteData} class="btn-icon variant-filled-error">
 			<iconify-icon icon="icomoon-free:bin" width="24" />
 		</button>
 
+		<!-- Clone Content -->
 		{#if $mode == 'edit'}
 			<button type="button" on:click={cloneData} class="h btn-icon variant-filled-secondary">
 				<iconify-icon icon="fa-solid:clone" width="24" />
 			</button>
 		{/if}
 
-		<select class="variant-ghost-surface rounded border-surface-500 text-white">
-			<option value="EN">EN</option>
+		<!-- TODO: Show translation Status -->
+		<!-- Select Content Language -->
+		<!-- Mobile -->
+		<select class="variant-ghost-surface rounded border-surface-500 text-white md:hidden" bind:value={$contentLanguage} on:change={handleChange}>
+			{#each Object.keys(options) as value}
+				<option {value}>{value.toUpperCase()}</option>
+			{/each}
+		</select>
+		<!-- Desktop -->
+		<select
+			class="variant-ghost-surface hidden rounded border-surface-500 text-white md:block"
+			bind:value={$contentLanguage}
+			on:change={handleChange}
+		>
+			{#each Object.entries(options) as [value, label]}
+				<option {value}>{label}</option>
+			{/each}
 		</select>
 
+		<!-- Cancel -->
 		<button type="button" on:click={handleCancel} class="btn-icon variant-ghost-surface">
 			<iconify-icon icon="material-symbols:close" width="24" />
 		</button>
@@ -137,12 +164,12 @@
 						</p>
 
 						<div class="flex gap-2">
-							<!-- Widget localization  -->
-							{#if field.localization}
+							<!-- Widget translated  -->
+							{#if field.translated}
 								<div class="flex items-center gap-1 px-2">
 									<iconify-icon icon="bi:translate" color="dark" width="18" class="text-sm" />
 									<div class="text-xs font-normal text-error-500">
-										{JSON.parse(PUBLIC_TRANSLATIONS)['en']}
+										{$contentLanguage.toUpperCase()}
 									</div>
 								</div>
 							{/if}

@@ -1,13 +1,37 @@
 import { writable, type Writable } from 'svelte/store';
-import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+import { PUBLIC_SYSTEM_LANGUAGE, PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
+import { setLocale } from '@src/i18n/i18n-svelte';
+import type { Locales } from '@src/i18n/i18n-types';
+import { loadAllLocales } from '@src/i18n/i18n-util.sync';
+import { browser } from '$app/environment';
 
-export let collectionValue: any = writable({}); // collective data of collection
+// Create a writable store for credentials with initial value from local storage
+export let credentials: Writable<{ username: string }> = writable();
+
+// Create a writable store for systemLanguage with initial value of PUBLIC_SYSTEM_LANGUAGE
+export let systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);
+
+// Create a writable store for contentLanguage with initial value of PUBLIC_CONTENT_LANGUAGES
+export let contentLanguage = writable(Object.keys(PUBLIC_CONTENT_LANGUAGES)[0]);
+
+// Subscribe to changes in credentials store and update local storage accordingly
+credentials.subscribe((val) => {
+	if (browser) globalThis.localStorage.setItem('credentials', JSON.stringify(val));
+});
+
+// Load all locales
+loadAllLocales();
+
+// Subscribe to changes in systemLanguage store and set locale accordingly
+systemLanguage.subscribe((val) => {
+	setLocale(val as Locales);
+});
+
+// collective data of collection
+export let collectionValue: any = writable({});
 export let mode: Writable<'view' | 'edit' | 'create' | 'delete' | 'publish' | 'unpublish' | 'schedule' | 'clone'> = writable('view');
 export let entryData: Writable<any> = writable({});
 export let deleteEntry: Writable<() => any> = writable(() => {});
-
-// Store selected content language
-export const language: Writable<string> = writable(PUBLIC_CONTENT_LANGUAGE);
 
 // Store image data while editing
 export const saveEditedImage: Writable<boolean> = writable(false);
@@ -19,8 +43,5 @@ export const toggleHeaderSidebar: Writable<boolean> = writable(false);
 export const toggleFooterSidebar: Writable<boolean> = writable(false);
 export const switchSideBar: Writable<boolean> = writable(true);
 
-// Store default SystemLanguage
-export const systemLanguage: Writable<string> = writable('en');
-
-//Store ListboxValue
+// Store ListboxValue
 export const storeListboxValue: Writable<string> = writable('create');

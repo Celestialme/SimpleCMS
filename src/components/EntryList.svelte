@@ -2,7 +2,7 @@
 	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
 	import { mode, entryData, deleteEntry, toggleLeftSidebar } from '@src/stores/store';
-	import { contentLanguage } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/store';
 
 	import axios from 'axios';
 	import { writable } from 'svelte/store';
@@ -397,6 +397,7 @@
 			</button>
 		{/if}
 		<!-- Collection type with icon -->
+		<!-- TODO: Translate Collection Name -->
 		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : 'ml-1'}">
 			{#if categories}<div class="mb-2 text-xs capitalize text-surface-500 dark:text-surface-300">
 					{categories[0].name}

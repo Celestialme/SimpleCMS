@@ -15,7 +15,7 @@
 	import { locales } from '@src/i18n/i18n-util';
 	import type { Locales } from '@src/i18n/i18n-types';
 	//console.log('locales', locales);
-	import { systemLanguage } from '@src/stores/load';
+	import { systemLanguage } from '@src/stores/store';
 	//console.log('systemLanguage', $systemLanguage);
 
 	let selectedLocale = (localStorage.getItem('selectedLanguage') || $systemLanguage) as Locales;

@@ -5,7 +5,7 @@
 
 	// import { goto } from '$app/navigation';
 	// import axios, { toFormData } from 'axios';
-	// import { credentials } from '@src/stores/load';
+	// import { credentials } from '@src/stores/store';
 
 	import SigninIcon from './icons/SigninIcon.svelte';
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';

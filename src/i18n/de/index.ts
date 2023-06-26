@@ -6,6 +6,7 @@ const de: Translation = {
 	SBL_Admin: 'Admin',
 	SBL_Admin_User: 'Admin Benutzer',
 	SBL_SystemLanguage: 'Systemspache',
+	SBL_User: 'Benutzerprofil',
 	SBL_isDark: 'Wechsel zum',
 	SBL_Light: 'Hell',
 	SBL_Dark: 'Dunkel',
@@ -17,7 +18,7 @@ const de: Translation = {
 	SBL_SignOut: 'Abmelden',
 
 	// Collections
-	CollectionCategory_Content: 'Inhalte',
+	CollectionCategory_Collection: 'Kollektion',
 	CollectionCategory_Menu: 'Menü',
 	CollectionCategory_Media: 'Medien',
 
@@ -145,9 +146,6 @@ const de: Translation = {
 	// Alert
 
 	// Collections
-	Collections: 'Sammlungen',
-	Media: 'Medien',
-
 	COLLECTION_TEST_User: 'Benutzer',
 	COLLECTION_TEST_Prefix: 'Präfix',
 	COLLECTION_TEST_Prefix_data: ['Herr.', 'Frau.', 'Fraulein', 'Dr.'],

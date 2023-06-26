@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleHeaderSidebar, toggleFooterSidebar, language } from '@src/stores/store';
-	import { contentLanguage } from '@src/stores/load';
+	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleHeaderSidebar, toggleFooterSidebar } from '@src/stores/store';
+	import { contentLanguage } from '@src/stores/store';
 	import axios from 'axios';
-	import { credentials } from '@src/stores/load';
+	import { credentials } from '@src/stores/store';
 	import { fly } from 'svelte/transition';
 
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
@@ -33,7 +33,20 @@
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 
 	// Popup Tooltips
-	let SwitchThemeSettings: PopupSettings = {
+
+	let UserTooltip: PopupSettings = {
+		event: 'hover',
+		target: 'User',
+		placement: 'right'
+	};
+
+	let GithubTooltip: PopupSettings = {
+		event: 'hover',
+		target: 'Github',
+		placement: 'right'
+	};
+
+	let SwitchThemeTooltip: PopupSettings = {
 		event: 'hover',
 		target: 'SwitchTheme',
 		placement: 'right'
@@ -65,10 +78,9 @@
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
-	import { locale } from '@src/i18n/i18n-svelte';
 	import { locales } from '@src/i18n/i18n-util';
 	import type { Locales } from '@src/i18n/i18n-types';
-	import { systemLanguage } from '@src/stores/load';
+	import { systemLanguage } from '@src/stores/store';
 	import { setLocale } from '@src/i18n/i18n-svelte';
 
 	let selectedLocale = (localStorage.getItem('selectedLanguage') || $systemLanguage) as Locales;
@@ -195,7 +207,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 			<div class="{$switchSideBar ? 'grid-cols-3 grid-rows-3' : 'grid-cols-2 grid-rows-2'} grid items-center justify-center overflow-hidden">
 				<!-- Avatar with user settings -->
 				<div class={$switchSideBar ? 'order-1 row-span-2' : 'order-1'}>
-					<button class="btn-icon hover:bg-surface-500 md:row-span-2">
+					<button class="btn-icon hover:bg-surface-500 md:row-span-2" use:popup={UserTooltip}>
 						<div on:click={handleClick} on:keypress={handleClick} class="relative cursor-pointer flex-col !no-underline">
 							<Avatar src={avatarSrc ? '/api/media/' + avatarSrc : '/Default_User.svg'} class="mx-auto {$switchSideBar ? 'w-[40px]' : 'w-[35px]'}" />
 							<div class="text-center text-[9px] text-black dark:text-white">
@@ -206,12 +218,16 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 								{/if}
 							</div>
 						</div>
+						<div class="card variant-filled-secondary p-4" data-popup="User">
+							{$LL.SBL_User()}
+							<div class="arrow variant-filled-secondary" />
+						</div>
 					</button>
 				</div>
 
 				<!-- TODO: Fix Tooltip overflow -->
 				<!-- System Language i18n Handling -->
-				<div class={$switchSideBar ? 'order-3 row-span-2  ' : 'order-2'}>
+				<div class={$switchSideBar ? 'order-3 row-span-2  ' : 'order-2'} use:popup={SystemLanguageTooltip}>
 					<select
 						bind:value={selectedLocale}
 						on:change={handleLocaleChange}
@@ -221,11 +237,15 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 							<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
 						{/each}
 					</select>
+					<div class="card variant-filled-secondary p-4" data-popup="SystemLanguage">
+						{$LL.SBL_SystemLanguage()}
+						<div class="arrow variant-filled-secondary" />
+					</div>
 				</div>
 
 				<!-- light/dark mode switch -->
 				<div class="{$switchSideBar ? 'order-2' : 'order-3'}  ">
-					<button use:popup={SwitchThemeSettings} on:click={toggleTheme} class="btn-icon hover:bg-surface-500 hover:text-white">
+					<button use:popup={SwitchThemeTooltip} on:click={toggleTheme} class="btn-icon hover:bg-surface-500 hover:text-white">
 						{#if !$modeCurrent}
 							<iconify-icon icon="bi:sun" width="22" />
 						{:else}
@@ -270,10 +290,15 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 
 				<!-- Github discussions -->
 				<div class={$switchSideBar ? 'order-7' : 'order-7 hidden'}>
-					<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
+					<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white" use:popup={GithubTooltip}>
 						<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
 							<iconify-icon icon="grommet-icons:github" width="30" />
 						</a>
+
+						<div class="card variant-filled-secondary p-4" data-popup="Github">
+							Github Discussion
+							<div class="arrow variant-filled-secondary" />
+						</div>
 					</button>
 				</div>
 

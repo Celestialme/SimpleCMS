@@ -20,20 +20,17 @@ let schema = {
 				{
 					fields: [
 						widgets.Text({
-							label: 'Header',
-							translated: false
+							label: 'Header'
 						})
 					]
 				},
 				{
 					fields: [
 						widgets.Text({
-							label: 'Header',
-							translated: false
+							label: 'Header'
 						}),
 						widgets.Text({
-							label: 'Header',
-							translated: false
+							label: 'Header'
 						})
 					]
 				}
