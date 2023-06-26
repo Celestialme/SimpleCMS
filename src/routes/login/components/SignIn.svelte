@@ -1,11 +1,9 @@
 <script lang="ts">
 	import type { PageData } from '../$types';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { loginFormSchema, forgotFormSchema, resetFormSchema } from '@src/utils/formSchemas';
+	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
-	// import { goto } from '$app/navigation';
-	// import axios, { toFormData } from 'axios';
-	// import { credentials } from '@src/stores/store';
+	import { loginFormSchema, forgotFormSchema, resetFormSchema } from '@src/utils/formSchemas';
 
 	import SigninIcon from './icons/SigninIcon.svelte';
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
@@ -78,15 +76,17 @@
 		onSubmit: ({ cancel }) => {
 			// Submit email as lowercase only
 			$forgotForm.email = $forgotForm.email.toLowerCase();
+
 			// handle login form submission
 			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			// handle forgot form result
-			// update variables to display reset form
 			if (result.type == 'redirect') {
+				// update variables to display reset form
 				resetPW = true;
 			}
+
 			cancel();
 
 			// add wiggle animation to form element
@@ -119,10 +119,13 @@
 			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
+			// handle forgot form result
 			if (result.type == 'redirect') {
+				// update variables to display login form
 				forgot = false;
 				resetPW = false;
 			}
+
 			cancel();
 
 			// add wiggle animation to form element
@@ -162,6 +165,7 @@
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
 		{#if !forgot && !resetPW}
+			<SuperDebug data={$form} />
 			<form method="post" action="?/signIn" use:enhance bind:this={formElement} class="flex w-full flex-col" class:hide={active != 0}>
 				<!-- Email field -->
 				<FloatingInput
@@ -210,6 +214,7 @@
 		{/if}
 
 		{#if resetPW && forgot}
+			<SuperDebug data={$resetForm} />
 			<!-- Reset Password -->
 			<form method="post" action="?/resetPW" use:resetEnhance bind:this={formElement} class="flex w-full flex-col">
 				<!-- Password field -->
@@ -250,10 +255,11 @@
 		{/if}
 
 		{#if forgot && !resetPW}
+			<SuperDebug data={$forgotForm} />
 			<!-- Forgotten Password -->
 			<form method="post" action="?/forgot" use:forgotEnhance bind:this={formElement} class="flex w-full flex-col">
 				<div class="  mb-2 text-center text-sm text-black">
-					<p>{$LL.LOGIN_ForgottenPassword_text()}</p>
+					<p class="mb-2 text-xs">{$LL.LOGIN_ForgottenPassword_text()}</p>
 				</div>
 				<!-- Email field -->
 				<FloatingInput

@@ -52,6 +52,7 @@ This FloatingInput component has the following properties:
 	export let textColor: InputProps['textColor'] = '!text-error-500';
 	export let type: 'password' | 'text' | 'email' = 'text';
 	export let value: InputProps['value'] = '';
+	export let tabindex: number = 0;
 
 	function getAutocompleteValue(label: string | undefined): string {
 		if (label === undefined) {
@@ -87,9 +88,10 @@ This FloatingInput component has the following properties:
 	<input
 		type={showPassword ? 'text' : type}
 		on:input={handleInput}
+		on:keydown
 		{id}
 		{autocomplete}
-		class="{inputClass} peer relative block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-gray-300 !bg-transparent pl-6 !text-{textColor} focus:border-blue-600 focus:outline-none focus:ring-0 dark:border-gray-400 dark:focus:border-blue-500"
+		class="{inputClass} peer relative block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-surface-300 !bg-transparent pl-6 !text-{textColor} focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-400 dark:focus:border-tertiary-500"
 		{value}
 		{name}
 		{required}
@@ -105,8 +107,10 @@ This FloatingInput component has the following properties:
 
 	{#if type === 'password'}
 		<iconify-icon
+			{tabindex}
+			role="button"
 			icon={showPassword ? 'bi:eye-fill' : 'bi:eye-slash-fill'}
-			class={`absolute right-0 ${showPasswordBackgroundColor === 'light' ? 'text-gray-700' : 'text-gray-300'}`}
+			class={`absolute right-0 ${showPasswordBackgroundColor === 'light' ? 'text-surface-700' : 'text-surface-300'}`}
 			width="24"
 			on:keydown
 			on:click|preventDefault={togglePasswordVisibility}
@@ -116,12 +120,12 @@ This FloatingInput component has the following properties:
 	{#if label}
 		<label
 			for="input"
-			class="{labelClass} pointer-events-none absolute left-6 transform text-sm text-gray-400 transition-all duration-200 ease-in-out peer-placeholder-shown:-top-1 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-left-0 peer-focus:-top-1.5 peer-focus:text-xs peer-focus:text-blue-600 {value &&
-				'-left-0 -top-1.5 text-xs text-blue-600'}"
+			class="{labelClass} pointer-events-none absolute left-6 transform text-sm text-surface-400 transition-all duration-200 ease-in-out peer-placeholder-shown:-top-1 peer-placeholder-shown:text-base peer-placeholder-shown:text-surface-400 peer-focus:-left-0 peer-focus:-top-1.5 peer-focus:text-xs peer-focus:text-tertiary-500 {value &&
+				'-left-0 -top-1.5 text-xs text-tertiary-500'}"
 		>
 			{label}
 			{#if required}
-				<span class="text-red-500">*</span>
+				<span class="text-error-500">*</span>
 			{/if}
 		</label>
 	{/if}

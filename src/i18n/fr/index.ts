@@ -97,7 +97,7 @@ const fr: Translation = {
 	LOGIN_ZOD_Token_string: "Un jeton d'authentification est requis",
 	LOGIN_ZOD_Password_match: 'Le mot de passe et la confirmation du mot de passe doivent correspondre',
 
-	LOGIN_ZOD_General_Unkown: "Une erreur inconnue s'est produite",
+	LOGIN_ZOD_General_Unknown: "Une erreur inconnue s'est produite",
 	LOGIN_ZOD_General_Error: 'Entrée invalide',
 	LOGIN_ZOD_Email_Error_inUse: "L'adresse e-mail est déjà utilisée",
 	LOGIN_ZOD_Email_Error_send: "Erreur lors de l'envoi du courrier électronique.",
@@ -105,8 +105,8 @@ const fr: Translation = {
 	LOGIN_ZOD_Email_Error_SignupKey: 'Incorrect email or password.',
 	LOGIN_ZOD_Token_Error: 'Token is wrong!',
 	LOGIN_ZOD_Token_Expired: 'Token has expired!',
-	LOGIN_ZOD_Forgotton_Error: 'No account under this email',
-	LOGIN_ZOD_Forgotton_email:
+	LOGIN_ZOD_Forgotten_Error: 'No account under this email',
+	LOGIN_ZOD_Forgotten_email:
 		'Hi there,<br><br>We received a request to reset your password. Your password reset token is:<br><br>{token:string}<br> <br>Please follow the link below to reset your password:<br>{link:string}<br><br>If you did not request this reset, please disregard this message.<br><br>Best regards,<br>The Support Team',
 
 	// Entry List

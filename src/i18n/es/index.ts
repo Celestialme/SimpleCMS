@@ -95,7 +95,7 @@ const es: Translation = {
 	LOGIN_ZOD_Token_string: 'Se requiere Auth Token',
 	LOGIN_ZOD_Password_match: 'La contraseña y la confirmación deben coincidir',
 
-	LOGIN_ZOD_General_Unkown: 'Se ha producido un error desconocido',
+	LOGIN_ZOD_General_Unnown: 'Se ha producido un error desconocido',
 	LOGIN_ZOD_General_Error: 'Entrada no válida',
 	LOGIN_ZOD_Email_Error_inUse: 'Correo electrónico ya utilizado',
 	LOGIN_ZOD_Email_Error_send: 'Error al enviar un e-mail',
@@ -103,8 +103,8 @@ const es: Translation = {
 	LOGIN_ZOD_Email_Error_SignupKey: 'Correo electrónico o contraseña incorrectos',
 	LOGIN_ZOD_Token_Error: 'Token incorrecto!',
 	LOGIN_ZOD_Token_Expired: 'Token expirado!',
-	LOGIN_ZOD_Forgotton_Error: 'No hay cuenta en esta dirección de correo electrónico',
-	LOGIN_ZOD_Forgotton_email:
+	LOGIN_ZOD_Forgotten_Error: 'No hay cuenta en esta dirección de correo electrónico',
+	LOGIN_ZOD_Forgotten_email:
 		'Hola,<br><br>Hemos recibido una solicitud para restablecer su contraseña. El token de restablecimiento de contraseña es:<br><br>{token:string}<br><br>Por favor, sigue el siguiente enlace para restablecer tu contraseña:<br>{link:string}<br><br>Si no has solicitado este restablecimiento, por favor, ignora este mensaje.<br><br>Atentamente,<br>Su equipo de soporte',
 
 	// Entry List

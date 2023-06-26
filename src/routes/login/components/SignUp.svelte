@@ -1,12 +1,13 @@
 <script lang="ts">
+	import type { PageData } from '../$types';
 	import { superForm } from 'sveltekit-superforms/client';
+	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
 	import SignupIcon from './icons/SignupIcon.svelte';
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
+	let tabIndex = 1;
 
-	import type { PageData } from '../$types';
 	import { PUBLIC_SITENAME } from '$env/static/public';
-
 	import CMSLogo from './icons/Logo.svelte';
 
 	// typesafe-i18n
@@ -24,7 +25,6 @@
 	export let FormSchemaSignUp: PageData['signUpForm'];
 	const { form, constraints, allErrors, errors, enhance, delayed } = superForm(FormSchemaSignUp, {
 		validators: signUpFormSchema,
-		//validators: (FormSchemaSignUp.data.token != null ? signUpFormSchema : signUpFormSchema.innerType().omit({ token: true })) as typeof signUpFormSchema,
 		// Clear form on success.
 		resetForm: true,
 		// Prevent page invalidation, which would clear the other form when the load function executes again.
@@ -38,28 +38,25 @@
 			// Submit email as lowercase only
 			$form.email = $form.email.toLowerCase();
 
+			console.log('onSubmit:', form);
+
 			// handle login form submission
 			if ($allErrors.length > 0) cancel();
 		},
 
 		onResult: ({ result, cancel }) => {
-			if (result.type == 'redirect') return;
+			console.log('onResult', result);
 
+			if (result.type == 'redirect') return;
 			cancel();
 
 			// add wiggle animation to form element
 			formElement.classList.add('wiggle');
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 
-			userExists = true;
-
-			// 	if (result.type == 'success') {
-			// 		registerError = result.data?.message;
-			// 	}
+			//userExists = true;
 		}
 	});
-
-	// let firstUserExists = $form.token != null;
 
 	export let FormSchemaSignUpOther: PageData['signUpFormOther'];
 	const {
@@ -89,6 +86,7 @@
 		},
 
 		onResult: ({ result, cancel }) => {
+			// handle forgot form result
 			if (result.type == 'redirect') return;
 
 			cancel();
@@ -103,6 +101,7 @@
 
 	let formElement: HTMLFormElement;
 
+	// TODO: Replace Role with the one assigned from token
 	let UserRole = 'Creator';
 </script>
 
@@ -137,11 +136,13 @@
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
 		{#if !firstUserExists}
+			<SuperDebug data={$form} />
 			<form method="post" action="?/signUp" use:enhance bind:this={formElement} class="flex flex-col" class:hide={active != 1}>
 				<!-- Username field -->
 				<FloatingInput
 					name="Username"
 					type="text"
+					tabindex={tabIndex++}
 					required
 					bind:value={$form.username}
 					label={$LL.LOGIN_Username()}
@@ -156,6 +157,7 @@
 				<FloatingInput
 					name="email"
 					type="email"
+					tabindex={tabIndex++}
 					required
 					bind:value={$form.email}
 					label={$LL.LOGIN_EmailAddress()}
@@ -171,6 +173,7 @@
 				<FloatingInput
 					name="password"
 					type="password"
+					tabindex={tabIndex++}
 					required
 					bind:value={$form.password}
 					label={$LL.LOGIN_Password()}
@@ -186,6 +189,7 @@
 				<FloatingInput
 					name="confirm_password"
 					type="password"
+					tabindex={tabIndex++}
 					required
 					bind:value={$form.confirm_password}
 					label={$LL.LOGIN_ConfirmPassword()}
@@ -206,12 +210,14 @@
 				</button>
 			</form>
 		{:else}
+			<SuperDebug data={$otherForm} />
 			<!-- TODO: Check if this repetition is really required for Registration Token -->
 			<form method="post" action="?/signUp" use:otherEnhance bind:this={formElement} class="flex flex-col" class:hide={active != 1}>
 				<!-- Username field -->
 				<FloatingInput
 					name="Username"
 					type="text"
+					tabindex={tabIndex++}
 					required
 					bind:value={$otherForm.username}
 					label={$LL.LOGIN_Username()}
@@ -226,6 +232,7 @@
 				<FloatingInput
 					name="email"
 					type="email"
+					tabindex={tabIndex++}
 					required
 					bind:value={$otherForm.email}
 					label={$LL.LOGIN_EmailAddress()}
@@ -241,6 +248,7 @@
 				<FloatingInput
 					name="password"
 					type="password"
+					tabindex={tabIndex++}
 					required
 					bind:value={$otherForm.password}
 					label={$LL.LOGIN_Password()}
@@ -256,6 +264,7 @@
 				<FloatingInput
 					name="confirm_password"
 					type="password"
+					tabindex={tabIndex++}
 					required
 					bind:value={$otherForm.confirm_password}
 					label={$LL.LOGIN_ConfirmPassword()}
@@ -271,8 +280,9 @@
 				{#if firstUserExists}
 					<FloatingInput
 						name="token"
-						required
 						type="text"
+						tabindex={tabIndex++}
+						required
 						bind:value={$otherForm.isToken}
 						label={$LL.LOGIN_Token()}
 						icon="mdi:key-chain"
