@@ -27,7 +27,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 		if (data[key] instanceof FileList) {
 			for (let _key in data[key]) {
 				// for multiple files
-				console.log(data[key]);
+				//console.log(data[key]);
 				formData.append(key, data[key][_key]);
 			}
 		} else if (typeof data[key] === 'object') {

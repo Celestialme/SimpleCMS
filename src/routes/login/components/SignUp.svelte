@@ -136,7 +136,7 @@
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
 		{#if !firstUserExists}
-			<SuperDebug data={$form} />
+			<!--<SuperDebug data={$form} />-->
 			<form method="post" action="?/signUp" use:enhance bind:this={formElement} class="flex flex-col" class:hide={active != 1}>
 				<!-- Username field -->
 				<FloatingInput
@@ -210,7 +210,7 @@
 				</button>
 			</form>
 		{:else}
-			<SuperDebug data={$otherForm} />
+			<!--<SuperDebug data={$otherForm} />-->
 			<!-- TODO: Check if this repetition is really required for Registration Token -->
 			<form method="post" action="?/signUp" use:otherEnhance bind:this={formElement} class="flex flex-col" class:hide={active != 1}>
 				<!-- Username field -->

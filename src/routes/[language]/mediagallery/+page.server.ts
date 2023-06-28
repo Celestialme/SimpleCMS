@@ -1,76 +1,61 @@
 import fs from 'fs';
 import path from 'path';
-import sharp from 'sharp';
 
-//import { LuciaAuth } from 'lucia-auth';
-let hasPermission: boolean = true;
+// Define a function to check if a directory exists and create it if it doesn't
+function ensureDirectoryExists(dirPath: string) {
+	if (!fs.existsSync(dirPath)) {
+		fs.mkdirSync(dirPath);
+	}
+}
 
 export function load({ params }) {
-	// Check if media files directory exists
-	const mediaDir = path.resolve('./mediafiles');
-	if (!fs.existsSync(mediaDir)) {
-		// If it doesn't exist, return an error message
-		return {
-			body: { error: 'Media files not found' }
-		};
-	}
-
-	// Check if media files cached directory exists
-	const cachedDir = path.resolve('./mediafilescached');
-	if (!fs.existsSync(cachedDir)) {
-		// If it doesn't exist, create it
-		fs.mkdirSync(cachedDir);
-	}
-
-	const collections = fs.readdirSync(mediaDir);
-
-	const images = collections.flatMap((item) => {
-		const itemPath = path.join(mediaDir, item);
-		const isDirectory = fs.statSync(itemPath).isDirectory();
-		let files;
-
-		if (isDirectory) {
-			files = fs.readdirSync(itemPath).map((file) => ({
-				file,
-				collection: item
-			}));
-		} else {
-			files = [{ file: item }];
+	try {
+		// Check if media files directory exists
+		const mediaDir = path.resolve('./mediafiles');
+		if (!fs.existsSync(mediaDir)) {
+			// If it doesn't exist, return an error message
+			return {
+				status: 404,
+				error: new Error('Media files directory not found')
+			};
 		}
 
-		return files.map((fileInfo) => {
-			const { file, collection } = fileInfo;
-			const filePath = path.join(mediaDir, collection || '', file);
-			const fileExt = path.extname(filePath).toLowerCase();
-			const fileName = path.parse(file).name;
-			let thumbnail;
+		// Check if media files cached directory exists
+		const cachedDir = path.resolve('./mediathumbnails');
+		ensureDirectoryExists(cachedDir);
 
-			if (['.jpeg', '.jpg', '.png', '.webp', '.tiff'].includes(fileExt)) {
-				const cachedCollectionDir = path.join(cachedDir, collection || '');
-				if (!fs.existsSync(cachedCollectionDir)) {
-					fs.mkdirSync(cachedCollectionDir);
-				}
-				const thumbnailPath = path.join(cachedCollectionDir, fileName + '.avif');
-				sharp(filePath).resize(360).toFormat('avif').toFile(thumbnailPath);
-				thumbnail = `/mediafilescached/${collection || ''}/${fileName}.avif`;
-			} else if (['.docx', '.xlsx', '.pptx'].includes(fileExt)) {
-				thumbnail = `/path/to/your/icon/file.svg`;
+		const collections = fs.readdirSync(mediaDir);
+
+		const images = collections.flatMap((item) => {
+			const itemPath = path.join(mediaDir, item);
+			const isDirectory = fs.statSync(itemPath).isDirectory();
+			let files;
+
+			if (isDirectory) {
+				files = fs.readdirSync(itemPath).map((file) => ({
+					file,
+					collection: item
+				}));
+			} else {
+				files = [{ file: item }];
 			}
 
-			//TODO: Add User Permission to see only own data files
-			// 	const user = await LuciaAuth.currentUser();
-			//  const hasPermission = user && user.canAccessMedia(collection);
-			// if (uploadedMedia) {
-			// 	const mediaId = uploadedMedia.find((media) => media.file === file);
-			// 	if (mediaId) {
-			// 		hasPermission = true;
-			// 	}
-			// } else {
-			// 	hasPermission = false;
-			// }
+			return files.map((fileInfo) => {
+				const { file, collection } = fileInfo;
+				const filePath = path.join(mediaDir, collection || '', file);
+				const fileExt = path.extname(filePath).toLowerCase();
+				const fileName = path.parse(file).name;
+				let thumbnail;
 
-			if (hasPermission) {
-				// The user can see all of the media files
+				if (['.jpeg', '.jpg', '.png', '.webp', '.tiff'].includes(fileExt)) {
+					thumbnail = `/mediathumbnails/${collection || ''}/${fileName}.avif`;
+				} else if (['.docx', '.xlsx', '.pptx'].includes(fileExt)) {
+					thumbnail = `/path/to/your/icon/file.svg`;
+				}
+
+				// TODO: Add user permission check
+				const hasPermission = true;
+
 				return {
 					image: `/mediafiles/${collection || ''}/${file}`,
 					name: file,
@@ -78,20 +63,28 @@ export function load({ params }) {
 					thumbnail,
 					hasPermission
 				};
-			} else {
-				// The user cannot see all of the media files
-				return {
-					image: `/mediafiles/${collection || ''}/${file}`,
-					name: file,
-					path: `/mediafiles/${collection || ''}`,
-					thumbnail,
-					hasPermission: false
-				};
-			}
+			});
 		});
-	});
 
-	return {
-		body: images
-	};
+		// Check if the images array is empty
+		if (images.length === 0) {
+			// If it is empty, return an error message
+			return {
+				status: 404,
+				error: new Error('No images found')
+			};
+		}
+
+		return {
+			status: 200,
+			body: images
+		};
+	} catch (error) {
+		// Catch any errors that may occur and return an error message
+		console.error(error);
+		return {
+			status: 500,
+			error: new Error('Internal Server Error')
+		};
+	}
 }

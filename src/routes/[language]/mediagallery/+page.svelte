@@ -304,20 +304,8 @@
 	}
 
 	// TODO: Check if no mediafiles exist
-	import { onMount } from 'svelte';
-	let error = 'Disable Empty Check';
-
-	// onMount(async () => {
-	// 	const res = await fetch('/[language]/mediagallery');
-	// 	const data = await res.json();
-
-	// 	if (data.error) {
-	// 		let error =  (data.error);
-	// 	} else {
-	// 		// handle successful response
-	// 		let error = false;
-	// 	}
-	// });
+	let errorMessage;
+	$: errorMessage = data?.error?.message;
 </script>
 
 <div class="m-2 flex flex-col gap-1">
@@ -492,7 +480,7 @@
 			</div>
 		</div>
 	</div>
-	{#if !error}
+	{#if !errorMessage}
 		<!-- Render grid or table -->
 		{#if view === 'grid'}
 			<div class="mx-auto flex flex-wrap gap-2">
@@ -640,6 +628,6 @@
 		{/if}
 	{:else}
 		<!-- Render error message -->
-		<p class="h2 text-center text-error-500">{error}</p>
+		<p class="h2 text-center text-error-500">{errorMessage}</p>
 	{/if}
 </div>

@@ -22,7 +22,7 @@ export async function load({ cookies, route, params }) {
 		if (
 			route.id != '/[language]/[collection]' &&
 			!collections.some((x) => x.name === params.collection) &&
-			!['/[language]/user', '/[language]/mediagallery', '/[language]/builder'].includes(route.id)
+			!['/[language]/user', '/[language]/mediagallery', '/[language]/builder', '/image'].includes(route.id)
 		) {
 			// Redirect to the first collection in the collections array
 			throw redirect(302, `/${params.language || PUBLIC_SYSTEM_LANGUAGE}/${collections[0].name}`);

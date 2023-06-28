@@ -175,7 +175,7 @@ async function signIn(email: string, password: string, cookies: Cookies) {
 		return null;
 	});
 
-	console.log('signIn key', key);
+	//console.log('signIn key', key);
 
 	if (!key) return false;
 

@@ -165,7 +165,7 @@
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
 		{#if !forgot && !resetPW}
-			<SuperDebug data={$form} />
+			<!--<SuperDebug data={$form} />-->
 			<form method="post" action="?/signIn" use:enhance bind:this={formElement} class="flex w-full flex-col" class:hide={active != 0}>
 				<!-- Email field -->
 				<FloatingInput
@@ -214,7 +214,7 @@
 		{/if}
 
 		{#if resetPW && forgot}
-			<SuperDebug data={$resetForm} />
+			<!--<SuperDebug data={$resetForm} />-->
 			<!-- Reset Password -->
 			<form method="post" action="?/resetPW" use:resetEnhance bind:this={formElement} class="flex w-full flex-col">
 				<!-- Password field -->
@@ -255,7 +255,7 @@
 		{/if}
 
 		{#if forgot && !resetPW}
-			<SuperDebug data={$forgotForm} />
+			<!--<SuperDebug data={$forgotForm} />-->
 			<!-- Forgotten Password -->
 			<form method="post" action="?/forgot" use:forgotEnhance bind:this={formElement} class="flex w-full flex-col">
 				<div class="  mb-2 text-center text-sm text-black">

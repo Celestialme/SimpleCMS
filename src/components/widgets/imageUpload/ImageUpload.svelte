@@ -67,7 +67,6 @@
 			<p>Uploaded File: <span class="text-primary-500">{_data[0].name}</span></p>
 			<p>File size: <span class="text-primary-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
 			<p>MIME type: <span class="text-primary-500">{_data[0].type}</span></p>
-			<p>LastModified: <span class="text-primary-500">{_data[0].lastModifiedDate}</span></p>
 
 			<br />
 
