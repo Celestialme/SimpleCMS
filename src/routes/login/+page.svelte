@@ -4,14 +4,11 @@
 	import SignIn from './components/SignIn.svelte';
 	import SignUp from './components/SignUp.svelte';
 	import Logo from './components/icons/Logo.svelte';
-	//import LocaleSwitcher from '@src/components/LocaleSwitcher.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 	//console.log('PageData', data);
 
-	import { locale } from '@src/i18n/i18n-svelte';
-	//console.log('locale', $locale);
 	import { locales } from '@src/i18n/i18n-util';
 	import type { Locales } from '@src/i18n/i18n-types';
 	//console.log('locales', locales);
@@ -152,8 +149,7 @@
 					class="rounded-full border-2 border-white bg-[#242728] uppercase text-white focus:ring-2 focus:ring-blue-500 active:ring active:ring-blue-300"
 				>
 					{#each locales as locale}
-						<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
-					{/each}
+						<option value={locale} selected={locale === $systemLanguage}>{locale.toUpperCase()} </option>{/each}
 				</select>
 			{/if}
 		</div>

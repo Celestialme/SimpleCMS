@@ -26,14 +26,11 @@
 	$: href = `/${$contentLanguage}/builder`;
 
 	//skeleton
-	import { AppShell, AppBar, Avatar, Modal, ProgressBar, Toast, toastStore, setModeUserPrefers, setModeCurrent } from '@skeletonlabs/skeleton';
+	import { AppShell, AppBar, Avatar, Modal, ProgressBar, popup, Toast, toastStore, setModeUserPrefers, setModeCurrent } from '@skeletonlabs/skeleton';
 	import { modeOsPrefers, modeUserPrefers, modeCurrent } from '@skeletonlabs/skeleton';
-	import type { ToastSettings } from '@skeletonlabs/skeleton';
-	import { popup } from '@skeletonlabs/skeleton';
-	import type { PopupSettings } from '@skeletonlabs/skeleton';
+	import type { ToastSettings, PopupSettings } from '@skeletonlabs/skeleton';
 
-	// Popup Tooltips
-
+	// Popup Tooltipss
 	let UserTooltip: PopupSettings = {
 		event: 'hover',
 		target: 'User',
@@ -207,11 +204,15 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 			<div class="{$switchSideBar ? 'grid-cols-3 grid-rows-3' : 'grid-cols-2 grid-rows-2'} grid items-center justify-center overflow-hidden">
 				<!-- Avatar with user settings -->
 				<div class={$switchSideBar ? 'order-1 row-span-2' : 'order-1'}>
-					<button class="btn-icon hover:bg-surface-500 md:row-span-2" use:popup={UserTooltip}>
+					<button class="btn-icon md:row-span-2" use:popup={UserTooltip} on:click={handleClick} on:keypress={handleClick}>
 						<div on:click={handleClick} on:keypress={handleClick} class="relative cursor-pointer flex-col !no-underline">
-							<Avatar src={avatarSrc ? '/api/media/' + avatarSrc : '/Default_User.svg'} class="mx-auto {$switchSideBar ? 'w-[40px]' : 'w-[35px]'}" />
-							<div class="text-center text-[9px] text-black dark:text-white">
+							<Avatar
+								src={avatarSrc ? '/api/media/' + avatarSrc : '/Default_User.svg'}
+								class="mx-auto hover:bg-surface-500 hover:p-1 {$switchSideBar ? 'w-[40px]' : 'w-[35px]'}"
+							/>
+							<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
 								{#if $switchSideBar}
+									Admin
 									<!-- {#if user?.username}
 										<div class="text-xs uppercase">{user?.username}</div>
 									{/if} -->
@@ -231,7 +232,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 					<select
 						bind:value={selectedLocale}
 						on:change={handleLocaleChange}
-						class="{$switchSideBar ? 'px-2.5 py-2' : 'px-2 py-1.5'} variant-filled-surface appearance-none rounded-full uppercase text-white"
+						class="{$switchSideBar ? 'px-2.5 py-2' : 'px-2 py-1.5'} btn-icon variant-filled-surface appearance-none rounded-full uppercase text-white"
 					>
 						{#each locales as locale}
 							<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
@@ -289,17 +290,17 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				</div>
 
 				<!-- Github discussions -->
-				<div class={$switchSideBar ? 'order-7' : 'order-7 hidden'}>
-					<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white" use:popup={GithubTooltip}>
-						<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
+				<div class="{$switchSideBar ? 'order-7' : 'order-7 hidden'} ">
+					<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
+						<button use:popup={GithubTooltip} class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
 							<iconify-icon icon="grommet-icons:github" width="30" />
-						</a>
 
-						<div class="card variant-filled-secondary p-4" data-popup="Github">
-							Github Discussion
-							<div class="arrow variant-filled-secondary" />
-						</div>
-					</button>
+							<div class="card variant-filled-secondary p-4" data-popup="Github">
+								Github Discussion
+								<div class="arrow variant-filled-secondary" />
+							</div>
+						</button>
+					</a>
 				</div>
 
 				<!-- CMS Version -->

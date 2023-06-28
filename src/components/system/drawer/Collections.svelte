@@ -6,12 +6,12 @@
 	import { mode, switchSideBar } from '@src/stores/store';
 	import { systemLanguage } from '@src/stores/store';
 
-	let href: any;
+	let link1: string = `/${$systemLanguage}/mediagallery`;
+	let link2: string = `/${$systemLanguage}/upload`;
 
 	// update the href value when the systemLanguage store value changes
-	$: href = `/${$systemLanguage}/mediagallery`;
-
-	// import Tooltip from '@src/components/system/tooltip/Tooltip.svelte';
+	// $: link1: href = `/${$systemLanguage}/mediagallery`;
+	// $: link2: href = `/${$systemLanguage}/image`;
 
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import { popup } from '@skeletonlabs/skeleton';
@@ -22,8 +22,6 @@
 		target: 'popupHover',
 		placement: 'right'
 	};
-
-	let expanded: any = {};
 </script>
 
 <!-- displays all collection parents and their Children as accordion -->
@@ -55,10 +53,10 @@
 						{#if $switchSideBar}
 							<!-- switchSideBar expanded -->
 							<div
-								type="button"
 								class="-mx-4 flex flex-row items-center py-1 pl-3 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
 								on:keydown
 								on:click={(e) => {
+									console.log('collection entry clicked');
 									mode.set('view');
 									$collection = _collection;
 								}}
@@ -69,7 +67,6 @@
 						{:else}
 							<!-- switchSideBar collapsed -->
 							<div
-								type="button"
 								class="-mx-4 flex flex-col items-center py-1 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
 								on:keydown
 								on:click={(e) => {
@@ -90,15 +87,30 @@
 	<!-- Gallery -->
 	{#if $switchSideBar}
 		<!-- switchSideBar expanded -->
-		<a on:keydown {href} class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
+		<a href={link1} class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-primary-600" />
 			<p class="mr-auto text-center uppercase">{$LL.CollectionCategory_Media()}</p>
 		</a>
 	{:else}
 		<!-- switchSideBar collapsed -->
-		<a on:keydown {href} class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
+		<a href={link1} class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
 			<p class="text-xs uppercase">{$LL.CollectionCategory_Media()}</p>
 			<iconify-icon icon="bi:images" width="24" class="text-primary-600" />
+		</a>
+	{/if}
+
+	<!-- testimage -->
+	{#if $switchSideBar}
+		<!-- switchSideBar expanded -->
+		<a href={link2} class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
+			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-tertiary-600" />
+			<p class="mr-auto text-center uppercase">Upload</p>
+		</a>
+	{:else}
+		<!-- switchSideBar collapsed -->
+		<a href={link2} class="btn variant-filled-tertiary mt-2 flex flex-col items-center py-1 pl-2">
+			<p class="text-xs uppercase">Upload</p>
+			<iconify-icon icon="bi:images" width="24" class="text-tertiary-600" />
 		</a>
 	{/if}
 </div>

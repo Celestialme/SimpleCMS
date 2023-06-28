@@ -10,6 +10,11 @@
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import CMSLogo from './icons/Logo.svelte';
 
+	// skeleton
+	import { Toast, toastStore } from '@skeletonlabs/skeleton';
+	import type { ToastSettings } from '@skeletonlabs/skeleton';
+
+	console.log('toastStore', toastStore);
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -45,7 +50,19 @@
 		onResult: ({ result, cancel }) => {
 			//console.log('onResult', result);
 
-			if (result.type == 'redirect') return;
+			if (result.type == 'redirect') {
+				// Trigger the toast
+				const t = {
+					message: $LL.LOGIN_SignInSuccess(),
+					// Provide any utility or variant background style:
+					background: 'variant-filled-primary',
+					timeout: 2000,
+					// Add your custom classes here:
+					classes: 'border-1 !rounded-md'
+				};
+				toastStore.trigger(t);
+				return;
+			}
 			cancel();
 
 			// add wiggle animation to form element
@@ -85,8 +102,19 @@
 			if (result.type == 'redirect') {
 				// update variables to display reset form
 				resetPW = true;
-			}
 
+				// Trigger the toast
+				// TODO: Toast in conflict with wiggle
+				const t = {
+					message: $LL.LOGIN_ForgottenPassword(),
+					// Provide any utility or variant background style:
+					background: 'variant-filled-primary',
+					// Add your custom classes here:
+					classes: 'border-1 !rounded-md'
+				};
+				toastStore.trigger(t);
+				return;
+			}
 			cancel();
 
 			// add wiggle animation to form element
@@ -124,8 +152,18 @@
 				// update variables to display login form
 				forgot = false;
 				resetPW = false;
-			}
 
+				// Trigger the toast
+				const t: ToastSettings = {
+					message: 'Password Reset',
+					// Provide any utility or variant background style:
+					background: 'variant-filled-primary',
+					// Add your custom classes here:
+					classes: 'border-1 !rounded-md'
+				};
+				toastStore.trigger(t);
+				return;
+			}
 			cancel();
 
 			// add wiggle animation to form element
@@ -136,6 +174,8 @@
 
 	let formElement: HTMLFormElement;
 </script>
+
+<Toast />
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <section

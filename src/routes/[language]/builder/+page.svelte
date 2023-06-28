@@ -9,7 +9,7 @@
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
-	import { toggleLeftSidebar, language } from '@src/stores/store';
+	import { toggleLeftSidebar, systemLanguage } from '@src/stores/store';
 
 	// Json export
 	function onCompleteHandler(e: Event): void {

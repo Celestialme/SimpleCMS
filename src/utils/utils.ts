@@ -173,14 +173,14 @@ export async function unpublishData(id) {
 	await axios.patch(`/api/${$collection.name}/${id}`, { published: false });
 }
 
-// Schedule FormData to databas
+// Schedule FormData to database
 export async function scheduleData(id, date) {
 	let $collection = get(collection);
 	await axios.patch(`/api/${$collection.name}/${id}`, { publishDate: date });
 }
 
 // Delete FormData
-// TODO: move images/files to trash folder see [collection]/+sever.ts
+// TODO: move images/files to trash folder see [collection]/+server.ts
 export async function deleteData(id) {
 	let $collection = get(collection);
 	await axios.delete(`/api/${$collection.name}/${id}`);
@@ -202,6 +202,23 @@ export async function validate(auth: Auth, sessionID: string | null) {
 	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
 	if (!resp) return { user: null, status: 404 };
 	return { user: resp.user.username, status: 200 };
+}
+
+/**
+ * Formats a file size in bytes to the appropriate unit (bytes, kilobytes, megabytes, or gigabytes).
+ * @param sizeInBytes - The size of the file in bytes.
+ * @returns The formatted file size as a string.
+ */
+export function formatSize(sizeInBytes) {
+	if (sizeInBytes < 1024) {
+		return `${sizeInBytes} bytes`;
+	} else if (sizeInBytes < 1024 * 1024) {
+		return `${(sizeInBytes / 1024).toFixed(2)} KB`;
+	} else if (sizeInBytes < 1024 * 1024 * 1024) {
+		return `${(sizeInBytes / (1024 * 1024)).toFixed(2)} MB`;
+	} else {
+		return `${(sizeInBytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+	}
 }
 
 // Replaces the locale slug in a URL.
