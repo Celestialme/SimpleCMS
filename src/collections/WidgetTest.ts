@@ -48,7 +48,7 @@ let schema = {
 			db_fieldName: 'Full Text option',
 			label: get(LL).COLLECTION_TEST_Full_Text_Option(),
 			icon: 'carbon:character-whole-number',
-			// prefix: '€',
+			prefix: '€',
 			suffix: 'cent',
 			count: 10,
 			minlength: 2,
@@ -56,14 +56,14 @@ let schema = {
 			placeholder: get(LL).COLLECTION_TEST_Full_Text_Option_Placeholder(),
 			translated: true,
 			required: true
-		})
+			// }),
 
-		// widgets.Email({
-		// 	db_fieldName: 'Email',
-		// 	icon: 'carbon:character-whole-number',
-		// 	placeholder: 'Enter Email',
-		// 	required: true
-		// })
+			// widgets.Email({
+			// 	db_fieldName: 'Email',
+			// 	icon: 'carbon:character-whole-number',
+			// 	placeholder: 'Enter Email',
+			// 	required: true
+		})
 	]
 };
 export default schema;

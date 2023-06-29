@@ -6,18 +6,12 @@
 	import { getFieldName } from '@src/utils/utils';
 
 	export let field: FieldType;
-	//console.log('field', field);
 
 	let fieldName = getFieldName(field);
-	//console.log('fieldName', fieldName);
-
-	export let value = $entryData[fieldName];
-	//console.log(value);
+	export let value = $entryData[fieldName] || {};
 
 	let _data = $mode == 'create' ? {} : value;
-	// console.log($mode);
 	let _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGES;
-	// console.log(_data, $contentLanguage);
 
 	export const WidgetData = async () => _data;
 
@@ -33,9 +27,9 @@
 		} else if (field?.count && length > field?.count) {
 			return 'bg-orange-600';
 		} else if (field?.minlength) {
-			return 'variant-filled-surface';
+			return '!variant-filled-surface';
 		} else {
-			return 'variant-ghost-surface';
+			return '!variant-ghost-surface';
 		}
 	};
 
@@ -49,9 +43,9 @@
 	}
 </script>
 
-<div class="btn-group variant-ghost-surface flex w-full rounded-none">
+<div class="btn-group variant-filled-surface flex w-full rounded">
 	{#if field?.prefix}
-		<button class="!px-2">{field?.prefix}</button>
+		<button class=" !px-2">{field?.prefix}</button>
 	{/if}
 
 	<input

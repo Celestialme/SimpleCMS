@@ -2,6 +2,8 @@
 	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 	import { contentLanguage } from '@src/stores/store';
 
+	//console.log('contentLanguage', contentLanguage);
+
 	// Manually parse the object from JSON string
 	let options = JSON.parse(PUBLIC_CONTENT_LANGUAGES.replace(/'/g, '"'));
 
@@ -43,7 +45,7 @@
 {#if !searchShow}
 	<!-- Filter -->
 	<button type="button" on:click={() => (filterShow = !filterShow)} class="btn-icon variant-ghost-surface">
-		<iconify-icon icon="material-symbols:filter-list-rounded" width="24" />
+		<iconify-icon icon="carbon:filter-edit" width="24" />
 	</button>
 
 	<!-- Column Order & Visibility -->

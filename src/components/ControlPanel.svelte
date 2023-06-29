@@ -17,7 +17,7 @@
 		await saveFormData({ data: $collectionValue });
 
 		// a function to undo the changes made by handleButtonClick
-		mode.set('view');
+		mode.set('view' || 'edit');
 
 		// get the current window width
 		let width = window.innerWidth;

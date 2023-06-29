@@ -17,6 +17,7 @@
 
 	let dropdownOpen = false;
 	let { actionname, buttonClass, iconValue } = getButtonAndIconValues($storeListboxValue);
+
 	// get the current window width
 	let width = window.innerWidth;
 
@@ -53,6 +54,7 @@
 			toggleRightSidebar.set(false);
 		}
 	}
+
 	function handleOptionClick(value: string) {
 		storeListboxValue.set(value);
 		//console.log('storeListboxValue:', $storeListboxValue);

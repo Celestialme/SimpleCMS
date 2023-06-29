@@ -12,7 +12,7 @@ export let credentials: Writable<{ username: string }> = writable();
 export let systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);
 
 // Create a writable store for contentLanguage with initial value of PUBLIC_CONTENT_LANGUAGES
-export let contentLanguage = writable(Object.keys(PUBLIC_CONTENT_LANGUAGES)[0]);
+export let contentLanguage = writable(Object.keys(JSON.parse(PUBLIC_CONTENT_LANGUAGES))[0]);
 
 // Subscribe to changes in credentials store and update local storage accordingly
 credentials.subscribe((val) => {

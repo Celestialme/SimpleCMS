@@ -1,15 +1,13 @@
 <script lang="ts">
-	import { collectionValue, mode } from '@src/stores/store';
-	import { credentials } from '@src/stores/store';
-
-	import Fields from '@src/components/Fields.svelte';
-
-	import EntryList from '@src/components/EntryList.svelte';
-	import collections, { collection } from '@src/collections';
-	import type { LayoutServerData } from '../../$types';
 	import { page } from '$app/stores';
-	import type { Schema } from '@src/collections/types';
 	import { goto } from '$app/navigation';
+	import collections, { collection } from '@src/collections';
+	import { collectionValue, mode } from '@src/stores/store';
+	import type { Schema } from '@src/collections/types';
+	import type { LayoutServerData } from '../$types';
+	import { credentials } from '@src/stores/store';
+	import Fields from '@src/components/Fields.svelte';
+	import EntryList from '@src/components/EntryList.svelte';
 
 	export let data: LayoutServerData;
 

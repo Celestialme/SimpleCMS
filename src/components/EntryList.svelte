@@ -1,7 +1,17 @@
 <script lang="ts">
 	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
-	import { mode, entryData, deleteEntry, toggleLeftSidebar } from '@src/stores/store';
+	import {
+		mode,
+		entryData,
+		deleteEntry,
+		switchSideBar,
+		toggleLeftSidebar,
+		toggleRightSidebar,
+		toggleHeaderSidebar,
+		toggleFooterSidebar,
+		storeListboxValue
+	} from '@src/stores/store';
 	import { contentLanguage } from '@src/stores/store';
 
 	import axios from 'axios';
@@ -388,7 +398,7 @@
 </script>
 
 <!-- TanstackHeader -->
-<div class="m-2 flex justify-between dark:text-white">
+<div class="mb-2 flex justify-between dark:text-white">
 	<!-- Row 1 for Mobile -->
 	<div class="flex items-center justify-between">
 		{#if $toggleLeftSidebar === true}
@@ -414,7 +424,7 @@
 	</div>
 
 	<button type="button" on:keydown on:click={() => (searchShow = !searchShow)} class="btn-icon variant-ghost-surface sm:hidden">
-		<iconify-icon icon="gridicons:dropdown" width="30" />
+		<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
 	</button>
 
 	<div class="relative hidden items-center justify-center gap-2 sm:flex">
@@ -499,7 +509,7 @@
 	<Loading />
 {/if}
 
-<div class="table-container px-2">
+<div class="table-container">
 	<table class="table-hover table {density === 'compact' ? 'table-compact' : density === 'normal' ? '' : 'table-comfortable'}">
 		<thead class="!text-primary">
 			{#each $table.getHeaderGroups() as headerGroup}

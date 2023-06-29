@@ -2,7 +2,7 @@ import widgets from '../components/widgets';
 
 let schema = {
 	// Collection Name required
-	name: 'posts3',
+	name: 'posts2',
 
 	// Optional & Icon , status, slug
 	// See for possible Icons https://icon-sets.iconify.design/

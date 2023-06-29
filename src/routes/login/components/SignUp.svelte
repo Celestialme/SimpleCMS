@@ -13,24 +13,24 @@
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
-	import { signUpFormSchema, signUpOtherFormSchema } from '@src/utils/formSchemas';
-
-	export let firstUserExists = false;
-	//console.log('firstUserExists', firstUserExists);
+	import { signUpFormSchema } from '@src/utils/formSchemas';
 
 	export let active: undefined | 0 | 1 = undefined;
 
-	let userExists = false;
-
 	export let FormSchemaSignUp: PageData['signUpForm'];
+	let firstUserExists = FormSchemaSignUp.data.token != null;
+	console.log('firstUserExists = ', firstUserExists);
+
+	let response: any;
 	const { form, constraints, allErrors, errors, enhance, delayed } = superForm(FormSchemaSignUp, {
-		validators: signUpFormSchema,
+		id: 'signup',
+		validators: (firstUserExists ? signUpFormSchema : signUpFormSchema.innerType().omit({ token: true })) as typeof signUpFormSchema,
 		// Clear form on success.
 		resetForm: true,
 		// Prevent page invalidation, which would clear the other form when the load function executes again.
 		invalidateAll: false,
 		// other options
-		defaultValidator: 'keep',
+		defaultValidator: 'clear',
 		applyAction: true,
 		taintedMessage: '',
 
@@ -46,6 +46,7 @@
 
 		onResult: ({ result, cancel }) => {
 			//console.log('onResult', result);
+			//console.log('Error', $errors)
 
 			if (result.type == 'redirect') return;
 			cancel();
@@ -54,48 +55,9 @@
 			formElement.classList.add('wiggle');
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 
-			userExists = true;
-		}
-	});
-
-	export let FormSchemaSignUpOther: PageData['signUpFormOther'];
-	const {
-		form: otherForm,
-		constraints: otherConstraints,
-		allErrors: otherAllErrors,
-		errors: otherErrors,
-		enhance: otherEnhance,
-		delayed: otherDelayed
-	} = superForm(FormSchemaSignUpOther, {
-		validators: signUpOtherFormSchema,
-		// Clear form on success.
-		resetForm: true,
-		// Prevent page invalidation, which would clear the other form when the load function executes again.
-		invalidateAll: false,
-		// other options
-		defaultValidator: 'keep',
-		applyAction: true,
-		taintedMessage: '',
-
-		onSubmit: ({ cancel }) => {
-			// Submit email as lowercase only
-			$otherForm.email = $otherForm.email.toLowerCase();
-
-			// handle login form submission
-			if ($allErrors.length > 0) cancel();
-		},
-
-		onResult: ({ result, cancel }) => {
-			// handle forgot form result
-			if (result.type == 'redirect') return;
-
-			cancel();
-
-			// add wiggle animation to form element
-			formElement.classList.add('wiggle');
-			setTimeout(() => formElement.classList.remove('wiggle'), 300);
-
-			userExists = true;
+			if (result.type == 'success') {
+				response = result.data?.message;
+			}
 		}
 	});
 
@@ -135,173 +97,101 @@
 
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
-		{#if !firstUserExists}
-			<!--<SuperDebug data={$form} />-->
-			<form method="post" action="?/signUp" use:enhance bind:this={formElement} class="flex flex-col" class:hide={active != 1}>
-				<!-- Username field -->
-				<FloatingInput
-					name="Username"
-					type="text"
-					tabindex={tabIndex++}
-					required
-					bind:value={$form.username}
-					label={$LL.LOGIN_Username()}
-					icon="mdi:user-circle"
-					iconColor="white"
-					textColor="white"
-					inputClass="text-white"
-				/>
-				{#if $errors.username}<span class="text-xs text-error-500">{$errors.username}</span>{/if}
+		<!--<SuperDebug data={$form} />-->
+		<form method="post" action="?/signUp" use:enhance bind:this={formElement} class="flex flex-col" class:hide={active != 1}>
+			<!-- Username field -->
+			<FloatingInput
+				name="Username"
+				type="text"
+				tabindex={tabIndex++}
+				required
+				bind:value={$form.username}
+				label={$LL.LOGIN_Username()}
+				{...$constraints.username}
+				icon="mdi:user-circle"
+				iconColor="white"
+				textColor="white"
+				inputClass="text-white"
+			/>
+			{#if $errors.username}<span class="text-xs text-error-500">{$errors.username}</span>{/if}
 
-				<!-- Email field -->
-				<FloatingInput
-					name="email"
-					type="email"
-					tabindex={tabIndex++}
-					required
-					bind:value={$form.email}
-					label={$LL.LOGIN_EmailAddress()}
-					icon="mdi:email"
-					iconColor="white"
-					textColor="white"
-					inputClass="text-white"
-				/>
-				{#if $errors.email}<span class="text-xs text-error-500">{$errors.email}</span>{/if}
+			<!-- Email field -->
+			<FloatingInput
+				name="email"
+				type="email"
+				tabindex={tabIndex++}
+				required
+				bind:value={$form.email}
+				label={$LL.LOGIN_EmailAddress()}
+				{...$constraints.email}
+				icon="mdi:email"
+				iconColor="white"
+				textColor="white"
+				inputClass="text-white"
+			/>
+			{#if $errors.email}<span class="text-xs text-error-500">{$errors.email}</span>{/if}
 
-				<!-- TODO Check PW & Check to show hide PW together and have matching PW -->
-				<!-- Password field -->
-				<FloatingInput
-					name="password"
-					type="password"
-					tabindex={tabIndex++}
-					required
-					bind:value={$form.password}
-					label={$LL.LOGIN_Password()}
-					icon="mdi:password"
-					iconColor="white"
-					textColor="white"
-					showPasswordBackgroundColor="dark"
-					inputClass="text-white"
-				/>
-				{#if $errors.password}<span class="text-xs text-error-500">{$errors.password}</span>{/if}
+			<!-- TODO Check PW & Check to show hide PW together and have matching PW -->
+			<!-- Password field -->
+			<FloatingInput
+				name="password"
+				type="password"
+				tabindex={tabIndex++}
+				required
+				bind:value={$form.password}
+				label={$LL.LOGIN_Password()}
+				{...$constraints.password}
+				icon="mdi:password"
+				iconColor="white"
+				textColor="white"
+				showPasswordBackgroundColor="dark"
+				inputClass="text-white"
+			/>
+			{#if $errors.password}<span class="text-xs text-error-500">{$errors.password}</span>{/if}
 
-				<!-- Password Confirm -->
-				<FloatingInput
-					name="confirm_password"
-					type="password"
-					tabindex={tabIndex++}
-					required
-					bind:value={$form.confirm_password}
-					label={$LL.LOGIN_ConfirmPassword()}
-					icon="mdi:password"
-					iconColor="white"
-					textColor="white"
-					showPasswordBackgroundColor="dark"
-					inputClass="text-white"
-				/>
-				{#if $errors.confirm_password}<span class="text-xs text-error-500">{$errors.confirm_password}</span>{/if}
+			<!-- Password Confirm -->
+			<FloatingInput
+				name="confirm_password"
+				type="password"
+				tabindex={tabIndex++}
+				required
+				bind:value={$form.confirm_password}
+				label={$LL.LOGIN_ConfirmPassword()}
+				{...$constraints.confirm_password}
+				icon="mdi:password"
+				iconColor="white"
+				textColor="white"
+				showPasswordBackgroundColor="dark"
+				inputClass="text-white"
+			/>
+			{#if $errors.confirm_password}<span class="text-xs text-error-500">{$errors.confirm_password}</span>{/if}
 
-				{#if userExists}<span class="text-xs text-error-500">User already exists</span>{/if}
-
-				<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase"
-					>{$LL.LOGIN_SignUp()}
-					<!-- Loading indicators -->
-					{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
-				</button>
-			</form>
-		{:else}
-			<!--<SuperDebug data={$otherForm} />-->
-			<!-- TODO: Check if this repetition is really required for Registration Token -->
-			<form method="post" action="?/signUp" use:otherEnhance bind:this={formElement} class="flex flex-col" class:hide={active != 1}>
-				<!-- Username field -->
-				<FloatingInput
-					name="Username"
-					type="text"
-					tabindex={tabIndex++}
-					required
-					bind:value={$otherForm.username}
-					label={$LL.LOGIN_Username()}
-					icon="mdi:user-circle"
-					iconColor="white"
-					textColor="white"
-					inputClass="text-white"
-				/>
-				{#if $otherErrors.username}<span class="text-xs text-error-500">{$otherErrors.username}</span>{/if}
-
-				<!-- Email field -->
-				<FloatingInput
-					name="email"
-					type="email"
-					tabindex={tabIndex++}
-					required
-					bind:value={$otherForm.email}
-					label={$LL.LOGIN_EmailAddress()}
-					icon="mdi:email"
-					iconColor="white"
-					textColor="white"
-					inputClass="text-white"
-				/>
-				{#if $otherErrors.email}<span class="text-xs text-error-500">{$otherErrors.email}</span>{/if}
-
-				<!-- TODO Check PW & Check to show hide PW together and have matching PW -->
-				<!-- Password field -->
-				<FloatingInput
-					name="password"
-					type="password"
-					tabindex={tabIndex++}
-					required
-					bind:value={$otherForm.password}
-					label={$LL.LOGIN_Password()}
-					icon="mdi:password"
-					iconColor="white"
-					textColor="white"
-					showPasswordBackgroundColor="dark"
-					inputClass="text-white"
-				/>
-				{#if $otherErrors.password}<span class="text-xs text-error-500">{$otherErrors.password}</span>{/if}
-
-				<!-- Password Confirm -->
-				<FloatingInput
-					name="confirm_password"
-					type="password"
-					tabindex={tabIndex++}
-					required
-					bind:value={$otherForm.confirm_password}
-					label={$LL.LOGIN_ConfirmPassword()}
-					icon="mdi:password"
-					iconColor="white"
-					textColor="white"
-					showPasswordBackgroundColor="dark"
-					inputClass="text-white"
-				/>
-				{#if $otherErrors.confirm_password}<span class="text-xs text-error-500">{$otherErrors.confirm_password}</span>{/if}
-
+			{#if $form.token != null}
 				<!-- Registration Token -->
-				{#if firstUserExists}
-					<FloatingInput
-						name="token"
-						type="text"
-						tabindex={tabIndex++}
-						required
-						bind:value={$otherForm.isToken}
-						label={$LL.LOGIN_Token()}
-						icon="mdi:key-chain"
-						iconColor="white"
-						textColor="white"
-						inputClass="text-white"
-					/>
-					{#if $otherErrors.isToken}<span class="text-xs text-error-500">{$otherErrors.isToken}</span>{/if}
-				{/if}
+				<FloatingInput
+					name="token"
+					type="text"
+					tabindex={tabIndex++}
+					required
+					bind:value={$form.token}
+					label={$LL.LOGIN_Token()}
+					{...$constraints.token}
+					icon="mdi:key-chain"
+					iconColor="white"
+					textColor="white"
+					inputClass="text-white"
+				/>
+				{#if $errors.token}<span class="text-xs text-error-500">{$errors.token}</span>{/if}
+			{/if}
 
-				{#if userExists}<span class="text-xs text-error-500">User already exists</span>{/if}
+			{#if response}<span class="text-xs text-error-500">{response}</span>{/if}
 
-				<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase"
-					>{$LL.LOGIN_SignUp()}
-					<!-- Loading indicators -->
-					{#if $otherDelayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
-				</button>
-			</form>
-		{/if}
+			<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase"
+				>{$LL.LOGIN_SignUp()}
+				<!-- Loading indicators -->
+				{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
+			</button>
+		</form>
 	</div>
 
 	<SignupIcon show={active == 0 || active == undefined} />

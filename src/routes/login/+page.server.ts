@@ -1,13 +1,12 @@
 import { fail, type Cookies, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
-import { passwordToken } from '@lucia-auth/tokens';
+import mongoose from 'mongoose';
 
 import { superValidate, message } from 'sveltekit-superforms/server';
-import { loginFormSchema, forgotFormSchema, resetFormSchema, signUpFormSchema, signUpOtherFormSchema } from '@src/utils/formSchemas';
+import { loginFormSchema, forgotFormSchema, resetFormSchema, signUpFormSchema } from '@src/utils/formSchemas';
 import { auth } from '@src/routes/api/db';
-
-import mongoose from 'mongoose';
+import { passwordToken } from '@lucia-auth/tokens';
 
 // load and validate login and sign up forms
 export const load: PageServerLoad = async (event) => {
@@ -19,13 +18,15 @@ export const load: PageServerLoad = async (event) => {
 	const loginForm = await superValidate(event, loginFormSchema);
 	const forgotForm = await superValidate(event, forgotFormSchema);
 	const resetForm = await superValidate(event, resetFormSchema);
+	//let recoverForm = await superValidate(event, recoverSchema);
 
-	// SignUp
-	const signUpForm = await superValidate(event, signUpFormSchema);
-	const signUpFormOther = await superValidate(event, signUpOtherFormSchema);
+	// SignUp FirstUser
+	let withoutToken = await superValidate(event, signUpFormSchema.innerType().omit({ token: true }));
+	// SignUp Other Users
+	let withToken = await superValidate(event, signUpFormSchema);
 
 	// check if first user exist
-	const firstUserExists = (await mongoose.models['auth_user'].countDocuments()) > 0;
+	let signUpForm: typeof withToken = (await mongoose.models['auth_key'].countDocuments()) === 0 ? (withoutToken as any) : withToken;
 
 	// Always return all Forms in load and form actions.
 	return {
@@ -33,19 +34,18 @@ export const load: PageServerLoad = async (event) => {
 		loginForm,
 		forgotForm,
 		resetForm,
+		// recoverForm
 
 		// SignUP
-		signUpForm,
-		signUpFormOther,
-		firstUserExists
+		signUpForm
 	};
 };
 
-// actions for SignIn and SignUp a user with form data
+// Actions for SignIn and SignUp a user with form data
 export const actions: Actions = {
 	//Function for handling the SignIn form submission and user authentication
 	signIn: async (event) => {
-		const signInForm = await superValidate(event, loginFormSchema);
+		let signInForm = await superValidate(event, loginFormSchema);
 		//console.log('signInForm', signInForm);
 
 		// Convenient validation check:
@@ -54,15 +54,16 @@ export const actions: Actions = {
 		// Validate with Lucia
 		const email = signInForm.data.email.toLocaleLowerCase();
 		const password = signInForm.data.password;
+		const isToken = signInForm.data.isToken;
 
-		let resp = await signIn(email, password, event.cookies);
+		let resp = await signIn(email, password, isToken, event.cookies);
 
-		if (resp) {
+		if (resp.status) {
 			// Return message if form is submitted successfully
 			message(signInForm, 'SignIn form submitted');
 			throw redirect(303, '/');
 		} else {
-			return { form: signInForm };
+			return { form: signInForm, message: resp.message };
 		}
 	},
 
@@ -126,42 +127,33 @@ export const actions: Actions = {
 		const username = signUpForm.data.username;
 		const email = signUpForm.data.email.toLocaleLowerCase();
 		const password = signUpForm.data.password;
-		const confirm_password = signUpForm.data.confirm_password;
+		const token = signUpForm.data.token;
 
-		let resp = await signUp(username, email, password, confirm_password, event.cookies);
+		let key = await auth.getKey('email', email).catch(() => null);
+		console.log('key', key);
+		let resp: { status: boolean; message?: string } = { status: false };
+		let isFirst = (await mongoose.models['auth_key'].countDocuments()) == 0;
 
-		if (resp) {
-			// Return message if form is submitted successfully
-			message(signUpForm, 'SignUp First User form submitted');
-			throw redirect(303, '/');
-		} else {
-			return { form: signUpForm };
+		if (key && key.passwordDefined) {
+			// finished account exists
+			return { form: signUpForm, message: 'This email is already registered' };
+		} else if (isFirst) {
+			// no account exists signUp for admin
+			resp = await signUp(username, email, password, event.cookies);
+		} else if (key && key.passwordDefined == false) {
+			// unfinished account exists
+			resp = await finishRegistration(username, email, password, token, event.cookies);
+			console.log('resp', resp);
+		} else if (!key && !isFirst) {
+			resp = { status: false, message: 'This user was not defined by admin' };
 		}
-	},
 
-	//Function for handling the sign-up form submission and user creation
-	signUpOther: async (event) => {
-		let signUpOtherForm = await superValidate(event, signUpOtherFormSchema);
-		//console.log('signUpOtherForm', signUpOtherForm);
-
-		// Convenient validation check:
-		//if (!signUpOtherForm.valid) return fail(400, { signUpOtherForm });
-
-		// TODO: Do something with the validated data
-		const username = signUpOtherForm.data.username;
-		const email = signUpOtherForm.data.email.toLocaleLowerCase();
-		const password = signUpOtherForm.data.password;
-		const confirm_password = signUpOtherForm.data.confirm_password;
-		const isToken = signUpOtherForm.data.isToken;
-
-		let resp = await signUpOther(username, email, password, confirm_password, isToken, event.cookies);
-
-		if (resp) {
+		if (resp.status) {
 			// Return message if form is submitted successfully
-			message(signUpOtherForm, 'SignUp Other User form submitted');
+			message(signUpForm, 'SignUp User form submitted');
 			throw redirect(303, '/');
 		} else {
-			return { form: signUpOtherForm };
+			return { form: signUpForm, message: resp.message || 'Unknown error' };
 		}
 	}
 };
@@ -169,25 +161,36 @@ export const actions: Actions = {
 // LUCIA setup -------------------------------
 
 // SignIn user with email and password, create session and set cookie
-async function signIn(email: string, password: string, cookies: Cookies) {
-	let key = await auth.useKey('email', email, password).catch((error) => {
-		console.log('signIn key error', error);
-		return null;
-	});
+async function signIn(email: string, password: string, isToken: boolean, cookies: Cookies) {
+	if (!isToken) {
+		let key = await auth.useKey('email', email, password).catch(() => null);
+		if (!key || !key.passwordDefined) return { status: false, message: 'Invalid Credentials' };
+		const session = await auth.createSession(key.userId);
+		let user = await auth.getUser(key.userId);
+		cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
+			path: '/'
+		});
+		return { status: true };
+	} else {
+		let token = password;
+		let key = await auth.getKey('email', email).catch(() => null);
+		if (!key) return { status: false, message: 'user does not exist' };
+		const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
+		try {
+			await tokenHandler.validate(token, key.userId);
 
-	//console.log('signIn key', key);
+			const session = await auth.createSession(key.userId);
 
-	if (!key) return false;
-
-	const session = await auth.createSession(key.userId);
-
-	let user = await auth.getUser(key.userId);
-
-	// Set the credentials cookie
-	cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-		path: '/'
-	});
-	return true;
+			let user = await auth.getUser(key.userId);
+			// Set the credentials cookie
+			cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
+				path: '/'
+			});
+			return { status: true };
+		} catch (e) {
+			return { status: false, message: 'invalid token' };
+		}
+	}
 }
 
 async function forgotPW(email: string, cookies: Cookies) {
@@ -222,13 +225,8 @@ async function resetPW(email: string, password: string, token: string, cookies: 
 // 	return { status: true, message: 'token has been sent to email' };
 // }
 
-// Function for creating a new user account and creating a session.
-
-async function signUp(username: string, email: string, password: string, confirm_password: string, cookies: Cookies) {
-	if (password !== confirm_password) {
-		return false;
-	}
-
+// Function create a new FIRST USER account as ADMIN and creating a session.
+async function signUp(username: string, email: string, password: string, cookies: Cookies) {
 	// Convert email to lowercase
 	email = email.toLowerCase();
 
@@ -240,7 +238,8 @@ async function signUp(username: string, email: string, password: string, confirm
 				password: password
 			},
 			attributes: {
-				username: username
+				username: username,
+				role: 'admin' // First user
 			}
 		})
 		.catch((e) => {
@@ -248,33 +247,60 @@ async function signUp(username: string, email: string, password: string, confirm
 			return null;
 		});
 
-	//console.log('signUp User', user);
+	//console.log('signUp FirstUser', user);
 
-	if (!user) return false;
+	if (!user) return { status: false, message: 'User does not exist' };
 	const session = await auth.createSession(user.userId);
 
 	// Set the credentials cookie
 	cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
 		path: '/'
 	});
-	return true;
+	return { status: true };
 }
 
-async function signUpOther(username: string, email: string, password: string, confirm_password: string, token: string, cookies: Cookies) {
+// Function create a new OTHER USER account and creating a session.
+async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies) {
+	// SignUp Token
 	let key = await auth.getKey('email', email).catch(() => null);
-	if (!key) return { status: false, message: 'user does not exist' };
+	if (!key) return { status: false, message: 'User does not exist' };
 	const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
+
 	try {
 		await tokenHandler.validate(token, key.userId);
-
+		await auth.updateUserAttributes(key.userId, { username });
 		await auth.updateKeyPassword('email', email, password);
+
 		const session = await auth.createSession(key.userId);
+
 		let user = await auth.getUser(key.userId);
+		// Set the credentials cookie
 		cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
 			path: '/'
 		});
+
 		return { status: true };
 	} catch (e) {
-		return { status: false, message: 'invalid token' };
+		return { status: false, message: 'Invalid token' };
 	}
+}
+
+// Function to Reset Password.
+//TODO Needs more work to send My MAIL
+
+async function recover(email: string, cookies: Cookies) {
+	// TODO: More secure Token
+	const tokenHandler = passwordToken(auth as any, 'register', {
+		expiresIn: 60 * 60, // expiration in 1 hour,
+		length: 43 // default
+	});
+
+	let key = await auth.getKey('email', email).catch(() => null);
+	if (!key) return { status: false, message: 'User does not exist' };
+
+	let token = (await tokenHandler.issue(key.userId)).toString();
+
+	console.log(token); // TODO send token to user via email
+
+	return { status: true, message: 'Your Token has been sent to email' };
 }

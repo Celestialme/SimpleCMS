@@ -1,18 +1,11 @@
 <script lang="ts">
+	import { collection, categories } from '@src/collections';
+	import { mode, switchSideBar } from '@src/stores/store';
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
-	import { collection, categories } from '@src/collections';
-	import { mode, switchSideBar } from '@src/stores/store';
-	import { systemLanguage } from '@src/stores/store';
-
-	let link1: string = `/${$systemLanguage}/mediagallery`;
-	let link2: string = `/${$systemLanguage}/upload`;
-
-	// update the href value when the systemLanguage store value changes
-	// $: link1: href = `/${$systemLanguage}/mediagallery`;
-	// $: link2: href = `/${$systemLanguage}/image`;
-
+	//skeleton
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
@@ -87,28 +80,28 @@
 	<!-- Gallery -->
 	{#if $switchSideBar}
 		<!-- switchSideBar expanded -->
-		<a href={link1} class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
+		<a href="/mediagallery" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-primary-600" />
 			<p class="mr-auto text-center uppercase">{$LL.CollectionCategory_Media()}</p>
 		</a>
 	{:else}
 		<!-- switchSideBar collapsed -->
-		<a href={link1} class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
+		<a href="/mediagallery" class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
 			<p class="text-xs uppercase">{$LL.CollectionCategory_Media()}</p>
 			<iconify-icon icon="bi:images" width="24" class="text-primary-600" />
 		</a>
 	{/if}
 
-	<!-- testimage -->
+	<!-- test image -->
 	{#if $switchSideBar}
 		<!-- switchSideBar expanded -->
-		<a href={link2} class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
+		<a href="/upload" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-tertiary-600" />
 			<p class="mr-auto text-center uppercase">Upload</p>
 		</a>
 	{:else}
 		<!-- switchSideBar collapsed -->
-		<a href={link2} class="btn variant-filled-tertiary mt-2 flex flex-col items-center py-1 pl-2">
+		<a href="/upload" class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
 			<p class="text-xs uppercase">Upload</p>
 			<iconify-icon icon="bi:images" width="24" class="text-tertiary-600" />
 		</a>

@@ -6,22 +6,18 @@
 	import { getFieldName } from '@src/utils/utils';
 
 	export let field: FieldType;
-	//console.log('field', field);
 
 	let fieldName = getFieldName(field);
-	//console.log('fieldName', fieldName);
-
-	export let value = $entryData[fieldName];
-	//console.log(value);
+	export let value = $entryData[fieldName] || {};
+	console.log('value: ', value);
 
 	let _data = $mode == 'create' ? {} : value;
-	//console.log($mode);
-	let _language = field?.localization ? $contentLanguage : $contentLanguage;
-	//console.log(_data, $contentLanguage);
+	let _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGES;
 
 	export const WidgetData = async () => _data;
 
 	let valid = true;
+
 	function checkRequired() {
 		if (field?.required && _data == '') {
 			valid = false;

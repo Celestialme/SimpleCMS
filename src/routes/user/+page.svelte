@@ -1,6 +1,10 @@
 <script lang="ts">
+	export let data: PageData;
+	import type { PageData } from './$types';
+	import { toggleLeftSidebar } from '@src/stores/store';
 	import axios from 'axios';
 	import '@src/stores/store';
+
 	import { superForm } from 'sveltekit-superforms/client';
 	import { addUserSchema } from '@src/utils/formSchemas';
 
@@ -16,7 +20,6 @@
 	}
 
 	let response;
-	export let data: PageData;
 	console.log(data);
 
 	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
@@ -43,14 +46,11 @@
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
-	import { toggleLeftSidebar } from '@src/stores/store';
 
 	// Lucia
 	import { page } from '$app/stores';
-	import type { PageData } from './$types';
 	import { invalidateAll } from '$app/navigation';
 
-	//export let data: PageData;
 	const user = $page.data.user;
 
 	// import UserList from './UserList/UserList.svelte';
@@ -198,7 +198,7 @@
 	<div class="flex items-center">
 		<!-- hamburger -->
 		{#if $toggleLeftSidebar === true}
-			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="variant-ghost-surface btn-icon mt-1">
+			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
