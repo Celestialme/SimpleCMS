@@ -13,6 +13,7 @@ export let signUpSchema = z
 		email: z.string().email(),
 		password: z.string().min(4),
 		confirmPassword: z.string().min(4),
+		username: z.string().min(3),
 		token: z.string().min(16)
 	})
 	.refine((data) => data.password === data.confirmPassword, {

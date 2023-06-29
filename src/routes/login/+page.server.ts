@@ -31,20 +31,24 @@ export const actions: Actions = {
 		let signUpForm = await superValidate(event, signUpSchema);
 		const email = signUpForm.data.email;
 		const password = signUpForm.data.password;
+		const username = signUpForm.data.username;
 		const token = signUpForm.data.token;
 		let key = await auth.getKey('email', email).catch(() => null);
 		console.log(key);
 		let resp: { status: boolean; message?: string } = { status: false };
+		let isFirst = (await mongoose.models['auth_key'].countDocuments()) == 0;
 		if (key && key.passwordDefined) {
 			// finished account exists
 			return { form: signUpForm, message: 'This email is already registered' };
-		} else if (!key) {
-			// no account exists
-			resp = await signUp(email, password, event.cookies);
-		} else if (key.passwordDefined == false) {
+		} else if (isFirst) {
+			// no account exists sign up for admin
+			resp = await signUp(username, email, password, event.cookies);
+		} else if (key && key.passwordDefined == false) {
 			// unfinished account exists
-			resp = await finishRegistration(email, password, token, event.cookies);
+			resp = await finishRegistration(username, email, password, token, event.cookies);
 			console.log('resp', resp);
+		} else if (!key && !isFirst) {
+			resp = { status: false, message: 'this user is not defined by admin' };
 		}
 		if (resp.status) {
 			throw redirect(303, '/');
@@ -98,7 +102,7 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 	}
 }
 
-async function signUp(email: string, password: string, cookies: Cookies) {
+async function signUp(username: string, email: string, password: string, cookies: Cookies) {
 	let user = await auth
 		.createUser({
 			primaryKey: {
@@ -107,7 +111,7 @@ async function signUp(email: string, password: string, cookies: Cookies) {
 				password: password
 			},
 			attributes: {
-				username: 'Admin',
+				username,
 				role: 'admin'
 			}
 		})
@@ -120,12 +124,13 @@ async function signUp(email: string, password: string, cookies: Cookies) {
 	});
 	return { status: true };
 }
-async function finishRegistration(email: string, password: string, token: string, cookies: Cookies) {
+async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies) {
 	let key = await auth.getKey('email', email).catch(() => null);
 	if (!key) return { status: false, message: 'user does not exist' };
 	const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
 	try {
 		await tokenHandler.validate(token, key.userId);
+		await auth.updateUserAttributes(key.userId, { username });
 
 		await auth.updateKeyPassword('email', email, password);
 		const session = await auth.createSession(key.userId);

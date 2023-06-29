@@ -28,6 +28,7 @@
 	<section>
 		<Collections />
 	</section>
+	<button class="text-white" on:click={() => goto(`/profile`)}>Profile</button>
 	<section class="mt-auto">
 		<Button on:click={signOut}>SignOut</Button>
 	</section>

@@ -153,9 +153,9 @@ export async function extractData(fieldsData: any) {
 
 export async function validate(auth: Auth, sessionID: string | null) {
 	if (!sessionID) {
-		return { user: null, status: 404 };
+		return { user: null, role: null, status: 404 };
 	}
 	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
-	if (!resp) return { user: null, status: 404 };
-	return { user: resp.user.username, status: 200 };
+	if (!resp) return { user: null, role: null, status: 404 };
+	return { user: resp.user.username, role: resp.user.role, status: 200 };
 }

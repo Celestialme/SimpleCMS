@@ -1,4 +1,5 @@
 import widgets from '../components/widgets';
+
 let schema = {
 	name: 'posts2',
 	fields: [
@@ -7,8 +8,7 @@ let schema = {
 			translated: true
 		}),
 		widgets.Text({
-			label: 'text2',
-			translated: false
+			label: 'text2'
 		})
 	]
 };

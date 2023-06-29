@@ -12,10 +12,10 @@
 	import { PUBLIC_SITENAME } from '$env/static/public';
 
 	let response;
-
+	let firstUserExists = formSchema.data.token != null;
 	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
 		id: 'signup',
-		validators: (formSchema.data.token != null ? signUpSchema : signUpSchema.innerType().omit({ token: true })) as typeof signUpSchema,
+		validators: (firstUserExists ? signUpSchema : signUpSchema.innerType().omit({ token: true })) as typeof signUpSchema,
 		defaultValidator: 'clear',
 		applyAction: true,
 		taintedMessage: '',
@@ -33,7 +33,6 @@
 			}
 		}
 	});
-	let firstUserExists = $form.token != null;
 </script>
 
 <section
@@ -61,6 +60,18 @@
 				</div>
 			</h1>
 		</div>
+		<FloatingInput
+			iconClass="text-white"
+			inputClass="text-white"
+			name="username"
+			type="text"
+			leading_icon="mdi:user-circle"
+			bind:value={$form.username}
+			label={$LL.LOGIN_Username()}
+			{...$constraints.username}
+			theme="dark"
+		/>
+		{#if $errors.username}<span class="invalid">{$errors.username}</span>{/if}
 		<FloatingInput
 			iconClass="text-white"
 			inputClass="text-white"
