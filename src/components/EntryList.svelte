@@ -220,6 +220,7 @@
 	$: Object.values(deleteMap).includes(true) ? mode.set('delete') : mode.set('view');
 
 	const defaultColumns = $collection.fields.map((field) => ({
+		id: field.label,
 		accessorKey: field.label
 	}));
 
@@ -251,8 +252,8 @@
 	//workaround for svelte-table bug
 	let flexRender = flexRenderBugged as (...args: Parameters<typeof flexRenderBugged>) => any;
 
+	//tick all
 	function process_deleteAll(deleteAll: boolean) {
-		//console.log('process_deleteAll called with deleteAll:', deleteAll);
 		if (deleteAll) {
 			for (let item in tableData) {
 				deleteMap[item] = true;
@@ -262,9 +263,9 @@
 				deleteMap[item] = false;
 			}
 		}
-		//console.log('deleteMap after process_deleteAll:', deleteMap);
 	}
 
+	// tick rows
 	$deleteEntry = async () => {
 		loadingTimer = setTimeout(() => {
 			isLoading = true;
@@ -286,10 +287,10 @@
 		isLoading = false;
 	};
 
-	// $: {
-	// 	console.log('deleteMap:', deleteMap);
-	// 	console.log('deleteAll:', deleteAll);
-	// }
+	$: {
+		console.log('deleteAll:', deleteAll);
+		console.log('deleteMap:', deleteMap);
+	}
 
 	const flipDurationMs = 300;
 
@@ -442,7 +443,7 @@
 </div>
 
 {#if columnShow}
-	<div class="rounded-b-0 mx-2 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide|global>
+	<div class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide|global>
 		<div class="text-primary-500">Drag & Drop Columns / Click to hide</div>
 		<!-- toggle all -->
 		<div class="flex w-full items-center justify-center">
@@ -503,7 +504,8 @@
 		</div>
 	</div>
 {/if}
-
+<!-- <p>deleteAll={deleteAll}</p>
+<p>deleteMap={JSON.stringify(deleteMap)}</p> -->
 <!-- Tanstack Table -->
 {#if isLoading}
 	<Loading />

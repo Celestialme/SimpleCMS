@@ -166,12 +166,13 @@
 	let items = [
 		{ id: 1, name: 'Item 1', DBName: 'item1', widget: 'Text' },
 		{ id: 2, name: 'Item 2', DBName: 'item2', widget: 'Text2' },
-		{ id: 3, name: 'Item 3', DBName: 'item3', widget: 'Text3' }
+		{ id: 3, name: 'Item 3', DBName: 'item3', widget: 'Text3' },
+		{ id: 4, name: 'Item 4', DBName: 'item4', widget: 'Text4' }
 		// ...
 	];
 </script>
 
-<div class="align-centre mb-2 ml-2 mt-2 flex dark:text-white">
+<div class="align-centre mb-2 mt-2 flex dark:text-white">
 	<div class="flex items-center justify-between">
 		{#if $toggleLeftSidebar === true}
 			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
@@ -228,8 +229,9 @@
 						bind:value={name}
 						on:input={checkInputName}
 						placeholder="Collection Unique Name"
-						class="variant-filled-surface ml-1.5 w-full sm:ml-0 sm:w-auto"
+						class="variant-filled-surface ml-1.5 {name ? 'sm:w-1/2' : 'w-full'}"
 					/>
+
 					{#if name}
 						<p class="mb-3 hidden sm:block">Database Name: <span class="font-bold text-primary-500">{DBName}</span></p>
 					{/if}
@@ -237,7 +239,6 @@
 				{#if name}
 					<p class="mb-3 sm:hidden">Database Name: <span class="font-bold text-primary-500">{DBName}</span></p>
 				{/if}
-
 				<div class="rounded-md border p-2">
 					<p class="mb-2 font-bold text-primary-500">Optional values:</p>
 
@@ -251,21 +252,22 @@
 							cols="50"
 							bind:value={description}
 							placeholder="Describe your Collection"
-							class="variant-filled-surface"
+							class="variant-filled-surface w-full"
 						/>
 					</div>
 
-					<!-- TODO: Pass icon iconselected values -->
+					<!-- TODO: Pass icon icon selected values -->
 					<!-- iconify icon chooser -->
-					<IconifyPicker {searchQuery} {icon} {iconselected} />
-
+					<div class="w-full">
+						<IconifyPicker {searchQuery} {icon} {iconselected} />
+					</div>
 					<!-- status -->
 					<div class="mb-4 flex items-center gap-4">
 						<label class="relative" for="status">
 							Status:
 							<iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-1" />
 						</label>
-						<select id="status" bind:value={status} class="variant-filled-surface w-52">
+						<select id="status" bind:value={status} class="variant-filled-surface w-full">
 							{#each statuses as statusOption}
 								<option value={statusOption} class="">{statusOption}</option>
 							{/each}
@@ -283,7 +285,7 @@
 							id="slug"
 							bind:value={slug}
 							placeholder="Path for collection..."
-							class="variant-filled-surface"
+							class="variant-filled-surface w-full"
 							on:input={onSlugInput}
 						/>
 					</div>

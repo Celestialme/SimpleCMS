@@ -21,6 +21,7 @@ let schema = {
 			icon: 'ri:t-box-line',
 			placeholder: get(LL).COLLECTION_TEST_First_placeholder(),
 			required: true,
+			translated: true,
 			width: '33%'
 		}),
 
@@ -56,13 +57,23 @@ let schema = {
 			placeholder: get(LL).COLLECTION_TEST_Full_Text_Option_Placeholder(),
 			translated: true,
 			required: true
-			// }),
+		}),
 
-			// widgets.Email({
-			// 	db_fieldName: 'Email',
-			// 	icon: 'carbon:character-whole-number',
-			// 	placeholder: 'Enter Email',
-			// 	required: true
+		widgets.Email({
+			label: 'email',
+			db_fieldName: 'Email',
+			icon: 'carbon:character-whole-number',
+			placeholder: 'Enter Email',
+			required: true
+		}),
+
+		widgets.Currency({
+			label: 'Currency',
+			db_fieldName: 'Currency',
+			currencyCode: 'Euro',
+			icon: 'carbon:character-whole-number',
+			placeholder: 'Enter Currency',
+			required: true
 		})
 	]
 };

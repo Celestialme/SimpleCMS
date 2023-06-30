@@ -90,18 +90,32 @@
 
 <!-- iconify icon -->
 <div class="mb-4 flex items-center gap-4">
-	<label for="icon" class="">Icon: <iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-1" /></label>
-	<input type="text" id="icon" bind:value={searchQuery} placeholder="Search for an icon..." class="variant-filled-surface" use:popup={popupIcon} />
-
+	<label for="icon" class="relative"> Icon: <iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-1" /></label>
+	<input
+		type="text"
+		id="icon"
+		bind:value={searchQuery}
+		placeholder="Search for an icon..."
+		class="variant-filled-surface {iconselected ? 'sm:w-1/2' : 'w-full'}"
+		use:popup={popupIcon}
+	/>
 	<!-- Display selected icon -->
 	{#if iconselected}
-		<div class="flex items-center justify-center gap-4 border p-1">
+		<div class="hidden items-center justify-center gap-2 sm:flex">
 			<!-- todo: display icon.name -->
 			<iconify-icon icon={iconselected} width="30" class="text-primary-500" />
-			<p>Name: <span class="text-primary-500">{iconselected}</span></p>
+			<p>Name: <span class=" text-primary-500">{iconselected}</span></p>
 		</div>
 	{/if}
 </div>
+<!-- Display selected icon -->
+{#if iconselected}
+	<div class="-mt-3 mb-1 flex items-center justify-center gap-2 sm:hidden">
+		<!-- todo: display icon.name -->
+		<iconify-icon icon={iconselected} width="30" class="text-primary-500" />
+		<p>Name: <span class=" text-primary-500">{iconselected}</span></p>
+	</div>
+{/if}
 
 <!-- icon popup -->
 <div class="card z-10 w-96 p-4 shadow-xl" data-popup="popupIcon">

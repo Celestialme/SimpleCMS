@@ -19,7 +19,7 @@
 
 	export let FormSchemaSignUp: PageData['signUpForm'];
 	let firstUserExists = FormSchemaSignUp.data.token != null;
-	console.log('firstUserExists = ', firstUserExists);
+	// console.log('firstUserExists = ', firstUserExists);
 
 	let response: any;
 	const { form, constraints, allErrors, errors, enhance, delayed } = superForm(FormSchemaSignUp, {

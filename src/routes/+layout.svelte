@@ -14,7 +14,15 @@
 
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import { mode, switchSideBar, toggleLeftSidebar, toggleRightSidebar, toggleHeaderSidebar, toggleFooterSidebar } from '@src/stores/store';
+	import {
+		mode,
+		switchSideBar,
+		toggleLeftSidebar,
+		toggleRightSidebar,
+		toggleHeaderSidebar,
+		toggleFooterSidebar,
+		storeListboxValue
+	} from '@src/stores/store';
 	import { contentLanguage } from '@src/stores/store';
 	import axios from 'axios';
 	import { credentials } from '@src/stores/store';
@@ -141,6 +149,7 @@
 	<div>toggleHeaderSidebar={$toggleHeaderSidebar}</div>
 	<div>toggleFooterSidebar={$toggleFooterSidebar}</div>
 	<div>mode={$mode}</div>
+<div>storeListboxValue ={$storeListboxValue}</div>
 </div> -->
 
 <AppShell

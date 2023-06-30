@@ -106,7 +106,7 @@
 	};
 </script>
 
-<div class="m-2 flex flex-col gap-1">
+<div class="flex flex-col gap-1">
 	<div class="flex items-center">
 		<!-- hamburger -->
 		{#if $toggleLeftSidebar === true}

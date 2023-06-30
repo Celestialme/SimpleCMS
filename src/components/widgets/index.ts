@@ -1,6 +1,6 @@
 // import Address from './address';
 // import Checkbox from './checkbox';
-// import Currency from './currency';
+import Currency from './currency';
 // import Date from './date';
 // import DateRange from './dateRange';
 import Email from './email';
@@ -26,7 +26,7 @@ let widgets = {
 	// Checkbox - boolean true / false checkbox
 	//Checkbox,
 	// Currency - define input with a currency string and suffix
-	//Currency,
+	Currency,
 	// Date - date / time field that saves a timestamp
 	//Date,
 	// DateRange - date with start / Finish timestamps

@@ -77,3 +77,8 @@ export let addUserSchema = z.object({
 	role: z.string(),
 	expiresIn: z.string()
 });
+
+// Widget Email Schema ------------------------------------
+export let widgetEmailSchema = z.object({
+	email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() })
+});

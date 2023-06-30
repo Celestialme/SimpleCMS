@@ -303,12 +303,18 @@
 		});
 	}
 
+	function closeOpenStates() {
+		searchGrid = false;
+		filterMenuOpen = false;
+		columnShow = false;
+	}
+
 	// TODO: Check if no mediafiles exist
 	let errorMessage;
 	$: errorMessage = data?.error?.message;
 </script>
 
-<div class="m-2 flex flex-col gap-1">
+<div class="flex flex-col gap-1">
 	<div class="flex items-center">
 		<!-- hamburger -->
 		{#if $toggleLeftSidebar === true}
@@ -351,12 +357,13 @@
 		<!-- Mobile -->
 		<div class="flex items-center justify-center text-center text-xs sm:hidden">
 			<!-- Display Grid / Table -->
-			<div class="flex flex-col items-center">
-				Display
+			<div class="flex flex-col items-center justify-center">
+				<p class="text-xs">Display</p>
+				<!-- TODO: Fix mobile space and table/grid is offset? -->
 				<div class="flex sm:divide-x sm:divide-gray-500">
 					{#if view === 'grid'}
 						<button
-							class="btn px-1"
+							class="btn flex flex-col items-center justify-center px-1"
 							on:keydown
 							on:click={() => {
 								view = 'table';
@@ -370,11 +377,11 @@
 							}}
 						>
 							<iconify-icon icon="material-symbols:grid-view-rounded" height="40" style={`color: white`} />
-							<br />Table
+							<p class="text-xs">Table</p>
 						</button>
 					{:else}
 						<button
-							class="btn px-1"
+							class="btn flex flex-col items-center justify-center px-1"
 							on:keydown
 							on:click={() => {
 								view = 'grid';
@@ -388,7 +395,6 @@
 							}}
 						>
 							<iconify-icon icon="material-symbols:list-alt-outline" height="40" style={`color: white`} />
-							<br />Grid
 						</button>
 					{/if}
 				</div>
@@ -396,21 +402,22 @@
 
 			<!-- switch between small, medium, and large images -->
 			<div class="flex flex-col items-center">
-				Size
+				<p class="text-xs">Size</p>
 				<div class="flex divide-x divide-surface-500">
 					{#if (view === 'grid' && gridSize === 'small') || (view === 'table' && tableSize === 'small')}
 						<button type="button" class="px-1" on:click={handleClick}>
 							<iconify-icon icon="material-symbols:background-grid-small-sharp" height="40" style={`color: white`} />
-							<br />Small
+							<p class="text-xs">Small</p>
 						</button>
 					{:else if (view === 'grid' && gridSize === 'medium') || (view === 'table' && tableSize === 'medium')}
 						<button type="button" class="px-1" on:click={handleClick}>
 							<iconify-icon icon="material-symbols:grid-on-sharp" height="40" style={`color: white`} />
-							<br />Medium
+							<p class="text-xs">Medium</p>
 						</button>
 					{:else}
 						<button type="button" class="px-1" on:click={handleClick}>
-							<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: white`} /><br />Large
+							<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: white`} />
+							<p class="text-xs">Large</p>
 						</button>
 					{/if}
 				</div>

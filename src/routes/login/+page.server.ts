@@ -149,6 +149,24 @@ export const actions: Actions = {
 		}
 
 		if (resp.status) {
+			// send welcome email
+			await event.fetch('/api/sendMail', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					email: email,
+					subject: 'New Admin registration',
+					message: 'New Admin registration',
+					templateName: 'Welcome',
+					props: {
+						username: username,
+						email: email
+					}
+				})
+			});
+
 			// Return message if form is submitted successfully
 			message(signUpForm, 'SignUp User form submitted');
 			throw redirect(303, '/');
@@ -226,7 +244,7 @@ async function resetPW(email: string, password: string, token: string, cookies: 
 // }
 
 // Function create a new FIRST USER account as ADMIN and creating a session.
-async function signUp(username: string, email: string, password: string, cookies: Cookies) {
+async function signUp(username: string, email: string, password: string, cookies: Cookies, event: any) {
 	// Convert email to lowercase
 	email = email.toLowerCase();
 
@@ -247,9 +265,8 @@ async function signUp(username: string, email: string, password: string, cookies
 			return null;
 		});
 
-	//console.log('signUp FirstUser', user);
-
 	if (!user) return { status: false, message: 'User does not exist' };
+
 	const session = await auth.createSession(user.userId);
 
 	// Set the credentials cookie
@@ -260,7 +277,7 @@ async function signUp(username: string, email: string, password: string, cookies
 }
 
 // Function create a new OTHER USER account and creating a session.
-async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies) {
+async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies, event: any) {
 	// SignUp Token
 	let key = await auth.getKey('email', email).catch(() => null);
 	if (!key) return { status: false, message: 'User does not exist' };
