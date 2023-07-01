@@ -1,3 +1,6 @@
+import type { InferSchemaType } from 'mongoose';
+import { Schema } from 'mongoose';
+
 export let session = {
 	_id: {
 		type: String
@@ -37,8 +40,10 @@ export let key = {
 
 export let UserSchema = {
 	_id: {
-		type: String // Set the type of the _id field to String
+		type: String,
+		required: true // Set the type of the _id field to String
 	},
+	authMethod: String, // last login method was used
 	email: String, // The email address of the user
 	role: String, // The role of the user
 	username: String, // The username of the user
@@ -50,3 +55,13 @@ export let UserSchema = {
 	expiresAt: Date, // The date and time when the password reset token expires
 	lastActiveAt: Date // The date and time when the user last accessed the application
 };
+type Modify<T, R> = Omit<T, keyof R> & R;
+let mongooseUserSchema = new Schema(UserSchema);
+export type User = Modify<
+	InferSchemaType<typeof mongooseUserSchema>,
+	{
+		id: string;
+		role: 'admin' | 'user';
+		authMethod: 'password' | 'token';
+	}
+>;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { collectionValue, mode } from '@src/stores/store';
-	import { credentials } from '@src/stores/load';
+	import { user } from '@src/stores/load';
 	import Drawer from '@src/components/system/drawer/Drawer.svelte';
 	import Fields from '@src/components/Fields.svelte';
 	import ControlPanel from '@src/components/ControlPanel.svelte';
@@ -14,7 +14,7 @@
 	let ForwardBackward: boolean = false; // if using browser history
 	collection.set(collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
 	console.log(data);
-	credentials.set(data.credentials);
+	user.set(data.user);
 	globalThis.onpopstate = async () => {
 		ForwardBackward = true;
 		collection.set(collections.find((x) => x.name === $page.params.collection) as Schema);

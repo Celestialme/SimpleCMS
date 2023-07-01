@@ -25,3 +25,12 @@ export let addUserSchema = z.object({
 	email: z.string().email(),
 	role: z.string()
 });
+export let changePasswordSchema = z
+	.object({
+		password: z.string().min(4),
+		confirmPassword: z.string().min(4)
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: 'Passwords do not match',
+		path: ['confirmPassword']
+	});

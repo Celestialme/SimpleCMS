@@ -4,7 +4,7 @@
 	export let active: undefined | 0 | 1 = undefined;
 	import LL from '@src/i18n/i18n-svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
-	import type { PageData } from '../$types';
+	import type { PageData, SubmitFunction } from '../$types';
 	export let formSchema: PageData['signUpForm'];
 	import { signUpSchema } from '@src/utils/formSchemas';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
@@ -20,8 +20,9 @@
 		applyAction: true,
 		taintedMessage: '',
 
-		onSubmit: ({ cancel }) => {
-			if ($allErrors.length > 0) cancel();
+		onSubmit: (args) => {
+			let _args = args as Parameters<SubmitFunction>[0];
+			if ($allErrors.length > 0) _args.cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			console.log(result);

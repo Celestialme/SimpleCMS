@@ -1,4 +1,4 @@
-import { fail, type Actions, type Cookies, redirect } from '@sveltejs/kit';
+import { type Actions, type Cookies, redirect } from '@sveltejs/kit';
 
 import { superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
@@ -6,6 +6,8 @@ import { loginSchema, signUpSchema, recoverSchema } from '../../utils/formSchema
 import { auth } from '@src/routes/api/db';
 import mongoose from 'mongoose';
 import { passwordToken } from '@lucia-auth/tokens';
+import type { User } from '@src/collections/Auth';
+
 export const actions: Actions = {
 	signIn: async (event) => {
 		let signInForm = await superValidate(event, loginSchema);
@@ -42,7 +44,7 @@ export const actions: Actions = {
 			return { form: signUpForm, message: 'This email is already registered' };
 		} else if (isFirst) {
 			// no account exists sign up for admin
-			resp = await signUp(username, email, password, event.cookies);
+			resp = await FirstUsersignUp(username, email, password, event.cookies);
 		} else if (key && key.passwordDefined == false) {
 			// unfinished account exists
 			resp = await finishRegistration(username, email, password, token, event.cookies);
@@ -78,10 +80,12 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 		let key = await auth.useKey('email', email, password).catch(() => null);
 		if (!key || !key.passwordDefined) return { status: false, message: 'Invalid Credentials' };
 		const session = await auth.createSession(key.userId);
-		let user = await auth.getUser(key.userId);
-		cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-			path: '/'
-		});
+		const sessionCookie = auth.createSessionCookie(session);
+		console.log(sessionCookie);
+		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+
+		let authMethod = 'password';
+		await auth.updateUserAttributes(key.userId, { authMethod });
 		return { status: true };
 	} else {
 		let token = password;
@@ -91,10 +95,10 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 		try {
 			await tokenHandler.validate(token, key.userId);
 			const session = await auth.createSession(key.userId);
-			let user = await auth.getUser(key.userId);
-			cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-				path: '/'
-			});
+			const sessionCookie = auth.createSessionCookie(session);
+			cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+			let authMethod = 'token';
+			await auth.updateUserAttributes(key.userId, { authMethod });
 			return { status: true };
 		} catch (e) {
 			return { status: false, message: 'invalid token' };
@@ -102,8 +106,8 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 	}
 }
 
-async function signUp(username: string, email: string, password: string, cookies: Cookies) {
-	let user = await auth
+async function FirstUsersignUp(username: string, email: string, password: string, cookies: Cookies) {
+	let user: User = await auth
 		.createUser({
 			primaryKey: {
 				providerId: 'email',
@@ -118,10 +122,10 @@ async function signUp(username: string, email: string, password: string, cookies
 		.catch((e) => null);
 	console.log(user);
 	if (!user) return { status: false, message: 'user does not exist' };
-	const session = await auth.createSession(user.userId);
-	cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-		path: '/'
-	});
+	const session = await auth.createSession(user.id);
+	const sessionCookie = auth.createSessionCookie(session);
+	cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+
 	return { status: true };
 }
 async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies) {
@@ -130,14 +134,14 @@ async function finishRegistration(username: string, email: string, password: str
 	const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
 	try {
 		await tokenHandler.validate(token, key.userId);
-		await auth.updateUserAttributes(key.userId, { username });
+		let authMethod = 'password';
+		await auth.updateUserAttributes(key.userId, { username, authMethod });
 
 		await auth.updateKeyPassword('email', email, password);
 		const session = await auth.createSession(key.userId);
-		let user = await auth.getUser(key.userId);
-		cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-			path: '/'
-		});
+		const sessionCookie = auth.createSessionCookie(session);
+		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+
 		return { status: true };
 	} catch (e) {
 		return { status: false, message: 'invalid token' };

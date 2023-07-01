@@ -2,16 +2,20 @@ import { redirect, type Actions } from '@sveltejs/kit';
 import { auth } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { superValidate } from 'sveltekit-superforms/server';
-import { addUserSchema } from '@src/utils/formSchemas';
+import { addUserSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { passwordToken } from '@lucia-auth/tokens';
+import { SESSION_COOKIE_NAME } from 'lucia-auth';
+import type { User } from '@src/collections/Auth';
 export async function load(event) {
-	let session = JSON.parse(event.cookies.get('credentials') || '{"username":null,"session":null}') as { username: string; session: string };
-	let user = await validate(auth, session.session);
+	let session = event.cookies.get(SESSION_COOKIE_NAME) as string;
+	let user = await validate(auth, session);
 	let addUserForm = await superValidate(event, addUserSchema);
+	let changePasswordForm = await superValidate(event, changePasswordSchema);
 	if (user.status == 200) {
 		return {
-			credentials: { username: user.user },
-			addUserForm
+			user: user.user,
+			addUserForm,
+			changePasswordForm
 		};
 	} else {
 		throw redirect(302, `/login`);
@@ -27,7 +31,7 @@ export const actions: Actions = {
 
 		if (key) return { form: addUserForm, message: 'This email is already registered' };
 
-		let user = await auth
+		let user: User = await auth
 			.createUser({
 				primaryKey: {
 					providerId: 'email',
@@ -45,8 +49,22 @@ export const actions: Actions = {
 			expiresIn: 60 * 60, // expiration in 1 hour,
 			length: 16 // default
 		});
-		let token = (await tokenHandler.issue(user.userId)).toString();
+		let token = (await tokenHandler.issue(user.id)).toString();
 		console.log(token); // send token to user via email
 		return { form: addUserForm };
+	},
+	changePassword: async (event) => {
+		let changePasswordForm = await superValidate(event, changePasswordSchema);
+		let password = changePasswordForm.data.password;
+		let session = event.cookies.get(SESSION_COOKIE_NAME) as string;
+		let user = await validate(auth, session);
+		if (user.status != 200) return { form: changePasswordForm, message: 'user does not exist or session expired' };
+		const key = (await auth.getAllUserKeys(user.user.id)).find((key) => key.passwordDefined == true);
+		if (!key) return { form: changePasswordForm, message: 'user does not exist or session expired' };
+		await auth.updateKeyPassword('email', key.providerUserId, password);
+		let authMethod = 'password';
+		await auth.updateUserAttributes(key.userId, { authMethod });
+
+		return { form: changePasswordForm };
 	}
 };

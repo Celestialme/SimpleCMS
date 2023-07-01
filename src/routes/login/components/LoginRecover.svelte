@@ -4,7 +4,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import LL from '@src/i18n/i18n-svelte';
-	import type { PageData } from '../$types';
+	import type { PageData, SubmitFunction } from '../$types';
 	import { superForm } from 'sveltekit-superforms/client';
 	import { recoverSchema } from '@src/utils/formSchemas';
 
@@ -20,8 +20,9 @@
 		applyAction: true,
 		taintedMessage: '',
 		clearOnSubmit: 'none',
-		onSubmit: ({ cancel }) => {
-			if ($allErrors.length > 0) cancel();
+		onSubmit: (args) => {
+			let _args = args as Parameters<SubmitFunction>[0];
+			if ($allErrors.length > 0) _args.cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			if (result.type == 'success') {

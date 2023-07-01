@@ -7,6 +7,7 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
+
 	type DISPLAY = (data: any, field: any, entry: any, contentLanguage: string) => Promise<any>;
 }
 export {};

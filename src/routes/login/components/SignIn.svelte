@@ -4,7 +4,7 @@
 	export let active: undefined | 0 | 1 = undefined;
 	import LL from '@src/i18n/i18n-svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
-	import type { PageData } from '../$types';
+	import type { PageData, SubmitFunction } from '../$types';
 	import { loginSchema } from '@src/utils/formSchemas';
 	import CMSLogo from './icons/Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
@@ -23,8 +23,9 @@
 		taintedMessage: '',
 		clearOnSubmit: 'none',
 		dataType: 'json',
-		onSubmit: ({ cancel }) => {
-			if ($allErrors.length > 0) cancel();
+		onSubmit: (args) => {
+			let _args = args as Parameters<SubmitFunction>[0];
+			if ($allErrors.length > 0) _args.cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			if (result.type == 'redirect') return;

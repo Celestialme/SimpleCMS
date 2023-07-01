@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { credentials } from '@src/stores/load';
+	import { user } from '@src/stores/load';
 	import axios from 'axios';
 	import Button from '../buttons/Button.svelte';
 	import Collections from './Collections.svelte';
@@ -18,7 +18,7 @@
 			)
 		).data;
 		if (resp.status == 200) {
-			$credentials = resp;
+			$user = resp;
 			goto(`/login`);
 		}
 	}

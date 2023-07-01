@@ -41,18 +41,7 @@ const auth = lucia({
 	autoDatabaseCleanup: true,
 	transformDatabaseUser: (userData) => {
 		return {
-			userId: userData.id,
-			email: userData.email,
-			role: userData.role,
-			username: userData.username,
-
-			firstname: userData.firstname,
-			lastname: userData.lastname,
-			avatar: userData.avatar,
-
-			resetRequestedAt: userData.resetRequestedAt,
-			resetToken: userData.resetToken,
-			lastActiveAt: userData.lastActiveAt
+			...userData
 		};
 	},
 	middleware: sveltekit()

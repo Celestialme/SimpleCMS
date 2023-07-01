@@ -6,6 +6,7 @@ import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
+import type { User } from '@src/collections/Auth';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -153,9 +154,9 @@ export async function extractData(fieldsData: any) {
 
 export async function validate(auth: Auth, sessionID: string | null) {
 	if (!sessionID) {
-		return { user: null, role: null, status: 404 };
+		return { user: {} as User, status: 404 };
 	}
 	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
-	if (!resp) return { user: null, role: null, status: 404 };
-	return { user: resp.user.username, role: resp.user.role, status: 200 };
+	if (!resp) return { user: {} as User, status: 404 };
+	return { user: resp.user as User, status: 200 };
 }
