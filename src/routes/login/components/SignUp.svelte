@@ -20,9 +20,8 @@
 		applyAction: true,
 		taintedMessage: '',
 
-		onSubmit: (args) => {
-			let _args = args as Parameters<SubmitFunction>[0];
-			if ($allErrors.length > 0) _args.cancel();
+		onSubmit: ({cancel}) => {
+			cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			console.log(result);
