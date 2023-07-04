@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageData } from '../$types';
+	import type { PageData, SubmitFunction } from '../$types';
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
@@ -18,10 +18,11 @@
 	export let active: undefined | 0 | 1 = undefined;
 
 	export let FormSchemaSignUp: PageData['signUpForm'];
+
+	let response: any;
 	let firstUserExists = FormSchemaSignUp.data.token != null;
 	// console.log('firstUserExists = ', firstUserExists);
 
-	let response: any;
 	const { form, constraints, allErrors, errors, enhance, delayed } = superForm(FormSchemaSignUp, {
 		id: 'signup',
 		validators: (firstUserExists ? signUpFormSchema : signUpFormSchema.innerType().omit({ token: true })) as typeof signUpFormSchema,
@@ -35,13 +36,7 @@
 		taintedMessage: '',
 
 		onSubmit: ({ cancel }) => {
-			// Submit email as lowercase only
-			$form.email = $form.email.toLowerCase();
-
-			//console.log('onSubmit:', form);
-
-			// handle login form submission
-			if ($allErrors.length > 0) cancel();
+			cancel();
 		},
 
 		onResult: ({ result, cancel }) => {
@@ -170,7 +165,7 @@
 				<!-- Registration Token -->
 				<FloatingInput
 					name="token"
-					type="text"
+					type="password"
 					tabindex={tabIndex++}
 					required
 					bind:value={$form.token}
@@ -179,6 +174,7 @@
 					icon="mdi:key-chain"
 					iconColor="white"
 					textColor="white"
+					showPasswordBackgroundColor="dark"
 					inputClass="text-white"
 				/>
 				{#if $errors.token}<span class="text-xs text-error-500">{$errors.token}</span>{/if}

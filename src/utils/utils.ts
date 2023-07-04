@@ -6,6 +6,9 @@ import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
+import type { User } from '@src/collections/Auth';
+
+import { createEventDispatcher } from 'svelte';
 
 // Configuration object for axios requests
 export const config = {
@@ -197,11 +200,11 @@ export async function extractData(fieldsData: any) {
 
 export async function validate(auth: Auth, sessionID: string | null) {
 	if (!sessionID) {
-		return { user: null, role: null, status: 404 };
+		return { user: {} as User, status: 404 };
 	}
 	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
-	if (!resp) return { user: null, role: null, status: 404 };
-	return { user: resp.user.username, role: resp.user.role, status: 200 };
+	if (!resp) return { user: {} as User, status: 404 };
+	return { user: resp.user as User, status: 200 };
 }
 
 /**
@@ -220,6 +223,54 @@ export function formatSize(sizeInBytes) {
 		return `${(sizeInBytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 	}
 }
+
+//handles sidebar toggle logic
+// let width = window.innerWidth;
+
+// 	window.addEventListener('resize', () => {
+// 		width = window.innerWidth;
+// 	});
+
+// export function toggle(width) {
+//   const dispatch = createEventDispatcher();
+
+//   let toggleLeftSidebar = false;
+//   let switchSideBar = false;
+//   let toggleHeaderSidebar = false;
+//   let toggleFooterSidebar = false;
+//   let toggleRightSidebar = false;
+
+//   if (width <= 567) {
+//     // For mobile toggle Header/Footer Sidebars
+//     toggleLeftSidebar = true;
+//     switchSideBar = true;
+//     toggleHeaderSidebar = false;
+//     toggleFooterSidebar = false;
+//     toggleRightSidebar = true;
+//   } else if (width >= 568 && width <= 767) {
+//     // use switchSideBar for md
+//     toggleLeftSidebar = false;
+//     switchSideBar = false;
+//     toggleHeaderSidebar = true;
+//     toggleFooterSidebar = true;
+//     toggleRightSidebar = false;
+//   } else if (width > 768) {
+//     // use toggleRightSidebar for xl and above
+//     toggleLeftSidebar = false;
+//     switchSideBar = true;
+//     toggleHeaderSidebar = false;
+//     toggleFooterSidebar = false;
+//     toggleRightSidebar = false;
+//   }
+
+//   return {
+//     toggleLeftSidebar,
+//     switchSideBar,
+//     toggleHeaderSidebar,
+//     toggleFooterSidebar,
+//     toggleRightSidebar,
+//   };
+// }
 
 // Replaces the locale slug in a URL.
 //

@@ -78,6 +78,25 @@ export let addUserSchema = z.object({
 	expiresIn: z.string()
 });
 
+// Change Password ------------------------------------
+export let changePasswordSchema = z
+	.object({
+		password: z
+			.string({ required_error: get(LL).LOGIN_ZOD_Password_string() })
+			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+				message: get(LL).LOGIN_ZOD_Password_regex()
+			}),
+		confirm_password: z
+			.string({ required_error: get(LL).LOGIN_ZOD_Confirm_password_string() })
+			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+				message: get(LL).LOGIN_ZOD_Confirm_password_regex()
+			})
+	})
+	.refine((data) => data.password === data.confirm_password, {
+		message: get(LL).LOGIN_ZOD_Password_match(),
+		path: ['confirmPassword']
+	});
+
 // Widget Email Schema ------------------------------------
 export let widgetEmailSchema = z.object({
 	email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() })

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { PageData } from '../$types';
+	import type { PageData, SubmitFunction } from '../$types';
+
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
@@ -15,6 +16,7 @@
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 
 	console.log('toastStore', toastStore);
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 

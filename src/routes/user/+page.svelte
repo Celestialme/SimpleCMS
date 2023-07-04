@@ -1,5 +1,4 @@
 <script lang="ts">
-	export let data: PageData;
 	import type { PageData } from './$types';
 	import { toggleLeftSidebar } from '@src/stores/store';
 	import axios from 'axios';
@@ -8,6 +7,10 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import { addUserSchema } from '@src/utils/formSchemas';
 
+	export let data: PageData;
+	console.log(data);
+
+	//get user roles from environment file
 	import { PUBLIC_USER_ROLES } from '$env/static/public';
 	const userRoles = PUBLIC_USER_ROLES.split(',');
 	let roles = userRoles.reduce((acc, role) => {
@@ -15,9 +18,9 @@
 		return acc;
 	}, {});
 
-	function filter(role) {
-		roles[role] = !roles[role];
-	}
+	// function filter(role) {
+	// 	roles[role] = !roles[role];
+	// }
 
 	let response;
 	console.log(data);
@@ -30,9 +33,8 @@
 		taintedMessage: '',
 		dataType: 'json',
 
-		onSubmit: ({ cancel, data }) => {
-			console.log(data);
-			if ($allErrors.length > 0) cancel();
+		onSubmit: ({ cancel }) => {
+			cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			cancel();
@@ -255,7 +257,8 @@
 <!-- {/if} -->
 
 <div class="m-2 rounded-md border-2">
-	<p class="mb-4 text-center text-primary-500">Hello {data.credentials.username}</p>
+	<p class="mb-4 text-center text-primary-500">Hello {data.user.username}</p>
+	<p class="text-center text-white">Auth method {data.user.authMethod}</p>
 	<form method="post" action="?/addUser" use:enhance class=" m-2">
 		<div class="r label">
 			{$LL.LOGIN_EmailAddress()}

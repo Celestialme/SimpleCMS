@@ -24,8 +24,8 @@
 		storeListboxValue
 	} from '@src/stores/store';
 	import { contentLanguage } from '@src/stores/store';
+
 	import axios from 'axios';
-	import { credentials } from '@src/stores/store';
 	import { fly } from 'svelte/transition';
 
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
@@ -71,25 +71,35 @@
 
 	// Lucia
 	// TODO: Fix User DATA
+	import { user } from '@src/stores/store';
+	console.log('user', $user);
+
 	// $: user = data.user;
 	// $: avatarSrc = user?.avatar;
 	$: avatarSrc = '';
+
 	//signOut
 	async function signOut() {
-		let resp = (
-			await axios.post(
-				`/api/auth`,
-				{ authType: 'signOut' },
-				{
-					headers: {
-						'content-type': 'multipart/form-data'
+		try {
+			let resp = (
+				await axios.post(
+					`/api/auth`,
+					{ authType: 'signOut' },
+					{
+						headers: {
+							'content-type': 'multipart/form-data'
+						}
 					}
-				}
-			)
-		).data;
-		if (resp.status == 200) {
-			$credentials = resp;
-			goto(`/login`);
+				)
+			).data;
+			if (resp.status == 200) {
+				$user = resp;
+				goto(`/login`);
+			} else {
+				// handle non-200 response status here
+			}
+		} catch (error) {
+			// handle error here
 		}
 	}
 

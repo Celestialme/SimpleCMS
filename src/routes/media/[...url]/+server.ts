@@ -17,7 +17,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 	try {
 		// Server limits
 		let outputFormat = PUBLIC_MEDIA_OUTPUT_FORMAT; // defines outputFormat for storage
-		const MAX_FILE_SIZE = 10 * 1024 * 1024; // Set a file size limit 10 MB
+		const MAX_FILE_SIZE = 100 * 1024 * 1024; // Set a file size limit 100 MB
 
 		// Parse form data
 		const formData = await request.formData();

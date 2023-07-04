@@ -287,10 +287,10 @@
 		isLoading = false;
 	};
 
-	$: {
-		console.log('deleteAll:', deleteAll);
-		console.log('deleteMap:', deleteMap);
-	}
+	// $: {
+	// 	console.log('deleteAll:', deleteAll);
+	// 	console.log('deleteMap:', deleteMap);
+	// }
 
 	const flipDurationMs = 300;
 

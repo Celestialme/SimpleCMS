@@ -11,8 +11,7 @@
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 	import { enhance } from '$app/forms';
-	import Error from '@src/routes/+error.svelte';
-	import { error, fail } from '@sveltejs/kit';
+	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
 
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
@@ -26,7 +25,9 @@
 	const roles = Object.fromEntries(rolesArray.map((role) => [role, false]));
 	roles['Editor'] = true;
 
+	// define default role
 	let roleSelected = 'Editor';
+
 	let errorStatus = {
 		email: { status: false, msg: '' },
 		valid: { status: false, msg: '' }
@@ -46,7 +47,9 @@
 	let valids: Record<string, boolean> = {
 		'2 hrs': false,
 		'12 hrs': true,
-		'48 hrs': false
+		'2 days': false,
+		'1 week': false,
+		'1 month': false
 	};
 
 	function filterValid(valid: string): void {
@@ -86,8 +89,14 @@
 				case '12 hrs':
 					expires_in = 12 * 60 * 60 * 1000;
 					break;
-				case '48 hrs':
+				case '2 Days':
 					expires_in = 48 * 60 * 60 * 1000;
+					break;
+				case '1 Week':
+					expires_in = 7 * 24 * 60 * 60 * 1000;
+					break;
+				case '1 Month':
+					expires_in = 30 * 24 * 60 * 60 * 1000;
 					break;
 				default:
 					errorStatus['valid'].status = true;
@@ -112,22 +121,8 @@
 	>
 		<!-- Email field -->
 		<div class="group relative z-0 mb-6 w-full">
-			<iconify-icon icon="mdi:email" width="18" class="absolute left-0 top-3.5 text-surface-400" />
-			<input
-				bind:value={email}
-				on:keydown={() => (errorStatus.email.status = false)}
-				color={errorStatus.email.status ? 'red' : 'base'}
-				name="newUserEmail"
-				class="peer block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-surface-300 !bg-transparent px-6 py-2.5 text-sm text-surface-900 focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-600 dark:text-white dark:focus:border-tertiary-500"
-				placeholder=" "
-				required
-			/>
-			<label
-				for="email"
-				class="absolute left-5 top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-tertiary-600 dark:text-surface-400 peer-focus:dark:text-tertiary-500"
-			>
-				{$LL.LOGIN_EmailAddress()}<span class="ml-2 text-error-500">*</span>
-			</label>
+			<FloatingInput label={$LL.LOGIN_EmailAddress()} icon="mdi:email" type="email" bind:value={email} required />
+
 			{#if errorStatus.email.status}
 				<div class="absolute left-0 top-11 text-xs text-error-500">
 					{errorStatus.email.msg}
@@ -135,6 +130,7 @@
 			{/if}
 		</div>
 
+		<!-- User Role  -->
 		<div class="flex flex-col gap-2 sm:flex-row">
 			<div class="sm:w-1/4">User Role:</div>
 			<div class="flex-auto">
@@ -147,6 +143,8 @@
 								roleSelected = r;
 							}}
 							on:keypress
+							role="button"
+							tabindex="0"
 						>
 							{#if roles[r]}<span><iconify-icon icon="fa:check" /></span>{/if}
 							<span class="capitalize">{r}</span>
@@ -156,7 +154,7 @@
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-2 sm:flex-row">
+		<div class="flex flex-col gap-2 pb-6 sm:flex-row">
 			<div class="sm:w-1/4">Token validity:</div>
 			<div class="flex-auto">
 				<div class="flex flex-wrap gap-2 space-x-2">
@@ -168,6 +166,8 @@
 								validSelected = v;
 							}}
 							on:keypress
+							role="button"
+							tabindex="0"
 						>
 							{#if valids[v]}<span><iconify-icon icon="fa:check" /></span>{/if}
 							<span class="capitalize">{v}</span>

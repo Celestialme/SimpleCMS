@@ -1,5 +1,5 @@
-import { fail, type Cookies, redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
+import { type Actions, type Cookies, redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 import mongoose from 'mongoose';
 
@@ -7,6 +7,7 @@ import { superValidate, message } from 'sveltekit-superforms/server';
 import { loginFormSchema, forgotFormSchema, resetFormSchema, signUpFormSchema } from '@src/utils/formSchemas';
 import { auth } from '@src/routes/api/db';
 import { passwordToken } from '@lucia-auth/tokens';
+import type { User } from '@src/collections/Auth';
 
 // load and validate login and sign up forms
 export const load: PageServerLoad = async (event) => {
@@ -15,9 +16,9 @@ export const load: PageServerLoad = async (event) => {
 	// Different schemas, so no id required.
 
 	// SignIn
-	const loginForm = await superValidate(event, loginFormSchema);
-	const forgotForm = await superValidate(event, forgotFormSchema);
-	const resetForm = await superValidate(event, resetFormSchema);
+	let loginForm = await superValidate(event, loginFormSchema);
+	let forgotForm = await superValidate(event, forgotFormSchema);
+	let resetForm = await superValidate(event, resetFormSchema);
 	//let recoverForm = await superValidate(event, recoverSchema);
 
 	// SignUp FirstUser
@@ -124,10 +125,10 @@ export const actions: Actions = {
 		//if (!signUpForm.valid) return fail(400, { signUpForm });
 
 		// Validate with Lucia
-		const username = signUpForm.data.username;
-		const email = signUpForm.data.email.toLocaleLowerCase();
-		const password = signUpForm.data.password;
-		const token = signUpForm.data.token;
+		const username = signUpFormSchema.data.username;
+		const email = signUpFormSchema.data.email.toLocaleLowerCase();
+		const password = signUpFormSchema.data.password;
+		const token = signUpFormSchema.data.token;
 
 		let key = await auth.getKey('email', email).catch(() => null);
 		console.log('key', key);
@@ -136,10 +137,10 @@ export const actions: Actions = {
 
 		if (key && key.passwordDefined) {
 			// finished account exists
-			return { form: signUpForm, message: 'This email is already registered' };
+			return { form: signUpFormSchema, message: 'This email is already registered' };
 		} else if (isFirst) {
 			// no account exists signUp for admin
-			resp = await signUp(username, email, password, event.cookies);
+			resp = await FirstUsersignUp(username, email, password, event.cookies);
 		} else if (key && key.passwordDefined == false) {
 			// unfinished account exists
 			resp = await finishRegistration(username, email, password, token, event.cookies);
@@ -184,10 +185,12 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 		let key = await auth.useKey('email', email, password).catch(() => null);
 		if (!key || !key.passwordDefined) return { status: false, message: 'Invalid Credentials' };
 		const session = await auth.createSession(key.userId);
-		let user = await auth.getUser(key.userId);
-		cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-			path: '/'
-		});
+		const sessionCookie = auth.createSessionCookie(session);
+		console.log(sessionCookie);
+		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+
+		let authMethod = 'password';
+		await auth.updateUserAttributes(key.userId, { authMethod });
 		return { status: true };
 	} else {
 		let token = password;
@@ -196,19 +199,39 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 		const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
 		try {
 			await tokenHandler.validate(token, key.userId);
-
 			const session = await auth.createSession(key.userId);
-
-			let user = await auth.getUser(key.userId);
-			// Set the credentials cookie
-			cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-				path: '/'
-			});
+			const sessionCookie = auth.createSessionCookie(session);
+			cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+			let authMethod = 'token';
+			await auth.updateUserAttributes(key.userId, { authMethod });
 			return { status: true };
 		} catch (e) {
 			return { status: false, message: 'invalid token' };
 		}
 	}
+}
+async function FirstUsersignUp(username: string, email: string, password: string, cookies: Cookies) {
+	let user: User = await auth
+		.createUser({
+			primaryKey: {
+				providerId: 'email',
+				providerUserId: email,
+				password: password
+			},
+			attributes: {
+				username,
+				role: 'admin'
+			}
+		})
+		.catch((e) => null);
+	console.log(user);
+	if (!user) return { status: false, message: 'user does not exist' };
+	const session = await auth.createSession(user.id);
+	const sessionCookie = auth.createSessionCookie(session);
+	// Set the credentials cookie
+	cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+
+	return { status: true };
 }
 
 async function forgotPW(email: string, cookies: Cookies) {
@@ -230,18 +253,6 @@ async function resetPW(email: string, password: string, token: string, cookies: 
 	});
 	return true;
 }
-
-// async function recover(email: string, cookies: Cookies) {
-// 	const tokenHandler = passwordToken(auth as any, 'register', {
-// 		expiresIn: 60 * 60, // expiration in 1 hour,
-// 		length: 16 // default
-// 	});
-// 	let key = await auth.getKey('email', email).catch(() => null);
-// 	if (!key) return { status: false, message: 'user does not exist' };
-// 	let token = (await tokenHandler.issue(key.userId)).toString();
-// 	console.log(token); // send token to user via email
-// 	return { status: true, message: 'token has been sent to email' };
-// }
 
 // Function create a new FIRST USER account as ADMIN and creating a session.
 async function signUp(username: string, email: string, password: string, cookies: Cookies, event: any) {
@@ -284,17 +295,16 @@ async function finishRegistration(username: string, email: string, password: str
 	const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
 
 	try {
+		let authMethod = 'password';
 		await tokenHandler.validate(token, key.userId);
-		await auth.updateUserAttributes(key.userId, { username });
+		await auth.updateUserAttributes(key.userId, { username, authMethod });
 		await auth.updateKeyPassword('email', email, password);
 
 		const session = await auth.createSession(key.userId);
+		const sessionCookie = auth.createSessionCookie(session);
 
-		let user = await auth.getUser(key.userId);
 		// Set the credentials cookie
-		cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-			path: '/'
-		});
+		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
 		return { status: true };
 	} catch (e) {

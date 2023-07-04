@@ -5,7 +5,7 @@
 	import { collectionValue, mode } from '@src/stores/store';
 	import type { Schema } from '@src/collections/types';
 	import type { LayoutServerData } from '../$types';
-	import { credentials } from '@src/stores/store';
+	import { user } from '@src/stores/store';
 	import Fields from '@src/components/Fields.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
 
@@ -19,8 +19,8 @@
 
 	//console.log(data);
 
-	// Set the value of the credentials store to the credentials property of the data variable
-	credentials.set(data.credentials);
+	// Set the value of the credentials store to the user property of the data variable
+	user.set(data.user);
 
 	globalThis.onpopstate = async () => {
 		// Set up an event listener for the popstate event

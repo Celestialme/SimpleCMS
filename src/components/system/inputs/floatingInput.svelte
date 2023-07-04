@@ -32,7 +32,7 @@ This FloatingInput component has the following properties:
 		required?: boolean;
 		showPasswordBackgroundColor?: 'light' | 'dark';
 		textColor?: string;
-		type?: 'text' | 'password';
+		type?: 'text' | 'email' | 'password';
 		value?: string;
 	}
 
