@@ -20,8 +20,8 @@
 		applyAction: true,
 		taintedMessage: '',
 		clearOnSubmit: 'none',
-		onSubmit: ({cancel}) => {
-			cancel();
+		onSubmit: ({ cancel }) => {
+			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			if (result.type == 'success') {

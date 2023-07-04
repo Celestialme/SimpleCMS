@@ -8,6 +8,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 	import { addUserSchema } from '@src/utils/formSchemas';
+	import { roles } from '@src/collections/Auth';
 	let response;
 	console.log(data);
 	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
@@ -18,8 +19,8 @@
 		taintedMessage: '',
 		dataType: 'json',
 
-		onSubmit: ({cancel}) => {
-			cancel();
+		onSubmit: ({ cancel }) => {
+			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			cancel();
@@ -43,7 +44,7 @@
 	/>
 	{#if $errors.email}<span class="invalid">{$errors.email}</span>{/if}
 	{#if response}<span class="invalid">{response}</span>{/if}
-	<DropDown items={['admin', 'user']} bind:selected={$form.role} />
+	<DropDown items={Object.values(roles)} bind:selected={$form.role} />
 	<Button class="bg-white mt-10">Create</Button>
 </form>
 

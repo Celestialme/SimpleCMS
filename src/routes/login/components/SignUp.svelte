@@ -21,7 +21,7 @@
 		taintedMessage: '',
 
 		onSubmit: ({cancel}) => {
-			cancel();
+			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			console.log(result);

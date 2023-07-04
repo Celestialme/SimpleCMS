@@ -1,6 +1,7 @@
 import widgets from '../components/widgets';
 import Posts from './Posts2';
-let schema = {
+import type { Schema } from './types';
+let schema: Schema = {
 	name: 'relation',
 	fields: [
 		widgets.Relation({

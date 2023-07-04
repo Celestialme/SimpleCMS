@@ -1,6 +1,13 @@
 import widgets from '../components/widgets';
-let schema = {
+import { roles } from './Auth';
+import type { Schema } from './types';
+let schema: Schema = {
 	name: 'posts3',
+	permissions: {
+		[roles.user]: {
+			read: false
+		}
+	},
 	fields: [
 		widgets.Text({
 			label: 'text',

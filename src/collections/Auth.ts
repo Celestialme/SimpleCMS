@@ -61,7 +61,13 @@ export type User = Modify<
 	InferSchemaType<typeof mongooseUserSchema>,
 	{
 		id: string;
-		role: 'admin' | 'user';
+		role: (typeof roles)[keyof typeof roles];
 		authMethod: 'password' | 'token';
 	}
 >;
+
+export let roles = {
+	admin: 'admin',
+	user: 'user',
+	developer: 'developer'
+} as const;

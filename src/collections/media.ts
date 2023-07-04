@@ -1,6 +1,6 @@
 import widgets from '../components/widgets';
 import type { Schema } from './types';
-let schema = {
+let schema: Schema = {
 	name: 'image upload',
 	fields: [
 		widgets.ImageUpload({

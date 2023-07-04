@@ -17,7 +17,7 @@
 		dataType: 'json',
 
 		onSubmit: ({ cancel }) => {
-			cancel();
+			if ($allErrors.length > 0) cancel();
 		},
 		onResult: ({ result, cancel }) => {
 			cancel();

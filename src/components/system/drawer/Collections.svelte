@@ -2,6 +2,7 @@
 	import { collection } from '@src/collections';
 	import { mode } from '@src/stores/store';
 	import { categories } from '@src/collections';
+	import { user } from '@src/stores/load';
 	let expanded: any = {};
 </script>
 
@@ -17,7 +18,7 @@
 	</div>
 	<div class:expand={expanded[index]} class="wrapper">
 		<div class={expanded[index] ? 'delayed-overflow' : 'overflow-hidden'}>
-			{#each category.collections as _collection}
+			{#each category.collections.filter((c) => c?.permissions?.[$user.role]?.read != false) as _collection}
 				<p
 					class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
 					on:click={(e) => {
