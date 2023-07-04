@@ -21,7 +21,10 @@ export async function load({ cookies, route, params }) {
 	}
 	if (user.status == 200) {
 		if (route.id != '/[language]/[collection]') {
-			throw redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGE}/${collections[0].name}`);
+			throw redirect(
+				302,
+				`/${params.language || PUBLIC_CONTENT_LANGUAGE}/${collections.filter((c) => c?.permissions?.[user.user.role]?.read != false)[0].name}`
+			);
 		}
 		if (collection?.permissions?.[user.user.role]?.read == false) {
 			throw error(404, {
