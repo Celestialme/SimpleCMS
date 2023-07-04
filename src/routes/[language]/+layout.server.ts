@@ -15,12 +15,14 @@ export async function load({ cookies, route, params }) {
 		throw redirect(302, `/profile`);
 	}
 	if (!locales.includes(params.language as any) || (!collection && params.collection)) {
+		// if collection is set in url but does not exists.
 		throw error(404, {
 			message: 'Not found'
 		});
 	}
 	if (user.status == 200) {
 		if (route.id != '/[language]/[collection]') {
+			//else if language and collection both set in url get first collection from filtered ones. we are filtering based on reading permissions
 			throw redirect(
 				302,
 				`/${params.language || PUBLIC_CONTENT_LANGUAGE}/${collections.filter((c) => c?.permissions?.[user.user.role]?.read != false)[0].name}`
