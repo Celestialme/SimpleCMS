@@ -22,11 +22,9 @@ export async function load({ cookies, route, params }) {
 	}
 	if (user.status == 200) {
 		if (route.id != '/[language]/[collection]') {
-			//else if language and collection both set in url get first collection from filtered ones. we are filtering based on reading permissions
-			throw redirect(
-				302,
-				`/${params.language || PUBLIC_CONTENT_LANGUAGE}/${collections.filter((c) => c?.permissions?.[user.user.role]?.read != false)[0].name}`
-			);
+			//else if language and collection both set in url
+			let _filtered = collections.filter((c) => c?.permissions?.[user.user.role]?.read != false); // filters collection  based on reading permissions  and redirects to first left one
+			throw redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGE}/${_filtered[0].name}`);
 		}
 		if (collection?.permissions?.[user.user.role]?.read == false) {
 			throw error(404, {
