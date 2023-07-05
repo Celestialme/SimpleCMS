@@ -19,11 +19,11 @@
 	$: count = _data[_language]?.length ?? 0;
 	const getBadgeClass = (length: number) => {
 		if (field?.minlength && length < field?.minlength) {
-			return 'bg-red-600 ';
+			return 'bg-red-600';
 		} else if (field?.maxlength && length > field?.maxlength) {
-			return 'bg-red-600 ';
+			return 'bg-red-600';
 		} else if (field?.count && length === field?.count) {
-			return 'bg-green-600 e';
+			return 'bg-green-600';
 		} else if (field?.count && length > field?.count) {
 			return 'bg-orange-600';
 		} else if (field?.minlength) {

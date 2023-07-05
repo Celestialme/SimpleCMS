@@ -7,8 +7,8 @@
 	export let cross = false;
 	export let checked = false;
 
-	console.log('checked in TanstackIcons:', checked);
-	console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
+	// console.log('checked in TanstackIcons:', checked);
+	// console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
 </script>
 
 <div

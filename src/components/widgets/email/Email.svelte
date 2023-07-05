@@ -9,20 +9,32 @@
 
 	let fieldName = getFieldName(field);
 	export let value = $entryData[fieldName] || {};
-	console.log('value: ', value);
+	//console.log('value: ', value);
 
 	let _data = $mode == 'create' ? {} : value;
 	let _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGES;
 
 	export const WidgetData = async () => _data;
 
-	let valid = true;
+	import * as z from 'zod';
 
-	function checkRequired() {
-		if (field?.required && _data == '') {
-			valid = false;
-		} else {
-			valid = true;
+	const emailSchema = z
+		.string()
+		.email()
+		.refine((value) => value.includes('@'), {
+			message: 'Please enter a valid email address'
+		});
+
+	let errorMessage = '';
+
+	function validateEmail() {
+		try {
+			emailSchema.parse(_data[_language]);
+			errorMessage = '';
+		} catch (error: unknown) {
+			if (error instanceof z.ZodError) {
+				errorMessage = error.errors[0].message;
+			}
 		}
 	}
 </script>
@@ -30,9 +42,12 @@
 <input
 	type="email"
 	bind:value={_data[_language]}
-	on:input={checkRequired}
+	on:input={validateEmail}
 	name={field?.db_fieldName}
 	id={field?.db_fieldName}
 	placeholder={field?.placeholder && field?.placeholder !== '' ? field?.placeholder : field?.db_fieldName}
 	class="input"
 />
+{#if errorMessage}
+	<p class="text-center text-sm text-error-500">{errorMessage}</p>
+{/if}

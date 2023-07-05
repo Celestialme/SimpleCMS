@@ -10,14 +10,14 @@ import ImageArray from './imageArray';
 // import ImageEditorPage from './imageEditorPage';
 import ImageUpload from './imageUpload';
 import MegaMenu from './megaMenu';
-// import Number from './number';
-// import PhoneNumber from './phoneNumber';
-// import Radio from './radio';
+import Number from './number';
+import PhoneNumber from './phoneNumber';
+import Radio from './radio';
 import Relation from './relation';
 // import RemoteVideo from './remoteVideo';
 // import RichText from './richText';
 // import SelectList from './selectList';
-// import Seo from './seo';
+import Seo from './seo';
 import Text from './text';
 
 let widgets = {
@@ -45,21 +45,21 @@ let widgets = {
 	// MegaMenu - Flexible Menu with possible hierarchy
 	MegaMenu,
 	// Number - field that enforces that its value be a number
-	//Number,
+	Number,
 	// PhoneNumber - Field checking for phone/Fax numbers
-	//PhoneNumber,
+	PhoneNumber,
 	// Radio - radio button group, allowing only one value to be selected
-	//Radio,
+	Radio,
 	// Relation - assign relationships to other collections
 	Relation,
-	// RemoteVideo - for youtube/vimeo(/Twitch/ticktock), grabbing Title/Duration,Dimention,User
+	// RemoteVideo - for youtube/vimeo(/Twitch/ticktock), grabbing Title/Duration,Dimension,User
 	//RemoteVideo,
 	// Rich Text - fully extensible Lexical Rich Text editor
 	//RichText,
 	// SelectList - dropdown / pick list style value selector
 	//SelectList,
 	// Seo - Basic Seo Title /Description with preview
-	//Seo,
+	Seo,
 	// Text - simple text input
 	Text
 	// Textarea - allows a bit larger of a text editor

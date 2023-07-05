@@ -1,4 +1,4 @@
-import Currency from './Currency.svelte';
+import Number from './Number.svelte';
 import type { Params } from './types';
 import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 
@@ -28,7 +28,7 @@ const widget = ({
 		};
 	}
 
-	let widget: { widget: any } = { widget: Currency };
+	let widget: { widget: any } = { widget: Number };
 
 	let field = {
 		display,

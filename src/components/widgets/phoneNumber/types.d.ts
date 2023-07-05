@@ -9,17 +9,12 @@ export type Params = {
 	icon?: string;
 
 	// Widget Specific parameters
-	currencyCode: string;
 	placeholder?: string;
-	required?: boolean;
-	width?: string;
 	count?: number;
 	minlength?: number;
 	maxlength?: number;
-	step?: number;
-	negative?: boolean;
-	prefix?: string;
-	suffix?: string;
+	pattern?: string;
+	size?: number;
 	required?: boolean;
 	readonly?: boolean;
 	width?: string;

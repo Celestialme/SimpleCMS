@@ -1,24 +1,18 @@
-import Currency from './Currency.svelte';
-import type { Params } from './types';
 import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
+import Radio from './Radio.svelte';
+import type { Params } from './types';
 
-const widget = ({
+let widget = ({
 	label,
 	db_fieldName,
 	display,
-	translated = false, // TODO: no translated need for this widget
+	translated = false, // default no translation
 	// extras
-	currencyCode,
 	icon,
-	placeholder,
-	prefix,
-	suffix,
-	minlength,
-	maxlength,
-	step,
-	negative,
+	color,
+	required,
 	readonly,
-	required
+	width
 }: Params) => {
 	if (!display) {
 		display = async (data: any, field: any, entry: any, contentLanguage: any) => {
@@ -28,25 +22,20 @@ const widget = ({
 		};
 	}
 
-	let widget: { widget: any } = { widget: Currency };
+	let widget: { widget: any } = { widget: Radio };
 
 	let field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,
 		db_fieldName,
+		translated,
 		// extras
-		currencyCode,
 		icon,
-		placeholder,
-		prefix,
-		suffix,
-		minlength,
-		maxlength,
-		step,
-		negative,
+		color,
+		required,
 		readonly,
-		required
+		width
 	};
 
 	return { ...field, ...widget };

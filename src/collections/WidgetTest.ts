@@ -1,3 +1,4 @@
+import { redirect } from '@sveltejs/kit';
 import widgets from '../components/widgets';
 import { roles } from './Auth';
 import type { Schema } from './types';
@@ -58,8 +59,8 @@ let schema: Schema = {
 			db_fieldName: 'Full Text option',
 			label: get(LL).COLLECTION_TEST_Full_Text_Option(),
 			icon: 'carbon:character-whole-number',
-			prefix: '€',
-			suffix: 'cent',
+			prefix: 'pre',
+			suffix: 'suf',
 			count: 10,
 			minlength: 2,
 			maxlength: 15,
@@ -71,9 +72,21 @@ let schema: Schema = {
 		widgets.Email({
 			label: 'email',
 			db_fieldName: 'Email',
-			icon: 'carbon:character-whole-number',
+			icon: 'material-symbols:mail-outline',
 			placeholder: 'Enter Email',
 			required: true
+		}),
+
+		widgets.Number({
+			label: 'Number',
+			db_fieldName: 'Number',
+			icon: 'carbon:character-whole-number',
+			placeholder: 'Enter Number',
+			required: true,
+			prefix: 'height',
+			suffix: 'mm',
+			step: 0.01,
+			translated: false
 		}),
 
 		widgets.Currency({
@@ -82,6 +95,33 @@ let schema: Schema = {
 			currencyCode: 'Euro',
 			icon: 'carbon:character-whole-number',
 			placeholder: 'Enter Currency',
+			required: true,
+			prefix: '€',
+			suffix: 'Cent',
+			step: 0.01,
+			translated: false
+		}),
+
+		widgets.PhoneNumber({
+			label: 'Phone Number',
+			db_fieldName: 'Phone',
+			icon: 'ph:phone',
+			placeholder: 'Enter Phone no',
+			required: true
+		}),
+
+		widgets.Radio({
+			label: 'Radio',
+			db_fieldName: 'Radio',
+			icon: 'ph:phone',
+			color: 'pink',
+			required: true
+		}),
+
+		widgets.Seo({
+			label: 'Seo',
+			db_fieldName: 'Seo',
+			icon: 'ph:phone',
 			required: true
 		})
 	]
