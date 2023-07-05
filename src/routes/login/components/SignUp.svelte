@@ -36,7 +36,8 @@
 		taintedMessage: '',
 
 		onSubmit: ({ cancel }) => {
-			cancel();
+			// handle login form submission
+			if ($allErrors.length > 0) cancel();
 		},
 
 		onResult: ({ result, cancel }) => {
