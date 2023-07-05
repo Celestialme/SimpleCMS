@@ -1,7 +1,9 @@
 import widgets from '../components/widgets';
 import Posts from './Names';
+import { roles } from './Auth';
+import type { Schema } from './types';
 
-let schema = {
+let schema: Schema = {
 	// Collection Name required
 	name: 'relation 2 posts',
 

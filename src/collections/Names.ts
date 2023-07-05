@@ -1,5 +1,8 @@
 import widgets from '../components/widgets';
-let schema = {
+import { roles } from './Auth';
+import type { Schema } from './types';
+
+let schema: Schema = {
 	// Collection Name required
 	name: 'names',
 	// Optional & Icon , status, slug

@@ -18,10 +18,6 @@
 		return acc;
 	}, {});
 
-	// function filter(role) {
-	// 	roles[role] = !roles[role];
-	// }
-
 	let response;
 	console.log(data);
 

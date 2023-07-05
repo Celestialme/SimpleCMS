@@ -1,12 +1,21 @@
 import widgets from '../components/widgets';
+import { roles } from './Auth';
+import type { Schema } from './types';
 
 // typesafe-i18n
 import LL from '@src/i18n/i18n-svelte';
 import { get } from 'svelte/store';
 
-let schema = {
+let schema: Schema = {
 	// Collection Name required
 	name: 'widget-test',
+
+	// Collection Permissions by user Roles
+	permissions: {
+		[roles.user]: {
+			read: false
+		}
+	},
 
 	// Optional & Icon , status, slug
 	// See for possible Icons https://icon-sets.iconify.design/

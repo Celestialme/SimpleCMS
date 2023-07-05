@@ -1,4 +1,5 @@
 import widgets from '../components/widgets';
+import { roles } from './Auth';
 import type { Schema } from './types';
 
 let schema: Schema = {

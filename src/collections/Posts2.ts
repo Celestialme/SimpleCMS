@@ -1,8 +1,17 @@
 import widgets from '../components/widgets';
+import { roles } from './Auth';
+import type { Schema } from './types';
 
-let schema = {
+let schema: Schema = {
 	// Collection Name required
 	name: 'posts2',
+
+	// Collection Permissions by user Roles
+	permissions: {
+		[roles.admin]: {
+			read: false
+		}
+	},
 
 	// Optional & Icon , status, slug
 	// See for possible Icons https://icon-sets.iconify.design/

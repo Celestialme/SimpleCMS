@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections';
 	import { mode, switchSideBar } from '@src/stores/store';
+	import { user } from '@src/stores/store';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -42,7 +43,8 @@
 
 				<!-- Collection Children -->
 				<svelte:fragment slot="content">
-					{#each category.collections as _collection}
+					<!-- filtered by User Role Permission -->
+					{#each category.collections.filter((c) => c?.permissions?.[$user.role]?.read != false) as _collection}
 						{#if $switchSideBar}
 							<!-- switchSideBar expanded -->
 							<div

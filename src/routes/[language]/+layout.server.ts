@@ -1,38 +1,45 @@
-import { error, redirect } from "@sveltejs/kit";
-import { auth } from "../api/db";
-import { validate } from "@src/utils/utils";
-import { SESSION_COOKIE_NAME } from "lucia-auth";
+import { error, redirect } from '@sveltejs/kit';
+import { auth } from '../api/db';
+import { validate } from '@src/utils/utils';
+import { SESSION_COOKIE_NAME } from 'lucia-auth';
 
-import collections from "@src/collections";
+import collections from '@src/collections';
 
-import { PUBLIC_CONTENT_LANGUAGES } from "$env/static/public";
-import { locales } from "@src/i18n/i18n-util";
+import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
+import { locales } from '@src/i18n/i18n-util';
 
 export async function load({ cookies, route, params }) {
-  let session = cookies.get(SESSION_COOKIE_NAME) as string;
-  let user = await validate(auth, session);
+	let session = cookies.get(SESSION_COOKIE_NAME) as string;
+	let user = await validate(auth, session);
+	let collection = collections.find((c) => c.name == params.collection);
 
-  if (user.user.authMethod == "token") {
-    throw redirect(302, `/user`);
-  }
+	if (user.user.authMethod == 'token') {
+		throw redirect(302, `/user`);
+	}
 
-  if (!locales.includes(params.language as any)) {
-    throw error(404, {
-      message: "Not found",
-    });
-  }
+	if (!locales.includes(params.language as any) || (!collection && params.collection)) {
+		// if collection is set in url but does not exists.
+		throw error(404, {
+			message: 'Not found'
+		});
+	}
 
-  if (user.status == 200) {
-    if (route.id != "/[language]/[collection]") {
-      throw redirect(
-        302,
-        `/${params.language || PUBLIC_CONTENT_LANGUAGES}/${collections[0].name}`
-      );
-    }
-    return {
-      user: user.user,
-    };
-  } else {
-    throw redirect(302, `/login`);
-  }
+	if (user.status == 200) {
+		if (route.id != '/[language]/[collection]') {
+			// else if language and collection both set in url
+			// filters collection based on reading permissions and redirects to first left one
+			let _filtered = collections.filter((c) => c?.permissions?.[user.user.role]?.read != false);
+			throw redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGES}/${_filtered[0].name}`);
+		}
+		if (collection?.permissions?.[user.user.role]?.read == false) {
+			throw error(404, {
+				message: 'No Access to this collection'
+			});
+		}
+		return {
+			user: user.user
+		};
+	} else {
+		throw redirect(302, `/login`);
+	}
 }
