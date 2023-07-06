@@ -125,10 +125,10 @@ export const actions: Actions = {
 		//if (!signUpForm.valid) return fail(400, { signUpForm });
 
 		// Validate with Lucia
-		const username = signUpFormSchema.data.username;
-		const email = signUpFormSchema.data.email.toLocaleLowerCase();
-		const password = signUpFormSchema.data.password;
-		const token = signUpFormSchema.data.token;
+		const username = signUpForm.data.username;
+		const email = signUpForm.data.email.toLocaleLowerCase();
+		const password = signUpForm.data.password;
+		const token = signUpForm.data.token;
 
 		let key = await auth.getKey('email', email).catch(() => null);
 		console.log('key', key);

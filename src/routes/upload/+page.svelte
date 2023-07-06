@@ -68,7 +68,7 @@
 
 		try {
 			// TODO: Add code to overwrite the existing image
-			const response = await axios.post(`/media/${paramUrl}`, formData, { headers: { 'X-Overwrite': 'true' } });
+			const response = await axios.post(`/mediafiles/${paramUrl}`, formData, { headers: { 'X-Overwrite': 'true' } });
 			const data = response.data;
 
 			if (data.error) {

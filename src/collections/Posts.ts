@@ -30,7 +30,7 @@ let schema: Schema = {
 
 		widgets.ImageUpload({
 			label: 'image',
-			path: 'mediafiles/images'
+			path: 'mediafiles/posts'
 		})
 	]
 };

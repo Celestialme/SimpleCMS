@@ -21,7 +21,7 @@ export function load({ params }) {
 		}
 
 		// Check if media files cached directory exists
-		const cachedDir = path.resolve('./mediathumbnails');
+		const cachedDir = path.resolve('./mediafiles/thumbnails');
 		ensureDirectoryExists(cachedDir);
 
 		const collections = fs.readdirSync(mediaDir);
@@ -48,7 +48,7 @@ export function load({ params }) {
 				let thumbnail;
 
 				if (['.jpeg', '.jpg', '.png', '.webp', '.tiff'].includes(fileExt)) {
-					thumbnail = `/mediathumbnails/${collection || ''}/${fileName}.avif`;
+					thumbnail = `/mediafiles/thumbnails/${collection || ''}/${fileName}.avif`;
 				} else if (['.docx', '.xlsx', '.pptx'].includes(fileExt)) {
 					thumbnail = `/path/to/your/icon/file.svg`;
 				}
