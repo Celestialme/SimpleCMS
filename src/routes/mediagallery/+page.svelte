@@ -110,7 +110,7 @@
 	// console.log(data);
 
 	// TODO : Allow pdf and doc image previews
-	const defaultData: Images[] = data.body;
+	const defaultData: Images[] | undefined = data.body;
 
 	let columnOrder: never[] = [];
 	let columnVisibility = {};
@@ -162,7 +162,7 @@
 	};
 
 	const options = writable<TableOptions<Images>>({
-		data: defaultData,
+		data: defaultData ?? [],
 		columns: localStorage.getItem('MediaTanstackConfiguration')
 			? JSON.parse(localStorage.getItem('MediaTanstackConfiguration')).map((item) => {
 					return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
@@ -284,29 +284,49 @@
 
 	let columnShow = false;
 
+	// TODO: Fix Grid search
 	function searchGrid(searchValue) {
 		// Get the data displayed in the grid
 		let gridData = images;
 
 		// Filter the data based on the search value
 		let filteredData = gridData.filter((item) => {
-			return item.name.toLowerCase().includes(searchValue.toLowerCase());
+			// Check if the image name or path contains the search query
+			return item.name.toLowerCase().includes(searchValue.toLowerCase()) || item.path.toLowerCase().includes(searchValue.toLowerCase());
 		});
 
 		// Update the data displayed in the grid with the filtered data
 		images = filteredData;
 	}
 
+	function searchTable(searchValue) {
+		// Get the data displayed in the table
+		let tableData = defaultData;
+
+		// Check if tableData is defined
+		if (tableData) {
+			// Filter the data based on the search value
+			let filteredData = tableData.filter((item) => {
+				// Check if the name property is defined
+				if (item.name) {
+					return item.name.toLowerCase().includes(searchValue.toLowerCase());
+				} else {
+					return false;
+				}
+			});
+
+			// Update the data displayed in the table with the filtered data
+			options.update((prev) => ({
+				...prev,
+				data: filteredData
+			}));
+		}
+	}
+
 	function getColumnByName(name) {
 		return $table.getAllLeafColumns().find((col) => {
 			return col.id == name;
 		});
-	}
-
-	function closeOpenStates() {
-		searchGrid = false;
-		filterMenuOpen = false;
-		columnShow = false;
 	}
 
 	// TODO: Check if no mediafiles exist
@@ -333,7 +353,17 @@
 			<!-- TODO: add actual search -->
 			<!-- search input grid -->
 			<div class="btn-group variant-filled-surface">
-				<input type="text" class="input" placeholder="Search Grid..." />
+				<input
+					type="text"
+					class="input"
+					placeholder="Search Grid..."
+					on:input={(event) => {
+						if (event.target instanceof HTMLInputElement) {
+							//console.log(event.target.value);
+							searchGrid(event.target.value);
+						}
+					}}
+				/>
 				<button type="submit" class="btn-icon">
 					<iconify-icon icon="material-symbols:search" width="24" />
 				</button>
@@ -342,7 +372,17 @@
 			<!-- search input tanstack -->
 			<div class="flex items-center gap-4">
 				<div class="btn-group variant-filled-surface">
-					<input type="text" class="input" placeholder="Search Table..." />
+					<input
+						type="text"
+						class="input"
+						placeholder="Search Table..."
+						on:input={(event) => {
+							if (event.target instanceof HTMLInputElement) {
+								// console.log(event.target.value);
+								searchTable(event.target.value);
+							}
+						}}
+					/>
 					<button type="submit" class="btn-icon">
 						<iconify-icon icon="material-symbols:search" width="24" />
 					</button>
