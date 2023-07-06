@@ -233,10 +233,11 @@
 </script>
 
 <!-- TODO: Fix input Value -->
-<div class="input-container rounded">
+<div class="input-container">
 	<!-- TODO: Enhance color change of numbers only -->
-	<!-- svelte-ignore a11y-label-has-associated-control -->
+
 	<label
+		for="title-input"
 		class={title.length >= 50 && title.length <= 60
 			? 'input-label green'
 			: title.length >= 30 && title.length <= 49
@@ -245,21 +246,25 @@
 			? 'input-label'
 			: 'input-label red'}
 	>
-		<div class="flex justify-between">
+		<div class="flex items-center justify-between">
 			<div class="text-black dark:text-white">{$LL.WIDGET_Seo_Suggetion_Title()}</div>
-			<div>
-				{$LL.WIDGET_Seo_Suggetion_Character()}
-				{title.length}
-				{$LL.WIDGET_Seo_Suggetion_WidthDesktop()}
-				{titleCharacterWidth}/600px {$LL.WIDGET_Seo_Suggetion_WidthMobile()}
-				{titleCharacterWidth}/654px
+			<div class="flex flex-col text-xs sm:flex-row sm:text-base">
+				<div>
+					{$LL.WIDGET_Seo_Suggetion_Character()}
+					<span class="text-primary-500">{title.length}</span>
+				</div>
+				<div>
+					{$LL.WIDGET_Seo_Suggetion_WidthDesktop()}
+					<span class="text-primary-500">{titleCharacterWidth}</span>/600px {$LL.WIDGET_Seo_Suggetion_WidthMobile()}
+					<span class="text-primary-500">{titleCharacterWidth}</span>/654px
+				</div>
 			</div>
-		</div>
-	</label>
+		</div></label
+	>
 	<input
 		id="title-input"
 		type="text"
-		class="input rounded-md"
+		class="input"
 		placeholder={$LL.WIDGET_Seo_Suggetion_SeoTitle()}
 		required
 		bind:value={title}
@@ -280,12 +285,18 @@
 	>
 		<div class="flex justify-between">
 			<div class="text-black dark:text-white">{$LL.WIDGET_Seo_Suggetion_Description()}</div>
-			<div>
-				{$LL.WIDGET_Seo_Suggetion_Character()}
-				{description.length}
-				{$LL.WIDGET_Seo_Suggetion_WidthDesktop()}
-				{descriptionCharacterWidth}/970px {$LL.WIDGET_Seo_Suggetion_WidthMobile()}
-				{descriptionCharacterWidth}/981px
+			<div class="flex flex-col text-xs sm:flex-row sm:text-base">
+				<div>
+					{$LL.WIDGET_Seo_Suggetion_Character()}
+					<span class="text-primary-500">{description.length}</span>
+				</div>
+				<div>
+					{$LL.WIDGET_Seo_Suggetion_WidthDesktop()}
+					<span class="text-primary-500">{descriptionCharacterWidth}</span>/970px
+
+					{$LL.WIDGET_Seo_Suggetion_WidthMobile()}
+					<span class="text-primary-500">{descriptionCharacterWidth}</span>/981px
+				</div>
 			</div>
 		</div>
 	</label>
@@ -297,20 +308,21 @@
 		cols="50"
 		bind:value={description}
 		on:input={handleDescriptionChange}
-		class="input rounded-md"
+		class="input"
 	/>
 </div>
+
 <!-- CTR display -->
 <div class="dark:boder-white relative mt-2 border-t border-surface-500 dark:border-white dark:bg-transparent">
-	<h2 class="mt-2 text-center">
-		<span class="rounded bg-surface-500 p-1 text-2xl text-white dark:bg-white dark:text-black">{$LL.WIDGET_Seo_Suggetion_SeoPreview()}</span>
+	<h2 class="mt-1 text-right text-xl text-white sm:text-center sm:text-2xl">
+		{$LL.WIDGET_Seo_Suggetion_SeoPreview()}
 	</h2>
 
 	<!-- Toggle Desktop/Mobile buttons -->
 	<div class="absolute left-0 top-1 flex justify-between gap-2">
 		<button
 			on:click={() => (SeoPreviewToggle = !SeoPreviewToggle)}
-			class="{SeoPreviewToggle ? 'hidden' : 'block'} btn variant-filled-tertiary flex items-center justify-center"
+			class="{SeoPreviewToggle ? 'hidden' : 'block'} btn btn-sm variant-filled-tertiary flex items-center justify-center"
 		>
 			<iconify-icon icon="ion:desktop-outline" width="20" class="mr-1" />
 			Desktop
@@ -320,7 +332,7 @@
 			on:click={() => (SeoPreviewToggle = !SeoPreviewToggle)}
 			class="{SeoPreviewToggle ? 'block' : 'hidden'} btn variant-filled-tertiary flex items-center justify-center"
 		>
-			<iconify-icon icon="bi:phone" width="20" class="mr-1" />
+			<iconify-icon icon="bi:phone" width="18" class="mr-1" />
 			Mobile
 		</button>
 	</div>
@@ -328,19 +340,21 @@
 	{#if SeoPreviewToggle}
 		<!-- mobile preview -->
 		<!-- TODO: add mobile login display -->
-		<div class="card variant-glass-secondary mx-auto mt-4 h-28 max-w-sm p-4">
-			<p class="flex items-center px-4 !text-xs text-surface-400">
+		<div class="min-h-30 card variant-glass-secondary mx-auto mt-4 max-w-sm p-1 sm:p-2 md:p-4">
+			<p class="flex items-center !text-xs text-surface-400">
 				<iconify-icon icon="mdi:world" width="18" class="mr-2 text-white" />{hostUrl}
 			</p>
-			<h3 class="px-4 !font-medium text-primary-500">{title}</h3>
-			<p class=" mb-2 px-4 pb-4 text-lg text-black dark:text-white">{description}</p>
+			<p class="text-sm !font-medium text-primary-500 sm:px-4">{title}</p>
+			<p class=" mb-2 !text-sm text-black dark:text-white sm:px-4">{description}</p>
 		</div>
 	{:else}
 		<!-- desktop preview-->
-		<div class="card variant-glass-secondary mt-4 h-28 p-4">
-			<p class="px-4 !text-xs text-surface-400">{hostUrl}</p>
-			<h3 class="px-4 !font-medium text-primary-500">{title}</h3>
-			<p class=" mb-2 px-4 pb-4 text-lg text-black dark:text-white">{description}</p>
+		<div class="card variant-glass-secondary mt-4 p-1 sm:p-2 md:p-4">
+			<p class="flex items-center !text-xs text-surface-400 sm:px-4">
+				<iconify-icon icon="mdi:world" width="18" class="mr-2 text-white" />{hostUrl}
+			</p>
+			<p class="!font-medium text-primary-500 sm:px-4">{title}</p>
+			<p class=" mb-2 pb-4 text-lg text-black dark:text-white sm:px-4">{description}</p>
 		</div>
 	{/if}
 </div>
@@ -348,20 +362,22 @@
 <!-- Mobile -->
 <div class="md:hidden">
 	<h3 class="mb-2 text-center">{$LL.WIDGET_Seo_Suggetion_ListOfSuggestion()}</h3>
-	<div class="flex">
-		<ProgressRadial value={progress} stroke={200} meter="stroke-primary-500" class="mr-6 mt-1 w-20  text-white sm:w-28">{progress}%</ProgressRadial>
-		<div class="flex flex-col justify-start">
+	<div class="flex items-center justify-around">
+		<ProgressRadial value={progress} stroke={200} meter="stroke-primary-500" width="w-20 sm:w-28" class="mr-6 mt-1 text-white "
+			>{progress}%</ProgressRadial
+		>
+		<div class="flex flex-col items-center justify-start text-xs sm:text-sm">
 			<div class="gap sm:flex sm:gap-4">
 				<div class="flex justify-center gap-2">
-					<iconify-icon icon="mdi:close-octagon" class="text-error-500" width="24" />
+					<iconify-icon icon="mdi:close-octagon" class="text-error-500" width="20" />
 					<span class="flex-auto">0 - 49</span>
 				</div>
 				<div class="flex justify-center gap-2">
-					<span><iconify-icon icon="bi:hand-thumbs-up-fill" width="24" class="text-tertiary-500" /></span>
+					<span><iconify-icon icon="bi:hand-thumbs-up-fill" width="20" class="text-tertiary-500" /></span>
 					<span class="flex-auto">50 - 79</span>
 				</div>
 				<div class="flex justify-center gap-2">
-					<span><iconify-icon icon="material-symbols:check-circle-outline" class="text-success-500" width="24" /></span>
+					<span><iconify-icon icon="material-symbols:check-circle-outline" class="text-success-500" width="20" /></span>
 					<span class="flex-auto">80 - 100</span>
 				</div>
 			</div>
