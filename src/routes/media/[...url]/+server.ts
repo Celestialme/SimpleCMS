@@ -6,11 +6,72 @@
 // TODO Handle Thumbnail generation for PDF and other office documents
 
 import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
-console.log(PUBLIC_MEDIA_OUTPUT_FORMAT);
+//console.log(PUBLIC_MEDIA_OUTPUT_FORMAT);
 import type { RequestHandler } from '@sveltejs/kit';
 import fs from 'fs';
 import mime from 'mime-types';
 import sharp from 'sharp';
+import { error } from '@sveltejs/kit';
+
+// handles POST requests for multiple mediafiles files
+export const GET: RequestHandler = async ({ params }) => {
+	try {
+		if (!params.url) {
+			throw error(400, 'Bad request');
+		}
+		const data = await fs.promises.readFile(`./mediafiles/${params.url}`);
+		return new Response(data, {
+			headers: {
+				'Content-Type': mime.lookup(params.url) as string
+			}
+		});
+	} catch (err: any) {
+		console.error(err);
+		if (err.code === 'ENOENT') {
+			throw error(404, 'File not found');
+		} else if (err.code === 'EACCES') {
+			throw error(403, 'Access denied');
+		} else if (err.code === 'ERR_FS_FILE_TOO_LARGE') {
+			throw error(413, 'File too large');
+		} else if (err.code === 'EMFILE') {
+			throw error(500, 'Too many open files');
+		} else if (err.code === 'EBUSY') {
+			throw error(500, 'Resource busy or locked');
+		} else {
+			throw error(500, 'Internal server error');
+		}
+	}
+};
+
+// handles POST requests for multiple mediathumbnail files
+export const _getMediaThumbnail: RequestHandler = async ({ params }) => {
+	try {
+		if (!params.url) {
+			throw error(400, 'Bad request');
+		}
+		const data = await fs.promises.readFile(`./mediathumbnails/${params.url}`);
+		return new Response(data, {
+			headers: {
+				'Content-Type': mime.lookup(params.url) as string
+			}
+		});
+	} catch (err: any) {
+		console.error(err);
+		if (err.code === 'ENOENT') {
+			throw error(404, 'File not found');
+		} else if (err.code === 'EACCES') {
+			throw error(403, 'Access denied');
+		} else if (err.code === 'ERR_FS_FILE_TOO_LARGE') {
+			throw error(413, 'File too large');
+		} else if (err.code === 'EMFILE') {
+			throw error(500, 'Too many open files');
+		} else if (err.code === 'EBUSY') {
+			throw error(500, 'Resource busy or locked');
+		} else {
+			throw error(500, 'Internal server error');
+		}
+	}
+};
 
 // handles POST requests for multiple media files
 export const POST: RequestHandler = async ({ request, params }) => {
