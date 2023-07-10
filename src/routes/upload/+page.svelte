@@ -45,7 +45,7 @@
 		if (originalImage && optimizedImage) {
 			try {
 				await axios.delete(`/mediafiles/${paramUrl}/${optimizedImage.name}`);
-				await axios.delete(`/mediathumbnails/${paramUrl}/${thumbnailImage.name}`);
+				await axios.delete(`/mediafiles/${paramUrl}/thumbnails/${thumbnailImage.name}`);
 			} catch (error) {
 				console.error(error);
 			}

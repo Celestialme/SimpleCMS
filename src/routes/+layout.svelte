@@ -156,6 +156,8 @@
 		target: 'SystemLanguage',
 		placement: 'right'
 	};
+
+	import HeaderControls from '@src/components/HeaderControls.svelte';
 </script>
 
 <!-- TODO: Fix Right And mobile Version of sidebars -->
@@ -198,11 +200,11 @@
 </div>
 
 <div class="flex flex-wrap justify-center text-xs">
-	<button class="btn-sm variant-outline-primary" on:click={() => toggleLeftSidebar.click()}>toggleLeft</button>
-	<button class="btn-sm variant-outline-primary" on:click={() => toggleLeftSidebar.clickSwitchSideBar()}>toggleLeftCollapse</button>
-	<button class="btn-sm variant-outline-primary" on:click={() => toggleRightSidebar.click()}>toggleRight</button>
-	<button class="btn-sm variant-outline-primary" on:click={() => togglePageHeader.click()}>togglePageHeader</button>
-	<button class="btn-sm variant-outline-primary" on:click={() => togglePageFooter.click()}>togglePageFooter</button>
+	<button class="btn-sm variant-outline-primary" on:click={toggleLeftSidebar.click}>toggleLeft</button>
+	<button class="btn-sm variant-outline-primary" on:click={toggleLeftSidebar.clickSwitchSideBar}>toggleLeftCollapse</button>
+	<button class="btn-sm variant-outline-primary" on:click={toggleRightSidebar.toggle()}>toggleRight</button>
+	<button class="btn-sm variant-outline-primary" on:click={togglePageHeader.toggle}>togglePageHeader</button>
+	<button class="btn-sm variant-outline-primary" on:click={togglePageFooter.toggle}>togglePageFooter</button>
 </div> -->
 <AppShell
 	slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
@@ -210,11 +212,11 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 {$toggleLeftSidebar === 'full' ? 'w-[220px]' : 'w-fit'}
 {$toggleLeftSidebar === 'closed' ? 'hidden' : 'block'}"
 	slotSidebarRight="h-full relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center
-	{$toggleRightSidebar === 'false' ? 'hidden' : 'block'}"
-	slotPageHeader="bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-b relative
-	{$togglePageHeader === 'false' ? 'hidden' : 'block'}"
-	slotPageFooter="bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-t 
-	{$togglePageFooter === 'false' ? 'hidden' : 'block'}"
+	{$toggleRightSidebar === 'closed' ? 'hidden' : 'block'}"
+	slotPageHeader="relative bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1  border-b 
+	{$togglePageHeader === 'closed' ? 'hidden' : 'block'}"
+	slotPageFooter="relative bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1  border-t 
+	{$togglePageFooter === 'closed' ? 'hidden' : 'block'}"
 >
 	<svelte:fragment slot="sidebarLeft">
 		<!-- Corporate Identity Full-->
@@ -389,21 +391,11 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 	</svelte:fragment>
 
 	<svelte:fragment slot="sidebarRight">
-		{#if $mode == 'edit' || $mode == 'create'}
-			<ControlPanel />
-		{/if}
+		<ControlPanel />
 	</svelte:fragment>
 
 	<svelte:fragment slot="pageHeader">
-		<div>pageHeader {$mode}</div>
-
-		{#if $mode === 'create'}
-			<div>pageHeader mobile create header</div>
-		{/if}
-
-		{#if $mode === 'edit'}
-			<div>pageHeader mobile edit header</div>
-		{/if}
+		<HeaderControls />
 	</svelte:fragment>
 
 	<!-- Router Slot -->

@@ -388,7 +388,7 @@
 	<!-- Row 1 for Mobile -->
 	<div class="flex items-center justify-between">
 		{#if $toggleLeftSidebar === 'closed'}
-			<button type="button" on:keydown on:click={() => toggleLeftSidebar.click()} class="btn-icon variant-ghost-surface mt-1">
+			<button type="button" on:keydown on:click={toggleLeftSidebar.click} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
@@ -399,7 +399,7 @@
 					{categories[0].name}
 				</div>{/if}
 			<div class="-mt-2 flex justify-start text-sm font-bold uppercase dark:text-white md:text-2xl lg:text-xl">
-				{#if $collection.icon}<span> <iconify-icon icon={$collection.icon} width="24" class="mr-1 text-red-500 sm:mr-2" /></span>{/if}
+				{#if $collection.icon}<span> <iconify-icon icon={$collection.icon} width="24" class="mr-1 text-error-500 sm:mr-2" /></span>{/if}
 				{#if $collection.name}
 					<div class="flex max-w-[65px] whitespace-normal leading-3 sm:mr-2 sm:max-w-none md:mt-0 md:leading-none xs:mt-1">
 						{$collection.name}

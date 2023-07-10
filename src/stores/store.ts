@@ -103,7 +103,7 @@ export const toggleLeftSidebar = fsm(getDefaultState(), {
 			} else if (get(screenWidth) === 'tablet') {
 				return 'collapsed';
 			} else {
-				return 'collapse';
+				return 'full';
 			}
 		},
 		clickSwitchSideBar: () => get(userPreferredState)
@@ -127,19 +127,19 @@ export const toggleLeftSidebar = fsm(getDefaultState(), {
 	}
 });
 
-export const togglePageHeader = fsm('false', {
-	false: { click: () => 'true' },
-	true: { click: () => 'false' }
+export const togglePageHeader = fsm('closed', {
+	closed: { open: () => 'open' },
+	open: { close: () => 'closed' }
 });
 
-export const togglePageFooter = fsm('false', {
-	false: { click: () => 'true' },
-	true: { click: () => 'false' }
+export const togglePageFooter = fsm('closed', {
+	closed: { open: () => 'open' },
+	open: { close: () => 'closed' }
 });
 
-export const toggleRightSidebar = fsm('false', {
-	false: { click: () => 'true' },
-	true: { click: () => 'false' }
+export const toggleRightSidebar = fsm('closed', {
+	closed: { open: () => 'open' },
+	open: { close: () => 'closed' }
 });
 
 export let width = writable('mobile');
@@ -149,42 +149,44 @@ export const handleSidebarToggle = () => {
 	if (get(screenWidth) === 'mobile') {
 		if (get(mode) === 'view') {
 			// logic for view mode on mobile
-			toggleLeftSidebar.click();
-			toggleRightSidebar.click('false');
-			togglePageHeader.click('false');
-			togglePageFooter.click('false');
+			toggleLeftSidebar.click('closed');
+			toggleRightSidebar.close();
+			togglePageHeader.close();
+			togglePageFooter.close();
 		} else {
 			// logic for all other modes on mobile
-			toggleLeftSidebar.clickBack();
-			togglePageHeader.click('true');
-			togglePageFooter.click('true');
+			toggleLeftSidebar.clickBack('closed');
+			toggleRightSidebar.close();
+			togglePageHeader.open();
+			togglePageFooter.open();
 		}
 	} else if (get(screenWidth) === 'tablet') {
 		if (get(mode) === 'view') {
 			// logic for view mode on tablet
 			toggleLeftSidebar.click('closed');
-			toggleRightSidebar.click('false');
-			togglePageHeader.click('false');
-			togglePageFooter.click('false');
+			toggleRightSidebar.close();
+			togglePageHeader.close();
+			togglePageFooter.close();
 		} else {
 			// logic for all other modes on tablet
 			toggleLeftSidebar.clickBack();
-			togglePageHeader.click('true');
-			togglePageFooter.click('true');
+			toggleRightSidebar.close();
+			togglePageHeader.open();
+			togglePageFooter.open();
 		}
 	} else if (get(screenWidth) === 'desktop') {
 		if (get(mode) === 'view') {
 			// logic for view mode on desktop
 			toggleLeftSidebar.click('collapsed');
-			toggleRightSidebar.click('false');
-			togglePageHeader.click('false');
-			togglePageFooter.click('false');
+			toggleRightSidebar.close();
+			togglePageHeader.close();
+			togglePageFooter.close();
 		} else {
 			// logic for all other modes on desktop
 			toggleLeftSidebar.click('collapsed');
-			toggleRightSidebar.click('true');
-			togglePageHeader.click('false');
-			togglePageFooter.click('false');
+			toggleRightSidebar.open();
+			togglePageHeader.open();
+			togglePageFooter.close();
 		}
 	}
 };
