@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections';
-	import { mode, switchSideBar } from '@src/stores/store';
+	import { mode, toggleLeftSidebar } from '@src/stores/store';
 	import { user } from '@src/stores/store';
 
 	// typesafe-i18n
@@ -31,7 +31,7 @@
 				</svelte:fragment>
 
 				<svelte:fragment slot="summary"
-					>{#if $switchSideBar}
+					>{#if $toggleLeftSidebar === 'full'}
 						<!-- TODO: Translation not updating -->
 						<p>{category.name}</p>
 					{/if}
@@ -45,7 +45,7 @@
 				<svelte:fragment slot="content">
 					<!-- filtered by User Role Permission -->
 					{#each category.collections.filter((c) => c?.permissions?.[$user.role]?.read != false) as _collection}
-						{#if $switchSideBar}
+						{#if $toggleLeftSidebar === 'full'}
 							<!-- switchSideBar expanded -->
 							<div
 								class="-mx-4 flex flex-row items-center py-1 pl-3 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
@@ -80,7 +80,7 @@
 	</Accordion>
 
 	<!-- Gallery -->
-	{#if $switchSideBar}
+	{#if $toggleLeftSidebar === 'full'}
 		<!-- switchSideBar expanded -->
 		<a href="/mediagallery" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-primary-600" />
@@ -95,7 +95,7 @@
 	{/if}
 
 	<!-- test image -->
-	{#if $switchSideBar}
+	{#if $toggleLeftSidebar === 'full'}
 		<!-- switchSideBar expanded -->
 		<a href="/upload" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-tertiary-600" />

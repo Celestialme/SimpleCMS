@@ -1,4 +1,5 @@
-import { writable, type Writable } from 'svelte/store';
+import { writable, derived, type Writable } from 'svelte/store';
+import { get } from 'svelte/store';
 import { PUBLIC_SYSTEM_LANGUAGE, PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 import { setLocale } from '@src/i18n/i18n-svelte';
 import type { Locales } from '@src/i18n/i18n-types';
@@ -35,12 +36,172 @@ export let deleteEntry: Writable<() => any> = writable(() => {});
 // Store image data while editing
 export const saveEditedImage: Writable<boolean> = writable(false);
 
-// Store for Sidebars
-export const toggleLeftSidebar: Writable<boolean> = writable(true);
-export const toggleRightSidebar: Writable<boolean> = writable(true);
-export const toggleHeaderSidebar: Writable<boolean> = writable(false);
-export const toggleFooterSidebar: Writable<boolean> = writable(false);
-export const switchSideBar: Writable<boolean> = writable(true);
-
 // Store ListboxValue
 export const storeListboxValue: Writable<string> = writable('create');
+
+// Update screenWidth whenever the window is resized
+export const screenWidth = writable(getScreenWidthName());
+
+if (typeof window !== 'undefined') {
+	// Update screenWidth whenever the window is resized
+	window.addEventListener('resize', () => {
+		screenWidth.set(getScreenWidthName());
+	});
+}
+
+function getScreenWidthName() {
+	if (typeof window === 'undefined') {
+		// Return a default value when running on the server-side
+		return 'desktop';
+	}
+
+	const width = window.innerWidth;
+	if (width <= 567) {
+		return 'mobile';
+	} else if (width >= 568 && width <= 767) {
+		return 'tablet';
+	} else {
+		return 'desktop';
+	}
+}
+
+// Sidebar State Machine logic
+import fsm from 'svelte-fsm';
+
+// Create a derived store that depends on both mode and screenWidth
+const initialState = derived([mode, screenWidth], ([$mode, $screenWidth]) => {
+	if ($mode === 'create') {
+		return getDefaultState();
+	} else {
+		if ($screenWidth === 'mobile') {
+			return 'closed';
+		} else if ($screenWidth === 'tablet') {
+			return 'collapsed';
+		} else {
+			return 'full';
+		}
+	}
+});
+
+function getDefaultState() {
+	if (get(screenWidth) === 'mobile') {
+		return 'closed';
+	} else if (get(screenWidth) === 'tablet') {
+		return 'collapsed';
+	} else {
+		return 'full';
+	}
+}
+
+export const toggleLeftSidebar = fsm(getDefaultState(), {
+	closed: {
+		click: (nextState) => {
+			if (nextState === 'closed') {
+				return 'closed';
+			} else if (get(screenWidth) === 'mobile') {
+				return 'closed';
+			} else if (get(screenWidth) === 'tablet') {
+				return 'collapsed';
+			} else {
+				return 'collapse';
+			}
+		},
+		clickSwitchSideBar: () => get(userPreferredState)
+	},
+
+	collapsed: {
+		click: () => 'full',
+		clickSwitchSideBar: () => 'full',
+		clickBack: () => 'closed'
+	},
+	full: {
+		click: () => {
+			if (get(screenWidth) === 'mobile' || get(screenWidth) === 'tablet') {
+				return 'collapsed';
+			} else {
+				return 'closed';
+			}
+		},
+		clickSwitchSideBar: () => 'collapsed',
+		clickBack: () => get(userPreferredState)
+	}
+});
+
+export const togglePageHeader = fsm('false', {
+	false: { click: () => 'true' },
+	true: { click: () => 'false' }
+});
+
+export const togglePageFooter = fsm('false', {
+	false: { click: () => 'true' },
+	true: { click: () => 'false' }
+});
+
+export const toggleRightSidebar = fsm('false', {
+	false: { click: () => 'true' },
+	true: { click: () => 'false' }
+});
+
+export let width = writable('mobile');
+export let userPreferredState = writable('collapsed');
+
+export const handleSidebarToggle = () => {
+	if (get(screenWidth) === 'mobile') {
+		if (get(mode) === 'view') {
+			// logic for view mode on mobile
+			toggleLeftSidebar.click();
+			toggleRightSidebar.click('false');
+			togglePageHeader.click('false');
+			togglePageFooter.click('false');
+		} else {
+			// logic for all other modes on mobile
+			toggleLeftSidebar.clickBack();
+			togglePageHeader.click('true');
+			togglePageFooter.click('true');
+		}
+	} else if (get(screenWidth) === 'tablet') {
+		if (get(mode) === 'view') {
+			// logic for view mode on tablet
+			toggleLeftSidebar.click('closed');
+			toggleRightSidebar.click('false');
+			togglePageHeader.click('false');
+			togglePageFooter.click('false');
+		} else {
+			// logic for all other modes on tablet
+			toggleLeftSidebar.clickBack();
+			togglePageHeader.click('true');
+			togglePageFooter.click('true');
+		}
+	} else if (get(screenWidth) === 'desktop') {
+		if (get(mode) === 'view') {
+			// logic for view mode on desktop
+			toggleLeftSidebar.click('collapsed');
+			toggleRightSidebar.click('false');
+			togglePageHeader.click('false');
+			togglePageFooter.click('false');
+		} else {
+			// logic for all other modes on desktop
+			toggleLeftSidebar.click('collapsed');
+			toggleRightSidebar.click('true');
+			togglePageHeader.click('false');
+			togglePageFooter.click('false');
+		}
+	}
+};
+
+// TODO: Add Screen/Browser resize without breaking load
+// screenWidth.subscribe(($screenWidth) => {
+// 	console.log('screenWidth changed:', $screenWidth);
+// 	if ($screenWidth === 'mobile') {
+// 		toggleLeftSidebar.click('closed');
+// 	} else if ($screenWidth === 'tablet') {
+// 		toggleLeftSidebar.click('collapsed');
+// 	} else {
+// 		toggleLeftSidebar.click('full');
+// 	}
+// });
+
+export const handleSwitchSideBar = () => {
+	userPreferredState.set(get(toggleLeftSidebar));
+	toggleLeftSidebar.clickSwitchSideBar(); // This line changes the state of the left sidebar according to the clickSwitchSideBar transition
+};

@@ -3,59 +3,23 @@
 	import LL from '@src/i18n/i18n-svelte';
 
 	import { createEventDispatcher } from 'svelte';
-	import {
-		mode,
-		switchSideBar,
-		toggleLeftSidebar,
-		toggleRightSidebar,
-		toggleHeaderSidebar,
-		toggleFooterSidebar,
-		storeListboxValue
-	} from '@src/stores/store';
+	import { mode, handleSidebarToggle, storeListboxValue } from '@src/stores/store';
 
 	const dispatch = createEventDispatcher();
 
 	let dropdownOpen = false;
 	let { actionname, buttonClass, iconValue } = getButtonAndIconValues($storeListboxValue);
 
-	// get the current window width
-	let width = window.innerWidth;
-
-	window.addEventListener('resize', () => {
-		width = window.innerWidth;
-	});
-
 	function handleButtonClick() {
-		mode.set('view');
+		mode.set($storeListboxValue);
 		dispatch($storeListboxValue);
 		dropdownOpen = false;
-		// get the current window width let width = window.innerWidth;
-		// use the custom screens
-		if (width <= 567) {
-			// For mobile toggle Header/Footer Sidebars
-			toggleLeftSidebar.set(true);
-			switchSideBar.set(true);
-			toggleHeaderSidebar.set(false);
-			toggleFooterSidebar.set(false);
-			toggleRightSidebar.set(true);
-		} else if (width >= 568 && width <= 767) {
-			// use switchSideBar for md
-			toggleLeftSidebar.set(false);
-			switchSideBar.set(false);
-			toggleHeaderSidebar.set(true);
-			toggleFooterSidebar.set(true);
-			toggleRightSidebar.set(false);
-		} else if (width > 768) {
-			// use toggleRightSidebar for xl and above
-			toggleLeftSidebar.set(false);
-			switchSideBar.set(true);
-			toggleHeaderSidebar.set(false);
-			toggleFooterSidebar.set(false);
-			toggleRightSidebar.set(false);
-		}
+
+		// Automatically switch the correct sidebar
+		handleSidebarToggle();
 	}
 
-	function handleOptionClick(value: string) {
+	function handleOptionClick(value) {
 		storeListboxValue.set(value);
 		//console.log('storeListboxValue:', $storeListboxValue);
 
@@ -63,7 +27,7 @@
 		dropdownOpen = false;
 	}
 
-	function getButtonAndIconValues(storeListboxValue: string) {
+	function getButtonAndIconValues(storeListboxValue: Mode) {
 		let actionname = '';
 		let buttonClass = '';
 		let iconValue = '';

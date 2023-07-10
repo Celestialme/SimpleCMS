@@ -224,54 +224,6 @@ export function formatSize(sizeInBytes) {
 	}
 }
 
-//handles sidebar toggle logic
-// let width = window.innerWidth;
-
-// 	window.addEventListener('resize', () => {
-// 		width = window.innerWidth;
-// 	});
-
-// export function toggle(width) {
-//   const dispatch = createEventDispatcher();
-
-//   let toggleLeftSidebar = false;
-//   let switchSideBar = false;
-//   let toggleHeaderSidebar = false;
-//   let toggleFooterSidebar = false;
-//   let toggleRightSidebar = false;
-
-//   if (width <= 567) {
-//     // For mobile toggle Header/Footer Sidebars
-//     toggleLeftSidebar = true;
-//     switchSideBar = true;
-//     toggleHeaderSidebar = false;
-//     toggleFooterSidebar = false;
-//     toggleRightSidebar = true;
-//   } else if (width >= 568 && width <= 767) {
-//     // use switchSideBar for md
-//     toggleLeftSidebar = false;
-//     switchSideBar = false;
-//     toggleHeaderSidebar = true;
-//     toggleFooterSidebar = true;
-//     toggleRightSidebar = false;
-//   } else if (width > 768) {
-//     // use toggleRightSidebar for xl and above
-//     toggleLeftSidebar = false;
-//     switchSideBar = true;
-//     toggleHeaderSidebar = false;
-//     toggleFooterSidebar = false;
-//     toggleRightSidebar = false;
-//   }
-
-//   return {
-//     toggleLeftSidebar,
-//     switchSideBar,
-//     toggleHeaderSidebar,
-//     toggleFooterSidebar,
-//     toggleRightSidebar,
-//   };
-// }
-
 // Replaces the locale slug in a URL.
 //
 // If the `full` argument is set to `true`, the full URL is returned as a string.

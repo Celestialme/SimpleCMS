@@ -16,13 +16,20 @@
 	import { goto } from '$app/navigation';
 	import {
 		mode,
-		switchSideBar,
+		handleSidebarToggle,
+		screenWidth,
+		userPreferredState,
 		toggleLeftSidebar,
 		toggleRightSidebar,
-		toggleHeaderSidebar,
-		toggleFooterSidebar,
+		togglePageHeader,
+		togglePageFooter,
 		storeListboxValue
 	} from '@src/stores/store';
+
+	import { collection } from '@src/collections';
+	// Use handleSidebarToggle as a reactive statement to automatically switch the correct sidebar
+	$: handleSidebarToggle;
+
 	import { contentLanguage } from '@src/stores/store';
 
 	import axios from 'axios';
@@ -72,7 +79,7 @@
 	// Lucia
 	// TODO: Fix User DATA
 	import { user } from '@src/stores/store';
-	console.log('user', $user);
+	//console.log('user', $user);
 
 	// $: user = data.user;
 	// $: avatarSrc = user?.avatar;
@@ -152,39 +159,75 @@
 </script>
 
 <!-- TODO: Fix Right And mobile Version of sidebars -->
-<!-- <div class="flex flex-col">
-	<div>toggleLeftSidebar={$toggleLeftSidebar}</div>
-	<div>switchSideBar={$switchSideBar}</div>
-	<div>toggleRightSidebar={$toggleRightSidebar}</div>
-	<div>toggleHeaderSidebar={$toggleHeaderSidebar}</div>
-	<div>toggleFooterSidebar={$toggleFooterSidebar}</div>
-	<div>mode={$mode}</div>
-<div>storeListboxValue ={$storeListboxValue}</div>
-</div> -->
+<!-- <div
+	class="flex flex-wrap justify-center
+ text-xs"
+>
+	<div class="mx-2 flex flex-col items-center">
+		Mode
+		<div class="font-bold text-primary-500">{$mode}</div>
+	</div>
+	<div class="mx-2 flex flex-col items-center">
+		screenWidth
+		<div class="font-bold text-primary-500">{$screenWidth}</div>
+	</div>
+	<div class="mx-2 flex flex-col items-center">
+		userPreferredState
+		<div class="font-bold text-primary-500">{$userPreferredState}</div>
+	</div>
+	<div class="mx-2 flex flex-col items-center">
+		toggleLeftSidebar
+		<div class="font-bold text-primary-500">{$toggleLeftSidebar}</div>
+	</div>
+	<div class="mx-2 flex flex-col items-center">
+		toggleRightSidebar
+		<div class="font-bold text-primary-500">{$toggleRightSidebar}</div>
+	</div>
+	<div class="mx-2 flex flex-col items-center">
+		togglePageHeader
+		<div class="font-bold text-primary-500">{$togglePageHeader}</div>
+	</div>
+	<div class="mx-2 flex flex-col items-center">
+		togglePageFooter
+		<div class="font-bold text-primary-500">{$togglePageFooter}</div>
+	</div>
+	<div class="mx-2 flex flex-col items-center">
+		storeListboxValue
+		<div class="font-bold text-primary-500">{$storeListboxValue}</div>
+	</div>
+</div>
 
+<div class="flex flex-wrap justify-center text-xs">
+	<button class="btn-sm variant-outline-primary" on:click={() => toggleLeftSidebar.click()}>toggleLeft</button>
+	<button class="btn-sm variant-outline-primary" on:click={() => toggleLeftSidebar.clickSwitchSideBar()}>toggleLeftCollapse</button>
+	<button class="btn-sm variant-outline-primary" on:click={() => toggleRightSidebar.click()}>toggleRight</button>
+	<button class="btn-sm variant-outline-primary" on:click={() => togglePageHeader.click()}>togglePageHeader</button>
+	<button class="btn-sm variant-outline-primary" on:click={() => togglePageFooter.click()}>togglePageFooter</button>
+</div> -->
 <AppShell
 	slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
-dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10 
-{$switchSideBar ? 'w-[220px]' : 'w-fit'}
-{$toggleLeftSidebar ? 'hidden' : 'block'}"
-	slotSidebarRight="h-full relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center 
-	{$toggleRightSidebar ? 'hidden' : 'block'}"
-	slotPageHeader="bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-b relative hidden 
-	{toggleHeaderSidebar ? 'hidden' : 'block'}"
-	slotPageFooter="bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-t relative hidden 
-	{$toggleFooterSidebar ? 'hidden' : 'block'}"
+dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10
+{$toggleLeftSidebar === 'full' ? 'w-[220px]' : 'w-fit'}
+{$toggleLeftSidebar === 'closed' ? 'hidden' : 'block'}"
+	slotSidebarRight="h-full relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center
+	{$toggleRightSidebar === 'false' ? 'hidden' : 'block'}"
+	slotPageHeader="bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-b relative
+	{$togglePageHeader === 'false' ? 'hidden' : 'block'}"
+	slotPageFooter="bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1 h-10 border-t 
+	{$togglePageFooter === 'false' ? 'hidden' : 'block'}"
 >
 	<svelte:fragment slot="sidebarLeft">
-		<!-- Corporate Identity -->
-		{#if $switchSideBar}
+		<!-- Corporate Identity Full-->
+		{#if $toggleLeftSidebar === 'full'}
 			<a href="/" class="t flex pt-2 !no-underline">
 				<SimpleCmsLogo fill="red" className="h-8" />
 
 				<span class="pl-1 text-2xl font-bold text-black dark:text-white">{PUBLIC_SITENAME}</span>
 			</a>
 		{:else}
+			<!-- Corporate Identity Collapsed-->
 			<div class="flex justify-start gap-1.5">
-				<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+				<button type="button" on:click={() => toggleLeftSidebar.clickBack()} class="btn-icon variant-ghost-surface mt-1">
 					<iconify-icon icon="mingcute:menu-fill" width="24" />
 				</button>
 
@@ -199,9 +242,9 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 			type="button"
 			class="absolute -right-3 top-2 flex items-center justify-center !rounded-full border-2 border-surface-300"
 			on:keydown
-			on:click={() => switchSideBar.update((value) => !value)}
+			on:click={() => toggleLeftSidebar.clickSwitchSideBar()}
 		>
-			{#if !switchSideBar}
+			{#if $toggleLeftSidebar !== 'full'}
 				<!-- Icon Collapsed -->
 				<iconify-icon
 					icon="bi:arrow-left-circle-fill"
@@ -218,17 +261,6 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 			{/if}
 		</button>
 
-		<!-- Search Collections -->
-		<div class="flex w-full items-center justify-center gap-2">
-			{#if !switchSideBar}
-				<a href="/" class="flex !no-underline">
-					<SimpleCmsLogo fill="red" className="h-8" />
-				</a>
-			{/if}
-
-			<!-- add search -->
-		</div>
-
 		<!--SideBar Middle -->
 		<Collections />
 
@@ -236,17 +268,21 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 		<div class="mb-2 mt-auto bg-white dark:bg-gradient-to-r dark:from-surface-800 dark:via-surface-700 dark:to-surface-500">
 			<div class="mx-1 mb-1 border-t border-surface-400" />
 
-			<div class="{$switchSideBar ? 'grid-cols-3 grid-rows-3' : 'grid-cols-2 grid-rows-2'} grid items-center justify-center overflow-hidden">
+			<div
+				class="{$toggleLeftSidebar === 'full'
+					? 'grid-cols-3 grid-rows-3'
+					: 'grid-cols-2 grid-rows-2'} grid items-center justify-center overflow-hidden"
+			>
 				<!-- Avatar with user settings -->
-				<div class={$switchSideBar ? 'order-1 row-span-2' : 'order-1'}>
+				<div class={$toggleLeftSidebar === 'full' ? 'order-1 row-span-2' : 'order-1'}>
 					<button class="btn-icon md:row-span-2" use:popup={UserTooltip} on:click={handleClick} on:keypress={handleClick}>
 						<div on:click={handleClick} on:keypress={handleClick} class="relative cursor-pointer flex-col !no-underline">
 							<Avatar
 								src={avatarSrc ? '/api/media/' + avatarSrc : '/Default_User.svg'}
-								class="mx-auto hover:bg-surface-500 hover:p-1 {$switchSideBar ? 'w-[40px]' : 'w-[35px]'}"
+								class="mx-auto hover:bg-surface-500 hover:p-1 {$toggleLeftSidebar === 'full' ? 'w-[40px]' : 'w-[35px]'}"
 							/>
 							<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
-								{#if $switchSideBar}
+								{#if $toggleLeftSidebar === 'full'}
 									Admin
 									<!-- {#if user?.username}
 										<div class="text-xs uppercase">{user?.username}</div>
@@ -263,11 +299,13 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 
 				<!-- TODO: Fix Tooltip overflow -->
 				<!-- System Language i18n Handling -->
-				<div class={$switchSideBar ? 'order-3 row-span-2  ' : 'order-2'} use:popup={SystemLanguageTooltip}>
+				<div class={$toggleLeftSidebar === 'full' ? 'order-3 row-span-2  ' : 'order-2'} use:popup={SystemLanguageTooltip}>
 					<select
 						bind:value={selectedLocale}
 						on:change={handleLocaleChange}
-						class="{$switchSideBar ? 'px-2.5 py-2' : 'px-2 py-1.5'} btn-icon variant-filled-surface appearance-none rounded-full uppercase text-white"
+						class="{$toggleLeftSidebar === 'full'
+							? 'px-2.5 py-2'
+							: 'px-2 py-1.5'} btn-icon variant-filled-surface appearance-none rounded-full uppercase text-white"
 					>
 						{#each locales as locale}
 							<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
@@ -280,7 +318,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				</div>
 
 				<!-- light/dark mode switch -->
-				<div class="{$switchSideBar ? 'order-2' : 'order-3'}  ">
+				<div class="{$toggleLeftSidebar === 'full' ? 'order-2' : 'order-3'}  ">
 					<button use:popup={SwitchThemeTooltip} on:click={toggleTheme} class="btn-icon hover:bg-surface-500 hover:text-white">
 						{#if !$modeCurrent}
 							<iconify-icon icon="bi:sun" width="22" />
@@ -299,7 +337,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				</div>
 
 				<!-- Lucia Sign Out -->
-				<div class={$switchSideBar ? 'order-4' : 'order-4'}>
+				<div class={$toggleLeftSidebar === 'full' ? 'order-4' : 'order-4'}>
 					<button use:popup={SignOutTooltip} on:click={signOut} type="submit" value="Sign out" class="btn-icon hover:bg-surface-500 hover:text-white"
 						><iconify-icon icon="uil:signout" width="26" /></button
 					>
@@ -311,7 +349,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				</div>
 
 				<!-- Collection Builder -->
-				<div class={$switchSideBar ? 'order-5' : 'order-6'}>
+				<div class={$toggleLeftSidebar === 'full' ? 'order-5' : 'order-6'}>
 					<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
 						<a href="/builder" use:popup={BuilderTooltip}>
 							<iconify-icon icon="material-symbols:build-circle" width="32" />
@@ -325,7 +363,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				</div>
 
 				<!-- Github discussions -->
-				<div class="{$switchSideBar ? 'order-7' : 'order-7 hidden'} ">
+				<div class="{$toggleLeftSidebar === 'full' ? 'order-7' : 'order-7 hidden'} ">
 					<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
 						<button use:popup={GithubTooltip} class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
 							<iconify-icon icon="grommet-icons:github" width="30" />
@@ -339,10 +377,10 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 				</div>
 
 				<!-- CMS Version -->
-				<div class={$switchSideBar ? 'order-6' : 'order-5'}>
+				<div class={$toggleLeftSidebar === 'full' ? 'order-6' : 'order-5'}>
 					<a href="https://github.com/Rar9/SimpleCMS/" target="blank">
-						<span class="{$switchSideBar ? 'py-1' : 'py-0'} badge variant-filled-primary rounded-xl text-black hover:text-white"
-							>{#if $switchSideBar}{$LL.SBL_Version()}{/if}{pkg}</span
+						<span class="{$toggleLeftSidebar === 'full' ? 'py-1' : 'py-0'} badge variant-filled-primary rounded-xl text-black hover:text-white"
+							>{#if $toggleLeftSidebar === 'full'}{$LL.SBL_Version()}{/if}{pkg}</span
 						>
 					</a>
 				</div>
@@ -357,10 +395,14 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 	</svelte:fragment>
 
 	<svelte:fragment slot="pageHeader">
-		<div>pageHeader</div>
+		<div>pageHeader {$mode}</div>
 
-		{#if $mode == 'edit' || $mode == 'create'}
-			mobile sidebar header
+		{#if $mode === 'create'}
+			<div>pageHeader mobile create header</div>
+		{/if}
+
+		{#if $mode === 'edit'}
+			<div>pageHeader mobile edit header</div>
 		{/if}
 	</svelte:fragment>
 
@@ -376,10 +418,16 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 	</div>
 
 	<svelte:fragment slot="pageFooter">
-		<div>pageFooter</div>
-
-		{#if $mode == 'edit' || $mode == 'create'}
-			mobile sidebar footer
+		{#if $mode !== 'view'}
+			<h2 class="text-center font-bold">{$collection.name} Info:</h2>
+			<div class="footer-content text-sm">
+				<!-- TODO: Use real dates & revision -->
+				<div class="mt-2 flex items-center justify-center gap-2 space-y-1 text-xs">
+					<div>Created: <span class="font-bold">{$collection.created}</span></div>
+					<div>Updated: <span class="font-bold">{$collection.updated}</span></div>
+					<div>Revision: <span class="font-bold">{$collection.revision}</span></div>
+				</div>
+			</div>
 		{/if}
 	</svelte:fragment>
 </AppShell>

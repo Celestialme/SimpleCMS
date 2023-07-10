@@ -44,6 +44,9 @@ dependencies:
   svelte-email:
     specifier: ^0.0.4
     version: 0.0.4
+  svelte-fsm:
+    specifier: ^1.2.0
+    version: 1.2.0
   typesafe-i18n:
     specifier: ^5.24.3
     version: 5.24.3(typescript@5.1.6)
@@ -3775,6 +3778,11 @@ packages:
       postcss-scss: 4.0.6(postcss@8.4.24)
       svelte: 4.0.4
     dev: true
+
+  /svelte-fsm@1.2.0:
+    resolution: {integrity: sha512-JScbFpGqEgIOIYcMRonR4lO6ExEI+L1+Zqq7zW7kuuMSkfkcQooPVbO/+k7VdCwF0/37anYmV6ooAOR5m9hz7g==}
+    engines: {node: '>=14.0.0', npm: '>=6.14.4'}
+    dev: false
 
   /svelte-hmr@0.15.2(svelte@4.0.4):
     resolution: {integrity: sha512-q/bAruCvFLwvNbeE1x3n37TYFb3mTBJ6TrCq6p2CoFbSTNhDE9oAtEfpy+wmc9So8AG0Tja+X0/mJzX9tSfvIg==}

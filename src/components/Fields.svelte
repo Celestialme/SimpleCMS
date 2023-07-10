@@ -1,15 +1,6 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections';
-	import {
-		collectionValue,
-		mode,
-		switchSideBar,
-		toggleLeftSidebar,
-		toggleRightSidebar,
-		toggleHeaderSidebar,
-		toggleFooterSidebar,
-		contentLanguage
-	} from '@src/stores/store';
+	import { collectionValue, mode, toggleLeftSidebar, handleSidebarToggle, contentLanguage } from '@src/stores/store';
 
 	import { cloneData, deleteData, getFieldName } from '@src/utils/utils';
 
@@ -38,38 +29,14 @@
 	// a function to undo the changes made by handleButtonClick
 	function handleCancel() {
 		mode.set('view');
-		// get the current window width
-		let width = window.innerWidth;
-		// use the custom screens
-		if (width <= 567) {
-			// For mobile toggle Header/Footer Sidebars
-			toggleLeftSidebar.set(true);
-			switchSideBar.set(false);
-			toggleHeaderSidebar.set(false);
-			toggleFooterSidebar.set(false);
-			toggleRightSidebar.set(true);
-		} else if (width >= 568 && width <= 767) {
-			// use switchSideBar for md
-			toggleLeftSidebar.set(false);
-			switchSideBar.set(false);
-			toggleHeaderSidebar.set(false);
-			toggleFooterSidebar.set(false);
-			toggleRightSidebar.set(true);
-		} else if (width > 768) {
-			// use toggleRightSidebar for xl and above
-			toggleLeftSidebar.set(false);
-			switchSideBar.set(true);
-			toggleHeaderSidebar.set(false);
-			toggleFooterSidebar.set(false);
-			toggleRightSidebar.set(true);
-		}
+		handleSidebarToggle();
 	}
 </script>
 
 <header class="relative flex w-full items-center justify-between border-b bg-white p-2 border-secondary-600-300-token dark:bg-surface-700">
 	<div class="flex items-center justify-start">
-		{#if $toggleLeftSidebar === true}
-			<button type="button" on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+		{#if $toggleLeftSidebar === 'closed'}
+			<button type="button" on:click={() => toggleLeftSidebar.click()} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}

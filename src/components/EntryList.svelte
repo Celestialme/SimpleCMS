@@ -1,17 +1,7 @@
 <script lang="ts">
 	import { categories } from '@src/collections';
 	import { collection } from '@src/collections';
-	import {
-		mode,
-		entryData,
-		deleteEntry,
-		switchSideBar,
-		toggleLeftSidebar,
-		toggleRightSidebar,
-		toggleHeaderSidebar,
-		toggleFooterSidebar,
-		storeListboxValue
-	} from '@src/stores/store';
+	import { mode, entryData, deleteEntry, handleSidebarToggle, toggleLeftSidebar, storeListboxValue } from '@src/stores/store';
 	import { contentLanguage } from '@src/stores/store';
 
 	import axios from 'axios';
@@ -287,11 +277,6 @@
 		isLoading = false;
 	};
 
-	// $: {
-	// 	console.log('deleteAll:', deleteAll);
-	// 	console.log('deleteMap:', deleteMap);
-	// }
-
 	const flipDurationMs = 300;
 
 	// Update items array to be an array of column objects
@@ -402,8 +387,8 @@
 <div class="mb-2 flex justify-between dark:text-white">
 	<!-- Row 1 for Mobile -->
 	<div class="flex items-center justify-between">
-		{#if $toggleLeftSidebar === true}
-			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+		{#if $toggleLeftSidebar === 'closed'}
+			<button type="button" on:keydown on:click={() => toggleLeftSidebar.click()} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
@@ -568,14 +553,15 @@
 					on:click={() => {
 						entryData.set(data?.entryList[index]);
 						mode.set('edit');
+						handleSidebarToggle();
 					}}
 				>
 					<td>
 						<TanstackIcons bind:checked={deleteMap[index]} class="ml-1" />
 						<!-- <TanstackIcons bind:cross={unpublishMap[index]} />
-		          				<TanstackIcons bind:checked={publishMap[index]} />						
-		          				<TanstackIcons bind:checked={cloneMap[index]} />
-		          				<TanstackIcons bind:checked={scheduleMap[index]} /> -->
+						<TanstackIcons bind:checked={publishMap[index]} />						
+						<TanstackIcons bind:checked={cloneMap[index]} />
+						<TanstackIcons bind:checked={scheduleMap[index]} /> -->
 					</td>
 
 					{#each row.getVisibleCells() as cell}

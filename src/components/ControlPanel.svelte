@@ -1,15 +1,6 @@
 <script lang="ts">
 	import { collection } from '@src/collections';
-	import {
-		collectionValue,
-		mode,
-		deleteEntry,
-		switchSideBar,
-		toggleLeftSidebar,
-		toggleRightSidebar,
-		toggleHeaderSidebar,
-		toggleFooterSidebar
-	} from '@src/stores/store';
+	import { collectionValue, mode, deleteEntry, handleSidebarToggle } from '@src/stores/store';
 
 	import { saveFormData } from '@src/utils/utils';
 
@@ -18,33 +9,7 @@
 
 		// a function to undo the changes made by handleButtonClick
 		mode.set('view' || 'edit');
-
-		// get the current window width
-		let width = window.innerWidth;
-
-		// use the custom screens
-		if (width <= 567) {
-			// For mobile toggle Header/Footer Sidebars
-			toggleLeftSidebar.set(true);
-			switchSideBar.set(false);
-			toggleHeaderSidebar.set(false);
-			toggleFooterSidebar.set(false);
-			toggleRightSidebar.set(true);
-		} else if (width >= 568 && width <= 767) {
-			// use switchSideBar for md
-			toggleLeftSidebar.set(false);
-			switchSideBar.set(false);
-			toggleHeaderSidebar.set(false);
-			toggleFooterSidebar.set(false);
-			toggleRightSidebar.set(true);
-		} else if (width > 768) {
-			// use toggleRightSidebar for xl and above
-			toggleLeftSidebar.set(false);
-			switchSideBar.set(true);
-			toggleHeaderSidebar.set(false);
-			toggleFooterSidebar.set(false);
-			toggleRightSidebar.set(true);
-		}
+		handleSidebarToggle();
 	}
 </script>
 
