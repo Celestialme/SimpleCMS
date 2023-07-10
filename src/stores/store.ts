@@ -149,7 +149,7 @@ export const handleSidebarToggle = () => {
 	if (get(screenWidth) === 'mobile') {
 		if (get(mode) === 'view') {
 			// logic for view mode on mobile
-			toggleLeftSidebar.click('closed');
+			toggleLeftSidebar.click('full');
 			toggleRightSidebar.close();
 			togglePageHeader.close();
 			togglePageFooter.close();

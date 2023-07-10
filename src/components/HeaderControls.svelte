@@ -43,8 +43,8 @@
 		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : 'ml-1'}">
 			{#if categories}
 				<div class="mb-2 text-xs capitalize text-gray-400 dark:text-gray-300">
-					<span class="capitalize text-primary-500">{$mode}:</span>
-					{categories[0].name}
+				                              	<span class="capitalize text-primary-500">{$mode}:</span>
+				<span class="hidden sm:block">	{categories[0].name}</span>
 				</div>
 			{/if}
 
@@ -65,25 +65,27 @@
 	<div class="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
 		{#if $screenWidth !== 'desktop'}
 			<!-- Save Content -->
-			<button type="button" on:click={saveData} class="btn variant-filled-primary">
+			<button type="button" on:click={saveData} class="btn-icon sm:btn variant-filled-primary">
 				<iconify-icon icon="material-symbols:save" width="24" />
-				Save {$collection.name}
+				<span class="hidden sm:block" >Save</span>
 			</button>
 			{#if $screenWidth === 'mobile'}
-				<!-- Delete Content -->
-				<button type="button" on:click={$deleteEntry} class="btn variant-filled-error">
-					<iconify-icon icon="icomoon-free:bin" width="24" />Delete {$collection.name}
-				</button>
+					<!-- Delete Content -->
+				<button type="button" on:click={$deleteEntry} class="btn-icon variant-filled-error">
+					<!--<iconify-icon icon="icomoon-free:bin" width="24" />Delete-->
+				
+			<iconify-icon icon="icomoon-free:bin" width="24" />
+			</button>
 			{/if}
 
 			<!-- Delete Content -->
-			<button type="button" on:click={deleteData} class="btn-icon variant-filled-error">
-				<iconify-icon icon="icomoon-free:bin" width="24" />
-			</button>
+			<!--<button type="button" on:click={deleteData} class="btn-icon variant-filled-error">-->
+			<!--	<iconify-icon icon="icomoon-free:bin" width="24" />-->
+			<!--</button>-->
 
 			<!-- Clone Content -->
 			{#if $mode == 'edit'}
-				<button type="button" on:click={cloneData} class="h btn-icon variant-filled-secondary">
+				<button type="button" on:click={cloneData} class="btn-icon variant-filled-secondary">
 					<iconify-icon icon="fa-solid:clone" width="24" />
 				</button>
 			{/if}
