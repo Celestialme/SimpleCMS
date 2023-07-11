@@ -61,7 +61,7 @@
 
 					<!-- Widget Input -->
 					<svelte:component
-						this={asAny(field.widget)}
+						this={asAny(field.widget.type)}
 						field={asAny(field)}
 						bind:WidgetData={fieldsData[getFieldName(field)]}
 						value={customData[getFieldName(field)]}

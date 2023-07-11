@@ -1,5 +1,5 @@
 import { redirect } from '@sveltejs/kit';
-import widgets from '../components/widgets';
+import widgets from '@src/components/widgets';
 import { roles } from './Auth';
 import type { Schema } from './types';
 

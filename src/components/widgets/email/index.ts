@@ -1,8 +1,10 @@
 import Email from './Email.svelte';
-import type { Params } from './types';
+import { GuiSchema, type Params } from './types';
+
 import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 
-let widget = ({
+const widget = ({
+	// Accept parameters from collection
 	label,
 	db_fieldName,
 	display,
@@ -13,13 +15,14 @@ let widget = ({
 	required
 }: Params) => {
 	if (!display) {
-		display = async (data: any, field: any, entry: any, contentLanguage: any) => {
+		display = async (data, field, entry, contentLanguage) => {
+			//console.log(data);
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGES] || 'NO entry';
 		};
 	}
 
-	let widget: { widget: any } = { widget: Email };
+	let widget: { type: any; key: 'Email' } = { type: Email, key: 'Email' };
 
 	let field = {
 		display,
@@ -33,8 +36,10 @@ let widget = ({
 		required
 	};
 
-	return { ...field, ...widget };
+	return { ...field, widget };
 };
+
+widget.GuiSchema = GuiSchema;
 
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

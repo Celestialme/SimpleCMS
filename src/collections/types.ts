@@ -1,3 +1,4 @@
+import type widgets from '@src/components/widgets';
 import type { roles } from './Auth';
 
 type permissions = {
@@ -9,7 +10,7 @@ export interface Schema {
 	permissions?: permissions;
 	icon?: string;
 	slug?: string;
-	fields: Array<any>;
+	fields: ReturnType<(typeof widgets)[keyof typeof widgets]>[];
 	strict?: boolean;
 	status?: 'published' | 'unpublished' | 'draft' | 'schedule' | 'cloned';
 }

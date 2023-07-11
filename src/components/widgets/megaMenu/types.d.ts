@@ -1,8 +1,23 @@
 export type Params = {
+	label: string;
+	display?: DISPLAY;
+	db_fieldName?: string;
 	widget?: any;
 	schema?: { [Key: string]: any };
-	db_fieldName?: string;
-	label: string;
+	translated?: boolean;
+	// Widget Specific parameters
 	menu: any[];
-	display?: DISPLAY;
+};
+
+export let GuiSchema = {
+	label: { type: String, required: true },
+	display: { type: String, required: true },
+	db_fieldName: { type: String, required: true },
+	// widget?: any;
+	// schema?: any;
+	translated: { type: Boolean, required: false },
+	icon: { type: String, required: false }
+
+	// Widget Specific parameters
+	// menu: any[];
 };

@@ -1,8 +1,12 @@
-import { findById } from '@src/utils/utils';
 import Relation from './Relation.svelte';
-import type { Params } from './types';
-let widget = ({ label, db_fieldName, display, relation }: Params) => {
+import { GuiSchema, type Params } from './types';
+import { findById } from '@src/utils/utils';
+
+import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
+
+const widget = ({ label, db_fieldName, display, relation }: Params) => {
 	if (!display) {
+		// display for table
 		display = async (data, field, entry, contentLanguage) => {
 			if (typeof data == 'string') {
 				data = await findById(data, relation);
@@ -11,7 +15,7 @@ let widget = ({ label, db_fieldName, display, relation }: Params) => {
 		};
 	}
 
-	let widget: { widget: any } = { widget: Relation };
+	let widget: { type: any; key: 'Relation' } = { type: Relation, key: 'Relation' };
 
 	let field = {
 		display,
@@ -21,8 +25,10 @@ let widget = ({ label, db_fieldName, display, relation }: Params) => {
 		relation
 	};
 
-	return { ...field, ...widget };
+	return { ...field, widget };
 };
+
+widget.GuiSchema = GuiSchema;
 
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

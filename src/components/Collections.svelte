@@ -3,6 +3,8 @@
 	import { mode, toggleLeftSidebar } from '@src/stores/store';
 	import { user } from '@src/stores/store';
 
+	export let modeSet: typeof $mode = 'view';
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -52,7 +54,7 @@
 								on:keydown
 								on:click={(e) => {
 									console.log('collection entry clicked');
-									mode.set('view');
+									mode.set(modeSet);
 									$collection = _collection;
 								}}
 							>
@@ -65,7 +67,7 @@
 								class="-mx-4 flex flex-col items-center py-1 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
 								on:keydown
 								on:click={(e) => {
-									mode.set('view');
+									mode.set(modeSet);
 									$collection = _collection;
 								}}
 							>

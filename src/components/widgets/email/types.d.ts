@@ -10,14 +10,7 @@ export type Params = {
 
 	// Widget Specific parameters
 	placeholder?: string;
-	count?: number;
-	minlength?: number;
-	maxlength?: number;
-	prefix?: string;
-	suffix?: string;
 	required?: boolean;
-	readonly?: boolean;
-	disabled?: boolean;
 	width?: string;
 };
 
@@ -32,13 +25,6 @@ export let GuiSchema = {
 
 	// Widget Specific parameters
 	placeholder: { type: String, required: false },
-	count: { type: number, required: false },
-	minlength: { type: number, required: false },
-	maxlength: { type: number, required: false },
-	prefix: { type: String, required: false },
-	suffix: { type: String, required: false },
 	required: { type: Boolean, required: false },
-	readonly: { type: Boolean, required: false },
-	disabled: { type: Boolean, required: false },
 	width: { type: String, required: false }
 };
