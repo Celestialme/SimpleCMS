@@ -41,6 +41,7 @@
 		"lucia-auth": "^1.0.0",
 		"mime-types": "^2.1.35",
 		"mongoose": "^7.0.3",
+		"tailwind-merge": "^1.13.2",
 		"typesafe-i18n": "^5.24.3"
 	}
 }

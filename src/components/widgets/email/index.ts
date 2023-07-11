@@ -1,8 +1,9 @@
 import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+import { GuiSchema } from '../text/types';
 import Email from './Email.svelte';
 import type { Params } from './types';
 //email
-let widget = ({ label, db_fieldName, display, translated = false }: Params) => {
+const widget = ({ label, db_fieldName, display, translated = false }: Params) => {
 	if (!display) {
 		display = async (data, field, entry, contentLanguage) => {
 			console.log(data);
@@ -10,7 +11,7 @@ let widget = ({ label, db_fieldName, display, translated = false }: Params) => {
 			return translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGE] || 'NO entry';
 		};
 	}
-	let widget: { widget: any } = { widget: Email };
+	let widget: { type: any; key: 'Email' } = { type: Email, key: 'Email' };
 	let field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
@@ -18,7 +19,8 @@ let widget = ({ label, db_fieldName, display, translated = false }: Params) => {
 		db_fieldName,
 		translated
 	};
-	return { ...field, ...widget };
+	return { ...field, widget };
 };
+widget.GuiSchema = GuiSchema;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

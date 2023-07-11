@@ -1,5 +1,6 @@
 <script lang="ts">
 	import 'iconify-icon';
+	import { twMerge } from 'tailwind-merge';
 	export let iconClass = '';
 	export let inputClass = '';
 	export let name: string;
@@ -32,7 +33,16 @@
 	<slot />
 	<iconify-icon icon={leading_icon} class={iconClass} />
 
-	<input class={inputClass} bind:this={inputElement} use:initInput placeholder=" " type="text" {name} id="input" bind:value />
+	<input
+		class={twMerge('bg-transparent text-white', inputClass)}
+		bind:this={inputElement}
+		use:initInput
+		placeholder=" "
+		type="text"
+		{name}
+		id="input"
+		bind:value
+	/>
 	<label for="input" class="text-xs text-gray-400"
 		>{label}
 		{#if required}
@@ -69,7 +79,6 @@
 		border: none;
 		outline: none;
 		width: 100%;
-		background-color: transparent;
 	}
 	label {
 		position: absolute;
