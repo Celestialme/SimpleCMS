@@ -387,8 +387,17 @@
 <div class="mb-2 flex justify-between dark:text-white">
 	<!-- Row 1 for Mobile -->
 	<div class="flex items-center justify-between">
+		<!-- Hamburger -->
 		{#if $toggleLeftSidebar === 'closed'}
-			<button type="button" on:keydown on:click={toggleLeftSidebar.click} class="btn-icon variant-ghost-surface mt-1">
+			<button
+				type="button"
+				on:keydown
+				on:click={() => {
+					// console.log('Hamburger clicked');
+					toggleLeftSidebar.click();
+				}}
+				class="btn-icon variant-ghost-surface mt-1"
+			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}

@@ -8,7 +8,7 @@
 	import { addUserSchema } from '@src/utils/formSchemas';
 
 	export let data: PageData;
-	console.log(data);
+	// console.log(data);
 
 	//get user roles from environment file
 	import { PUBLIC_USER_ROLES } from '$env/static/public';
@@ -19,7 +19,7 @@
 	}, {});
 
 	let response;
-	console.log(data);
+	// console.log(data);
 
 	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
 		id: 'addUser',

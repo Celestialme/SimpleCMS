@@ -8,8 +8,6 @@ import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
 
-import { createEventDispatcher } from 'svelte';
-
 // Configuration object for axios requests
 export const config = {
 	headers: {
@@ -221,6 +219,24 @@ export function formatSize(sizeInBytes) {
 		return `${(sizeInBytes / (1024 * 1024)).toFixed(2)} MB`;
 	} else {
 		return `${(sizeInBytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+	}
+}
+
+// TODO: get this data right
+// Retrieves the creation, update, and revision dates of an uploaded image or a text field from a MongoDB database
+export async function getDates(fieldName: string, collectionName: string) {
+	// find the document for the uploaded image or text field
+	const field = await schemas[collectionName].findOne({ name: fieldName });
+
+	if (field) {
+		// return the desired data
+		return {
+			created: field.get('createdAt'),
+			updated: field.get('updatedAt'),
+			revision: field.get('revision')
+		};
+	} else {
+		throw new Error('Field not found');
 	}
 }
 

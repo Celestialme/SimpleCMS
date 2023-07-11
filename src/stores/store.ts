@@ -99,7 +99,7 @@ export const toggleLeftSidebar = fsm(getDefaultState(), {
 			if (nextState === 'closed') {
 				return 'closed';
 			} else if (get(screenWidth) === 'mobile') {
-				return 'closed';
+				return get(userPreferredState); // use the value of userPreferredState
 			} else if (get(screenWidth) === 'tablet') {
 				return 'collapsed';
 			} else {

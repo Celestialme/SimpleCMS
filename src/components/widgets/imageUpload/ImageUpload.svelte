@@ -11,8 +11,6 @@
 
 	export const WidgetData = async () => _data;
 	export const file: File | undefined = undefined; // pass file directly from imageArray
-	let value: any;
-	//console.log(file);
 
 	let fieldName = getFieldName(field);
 	let sanitizedFileName: string | undefined = undefined;
@@ -37,12 +35,14 @@
 			_data = node.files = fileList.files;
 		} else if ($mode === 'edit') {
 			axios.get(`/${field?.path}/${$entryData[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
+				console.log('data returned by the server', data); // log the data returned by the server
 				let fileList = new DataTransfer();
 				let file = new File([data], $entryData[fieldName].name, {
 					type: $entryData[fieldName].mimetype
 				});
 				fileList.items.add(file);
 				_data = node.files = fileList.files;
+				console.log('_data returned', _data); // log the value of _data
 			});
 		}
 	}
@@ -57,7 +57,7 @@
 
 <!-- image preview -->
 <!-- TODO: add further EXIF data for better media gallery search. -->
-{#if _data && $mode === 'create'}
+{#if _data}
 	<div class="flex flex-col items-center md:flex-row">
 		<div class="flex justify-center md:mr-4">
 			<img src={URL.createObjectURL(_data[0])} alt="" class="mt-4 h-60 rounded-md border" />
@@ -82,5 +82,6 @@
 
 <!-- TODO: way is image not loading on edit? -->
 {#if _data && $mode === 'edit'}
+	console.log(_data); // log the value of _data
 	<img src={URL.createObjectURL(_data[0])} alt="" />
 {/if}

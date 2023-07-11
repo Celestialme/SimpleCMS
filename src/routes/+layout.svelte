@@ -39,6 +39,7 @@
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import Collections from '@src/components/Collections.svelte';
+	import { getDates } from '@src/utils/utils';
 
 	contentLanguage.set($page.params.language);
 
@@ -158,6 +159,15 @@
 	};
 
 	import HeaderControls from '@src/components/HeaderControls.svelte';
+
+	let dates = { created: '', updated: '', revision: '' };
+	async function showDates() {
+		try {
+			dates = await getDates('yourFieldName', 'yourCollectionName');
+		} catch (error) {
+			console.error(error);
+		}
+	}
 </script>
 
 <!-- TODO: Fix Right And mobile Version of sidebars -->
@@ -197,15 +207,8 @@
 		storeListboxValue
 		<div class="font-bold text-primary-500">{$storeListboxValue}</div>
 	</div>
-</div>
-
-<div class="flex flex-wrap justify-center text-xs">
-	<button class="btn-sm variant-outline-primary" on:click={toggleLeftSidebar.click}>toggleLeft</button>
-	<button class="btn-sm variant-outline-primary" on:click={toggleLeftSidebar.clickSwitchSideBar}>toggleLeftCollapse</button>
-	<button class="btn-sm variant-outline-primary" on:click={toggleRightSidebar.toggle()}>toggleRight</button>
-	<button class="btn-sm variant-outline-primary" on:click={togglePageHeader.toggle}>togglePageHeader</button>
-	<button class="btn-sm variant-outline-primary" on:click={togglePageFooter.toggle}>togglePageFooter</button>
 </div> -->
+
 <AppShell
 	slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10
@@ -244,7 +247,10 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 			type="button"
 			class="absolute -right-3 top-2 flex items-center justify-center !rounded-full border-2 border-surface-300"
 			on:keydown
-			on:click={() => toggleLeftSidebar.clickSwitchSideBar()}
+			on:click={() => {
+				toggleLeftSidebar.clickSwitchSideBar();
+				userPreferredState.set($toggleLeftSidebar === 'full' ? 'collapsed' : 'full');
+			}}
 		>
 			{#if $toggleLeftSidebar !== 'full'}
 				<!-- Icon Collapsed -->
@@ -413,11 +419,10 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 		{#if $mode !== 'view'}
 			<h2 class="text-center font-bold">{$collection.name} Info:</h2>
 			<div class="footer-content text-sm">
-				<!-- TODO: Use real dates & revision -->
 				<div class="mt-2 flex items-center justify-center gap-2 space-y-1 text-xs">
-					<div>Created: <span class="font-bold">{$collection.created}</span></div>
-					<div>Updated: <span class="font-bold">{$collection.updated}</span></div>
-					<div>Revision: <span class="font-bold">{$collection.revision}</span></div>
+					<div>Created: <span class="font-bold">{dates.created}</span></div>
+					<div>Updated: <span class="font-bold">{dates.updated}</span></div>
+					<div>Revision: <span class="font-bold">{dates.revision}</span></div>
 				</div>
 			</div>
 		{/if}
