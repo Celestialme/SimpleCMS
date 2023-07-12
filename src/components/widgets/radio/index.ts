@@ -1,5 +1,6 @@
 import Radio from './Radio.svelte';
-import { GuiSchema, type Params } from './types';
+import type { Params } from './types';
+import { GuiSchema } from './types';
 
 import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 

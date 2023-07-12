@@ -1,6 +1,7 @@
 // MegaMenu - allows multilevel menus for navigation
 import MegaMenu from './MegaMenu.svelte';
-import { GuiSchema, type Params } from './types';
+import type { Params } from './types';
+import { GuiSchema } from './types';
 import { writable, type Writable } from 'svelte/store';
 
 import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
