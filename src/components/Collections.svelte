@@ -20,6 +20,7 @@
 	};
 </script>
 
+<!-- TODO: Fix reactive i18n Translation -->
 <!-- displays all collection parents and their Children as accordion -->
 <div class="mt-2">
 	<!-- TODO: Apply Tooltip for collapsed  -->

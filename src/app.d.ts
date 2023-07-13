@@ -9,6 +9,8 @@ declare global {
 		type DatabaseSessionAttributes = {};
 	}
 
+	/// <reference path="./types/**/*.d.ts" />
+
 	namespace App {
 		// interface Error {}
 		// interface Locals {}

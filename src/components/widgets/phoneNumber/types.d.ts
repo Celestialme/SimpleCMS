@@ -31,11 +31,11 @@ export let GuiSchema = {
 
 	// Widget Specific parameters
 	placeholder: { type: String, required: false },
-	count: { type: number, required: false },
-	minlength: { type: number, required: false },
-	maxlength: { type: number, required: false },
+	count: { type: Number, required: false },
+	minlength: { type: Number, required: false },
+	maxlength: { type: Number, required: false },
 	pattern: { type: String, required: false },
-	size: { type: String, required: false },
+	size: { type: Number, required: false },
 	required: { type: Boolean, required: false },
 	readonly: { type: Boolean, required: false },
 	width: { type: String, required: false }

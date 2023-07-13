@@ -1,6 +1,9 @@
 import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
+// Set the body size limit '100mb
+process.env.BODY_SIZE_LIMIT = '104857600';
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
@@ -8,14 +11,13 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		// adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
-		// If your environment is not supported or you settled on a specific environment, switch out the adapter.
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter({
-            out: 'build',
-            precompress: true,
-            polyfill: false
-        }),
+			out: 'build',
+			precompress: false,
+			envPrefix: '',
+			polyfill: true
+		}),
 		csrf: {
 			checkOrigin: false
 		}
