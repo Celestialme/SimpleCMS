@@ -1,7 +1,7 @@
 // ImageArray - allows multiple image upload with editor
 import ImageArray from './ImageArray.svelte';
 import type { Params } from './types';
-import { GuiSchema } from './types';
+import { GuiSchema } from './guiSchema';
 import type { Params as ImageUpload_Params } from '../imageUpload/types';
 import { getFieldName } from '@src/utils/utils.js';
 

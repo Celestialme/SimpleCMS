@@ -1,6 +1,6 @@
 import Number from './Number.svelte';
 import type { Params } from './types';
-import { GuiSchema } from './types';
+import { GuiSchema } from './guiSchema';
 
 import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 
