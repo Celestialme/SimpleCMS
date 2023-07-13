@@ -129,13 +129,23 @@
 		{ id: 1, name: 'Item 1', DBName: 'item1', widget: 'Text' },
 		{ id: 2, name: 'Item 2', DBName: 'item2', widget: 'Text2' },
 		{ id: 3, name: 'Item 3', DBName: 'item3', widget: 'Text3' }
-		// ...
 	];
+
+	const headers = ['ID', 'Name', 'DBName', 'Widget'];
+	const flipDurationMs = 300;
+
+	const handleDndConsider = (e) => {
+		items = e.detail.items;
+	};
+
+	const handleDndFinalize = (e) => {
+		items = e.detail.items;
+	};
 </script>
 
 <div class="align-centre mb-2 mt-2 flex dark:text-white">
 	<div class="flex items-center justify-between">
-		{#if $toggleLeftSidebar === true}
+		{#if $toggleLeftSidebar === 'closed'}
 			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
@@ -170,7 +180,6 @@
 		>
 
 		<!-- Tab Panels --->
-
 		<svelte:fragment slot="panel">
 			<!-- Edit -->
 			{#if tabSet === 0}
@@ -270,7 +279,16 @@
 				</div>
 
 				<!--dnd vertical row -->
-				<VerticalList {items} />
+				<VerticalList {items} {headers} {flipDurationMs} {handleDndConsider} {handleDndFinalize}>
+					{#each items as item (item.id)}
+						<div class="border-blue variant-ghost-secondary my-2 flex w-full items-center gap-6 rounded-md border p-1 text-center text-primary-500">
+							<div class="marker: badge variant-outline-primary rounded-full text-white">{item.id}</div>
+							<div class="text-white">{item.name}</div>
+							<div class="text-white">{item.DBName}</div>
+							<div class="text-white">{item.widget}</div>
+						</div>
+					{/each}
+				</VerticalList>
 
 				<div class=" border-t text-center border-surface-400-500-token">
 					<button class="btn variant-filled-tertiary mt-2" on:click={modalComponentForm}>Add more Fields</button>

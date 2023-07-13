@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { collection } from '@src/collections';
+	import { collection } from '@src/collections/index';
 	import { collectionValue, mode, deleteEntry, handleSidebarToggle } from '@src/stores/store';
 
 	import { saveFormData } from '@src/utils/utils';

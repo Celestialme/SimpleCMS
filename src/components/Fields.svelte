@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { collection } from '@src/collections';
+	import { collection } from '@src/collections/index';
 	import { collectionValue, contentLanguage } from '@src/stores/store';
 
 	import { getFieldName } from '@src/utils/utils';

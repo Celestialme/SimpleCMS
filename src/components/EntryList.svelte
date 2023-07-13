@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { categories } from '@src/collections';
-	import { collection } from '@src/collections';
+	import { categories, collection } from '@src/collections/index';
+
 	import { mode, entryData, deleteEntry, handleSidebarToggle, toggleLeftSidebar, storeListboxValue } from '@src/stores/store';
 	import { contentLanguage } from '@src/stores/store';
 

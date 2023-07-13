@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { collection, categories } from '@src/collections';
+	import { collection, categories } from '@src/collections/index';
 	import { mode, toggleLeftSidebar } from '@src/stores/store';
 	import { user } from '@src/stores/store';
 
@@ -109,6 +109,21 @@
 		<a href="/upload" class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
 			<p class="text-xs uppercase">Upload</p>
 			<iconify-icon icon="bi:images" width="24" class="text-tertiary-600" />
+		</a>
+	{/if}
+
+	<!-- test Builder -->
+	{#if $toggleLeftSidebar === 'full'}
+		<!-- switchSideBar expanded -->
+		<a href="/collection" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
+			<iconify-icon icon="ion:build" width="24" class="text-waring-600 px-2 py-1" />
+			<p class="mr-auto text-center uppercase">C builder</p>
+		</a>
+	{:else}
+		<!-- switchSideBar collapsed -->
+		<a href="/collection" class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
+			<p class="text-xs uppercase">Cbuilder</p>
+			<iconify-icon icon="ion:build" width="24" class="text-waring-600" />
 		</a>
 	{/if}
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { collection, categories } from '@src/collections';
+	import { collection, categories } from '@src/collections/index';
 	import { collectionValue, deleteEntry, mode, screenWidth, toggleLeftSidebar, handleSidebarToggle, contentLanguage } from '@src/stores/store';
 	import { cloneData, deleteData } from '@src/utils/utils';
 	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';

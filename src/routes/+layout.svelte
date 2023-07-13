@@ -26,7 +26,7 @@
 		storeListboxValue
 	} from '@src/stores/store';
 
-	import { collection } from '@src/collections';
+	import { collection } from '@src/collections/index';
 	// Use handleSidebarToggle as a reactive statement to automatically switch the correct sidebar
 	$: handleSidebarToggle;
 
@@ -209,19 +209,23 @@
 	</div>
 </div> -->
 
-
 <svelte:head>
-  <!--Basic SEO-->
-  <title>{PUBLIC_SITENAME} - powered with sveltekit</title>
-  <meta name="description" content="{PUBLIC_SITENAME} - a modern, powerful, and easy-to-use CMS powered by SvelteKit. Manage your content with ease and take advantage of the latest web technologies." />
+	<!--Basic SEO-->
+	<title>{PUBLIC_SITENAME} - powered with sveltekit</title>
+	<meta
+		name="description"
+		content="{PUBLIC_SITENAME} - a modern, powerful, and easy-to-use CMS powered by SvelteKit. Manage your content with ease and take advantage of the latest web technologies."
+	/>
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="{PUBLIC_SITENAME} - powered with sveltekit" />
-  <meta property="og:description" content="{PUBLIC_SITENAME} - a modern, powerful, and easy-to-use CMS powered by SvelteKit. Manage your content with ease and take advantage of the latest web technologies." />
-  <meta property="og:image" content="/SimpleCMS_Logo_Round.png" />
-  <meta property="og:type" content="website" />
+	<!-- Open Graph -->
+	<meta property="og:title" content="{PUBLIC_SITENAME} - powered with sveltekit" />
+	<meta
+		property="og:description"
+		content="{PUBLIC_SITENAME} - a modern, powerful, and easy-to-use CMS powered by SvelteKit. Manage your content with ease and take advantage of the latest web technologies."
+	/>
+	<meta property="og:image" content="/SimpleCMS_Logo_Round.png" />
+	<meta property="og:type" content="website" />
 </svelte:head>
-
 
 <AppShell
 	slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700

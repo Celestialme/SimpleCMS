@@ -13,23 +13,46 @@ import Posts2 from './Posts2';
 import Relation from './Relation';
 import WidgetTest from './WidgetTest';
 
+export async function getCollections() {
+	try {
+		const res = await fetch('/api/collections');
+		if (!res.ok) {
+			throw new Error(`Error calling /api/collections: ${res.status} ${res.statusText}`);
+		}
+		const collectionFiles = await res.json();
+		console.log('collectionFiles', collectionFiles);
+		return collectionFiles;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
 // Display how Collections are sorted and displayed in Categories section
 // TODO Add translations
 let categories = [
 	{
+		id: 1,
 		name: get(LL).CollectionCategory_Collection(),
 		icon: 'bi:collection',
-		collections: [Posts, Names, Posts2, Relation, WidgetTest]
+		collections: [
+			{ ...Posts, id: 1.1 },
+			{ ...Names, id: 1.2 },
+			{ ...Posts2, id: 1.3 },
+			{ ...Relation, id: 1.4 },
+			{ ...WidgetTest, id: 1.5 }
+		]
 	},
 	{
+		id: 2,
 		name: get(LL).CollectionCategory_Menu(),
 		icon: 'bi:menu-button-wide',
-		collections: [Menu]
+		collections: [{ ...Menu, id: 2.1 }]
 	},
 	{
+		id: 3,
 		name: 'Images',
 		icon: 'bi:images',
-		collections: [ImageArray]
+		collections: [{ ...ImageArray, id: 3.1 }]
 	}
 ];
 
