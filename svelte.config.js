@@ -2,7 +2,7 @@ import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
 // Set the body size limit '100mb
-process.env.BODY_SIZE_LIMIT = '104857600';
+//process.env.BODY_SIZE_LIMIT = '104857600';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
