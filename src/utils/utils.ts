@@ -43,11 +43,86 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	return formData;
 };
 
-// Saves files to disk and returns file information
+// Saves POSTS files to disk and returns file information
+//import sharp from 'sharp';
+// import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
+
+// Saves POSTS files to disk and returns file information
+// export function saveFiles(data: FormData, collection: string) {
+// 	let files: any = {};
+// 	let _files: Array<any> = [];
+// 	let schema = schemas.find((schema) => schema.name === collection);
+
+// 	const maxUploadSize = 100 * 1024 * 1024; // 100MB
+// 	const publicMediaOutputFormat: 'avif' | 'webp' | undefined = PUBLIC_MEDIA_OUTPUT_FORMAT as 'avif' | 'webp' | undefined;
+// 	const supportedFileTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+
+// 	for (let [fieldname, fieldData] of data.entries()) {
+// 		if (fieldData instanceof Blob) {
+// 			// Check if the file size exceeds the maximum upload size
+// 			if (fieldData.size > maxUploadSize) {
+// 				throw new Error(`File size exceeds the maximum upload size of ${maxUploadSize} bytes`);
+// 			}
+// 			// Check if the file type is supported
+// 			if (!supportedFileTypes.includes(fieldData.type)) {
+// 				throw new Error(`Unsupported file type: ${fieldData.type}`);
+// 			}
+// 			_files.push({ blob: fieldData, fieldname });
+// 		}
+// 	}
+
+// 	for (let file of _files) {
+// 		let { blob, fieldname } = file;
+// 		let path = _findFieldByTitle(schema, fieldname).path;
+// 		let fileName = sanitizeFileName(blob.name, collection);
+// 		let filePath = `${path}/${fileName}`;
+
+// 		// Create folder if it doesn't exist
+// 		if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
+// 		// Check if the file already exists and throw an error if it does
+// 		if (fs.existsSync(filePath)) {
+// 			throw new Error(`File already exists: ${filePath}`);
+// 		}
+
+// 		files[fieldname as keyof typeof files] = { name: fileName, size: blob.size, type: blob.type, lastModified: blob.lastModified };
+
+// 		(blob as Blob).arrayBuffer().then(async (arrayBuffer) => {
+// 			// Optimize image files using sharp.js with a compression quality of 80% for webp and 50% for avif
+// 			if (publicMediaOutputFormat && ['webp', 'avif'].includes(publicMediaOutputFormat)) {
+// 				const compressionQuality = publicMediaOutputFormat === 'webp' ? 80 : 50;
+// 				const optimizedImageBuffer = await sharp(Buffer.from(arrayBuffer))
+// 					.rotate() // Rotate image according to EXIF data
+// 					.toFormat(publicMediaOutputFormat, { quality: compressionQuality })
+// 					.toBuffer();
+// 				fs.writeFileSync(filePath, optimizedImageBuffer);
+
+// 				// Create a reduced thumbnail using sharp.js with a compression quality of 80% for webp and 50% for avif
+// 				const thumbnailBuffer = await sharp(Buffer.from(arrayBuffer))
+// 					.rotate() // Rotate image according to EXIF data
+// 					.resize(320, 320)
+// 					.toFormat(publicMediaOutputFormat, { quality: compressionQuality })
+// 					.toBuffer();
+// 				const thumbnailPath = `${path}/thumbnail-${fileName}`;
+// 				fs.writeFileSync(thumbnailPath, thumbnailBuffer);
+// 				files[fieldname].thumbnail = thumbnailPath;
+// 			} else {
+// 				fs.writeFileSync(filePath, Buffer.from(arrayBuffer));
+// 			}
+// 		});
+// 	}
+// 	return files;
+// }
+
+// function sanitizeFileName(fileName: string, collection: string) {
+// 	// Sanitize the file name by adding the collection to it and replacing any characters that are not letters, numbers, periods or hyphens with underscores
+// 	return `${collection}-${fileName.replace(/[^a-z0-9.-]/gi, '_').toLowerCase()}`;
+// }
+
 export function saveFiles(data: FormData, collection: string) {
 	let files: any = {};
 	let _files: Array<any> = [];
 	let schema = schemas.find((schema) => schema.name === collection);
+
 	for (let [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {
 			_files.push({ blob: fieldData, fieldname });

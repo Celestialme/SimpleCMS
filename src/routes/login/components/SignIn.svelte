@@ -15,7 +15,6 @@
 	import { Toast, toastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 
-	console.log('toastStore', toastStore);
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
