@@ -7,8 +7,10 @@ import { SESSION_COOKIE_NAME } from 'lucia-auth';
 import { auth } from './api/db';
 
 export async function load({ cookies, route, params }) {
+	console.log('load function called');
 	let session = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await validate(auth, session);
+	console.log('user:', user);
 	// filters collection  based on reading permissions  and redirects to first left one
 	let _filtered = collections.filter((c) => c?.permissions?.[user.user.role]?.read != false);
 

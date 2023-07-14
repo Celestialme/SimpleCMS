@@ -557,7 +557,7 @@ type RootTranslation = {
 	 */
 	WIDGET_Address_GetMap: string
 	/**
-	 * G​e​o​c​o​o​r​d​i​n​a​t​e​s
+	 * G​e​o​ ​C​o​o​r​d​i​n​a​t​e​s
 	 */
 	WIDGET_Address_Geocoordinates: string
 	/**
@@ -603,99 +603,119 @@ type RootTranslation = {
 	/**
 	 * Y​o​u​r​ ​t​i​t​l​e​ ​i​s​ ​m​o​r​e​ ​t​h​a​n​ ​5​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​P​e​r​f​e​c​t​!
 	 */
-	WIDGET_Seo_Suggetion_TitlePerfect: string
+	WIDGET_Seo_Suggestion_TitlePerfect: string
 	/**
 	 * Y​o​u​r​ ​t​i​t​l​e​ ​i​s​ ​m​o​r​e​ ​t​h​a​n​ ​3​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​T​r​y​ ​5​0​+​.​ ​G​o​o​d​!
 	 */
-	WIDGET_Seo_Suggetion_TitleGood: string
+	WIDGET_Seo_Suggestion_TitleGood: string
 	/**
 	 * Y​o​u​r​ ​t​i​t​l​e​ ​i​s​ ​t​o​o​ ​s​h​o​r​t​.​ ​M​a​k​e​ ​s​u​r​e​ ​y​o​u​r​ ​t​i​t​l​e​ ​i​s​ ​a​t​ ​l​e​a​s​t​ ​5​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​B​a​d​!
 	 */
-	WIDGET_Seo_Suggetion_TitleBad: string
+	WIDGET_Seo_Suggestion_TitleBad: string
 	/**
 	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​b​e​t​w​e​e​n​ ​1​2​0​ ​a​n​d​ ​1​6​5​ ​c​h​a​r​a​c​t​e​r​s​.​ ​P​e​r​f​e​c​t​!
 	 */
-	WIDGET_Seo_Suggetion_DescriptionPerfect: string
+	WIDGET_Seo_Suggestion_DescriptionPerfect: string
 	/**
 	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​m​o​r​e​ ​t​h​a​n​ ​9​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​G​o​o​d​!
 	 */
-	WIDGET_Seo_Suggetion_DescriptionGood: string
+	WIDGET_Seo_Suggestion_DescriptionGood: string
 	/**
 	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​l​e​s​s​ ​t​h​a​n​ ​9​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​B​a​d​!
 	 */
-	WIDGET_Seo_Suggetion_DescriptionBad: string
+	WIDGET_Seo_Suggestion_DescriptionBad: string
 	/**
 	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​2​ ​t​o​ ​4​ ​s​e​n​t​e​n​c​e​s​ ​l​o​n​g​.​ ​P​e​r​f​e​c​t​!
 	 */
-	WIDGET_Seo_Suggetion_SentencePerfect: string
+	WIDGET_Seo_Suggestion_SentencePerfect: string
 	/**
-	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​o​n​ ​i​s​ ​o​n​l​y​ ​1​ ​s​e​n​t​e​n​c​e​ ​l​o​n​g​.​ ​M​a​k​e​ ​s​u​r​e​ ​y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​2​ ​t​o​ ​4​ ​s​e​n​t​e​n​c​e​s​ ​l​o​n​g​.
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​2​ ​t​o​ ​4​ ​s​e​n​t​e​n​c​e​s​ ​l​o​n​g​ ​b​u​t​ ​n​o​t​ ​a​l​l​ ​s​e​n​t​e​n​c​e​s​ ​a​r​e​ ​b​e​t​w​e​e​n​ ​1​0​ ​a​n​d​ ​3​0​ ​c​h​a​r​a​c​t​e​r​s​.​ ​G​o​o​d​!
 	 */
-	WIDGET_Seo_Suggetion_SentenceBad: string
+	WIDGET_Seo_Suggestion_SentenceGood: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​o​n​l​y​ ​1​ ​s​e​n​t​e​n​c​e​ ​l​o​n​g​.​ ​M​a​k​e​ ​s​u​r​e​ ​y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​i​s​ ​2​ ​t​o​ ​4​ ​s​e​n​t​e​n​c​e​s​ ​l​o​n​g​.
+	 */
+	WIDGET_Seo_Suggestion_SentenceBad: string
 	/**
 	 * Y​o​u​r​ ​t​i​t​l​e​ ​u​s​e​s​ ​n​u​m​b​e​r​s​.​ ​P​e​r​f​e​c​t​!
 	 */
-	WIDGET_Seo_Suggetion_NumberPerfect: string
+	WIDGET_Seo_Suggestion_NumberPerfect: string
 	/**
 	 * Y​o​u​r​ ​t​i​t​l​e​ ​d​o​e​s​ ​n​o​t​ ​u​s​e​ ​n​u​m​b​e​r​s​.​ ​T​h​e​ ​u​s​e​ ​o​f​ ​n​u​m​b​e​r​s​ ​i​n​ ​y​o​u​r​ ​t​i​t​l​e​ ​c​a​n​ ​i​n​c​r​e​a​s​e​ ​y​o​u​r​ ​C​T​R​.
 	 */
-	WIDGET_Seo_Suggetion_NumberBad: string
+	WIDGET_Seo_Suggestion_NumberBad: string
 	/**
-	 * Y​o​u​r​ ​t​i​t​l​e​ ​h​a​s​ ​t​h​e​ ​P​o​w​e​r​ ​W​o​r​d​ ​w​o​r​d​ ​P​e​r​f​e​c​t​!
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​h​a​s​ ​t​h​e​ ​P​o​w​e​r​ ​W​o​r​d​.​ ​P​e​r​f​e​c​t​!
 	 */
-	WIDGET_Seo_Suggetion_PowerWordTitle: string
+	WIDGET_Seo_Suggestion_PowerWordTitle: string
 	/**
-	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​u​s​e​s​ ​t​h​e​ ​P​o​w​e​r​ ​W​o​r​d​ ​w​o​r​d​.​ ​P​e​r​f​e​c​t​!
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​d​o​e​s​ ​n​o​t​ ​h​a​v​e​ ​a​ ​P​o​w​e​r​ ​W​o​r​d​.​ ​B​a​d​!
 	 */
-	WIDGET_Seo_Suggetion_PowerWordDescription: string
+	WIDGET_Seo_Suggestion_PowerWordTitleBad: string
 	/**
-	 * Y​o​u​r​ ​t​i​t​l​e​ ​h​a​s​ ​t​h​e​ ​C​T​A​ ​k​e​y​w​o​r​d​ ​k​e​y​w​o​r​d​.​ ​G​o​o​d​!
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​u​s​e​s​ ​t​h​e​ ​P​o​w​e​r​ ​W​o​r​d​.​ ​P​e​r​f​e​c​t​!
 	 */
-	WIDGET_Seo_Suggetion_ctaKeywordsTitle: string
+	WIDGET_Seo_Suggestion_PowerWordDescription: string
 	/**
-	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​u​s​e​s​ ​t​h​e​ ​C​T​A​ ​k​e​y​w​o​r​d​ ​k​e​y​w​o​r​d​.​ ​G​o​o​d​!
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​d​o​e​s​ ​n​o​t​ ​u​s​e​ ​a​ ​P​o​w​e​r​ ​W​o​r​d​.​ ​B​a​d
 	 */
-	WIDGET_Seo_Suggetion_ctaKeywordsDescription: string
+	WIDGET_Seo_Suggestion_PowerWordDescriptionBad: string
+	/**
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​h​a​s​ ​t​h​e​ ​C​T​A​ ​k​e​y​w​o​r​d​.​ ​P​e​r​f​e​c​t​!
+	 */
+	WIDGET_Seo_Suggestion_ctaKeywordsTitle: string
+	/**
+	 * Y​o​u​r​ ​t​i​t​l​e​ ​d​o​e​s​ ​n​o​t​ ​h​a​v​e​ ​a​ ​C​T​A​ ​k​e​y​w​o​r​d​.​ ​B​a​d​!
+	 */
+	WIDGET_Seo_Suggestion_ctaKeywordsTitleBad: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​u​s​e​s​ ​t​h​e​ ​C​T​A​ ​k​e​y​w​o​r​d​.​ ​P​e​r​f​e​c​t​!
+	 */
+	WIDGET_Seo_Suggestion_ctaKeywordsDescription: string
+	/**
+	 * Y​o​u​r​ ​d​e​s​c​r​i​p​t​i​o​n​ ​d​o​e​s​ ​n​o​t​ ​u​s​e​ ​a​ ​C​T​A​ ​k​e​y​w​o​r​d​.​ ​B​a​d​!
+	 */
+	WIDGET_Seo_Suggestion_ctaKeywordsDescriptionBad: string
 	/**
 	 * T​i​t​l​e​:
 	 */
-	WIDGET_Seo_Suggetion_Title: string
+	WIDGET_Seo_Suggestion_Title: string
 	/**
 	 * C​h​a​r​a​c​t​e​r​:
 	 */
-	WIDGET_Seo_Suggetion_Character: string
+	WIDGET_Seo_Suggestion_Character: string
 	/**
 	 * -​ ​D​e​s​k​t​o​p​:
 	 */
-	WIDGET_Seo_Suggetion_WidthDesktop: string
+	WIDGET_Seo_Suggestion_WidthDesktop: string
 	/**
 	 * M​o​b​i​l​e​:​ 
 	 */
-	WIDGET_Seo_Suggetion_WidthMobile: string
+	WIDGET_Seo_Suggestion_WidthMobile: string
 	/**
 	 * S​E​O​ ​T​i​t​l​e​:​ 
 	 */
-	WIDGET_Seo_Suggetion_SeoTitle: string
+	WIDGET_Seo_Suggestion_SeoTitle: string
 	/**
 	 * D​e​s​c​r​i​p​t​i​o​n​:
 	 */
-	WIDGET_Seo_Suggetion_Description: string
+	WIDGET_Seo_Suggestion_Description: string
 	/**
 	 * S​E​O​ ​D​e​s​c​r​i​p​t​i​o​n
 	 */
-	WIDGET_Seo_Suggetion_SeoDescription: string
+	WIDGET_Seo_Suggestion_SeoDescription: string
 	/**
 	 * S​E​O​ ​P​r​e​v​i​e​w
 	 */
-	WIDGET_Seo_Suggetion_SeoPreview: string
+	WIDGET_Seo_Suggestion_SeoPreview: string
 	/**
 	 * S​E​O​ ​S​u​g​g​e​s​t​i​o​n​s​:
 	 */
-	WIDGET_Seo_Suggetion_ListOfSuggestion: string
+	WIDGET_Seo_Suggestion_ListOfSuggestion: string
 	/**
 	 * O​p​t​i​m​i​z​e​ ​t​i​t​l​e​ ​&​ ​d​e​s​c​r​i​p​t​i​o​n​ ​f​o​r​ ​G​o​o​g​l​e​ ​s​e​a​r​c​h​ ​r​e​s​u​l​t​s​,​ ​t​o​ ​i​m​p​r​o​v​e​ ​t​h​e​ ​v​i​s​u​a​l​ ​a​p​p​e​a​l​ ​t​o​ ​b​r​i​n​g​s​ ​m​o​r​e​ ​c​l​i​c​k​s​ ​t​o​ ​y​o​u​r​ ​w​e​b​s​i​t​e​.
 	 */
-	WIDGET_Seo_Suggetion_Text: string
+	WIDGET_Seo_Suggestion_Text: string
 	WIDGET_SEO_PowerWords: {
 		/**
 		 * a​m​a​z​i​n​g
@@ -1554,7 +1574,7 @@ export type TranslationFunctions = {
 	 */
 	WIDGET_Address_GetMap: () => LocalizedString
 	/**
-	 * Geocoordinates
+	 * Geo Coordinates
 	 */
 	WIDGET_Address_Geocoordinates: () => LocalizedString
 	/**
@@ -1600,99 +1620,119 @@ export type TranslationFunctions = {
 	/**
 	 * Your title is more than 50 characters. Perfect!
 	 */
-	WIDGET_Seo_Suggetion_TitlePerfect: () => LocalizedString
+	WIDGET_Seo_Suggestion_TitlePerfect: () => LocalizedString
 	/**
 	 * Your title is more than 30 characters. Try 50+. Good!
 	 */
-	WIDGET_Seo_Suggetion_TitleGood: () => LocalizedString
+	WIDGET_Seo_Suggestion_TitleGood: () => LocalizedString
 	/**
 	 * Your title is too short. Make sure your title is at least 50 characters. Bad!
 	 */
-	WIDGET_Seo_Suggetion_TitleBad: () => LocalizedString
+	WIDGET_Seo_Suggestion_TitleBad: () => LocalizedString
 	/**
 	 * Your description is between 120 and 165 characters. Perfect!
 	 */
-	WIDGET_Seo_Suggetion_DescriptionPerfect: () => LocalizedString
+	WIDGET_Seo_Suggestion_DescriptionPerfect: () => LocalizedString
 	/**
 	 * Your description is more than 90 characters. Good!
 	 */
-	WIDGET_Seo_Suggetion_DescriptionGood: () => LocalizedString
+	WIDGET_Seo_Suggestion_DescriptionGood: () => LocalizedString
 	/**
 	 * Your description is less than 90 characters. Bad!
 	 */
-	WIDGET_Seo_Suggetion_DescriptionBad: () => LocalizedString
+	WIDGET_Seo_Suggestion_DescriptionBad: () => LocalizedString
 	/**
 	 * Your description is 2 to 4 sentences long. Perfect!
 	 */
-	WIDGET_Seo_Suggetion_SentencePerfect: () => LocalizedString
+	WIDGET_Seo_Suggestion_SentencePerfect: () => LocalizedString
 	/**
-	 * Your descripton is only 1 sentence long. Make sure your description is 2 to 4 sentences long.
+	 * Your description is 2 to 4 sentences long but not all sentences are between 10 and 30 characters. Good!
 	 */
-	WIDGET_Seo_Suggetion_SentenceBad: () => LocalizedString
+	WIDGET_Seo_Suggestion_SentenceGood: () => LocalizedString
+	/**
+	 * Your description is only 1 sentence long. Make sure your description is 2 to 4 sentences long.
+	 */
+	WIDGET_Seo_Suggestion_SentenceBad: () => LocalizedString
 	/**
 	 * Your title uses numbers. Perfect!
 	 */
-	WIDGET_Seo_Suggetion_NumberPerfect: () => LocalizedString
+	WIDGET_Seo_Suggestion_NumberPerfect: () => LocalizedString
 	/**
 	 * Your title does not use numbers. The use of numbers in your title can increase your CTR.
 	 */
-	WIDGET_Seo_Suggetion_NumberBad: () => LocalizedString
+	WIDGET_Seo_Suggestion_NumberBad: () => LocalizedString
 	/**
-	 * Your title has the Power Word word Perfect!
+	 * Your title has the Power Word. Perfect!
 	 */
-	WIDGET_Seo_Suggetion_PowerWordTitle: () => LocalizedString
+	WIDGET_Seo_Suggestion_PowerWordTitle: () => LocalizedString
 	/**
-	 * Your description uses the Power Word word. Perfect!
+	 * Your title does not have a Power Word. Bad!
 	 */
-	WIDGET_Seo_Suggetion_PowerWordDescription: () => LocalizedString
+	WIDGET_Seo_Suggestion_PowerWordTitleBad: () => LocalizedString
 	/**
-	 * Your title has the CTA keyword keyword. Good!
+	 * Your description uses the Power Word. Perfect!
 	 */
-	WIDGET_Seo_Suggetion_ctaKeywordsTitle: () => LocalizedString
+	WIDGET_Seo_Suggestion_PowerWordDescription: () => LocalizedString
 	/**
-	 * Your description uses the CTA keyword keyword. Good!
+	 * Your description does not use a Power Word. Bad
 	 */
-	WIDGET_Seo_Suggetion_ctaKeywordsDescription: () => LocalizedString
+	WIDGET_Seo_Suggestion_PowerWordDescriptionBad: () => LocalizedString
+	/**
+	 * Your title has the CTA keyword. Perfect!
+	 */
+	WIDGET_Seo_Suggestion_ctaKeywordsTitle: () => LocalizedString
+	/**
+	 * Your title does not have a CTA keyword. Bad!
+	 */
+	WIDGET_Seo_Suggestion_ctaKeywordsTitleBad: () => LocalizedString
+	/**
+	 * Your description uses the CTA keyword. Perfect!
+	 */
+	WIDGET_Seo_Suggestion_ctaKeywordsDescription: () => LocalizedString
+	/**
+	 * Your description does not use a CTA keyword. Bad!
+	 */
+	WIDGET_Seo_Suggestion_ctaKeywordsDescriptionBad: () => LocalizedString
 	/**
 	 * Title:
 	 */
-	WIDGET_Seo_Suggetion_Title: () => LocalizedString
+	WIDGET_Seo_Suggestion_Title: () => LocalizedString
 	/**
 	 * Character:
 	 */
-	WIDGET_Seo_Suggetion_Character: () => LocalizedString
+	WIDGET_Seo_Suggestion_Character: () => LocalizedString
 	/**
 	 * - Desktop:
 	 */
-	WIDGET_Seo_Suggetion_WidthDesktop: () => LocalizedString
+	WIDGET_Seo_Suggestion_WidthDesktop: () => LocalizedString
 	/**
 	 * Mobile: 
 	 */
-	WIDGET_Seo_Suggetion_WidthMobile: () => LocalizedString
+	WIDGET_Seo_Suggestion_WidthMobile: () => LocalizedString
 	/**
 	 * SEO Title: 
 	 */
-	WIDGET_Seo_Suggetion_SeoTitle: () => LocalizedString
+	WIDGET_Seo_Suggestion_SeoTitle: () => LocalizedString
 	/**
 	 * Description:
 	 */
-	WIDGET_Seo_Suggetion_Description: () => LocalizedString
+	WIDGET_Seo_Suggestion_Description: () => LocalizedString
 	/**
 	 * SEO Description
 	 */
-	WIDGET_Seo_Suggetion_SeoDescription: () => LocalizedString
+	WIDGET_Seo_Suggestion_SeoDescription: () => LocalizedString
 	/**
 	 * SEO Preview
 	 */
-	WIDGET_Seo_Suggetion_SeoPreview: () => LocalizedString
+	WIDGET_Seo_Suggestion_SeoPreview: () => LocalizedString
 	/**
 	 * SEO Suggestions:
 	 */
-	WIDGET_Seo_Suggetion_ListOfSuggestion: () => LocalizedString
+	WIDGET_Seo_Suggestion_ListOfSuggestion: () => LocalizedString
 	/**
 	 * Optimize title & description for Google search results, to improve the visual appeal to brings more clicks to your website.
 	 */
-	WIDGET_Seo_Suggetion_Text: () => LocalizedString
+	WIDGET_Seo_Suggestion_Text: () => LocalizedString
 	WIDGET_SEO_PowerWords: {
 		/**
 		 * amazing
