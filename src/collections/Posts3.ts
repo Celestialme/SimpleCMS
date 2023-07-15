@@ -6,6 +6,9 @@ let schema: Schema = {
 	permissions: {
 		[roles.user]: {
 			read: false
+		},
+		[roles.admin]: {
+			write: false
 		}
 	},
 	fields: [
