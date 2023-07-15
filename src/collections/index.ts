@@ -13,20 +13,6 @@ import Posts2 from './Posts2';
 import Relation from './Relation';
 import WidgetTest from './WidgetTest';
 
-export async function getCollections() {
-	try {
-		const res = await fetch('/api/collections');
-		if (!res.ok) {
-			throw new Error(`Error calling /api/collections: ${res.status} ${res.statusText}`);
-		}
-		const collectionFiles = await res.json();
-		console.log('collectionFiles', collectionFiles);
-		return collectionFiles;
-	} catch (error) {
-		console.error(error);
-	}
-}
-
 // Display how Collections are sorted and displayed in Categories section
 // TODO Add translations
 let categories = [
@@ -38,8 +24,8 @@ let categories = [
 			{ ...Posts, id: 1.1 },
 			{ ...Names, id: 1.2 },
 			{ ...Posts2, id: 1.3 },
-			{ ...Relation, id: 1.4 },
-			{ ...WidgetTest, id: 1.5 }
+			{ ...Relation, id: 1.4 }
+			// { ...WidgetTest, id: 1.5 }
 		]
 	},
 	{

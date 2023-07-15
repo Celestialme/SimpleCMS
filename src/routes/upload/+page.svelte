@@ -109,11 +109,12 @@
 <div class="flex flex-col gap-1">
 	<div class="flex items-center">
 		<!-- hamburger -->
-		{#if $toggleLeftSidebar === true}
-			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+		{#if $toggleLeftSidebar === 'closed'}
+			<button type="button" on:click={() => toggleLeftSidebar.click()} class="btn-icon variant-ghost-surface mt-1">
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
+
 		<!-- Title  with icon -->
 		<h1 class="h1 mb-2 ml-2 flex items-center gap-1">
 			<iconify-icon icon="bi:images" width="24" class="mr-1 text-error-500 sm:mr-2" /> Upload Tester
