@@ -61,7 +61,9 @@
 		on:input={handleInput}
 		name={field?.db_fieldName}
 		id={field?.db_fieldName}
-		placeholder={field?.placeholder && field?.placeholder !== '' ? field?.placeholder : field?.db_fieldName}
+		placeholder={field?.placeholder && field?.placeholder !== ''
+			? field?.placeholder
+			: field?.db_fieldName}
 		required={field?.required}
 		readonly={field?.readonly}
 		minlength={field?.minlength}

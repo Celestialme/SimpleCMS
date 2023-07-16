@@ -31,7 +31,9 @@
 			// Use prefix=ic to filter by Google Material icon set
 			// Use start variable to specify the start index of the result
 			const response = await axios.get(
-				`https://api.iconify.design/search?query=${encodeURIComponent(searchQuery)}&prefix=ic&limit=50&start=${start}`
+				`https://api.iconify.design/search?query=${encodeURIComponent(
+					searchQuery
+				)}&prefix=ic&limit=50&start=${start}`
 			);
 			// console.log('response', response);
 			// const total = response.data.total;
@@ -90,7 +92,13 @@
 
 <!-- iconify icon -->
 <div class="mb-4 flex items-center gap-4">
-	<label for="icon" class="relative"> Icon: <iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-1" /></label>
+	<label for="icon" class="relative">
+		Icon: <iconify-icon
+			icon="material-symbols:info"
+			width="18"
+			class="absolute -top-3 right-1"
+		/></label
+	>
 	<input
 		type="text"
 		id="icon"
@@ -129,7 +137,13 @@
 			{#each icons as icon}
 				<button class="relative flex flex-col items-center">
 					<span class="iconify" data-icon={icon} data-inline="false" />
-					<iconify-icon {icon} width="24" on:keydown on:click={() => selectIcon(icon)} class="hover:cursor-pointer hover:text-primary-500" />
+					<iconify-icon
+						{icon}
+						width="24"
+						on:keydown
+						on:click={() => selectIcon(icon)}
+						class="hover:cursor-pointer hover:text-primary-500"
+					/>
 				</button>
 			{/each}
 		</div>
@@ -138,9 +152,19 @@
 		<!-- TODO Button Click will close popup -->
 		<div class="mt-6 flex justify-between">
 			<!-- Disable the previous button if the start index is zero -->
-			<button disabled={start === 0} on:keydown on:click={prevPage} class="btn btn-sm variant-filled-primary">Previous</button>
+			<button
+				disabled={start === 0}
+				on:keydown
+				on:click={prevPage}
+				class="btn btn-sm variant-filled-primary">Previous</button
+			>
 			<!-- Disable the next button if there are less than 50 icons in the current page -->
-			<button disabled={icons.length < 50} on:keydown on:click={nextPage} class="btn btn-sm variant-filled-primary">Next</button>
+			<button
+				disabled={icons.length < 50}
+				on:keydown
+				on:click={nextPage}
+				class="btn btn-sm variant-filled-primary">Next</button
+			>
 		</div>
 	</div>
 	<div class="arrow bg-surface-100-800-token" />

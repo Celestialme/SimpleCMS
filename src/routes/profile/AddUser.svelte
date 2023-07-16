@@ -32,10 +32,20 @@
 	$form.role = 'User';
 </script>
 
-<form method="post" action="?/addUser" use:enhance class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2">
+<form
+	method="post"
+	action="?/addUser"
+	use:enhance
+	class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2"
+>
 	<div class="r label">
 		{$LL.LOGIN_EmailAddress()}
-		<input bind:value={$form.email} name="email" type="email" class="input variant-outline-surface" />
+		<input
+			bind:value={$form.email}
+			name="email"
+			type="email"
+			class="input variant-outline-surface"
+		/>
 	</div>
 
 	{#if $errors.email}<span class="invalid">{$errors.email}</span>{/if}

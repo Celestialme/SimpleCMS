@@ -1,6 +1,14 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections/index';
-	import { collectionValue, deleteEntry, mode, screenWidth, toggleLeftSidebar, handleSidebarToggle, contentLanguage } from '@src/stores/store';
+	import {
+		collectionValue,
+		deleteEntry,
+		mode,
+		screenWidth,
+		toggleLeftSidebar,
+		handleSidebarToggle,
+		contentLanguage
+	} from '@src/stores/store';
 	import { cloneData, deleteData } from '@src/utils/utils';
 	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 	import { saveFormData } from '@src/utils/utils';
@@ -31,14 +39,23 @@
 
 	export let showMore = false;
 	$: if ($mode === 'edit' || $mode === 'create') {
-  		showMore = false;
+		showMore = false;
 	}
 </script>
 
-<header class="relative flex w-full items-center justify-between {showMore ? '' : 'border-b'} bg-white p-2 border-secondary-600-300-token dark:bg-surface-700">	<div class="flex items-center justify-start">
+<header
+	class="relative flex w-full items-center justify-between {showMore
+		? ''
+		: 'border-b'} border-secondary-600-300-token bg-white p-2 dark:bg-surface-700"
+>
+	<div class="flex items-center justify-start">
 		<!-- hamburger -->
 		{#if $toggleLeftSidebar === 'closed'}
-			<button type="button" on:click={() => toggleLeftSidebar.click()} class="btn-icon variant-ghost-surface">
+			<button
+				type="button"
+				on:click={() => toggleLeftSidebar.click()}
+				class="btn-icon variant-ghost-surface"
+			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
@@ -65,13 +82,18 @@
 		{#if $screenWidth !== 'desktop'}
 			<!-- Save Content -->
 			<button type="button" on:click={saveData} class="btn-icon variant-filled-primary md:btn">
-				<iconify-icon icon="material-symbols:save" width="24" />
+				<iconify-icon icon="material-symbols:save" width="24" class="text-white" />
 				<span class="hidden md:block">Save</span>
 			</button>
 
 			{#if $screenWidth === 'mobile' && $mode === 'edit'}
-			 <!-- DropDown to show more Buttons -->
-				<button type="button" on:keydown on:click={() => (showMore = !showMore)} class="btn-icon variant-ghost-surface sm:hidden">
+				<!-- DropDown to show more Buttons -->
+				<button
+					type="button"
+					on:keydown
+					on:click={() => (showMore = !showMore)}
+					class="btn-icon variant-ghost-surface sm:hidden"
+				>
 					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
 				</button>
 			{:else}
@@ -87,15 +109,15 @@
 		<!-- Select Content Language -->
 		<!-- Mobile -->
 		<!-- TODO: hide arrow for x mobile -->
-	<select
-		class="sm:appearance-none md:appearance-auto variant-ghost-surface m-0 rounded border-surface-500 text-white md:hidden"
-		bind:value={$contentLanguage}
-		on:change={handleChange}
-	>
-		{#each Object.keys(options) as value}
-			<option {value}>{value.toUpperCase()}</option>
-		{/each}
-	</select>
+		<select
+			class="md:appearance-auto variant-ghost-surface m-0 rounded border-surface-500 text-white sm:appearance-none md:hidden"
+			bind:value={$contentLanguage}
+			on:change={handleChange}
+		>
+			{#each Object.keys(options) as value}
+				<option {value}>{value.toUpperCase()}</option>
+			{/each}
+		</select>
 
 		<!-- Desktop -->
 		<select
@@ -115,29 +137,24 @@
 	</div>
 </header>
 
-{#if showMore }
-<div class="flex  justify-center gap-2 mt-2">
-	<div class="flex flex-col justify-center items-center ">
-	  <!-- Delete Content -->
-	  <button type="button" on:click={$deleteEntry} class="btn-icon variant-filled-error">
-		<iconify-icon icon="icomoon-free:bin" width="24" />
-	  </button>
-	  <div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
-		Delete
-	  </div>
-	</div>
-  
-	<!-- Clone Content -->
-	{#if $mode == 'edit'}
-	  <div class="flex flex-col justify-center items-center">
-		<button type="button" on:click={cloneData} class="btn-icon variant-filled-secondary">
-		  <iconify-icon icon="fa-solid:clone" width="24" />
-		</button>
-		<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
-		  Clone
+{#if showMore}
+	<div class="mt-2 flex justify-center gap-2">
+		<div class="flex flex-col items-center justify-center">
+			<!-- Delete Content -->
+			<button type="button" on:click={$deleteEntry} class="btn-icon variant-filled-error">
+				<iconify-icon icon="icomoon-free:bin" width="24" />
+			</button>
+			<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">Delete</div>
 		</div>
-	  </div>
-	{/if}
-  </div>
-  
+
+		<!-- Clone Content -->
+		{#if $mode == 'edit'}
+			<div class="flex flex-col items-center justify-center">
+				<button type="button" on:click={cloneData} class="btn-icon variant-filled-secondary">
+					<iconify-icon icon="fa-solid:clone" width="24" />
+				</button>
+				<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">Clone</div>
+			</div>
+		{/if}
+	</div>
 {/if}

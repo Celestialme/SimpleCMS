@@ -1,7 +1,12 @@
 <script lang="ts">
 	// Collection Creation
 	import { TabGroup, Tab, Autocomplete, popup, Modal, modalStore } from '@skeletonlabs/skeleton';
-	import type { AutocompleteOption, PopupSettings, ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
+	import type {
+		AutocompleteOption,
+		PopupSettings,
+		ModalSettings,
+		ModalComponent
+	} from '@skeletonlabs/skeleton';
 	import VerticalList from '@src/components/VerticalList.svelte';
 	import IconifyPicker from '@src/components/IconifyPicker.svelte';
 
@@ -146,18 +151,29 @@
 <div class="align-centre mb-2 mt-2 flex dark:text-white">
 	<div class="flex items-center justify-between">
 		{#if $toggleLeftSidebar === 'closed'}
-			<button type="button" on:keydown on:click={() => toggleLeftSidebar.update((value) => !value)} class="btn-icon variant-ghost-surface mt-1">
+			<button
+				type="button"
+				on:keydown
+				on:click={() => toggleLeftSidebar.update((value) => !value)}
+				class="variant-ghost-surface btn-icon mt-1"
+			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
 		<!-- Title  with icon -->
 		<h1 class="{!$toggleLeftSidebar ? 'ml-2' : ''} h1 flex items-center gap-1">
-			<iconify-icon icon="dashicons:welcome-widgets-menus" width="24" class="mr-1 text-error-500 sm:mr-2" /> Collection Builder
+			<iconify-icon
+				icon="dashicons:welcome-widgets-menus"
+				width="24"
+				class="mr-1 text-error-500 sm:mr-2"
+			/> Collection Builder
 		</h1>
 	</div>
 </div>
 <div class="m-2">
-	<p class="mb-2 hidden text-center sm:block">This builder will help you to setup a new Content Collection</p>
+	<p class="mb-2 hidden text-center sm:block">
+		This builder will help you to setup a new Content Collection
+	</p>
 
 	<TabGroup on:complete={onCompleteHandler}>
 		<Tab bind:group={tabSet} name="tab1" value={0}>
@@ -203,11 +219,15 @@
 					/>
 
 					{#if name}
-						<p class="mb-3 hidden sm:block">Database Name: <span class="font-bold text-primary-500">{DBName}</span></p>
+						<p class="mb-3 hidden sm:block">
+							Database Name: <span class="font-bold text-primary-500">{DBName}</span>
+						</p>
 					{/if}
 				</div>
 				{#if name}
-					<p class="mb-3 sm:hidden">Database Name: <span class="font-bold text-primary-500">{DBName}</span></p>
+					<p class="mb-3 sm:hidden">
+						Database Name: <span class="font-bold text-primary-500">{DBName}</span>
+					</p>
 				{/if}
 				<div class="rounded-md border p-2">
 					<p class="mb-2 font-bold text-primary-500">Optional values:</p>
@@ -235,7 +255,11 @@
 					<div class="mb-4 flex items-center gap-4">
 						<label class="relative" for="status">
 							Status:
-							<iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-1" />
+							<iconify-icon
+								icon="material-symbols:info"
+								width="18"
+								class="absolute -top-3 right-1"
+							/>
 						</label>
 						<select id="status" bind:value={status} class="variant-filled-surface w-full">
 							{#each statuses as statusOption}
@@ -248,7 +272,11 @@
 					<div class="mb-4 flex items-center gap-4">
 						<label for="slug" class="relative">
 							Slug:
-							<iconify-icon icon="material-symbols:info" width="18" class="absolute -top-3 right-1" />
+							<iconify-icon
+								icon="material-symbols:info"
+								width="18"
+								class="absolute -top-3 right-1"
+							/>
 						</label>
 						<input
 							type="text"
@@ -263,7 +291,11 @@
 
 				<div class="flex justify-between">
 					<a href="/builder" class="btn variant-filled-secondary mt-2">Cancel</a>
-					<button type="button" on:click={() => (tabSet = 1)} class="btn variant-filled-primary mt-2">Next</button>
+					<button
+						type="button"
+						on:click={() => (tabSet = 1)}
+						class="btn variant-filled-primary mt-2">Next</button
+					>
 				</div>
 
 				<!-- Manage Fields -->
@@ -281,8 +313,12 @@
 				<!--dnd vertical row -->
 				<VerticalList {items} {headers} {flipDurationMs} {handleDndConsider} {handleDndFinalize}>
 					{#each items as item (item.id)}
-						<div class="border-blue variant-ghost-secondary my-2 flex w-full items-center gap-6 rounded-md border p-1 text-center text-primary-500">
-							<div class="marker: badge variant-outline-primary rounded-full text-white">{item.id}</div>
+						<div
+							class="border-blue variant-ghost-secondary my-2 flex w-full items-center gap-6 rounded-md border p-1 text-center text-primary-500"
+						>
+							<div class="marker: badge variant-outline-primary rounded-full text-white">
+								{item.id}
+							</div>
 							<div class="text-white">{item.name}</div>
 							<div class="text-white">{item.DBName}</div>
 							<div class="text-white">{item.widget}</div>
@@ -290,12 +326,22 @@
 					{/each}
 				</VerticalList>
 
-				<div class=" border-t text-center border-surface-400-500-token">
-					<button class="btn variant-filled-tertiary mt-2" on:click={modalComponentForm}>Add more Fields</button>
+				<div class=" border-surface-400-500-token border-t text-center">
+					<button class="btn variant-filled-tertiary mt-2" on:click={modalComponentForm}
+						>Add more Fields</button
+					>
 				</div>
 				<div class=" flex items-center justify-between">
-					<button type="button" on:click={() => (tabSet = 0)} class="btn variant-filled-secondary mt-2 justify-end">Previous</button>
-					<button type="button" on:click={onCompleteHandler} class="btn variant-filled-primary mt-2 justify-end dark:text-black">Save</button>
+					<button
+						type="button"
+						on:click={() => (tabSet = 0)}
+						class="btn variant-filled-secondary mt-2 justify-end">Previous</button
+					>
+					<button
+						type="button"
+						on:click={onCompleteHandler}
+						class="btn variant-filled-primary mt-2 justify-end dark:text-black">Save</button
+					>
 				</div>
 
 				<!-- Manage Permissions -->

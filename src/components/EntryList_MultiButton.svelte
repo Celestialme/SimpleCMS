@@ -110,7 +110,7 @@
 
 	{#if dropdownOpen}
 		<ul
-			class="mt-1 absolute right-2 top-14 z-10 divide-y rounded border bg-surface-700 text-white ring-1 ring-black ring-opacity-5 "
+			class="absolute right-2 top-14 z-10 mt-1 divide-y rounded border bg-surface-700 text-white ring-1 ring-black ring-opacity-5"
 		>
 			{#if $storeListboxValue !== 'create'}
 				<li>

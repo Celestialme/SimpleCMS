@@ -20,7 +20,14 @@
 </script>
 
 <div class="relative">
-	<Input type="text" labelClass="hidden" inputClass="border rounded p-2 " {placeholder} on:input={handleInput} bind:value />
+	<Input
+		type="text"
+		labelClass="hidden"
+		inputClass="border rounded p-2 "
+		{placeholder}
+		on:input={handleInput}
+		bind:value
+	/>
 	{#if showDropdown}
 		<ul class="absolute z-10 rounded border bg-white">
 			{#each filteredItems as item}

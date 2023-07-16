@@ -3,11 +3,9 @@ import * as collections from './collections';
 
 // Generate the GraphQL types and fields based on the collection schemas
 const types = Object.values(collections).map((collection) => {
-  const fields = collection.fields
-    .map((field) => `${field.label}: ${field.type}`)
-    .join('\n');
+	const fields = collection.fields.map((field) => `${field.label}: ${field.type}`).join('\n');
 
-  return `
+	return `
     type ${collection.name} {
       id: ID!
       ${fields}
@@ -19,8 +17,8 @@ const types = Object.values(collections).map((collection) => {
 const query = `
   type Query {
     ${Object.values(collections)
-      .map((collection) => `${collection.name}s: [${collection.name}]`)
-      .join('\n')}
+			.map((collection) => `${collection.name}s: [${collection.name}]`)
+			.join('\n')}
   }
 `;
 

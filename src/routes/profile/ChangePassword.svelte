@@ -31,10 +31,25 @@
 <div class="bg-gray-400">
 	Change PW
 
-	<form method="post" action="?/changePassword" use:enhance class="mx-auto mb-[5%] flex w-full flex-col p-4 lg:w-1/2">
-		<input bind:value={$form.password} name="password" type="password" placeholder={$LL.LOGIN_Password()} />
+	<form
+		method="post"
+		action="?/changePassword"
+		use:enhance
+		class="mx-auto mb-[5%] flex w-full flex-col p-4 lg:w-1/2"
+	>
+		<input
+			bind:value={$form.password}
+			name="password"
+			type="password"
+			placeholder={$LL.LOGIN_Password()}
+		/>
 		{#if $errors.password}<span class="invalid">{$errors.password}</span>{/if}
-		<input bind:value={$form.confirm_password} name="confirmPassword" type="password" placeholder={$LL.LOGIN_ConfirmPassword()} />
+		<input
+			bind:value={$form.confirm_password}
+			name="confirmPassword"
+			type="password"
+			placeholder={$LL.LOGIN_ConfirmPassword()}
+		/>
 		{#if $errors.confirm_password}<span class="invalid">{$errors.confirm_password}</span>{/if}
 		<button class="btn variant-filled-tertiary mt-10">Change</button>
 

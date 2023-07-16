@@ -132,7 +132,12 @@ export function saveFiles(data: FormData, collection: string) {
 	for (let file of _files) {
 		let { blob, fieldname } = file;
 
-		files[fieldname as keyof typeof files] = { name: blob.name, size: blob.size, type: blob.type, lastModified: blob.lastModified };
+		files[fieldname as keyof typeof files] = {
+			name: blob.name,
+			size: blob.size,
+			type: blob.type,
+			lastModified: blob.lastModified
+		};
 		let path = _findFieldByTitle(schema, fieldname).path;
 
 		if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
@@ -210,7 +215,17 @@ export function getFieldName(field: any) {
 }
 
 // Saves FormData to database
-export async function saveFormData({ data, _collection, _mode, id }: { data: any; _collection?: Schema; _mode?: 'edit' | 'create'; id?: string }) {
+export async function saveFormData({
+	data,
+	_collection,
+	_mode,
+	id
+}: {
+	data: any;
+	_collection?: Schema;
+	_mode?: 'edit' | 'create';
+	id?: string;
+}) {
 	//console.log(data);
 	let $mode = _mode || get(mode);
 	let $collection = _collection || get(collection);
@@ -225,7 +240,9 @@ export async function saveFormData({ data, _collection, _mode, id }: { data: any
 			return await axios.post(`/api/${$collection.name}`, formData, config).then((res) => res.data);
 		case 'edit':
 			formData.append('_id', id || $entryData._id);
-			return await axios.patch(`/api/${$collection.name}`, formData, config).then((res) => res.data);
+			return await axios
+				.patch(`/api/${$collection.name}`, formData, config)
+				.then((res) => res.data);
 	}
 }
 

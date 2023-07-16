@@ -89,7 +89,8 @@ const en: BaseTranslation = {
 	LOGIN_ZOD_Email_string: 'Email is required',
 	LOGIN_ZOD_Email_email: 'Email must be a valid email',
 	LOGIN_ZOD_Password_string: 'Password is required',
-	LOGIN_ZOD_Password_regex: 'Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.',
+	LOGIN_ZOD_Password_regex:
+		'Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.',
 	LOGIN_ZOD_Confirm_password_string: 'Confirm Password is required',
 	LOGIN_ZOD_Confirm_password_regex:
 		'Password must be a minimum of 8 characters & contain at least one letter, one number, and one special character.',
@@ -179,15 +180,20 @@ const en: BaseTranslation = {
 
 	WIDGET_Seo_Suggestion_TitlePerfect: 'Your title is more than 50 characters. Perfect!',
 	WIDGET_Seo_Suggestion_TitleGood: 'Your title is more than 30 characters. Try 50+. Good!',
-	WIDGET_Seo_Suggestion_TitleBad: 'Your title is too short. Make sure your title is at least 50 characters. Bad!',
-	WIDGET_Seo_Suggestion_DescriptionPerfect: 'Your description is between 120 and 165 characters. Perfect!',
+	WIDGET_Seo_Suggestion_TitleBad:
+		'Your title is too short. Make sure your title is at least 50 characters. Bad!',
+	WIDGET_Seo_Suggestion_DescriptionPerfect:
+		'Your description is between 120 and 165 characters. Perfect!',
 	WIDGET_Seo_Suggestion_DescriptionGood: 'Your description is more than 90 characters. Good!',
 	WIDGET_Seo_Suggestion_DescriptionBad: 'Your description is less than 90 characters. Bad!',
 	WIDGET_Seo_Suggestion_SentencePerfect: 'Your description is 2 to 4 sentences long. Perfect!',
-	WIDGET_Seo_Suggestion_SentenceGood: 'Your description is 2 to 4 sentences long but not all sentences are between 10 and 30 characters. Good!',
-	WIDGET_Seo_Suggestion_SentenceBad: 'Your description is only 1 sentence long. Make sure your description is 2 to 4 sentences long.',
+	WIDGET_Seo_Suggestion_SentenceGood:
+		'Your description is 2 to 4 sentences long but not all sentences are between 10 and 30 characters. Good!',
+	WIDGET_Seo_Suggestion_SentenceBad:
+		'Your description is only 1 sentence long. Make sure your description is 2 to 4 sentences long.',
 	WIDGET_Seo_Suggestion_NumberPerfect: 'Your title uses numbers. Perfect!',
-	WIDGET_Seo_Suggestion_NumberBad: 'Your title does not use numbers. The use of numbers in your title can increase your CTR.',
+	WIDGET_Seo_Suggestion_NumberBad:
+		'Your title does not use numbers. The use of numbers in your title can increase your CTR.',
 	WIDGET_Seo_Suggestion_PowerWordTitle: `Your title has the Power Word. Perfect!`,
 	WIDGET_Seo_Suggestion_PowerWordTitleBad: `Your title does not have a Power Word. Bad!`,
 	WIDGET_Seo_Suggestion_PowerWordDescription: `Your description uses the Power Word. Perfect!`,

@@ -6,14 +6,26 @@
 	export let tokenLink = dev ? HOST_DEV : HOST_PROD;
 
 	// svelte-email
-	import { Button, Container, Head, Hr, Html, Img, Link, Preview, Section, Text } from 'svelte-email';
+	import {
+		Button,
+		Container,
+		Head,
+		Hr,
+		Html,
+		Img,
+		Link,
+		Preview,
+		Section,
+		Text
+	} from 'svelte-email';
 
 	interface EmailProps {
 		username?: string;
 	}
 	export let username: EmailProps['username'];
 
-	const fontFamily = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';
+	const fontFamily =
+		'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';
 
 	const main = {
 		backgroundColor: '#ffffff'
@@ -78,7 +90,9 @@
 				/>
 			</Link>
 			<Text style={paragraph}>Hello {username},</Text>
-			<Text style={paragraph}>You have successfully changed your Password for {PUBLIC_SITENAME}</Text>
+			<Text style={paragraph}
+				>You have successfully changed your Password for {PUBLIC_SITENAME}</Text
+			>
 			<Text style={paragraph}>If you did not request this change, please contact us.</Text>
 			<Hr style={hr} />
 			<Text style={footer}>Your {PUBLIC_SITENAME} Team</Text>

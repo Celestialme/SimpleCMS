@@ -47,7 +47,14 @@
 <div class="form-check">
 	<!-- TODO Fix Color and rounded-full -->
 	<label class="flex items-center space-x-2">
-		<input class="radio" type="radio" checked name="radio-direct" color={field.color} bind:value={_data[_language]} />
+		<input
+			class="radio"
+			type="radio"
+			checked
+			name="radio-direct"
+			color={field.color}
+			bind:value={_data[_language]}
+		/>
 		<p>{field.label ? field.label : field.db_fieldName} skeleton</p>
 	</label>
 

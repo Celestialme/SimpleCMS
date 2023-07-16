@@ -6,14 +6,26 @@
 	export let hostLink = dev ? HOST_DEV : HOST_PROD;
 
 	// svelte-email
-	import { Button, Container, Head, Hr, Html, Img, Link, Preview, Section, Text } from 'svelte-email';
+	import {
+		Button,
+		Container,
+		Head,
+		Hr,
+		Html,
+		Img,
+		Link,
+		Preview,
+		Section,
+		Text
+	} from 'svelte-email';
 
 	interface EmailProps {
 		username?: string;
 	}
 	export let username: EmailProps['username'];
 
-	const fontFamily = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';
+	const fontFamily =
+		'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';
 
 	const main = {
 		backgroundColor: '#ffffff'
@@ -119,8 +131,9 @@
 			<Text>Dear {username},</Text>
 			<Text>Welcome to {PUBLIC_SITENAME} - a Sveltekit powered flexible Headless CMS.</Text>
 			<Text
-				>SimpleCMS is a fast and flexible headless CMS that allows you to easily manage your content. With Sveltekit powering our platform, you can
-				expect a seamless and efficient experience.</Text
+				>SimpleCMS is a fast and flexible headless CMS that allows you to easily manage your
+				content. With Sveltekit powering our platform, you can expect a seamless and efficient
+				experience.</Text
 			>
 			<Text
 				>If you have any questions or need help getting started, please visit our Q&A on Github <Link

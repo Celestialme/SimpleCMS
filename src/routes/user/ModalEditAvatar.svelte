@@ -36,7 +36,14 @@
 
 	// Zod validation
 	import z from 'zod';
-	const imageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/svg+xml', 'image/gif'];
+	const imageTypes = [
+		'image/jpeg',
+		'image/jpg',
+		'image/png',
+		'image/webp',
+		'image/svg+xml',
+		'image/gif'
+	];
 	const avatarSchema = z.object({
 		file: z
 			.instanceof(Blob)
@@ -113,13 +120,23 @@
 	<form class="modal-form {cForm}">
 		<div class="grid grid-cols-1 grid-rows-{avatarSrc ? '1' : '2'} items-center justify-center">
 			<Avatar
-				src={avatarSrc ? (avatarSrc.startsWith('data') ? avatarSrc : '/api/' + avatarSrc) : '/Default_User.svg'}
+				src={avatarSrc
+					? avatarSrc.startsWith('data')
+						? avatarSrc
+						: '/api/' + avatarSrc
+					: '/Default_User.svg'}
 				rounded-full
 				class="mx-auto mb-3 w-32"
 			/>
 
 			{#if !files}
-				<FileDropzone on:change={onChange} required name="Avatar Upload" accept="image/*" slotLead="flex flex-col justify-center items-center">
+				<FileDropzone
+					on:change={onChange}
+					required
+					name="Avatar Upload"
+					accept="image/*"
+					slotLead="flex flex-col justify-center items-center"
+				>
 					<svelte:fragment slot="lead">
 						<!-- icon -->
 						<svg xmlns="http://www.w3.org/2000/svg" width="3.5em" height="3.5em" viewBox="0 0 24 24"
@@ -138,7 +155,9 @@
 			{/if}
 		</div>
 		{#if !files}
-			<small class="block text-center opacity-75">Files should not exceed 5MB, and will be converted to WebP</small>
+			<small class="block text-center opacity-75"
+				>Files should not exceed 5MB, and will be converted to WebP</small
+			>
 		{/if}
 	</form>
 	<!-- prettier-ignore -->

@@ -27,10 +27,24 @@
 	<Accordion regionControl="bg-surface-500 uppercase text-white hover:!bg-surface-400">
 		<!-- Collection Parents -->
 		{#each categories as category, index}
-			<AccordionItem regionPanel="divide-y divide-black my-0" class="divide-y rounded-md bg-surface-100 dark:bg-surface-300">
+			<AccordionItem
+				regionPanel={`divide-y divide-black my-0 ${
+					category.collections.length > 5
+						? $toggleLeftSidebar === 'full'
+							? 'max-h-72'
+							: 'max-h-[256px]'
+						: ''
+				} overflow-y-auto`}
+				class="divide-y rounded-md bg-surface-100 dark:bg-surface-300"
+			>
 				<svelte:fragment slot="lead">
 					<!-- TODO: Tooltip not fully working -->
-					<iconify-icon icon={category.icon} width="24" class="text-error-500" use:popup={popupCollections} />
+					<iconify-icon
+						icon={category.icon}
+						width="24"
+						class="text-error-500"
+						use:popup={popupCollections}
+					/>
 				</svelte:fragment>
 
 				<svelte:fragment slot="summary"
@@ -47,14 +61,15 @@
 				<!-- Collection Children -->
 				<svelte:fragment slot="content">
 					<!-- filtered by User Role Permission -->
-					{#each category.collections.filter((c) => c?.permissions?.[$user.role]?.read != false) as _collection}
+					{#each category.collections.filter((c) => c?.permissions?.[$user.role]?.read != false) as _collection, index}
 						{#if $toggleLeftSidebar === 'full'}
 							<!-- switchSideBar expanded -->
 							<div
+								role="button"
+								tabindex={index}
 								class="-mx-4 flex flex-row items-center py-1 pl-3 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
 								on:keydown
 								on:click={(e) => {
-									console.log('collection entry clicked');
 									mode.set(modeSet);
 									$collection = _collection;
 								}}
@@ -65,6 +80,8 @@
 						{:else}
 							<!-- switchSideBar collapsed -->
 							<div
+								role="button"
+								tabindex={index}
 								class="-mx-4 flex flex-col items-center py-1 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
 								on:keydown
 								on:click={(e) => {
@@ -85,13 +102,19 @@
 	<!-- Gallery -->
 	{#if $toggleLeftSidebar === 'full'}
 		<!-- switchSideBar expanded -->
-		<a href="/mediagallery" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
+		<a
+			href="/mediagallery"
+			class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white"
+		>
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-primary-600" />
 			<p class="mr-auto text-center uppercase">{$LL.CollectionCategory_Media()}</p>
 		</a>
 	{:else}
 		<!-- switchSideBar collapsed -->
-		<a href="/mediagallery" class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
+		<a
+			href="/mediagallery"
+			class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2"
+		>
 			<p class="text-xs uppercase">{$LL.CollectionCategory_Media()}</p>
 			<iconify-icon icon="bi:images" width="24" class="text-primary-600" />
 		</a>
@@ -100,7 +123,10 @@
 	<!-- test image -->
 	{#if $toggleLeftSidebar === 'full'}
 		<!-- switchSideBar expanded -->
-		<a href="/upload" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
+		<a
+			href="/upload"
+			class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white"
+		>
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-tertiary-600" />
 			<p class="mr-auto text-center uppercase">Upload</p>
 		</a>
@@ -115,13 +141,19 @@
 	<!-- test Builder -->
 	{#if $toggleLeftSidebar === 'full'}
 		<!-- switchSideBar expanded -->
-		<a href="/collection" class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white">
+		<a
+			href="/collection"
+			class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white"
+		>
 			<iconify-icon icon="ion:build" width="24" class="text-waring-600 px-2 py-1" />
 			<p class="mr-auto text-center uppercase">C builder</p>
 		</a>
 	{:else}
 		<!-- switchSideBar collapsed -->
-		<a href="/collection" class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
+		<a
+			href="/collection"
+			class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2"
+		>
 			<p class="text-xs uppercase">Cbuilder</p>
 			<iconify-icon icon="ion:build" width="24" class="text-waring-600" />
 		</a>

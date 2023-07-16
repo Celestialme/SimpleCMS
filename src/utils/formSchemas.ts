@@ -3,15 +3,19 @@ import { get } from 'svelte/store';
 import LL from '@src/i18n/i18n-svelte.js';
 
 // SignIn Schema ------------------------------------
-export let loginFormSchema = z.object({
-	email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() }),
+export const loginFormSchema = z.object({
+	email: z
+		.string({ required_error: get(LL).LOGIN_ZOD_Email_string() })
+		.email({ message: get(LL).LOGIN_ZOD_Email_email() }),
 	password: z.string({ required_error: get(LL).LOGIN_ZOD_Password_string() }).min(4),
 	isToken: z.boolean()
 });
 
 // SignIn Forgotten Password ------------------------------------
-export let forgotFormSchema = z.object({
-	email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() })
+export const forgotFormSchema = z.object({
+	email: z
+		.string({ required_error: get(LL).LOGIN_ZOD_Email_string() })
+		.email({ message: get(LL).LOGIN_ZOD_Email_email() })
 });
 
 // SignIn Reset Password ------------------------------------
@@ -22,9 +26,11 @@ interface SignInResetFormData {
 	confirm_password: string;
 }
 
-export let resetFormSchema = z
+export const resetFormSchema = z
 	.object({
-		email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() }),
+		email: z
+			.string({ required_error: get(LL).LOGIN_ZOD_Email_string() })
+			.email({ message: get(LL).LOGIN_ZOD_Email_email() }),
 		token: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1),
 		password: z
 			.string({ required_error: get(LL).LOGIN_ZOD_Password_string() })
@@ -37,7 +43,10 @@ export let resetFormSchema = z
 				message: get(LL).LOGIN_ZOD_Confirm_password_regex()
 			})
 	})
-	.refine((data: SignInResetFormData) => data.password === data.confirm_password, get(LL).LOGIN_ZOD_Password_match());
+	.refine(
+		(data: SignInResetFormData) => data.password === data.confirm_password,
+		get(LL).LOGIN_ZOD_Password_match()
+	);
 
 // Sign Up User ------------------------------------
 interface SignUpFormData {
@@ -48,7 +57,7 @@ interface SignUpFormData {
 	token: string;
 }
 
-export let signUpFormSchema = z
+export const signUpFormSchema = z
 	.object({
 		username: z
 			.string({ required_error: get(LL).LOGIN_ZOD_Username_string() })
@@ -56,7 +65,9 @@ export let signUpFormSchema = z
 			.min(2, { message: get(LL).LOGIN_ZOD_Username_min() })
 			.max(24, { message: get(LL).LOGIN_ZOD_Username_max() })
 			.trim(),
-		email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() }),
+		email: z
+			.string({ required_error: get(LL).LOGIN_ZOD_Email_string() })
+			.email({ message: get(LL).LOGIN_ZOD_Email_email() }),
 		password: z
 			.string({ required_error: get(LL).LOGIN_ZOD_Password_string() })
 			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
@@ -69,17 +80,22 @@ export let signUpFormSchema = z
 			}),
 		token: z.string().min(16)
 	})
-	.refine((data: SignUpFormData) => data.password === data.confirm_password, get(LL).LOGIN_ZOD_Password_match());
+	.refine(
+		(data: SignUpFormData) => data.password === data.confirm_password,
+		get(LL).LOGIN_ZOD_Password_match()
+	);
 
 // Validate New User Token ------------------------------------
-export let addUserTokenSchema = z.object({
-	email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() }),
+export const addUserTokenSchema = z.object({
+	email: z
+		.string({ required_error: get(LL).LOGIN_ZOD_Email_string() })
+		.email({ message: get(LL).LOGIN_ZOD_Email_email() }),
 	role: z.string(),
 	expiresIn: z.string()
 });
 
 // Change Password ------------------------------------
-export let changePasswordSchema = z
+export const changePasswordSchema = z
 	.object({
 		password: z
 			.string({ required_error: get(LL).LOGIN_ZOD_Password_string() })
@@ -98,6 +114,8 @@ export let changePasswordSchema = z
 	});
 
 // Widget Email Schema ------------------------------------
-export let widgetEmailSchema = z.object({
-	email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() })
+export const widgetEmailSchema = z.object({
+	email: z
+		.string({ required_error: get(LL).LOGIN_ZOD_Email_string() })
+		.email({ message: get(LL).LOGIN_ZOD_Email_email() })
 });

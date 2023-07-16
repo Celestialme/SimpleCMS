@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { roles } from "@src/collections/Auth";
+	import { roles } from '@src/collections/Auth';
 	// define default role
 	let roleSelected = Object.values(roles)[0];
 
@@ -46,8 +46,6 @@
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
 	const cHeader = 'text-2xl font-bold';
 	const cForm = 'border border-surface-500 p-4 space-y-4 rounded-container-token';
-
-
 </script>
 
 <!-- @component This example creates a simple form modal. -->
@@ -64,7 +62,11 @@
 	<form class="modal-form {cForm}">
 		<!-- Username field -->
 		<div class="group relative z-0 mb-6 w-full">
-			<iconify-icon icon="mdi:user-circle" width="18" class="absolute left-0 top-3.5 text-gray-400" />
+			<iconify-icon
+				icon="mdi:user-circle"
+				width="18"
+				class="absolute left-0 top-3.5 text-gray-400"
+			/>
 			<input
 				bind:value={formData.username}
 				on:keydown={() => (errorStatus.username.status = false)}
@@ -88,9 +90,9 @@
 				</div>
 			{/if}
 		</div>
- 
+
 		<!-- admin area -->
-		{#if user?.role==roles.admin}
+		{#if user?.role == roles.admin}
 			<!-- Email field -->
 			<div class="group relative z-0 mb-6 w-full">
 				<iconify-icon icon="mdi:email" width="18" class="absolute left-0 top-3.5 text-gray-400" />
@@ -106,7 +108,7 @@
 				/>
 				<label
 					for="email"
-					class="absolute left-5 top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm  duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-tertiary-600 dark:text-surface-400 peer-focus:dark:text-tertiary-500"
+					class="absolute left-5 top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-tertiary-600 dark:text-surface-400 peer-focus:dark:text-tertiary-500"
 				>
 					{$LL.LOGIN_EmailAddress()}<span class="ml-2 text-error-500">*</span>
 				</label>
@@ -116,7 +118,7 @@
 					</div>
 				{/if}
 			</div>
-			{:else}
+		{:else}
 			<!-- only show email but normal user cant change it -->
 			<div class="group relative z-0 mb-6 w-full">
 				<iconify-icon icon="mdi:email" width="18" class="absolute left-0 top-3.5 text-gray-400" />
@@ -249,7 +251,7 @@
 		</div>
 
 		<!-- admin area -->
-		{#if user?.role==roles.admin}
+		{#if user?.role == roles.admin}
 			<div class="flex flex-col gap-2 sm:flex-row">
 				<div class="sm:w-1/4">Role:</div>
 				<div class="flex-auto">
@@ -257,20 +259,22 @@
 
 					<div class="flex flex-wrap gap-2 space-x-2">
 						{#each Object.values(roles) as r}
-						<span
-							class="chip {roleSelected===r ? 'variant-filled-tertiary' : 'variant-ghost-secondary'}"
-							on:click={() => {
-								// filterRole(r);
-								roleSelected = r;
-							}}
-							on:keypress
-							role="button"
-							tabindex="0"
-						>
-							{#if roleSelected===r }<span><iconify-icon icon="fa:check" /></span>{/if}
-							<span class="capitalize">{r}</span>
-						</span>
-					{/each}
+							<span
+								class="chip {roleSelected === r
+									? 'variant-filled-tertiary'
+									: 'variant-ghost-secondary'}"
+								on:click={() => {
+									// filterRole(r);
+									roleSelected = r;
+								}}
+								on:keypress
+								role="button"
+								tabindex="0"
+							>
+								{#if roleSelected === r}<span><iconify-icon icon="fa:check" /></span>{/if}
+								<span class="capitalize">{r}</span>
+							</span>
+						{/each}
 					</div>
 				</div>
 			</div>

@@ -36,7 +36,12 @@
 {#if !_data || showFields}
 	{#key depth}
 		{(fieldsData = {}) && ''}
-		<Fields fields={field.menu[depth].fields} root={false} bind:fieldsData customData={$currentChild} />
+		<Fields
+			fields={field.menu[depth].fields}
+			root={false}
+			bind:fieldsData
+			customData={$currentChild}
+		/>
 	{/key}
 
 	<button type="button" on:click={saveLayer} class="btn variant-filled-primary">

@@ -34,24 +34,30 @@
 			fileList.items.add(file);
 			_data = node.files = fileList.files;
 		} else if ($mode === 'edit') {
-			axios.get(`/${field?.path}/${$entryData[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
-				console.log('data returned by the server', data); // log the data returned by the server
-				let fileList = new DataTransfer();
-				let file = new File([data], $entryData[fieldName].name, {
-					type: $entryData[fieldName].mimetype
+			axios
+				.get(`/${field?.path}/${$entryData[fieldName].name}`, { responseType: 'blob' })
+				.then(({ data }) => {
+					console.log('data returned by the server', data); // log the data returned by the server
+					let fileList = new DataTransfer();
+					let file = new File([data], $entryData[fieldName].name, {
+						type: $entryData[fieldName].mimetype
+					});
+					fileList.items.add(file);
+					_data = node.files = fileList.files;
+					console.log('_data returned', _data); // log the value of _data
 				});
-				fileList.items.add(file);
-				_data = node.files = fileList.files;
-				console.log('_data returned', _data); // log the value of _data
-			});
 		}
 	}
 </script>
 
 <!-- <FileDropzone /> -->
 <FileDropzone name={fieldName} accept="image/*" on:change={setFile}>
-	<svelte:fragment slot="lead"><iconify-icon icon="fa6-solid:file-arrow-up" width="45" /></svelte:fragment>
-	<svelte:fragment slot="message"><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment>
+	<svelte:fragment slot="lead"
+		><iconify-icon icon="fa6-solid:file-arrow-up" width="45" /></svelte:fragment
+	>
+	<svelte:fragment slot="message"
+		><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment
+	>
 	<svelte:fragment slot="meta">PNG, JPG, and GIF allowed.</svelte:fragment>
 </FileDropzone>
 

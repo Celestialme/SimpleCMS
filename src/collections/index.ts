@@ -25,7 +25,8 @@ let categories = [
 			{ ...Names, id: 1.2 },
 			{ ...Posts2, id: 1.3 },
 			{ ...Relation, id: 1.4 },
-			{ ...WidgetTest, id: 1.5 }
+			{ ...WidgetTest, id: 1.5 },
+			{ ...ImageArray, id: 1.6 }
 		]
 	},
 	{
@@ -33,12 +34,6 @@ let categories = [
 		name: get(LL).CollectionCategory_Menu(),
 		icon: 'bi:menu-button-wide',
 		collections: [{ ...Menu, id: 2.1 }]
-	},
-	{
-		id: 3,
-		name: 'Images',
-		icon: 'bi:images',
-		collections: [{ ...ImageArray, id: 3.1 }]
 	}
 ];
 

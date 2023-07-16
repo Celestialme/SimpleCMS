@@ -25,31 +25,32 @@
 <!-- {#if hasCollections}
 	<p>Please use the /builder first.</p>
 {:else} -->
-	<div class="body">
-		<section class="left_panel">
-			<Collections modeSet={'edit'} />
-		</section>
-		<div class="right_panel">
-			<div
-				class="add_new"
-				on:click={() => {
-					mode.set('create');
-				}}
-			>
-				<iconify-icon icon="typcn:plus" class="text-white" width="50" />
-			</div>
-			{#if $mode == 'create'}
-				<div>
-					<FloatingInput label="name" name="name" />
-				</div>
-			{:else if $mode == 'edit'}
-				<div>
-					<FloatingInput label="name" name="name" />
-					<BuilderFields fields={$collection.fields} />
-				</div>
-			{/if}
+<div class="body">
+	<section class="left_panel">
+		<Collections modeSet={'edit'} />
+	</section>
+	<div class="right_panel">
+		<div
+			class="add_new"
+			on:click={() => {
+				mode.set('create');
+			}}
+		>
+			<iconify-icon icon="typcn:plus" class="text-white" width="50" />
 		</div>
+		{#if $mode == 'create'}
+			<div>
+				<FloatingInput label="name" name="name" />
+			</div>
+		{:else if $mode == 'edit'}
+			<div>
+				<FloatingInput label="name" name="name" />
+				<BuilderFields fields={$collection.fields} />
+			</div>
+		{/if}
 	</div>
+</div>
+
 <!-- {/if} -->
 
 <style>

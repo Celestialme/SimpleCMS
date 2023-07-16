@@ -34,7 +34,7 @@
 	let role = user?.role;
 	let email = user?.email;
 
-		// TODO  Get hashed password
+	// TODO  Get hashed password
 	let password = 'hash-password';
 
 	// Modal Trigger - User Form
@@ -161,7 +161,11 @@
 	<div class="flex items-center">
 		<!-- hamburger -->
 		{#if $toggleLeftSidebar === 'closed'}
-			<button type="button" on:click={() => toggleLeftSidebar.click()} class="btn-icon variant-ghost-surface mt-1">
+			<button
+				type="button"
+				on:click={() => toggleLeftSidebar.click()}
+				class="variant-ghost-surface btn-icon mt-1"
+			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
@@ -173,9 +177,18 @@
 	<div class="grid grid-cols-1 grid-rows-2 gap-1 overflow-hidden md:grid-cols-2 md:grid-rows-1">
 		<!-- Avatar with user info -->
 		<div class="relative mx-2 mt-1 flex flex-col items-center justify-center gap-2">
-			<Avatar src={avatarSrc ? '/api/' + avatarSrc : '/Default_User.svg'} initials="AV" rounded-none class="w-32" />
+			<Avatar
+				src={avatarSrc ? '/api/' + avatarSrc : '/Default_User.svg'}
+				initials="AV"
+				rounded-none
+				class="w-32"
+			/>
 
-			<button on:click={modalEditAvatar} class="gradient-primary w-30 badge absolute top-8 sm:top-4 text-white">{$LL.USER_Edit_Avatar()}</button>
+			<button
+				on:click={modalEditAvatar}
+				class="gradient-primary w-30 badge absolute top-8 text-white sm:top-4"
+				>{$LL.USER_Edit_Avatar()}</button
+			>
 
 			<div class="gradient-secondary badge mt-1 w-full max-w-xs text-white">
 				{$LL.USER_ID()}:<span class="ml-2">{id}</span>
@@ -199,40 +212,50 @@
 				<input bind:value={password} name="password" type="password" disabled class="input" />
 			</label>
 			<div class="my-2 flex flex-col justify-between gap-2 sm:flex-row sm:justify-between sm:gap-0">
-				<button class="gradient-secondary btn  text-white md:w-auto" on:click={modalUserForm}>
-					<iconify-icon icon="bi:pencil-fill" color="white" width="18" class="mr-1" />{$LL.USER_Edit()}:
+				<button class="gradient-secondary btn text-white md:w-auto" on:click={modalUserForm}>
+					<iconify-icon
+						icon="bi:pencil-fill"
+						color="white"
+						width="18"
+						class="mr-1"
+					/>{$LL.USER_Edit()}:
 				</button>
-				<button on:click={modalConfirm} class="gradient-error btn  text-white"
-					><iconify-icon icon="bi:trash3-fill" color="white" width="18" class="mr-1" />{$LL.USER_Delete()}</button
+				<button on:click={modalConfirm} class="gradient-error btn text-white"
+					><iconify-icon
+						icon="bi:trash3-fill"
+						color="white"
+						width="18"
+						class="mr-1"
+					/>{$LL.USER_Delete()}</button
 				>
 			</div>
 		</form>
 	</div>
 	<!-- admin area -->
-{#if user?.role==roles.admin}
-	<div class="border-td mt-2 flex flex-col border-t-2">
-		<p class="h2 mb-4 text-center text-3xl font-bold dark:text-white">{$LL.USER_AdminArea()}</p>
-		<div class=" flex sm:flex-row flex-col justify-between items-center gap-2">
-			<button 
-				on:click={modalTokenUser} 
-				class="btn gradient-primary text-white w-full sm:max-w-xs">
-				<iconify-icon icon="material-symbols:mail" color="white" width="18" class="mr-1" />
-				{$LL.USER_EmailToken()}
-			</button>
-			<button 
-				on:click={() => (showUserList = !showUserList)}
-				class="btn gradient-secondary text-white w-full sm:max-w-xs">
-				<iconify-icon icon="mdi:account-circle" color="white" width="18" class="mr-1" />
-				{showUserList ? $LL.USER_ListCollapse() : $LL.USER_ListShow()}
-			</button>
+	{#if user?.role == roles.admin}
+		<div class="border-td mt-2 flex flex-col border-t-2">
+			<p class="h2 mb-4 text-center text-3xl font-bold dark:text-white">{$LL.USER_AdminArea()}</p>
+			<div class=" flex flex-col items-center justify-between gap-2 sm:flex-row">
+				<button
+					on:click={modalTokenUser}
+					class="gradient-primary btn w-full text-white sm:max-w-xs"
+				>
+					<iconify-icon icon="material-symbols:mail" color="white" width="18" class="mr-1" />
+					{$LL.USER_EmailToken()}
+				</button>
+				<button
+					on:click={() => (showUserList = !showUserList)}
+					class="gradient-secondary btn w-full text-white sm:max-w-xs"
+				>
+					<iconify-icon icon="mdi:account-circle" color="white" width="18" class="mr-1" />
+					{showUserList ? $LL.USER_ListCollapse() : $LL.USER_ListShow()}
+				</button>
+			</div>
 		</div>
-	</div>
 
-	{#if showUserList}
+		{#if showUserList}
 			<!-- <UserList /> -->
 			<p class="mt-3 border text-center">Display Available Users for edit/remove</p>
 		{/if}
-	{/if} 
+	{/if}
 </div>
-
-

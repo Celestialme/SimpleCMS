@@ -110,7 +110,9 @@ This FloatingInput component has the following properties:
 			{tabindex}
 			role="button"
 			icon={showPassword ? 'bi:eye-fill' : 'bi:eye-slash-fill'}
-			class={`absolute right-0 ${showPasswordBackgroundColor === 'light' ? 'text-surface-700' : 'text-surface-300'}`}
+			class={`absolute right-0 ${
+				showPasswordBackgroundColor === 'light' ? 'text-surface-700' : 'text-surface-300'
+			}`}
 			width="24"
 			on:keydown
 			on:click|preventDefault={togglePasswordVisibility}

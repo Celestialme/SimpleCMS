@@ -1,16 +1,16 @@
 <script lang="ts">
-// Here’s a breakdown of how the score is calculated for each check:
+	// Here’s a breakdown of how the score is calculated for each check:
 
-// Title length: If the title is more than 50 characters, the title_score is set to 3.
-// Description length: If the description is between 120 and 165 characters, the description_score is set to 3.
-// Number of sentences in the description: If the description contains between 2 and 4 sentences, the sentences_score is set to 3.
-// Presence of numbers in the title: If the title contains a number, the title_numbers_score is set to 3.
-// Presence of power words in the title: If the title contains a power word, the title_power_words_score is set to 3.
-// Presence of power words in the description: If the description contains a power word, the description_power_words_score is set to 3.
-// Presence of CTA keywords in the title: If the title contains a CTA keyword, the title_CTA_score is set to 3.
-// Presence of CTA keywords in the description: If the description contains a CTA keyword, the description_CTA_score is set to 3
+	// Title length: If the title is more than 50 characters, the title_score is set to 3.
+	// Description length: If the description is between 120 and 165 characters, the description_score is set to 3.
+	// Number of sentences in the description: If the description contains between 2 and 4 sentences, the sentences_score is set to 3.
+	// Presence of numbers in the title: If the title contains a number, the title_numbers_score is set to 3.
+	// Presence of power words in the title: If the title contains a power word, the title_power_words_score is set to 3.
+	// Presence of power words in the description: If the description contains a power word, the description_power_words_score is set to 3.
+	// Presence of CTA keywords in the title: If the title contains a CTA keyword, the title_CTA_score is set to 3.
+	// Presence of CTA keywords in the description: If the description contains a CTA keyword, the description_CTA_score is set to 3
 
-// If all of these checks have an impact of 3, then you should get a maximum score of 24 (8 checks * 3 points per check)
+	// If all of these checks have an impact of 3, then you should get a maximum score of 24 (8 checks * 3 points per check)
 
 	import type { FieldType } from '.';
 	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
@@ -82,19 +82,19 @@
 
 	let suggestions = analyze(title, description);
 
-function analyze(title: string, description: string) {
-  let scores = {
-    title_score: 0,
-    description_score: 0,
-    sentences_score: 0,
-    title_numbers_score: 0,
-    title_power_words_score: 0,
-    description_power_words_score: 0,
-    title_CTA_score: 0,
-    description_CTA_score: 0
-  };
+	function analyze(title: string, description: string) {
+		let scores = {
+			title_score: 0,
+			description_score: 0,
+			sentences_score: 0,
+			title_numbers_score: 0,
+			title_power_words_score: 0,
+			description_power_words_score: 0,
+			title_CTA_score: 0,
+			description_CTA_score: 0
+		};
 
-  let suggestions: any = [];
+		let suggestions: any = [];
 
 		// Check if the title is more than 50 characters
 		if (title.length > 50) {
@@ -247,23 +247,22 @@ function analyze(title: string, description: string) {
 			}
 		}
 		score = Object.values(scores).reduce((acc, x) => acc + x);
-		
+
 		// Debug code to log the scores for each check
-    console.log('Title score:', scores.title_score);
-	console.log('Title numbers score:', scores.title_numbers_score);    
-    console.log('Title power words score:', scores.title_power_words_score);
-	console.log('Title CTA score:', scores.title_CTA_score);
-   
-    console.log('Description score:', scores.description_score);    
-    console.log('Sentences score:', scores.sentences_score);    
-    console.log('Description power words score:', scores.description_power_words_score);
-        console.log('Description CTA score:', scores.description_CTA_score);
-    
-    console.log('Total score:', score);
+		console.log('Title score:', scores.title_score);
+		console.log('Title numbers score:', scores.title_numbers_score);
+		console.log('Title power words score:', scores.title_power_words_score);
+		console.log('Title CTA score:', scores.title_CTA_score);
 
-    return suggestions;
-}
+		console.log('Description score:', scores.description_score);
+		console.log('Sentences score:', scores.sentences_score);
+		console.log('Description power words score:', scores.description_power_words_score);
+		console.log('Description CTA score:', scores.description_CTA_score);
 
+		console.log('Total score:', score);
+
+		return suggestions;
+	}
 </script>
 
 <!-- TODO: Fix input Value -->
@@ -347,7 +346,9 @@ function analyze(title: string, description: string) {
 </div>
 
 <!-- CTR display -->
-<div class="dark:boder-white relative mt-2 border-t border-surface-500 dark:border-white dark:bg-transparent">
+<div
+	class="dark:boder-white relative mt-2 border-t border-surface-500 dark:border-white dark:bg-transparent"
+>
 	<h2 class="mt-1 text-right text-xl text-white sm:text-center sm:text-2xl">
 		{$LL.WIDGET_Seo_Suggestion_SeoPreview()}
 	</h2>
@@ -356,7 +357,9 @@ function analyze(title: string, description: string) {
 	<div class="absolute left-0 top-1 flex justify-between gap-2">
 		<button
 			on:click={() => (SeoPreviewToggle = !SeoPreviewToggle)}
-			class="{SeoPreviewToggle ? 'hidden' : 'block'} btn btn-sm variant-filled-tertiary flex items-center justify-center"
+			class="{SeoPreviewToggle
+				? 'hidden'
+				: 'block'} btn btn-sm variant-filled-tertiary flex items-center justify-center"
 		>
 			<iconify-icon icon="ion:desktop-outline" width="20" class="mr-1" />
 			Desktop
@@ -364,7 +367,9 @@ function analyze(title: string, description: string) {
 
 		<button
 			on:click={() => (SeoPreviewToggle = !SeoPreviewToggle)}
-			class="{SeoPreviewToggle ? 'block' : 'hidden'} btn variant-filled-tertiary flex items-center justify-center"
+			class="{SeoPreviewToggle
+				? 'block'
+				: 'hidden'} btn variant-filled-tertiary flex items-center justify-center"
 		>
 			<iconify-icon icon="bi:phone" width="18" class="mr-1" />
 			Mobile
@@ -397,8 +402,12 @@ function analyze(title: string, description: string) {
 <div class="md:hidden">
 	<h3 class="mb-2 text-center">{$LL.WIDGET_Seo_Suggestion_ListOfSuggestion()}</h3>
 	<div class="flex items-center justify-around">
-		<ProgressRadial value={progress} stroke={200} meter="stroke-primary-500" width="w-20 sm:w-28" class="mr-6 mt-1 text-white "
-			>{progress}%</ProgressRadial
+		<ProgressRadial
+			value={progress}
+			stroke={200}
+			meter="stroke-primary-500"
+			width="w-20 sm:w-28"
+			class="mr-6 mt-1 text-white ">{progress}%</ProgressRadial
 		>
 		<div class="flex flex-col items-center justify-start text-xs sm:text-sm">
 			<div class="gap sm:flex sm:gap-4">
@@ -407,11 +416,23 @@ function analyze(title: string, description: string) {
 					<span class="flex-auto">0 - 49</span>
 				</div>
 				<div class="flex justify-center gap-2">
-					<span><iconify-icon icon="bi:hand-thumbs-up-fill" width="20" class="text-tertiary-500" /></span>
+					<span
+						><iconify-icon
+							icon="bi:hand-thumbs-up-fill"
+							width="20"
+							class="text-tertiary-500"
+						/></span
+					>
 					<span class="flex-auto">50 - 79</span>
 				</div>
 				<div class="flex justify-center gap-2">
-					<span><iconify-icon icon="material-symbols:check-circle-outline" class="text-success-500" width="20" /></span>
+					<span
+						><iconify-icon
+							icon="material-symbols:check-circle-outline"
+							class="text-success-500"
+							width="20"
+						/></span
+					>
 					<span class="flex-auto">80 - 100</span>
 				</div>
 			</div>
@@ -425,7 +446,12 @@ function analyze(title: string, description: string) {
 <!-- desktop -->
 <div class="hidden md:block">
 	<div class="mt-2 flex items-center justify-center dark:text-white">
-		<ProgressRadial value={progress} stroke={200} meter="stroke-primary-500" class="mr-6 mt-1 w-20 text-2xl text-white">{progress}%</ProgressRadial>
+		<ProgressRadial
+			value={progress}
+			stroke={200}
+			meter="stroke-primary-500"
+			class="mr-6 mt-1 w-20 text-2xl text-white">{progress}%</ProgressRadial
+		>
 		<div class="mb-2">
 			<div class="mb-2 flex items-center justify-between lg:justify-start lg:gap-5">
 				<h3 class="">{$LL.WIDGET_Seo_Suggestion_ListOfSuggestion()}</h3>
@@ -435,11 +461,23 @@ function analyze(title: string, description: string) {
 					<span class="flex-auto">0 - 49</span>
 				</div>
 				<div class="flex items-center gap-2">
-					<span><iconify-icon icon="bi:hand-thumbs-up-fill" width="24" class="text-tertiary-500" /></span>
+					<span
+						><iconify-icon
+							icon="bi:hand-thumbs-up-fill"
+							width="24"
+							class="text-tertiary-500"
+						/></span
+					>
 					<span class="flex-auto">50 - 79</span>
 				</div>
 				<div class="flex items-center gap-2">
-					<span><iconify-icon icon="material-symbols:check-circle-outline" class="text-success-500" width="24" /></span>
+					<span
+						><iconify-icon
+							icon="material-symbols:check-circle-outline"
+							class="text-success-500"
+							width="24"
+						/></span
+					>
 					<span class="flex-auto">80 - 100</span>
 				</div>
 			</div>
@@ -455,7 +493,11 @@ function analyze(title: string, description: string) {
 		<li class="flex items-start p-1">
 			<div class="mr-4 flex-none">
 				{#if suggestion.impact === 3}
-					<iconify-icon icon="material-symbols:check-circle-outline" class="text-success-500" width="24" />
+					<iconify-icon
+						icon="material-symbols:check-circle-outline"
+						class="text-success-500"
+						width="24"
+					/>
 				{:else if suggestion.impact === 2}
 					<iconify-icon icon="bi:hand-thumbs-up-fill" width="24" class="text-tertiary-500" />
 				{:else}

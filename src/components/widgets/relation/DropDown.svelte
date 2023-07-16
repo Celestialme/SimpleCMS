@@ -11,9 +11,12 @@
 	let options: Array<{ display: any; _id: any }> = [];
 	let filtered = options;
 	//console.log(dropDownData);
-	Promise.all(dropDownData.map(async (item) => ({ display: await field?.display(item, field, $entryData), _id: item._id }))).then(
-		(res) => (options = res)
-	);
+	Promise.all(
+		dropDownData.map(async (item) => ({
+			display: await field?.display(item, field, $entryData),
+			_id: item._id
+		}))
+	).then((res) => (options = res));
 	$: filtered = options.filter((item) => item.display.includes(search));
 </script>
 

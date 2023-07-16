@@ -20,7 +20,11 @@ mongoose
 		pass: DB_PASSWORD,
 		dbName: DB_NAME
 	})
-	.then(() => console.log('---------------------Connection to database is successful! -----------------------'))
+	.then(() =>
+		console.log(
+			'---------------------Connection to database is successful! -----------------------'
+		)
+	)
 	.catch((error) => console.error('Error connecting to database:', error));
 
 let collections: { [Key: string]: mongoose.Model<any> } = {};
@@ -44,9 +48,15 @@ for (let schema of schemas) {
 	}
 }
 
-!mongoose.models['auth_session'] && mongoose.model('auth_session', new mongoose.Schema({ ...session }, { _id: false }));
-!mongoose.models['auth_key'] && mongoose.model('auth_key', new mongoose.Schema({ ...key }, { _id: false }));
-!mongoose.models['auth_user'] && mongoose.model('auth_user', new mongoose.Schema({ ...UserSchema }, { _id: false, timestamps: true }));
+!mongoose.models['auth_session'] &&
+	mongoose.model('auth_session', new mongoose.Schema({ ...session }, { _id: false }));
+!mongoose.models['auth_key'] &&
+	mongoose.model('auth_key', new mongoose.Schema({ ...key }, { _id: false }));
+!mongoose.models['auth_user'] &&
+	mongoose.model(
+		'auth_user',
+		new mongoose.Schema({ ...UserSchema }, { _id: false, timestamps: true })
+	);
 
 const auth = lucia({
 	adapter: adapter(mongoose),

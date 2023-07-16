@@ -45,7 +45,9 @@
 	on:input={validateEmail}
 	name={field?.db_fieldName}
 	id={field?.db_fieldName}
-	placeholder={field?.placeholder && field?.placeholder !== '' ? field?.placeholder : field?.db_fieldName}
+	placeholder={field?.placeholder && field?.placeholder !== ''
+		? field?.placeholder
+		: field?.db_fieldName}
 	class="input"
 />
 {#if errorMessage}

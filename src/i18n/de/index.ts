@@ -76,7 +76,8 @@ const de: Translation = {
 	LOGIN_Token: 'Anmeldungs Token',
 	LOGIN_ConfirmPassword: 'Passwort bestätigen',
 	LOGIN_ForgottenPassword: 'Kennwort vergessen',
-	LOGIN_ForgottenPassword_text: 'Machen Sie sich keine Sorgen. Wir helfen Ihnen, Ihr Passwort wiederzufinden.',
+	LOGIN_ForgottenPassword_text:
+		'Machen Sie sich keine Sorgen. Wir helfen Ihnen, Ihr Passwort wiederzufinden.',
 	LOGIN_SendResetMail: 'E-Mail Passwort senden',
 	LOGIN_ResetPassword: 'Passwort zurücksetzen',
 	LOGIN_ResetPasswordSave: 'Neues Password speichern',
@@ -126,8 +127,10 @@ const de: Translation = {
 	ENTRYLIST_Modal_body_Create: 'Sind Sie sicher, dass Sie diesen Inhalt erstellen möchten?',
 	ENTRYLIST_Modal_title_Publish: 'Bitte bestätigen Sie die Veröffentlichung des Inhalts',
 	ENTRYLIST_Modal_body_Publish: 'Sind Sie sicher, dass Sie diesen Inhalt veröffentlichen möchten?',
-	ENTRYLIST_Modal_title_Unpublish: 'Bitte bestätigen Sie, dass der Inhalt nicht veröffentlicht werden soll',
-	ENTRYLIST_Modal_body_Unpublish: 'Sind Sie sicher, dass Sie diesen Inhalt nicht veröffentlichen möchten?',
+	ENTRYLIST_Modal_title_Unpublish:
+		'Bitte bestätigen Sie, dass der Inhalt nicht veröffentlicht werden soll',
+	ENTRYLIST_Modal_body_Unpublish:
+		'Sind Sie sicher, dass Sie diesen Inhalt nicht veröffentlichen möchten?',
 	ENTRYLIST_Modal_title_Schedule: 'Bitte bestätigen Sie den Zeitplan für den Inhalt',
 	ENTRYLIST_Modal_body_Schedule: 'Sind Sie sicher, dass Sie diesen Inhalt einplanen möchten?',
 	ENTRYLIST_Modal_title_Clone: 'Bitte bestätigen Sie das Klonen von Inhalten',
@@ -178,17 +181,24 @@ const de: Translation = {
 	WIDGET_Relation_AddNew: 'Neu hinzufügen',
 
 	WIDGET_Seo_Suggestion_TitlePerfect: 'Ihr Titel hat mehr als 50 Zeichen. Perfekt!',
-	WIDGET_Seo_Suggestion_TitleGood: 'Ihr Titel besteht aus mehr als 30 Zeichen. Versuchen Sie 50+. Gut!',
-	WIDGET_Seo_Suggestion_TitleBad: 'Ihr Titel ist zu kurz. Stellen Sie sicher, dass Ihr Titel mindestens 50 Zeichen lang ist. Schlecht!',
-	WIDGET_Seo_Suggestion_DescriptionPerfect: 'Ihre Beschreibung hat zwischen 120 und 165 Zeichen. Perfekt!',
+	WIDGET_Seo_Suggestion_TitleGood:
+		'Ihr Titel besteht aus mehr als 30 Zeichen. Versuchen Sie 50+. Gut!',
+	WIDGET_Seo_Suggestion_TitleBad:
+		'Ihr Titel ist zu kurz. Stellen Sie sicher, dass Ihr Titel mindestens 50 Zeichen lang ist. Schlecht!',
+	WIDGET_Seo_Suggestion_DescriptionPerfect:
+		'Ihre Beschreibung hat zwischen 120 und 165 Zeichen. Perfekt!',
 	WIDGET_Seo_Suggestion_DescriptionGood: 'Ihre Beschreibung besteht aus mehr als 90 Zeichen. Gut!',
 	WIDGET_Seo_Suggestion_DescriptionBad: 'Ihre Beschreibung hat weniger als 90 Zeichen. Schlecht!',
-	WIDGET_Seo_Suggestion_SentencePerfect: 'Ihre Beschreibung ist zwischen 2 und 4 Sätzen lang. Perfekt!',
-	WIDGET_Seo_Suggestion_SentenceGood: 'Ihre Beschreibung ist 2 bis 4 Sätze lang, aber nicht alle Sätze sind zwischen 10 und 30 Zeichen lang. Gut!',
-	WIDGET_Seo_Suggestion_SentenceBad: 'Ihre Beschreibung ist nur 1 Satz lang. Stellen Sie sicher, dass Ihre Beschreibung 2 bis 4 Sätze lang ist.',
+	WIDGET_Seo_Suggestion_SentencePerfect:
+		'Ihre Beschreibung ist zwischen 2 und 4 Sätzen lang. Perfekt!',
+	WIDGET_Seo_Suggestion_SentenceGood:
+		'Ihre Beschreibung ist 2 bis 4 Sätze lang, aber nicht alle Sätze sind zwischen 10 und 30 Zeichen lang. Gut!',
+	WIDGET_Seo_Suggestion_SentenceBad:
+		'Ihre Beschreibung ist nur 1 Satz lang. Stellen Sie sicher, dass Ihre Beschreibung 2 bis 4 Sätze lang ist.',
 
 	WIDGET_Seo_Suggestion_NumberPerfect: 'Ihr Titel verwendet Zahlen. Perfekt!',
-	WIDGET_Seo_Suggestion_NumberBad: 'Ihr Titel verwendet keine Zahlen. Die Verwendung von Zahlen in Ihrem Titel kann Ihre CTR erhöhen.',
+	WIDGET_Seo_Suggestion_NumberBad:
+		'Ihr Titel verwendet keine Zahlen. Die Verwendung von Zahlen in Ihrem Titel kann Ihre CTR erhöhen.',
 	WIDGET_Seo_Suggestion_PowerWordTitle: `Ihr Titel enthält das Power Word. Perfekt!`,
 	WIDGET_Seo_Suggestion_PowerWordTitleBad: `Ihr Titel enthält kein Power Word. Schlecht!`,
 	WIDGET_Seo_Suggestion_PowerWordDescription: `Ihre Beschreibung verwendet das Power Word. Perfekt!`,

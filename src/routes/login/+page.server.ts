@@ -4,7 +4,12 @@ import type { PageServerLoad } from './$types';
 import mongoose from 'mongoose';
 
 import { superValidate, message } from 'sveltekit-superforms/server';
-import { loginFormSchema, forgotFormSchema, resetFormSchema, signUpFormSchema } from '@src/utils/formSchemas';
+import {
+	loginFormSchema,
+	forgotFormSchema,
+	resetFormSchema,
+	signUpFormSchema
+} from '@src/utils/formSchemas';
 import { auth } from '@src/routes/api/db';
 import { passwordToken } from '@lucia-auth/tokens';
 import type { User } from '@src/collections/Auth';
@@ -27,7 +32,8 @@ export const load: PageServerLoad = async (event) => {
 	let withToken = await superValidate(event, signUpFormSchema);
 
 	// check if first user exist
-	let signUpForm: typeof withToken = (await mongoose.models['auth_key'].countDocuments()) === 0 ? (withoutToken as any) : withToken;
+	let signUpForm: typeof withToken =
+		(await mongoose.models['auth_key'].countDocuments()) === 0 ? (withoutToken as any) : withToken;
 
 	// Always return all Forms in load and form actions.
 	return {
@@ -210,7 +216,12 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 		}
 	}
 }
-async function FirstUsersignUp(username: string, email: string, password: string, cookies: Cookies) {
+async function FirstUsersignUp(
+	username: string,
+	email: string,
+	password: string,
+	cookies: Cookies
+) {
 	let user: User = await auth
 		.createUser({
 			primaryKey: {
@@ -256,7 +267,13 @@ async function resetPW(email: string, password: string, token: string, cookies: 
 }
 
 // Function create a new FIRST USER account as ADMIN and creating a session.
-async function signUp(username: string, email: string, password: string, cookies: Cookies, event: any) {
+async function signUp(
+	username: string,
+	email: string,
+	password: string,
+	cookies: Cookies,
+	event: any
+) {
 	// Convert email to lowercase
 	email = email.toLowerCase();
 
@@ -282,14 +299,25 @@ async function signUp(username: string, email: string, password: string, cookies
 	const session = await auth.createSession(user.userId);
 
 	// Set the credentials cookie
-	cookies.set('credentials', JSON.stringify({ username: user.username, session: session.sessionId }), {
-		path: '/'
-	});
+	cookies.set(
+		'credentials',
+		JSON.stringify({ username: user.username, session: session.sessionId }),
+		{
+			path: '/'
+		}
+	);
 	return { status: true };
 }
 
 // Function create a new OTHER USER account and creating a session.
-async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies, event: any) {
+async function finishRegistration(
+	username: string,
+	email: string,
+	password: string,
+	token: string,
+	cookies: Cookies,
+	event: any
+) {
 	// SignUp Token
 	let key = await auth.getKey('email', email).catch(() => null);
 	if (!key) return { status: false, message: 'User does not exist' };

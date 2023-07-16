@@ -13,7 +13,16 @@
 	"[svelte]": {
 		"editor.defaultFormatter": "svelte.svelte-vscode"
 	},
-	"cSpell.words": ["cssnano", "iconify", "simplecms", "skeletonlabs", "superforms", "tailwindcss", "tanstack", "typesafe"],
+	"cSpell.words": [
+		"cssnano",
+		"iconify",
+		"simplecms",
+		"skeletonlabs",
+		"superforms",
+		"tailwindcss",
+		"tanstack",
+		"typesafe"
+	],
 	"workbench.colorCustomizations": {
 		"activityBar.activeBackground": "#2f7c47",
 		"activityBar.background": "#2f7c47",

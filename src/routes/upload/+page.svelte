@@ -18,7 +18,9 @@
 	let overwriteConfirmed = false;
 
 	$: if (errorMessage === 'File already exists') {
-		overwriteConfirmed = confirm('A file with this name already exists. Do you want to overwrite it?');
+		overwriteConfirmed = confirm(
+			'A file with this name already exists. Do you want to overwrite it?'
+		);
 		if (overwriteConfirmed) {
 			// TODO: Add code to overwrite the existing image
 		} else {
@@ -68,7 +70,9 @@
 
 		try {
 			// TODO: Add code to overwrite the existing image
-			const response = await axios.post(`/mediafiles/${paramUrl}`, formData, { headers: { 'X-Overwrite': 'true' } });
+			const response = await axios.post(`/mediafiles/${paramUrl}`, formData, {
+				headers: { 'X-Overwrite': 'true' }
+			});
 			const data = response.data;
 
 			if (data.error) {
@@ -110,7 +114,11 @@
 	<div class="flex items-center">
 		<!-- hamburger -->
 		{#if $toggleLeftSidebar === 'closed'}
-			<button type="button" on:click={() => toggleLeftSidebar.click()} class="btn-icon variant-ghost-surface mt-1">
+			<button
+				type="button"
+				on:click={() => toggleLeftSidebar.click()}
+				class="variant-ghost-surface btn-icon mt-1"
+			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
@@ -123,8 +131,12 @@
 
 	<!-- <FileDropzone /> -->
 	<FileDropzone name={fieldName} accept="image/*" on:change={setFile}>
-		<svelte:fragment slot="lead"><iconify-icon icon="fa6-solid:file-arrow-up" width="45" /></svelte:fragment>
-		<svelte:fragment slot="message"><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment>
+		<svelte:fragment slot="lead"
+			><iconify-icon icon="fa6-solid:file-arrow-up" width="45" /></svelte:fragment
+		>
+		<svelte:fragment slot="message"
+			><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment
+		>
 		<svelte:fragment slot="meta">PNG, JPG, and GIF allowed.</svelte:fragment>
 	</FileDropzone>
 
@@ -163,8 +175,16 @@
 				<h2 class="mb-1">
 					<div class="flex">
 						<div class="w-36">Optimized Image:</div>
-						<div class={`text-primary-500 ${((originalImage.size - optimizedImage.size) / originalImage.size) * 100 <= 0 ? 'text-error-500' : ''}`}>
-							{(((originalImage.size - optimizedImage.size) / originalImage.size) * 100).toFixed(2)}%
+						<div
+							class={`text-primary-500 ${
+								((originalImage.size - optimizedImage.size) / originalImage.size) * 100 <= 0
+									? 'text-error-500'
+									: ''
+							}`}
+						>
+							{(((originalImage.size - optimizedImage.size) / originalImage.size) * 100).toFixed(
+								2
+							)}%
 						</div>
 					</div>
 				</h2>

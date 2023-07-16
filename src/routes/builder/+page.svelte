@@ -43,14 +43,22 @@
 	<div class="flex items-center justify-between">
 		<!-- hamburger -->
 		{#if $toggleLeftSidebar === 'closed'}
-			<button type="button" on:click={() => toggleLeftSidebar.click()} class="btn-icon variant-ghost-surface mt-1">
+			<button
+				type="button"
+				on:click={() => toggleLeftSidebar.click()}
+				class="variant-ghost-surface btn-icon mt-1"
+			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
 		{/if}
 
 		<!-- Title  with icon -->
 		<h1 class="{!$toggleLeftSidebar ? 'ml-2' : ''} h1 flex items-center gap-1">
-			<iconify-icon icon="dashicons:welcome-widgets-menus" width="24" class="mr-1 text-error-500 sm:mr-2" /> Collection Builder
+			<iconify-icon
+				icon="dashicons:welcome-widgets-menus"
+				width="24"
+				class="mr-1 text-error-500 sm:mr-2"
+			/> Collection Builder
 		</h1>
 	</div>
 </div>
@@ -60,10 +68,12 @@
 		<p class="my-2 text-center">Create a first collection to get started</p>
 	{:else}
 		<h2 class="my-2 text-center font-bold">Current Collection Overview</h2>
-		<p class="my-2 text-center">Select to a Collection to Edit or Create a New Collection. <br />Change Order by Dragging.</p>
+		<p class="my-2 text-center">
+			Select to a Collection to Edit or Create a New Collection. <br />Change Order by Dragging.
+		</p>
 
 		<!-- Table of collection -->
-		<table class="table-hover table border-2 border-primary-500">
+		<table class="table table-hover border-2 border-primary-500">
 			<tbody
 				use:dndzone={{ items: $categories, flipDurationMs: 300 }}
 				on:consider|preventDefault={handleDndConsider}
@@ -79,7 +89,10 @@
 						</tr>
 					{:else}
 						{#each category.collections as collection}
-							<tr on:click={() => handleCollectionClick(collection.name)} class=" cursor-pointer hover:text-primary-500">
+							<tr
+								on:click={() => handleCollectionClick(collection.name)}
+								class=" cursor-pointer hover:text-primary-500"
+							>
 								<td>{collection.name}</td>
 							</tr>
 						{/each}
@@ -92,6 +105,10 @@
 
 <!-- buttons -->
 <div class="flex items-center justify-between gap-2">
-	<button class="btn variant-filled-tertiary mt-4" on:click={handleCreateNewCategory}>Create New Category</button>
-	<button class="btn variant-filled-primary mt-4" on:click={handleCreateNewCollection}>Create New Collection</button>
+	<button class="btn variant-filled-tertiary mt-4" on:click={handleCreateNewCategory}
+		>Create New Category</button
+	>
+	<button class="btn variant-filled-primary mt-4" on:click={handleCreateNewCollection}
+		>Create New Collection</button
+	>
 </div>

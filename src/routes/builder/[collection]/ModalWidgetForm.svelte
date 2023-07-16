@@ -80,12 +80,18 @@
 					placeholder="Select Widget..."
 				/>
 				<div data-popup="popupAutocomplete" class="w-full bg-surface-500 text-white">
-					<Autocomplete bind:input={inputPopupWidget} options={widgetOptions} on:selection={onPopupWidgetSelect} />
+					<Autocomplete
+						bind:input={inputPopupWidget}
+						options={widgetOptions}
+						on:selection={onPopupWidgetSelect}
+					/>
 				</div>
 
 				{#if selectedWidget}
 					<div class="mb-2 border-y text-center text-primary-500">
-						<div class="text-xl text-primary-500"><span class="font-bold">{selectedWidget}</span> Widget Input Options</div>
+						<div class="text-xl text-primary-500">
+							<span class="font-bold">{selectedWidget}</span> Widget Input Options
+						</div>
 						<div class="text-xs text-error-500">* Required</div>
 					</div>
 					<div class="options-table">
@@ -114,7 +120,13 @@
 										bind:value={selectedWidgetoptions[option]}
 									/>
 								{:else if option === 'required' || option === 'readonly' || option === 'disabled' || option === 'localization'}
-									<input type="checkbox" name={option} id={option} class="variant-filled-surface" bind:value={selectedWidgetoptions[option]} />
+									<input
+										type="checkbox"
+										name={option}
+										id={option}
+										class="variant-filled-surface"
+										bind:value={selectedWidgetoptions[option]}
+									/>
 								{:else}
 									<input
 										type="text"

@@ -27,7 +27,9 @@ const widget = ({
 		display = async (data: any, field: any, entry: any, contentLanguage: any) => {
 			// console.log(data);
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
-			return translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGES] || 'NO entry';
+			return translated
+				? data[contentLanguage] || 'NO entry'
+				: data[PUBLIC_CONTENT_LANGUAGES] || 'NO entry';
 		};
 	}
 

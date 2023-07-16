@@ -22,12 +22,21 @@
 		let relation_id = '';
 		if (!field) return;
 		if (entryMode == 'create') {
-			relation_id = (await saveFormData({ data: fieldsData, _collection: field.relation, _mode: 'create' }))[0]?._id;
+			relation_id = (
+				await saveFormData({ data: fieldsData, _collection: field.relation, _mode: 'create' })
+			)[0]?._id;
 			console.log(relation_id);
 		} else if (entryMode == 'choose') {
 			relation_id = selected?._id;
 		} else if (entryMode == 'edit') {
-			relation_id = (await saveFormData({ data: fieldsData, _collection: field.relation, _mode: 'edit', id: relation_entry._id }))[0]?._id;
+			relation_id = (
+				await saveFormData({
+					data: fieldsData,
+					_collection: field.relation,
+					_mode: 'edit',
+					id: relation_entry._id
+				})
+			)[0]?._id;
 		}
 		return relation_id;
 	};
@@ -59,7 +68,9 @@
 
 {#if !expanded && !showDropDown}
 	<div class="flex">
-		<button type="button" on:keydown on:click={openDropDown}>{selected?.display || display || 'select new'}</button>
+		<button type="button" on:keydown on:click={openDropDown}
+			>{selected?.display || display || 'select new'}</button
+		>
 
 		<button
 			type="button"
@@ -90,7 +101,12 @@
 {:else if !expanded && showDropDown}
 	<DropDown {dropDownData} {field} bind:selected bind:showDropDown />
 {:else}
-	<Fields fields={field?.relation.fields} root={false} bind:fieldsData customData={relation_entry} />
+	<Fields
+		fields={field?.relation.fields}
+		root={false}
+		bind:fieldsData
+		customData={relation_entry}
+	/>
 
 	<button type="button" on:click={() => (expanded = false)} class="btn variant-filled-primary">
 		<iconify-icon icon="material-symbols:save" width="24" />Save

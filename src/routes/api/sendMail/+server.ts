@@ -38,7 +38,13 @@ export const POST: RequestHandler = async ({ request }) => {
 	return new Response(null, { status: 200 });
 };
 
-async function sendMail(email: string, subject: string, message: string, templateName: keyof typeof templates, props: EmailProps) {
+async function sendMail(
+	email: string,
+	subject: string,
+	message: string,
+	templateName: keyof typeof templates,
+	props: EmailProps
+) {
 	// console.log(email, subject, message);
 	// function sendMail(email, subject, message, html) {
 	const transporter = nodemailer.createTransport({

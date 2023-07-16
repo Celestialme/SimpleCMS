@@ -17,7 +17,9 @@ const widget = ({ label, db_fieldName, display, path = '' }: Params) => {
 		label,
 		db_fieldName,
 		display,
-		schema: { [db_fieldName || label]: { size: Number, name: String, type: String, lastModified: Number } },
+		schema: {
+			[db_fieldName || label]: { size: Number, name: String, type: String, lastModified: Number }
+		},
 		// Widget Specific parameters
 		path
 	};

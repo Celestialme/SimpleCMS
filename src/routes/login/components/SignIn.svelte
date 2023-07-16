@@ -15,7 +15,6 @@
 	import { Toast, toastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 
-
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -207,7 +206,14 @@
 
 		{#if !forgot && !resetPW}
 			<!--<SuperDebug data={$form} />-->
-			<form method="post" action="?/signIn" use:enhance bind:this={formElement} class="flex w-full flex-col gap-3" class:hide={active != 0}>
+			<form
+				method="post"
+				action="?/signIn"
+				use:enhance
+				bind:this={formElement}
+				class="flex w-full flex-col gap-3"
+				class:hide={active != 0}
+			>
 				<!-- Email field -->
 				<FloatingInput
 					name="email"
@@ -233,7 +239,8 @@
 					iconColor="black"
 					textColor="black"
 				/>
-				{#if $errors.password}<span class="invalid text-xs text-error-500">{$errors.password}</span>{/if}
+				{#if $errors.password}<span class="invalid text-xs text-error-500">{$errors.password}</span
+					>{/if}
 
 				<div class="mt-4 flex items-center justify-between">
 					<button type="submit" class="btn variant-filled-surface">
@@ -257,7 +264,13 @@
 		{#if resetPW && forgot}
 			<!--<SuperDebug data={$resetForm} />-->
 			<!-- Reset Password -->
-			<form method="post" action="?/resetPW" use:resetEnhance bind:this={formElement} class="flex w-full flex-col">
+			<form
+				method="post"
+				action="?/resetPW"
+				use:resetEnhance
+				bind:this={formElement}
+				class="flex w-full flex-col"
+			>
 				<!-- Password field -->
 				<FloatingInput
 					name="password"
@@ -269,7 +282,9 @@
 					iconColor="black"
 					textColor="black"
 				/>
-				{#if $resetErrors.password}<span class="invalid text-xs text-error-500">{$resetErrors.password}</span>{/if}
+				{#if $resetErrors.password}<span class="invalid text-xs text-error-500"
+						>{$resetErrors.password}</span
+					>{/if}
 
 				<!-- Password  Confirm field -->
 				<FloatingInput
@@ -282,10 +297,19 @@
 					iconColor="black"
 					textColor="black"
 				/>
-				{#if $resetErrors.confirm_password}<span class="invalid text-xs text-error-500">{$resetErrors.confirm_password}</span>{/if}
+				{#if $resetErrors.confirm_password}<span class="invalid text-xs text-error-500"
+						>{$resetErrors.confirm_password}</span
+					>{/if}
 
 				<!-- Password field -->
-				<FloatingInput type="password" bind:value={$form.password} bind:showPassword label={$LL.LOGIN_Token()} icon="mdi:lock" iconColor="black" />
+				<FloatingInput
+					type="password"
+					bind:value={$form.password}
+					bind:showPassword
+					label={$LL.LOGIN_Token()}
+					icon="mdi:lock"
+					iconColor="black"
+				/>
 
 				<button type="submit" class="btn variant-filled-surface ml-2 mt-6">
 					{$LL.LOGIN_ResetPasswordSave()}
@@ -298,7 +322,13 @@
 		{#if forgot && !resetPW}
 			<!--<SuperDebug data={$forgotForm} />-->
 			<!-- Forgotten Password -->
-			<form method="post" action="?/forgot" use:forgotEnhance bind:this={formElement} class="flex w-full flex-col">
+			<form
+				method="post"
+				action="?/forgot"
+				use:forgotEnhance
+				bind:this={formElement}
+				class="flex w-full flex-col"
+			>
 				<div class="  mb-2 text-center text-sm text-black">
 					<p class="mb-2 text-xs">{$LL.LOGIN_ForgottenPassword_text()}</p>
 				</div>
@@ -313,10 +343,14 @@
 					iconColor="black"
 					textColor="black"
 				/>
-				{#if $forgotErrors.email}<span class="invalid text-xs text-error-500">{$forgotErrors.email}</span>{/if}
+				{#if $forgotErrors.email}<span class="invalid text-xs text-error-500"
+						>{$forgotErrors.email}</span
+					>{/if}
 
 				<div class="mt-4 flex items-center justify-between">
-					<button type="submit" class="btn variant-filled-surface">{$LL.LOGIN_SendResetMail()}</button>
+					<button type="submit" class="btn variant-filled-surface"
+						>{$LL.LOGIN_SendResetMail()}</button
+					>
 					<!-- Loading indicators -->
 					{#if $forgotDelayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
 

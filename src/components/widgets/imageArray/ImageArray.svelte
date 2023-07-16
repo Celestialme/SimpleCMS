@@ -12,11 +12,18 @@
 	let _fieldsValue: any = [];
 	let files: any = [];
 
+	let name;
+	if (field.db_fieldName) {
+		name = field.db_fieldName;
+	} else {
+		name = 'defaultName';
+	}
+
 	export const WidgetData = async () => {
-		//	console.log(files.length);
+		console.log('files:', files);
 		for (let i = 0; i < files.length; i++) {
 			let fieldsData = _fieldsValue[i];
-			//console.log(fieldsData);
+			console.log('fieldsData:', fieldsData);
 			debugger;
 			await saveFormData(fieldsData);
 		}
@@ -34,9 +41,13 @@
 
 <!-- TODO: Add Image display and link File-->
 <!-- <FileDropzone /> -->
-<FileDropzone name={field.db_fieldName} accept="image/*" on:change={onChangeHandler}>
-	<svelte:fragment slot="lead"><iconify-icon icon="fa6-solid:file-arrow-up" width="45" /></svelte:fragment>
-	<svelte:fragment slot="message"><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment>
+<FileDropzone {name} accept="image/*" on:change={onChangeHandler}>
+	<svelte:fragment slot="lead"
+		><iconify-icon icon="fa6-solid:file-arrow-up" width="45" /></svelte:fragment
+	>
+	<svelte:fragment slot="message"
+		><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment
+	>
 	<svelte:fragment slot="meta">PNG, JPG, and GIF allowed.</svelte:fragment>
 </FileDropzone>
 

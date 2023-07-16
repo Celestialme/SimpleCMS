@@ -119,8 +119,11 @@ export const actions: Actions = {
 		}
 
 		// Get the user's key.
-		const key = (await auth.getAllUserKeys(user.user.id)).find((key) => key.passwordDefined == true);
-		if (!key) return { form: changePasswordForm, message: 'user does not exist or session expired' };
+		const key = (await auth.getAllUserKeys(user.user.id)).find(
+			(key) => key.passwordDefined == true
+		);
+		if (!key)
+			return { form: changePasswordForm, message: 'user does not exist or session expired' };
 
 		// Update the user's key password.
 		await auth.updateKeyPassword('email', key.providerUserId, password);

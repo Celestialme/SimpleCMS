@@ -6,7 +6,19 @@
 	export let tokenLink = dev ? HOST_DEV : HOST_PROD;
 
 	// svelte-email
-	import { Button, Container, Column, Head, Hr, Html, Img, Link, Preview, Section, Text } from 'svelte-email';
+	import {
+		Button,
+		Container,
+		Column,
+		Head,
+		Hr,
+		Html,
+		Img,
+		Link,
+		Preview,
+		Section,
+		Text
+	} from 'svelte-email';
 
 	interface EmailProps {
 		username?: string;
@@ -27,7 +39,8 @@
 	let hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
 	let readable_expires_at = `${hoursDiff} hours`;
 
-	const fontFamily = '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';
+	const fontFamily =
+		'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';
 
 	const main = {
 		backgroundColor: '#ffffff'
@@ -131,7 +144,9 @@
 				</Link>
 			</Section>
 
-			<Text style={paragraph}>You have received an Access Token to create a new user for {PUBLIC_SITENAME}</Text>
+			<Text style={paragraph}
+				>You have received an Access Token to create a new user for {PUBLIC_SITENAME}</Text
+			>
 			<Section style={review}>
 				<Column style={label}>
 					<Text style={paragraph}>Email:</Text>
@@ -143,7 +158,9 @@
 					<Text style={paragraph}><span style={styleToString(paragraphbold)}>{email}</span></Text>
 					<Text style={paragraph}><span style={styleToString(paragraphbold)}>{token}</span></Text>
 					<Text style={paragraph}><span style={styleToString(paragraphbold)}>{role}</span></Text>
-					<Text style={paragraph}><span style={styleToString(paragraphbold)}>{readable_expires_at}</span></Text>
+					<Text style={paragraph}
+						><span style={styleToString(paragraphbold)}>{readable_expires_at}</span></Text
+					>
 				</Column>
 			</Section>
 

@@ -30,7 +30,9 @@
 
 <!-- Expanding Search -->
 {#if searchShow}
-	<div class="btn-group variant-ghost-surface absolute left-1/2 top-0 flex -translate-x-1/2 transform items-center justify-end">
+	<div
+		class="variant-ghost-surface btn-group absolute left-1/2 top-0 flex -translate-x-1/2 transform items-center justify-end"
+	>
 		<button
 			type="button"
 			on:click={() => {
@@ -71,7 +73,7 @@
 			closeOpenStates();
 			searchShow = !searchShow;
 		}}
-		class="btn-icon variant-ghost-surface"
+		class="variant-ghost-surface btn-icon"
 	>
 		<iconify-icon icon="material-symbols:search-rounded" width="24" />
 	</button>
@@ -80,34 +82,33 @@
 {#if !searchShow}
 	<!-- Filter -->
 	<button
-	type="button"
-	on:click={() => {
-		if (filterShow) {
-			filterShow = false;
-		} else {
-			closeOpenStates();
-			filterShow = true;
-		}
-	}}
-	class="btn-icon variant-ghost-surface"
->
-	<iconify-icon icon="carbon:filter-edit" width="24" />
-</button>
-
+		type="button"
+		on:click={() => {
+			if (filterShow) {
+				filterShow = false;
+			} else {
+				closeOpenStates();
+				filterShow = true;
+			}
+		}}
+		class="variant-ghost-surface btn-icon"
+	>
+		<iconify-icon icon="carbon:filter-edit" width="24" />
+	</button>
 
 	<!-- Column Order & Visibility -->
 	<!-- Column Order/ Sort-->
 	<button
 		type="button"
 		on:click={() => {
-		if (columnShow) {
-			columnShow = false;
-		} else {
-			closeOpenStates();
-			columnShow = true;
-		}
-	}}
-		class="btn-icon variant-ghost-surface"
+			if (columnShow) {
+				columnShow = false;
+			} else {
+				closeOpenStates();
+				columnShow = true;
+			}
+		}}
+		class="variant-ghost-surface btn-icon"
 	>
 		<iconify-icon icon="fluent:column-triple-edit-24-regular" width="24" />
 		<!-- {$LL.TANSTACK_Column()} -->
@@ -127,7 +128,7 @@
 				updateDensity('compact');
 			}
 		}}
-		class="btn-icon variant-ghost-surface"
+		class="variant-ghost-surface btn-icon"
 		><iconify-icon
 			icon={density === 'compact'
 				? 'material-symbols:align-space-even-rounded'

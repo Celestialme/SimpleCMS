@@ -63,7 +63,7 @@
 		'2 hrs': false,
 		'12 hrs': true,
 		'2 days': false,
-		'1 week': false		
+		'1 week': false
 	};
 
 	function filterValid(valid: string): void {
@@ -93,9 +93,8 @@
 		method="post"
 		action="?/addUser"
 		use:enhance={({ data, cancel }) => {
-
 			data.append('role', roleSelected);
-			
+
 			let expires_in = 120;
 			// converting it in milliseconds
 			switch (validSelected) {
@@ -136,11 +135,16 @@
 				}
 			};
 		}}
-		
 	>
 		<!-- Email field -->
 		<div class="group relative z-0 mb-6 w-full">
-			<FloatingInput label={$LL.LOGIN_EmailAddress()} icon="mdi:email" type="email" bind:value={email} required />
+			<FloatingInput
+				label={$LL.LOGIN_EmailAddress()}
+				icon="mdi:email"
+				type="email"
+				bind:value={email}
+				required
+			/>
 
 			{#if errorStatus.email.status}
 				<div class="absolute left-0 top-11 text-xs text-error-500">
@@ -156,7 +160,9 @@
 				<div class="flex flex-wrap gap-2 space-x-2">
 					{#each Object.values(roles) as r}
 						<span
-							class="chip {roleSelected===r ? 'variant-filled-tertiary' : 'variant-ghost-secondary'}"
+							class="chip {roleSelected === r
+								? 'variant-filled-tertiary'
+								: 'variant-ghost-secondary'}"
 							on:click={() => {
 								// filterRole(r);
 								roleSelected = r;
@@ -165,7 +171,7 @@
 							role="button"
 							tabindex="0"
 						>
-							{#if roleSelected===r }<span><iconify-icon icon="fa:check" /></span>{/if}
+							{#if roleSelected === r}<span><iconify-icon icon="fa:check" /></span>{/if}
 							<span class="capitalize">{r}</span>
 						</span>
 					{/each}
@@ -203,7 +209,9 @@
 		</div>
 
 		<footer class="modal-footer {parent.regionFooter}">
-			<button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
+			<button class="btn {parent.buttonNeutral}" on:click={parent.onClose}
+				>{parent.buttonTextCancel}</button
+			>
 			<button type="submit" class="btn {parent.buttonPositive}">Send</button>
 		</footer>
 	</form>

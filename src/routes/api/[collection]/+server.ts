@@ -59,7 +59,9 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 	let files = saveFiles(data, params.collection);
 
 	// Return new Response object containing JSON stringified result of updating one document in collection where its _id property matches _id, with properties from both formData and files objects, with option to upsert
-	return new Response(JSON.stringify(await collection.updateOne({ _id }, { ...formData, ...files }, { upsert: true })));
+	return new Response(
+		JSON.stringify(await collection.updateOne({ _id }, { ...formData, ...files }, { upsert: true }))
+	);
 };
 
 // Export an asynchronous function named POST that is a RequestHandler

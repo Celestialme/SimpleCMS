@@ -6,5 +6,5 @@ import { resolvers } from '$api/resolvers';
 const server = createGraphQLServer({ schema, resolvers });
 
 export const post = async (request) => {
-  return await handleRequest(request, server);
+	return await handleRequest(request, server);
 };

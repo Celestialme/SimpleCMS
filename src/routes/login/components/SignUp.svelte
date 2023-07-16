@@ -25,7 +25,9 @@
 
 	const { form, constraints, allErrors, errors, enhance, delayed } = superForm(FormSchemaSignUp, {
 		id: 'signup',
-		validators: (firstUserExists ? signUpFormSchema : signUpFormSchema.innerType().omit({ token: true })) as typeof signUpFormSchema,
+		validators: (firstUserExists
+			? signUpFormSchema
+			: signUpFormSchema.innerType().omit({ token: true })) as typeof signUpFormSchema,
 		// Clear form on success.
 		resetForm: true,
 		// Prevent page invalidation, which would clear the other form when the load function executes again.
@@ -82,10 +84,12 @@
 				<div class="break-words lg:-mt-1">
 					{$LL.LOGIN_SignUp()}
 					{#if !firstUserExists}
-					 	<span class="text-primary-500 text-2xl sm:text-3xl">: Admin</span>
+						<span class="text-2xl text-primary-500 sm:text-3xl">: Admin</span>
 					{:else}
 						<!-- TODO: Grab User Role from Token  -->
-						<span class="text-primary-500 text-2xl sm:text-3xl">{#if UserRole}: {UserRole}{:else}: New User{/if}</span>
+						<span class="text-2xl text-primary-500 sm:text-3xl"
+							>{#if UserRole}: {UserRole}{:else}: New User{/if}</span
+						>
 					{/if}
 				</div>
 			</h1>
@@ -94,7 +98,14 @@
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
 		<!--<SuperDebug data={$form} />-->
-		<form method="post" action="?/signUp" use:enhance bind:this={formElement} class="flex flex-col  gap-3 items" class:hide={active != 1}>
+		<form
+			method="post"
+			action="?/signUp"
+			use:enhance
+			bind:this={formElement}
+			class="items flex flex-col gap-3"
+			class:hide={active != 1}
+		>
 			<!-- Username field -->
 			<FloatingInput
 				name="username"
@@ -160,7 +171,9 @@
 				showPasswordBackgroundColor="dark"
 				inputClass="text-white"
 			/>
-			{#if $errors.confirm_password}<span class="text-xs text-error-500">{$errors.confirm_password}</span>{/if}
+			{#if $errors.confirm_password}<span class="text-xs text-error-500"
+					>{$errors.confirm_password}</span
+				>{/if}
 
 			{#if $form.token != null}
 				<!-- Registration Token -->
@@ -183,7 +196,7 @@
 
 			{#if response}<span class="text-xs text-error-500">{response}</span>{/if}
 
-			<button type="submit" class="btn variant-filled  mt-4 uppercase"
+			<button type="submit" class="btn variant-filled mt-4 uppercase"
 				>{$LL.LOGIN_SignUp()}
 				<!-- Loading indicators -->
 				{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
