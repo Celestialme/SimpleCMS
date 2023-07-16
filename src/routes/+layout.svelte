@@ -227,6 +227,11 @@
 	<meta property="og:type" content="website" />
 </svelte:head>
 
+<!-- hack as root +layout cannot be overwritten ? -->
+{#if $page.url.pathname === '/login'}
+<slot />
+{:else}
+
 <AppShell
 	slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10
@@ -309,10 +314,10 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 							/>
 							<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
 								{#if $toggleLeftSidebar === 'full'}
-									Admin
-									<!-- {#if user?.username}
+									{user?.username}
+									 {#if user?.username}
 										<div class="text-xs uppercase">{user?.username}</div>
-									{/if} -->
+									{/if}
 								{/if}
 							</div>
 						</div>
@@ -435,14 +440,27 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 
 	<svelte:fragment slot="pageFooter">
 		{#if $mode !== 'view'}
-			<h2 class="text-center font-bold">{$collection.name} Info:</h2>
+			<h2 class="text-center font-bold text-primary-500 uppercase">{$collection.name} Info:</h2>
 			<div class="footer-content text-sm">
-				<div class="mt-2 flex items-center justify-center gap-2 space-y-1 text-xs">
+				<div class="mt-2 flex flex-row items-center mb-2 justify-around gap-2 space-between text-xs">
+				<!-- TODO: hide when working -->
 					<div>Created: <span class="font-bold">{dates.created}</span></div>
 					<div>Updated: <span class="font-bold">{dates.updated}</span></div>
 					<div>Revision: <span class="font-bold">{dates.revision}</span></div>
+				
+				
+				{#if dates.created}
+					<div>Created: <span class="font-bold">{dates.created}</span></div>
+				{/if}
+				{#if dates.updated}
+					<div>Updated: <span class="font-bold">{dates.updated}</span></div>
+				{/if}
+				{#if dates.revision}
+					<div>Revision: <span class="font-bold">{dates.revision}</span></div>
+				{/if}
 				</div>
 			</div>
 		{/if}
 	</svelte:fragment>
 </AppShell>
+{/if}

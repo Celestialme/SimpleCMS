@@ -24,8 +24,8 @@ let categories = [
 			{ ...Posts, id: 1.1 },
 			{ ...Names, id: 1.2 },
 			{ ...Posts2, id: 1.3 },
-			{ ...Relation, id: 1.4 }
-			// { ...WidgetTest, id: 1.5 }
+			{ ...Relation, id: 1.4 },
+			{ ...WidgetTest, id: 1.5 }
 		]
 	},
 	{

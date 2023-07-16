@@ -72,7 +72,7 @@ export let signUpFormSchema = z
 	.refine((data: SignUpFormData) => data.password === data.confirm_password, get(LL).LOGIN_ZOD_Password_match());
 
 // Validate New User Token ------------------------------------
-export let addUserSchema = z.object({
+export let addUserTokenSchema = z.object({
 	email: z.string({ required_error: get(LL).LOGIN_ZOD_Email_string() }).email({ message: get(LL).LOGIN_ZOD_Email_email() }),
 	role: z.string(),
 	expiresIn: z.string()

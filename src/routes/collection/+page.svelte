@@ -2,6 +2,7 @@
     import { dndzone } from 'svelte-dnd-action';
 	import { flip } from 'svelte/animate';
     import { categories as importedCategories } from '@src/collections/index';
+	import { toggleLeftSidebar } from '@src/stores/store';
 	const flipDurationMs = 200;
     let newCategoryName = '';
     let categories = [...importedCategories];
@@ -42,8 +43,23 @@
     }
 </script>
 
+<div class="flex items-center">
+    <!-- hamburger -->
+    {#if $toggleLeftSidebar === 'closed'}
+        <button type="button" on:click={() => toggleLeftSidebar.click()} class="btn-icon variant-ghost-surface mt-1">
+            <iconify-icon icon="mingcute:menu-fill" width="24" />
+        </button>
+    {/if}
+
+    <!-- Title  with icon -->
+    <h1 class="h1 ml-2 flex items-center gap-1">Menu Builder</h1>
+</div>
+
+	
 <!-- display collections -->
 <div class="mt-2 rounded border p-2">
+    
+
 	<h2 class="mt-4 text-lg font-bold">Available Collections</h2>
 	<div
 		class="flex flex-wrap"

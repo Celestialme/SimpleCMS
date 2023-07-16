@@ -83,10 +83,11 @@
 	//$: if (mode.set === “create”) { switchSideBar.update((value) => !value); toggleRightSidebar.update((value) => !value); }
 </script>
 
-<div class="relative inline-flex rounded-md">
+<div class=" inline-flex rounded">
+	<!-- left button -->
 	<button
 		type="button"
-		class={`inline-block w-[60px] rounded-l-full px-1 pl-3 font-medium uppercase leading-normal text-black transition duration-150 ease-in-out dark:text-white md:w-[135px] ${buttonClass}`}
+		class={`inline-block w-[60px] rounded-l-full pl-3 font-medium uppercase leading-normal text-black transition duration-150 ease-in-out dark:text-white md:w-[135px] ${buttonClass}`}
 		on:click|preventDefault={handleButtonClick}
 		on:click={() => mode.set($storeListboxValue)}
 	>
@@ -95,12 +96,13 @@
 			<span class="ml-2 hidden md:block">{actionname}</span>
 		</span>
 	</button>
-
+	<!-- white line -->
 	<div class="border-l-2 border-white" />
 
+	<!-- dropdown button -->
 	<button
 		type="button"
-		class="inline-block rounded-r bg-surface-700 px-2 py-2 text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-gray-600 focus:bg-gray-600 focus:outline-none focus:ring-0 active:bg-gray-700"
+		class="relative inline-block rounded-r bg-surface-600 px-2 text-xs font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:bg-surface-500 focus:bg-surface-500 focus:outline-none focus:ring-0 active:bg-surface-500"
 		on:click|preventDefault={() => (dropdownOpen = !dropdownOpen)}
 	>
 		<iconify-icon icon="mdi:chevron-down" width="24" />
@@ -108,7 +110,7 @@
 
 	{#if dropdownOpen}
 		<ul
-			class="absolute right-0 top-12 z-20 divide-y-2 rounded-sm border bg-surface-800 py-1 text-white shadow-lg ring-1 ring-black ring-opacity-5 md:w-[90%]"
+			class="mt-1 absolute right-2 top-14 z-10 divide-y rounded border bg-surface-700 text-white ring-1 ring-black ring-opacity-5 "
 		>
 			{#if $storeListboxValue !== 'create'}
 				<li>

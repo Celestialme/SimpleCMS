@@ -9,9 +9,9 @@
 
 <div class="body">
 	<p class="text-center text-white">Hello {data.user.username}</p>
-	<p class="text-center text-white">Auth method {data.user.authMethod}</p>
+	<p class="text-center text-white">Auth method {data.user.authMethod}</p><p class="text-center text-white">email {data.user.email}</p>
 	{#if data.user.role == 'admin'}
-		<AddUser {data} />
+		<div class="border"><AddUser {data} /></div>
 	{/if}
 	<ChangePassword {data} />
 </div>

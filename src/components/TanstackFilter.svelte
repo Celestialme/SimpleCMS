@@ -80,24 +80,33 @@
 {#if !searchShow}
 	<!-- Filter -->
 	<button
-		type="button"
-		on:click={() => {
+	type="button"
+	on:click={() => {
+		if (filterShow) {
+			filterShow = false;
+		} else {
 			closeOpenStates();
-			filterShow = !filterShow;
-		}}
-		class="btn-icon variant-ghost-surface"
-	>
-		<iconify-icon icon="carbon:filter-edit" width="24" />
-	</button>
+			filterShow = true;
+		}
+	}}
+	class="btn-icon variant-ghost-surface"
+>
+	<iconify-icon icon="carbon:filter-edit" width="24" />
+</button>
+
 
 	<!-- Column Order & Visibility -->
 	<!-- Column Order/ Sort-->
 	<button
 		type="button"
 		on:click={() => {
+		if (columnShow) {
+			columnShow = false;
+		} else {
 			closeOpenStates();
-			columnShow = !columnShow;
-		}}
+			columnShow = true;
+		}
+	}}
 		class="btn-icon variant-ghost-surface"
 	>
 		<iconify-icon icon="fluent:column-triple-edit-24-regular" width="24" />

@@ -34,26 +34,11 @@ export type User = Modify<
 >;
 
 // TODO Replace role with defined in env. file
-// export let roles = {
-// 	admin: 'admin',
-// 	user: 'user',
-// 	developer: 'developer'
-// } as const;
-
-// grab Role data from environment file
-import { PUBLIC_USER_ROLES } from '$env/static/public';
-
-// Read the available user roles from the PUBLIC_USER_ROLES environment variable
-const userRoles = PUBLIC_USER_ROLES.split(',');
-
-// Create an object with the available user roles as keys and values
-type Roles = {
-	[key: string]: string;
-};
-export let roles = userRoles.reduce((acc, role) => {
-	acc[role.toLowerCase()] = role;
-	return acc;
-}, {}) as Roles;
+export let roles = {
+	admin: 'admin',
+	user: 'user',
+	developer: 'developer'
+} as const;
 
 // Sessions are how you validate and keep track of users
 export let session = {

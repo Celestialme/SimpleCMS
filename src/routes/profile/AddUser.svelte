@@ -5,7 +5,7 @@
 	import LL from '@src/i18n/i18n-svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 
-	import { addUserSchema } from '@src/utils/formSchemas';
+	import { addUserTokenSchema } from '@src/utils/formSchemas';
 	import { roles } from '@src/collections/Auth';
 	//console.log('roles: ', roles);
 
@@ -13,7 +13,7 @@
 	console.log(data);
 	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
 		id: 'addUser',
-		validators: addUserSchema,
+		validators: addUserTokenSchema,
 		defaultValidator: 'clear',
 		applyAction: true,
 		taintedMessage: '',

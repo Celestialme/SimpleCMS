@@ -437,8 +437,8 @@
 </div>
 
 {#if columnShow}
-	<div class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-700 text-center" transition:slide|global>
-		<div class="text-primary-500">Drag & Drop Columns / Click to hide</div>
+	<div class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-300 dark:bg-surface-700 text-center" transition:slide|global>
+		<div class="text-white dark:text-primary-500">Drag & Drop Columns / Click to hide</div>
 		<!-- toggle all -->
 		<div class="flex w-full items-center justify-center">
 			<label class="mr-3">
@@ -452,7 +452,7 @@
 				{$LL.TANSTACK_Toggle()}
 			</label>
 			<section
-				class="flex justify-center rounded-md bg-surface-700 p-2"
+				class="flex justify-center rounded-md  p-2"
 				use:dndzone={{ items, flipDurationMs }}
 				on:consider={handleDndConsider}
 				on:finalize={handleDndFinalize}

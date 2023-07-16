@@ -1,46 +1,61 @@
 <script lang="ts">
+	export let data: PageData;
+	import type { PageData, SubmitFunction } from './$types';
+	import '@src/stores/store';
+	import { superForm } from 'sveltekit-superforms/client';
+	//import { enhance } from '$app/forms';
+
+	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
+	import { addUserTokenSchema } from '@src/utils/formSchemas';
+	import { roles } from '@src/collections/Auth';
+	//console.log('roles: ', roles);
+
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: any;
-
-	import { PUBLIC_USER_ROLES } from '$env/static/public';
 
 	// Skelton & Stores
 	import { modalStore } from '@skeletonlabs/skeleton';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
-	import { enhance } from '$app/forms';
-	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
 
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
 	const cHeader = 'text-2xl font-bold';
 	const cForm = 'border border-surface-500 p-4 space-y-4 rounded-container-token';
 
+	// let response;
+	// console.log(data);
+	// let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
+	// 	id: 'addUser',
+	// 	validators: addUserTokenSchema,
+	// 	defaultValidator: 'clear',
+	// 	applyAction: true,
+	// 	taintedMessage: '',
+	// 	dataType: 'json',
+
+	// 	onSubmit: ({ cancel }) => {
+	// 		if ($allErrors.length > 0) cancel();
+	// 	},
+	// 	onResult: ({ result, cancel }) => {
+	// 		cancel();
+	// 		if (result.type == 'success') {
+	// 			response = result.data?.message;
+	// 		}
+	// 	}
+	// });
+	// $form.role = 'User';
+
 	let email = '';
-
-	// Get allowed user Roles from environment variable
-	const rolesArray = PUBLIC_USER_ROLES.split(',');
-	const roles = Object.fromEntries(rolesArray.map((role) => [role, false]));
-	roles['Editor'] = true;
-
 	// define default role
-	let roleSelected = 'Editor';
+	let roleSelected = Object.values(roles)[0];
 
 	let errorStatus = {
 		email: { status: false, msg: '' },
+		role: { status: false, msg: '' },
 		valid: { status: false, msg: '' }
 	};
-
-	function filterRole(role: string): void {
-		for (const r in roles) {
-			if (r !== role) {
-				roles[r] = false;
-			}
-		}
-		roles[role] = !roles[role];
-	}
 
 	// Token Valid Duration
 	let validSelected = '12 hrs';
@@ -48,8 +63,7 @@
 		'2 hrs': false,
 		'12 hrs': true,
 		'2 days': false,
-		'1 week': false,
-		'1 month': false
+		'1 week': false		
 	};
 
 	function filterValid(valid: string): void {
@@ -77,9 +91,11 @@
 	<form
 		class="modal-form {cForm}"
 		method="post"
-		action="?/generateToken"
+		action="?/addUser"
 		use:enhance={({ data, cancel }) => {
+
 			data.append('role', roleSelected);
+			
 			let expires_in = 120;
 			// converting it in milliseconds
 			switch (validSelected) {
@@ -104,10 +120,12 @@
 					cancel();
 			}
 			data.append('expires_in', expires_in.toString());
+
 			return async ({ result }) => {
 				if (result.type === 'success') {
 					modalStore.close();
 				}
+
 				if (result.type === 'failure') {
 					result?.data?.errors &&
 						// @ts-ignore
@@ -118,6 +136,7 @@
 				}
 			};
 		}}
+		
 	>
 		<!-- Email field -->
 		<div class="group relative z-0 mb-6 w-full">
@@ -135,18 +154,18 @@
 			<div class="sm:w-1/4">User Role:</div>
 			<div class="flex-auto">
 				<div class="flex flex-wrap gap-2 space-x-2">
-					{#each Object.keys(roles) as r}
+					{#each Object.values(roles) as r}
 						<span
-							class="chip {roles[r] ? 'variant-filled-tertiary' : 'variant-ghost-secondary'}"
+							class="chip {roleSelected===r ? 'variant-filled-tertiary' : 'variant-ghost-secondary'}"
 							on:click={() => {
-								filterRole(r);
+								// filterRole(r);
 								roleSelected = r;
 							}}
 							on:keypress
 							role="button"
 							tabindex="0"
 						>
-							{#if roles[r]}<span><iconify-icon icon="fa:check" /></span>{/if}
+							{#if roleSelected===r }<span><iconify-icon icon="fa:check" /></span>{/if}
 							<span class="capitalize">{r}</span>
 						</span>
 					{/each}
@@ -154,6 +173,7 @@
 			</div>
 		</div>
 
+		<!-- Token validity  -->
 		<div class="flex flex-col gap-2 pb-6 sm:flex-row">
 			<div class="sm:w-1/4">Token validity:</div>
 			<div class="flex-auto">

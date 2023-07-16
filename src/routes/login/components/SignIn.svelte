@@ -207,7 +207,7 @@
 
 		{#if !forgot && !resetPW}
 			<!--<SuperDebug data={$form} />-->
-			<form method="post" action="?/signIn" use:enhance bind:this={formElement} class="flex w-full flex-col" class:hide={active != 0}>
+			<form method="post" action="?/signIn" use:enhance bind:this={formElement} class="flex w-full flex-col gap-3" class:hide={active != 0}>
 				<!-- Email field -->
 				<FloatingInput
 					name="email"
@@ -235,7 +235,7 @@
 				/>
 				{#if $errors.password}<span class="invalid text-xs text-error-500">{$errors.password}</span>{/if}
 
-				<div class="ml-1 mt-4 flex items-center justify-between">
+				<div class="mt-4 flex items-center justify-between">
 					<button type="submit" class="btn variant-filled-surface">
 						{$LL.LOGIN_SignIn()}
 						<!-- Loading indicators -->

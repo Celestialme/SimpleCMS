@@ -22,9 +22,9 @@
 	export let hasCollections: any;
 </script>
 
-{#if !hasCollections}
+<!-- {#if hasCollections}
 	<p>Please use the /builder first.</p>
-{:else}
+{:else} -->
 	<div class="body">
 		<section class="left_panel">
 			<Collections modeSet={'edit'} />
@@ -50,7 +50,7 @@
 			{/if}
 		</div>
 	</div>
-{/if}
+<!-- {/if} -->
 
 <style>
 	.body {

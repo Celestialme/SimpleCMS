@@ -133,8 +133,6 @@ This FloatingInput component has the following properties:
 
 <style lang="postcss">
 	div {
-		min-width: 280px;
-		margin: 5px;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;

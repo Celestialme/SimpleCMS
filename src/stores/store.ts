@@ -30,6 +30,8 @@ systemLanguage.subscribe((val) => {
 export let collectionValue: any = writable({});
 export let mode: Writable<'view' | 'edit' | 'create' | 'delete' | 'publish' | 'unpublish' | 'schedule' | 'clone'> = writable('view');
 export let entryData: Writable<any> = writable({});
+
+//TODO: check deleteEntry function and ad modal to confirm deletion
 export let deleteEntry: Writable<() => any> = writable(() => {});
 
 // Store image data while editing

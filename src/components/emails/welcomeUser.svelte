@@ -129,7 +129,7 @@
 			>
 			<Text>Thank you for choosing SimpleCMS. We're excited to have you on board!</Text>
 			<Section style={btnContainer}>
-				<Button pX={12} pY={12} style={button} href={hostLink}>Go to</Button>
+				<Button pX={12} pY={12} style={button} href={hostLink}>Go to {PUBLIC_SITENAME}</Button>
 			</Section>
 			<Hr style={hr} />
 			<Text style={footer}>Your {PUBLIC_SITENAME} Team</Text>

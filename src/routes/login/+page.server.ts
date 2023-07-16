@@ -219,6 +219,7 @@ async function FirstUsersignUp(username: string, email: string, password: string
 				password: password
 			},
 			attributes: {
+				email,
 				username,
 				role: 'admin'
 			}
@@ -297,7 +298,7 @@ async function finishRegistration(username: string, email: string, password: str
 	try {
 		let authMethod = 'password';
 		await tokenHandler.validate(token, key.userId);
-		await auth.updateUserAttributes(key.userId, { username, authMethod });
+		await auth.updateUserAttributes(key.userId, { email, username, authMethod });
 		await auth.updateKeyPassword('email', email, password);
 
 		const session = await auth.createSession(key.userId);

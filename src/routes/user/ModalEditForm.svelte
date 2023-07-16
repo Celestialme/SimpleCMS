@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { roles } from "@src/collections/Auth";
+	// define default role
+	let roleSelected = Object.values(roles)[0];
+
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: any;
@@ -43,22 +47,7 @@
 	const cHeader = 'text-2xl font-bold';
 	const cForm = 'border border-surface-500 p-4 space-y-4 rounded-container-token';
 
-	//TODO: Get Roles from allowed user
-	let roles: Record<string, boolean> = {
-		Admin: true,
-		Editor: false,
-		User: false,
-		Guest: false
-	};
 
-	function filter(role: string): void {
-		for (const r in roles) {
-			if (r !== role) {
-				roles[r] = false;
-			}
-		}
-		roles[role] = !roles[role];
-	}
 </script>
 
 <!-- @component This example creates a simple form modal. -->
@@ -99,32 +88,61 @@
 				</div>
 			{/if}
 		</div>
-
-		<!-- Email field -->
-		<div class="group relative z-0 mb-6 w-full">
-			<iconify-icon icon="mdi:email" width="18" class="absolute left-0 top-3.5 text-gray-400" />
-			<input
-				bind:value={formData.email}
-				on:keydown={() => (errorStatus.email.status = false)}
-				color={errorStatus.email.status ? 'red' : 'base'}
-				type="email"
-				name="email"
-				class="peer block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-surface-300 !bg-transparent px-6 py-2.5 text-sm text-surface-900 focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-600 dark:text-white dark:focus:border-tertiary-500"
-				placeholder=" "
-				required
-			/>
-			<label
-				for="email"
-				class="absolute left-5 top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-tertiary-600 dark:text-surface-400 peer-focus:dark:text-tertiary-500"
-			>
-				{$LL.LOGIN_EmailAddress()}<span class="ml-2 text-error-500">*</span>
-			</label>
-			{#if errorStatus.email.status}
-				<div class="absolute left-0 top-11 text-xs text-error-500">
-					{errorStatus.email.msg}
-				</div>
-			{/if}
-		</div>
+ 
+		<!-- admin area -->
+		{#if user?.role==roles.admin}
+			<!-- Email field -->
+			<div class="group relative z-0 mb-6 w-full">
+				<iconify-icon icon="mdi:email" width="18" class="absolute left-0 top-3.5 text-gray-400" />
+				<input
+					bind:value={formData.email}
+					on:keydown={() => (errorStatus.email.status = false)}
+					color={errorStatus.email.status ? 'red' : 'base'}
+					type="email"
+					name="email"
+					class="peer block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-surface-300 !bg-transparent px-6 py-2.5 text-sm text-surface-900 focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-600 dark:text-white dark:focus:border-tertiary-500"
+					placeholder=" "
+					required
+				/>
+				<label
+					for="email"
+					class="absolute left-5 top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm  duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-tertiary-600 dark:text-surface-400 peer-focus:dark:text-tertiary-500"
+				>
+					{$LL.LOGIN_EmailAddress()}<span class="ml-2 text-error-500">*</span>
+				</label>
+				{#if errorStatus.email.status}
+					<div class="absolute left-0 top-11 text-xs text-error-500">
+						{errorStatus.email.msg}
+					</div>
+				{/if}
+			</div>
+			{:else}
+			<!-- only show email but normal user cant change it -->
+			<div class="group relative z-0 mb-6 w-full">
+				<iconify-icon icon="mdi:email" width="18" class="absolute left-0 top-3.5 text-gray-400" />
+				<input
+					bind:value={formData.email}
+					on:keydown={() => (errorStatus.email.status = false)}
+					color={errorStatus.email.status ? 'red' : 'base'}
+					type="email"
+					name="email "
+					class="peer block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-surface-300 !bg-transparent px-6 py-2.5 text-sm text-surface-900 focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-600 dark:text-white dark:focus:border-tertiary-500"
+					placeholder=" "
+					disabled
+				/>
+				<label
+					for="email"
+					class="absolute left-5 top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-sm duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:text-tertiary-600 dark:text-red-400 peer-focus:dark:text-tertiary-500"
+				>
+					Email Cannot be changed<span class="ml-2 text-error-500">*</span>
+				</label>
+				{#if errorStatus.email.status}
+					<div class="absolute left-0 top-11 text-xs text-error-500">
+						{errorStatus.email.msg}
+					</div>
+				{/if}
+			</div>
+		{/if}
 
 		<!-- Password field -->
 		<div class="group relative z-0 mb-6 w-full">
@@ -231,25 +249,28 @@
 		</div>
 
 		<!-- admin area -->
-		{#if user?.role === 'Admin'}
+		{#if user?.role==roles.admin}
 			<div class="flex flex-col gap-2 sm:flex-row">
 				<div class="sm:w-1/4">Role:</div>
 				<div class="flex-auto">
 					<!-- TODO:  bind:value={formData.role}  -->
 
 					<div class="flex flex-wrap gap-2 space-x-2">
-						{#each Object.keys(roles) as r}
-							<span
-								class="chip {roles[r] ? 'variant-filled-tertiary' : 'variant-ghost-secondary'}"
-								on:click={() => {
-									filter(r);
-								}}
-								on:keypress
-							>
-								{#if roles[r]}<span><iconify-icon icon="fa:check" /></span>{/if}
-								<span class="capitalize">{r}</span>
-							</span>
-						{/each}
+						{#each Object.values(roles) as r}
+						<span
+							class="chip {roleSelected===r ? 'variant-filled-tertiary' : 'variant-ghost-secondary'}"
+							on:click={() => {
+								// filterRole(r);
+								roleSelected = r;
+							}}
+							on:keypress
+							role="button"
+							tabindex="0"
+						>
+							{#if roleSelected===r }<span><iconify-icon icon="fa:check" /></span>{/if}
+							<span class="capitalize">{r}</span>
+						</span>
+					{/each}
 					</div>
 				</div>
 			</div>

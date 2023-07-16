@@ -82,10 +82,10 @@
 				<div class="break-words lg:-mt-1">
 					{$LL.LOGIN_SignUp()}
 					{#if !firstUserExists}
-						: Admin
+					 	<span class="text-primary-500 text-2xl sm:text-3xl">: Admin</span>
 					{:else}
 						<!-- TODO: Grab User Role from Token  -->
-						{#if UserRole}: {UserRole}{:else}: New User{/if}
+						<span class="text-primary-500 text-2xl sm:text-3xl">{#if UserRole}: {UserRole}{:else}: New User{/if}</span>
 					{/if}
 				</div>
 			</h1>
@@ -94,10 +94,10 @@
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
 		<!--<SuperDebug data={$form} />-->
-		<form method="post" action="?/signUp" use:enhance bind:this={formElement} class="flex flex-col" class:hide={active != 1}>
+		<form method="post" action="?/signUp" use:enhance bind:this={formElement} class="flex flex-col  gap-3 items" class:hide={active != 1}>
 			<!-- Username field -->
 			<FloatingInput
-				name="Username"
+				name="username"
 				type="text"
 				tabindex={tabIndex++}
 				required
@@ -183,7 +183,7 @@
 
 			{#if response}<span class="text-xs text-error-500">{response}</span>{/if}
 
-			<button type="submit" class="btn variant-filled ml-2 mt-4 uppercase"
+			<button type="submit" class="btn variant-filled  mt-4 uppercase"
 				>{$LL.LOGIN_SignUp()}
 				<!-- Loading indicators -->
 				{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}

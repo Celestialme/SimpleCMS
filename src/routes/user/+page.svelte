@@ -3,44 +3,10 @@
 	import { toggleLeftSidebar } from '@src/stores/store';
 	import axios from 'axios';
 	import '@src/stores/store';
-
-	import { superForm } from 'sveltekit-superforms/client';
-	import { addUserSchema } from '@src/utils/formSchemas';
+	import { roles } from '@src/collections/Auth';
 
 	export let data: PageData;
 	// console.log(data);
-
-	//get user roles from environment file
-	import { PUBLIC_USER_ROLES } from '$env/static/public';
-	const userRoles = PUBLIC_USER_ROLES.split(',');
-	let roles = userRoles.reduce((acc, role) => {
-		acc[role] = false;
-		return acc;
-	}, {});
-
-	let response;
-	// console.log(data);
-
-	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
-		id: 'addUser',
-		validators: addUserSchema,
-		defaultValidator: 'clear',
-		applyAction: true,
-		taintedMessage: '',
-		dataType: 'json',
-
-		onSubmit: ({ cancel }) => {
-			cancel();
-		},
-		onResult: ({ result, cancel }) => {
-			cancel();
-			if (result.type == 'success') {
-				response = result.data?.message;
-			}
-		}
-	});
-	$form.role = 'User';
-	$form.expiresIn = '120';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -48,7 +14,6 @@
 	// Lucia
 	import { page } from '$app/stores';
 	import { invalidateAll } from '$app/navigation';
-
 	const user = $page.data.user;
 
 	// import UserList from './UserList/UserList.svelte';
@@ -67,9 +32,9 @@
 	let id = user?._id;
 	let username = user?.username;
 	let role = user?.role;
-
 	let email = user?.email;
-	// TODO  Get hashed password
+
+		// TODO  Get hashed password
 	let password = 'hash-password';
 
 	// Modal Trigger - User Form
@@ -88,7 +53,7 @@
 			title: 'Edit User Data',
 			body: 'Modify your data and then press Save.',
 			component: modalComponent,
-			// Pass abitrary data to the component
+			// Pass arbitrary data to the component
 			response: async (r: any) => {
 				if (r) {
 					const res = await axios.post('/api/user/editUser', {
@@ -210,7 +175,7 @@
 		<div class="relative mx-2 mt-1 flex flex-col items-center justify-center gap-2">
 			<Avatar src={avatarSrc ? '/api/' + avatarSrc : '/Default_User.svg'} initials="AV" rounded-none class="w-32" />
 
-			<button on:click={modalEditAvatar} class="gradient-primary w-30 badge absolute top-1 text-white">{$LL.USER_Edit_Avatar()}</button>
+			<button on:click={modalEditAvatar} class="gradient-primary w-30 badge absolute top-8 sm:top-4 text-white">{$LL.USER_Edit_Avatar()}</button>
 
 			<div class="gradient-secondary badge mt-1 w-full max-w-xs text-white">
 				{$LL.USER_ID()}:<span class="ml-2">{id}</span>
@@ -234,54 +199,40 @@
 				<input bind:value={password} name="password" type="password" disabled class="input" />
 			</label>
 			<div class="my-2 flex flex-col justify-between gap-2 sm:flex-row sm:justify-between sm:gap-0">
-				<button class="gradient-secondary btn btn-sm text-white md:w-auto" on:click={modalUserForm}>
+				<button class="gradient-secondary btn  text-white md:w-auto" on:click={modalUserForm}>
 					<iconify-icon icon="bi:pencil-fill" color="white" width="18" class="mr-1" />{$LL.USER_Edit()}:
 				</button>
-				<button on:click={modalConfirm} class="gradient-error btn btn-sm text-white"
+				<button on:click={modalConfirm} class="gradient-error btn  text-white"
 					><iconify-icon icon="bi:trash3-fill" color="white" width="18" class="mr-1" />{$LL.USER_Delete()}</button
 				>
 			</div>
 		</form>
 	</div>
-	<!-- {#if user.role == "admin"} -->
-	<div class="border-td mt-2 flex flex-col">
-		<p class="h2 mb-4 text-center text-white">Admin Area</p>
-		<button on:click={modalTokenUser} class="btn-base gradient-primary w-30 btn order-2 mx-2 mb-2 text-white sm:order-2"
-			><iconify-icon icon="material-symbols:mail" color="white" width="18" class="mr-1" />{$LL.USER_EmailToken()}</button
-		>
-	</div>
-</div>
-<!-- {/if} -->
-
-<div class="m-2 rounded-md border-2">
-	<p class="mb-4 text-center text-primary-500">Hello {data.user.username}</p>
-	<p class="text-center text-white">Auth method {data.user.authMethod}</p>
-	<form method="post" action="?/addUser" use:enhance class=" m-2">
-		<div class="r label">
-			{$LL.LOGIN_EmailAddress()}
-			<input bind:value={$form.email} name="email" type="email" class="input variant-outline-surface" />
+	<!-- admin area -->
+{#if user?.role==roles.admin}
+	<div class="border-td mt-2 flex flex-col border-t-2">
+		<p class="h2 mb-4 text-center text-3xl font-bold dark:text-white">{$LL.USER_AdminArea()}</p>
+		<div class=" flex sm:flex-row flex-col justify-between items-center gap-2">
+			<button 
+				on:click={modalTokenUser} 
+				class="btn gradient-primary text-white w-full sm:max-w-xs">
+				<iconify-icon icon="material-symbols:mail" color="white" width="18" class="mr-1" />
+				{$LL.USER_EmailToken()}
+			</button>
+			<button 
+				on:click={() => (showUserList = !showUserList)}
+				class="btn gradient-secondary text-white w-full sm:max-w-xs">
+				<iconify-icon icon="mdi:account-circle" color="white" width="18" class="mr-1" />
+				{showUserList ? $LL.USER_ListCollapse() : $LL.USER_ListShow()}
+			</button>
 		</div>
-		{#if response}<span class="text-xs text-error-500">{response}</span>{/if}
+	</div>
 
-		<label class="label">
-			<span>Select User Role</span>
-			<select class="select" bind:value={$form.role}>
-				{#each userRoles as role}
-					<option value={role}>{role}</option>
-				{/each}
-			</select>
-		</label>
-
-		<label class="label">
-			<span>Expires In:</span>
-			<select class="select" bind:value={$form.expiresIn}>
-				<option value="1">2hrs</option>
-				<option value="2">12hrs</option>
-				<option value="3">2days</option>
-			</select>
-		</label>
-
-		<!-- <DropDown items={['admin', 'user']} bind:selected={$form.role} /> -->
-		<button type="submit" class="primary btn variant-filled-primary m-2">Create</button>
-	</form>
+	{#if showUserList}
+			<!-- <UserList /> -->
+			<p class="mt-3 border text-center">Display Available Users for edit/remove</p>
+		{/if}
+	{/if} 
 </div>
+
+

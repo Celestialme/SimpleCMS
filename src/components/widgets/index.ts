@@ -1,5 +1,5 @@
 // import Address from './address';
-// import Checkbox from './checkbox';
+import Checkbox from './checkbox';
 import Currency from './currency';
 // import Date from './date';
 // import DateRange from './dateRange';
@@ -24,7 +24,7 @@ let widgets = {
 	// Address flexible Address fields
 	//Address,
 	// Checkbox - boolean true / false checkbox
-	//Checkbox,
+	Checkbox,
 	// Currency - define input with a currency string and suffix
 	Currency,
 	// Date - date / time field that saves a timestamp

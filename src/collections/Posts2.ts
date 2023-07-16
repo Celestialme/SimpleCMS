@@ -8,8 +8,11 @@ let schema: Schema = {
 
 	// Collection Permissions by user Roles
 	permissions: {
-		[roles.admin]: {
+		[roles.user]: {
 			read: false
+		},
+		[roles.admin]: {
+			write: false
 		}
 	},
 

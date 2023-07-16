@@ -118,6 +118,14 @@ let schema: Schema = {
 			required: true
 		}),
 
+		widgets.Checkbox({
+			label: 'Checkbox',
+			db_fieldName: 'Checkbox',
+			icon: 'ph:phone',
+			color: 'pink',
+			required: true
+		}),
+
 		widgets.Seo({
 			label: 'Seo',
 			db_fieldName: 'Seo',
