@@ -313,25 +313,34 @@ export function formatSize(sizeInBytes) {
 		return `${(sizeInBytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 	}
 }
-
-// TODO: get this data right
-// Retrieves the creation, update, and revision dates of an uploaded image or a text field from a MongoDB database
-export async function getDates(fieldName: string, collectionName: string) {
-	// find the document for the uploaded image or text field
-	const field = await schemas[collectionName].findOne({ name: fieldName });
-
-	if (field) {
-		// return the desired data
-		return {
-			created: field.get('createdAt'),
-			updated: field.get('updatedAt'),
-			revision: field.get('revision')
-		};
-	} else {
-		throw new Error('Field not found');
-	}
+export async function getDates(collectionName: string) {
+  // Send a GET request to the endpoint that retrieves the data from the MongoDB database
+  const response = await axios.get(`/api/${collectionName}`);
+  // Check if the entryList array is empty
+  if (response.data.entryList.length === 0) {
+    // Return an object with '-' for each field
+    return {
+      created: '-',
+      updated: '-',
+      revision: '-',
+    };
+  } else {
+    // Get the first entry from the entryList array
+    const result = response.data.entryList[0];
+    // Convert the timestamps to Date objects or '-' if null
+    const createdDate = result.createdAt ? new Date(result.createdAt).toLocaleString() : '-';
+    const updatedDate = result.updatedAt ? new Date(result.updatedAt).toLocaleString() : '-';
+    // Return the result
+    return {
+      created: createdDate,
+      updated: updatedDate,
+      revision: result.revision || '-',
+    };
+  }
 }
 
+
+//TODO: is this actually required as all is done via DB? 
 // Replaces the locale slug in a URL.
 //
 // If the `full` argument is set to `true`, the full URL is returned as a string.
@@ -349,3 +358,5 @@ export const replaceLocaleInUrl = (url: URL, locale: string, full = false): stri
 	newUrl.pathname = new_pathname;
 	return newUrl.toString();
 };
+
+

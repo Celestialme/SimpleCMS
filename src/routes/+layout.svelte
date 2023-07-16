@@ -171,14 +171,17 @@
 
 	import HeaderControls from '@src/components/HeaderControls.svelte';
 
-	let dates = { created: '', updated: '', revision: '' };
-	async function showDates() {
-		try {
-			dates = await getDates('yourFieldName', 'yourCollectionName');
-		} catch (error) {
-			console.error(error);
-		}
-	}
+	import { onMount } from 'svelte';
+
+  let dates = { created: '', updated: '', revision: '' };
+
+  onMount(async () => {
+    try {
+      dates = await getDates($collection.name);
+    } catch (error) {
+      console.error(error);
+    }
+  });
 </script>
 
 <!-- TODO: Fix Right And mobile Version of sidebars -->
