@@ -8,7 +8,5 @@ export const GuiSchema = {
 	icon: { type: String, required: false },
 
 	// Widget Specific parameters
-	placeholder: { type: String, required: false },
-	required: { type: Boolean, required: false },
-	width: { type: String, required: false }
+	required: { type: Boolean, required: false }
 };

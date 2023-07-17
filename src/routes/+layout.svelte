@@ -40,6 +40,8 @@
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import Collections from '@src/components/Collections.svelte';
 	import { getDates } from '@src/utils/utils';
+	import type { PageData } from './$types';
+	export let data: PageData;
 
 	contentLanguage.set($page.params.language);
 
@@ -82,7 +84,6 @@
 	import { user } from '@src/stores/store';
 	//console.log('user', $user);
 
-	// $: user = data.user;
 	// $: avatarSrc = user?.avatar;
 	$: avatarSrc = '';
 
@@ -173,15 +174,15 @@
 
 	import { onMount } from 'svelte';
 
-  let dates = { created: '', updated: '', revision: '' };
+	let dates = { created: '', updated: '', revision: '' };
 
-  onMount(async () => {
-    try {
-      dates = await getDates($collection.name);
-    } catch (error) {
-      console.error(error);
-    }
-  });
+	onMount(async () => {
+		try {
+			dates = await getDates($collection.name);
+		} catch (error) {
+			console.error(error);
+		}
+	});
 </script>
 
 <!-- TODO: Fix Right And mobile Version of sidebars -->
@@ -331,7 +332,7 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 							on:click={handleClick}
 							on:keypress={handleClick}
 						>
-							<div
+							<button
 								on:click={handleClick}
 								on:keypress={handleClick}
 								class="relative cursor-pointer flex-col !no-underline"
@@ -344,13 +345,12 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 								/>
 								<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
 									{#if $toggleLeftSidebar === 'full'}
-										{user?.username}
-										{#if user?.username}
-											<div class="text-xs uppercase">{user?.username}</div>
+										{#if $user?.username}
+											<div class="text-[10px] uppercase">{$user?.username}</div>
 										{/if}
 									{/if}
 								</div>
-							</div>
+							</button>
 							<div class="card variant-filled-secondary p-4" data-popup="User">
 								{$LL.SBL_User()}
 								<div class="arrow variant-filled-secondary" />

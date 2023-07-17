@@ -1,4 +1,4 @@
-export let GuiSchema = {
+export const GuiSchema = {
 	label: { type: String, required: true },
 	display: { type: String, required: true },
 	db_fieldName: { type: String, required: true },

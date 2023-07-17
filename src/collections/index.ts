@@ -44,6 +44,12 @@ let categories = [
 		name: get(LL).CollectionCategory_Menu(),
 		icon: 'bi:menu-button-wide',
 		collections: [{ ...Menu, id: 2.1 }]
+	},
+	{
+		id: 3,
+		name: 'Images',
+		icon: 'bi:images',
+		collections: [{ ...ImageArray, id: 3.1 }]
 	}
 ];
 

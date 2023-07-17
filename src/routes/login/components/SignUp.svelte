@@ -21,7 +21,6 @@
 
 	let response: any;
 	let firstUserExists = FormSchemaSignUp.data.token != null;
-	// console.log('firstUserExists = ', firstUserExists);
 
 	const { form, constraints, allErrors, errors, enhance, delayed } = superForm(FormSchemaSignUp, {
 		id: 'signup',

@@ -1,7 +1,9 @@
 // import Address from './address';
 import Checkbox from './checkbox';
 import Currency from './currency';
-// import Date from './date';
+import ColorPicker from './colorPicker';
+import Date from './date';
+import DateTime from './dateTime';
 // import DateRange from './dateRange';
 import Email from './email';
 // import Group from './group';
@@ -14,7 +16,7 @@ import Number from './number';
 import PhoneNumber from './phoneNumber';
 import Radio from './radio';
 import Relation from './relation';
-// import RemoteVideo from './remoteVideo';
+import RemoteVideo from './remoteVideo';
 // import RichText from './richText';
 // import SelectList from './selectList';
 import Seo from './seo';
@@ -25,10 +27,14 @@ let widgets = {
 	//Address,
 	// Checkbox - boolean true / false checkbox
 	Checkbox,
+	// Color Picker - choice of color
+	ColorPicker,
 	// Currency - define input with a currency string and suffix
 	Currency,
+	// Date - date field that saves a timestamp
+	Date,
 	// Date - date / time field that saves a timestamp
-	//Date,
+	DateTime,
 	// DateRange - date with start / Finish timestamps
 	//DateRange,
 	// Email - validates the entry is a properly formatted email
@@ -53,7 +59,7 @@ let widgets = {
 	// Relation - assign relationships to other collections
 	Relation: Relation,
 	// RemoteVideo - for youtube/vimeo(/Twitch/ticktock), grabbing Title/Duration,Dimension,User
-	//RemoteVideo,
+	RemoteVideo,
 	// Rich Text - fully extensible Lexical Rich Text editor
 	//RichText,
 	// SelectList - dropdown / pick list style value selector

@@ -45,8 +45,8 @@
 </script>
 
 <div class="form-check">
-	<!-- TODO Fix Color and rounded-full -->
-	<label class="flex items-center space-x-2">
+	<!-- TODO Fix Color and rounded-full for skeleton -->
+	<!-- <label class="flex items-center space-x-2">
 		<input
 			class="radio"
 			type="radio"
@@ -56,7 +56,7 @@
 			bind:value={_data[_language]}
 		/>
 		<p>{field.label ? field.label : field.db_fieldName} skeleton</p>
-	</label>
+	</label> -->
 
 	<input
 		bind:value={_data[_language]}

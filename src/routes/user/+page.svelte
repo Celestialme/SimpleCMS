@@ -29,7 +29,7 @@
 	let avatarSrc = user?.avatar;
 	let showUserList = true;
 
-	let id = user?._id;
+	let id = user?.id;
 	let username = user?.username;
 	let role = user?.role;
 	let email = user?.email;
@@ -164,7 +164,7 @@
 			<button
 				type="button"
 				on:click={() => toggleLeftSidebar.click()}
-				class="variant-ghost-surface btn-icon mt-1"
+				class="btn-icon variant-ghost-surface mt-1"
 			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
@@ -211,7 +211,7 @@
 				>{$LL.USER_Password()}:
 				<input bind:value={password} name="password" type="password" disabled class="input" />
 			</label>
-			<div class="my-2 flex flex-col justify-between gap-2 sm:flex-row sm:justify-between sm:gap-0">
+			<div class="my-2 flex flex-col justify-between gap-2 sm:flex-row sm:justify-between sm:gap-1">
 				<button class="gradient-secondary btn text-white md:w-auto" on:click={modalUserForm}>
 					<iconify-icon
 						icon="bi:pencil-fill"

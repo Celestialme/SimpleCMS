@@ -10,5 +10,5 @@ export const GuiSchema = {
 	// Widget Specific parameters
 	placeholder: { type: String, required: false },
 	required: { type: Boolean, required: false },
-	width: { type: String, required: false }
+	readonly: { type: Boolean, required: false }
 };

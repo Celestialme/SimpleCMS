@@ -5,6 +5,7 @@
 
 	import { saveFormData, getDates } from '@src/utils/utils';
 	import { user } from '@src/stores/store';
+	//console.log('user', $user.role);
 
 	async function saveData() {
 		await saveFormData({ data: $collectionValue });

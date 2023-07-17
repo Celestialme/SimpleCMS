@@ -77,6 +77,35 @@ let schema: Schema = {
 			required: true
 		}),
 
+		widgets.RemoteVideo({
+			label: 'RemoteVideo',
+			db_fieldName: 'RemoteVideo',
+			icon: 'mdi:youtube',
+			placeholder: 'Enter RemoteVideo',
+			required: true
+		}),
+
+		widgets.ColorPicker({
+			label: 'ColorPicker',
+			db_fieldName: 'ColorPicker',
+			icon: 'bi:calendar3',
+			required: true
+		}),
+
+		widgets.Date({
+			label: 'Date',
+			db_fieldName: 'Date',
+			icon: 'bi:calendar3',
+			required: true
+		}),
+
+		widgets.DateTime({
+			label: 'DateTime',
+			db_fieldName: 'DateTime',
+			icon: 'bi:calendar3',
+			required: true
+		}),
+
 		widgets.Number({
 			label: 'Number',
 			db_fieldName: 'Number',
@@ -113,7 +142,7 @@ let schema: Schema = {
 		widgets.Radio({
 			label: 'Radio',
 			db_fieldName: 'Radio',
-			icon: 'ph:phone',
+			icon: 'akar-icons:radio-fill',
 			color: 'pink',
 			required: true
 		}),
@@ -121,7 +150,7 @@ let schema: Schema = {
 		widgets.Checkbox({
 			label: 'Checkbox',
 			db_fieldName: 'Checkbox',
-			icon: 'ph:phone',
+			icon: 'mdi:check-bold',
 			color: 'pink',
 			required: true
 		}),
@@ -129,7 +158,7 @@ let schema: Schema = {
 		widgets.Seo({
 			label: 'Seo',
 			db_fieldName: 'Seo',
-			icon: 'ph:phone',
+			icon: 'tabler:seo',
 			required: true
 		})
 	]

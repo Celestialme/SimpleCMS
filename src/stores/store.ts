@@ -8,7 +8,6 @@ import type { User } from '@src/collections/Auth';
 
 // Create a writable store for user with initial value from local storage
 export let user: Writable<User> = writable();
-//export let credentials: Writable<{ username: string }> = writable();
 
 // Create a writable store for systemLanguage with initial value of PUBLIC_SYSTEM_LANGUAGE
 export let systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);
@@ -17,10 +16,7 @@ export let systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);
 export let contentLanguage = writable(Object.keys(JSON.parse(PUBLIC_CONTENT_LANGUAGES))[0]);
 
 // Subscribe to changes in credentials store and update local storage accordingly
-
-// Load all locales
-loadAllLocales();
-
+loadAllLocales(); // Load all locales
 // Subscribe to changes in systemLanguage store and set locale accordingly
 systemLanguage.subscribe((val) => {
 	setLocale(val as Locales);
