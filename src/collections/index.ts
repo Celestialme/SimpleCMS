@@ -4,6 +4,17 @@ import { writable } from 'svelte/store';
 import { get } from 'svelte/store';
 import LL from '@src/i18n/i18n-svelte.js';
 
+export function updateCategories(newColumnsData) {
+	categories = newColumnsData.map((column) => ({
+		id: column.id,
+		name: column.name,
+		icon: column.icon,
+		collections: column.items.map((item) => ({
+			...item
+		}))
+	}));
+}
+
 // List of Collections
 import ImageArray from './imageArray';
 import Menu from './Menu';
@@ -25,8 +36,7 @@ let categories = [
 			{ ...Names, id: 1.2 },
 			{ ...Posts2, id: 1.3 },
 			{ ...Relation, id: 1.4 },
-			{ ...WidgetTest, id: 1.5 },
-			{ ...ImageArray, id: 1.6 }
+			{ ...WidgetTest, id: 1.5 }
 		]
 	},
 	{
@@ -37,6 +47,7 @@ let categories = [
 	}
 ];
 
+// TODO: Allow Unassigned collection to be displayed as well
 export { categories };
 let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
 export default collections;
