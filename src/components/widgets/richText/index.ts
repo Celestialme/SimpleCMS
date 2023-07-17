@@ -1,4 +1,4 @@
-import DateRange from './DateRange.svelte';
+import richText from './richText.svelte';
 import type { Params } from './types';
 import { GuiSchema } from './guiSchema';
 
@@ -8,15 +8,16 @@ const widget = ({
 	label,
 	db_fieldName,
 	display,
-	translated = false, // default no translation
+	translated = false, // TODO: no translated need for this widget
 	icon,
 	// extras
+	placeholder,
 	required
 }: Params) => {
 	if (!display) {
 		// display for table
-		display = async (data: any, field: any, entry: any, contentLanguage: any) => {
-			// console.log(data);
+		display = async (data, field, entry, contentLanguage) => {
+			//console.log(data);
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return translated
 				? data[contentLanguage] || 'NO entry'
@@ -24,16 +25,16 @@ const widget = ({
 		};
 	}
 
-	const widget: { type: any; key: 'DateRange' } = { type: DateRange, key: 'DateRange' };
+	const widget: { type: any; key: 'richText' } = { type: richText, key: 'richText' };
 
 	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,
 		db_fieldName,
-		translated,
 		icon,
 		// extras
+		placeholder,
 		required
 	};
 

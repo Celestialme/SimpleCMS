@@ -26,9 +26,9 @@ const widget = ({
 		};
 	}
 
-	let widget: { type: any; key: 'Seo' } = { type: Seo, key: 'Seo' };
+	const widget: { type: any; key: 'Seo' } = { type: Seo, key: 'Seo' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,

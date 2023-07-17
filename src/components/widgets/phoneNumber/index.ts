@@ -32,9 +32,9 @@ const widget = ({
 		};
 	}
 
-	let widget: { type: any; key: 'PhoneNumber' } = { type: PhoneNumber, key: 'PhoneNumber' };
+	const widget: { type: any; key: 'PhoneNumber' } = { type: PhoneNumber, key: 'PhoneNumber' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,

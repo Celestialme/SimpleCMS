@@ -35,9 +35,9 @@ const widget = ({
 		};
 	}
 
-	let widget: { type: any; key: 'Currency' } = { type: Currency, key: 'Currency' };
+	const widget: { type: any; key: 'Currency' } = { type: Currency, key: 'Currency' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,

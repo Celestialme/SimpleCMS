@@ -26,9 +26,9 @@ const widget = ({
 		};
 	}
 
-	let widget: { type: any; key: 'Checkbox' } = { type: Checkbox, key: 'Checkbox' };
+	const widget: { type: any; key: 'Checkbox' } = { type: Checkbox, key: 'Checkbox' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,

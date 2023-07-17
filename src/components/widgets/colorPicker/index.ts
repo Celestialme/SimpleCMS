@@ -26,7 +26,7 @@ const widget = ({
 
 	const widget: { type: any; key: 'ColorPicker' } = { type: ColorPicker, key: 'ColorPicker' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,

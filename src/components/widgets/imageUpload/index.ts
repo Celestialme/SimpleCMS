@@ -11,9 +11,9 @@ const widget = ({ label, db_fieldName, display, path = '' }: Params) => {
 			return `<img class='max-w-[200px] inline-block' src="/${path}/${data?.name}" />`;
 		};
 
-	let widget: { type: any; key: 'ImageUpload' } = { type: ImageUpload, key: 'ImageUpload' };
+	const widget: { type: any; key: 'ImageUpload' } = { type: ImageUpload, key: 'ImageUpload' };
 
-	let field = {
+	const field = {
 		label,
 		db_fieldName,
 		display,

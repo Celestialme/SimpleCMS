@@ -27,9 +27,9 @@ const widget = ({
 		};
 	}
 
-	let widget: { type: any; key: 'Radio' } = { type: Radio, key: 'Radio' };
+	const widget: { type: any; key: 'Radio' } = { type: Radio, key: 'Radio' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,

@@ -26,9 +26,9 @@ const widget = ({
 		};
 	}
 
-	let widget: { type: any; key: 'MegaMenu' } = { type: MegaMenu, key: 'MegaMenu' };
+	const widget: { type: any; key: 'MegaMenu' } = { type: MegaMenu, key: 'MegaMenu' };
 
-	let field = { display, schema: { [db_fieldName || label]: String }, label, db_fieldName, menu };
+	const field = { display, schema: { [db_fieldName || label]: String }, label, db_fieldName, menu };
 
 	return { ...field, widget };
 };

@@ -33,9 +33,9 @@ const widget = ({
 		};
 	}
 
-	let widget: { type: any; key: 'Number' } = { type: Number, key: 'Number' };
+	const widget: { type: any; key: 'Number' } = { type: Number, key: 'Number' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,

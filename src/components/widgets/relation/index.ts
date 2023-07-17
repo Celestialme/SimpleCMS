@@ -16,9 +16,9 @@ const widget = ({ label, db_fieldName, display, relation }: Params) => {
 		};
 	}
 
-	let widget: { type: any; key: 'Relation' } = { type: Relation, key: 'Relation' };
+	const widget: { type: any; key: 'Relation' } = { type: Relation, key: 'Relation' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: String },
 		label,

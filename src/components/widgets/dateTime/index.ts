@@ -26,7 +26,7 @@ const widget = ({
 
 	const widget: { type: any; key: 'DateTime' } = { type: DateTime, key: 'DateTime' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,

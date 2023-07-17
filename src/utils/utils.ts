@@ -4,6 +4,7 @@ import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import axios from 'axios';
 import { get } from 'svelte/store';
+import { contentLanguage } from '@src/stores/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
@@ -314,33 +315,45 @@ export function formatSize(sizeInBytes) {
 	}
 }
 export async function getDates(collectionName: string) {
-  // Send a GET request to the endpoint that retrieves the data from the MongoDB database
-  const response = await axios.get(`/api/${collectionName}`);
-  // Check if the entryList array is empty
-  if (response.data.entryList.length === 0) {
-    // Return an object with '-' for each field
-    return {
-      created: '-',
-      updated: '-',
-      revision: '-',
-    };
-  } else {
-    // Get the first entry from the entryList array
-    const result = response.data.entryList[0];
-    // Convert the timestamps to Date objects or '-' if null
-    const createdDate = result.createdAt ? new Date(result.createdAt).toLocaleString() : '-';
-    const updatedDate = result.updatedAt ? new Date(result.updatedAt).toLocaleString() : '-';
-    // Return the result
-    return {
-      created: createdDate,
-      updated: updatedDate,
-      revision: result.revision || '-',
-    };
-  }
+	// Send a GET request to the endpoint that retrieves the data from the MongoDB database
+	const response = await axios.get(`/api/${collectionName}`);
+	// Check if the entryList array is empty
+	if (response.data.entryList.length === 0) {
+		// Return an object with '-' for each field
+		return {
+			created: '-',
+			updated: '-',
+			revision: '-'
+		};
+	} else {
+		// Get the first entry from the entryList array
+		const result = response.data.entryList[0];
+		// Convert the timestamps to Date objects or '-' if null
+		const options = {
+			day: '2-digit',
+			month: '2-digit',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false
+		};
+		const locale = get(contentLanguage);
+		const createdDate = result.createdAt
+			? new Date(result.createdAt).toLocaleString(locale, options)
+			: '-';
+		const updatedDate = result.updatedAt
+			? new Date(result.updatedAt).toLocaleString(locale, options)
+			: '-';
+		// Return the result
+		return {
+			created: createdDate,
+			updated: updatedDate,
+			revision: result.revision || '-'
+		};
+	}
 }
 
-
-//TODO: is this actually required as all is done via DB? 
+//TODO: is this actually required as all is done via DB?
 // Replaces the locale slug in a URL.
 //
 // If the `full` argument is set to `true`, the full URL is returned as a string.
@@ -358,5 +371,3 @@ export const replaceLocaleInUrl = (url: URL, locale: string, full = false): stri
 	newUrl.pathname = new_pathname;
 	return newUrl.toString();
 };
-
-

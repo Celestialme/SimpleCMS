@@ -25,9 +25,9 @@ const widget = ({
 		};
 	}
 
-	let widget: { type: any; key: 'Email' } = { type: Email, key: 'Email' };
+	const widget: { type: any; key: 'Email' } = { type: Email, key: 'Email' };
 
-	let field = {
+	const field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },
 		label,

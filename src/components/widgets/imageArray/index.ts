@@ -23,9 +23,9 @@ const widget = ({
 				entry[getFieldName(uploader)].name
 			}" />`;
 
-	let widget: { type: any; key: 'ImageArray' } = { type: ImageArray, key: 'ImageArray' };
+	const widget: { type: any; key: 'ImageArray' } = { type: ImageArray, key: 'ImageArray' };
 
-	let field = {
+	const field = {
 		schema: { [db_fieldName || label]: { String: String } },
 		db_fieldName,
 		label,
