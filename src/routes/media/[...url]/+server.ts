@@ -12,7 +12,7 @@ import { error } from '@sveltejs/kit';
 // import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
 // import sharp from 'sharp';
 
-// handles POST requests for multiple mediafiles files
+// handles GET requests for multiple mediafiles files
 export const GET: RequestHandler = async ({ params }) => {
 	try {
 		if (!params.url) {

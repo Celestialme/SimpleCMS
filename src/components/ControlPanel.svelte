@@ -63,19 +63,18 @@
 				<p class="mt-2">Seo {$collection.name} widget</p>
 			</main>
 
-			<footer class="mb-2 text-white">
+			<footer class="-mx-1 mb-2 text-white">
 				<h2 class="text-center font-bold uppercase text-primary-500">{$collection.name} Info:</h2>
-				<div class="footer-content text-sm">
-					<div class="mt-2 grid grid-cols-3 items-center gap-x-2 space-y-1 text-xs">
-						<!-- Labels -->
-						{#each Object.keys(dates) as key}
-							<div>{key}:</div>
-						{/each}
-						<!-- Data -->
-						{#each Object.values(dates) as value}
-							<div class="font-bold text-primary-500">{value}</div>
-						{/each}
-					</div>
+
+				<div class="mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
+					<!-- Labels -->
+					{#each Object.keys(dates) as key}
+						<div class="capitalize">{key}:</div>
+					{/each}
+					<!-- Data -->
+					{#each Object.values(dates) as value}
+						<div class="text-primary-500">{value}</div>
+					{/each}
 				</div>
 			</footer>
 		</div>

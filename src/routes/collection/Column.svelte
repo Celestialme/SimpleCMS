@@ -30,14 +30,14 @@
 	<button
 		on:click={handleColumnNameClick}
 		aria-label="Edit column name and icon"
-		class="flex h-10 items-center gap-2 font-bold"
+		class="flex h-10 items-center font-bold"
 	>
 		<iconify-icon {icon} width="18" />
-		<span class="dark:text-primary-500">{name}</span>
+		<span class="ml-2 dark:text-primary-500">{name}</span>
 	</button>
 	<iconify-icon icon="mdi:drag" width="18" class="absolute right-1 top-2" />
 	<div
-		class="h-[calc(100%-2.5em)] overflow-y-scroll"
+		class="-mr-2 h-[calc(100%-2.5em)] overflow-y-scroll"
 		use:dndzone={{ items, flipDurationMs, zoneTabIndex: -1 }}
 		on:consider={handleDndConsiderCards}
 		on:finalize={handleDndFinalizeCards}

@@ -11,7 +11,7 @@
 	// console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
 </script>
 
-<div
+<button
 	class="flex h-[26px] w-[26px] items-center justify-center rounded-md border-2 border-surface-800 dark:border-surface-400 {$$props.class}"
 	on:keydown
 	on:click|stopPropagation={() => {
@@ -325,4 +325,4 @@
 			/>
 		</svg>
 	{/if}
-</div>
+</button>

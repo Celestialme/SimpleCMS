@@ -42,24 +42,6 @@
 		modalStore.trigger(d);
 	}
 
-	// let newCategoryName = '';
-	// let newCategoryIcon = '';
-
-	// // TODO: adding needs to refresh columnsData
-	// function addCategory() {
-	// 	columnsData = [
-	// 		...columnsData,
-	// 		{
-	// 			id: newCategoryName.toLowerCase().replace(/\s/g, '-'),
-	// 			name: newCategoryName,
-	// 			icon: newCategoryIcon,
-	// 			items: []
-	// 		}
-	// 	];
-	// 	newCategoryName = '';
-	// 	newCategoryIcon = '';
-	// }
-
 	let availableCollections = collections.filter((collection) => {
 		return !importedCategories.some((category) => category.collections.includes(collection));
 	});
@@ -103,13 +85,13 @@
 	}
 </script>
 
-<div class="flex items-center">
+<div class="mb-2 flex items-center">
 	<!-- hamburger -->
 	{#if $toggleLeftSidebar === 'closed'}
 		<button
 			type="button"
 			on:click={() => toggleLeftSidebar.click()}
-			class="btn-icon variant-ghost-surface mt-1"
+			class="btn-icon variant-ghost-surface"
 		>
 			<iconify-icon icon="mingcute:menu-fill" width="24" />
 		</button>

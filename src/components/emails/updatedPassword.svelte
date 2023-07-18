@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import { dev } from '$app/environment';
-	import { HOST_DEV, HOST_PROD } from '$env/static/private';
 
+	import { user } from '@src/stores/store';
+	const username = $user?.username;
+
+	import { HOST_DEV, HOST_PROD } from '$env/static/private';
 	export let tokenLink = dev ? HOST_DEV : HOST_PROD;
 
 	// svelte-email
@@ -18,11 +21,6 @@
 		Section,
 		Text
 	} from 'svelte-email';
-
-	interface EmailProps {
-		username?: string;
-	}
-	export let username: EmailProps['username'];
 
 	const fontFamily =
 		'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif';

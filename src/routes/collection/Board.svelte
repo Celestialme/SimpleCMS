@@ -30,14 +30,14 @@
 </script>
 
 <section
-	class="mt-2 flex h-[90vh] w-full"
+	class="ml-1 mr-3 mt-2 flex flex-wrap gap-2 md:mr-1"
 	use:dndzone={{ items: columns, flipDurationMs, type: 'column' }}
 	on:consider={handleDndConsiderColumns}
 	on:finalize={handleDndFinalizeColumns}
 >
 	{#each columns as { id, name, icon, items }, idx (id)}
 		<div
-			class="float-left mx-1 w-1/4 rounded-sm border border-surface-300 p-1 dark:border-surface-400"
+			class="w-full rounded-sm border border-surface-300 p-2 dark:border-surface-400 sm:w-1/2 md:float-left md:w-1/4"
 			animate:flip={{ duration: flipDurationMs }}
 		>
 			<Column {name} {icon} {items} onDrop={(newItems) => handleItemFinalize(idx, newItems)} />

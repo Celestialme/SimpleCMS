@@ -19,15 +19,15 @@ export const config = {
 // Converts data to FormData object
 export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	const formData = new FormData();
-	let data = {};
-	for (let key in getData) {
-		let value = await getData[key]();
+	const data = {};
+	for (const key in getData) {
+		const value = await getData[key]();
 		if (!value) continue;
 		data[key] = value;
 	}
 	for (const key in data) {
 		if (data[key] instanceof FileList) {
-			for (let _key in data[key]) {
+			for (const _key in data[key]) {
 				// for multiple files
 				//console.log(data[key]);
 				formData.append(key, data[key][_key]);
@@ -120,18 +120,20 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 // }
 
 export function saveFiles(data: FormData, collection: string) {
-	let files: any = {};
-	let _files: Array<any> = [];
-	let schema = schemas.find((schema) => schema.name === collection);
+	const files: any = {};
+	const _files: Array<any> = [];
+	const schema = schemas.find((schema) => schema.name === collection);
 
-	for (let [fieldname, fieldData] of data.entries()) {
+	for (const [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {
 			_files.push({ blob: fieldData, fieldname });
 		}
 	}
 
-	for (let file of _files) {
-		let { blob, fieldname } = file;
+	for (const file of _files) {
+		const { blob, fieldname } = file;
+		console.log('save blob:', blob);
+		console.log('save fieldname:', fieldname);
 
 		files[fieldname as keyof typeof files] = {
 			name: blob.name,
@@ -139,11 +141,14 @@ export function saveFiles(data: FormData, collection: string) {
 			type: blob.type,
 			lastModified: blob.lastModified
 		};
-		let path = _findFieldByTitle(schema, fieldname).path;
+		const path = _findFieldByTitle(schema, fieldname).path;
+		console.log('save path:', path);
 
 		if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
 		(blob as Blob).arrayBuffer().then((arrayBuffer) => {
 			fs.writeFileSync(path + '/' + blob.name, Buffer.from(arrayBuffer));
+
+			console.log('save filePath:', path + '/' + blob.name);
 		});
 	}
 	return files;
@@ -151,7 +156,7 @@ export function saveFiles(data: FormData, collection: string) {
 
 // finds field title that matches the fieldname and returns that field
 function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
-	for (let field of schema.fields) {
+	for (const field of schema.fields) {
 		console.log('field is ', field.db_fieldName, field.label);
 		if (field.db_fieldName == fieldname || field.label == fieldname) {
 			found.val = true;
@@ -168,10 +173,10 @@ function _findFieldByTitle(schema: any, fieldname: string, found = { val: false 
 
 // takes an object and recursively parses any values that can be converted to JSON
 export function parse(obj: any) {
-	for (let key in obj) {
+	for (const key in obj) {
 		try {
 			if (Array.isArray(obj[key])) {
-				for (let index of obj[key]) {
+				for (const index of obj[key]) {
 					obj[key][index] = JSON.parse(obj[key][index]);
 				}
 			} else {
@@ -190,7 +195,7 @@ export function parse(obj: any) {
 export let fieldsToSchema = (fields: Array<any>) => {
 	// removes widget, so it does not set up in db
 	let schema: any = {};
-	for (let field of fields) {
+	for (const field of fields) {
 		schema = { ...schema, ...field.schema };
 	}
 	delete schema.widget;
@@ -200,7 +205,7 @@ export let fieldsToSchema = (fields: Array<any>) => {
 // Finds documents in collection that match query
 export async function find(query: object, collection: Schema) {
 	if (!collection) return;
-	let _query = JSON.stringify(query);
+	const _query = JSON.stringify(query);
 	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
 }
 
@@ -227,11 +232,12 @@ export async function saveFormData({
 	_mode?: 'edit' | 'create';
 	id?: string;
 }) {
-	//console.log(data);
-	let $mode = _mode || get(mode);
-	let $collection = _collection || get(collection);
-	let $entryData = get(entryData);
-	let formData = data instanceof FormData ? data : await col2formData(data);
+	console.log('saveFormData', data);
+
+	const $mode = _mode || get(mode);
+	const $collection = _collection || get(collection);
+	const $entryData = get(entryData);
+	const formData = data instanceof FormData ? data : await col2formData(data);
 	if (_mode === 'edit' && !id) {
 		throw new Error('ID is required for edit mode.');
 	}
@@ -249,41 +255,41 @@ export async function saveFormData({
 
 // Clone FormData to database
 export async function cloneData(data) {
-	let $collection = get(collection);
-	let formData = data instanceof FormData ? data : await col2formData(data);
+	const $collection = get(collection);
+	const formData = data instanceof FormData ? data : await col2formData(data);
 	if (!formData) return;
 	await axios.post(`/api/${$collection.name}`, formData, config);
 }
 
 // Publish FormData to database
 export async function publishData(id) {
-	let $collection = get(collection);
+	const $collection = get(collection);
 	await axios.patch(`/api/${$collection.name}/${id}`, { published: true });
 }
 
 // Unpublish FormData to database
 export async function unpublishData(id) {
-	let $collection = get(collection);
+	const $collection = get(collection);
 	await axios.patch(`/api/${$collection.name}/${id}`, { published: false });
 }
 
 // Schedule FormData to database
 export async function scheduleData(id, date) {
-	let $collection = get(collection);
+	const $collection = get(collection);
 	await axios.patch(`/api/${$collection.name}/${id}`, { publishDate: date });
 }
 
 // Delete FormData
 // TODO: move images/files to trash folder see [collection]/+server.ts
 export async function deleteData(id) {
-	let $collection = get(collection);
+	const $collection = get(collection);
 	await axios.delete(`/api/${$collection.name}/${id}`);
 }
 
 export async function extractData(fieldsData: any) {
 	// extracts data from fieldsData because FieldsData is async
-	let temp = {};
-	for (let key in fieldsData) {
+	const temp = {};
+	for (const key in fieldsData) {
 		temp[key] = await fieldsData[key]();
 	}
 	return temp;
@@ -329,7 +335,7 @@ export async function getDates(collectionName: string) {
 		// Get the first entry from the entryList array
 		const result = response.data.entryList[0];
 		// Convert the timestamps to Date objects or '-' if null
-		const options = {
+		const options: Intl.DateTimeFormatOptions = {
 			day: '2-digit',
 			month: '2-digit',
 			year: 'numeric',
@@ -344,6 +350,7 @@ export async function getDates(collectionName: string) {
 		const updatedDate = result.updatedAt
 			? new Date(result.updatedAt).toLocaleString(locale, options)
 			: '-';
+
 		// Return the result
 		return {
 			created: createdDate,

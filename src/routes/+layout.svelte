@@ -245,12 +245,12 @@
 <!-- hack as root +layout cannot be overwritten ? -->
 {#if $page.url.pathname === '/login'}
 	<slot />
-{:else}
-	<AppShell
+{:else}<AppShell
 		slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10
 {$toggleLeftSidebar === 'full' ? 'w-[220px]' : 'w-fit'}
-{$toggleLeftSidebar === 'closed' ? 'hidden' : 'block'}"
+{$toggleLeftSidebar === 'closed' ? 'hidden' : 'block'}
+lg:overflow-y-scroll lg:max-h-screen}"
 		slotSidebarRight="h-full relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center
 	{$toggleRightSidebar === 'closed' ? 'hidden' : 'block'}"
 		slotPageHeader="relative bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1  border-b 
@@ -489,25 +489,16 @@ dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-30
 		<svelte:fragment slot="pageFooter">
 			{#if $mode !== 'view'}
 				<h2 class="text-center font-bold uppercase text-primary-500">{$collection.name} Info:</h2>
-				<div class="footer-content text-sm">
-					<div
-						class="space-between mb-2 mt-2 flex flex-row items-center justify-around gap-2 text-xs"
-					>
-						<!-- TODO: hide when working -->
-						<div>Created: <span class="font-bold">{dates.created}</span></div>
-						<div>Updated: <span class="font-bold">{dates.updated}</span></div>
-						<div>Revision: <span class="font-bold">{dates.revision}</span></div>
 
-						{#if dates.created}
-							<div>Created: <span class="font-bold">{dates.created}</span></div>
-						{/if}
-						{#if dates.updated}
-							<div>Updated: <span class="font-bold">{dates.updated}</span></div>
-						{/if}
-						{#if dates.revision}
-							<div>Revision: <span class="font-bold">{dates.revision}</span></div>
-						{/if}
-					</div>
+				<div class="mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
+					<!-- Labels -->
+					{#each Object.keys(dates) as key}
+						<div class="capitalize">{key}:</div>
+					{/each}
+					<!-- Data -->
+					{#each Object.values(dates) as value}
+						<div class="text-primary-500">{value}</div>
+					{/each}
 				</div>
 			{/if}
 		</svelte:fragment>
