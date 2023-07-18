@@ -158,9 +158,9 @@
 		placement: 'right'
 	};
 
-	let BuilderTooltip: PopupSettings = {
+	let ConfigTooltip: PopupSettings = {
 		event: 'hover',
-		target: 'Builder',
+		target: 'Config',
 		placement: 'right'
 	};
 
@@ -421,15 +421,15 @@ lg:overflow-y-scroll lg:max-h-screen}"
 						</div>
 					</div>
 
-					<!-- Collection Builder -->
+					<!-- System Configuration -->
 					<div class={$toggleLeftSidebar === 'full' ? 'order-5' : 'order-6'}>
 						<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
-							<a href="/builder" use:popup={BuilderTooltip}>
+							<a href="/config" use:popup={ConfigTooltip}>
 								<iconify-icon icon="material-symbols:build-circle" width="32" />
 							</a>
 
-							<div class="card variant-filled-secondary z-10 p-2" data-popup="Builder">
-								Collection Builder
+							<div class="card variant-filled-secondary z-10 p-2" data-popup="Config">
+								System Configuration
 								<div class="arrow variant-filled-secondary" />
 							</div>
 						</button>

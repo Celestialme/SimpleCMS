@@ -20,18 +20,12 @@ export const forgotFormSchema = z.object({
 
 // SignIn Reset Password ------------------------------------
 interface SignInResetFormData {
-	email: string;
-	token: string;
 	password: string;
 	confirm_password: string;
+	token: string;
 }
-
 export const resetFormSchema = z
 	.object({
-		email: z
-			.string({ required_error: get(LL).LOGIN_ZOD_Email_string() })
-			.email({ message: get(LL).LOGIN_ZOD_Email_email() }),
-		token: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1),
 		password: z
 			.string({ required_error: get(LL).LOGIN_ZOD_Password_string() })
 			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
@@ -41,7 +35,8 @@ export const resetFormSchema = z
 			.string({ required_error: get(LL).LOGIN_ZOD_Confirm_password_string() })
 			.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
 				message: get(LL).LOGIN_ZOD_Confirm_password_regex()
-			})
+			}),
+		token: z.string({ required_error: get(LL).LOGIN_ZOD_Token_string() }).min(1)
 	})
 	.refine(
 		(data: SignInResetFormData) => data.password === data.confirm_password,

@@ -1,13 +1,12 @@
 //lucia models
-
 import type { InferSchemaType } from 'mongoose';
 import { Schema } from 'mongoose';
 
 // Define the schema for the User model
-export let UserSchema = {
+export const UserSchema = {
 	_id: {
 		type: String, // Set the type of the _id field to String
-		required: true // Set the type of the _id field to String
+		required: true // make it required
 	},
 	authMethod: String, // last login method was used
 	email: String, // The email address of the user
@@ -15,7 +14,7 @@ export let UserSchema = {
 	username: String, // The username of the user
 	firstname: String, // The first name of the user
 	lastname: String, // The last name of the user
-	avatar: String, // The avatar of the user
+	avatar: String, // The avatar url to media api
 	resetRequestedAt: String, // The date and time when a password reset was requested
 	resetToken: String, // The password reset token value
 	expiresAt: Date, // The date and time when the password reset token expires
@@ -23,7 +22,7 @@ export let UserSchema = {
 };
 
 type Modify<T, R> = Omit<T, keyof R> & R;
-let mongooseUserSchema = new Schema(UserSchema);
+const mongooseUserSchema = new Schema(UserSchema);
 export type User = Modify<
 	InferSchemaType<typeof mongooseUserSchema>,
 	{
@@ -33,15 +32,16 @@ export type User = Modify<
 	}
 >;
 
-// TODO Replace role with defined in env. file
-export let roles = {
+// TODO: would be nice t get this into environment file
+export const roles = {
 	admin: 'admin',
-	user: 'user',
-	developer: 'developer'
+	developer: 'developer',
+	editor: 'editor',
+	user: 'user'
 } as const;
 
 // Sessions are how you validate and keep track of users
-export let session = {
+export const session = {
 	_id: {
 		type: String // session id
 	},
@@ -60,7 +60,7 @@ export let session = {
 };
 
 // The key table stores the user’s keys.
-export let key = {
+export const key = {
 	_id: {
 		type: String // key id in the form of: ${providerId}:${providerUserId}
 	},
@@ -81,7 +81,7 @@ export let key = {
 };
 
 // Define the schema for the SignUpToken model
-export let SignUpTokenSchema = {
+export const SignUpTokenSchema = {
 	_id: {
 		type: String // Set the type of the _id field to String
 	},

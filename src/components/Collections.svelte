@@ -119,43 +119,4 @@
 			<iconify-icon icon="bi:images" width="24" class="text-primary-600" />
 		</a>
 	{/if}
-
-	<!-- test image -->
-	{#if $toggleLeftSidebar === 'full'}
-		<!-- switchSideBar expanded -->
-		<a
-			href="/upload"
-			class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white"
-		>
-			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-tertiary-600" />
-			<p class="mr-auto text-center uppercase">Upload</p>
-		</a>
-	{:else}
-		<!-- switchSideBar collapsed -->
-		<a href="/upload" class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2">
-			<p class="text-xs uppercase">Upload</p>
-			<iconify-icon icon="bi:images" width="24" class="text-tertiary-600" />
-		</a>
-	{/if}
-
-	<!-- test Builder -->
-	{#if $toggleLeftSidebar === 'full'}
-		<!-- switchSideBar expanded -->
-		<a
-			href="/collection"
-			class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white"
-		>
-			<iconify-icon icon="ion:build" width="24" class="text-waring-600 px-2 py-1" />
-			<p class="mr-auto text-center uppercase">C builder</p>
-		</a>
-	{:else}
-		<!-- switchSideBar collapsed -->
-		<a
-			href="/collection"
-			class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2"
-		>
-			<p class="text-xs uppercase">Cbuilder</p>
-			<iconify-icon icon="ion:build" width="24" class="text-waring-600" />
-		</a>
-	{/if}
 </div>

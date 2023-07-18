@@ -18,12 +18,12 @@
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
+	let showPassword = false;
+
 	export let active: undefined | 0 | 1 = undefined;
 	export const show = false;
-	export let forgot = false;
-	export let resetPW = false;
-
-	let showPassword = false;
+	export let PWforgot: boolean = false;
+	export let PWreset: boolean = false;
 
 	export let FormSchemaLogin: PageData['loginForm'];
 	const { form, constraints, allErrors, errors, enhance, delayed } = superForm(FormSchemaLogin, {
@@ -48,8 +48,7 @@
 		},
 
 		onResult: ({ result, cancel }) => {
-			//console.log('onResult', result);
-
+			// handle SignIn form result
 			if (result.type == 'redirect') {
 				// Trigger the toast
 				const t = {
@@ -101,14 +100,16 @@
 			// handle forgot form result
 			if (result.type == 'redirect') {
 				// update variables to display reset form
-				resetPW = true;
+				PWforgot: false;
+				PWreset = true;
 
 				// Trigger the toast
 				// TODO: Toast in conflict with wiggle
 				const t = {
-					message: $LL.LOGIN_ForgottenPassword(),
+					message: 'Password reset token was send by Email',
 					// Provide any utility or variant background style:
 					background: 'variant-filled-primary',
+					timeout: 2000,
 					// Add your custom classes here:
 					classes: 'border-1 !rounded-md'
 				};
@@ -150,14 +151,15 @@
 			// handle forgot form result
 			if (result.type == 'redirect') {
 				// update variables to display login form
-				forgot = false;
-				resetPW = false;
+				PWforgot = false;
+				PWreset = false;
 
 				// Trigger the toast
 				const t: ToastSettings = {
-					message: 'Password Reset',
+					message: 'Password was Changed',
 					// Provide any utility or variant background style:
-					background: 'variant-filled-primary',
+					timeout: 2000,
+					background: 'variant-variant-filled-surfaced',
 					// Add your custom classes here:
 					classes: 'border-1 !rounded-md'
 				};
@@ -177,6 +179,9 @@
 
 <Toast />
 
+<!-- TODO:improve this logic so only one value is required -->
+<!-- PWforgot:{PWforgot}
+PWreset:{PWreset} -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <section
 	on:click
@@ -193,18 +198,20 @@
 
 			<h1 class="text-3xl font-bold text-black lg:text-4xl">
 				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
-				{#if !forgot}
+				{#if !PWforgot && !PWreset}
 					<div class="lg:-mt-1">{$LL.LOGIN_SignIn()}</div>
-				{:else if forgot}
+				{:else if PWforgot && !PWreset}
 					<div class="text-2xl lg:-mt-1 lg:text-4xl">{$LL.LOGIN_ForgottenPassword()}</div>
-				{:else}
+				{:else if PWforgot && PWreset}
 					<div class="lg:-mt-1">{$LL.LOGIN_ResetPassword()}</div>
 				{/if}
 			</h1>
 		</div>
+
 		<div class="-mt-2 text-right text-xs text-error-500">{$LL.LOGIN_Required()}</div>
 
-		{#if !forgot && !resetPW}
+		<!-- Sign In -->
+		{#if !PWforgot && !PWreset}
 			<!--<SuperDebug data={$form} />-->
 			<form
 				method="post"
@@ -253,84 +260,28 @@
 						type="button"
 						class="btn variant-ringed-surface text-black"
 						on:click={() => {
-							forgot = true;
-							resetPW = false;
-						}}>{$LL.LOGIN_ForgottenPassword()}</button
-					>
+							PWforgot = true;
+							PWreset = false;
+						}}
+						>{$LL.LOGIN_ForgottenPassword()}
+					</button>
 				</div>
 			</form>
 		{/if}
 
-		{#if resetPW && forgot}
-			<!--<SuperDebug data={$resetForm} />-->
-			<!-- Reset Password -->
+		<!-- Forgotten Password -->
+		{#if PWforgot && !PWreset}
+			<!-- <SuperDebug data={$forgotForm} /> -->
+
 			<form
 				method="post"
-				action="?/resetPW"
-				use:resetEnhance
-				bind:this={formElement}
-				class="flex w-full flex-col"
-			>
-				<!-- Password field -->
-				<FloatingInput
-					name="password"
-					type="password"
-					bind:value={$resetForm.password}
-					bind:showPassword
-					label={$LL.LOGIN_Password()}
-					icon="mdi:lock"
-					iconColor="black"
-					textColor="black"
-				/>
-				{#if $resetErrors.password}<span class="invalid text-xs text-error-500"
-						>{$resetErrors.password}</span
-					>{/if}
-
-				<!-- Password  Confirm field -->
-				<FloatingInput
-					name="confirm_password"
-					type="password"
-					bind:value={$resetForm.confirm_password}
-					bind:showPassword
-					label={$LL.LOGIN_ConfirmPassword()}
-					icon="mdi:lock"
-					iconColor="black"
-					textColor="black"
-				/>
-				{#if $resetErrors.confirm_password}<span class="invalid text-xs text-error-500"
-						>{$resetErrors.confirm_password}</span
-					>{/if}
-
-				<!-- Password field -->
-				<FloatingInput
-					type="password"
-					bind:value={$form.password}
-					bind:showPassword
-					label={$LL.LOGIN_Token()}
-					icon="mdi:lock"
-					iconColor="black"
-				/>
-
-				<button type="submit" class="btn variant-filled-surface ml-2 mt-6">
-					{$LL.LOGIN_ResetPasswordSave()}
-					<!-- Loading indicators -->
-					{#if $resetDelayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
-				</button>
-			</form>
-		{/if}
-
-		{#if forgot && !resetPW}
-			<!--<SuperDebug data={$forgotForm} />-->
-			<!-- Forgotten Password -->
-			<form
-				method="post"
-				action="?/forgot"
+				action="?/forgotPW"
 				use:forgotEnhance
 				bind:this={formElement}
-				class="flex w-full flex-col"
+				class="flex w-full flex-col gap-3"
 			>
-				<div class="  mb-2 text-center text-sm text-black">
-					<p class="mb-2 text-xs">{$LL.LOGIN_ForgottenPassword_text()}</p>
+				<div class="mb-2 text-center text-sm text-black">
+					<p class="mb-2 text-xs text-tertiary-500">{$LL.LOGIN_ForgottenPassword_text()}</p>
 				</div>
 				<!-- Email field -->
 				<FloatingInput
@@ -343,26 +294,103 @@
 					iconColor="black"
 					textColor="black"
 				/>
-				{#if $forgotErrors.email}<span class="invalid text-xs text-error-500"
-						>{$forgotErrors.email}</span
-					>{/if}
+				{#if $forgotErrors.email}
+					<span class="invalid text-xs text-error-500">
+						{$forgotErrors.email}
+					</span>
+				{/if}
 
 				<div class="mt-4 flex items-center justify-between">
-					<button type="submit" class="btn variant-filled-surface"
-						>{$LL.LOGIN_SendResetMail()}</button
-					>
+					<button type="submit" class="btn variant-filled-surface">
+						{$LL.LOGIN_SendResetMail()}
+					</button>
+
 					<!-- Loading indicators -->
-					{#if $forgotDelayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
+					{#if $forgotDelayed}
+						<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />
+					{/if}
 
 					<button
 						type="button"
 						class="btn-icon variant-filled-surface"
 						on:click={() => {
-							forgot = false;
-							resetPW = false;
-						}}><iconify-icon icon="mdi:arrow-left-circle" width="38" /></button
+							PWforgot == false;
+							PWreset == true;
+						}}
 					>
+						<iconify-icon icon="mdi:arrow-left-circle" width="38" />
+					</button>
 				</div>
+			</form>
+		{/if}
+
+		<!-- Reset Password -->
+		{#if PWforgot && PWreset}
+			<!-- <SuperDebug data={$resetForm} /> -->
+			<form
+				method="post"
+				action="?/resetPW"
+				use:resetEnhance
+				bind:this={formElement}
+				class="flex w-full flex-col gap-3"
+			>
+				<!-- Password field -->
+				<FloatingInput
+					name="password"
+					type="password"
+					bind:value={$resetForm.password}
+					bind:showPassword
+					label={$LL.LOGIN_Password()}
+					icon="mdi:lock"
+					iconColor="black"
+					textColor="black"
+				/>
+				{#if $resetErrors.password}
+					<span class="invalid text-xs text-error-500">
+						{$resetErrors.password}
+					</span>
+				{/if}
+
+				<!-- Password  Confirm field -->
+				<FloatingInput
+					name="confirm_password"
+					type="password"
+					bind:value={$resetForm.confirm_password}
+					bind:showPassword
+					label={$LL.LOGIN_ConfirmPassword()}
+					icon="mdi:lock"
+					iconColor="black"
+					textColor="black"
+				/>
+				{#if $resetErrors.confirm_password}
+					<span class="invalid text-xs text-error-500">
+						{$resetErrors.confirm_password}
+					</span>
+				{/if}
+
+				<!-- Registration Token -->
+				<FloatingInput
+					type="password"
+					bind:value={$resetForm.token}
+					bind:showPassword
+					label={$LL.LOGIN_Token()}
+					icon="mdi:lock"
+					iconColor="black"
+				/>
+
+				{#if $resetErrors.token}
+					<span class="invalid text-xs text-error-500">
+						{$resetErrors.token}
+					</span>
+				{/if}
+
+				<button type="submit" class="btn variant-filled-surface ml-2 mt-6">
+					{$LL.LOGIN_ResetPasswordSave()}
+					<!-- Loading indicators -->
+					{#if $resetDelayed}
+						<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />
+					{/if}
+				</button>
 			</form>
 		{/if}
 	</div>

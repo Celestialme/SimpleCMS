@@ -26,7 +26,7 @@
 	>
 		{#each items as item (item.id)}
 			<div
-				class="relative flex h-10 w-32 items-center justify-center rounded-sm border border-surface-700 bg-surface-300 text-center text-xs font-bold hover:bg-surface-400 dark:text-white"
+				class="relative flex h-10 w-32 items-center justify-center rounded-sm border border-surface-700 bg-surface-300 text-center text-sm font-bold hover:bg-surface-400 dark:text-white"
 				animate:flip={{ duration: flipDurationMs }}
 			>
 				{item.name}

@@ -1,5 +1,5 @@
 import { buildSchema } from 'graphql';
-import * as collections from './collections';
+import * as collections from '@src/collections';
 
 // Generate the GraphQL types and fields based on the collection schemas
 const types = Object.values(collections).map((collection) => {

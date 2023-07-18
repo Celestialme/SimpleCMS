@@ -11,7 +11,7 @@
 
 	export const WidgetData = async () => _data;
 	export const file: File | undefined = undefined; // pass file directly from imageArray
-	export let value: any; //fix for filedropzone <ImageUpload> was created with unknown prop 'value'?
+	export let value: any; //fix for file dropzone <ImageUpload> was created with unknown prop 'value'?
 
 	console.log('imageUpload value', value);
 	let fieldName = getFieldName(field);

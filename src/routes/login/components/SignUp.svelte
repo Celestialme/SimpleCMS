@@ -60,8 +60,10 @@
 
 	let formElement: HTMLFormElement;
 
-	// TODO: Replace Role with the one assigned from token
-	let UserRole = 'Creator';
+	// TODO: Replace Role with the one assigned by token
+	let UserRole = 'User';
+
+	let showPassword = false;
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -145,6 +147,7 @@
 				tabindex={tabIndex++}
 				required
 				bind:value={$form.password}
+				bind:showPassword
 				label={$LL.LOGIN_Password()}
 				{...$constraints.password}
 				icon="mdi:password"
@@ -162,6 +165,7 @@
 				tabindex={tabIndex++}
 				required
 				bind:value={$form.confirm_password}
+				bind:showPassword
 				label={$LL.LOGIN_ConfirmPassword()}
 				{...$constraints.confirm_password}
 				icon="mdi:password"
@@ -201,6 +205,15 @@
 				{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
 			</button>
 		</form>
+
+		<!-- TODO: Fix transition to signIn -->
+		<!-- <p class="text-center text-sm text-surface-300">
+			Already have an account?
+			
+			<button type="button" on:click={() => (active = 0)} class="btn text-tertiary-500">
+				{$LL.LOGIN_SignIn()}
+			</button>
+		</p> -->
 	</div>
 
 	<SignupIcon show={active == 0 || active == undefined} />

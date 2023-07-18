@@ -1,10 +1,31 @@
-import { createGraphQLServer } from '@graphql-yoga/core';
-import { handleRequest } from '@graphql-yoga/lambda';
-import { schema } from '$api/generateSchema';
-import { resolvers } from '$api/resolvers';
+const { GraphQLServerLambda } = require('graphql-yoga');
 
-const server = createGraphQLServer({ schema, resolvers });
+const typeDefs = `
+  type Query {
+    hello(name: String): String
+  }
+`;
 
-export const post = async (request) => {
-	return await handleRequest(request, server);
+const resolvers = {
+	Query: {
+		hello: (_, { name }) => `Hello ${name || 'World'}`
+	}
 };
+
+const lambda = new GraphQLServerLambda({ typeDefs, resolvers });
+
+export async function post(request) {
+	const context = {};
+
+	const result = await new Promise((resolve, reject) => {
+		lambda.handler(request, context, (error, result) => {
+			if (error) {
+				reject(error);
+			} else {
+				resolve(result);
+			}
+		});
+	});
+
+	return { body: result };
+}

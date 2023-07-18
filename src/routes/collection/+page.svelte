@@ -108,9 +108,11 @@
 </div>
 
 <!-- add an input field and a button here -->
-<div class="my-1 ml-1 flex-col rounded-sm bg-surface-400 p-2 text-center">
-	<button on:click={modalAddCategory} type="button" class="btn-sm variant-filled-tertiary"
-		>Add New Category</button
+<div class="my-1 ml-1 flex-col rounded-sm bg-surface-500 p-2 text-center">
+	<button
+		on:click={modalAddCategory}
+		type="button"
+		class="btn-sm variant-filled-tertiary rounded-md">Add New Category</button
 	>
 </div>
 

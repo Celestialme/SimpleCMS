@@ -56,8 +56,6 @@
 	<SignUp
 		{active}
 		FormSchemaSignUp={data.signUpForm}
-		FormSchemaSignUpOther={data.signUpFormOther}
-		firstUserExists={data.firstUserExists}
 		on:click={() => (active = 1)}
 		on:pointerenter={() => (background = 'white')}
 	/>
