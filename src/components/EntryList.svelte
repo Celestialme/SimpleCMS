@@ -11,7 +11,6 @@
 	} from '@src/stores/store';
 	import { contentLanguage } from '@src/stores/store';
 
-	import axios from 'axios';
 	import { writable } from 'svelte/store';
 	import { flip } from 'svelte/animate';
 	import { slide } from 'svelte/transition';
@@ -76,9 +75,9 @@
 		}, 400);
 
 		data = undefined;
-		data = (await axios
-			.get(`/api/${$collection.name}?page=${1}&length=${50}`)
-			.then((data) => data.data)) as { entryList: [any]; totalCount: number };
+		data = await fetch(`/api/${$collection.name}?page=${1}&length=${50}`)
+			.then((response) => response.json())
+			.then((data) => data as { entryList: [any]; totalCount: number });
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
@@ -290,7 +289,10 @@
 		if (deleteList.length == 0) return;
 		let formData = new FormData();
 		formData.append('ids', JSON.stringify(deleteList));
-		await axios.delete(`/api/${$collection.name}`, { data: formData });
+		await fetch(`/api/${$collection.name}`, {
+			method: 'DELETE',
+			body: formData
+		});
 		refresh($collection);
 		mode.set('view');
 

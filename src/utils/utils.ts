@@ -2,19 +2,11 @@ import fs from 'fs';
 import schemas, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
-import axios from 'axios';
 import { get } from 'svelte/store';
 import { contentLanguage } from '@src/stores/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
-
-// Configuration object for axios requests
-export const config = {
-	headers: {
-		'Content-Type': 'multipart/form-data'
-	}
-};
 
 // Converts data to FormData object
 export const col2formData = async (getData: { [Key: string]: () => any }) => {
@@ -206,13 +198,15 @@ export let fieldsToSchema = (fields: Array<any>) => {
 export async function find(query: object, collection: Schema) {
 	if (!collection) return;
 	const _query = JSON.stringify(query);
-	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
+	const response = await fetch(`/api/find?collection=${collection.name}&query=${_query}`);
+	return response.json();
 }
 
 // Finds document in collection with specified ID
 export async function findById(id: string, collection: Schema) {
 	if (!id || !collection) return;
-	return (await axios.get(`/api/find?collection=${collection.name}&id=${id}`)).data;
+	const response = await fetch(`/api/find?collection=${collection.name}&id=${id}`);
+	return response.json();
 }
 
 // Returns field's database field name or label
@@ -243,13 +237,21 @@ export async function saveFormData({
 	}
 	if (!formData) return;
 	switch ($mode) {
-		case 'create':
-			return await axios.post(`/api/${$collection.name}`, formData, config).then((res) => res.data);
-		case 'edit':
+		case 'create': {
+			const createResponse = await fetch(`/api/${$collection.name}`, {
+				method: 'POST',
+				body: formData
+			});
+			return createResponse.json();
+		}
+		case 'edit': {
 			formData.append('_id', id || $entryData._id);
-			return await axios
-				.patch(`/api/${$collection.name}`, formData, config)
-				.then((res) => res.data);
+			const editResponse = await fetch(`/api/${$collection.name}`, {
+				method: 'PATCH',
+				body: formData
+			});
+			return editResponse.json();
+		}
 	}
 }
 
@@ -258,32 +260,47 @@ export async function cloneData(data) {
 	const $collection = get(collection);
 	const formData = data instanceof FormData ? data : await col2formData(data);
 	if (!formData) return;
-	await axios.post(`/api/${$collection.name}`, formData, config);
+	await fetch(`/api/${$collection.name}`, {
+		method: 'POST',
+		body: formData
+	});
 }
 
 // Publish FormData to database
 export async function publishData(id) {
 	const $collection = get(collection);
-	await axios.patch(`/api/${$collection.name}/${id}`, { published: true });
+	await fetch(`/api/${$collection.name}/${id}`, {
+		method: 'PATCH',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ published: true })
+	});
 }
 
 // Unpublish FormData to database
 export async function unpublishData(id) {
 	const $collection = get(collection);
-	await axios.patch(`/api/${$collection.name}/${id}`, { published: false });
+	await fetch(`/api/${$collection.name}/${id}`, {
+		method: 'PATCH',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ published: false })
+	});
 }
 
 // Schedule FormData to database
 export async function scheduleData(id, date) {
 	const $collection = get(collection);
-	await axios.patch(`/api/${$collection.name}/${id}`, { publishDate: date });
+	await fetch(`/api/${$collection.name}/${id}`, {
+		method: 'PATCH',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ publishDate: date })
+	});
 }
 
 // Delete FormData
 // TODO: move images/files to trash folder see [collection]/+server.ts
 export async function deleteData(id) {
 	const $collection = get(collection);
-	await axios.delete(`/api/${$collection.name}/${id}`);
+	await fetch(`/api/${$collection.name}/${id}`, { method: 'DELETE' });
 }
 
 export async function extractData(fieldsData: any) {
@@ -320,11 +337,13 @@ export function formatSize(sizeInBytes) {
 		return `${(sizeInBytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 	}
 }
+
 export async function getDates(collectionName: string) {
 	// Send a GET request to the endpoint that retrieves the data from the MongoDB database
-	const response = await axios.get(`/api/${collectionName}`);
+	const response = await fetch(`/api/${collectionName}`);
+	const data = await response.json();
 	// Check if the entryList array is empty
-	if (response.data.entryList.length === 0) {
+	if (data.entryList.length === 0) {
 		// Return an object with '-' for each field
 		return {
 			created: '-',
@@ -333,7 +352,7 @@ export async function getDates(collectionName: string) {
 		};
 	} else {
 		// Get the first entry from the entryList array
-		const result = response.data.entryList[0];
+		const result = data.entryList[0];
 		// Convert the timestamps to Date objects or '-' if null
 		const options: Intl.DateTimeFormatOptions = {
 			day: '2-digit',

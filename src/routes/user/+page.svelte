@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { toggleLeftSidebar } from '@src/stores/store';
-	import axios from 'axios';
 	import '@src/stores/store';
 	import { roles } from '@src/collections/Auth';
 
@@ -56,9 +55,10 @@
 			// Pass arbitrary data to the component
 			response: async (r: any) => {
 				if (r) {
-					const res = await axios.post('/api/user/editUser', {
-						...r,
-						id
+					const res = await fetch('/api/user/editUser', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ ...r, id })
 					});
 
 					if (res.status === 200) {
@@ -94,16 +94,15 @@
 					formData.append('dataurl', r.dataURL);
 
 					try {
-						const res = await axios({
-							method: 'post',
-							url: '/api/user/editAvatar',
-							data: formData,
-							headers: { 'Content-Type': 'multipart/form-data' }
+						const res = await fetch('/api/user/editAvatar', {
+							method: 'POST',
+							body: formData
 						});
 
 						if (res.status === 200) {
+							const data = await res.json();
 							await invalidateAll();
-							const resizedDataUrl = res.data.path;
+							const resizedDataUrl = data.path;
 							avatarSrc = resizedDataUrl;
 						}
 					} catch (err) {

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import axios from 'axios';
 	import { FileDropzone } from '@skeletonlabs/skeleton';
 	import { toggleLeftSidebar } from '@src/stores/store';
 
@@ -46,8 +45,12 @@
 		// Delete old images // TODO: not working yet
 		if (originalImage && optimizedImage) {
 			try {
-				await axios.delete(`/mediafiles/${paramUrl}/${optimizedImage.name}`);
-				await axios.delete(`/mediafiles/${paramUrl}/thumbnails/${thumbnailImage.name}`);
+				await fetch(`/mediafiles/${paramUrl}/${optimizedImage.name}`, {
+					method: 'DELETE'
+				});
+				await fetch(`/mediafiles/${paramUrl}/thumbnails/${thumbnailImage.name}`, {
+					method: 'DELETE'
+				});
 			} catch (error) {
 				console.error(error);
 			}
@@ -70,10 +73,12 @@
 
 		try {
 			// TODO: Add code to overwrite the existing image
-			const response = await axios.post(`/mediafiles/${paramUrl}`, formData, {
-				headers: { 'X-Overwrite': 'true' }
+			const response = await fetch(`/mediafiles/${paramUrl}`, {
+				method: 'POST',
+				headers: { 'X-Overwrite': 'true' },
+				body: formData
 			});
-			const data = response.data;
+			const data = await response.json();
 
 			if (data.error) {
 				errorMessage = data.error;
@@ -92,14 +97,12 @@
 			thumbnailImageUrl = `data:image/avif;base64,${data.thumbnailData}`;
 			errorMessage = '';
 		} catch (error) {
-			if (axios.isAxiosError(error)) {
-				if (error.response?.status === 400) {
-					errorMessage = error.response.data;
+			if (error instanceof Error) {
+				if (error.name === 'AbortError') {
+					errorMessage = 'The request was aborted';
 				} else {
 					errorMessage = error.message;
 				}
-			} else if (error instanceof Error) {
-				errorMessage = error.message;
 			} else {
 				errorMessage = 'An unknown error occurred';
 			}
@@ -117,7 +120,7 @@
 			<button
 				type="button"
 				on:click={() => toggleLeftSidebar.click()}
-				class="variant-ghost-surface btn-icon mt-1"
+				class="btn-icon variant-ghost-surface mt-1"
 			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>

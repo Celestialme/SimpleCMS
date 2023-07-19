@@ -37,7 +37,7 @@
 		slug?: string;
 		fields: any[];
 		strict?: boolean;
-		status?: string;
+		status?: 'published' | 'unpublished' | 'draft' | 'schedule' | 'cloned';
 	}
 
 	let filteredCategories: Category[] = categories;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import axios from 'axios';
+	import { onMount } from 'svelte';
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
@@ -10,12 +10,39 @@
 	let _data: FileList;
 
 	export const WidgetData = async () => _data;
-	export const file: File | undefined = undefined; // pass file directly from imageArray
+	export let file: File | undefined = undefined; // pass file directly from imageArray
 	export let value: any; //fix for file dropzone <ImageUpload> was created with unknown prop 'value'?
 
 	console.log('imageUpload value', value);
 	let fieldName = getFieldName(field);
 	let sanitizedFileName: string | undefined = undefined;
+
+	onMount(async () => {
+		if ($mode === 'edit') {
+			try {
+				const controller = new AbortController();
+				const signal = controller.signal;
+				const response = await fetch(`/${field?.path}/${$entryData[fieldName].name}`, { signal });
+				const data = await response.blob();
+				console.log('data returned by the server', data); // log the data returned by the server
+				let fileList = new DataTransfer();
+				let file = new File([data], $entryData[fieldName].name, {
+					type: $entryData[fieldName].mimetype
+				});
+				fileList.items.add(file);
+				_data = fileList.files;
+				console.log('_data returned', _data); // log the value of _data
+			} catch (error) {
+				console.error(error);
+			}
+		}
+	});
+
+	$: if (file instanceof File) {
+		let fileList = new DataTransfer();
+		fileList.items.add(file);
+		_data = fileList.files;
+	}
 
 	function setFile(e: Event) {
 		const node = e.target as HTMLInputElement;
@@ -30,37 +57,22 @@
 			fileList.items.add(sanitizedFile);
 			_data = fileList.files;
 		}
-
-		if (file instanceof File) {
-			let fileList = new DataTransfer();
-			fileList.items.add(file);
-			_data = node.files = fileList.files;
-		} else if ($mode === 'edit') {
-			axios
-				.get(`/${field?.path}/${$entryData[fieldName].name}`, { responseType: 'blob' })
-				.then(({ data }) => {
-					console.log('data returned by the server', data); // log the data returned by the server
-					let fileList = new DataTransfer();
-					let file = new File([data], $entryData[fieldName].name, {
-						type: $entryData[fieldName].mimetype
-					});
-					fileList.items.add(file);
-					_data = node.files = fileList.files;
-					console.log('_data returned', _data); // log the value of _data
-				});
-		}
 	}
 </script>
 
 <!-- <FileDropzone /> -->
-<FileDropzone name={fieldName} accept="image/*" on:change={setFile}>
+<FileDropzone
+	name={fieldName}
+	accept="image/*,image/webp,image/avif,image/svg+xml"
+	on:change={setFile}
+>
 	<svelte:fragment slot="lead"
 		><iconify-icon icon="fa6-solid:file-arrow-up" width="45" /></svelte:fragment
 	>
 	<svelte:fragment slot="message"
 		><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment
 	>
-	<svelte:fragment slot="meta">PNG, JPG, and GIF allowed.</svelte:fragment>
+	<svelte:fragment slot="meta">PNG, JPG, GIF, WEBP, AVIF, and SVG allowed.</svelte:fragment>
 </FileDropzone>
 
 <!-- image preview -->

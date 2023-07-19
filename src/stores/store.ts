@@ -1,4 +1,4 @@
-import { writable, derived, type Writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 import { get } from 'svelte/store';
 import { PUBLIC_SYSTEM_LANGUAGE, PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 import { setLocale } from '@src/i18n/i18n-svelte';
@@ -7,13 +7,13 @@ import { loadAllLocales } from '@src/i18n/i18n-util.sync';
 import type { User } from '@src/collections/Auth';
 
 // Create a writable store for user with initial value from local storage
-export let user: Writable<User> = writable();
+export const user: Writable<User> = writable();
 
 // Create a writable store for systemLanguage with initial value of PUBLIC_SYSTEM_LANGUAGE
-export let systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);
+export const systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);
 
 // Create a writable store for contentLanguage with initial value of PUBLIC_CONTENT_LANGUAGES
-export let contentLanguage = writable(Object.keys(JSON.parse(PUBLIC_CONTENT_LANGUAGES))[0]);
+export const contentLanguage = writable(Object.keys(JSON.parse(PUBLIC_CONTENT_LANGUAGES))[0]);
 
 // Subscribe to changes in credentials store and update local storage accordingly
 loadAllLocales(); // Load all locales
@@ -23,14 +23,14 @@ systemLanguage.subscribe((val) => {
 });
 
 // collective data of collection
-export let collectionValue: any = writable({});
-export let mode: Writable<
+export const collectionValue: any = writable({});
+export const mode: Writable<
 	'view' | 'edit' | 'create' | 'delete' | 'publish' | 'unpublish' | 'schedule' | 'clone'
 > = writable('view');
-export let entryData: Writable<any> = writable({});
+export const entryData: Writable<any> = writable({});
 
 //TODO: check deleteEntry function and ad modal to confirm deletion
-export let deleteEntry: Writable<() => any> = writable(() => {});
+export const deleteEntry: Writable<() => any> = writable(() => {});
 
 // Store image data while editing
 export const saveEditedImage: Writable<boolean> = writable(false);
@@ -67,21 +67,6 @@ function getScreenWidthName() {
 // Sidebar State Machine logic
 import fsm from 'svelte-fsm';
 
-// Create a derived store that depends on both mode and screenWidth
-const initialState = derived([mode, screenWidth], ([$mode, $screenWidth]) => {
-	if ($mode === 'create') {
-		return getDefaultState();
-	} else {
-		if ($screenWidth === 'mobile') {
-			return 'closed';
-		} else if ($screenWidth === 'tablet') {
-			return 'collapsed';
-		} else {
-			return 'full';
-		}
-	}
-});
-
 function getDefaultState() {
 	if (get(screenWidth) === 'mobile') {
 		return 'closed';
@@ -115,13 +100,21 @@ export const toggleLeftSidebar = fsm(getDefaultState(), {
 	},
 	full: {
 		click: () => {
+			//console.log('fsm-full-click');
 			if (get(screenWidth) === 'mobile' || get(screenWidth) === 'tablet') {
 				return 'collapsed';
 			} else {
 				return 'closed';
 			}
 		},
-		clickSwitchSideBar: () => 'collapsed',
+		clickSwitchSideBar: () => {
+			//console.log('fsm-full-clickSwitchSideBar');
+			if (get(screenWidth) === 'mobile') {
+				return 'closed';
+			} else {
+				return 'collapsed';
+			}
+		},
 		clickBack: () => get(userPreferredState)
 	}
 });
@@ -141,8 +134,8 @@ export const toggleRightSidebar = fsm('closed', {
 	open: { close: () => 'closed' }
 });
 
-export let width = writable('mobile');
-export let userPreferredState = writable('collapsed');
+export const width = writable('mobile');
+export const userPreferredState = writable('collapsed');
 
 export const handleSidebarToggle = () => {
 	if (get(screenWidth) === 'mobile') {

@@ -1,6 +1,4 @@
 <script lang="ts">
-	import axios from 'axios';
-
 	// Skeleton
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { popup } from '@skeletonlabs/skeleton';
@@ -16,13 +14,15 @@
 	// Import loadIcons function from Iconify Svelte library
 	import { loadIcons } from '@iconify/svelte';
 
-	export let icon: any = '';
+	export let icon = '';
 	let icons = []; // array of icon names
-	export let iconselected: any = '';
+	export let iconselected = '';
 	let loading = false; // loading state
 	export let searchQuery = '';
 
 	//TODO: Update Search on Next/Previous event
+	let total = 0; // variable to store the total number of results
+
 	// function to fetch icons from Iconify API
 	async function searchIcons(query: string, event?: FocusEvent) {
 		loading = true;
@@ -30,24 +30,18 @@
 			// Use search API query with prefix and limit parameters
 			// Use prefix=ic to filter by Google Material icon set
 			// Use start variable to specify the start index of the result
-			const response = await axios.get(
+			const response = await fetch(
 				`https://api.iconify.design/search?query=${encodeURIComponent(
 					searchQuery
 				)}&prefix=ic&limit=50&start=${start}`
 			);
-			// console.log('response', response);
-			// const total = response.data.total;
-			// const limit = response.data.limit;
-			// const pages = Math.ceil(total / limit);
-
-			// console.log(`There are ${pages} pages of results.`);
-
-			if (response.data && response.data.icons) {
-				icons = response.data.icons; // update icons array
-				//console.log('icons', icons);
+			const data = await response.json();
+			if (data && data.icons) {
+				total = data.total; // update total variable
+				icons = data.icons; // update icons array
 
 				// Use loadIcons function to preload icons from API
-				loadIcons(icons.map((icon) => `${response.data.prefix}:${icon}`));
+				loadIcons(icons.map((icon) => `${data.prefix}:${icon}`));
 			}
 		} catch (error) {
 			// Display error message
@@ -59,7 +53,7 @@
 	// function to select an icon
 	function selectIcon(icon: string) {
 		iconselected = icon; // update selected icon name
-		// TODO : close the popup
+		// TODO : close the skeleton popup when the icon was selects
 	}
 
 	// reactive statement to update selected icon name on click
@@ -135,15 +129,9 @@
 		</div>
 		<div class="grid grid-cols-5 gap-2">
 			{#each icons as icon}
-				<button class="relative flex flex-col items-center">
+				<button class="relative flex flex-col items-center" on:click={() => selectIcon(icon)}>
 					<span class="iconify" data-icon={icon} data-inline="false" />
-					<iconify-icon
-						{icon}
-						width="24"
-						on:keydown
-						on:click={() => selectIcon(icon)}
-						class="hover:cursor-pointer hover:text-primary-500"
-					/>
+					<iconify-icon {icon} width="24" class="hover:text-primary-500" />
 				</button>
 			{/each}
 		</div>

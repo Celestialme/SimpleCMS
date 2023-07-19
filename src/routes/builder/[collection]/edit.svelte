@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import axios from 'axios';
 
 	// Get the value of the collection parameter from the page store
 	const { collection } = $page.params;
@@ -10,10 +9,11 @@
 
 	async function getSchema() {
 		// Make a GET request to the /builder endpoint with the collection parameter
-		const response = await axios.get(`/builder/${collection}`);
+		const response = await fetch(`/builder/${collection}`);
+		const data = await response.json();
 
 		// Get the schema object from the response data
-		schema = response.data;
+		schema = data;
 	}
 
 	onMount(() => {
