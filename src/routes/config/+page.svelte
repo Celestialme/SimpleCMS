@@ -19,7 +19,7 @@
 </div>
 
 <h2 class="ml-2 mt-8 text-center text-primary-500">Select what you need to customize</h2>
-<div class="mt-4 grid grid-cols-3 gap-4">
+<div class="mt-4 grid sm:grid-cols-2 md:grid-cols-3 gap-4">
 	<!-- Collection -->
 	<a href="/collection" class="btn variant-outline-secondary gap-2 py-6">
 		<iconify-icon icon="mingcute:menu-fill" width="24" class="text-tertiary-600" />

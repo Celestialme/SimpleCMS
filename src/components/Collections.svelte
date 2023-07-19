@@ -18,16 +18,82 @@
 		target: 'popupHover',
 		placement: 'right'
 	};
+
+	// Search Collections
+	let search = '';
+	interface Category {
+		id: number;
+		name: string;
+		icon: string;
+		collections: Collection[];
+		open?: boolean;
+	}
+
+	interface Collection {
+		id: number;
+		name: string;
+		permissions?: any;
+		icon?: string;
+		slug?: string;
+		fields: any[];
+		strict?: boolean;
+		status?: string;
+	}
+
+	let filteredCategories: Category[] = categories;
+
+	function filterCategories() {
+		filteredCategories = categories.reduce((acc: Category[], category) => {
+			const filteredCollections = category.collections.filter((collection) =>
+				collection.name.toLowerCase().includes(search.toLowerCase())
+			);
+			if (
+				filteredCollections.length > 0 ||
+				(search === '' && category.name.toLowerCase().includes(search.toLowerCase()))
+			) {
+				acc.push({
+					...category,
+					collections: filteredCollections,
+					open: filteredCollections.length > 0 && search !== ''
+				});
+			}
+			return acc;
+		}, []);
+	}
 </script>
 
-<!-- TODO: Fix reactive i18n Translation -->
 <!-- displays all collection parents and their Children as accordion -->
 <div class="mt-2">
+	<!-- Search -->
+	{#if $toggleLeftSidebar === 'collapsed'}
+		<!-- show the search icon button -->
+		<button
+			type="button"
+			on:click={() => {
+				toggleLeftSidebar.click('full');
+				// searchShow = true;
+			}}
+			class="btn variant-filled-surface mb-2 w-full"
+		>
+			<iconify-icon icon="ic:outline-search" width="24" />
+		</button>
+	{:else}
+		<!-- show the expanding search input -->
+		<input
+			type="text"
+			bind:value={search}
+			on:input={filterCategories}
+			placeholder="Search …"
+			class="input variant-outline-surface mb-2 w-full border !border-surface-400"
+		/>
+	{/if}
+
 	<!-- TODO: Apply Tooltip for collapsed  -->
 	<Accordion regionControl="bg-surface-500 uppercase text-white hover:!bg-surface-400">
 		<!-- Collection Parents -->
-		{#each categories as category, index}
+		{#each filteredCategories as category, index}
 			<AccordionItem
+				bind:open={category.open}
 				regionPanel={`divide-y divide-black my-0 ${
 					category.collections.length > 5
 						? $toggleLeftSidebar === 'full'

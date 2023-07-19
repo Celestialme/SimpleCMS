@@ -440,7 +440,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 						<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
 							<button
 								use:popup={GithubTooltip}
-								class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white"
+								class="btn-icon hover:bg-surface-500 hover:text-white"
 							>
 								<iconify-icon icon="grommet-icons:github" width="30" />
 
