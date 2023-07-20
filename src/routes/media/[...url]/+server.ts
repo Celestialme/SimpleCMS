@@ -9,8 +9,13 @@ import type { RequestHandler } from './$types';
 import fs from 'fs';
 import mime from 'mime-types';
 import { error } from '@sveltejs/kit';
-// import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
+
 // import sharp from 'sharp';
+
+// TODO : Test PUBLIC_MEDIASERVER_URL Function
+// handles GET requests for multiple mediafiles files
+const PUBLIC_MEDIA_FOLDER = process.env.PUBLIC_MEDIA_FOLDER;
+const PUBLIC_MEDIASERVER_URL = process.env.PUBLIC_MEDIASERVER_URL;
 
 // handles GET requests for multiple mediafiles files
 export const GET: RequestHandler = async ({ params }) => {
@@ -18,12 +23,21 @@ export const GET: RequestHandler = async ({ params }) => {
 		if (!params.url) {
 			return new Response('Bad request', { status: 400 });
 		}
-		const data = await fs.promises.readFile(`./mediafiles/${params.url}`);
-		return new Response(data, {
-			headers: {
-				'Content-Type': mime.lookup(params.url) as string
-			}
-		});
+		if (PUBLIC_MEDIASERVER_URL) {
+			return new Response(null, {
+				status: 302,
+				headers: {
+					location: `${PUBLIC_MEDIASERVER_URL}/${params.url}`
+				}
+			});
+		} else {
+			const data = await fs.promises.readFile(`${PUBLIC_MEDIA_FOLDER}/${params.url}`);
+			return new Response(data, {
+				headers: {
+					'Content-Type': mime.lookup(params.url) as string
+				}
+			});
+		}
 	} catch (err: any) {
 		console.error(err);
 		if (err.code === 'ENOENT') {
