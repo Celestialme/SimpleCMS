@@ -2,6 +2,12 @@
 	import { FileDropzone } from '@skeletonlabs/skeleton';
 	import { toggleLeftSidebar } from '@src/stores/store';
 
+	import {
+		PUBLIC_MEDIA_FOLDER,
+		PUBLIC_MEDIASERVER_URL, //TODO : ADD PUBLIC_MEDIASERVER_URL  or perhaps use /api/media todo this instead
+		PUBLIC_MEDIA_OUTPUT_FORMAT
+	} from '$env/static/public';
+
 	let file: any;
 	let previewImageUrl: any;
 	let originalImage: any;
@@ -45,10 +51,10 @@
 		// Delete old images // TODO: not working yet
 		if (originalImage && optimizedImage) {
 			try {
-				await fetch(`/mediafiles/${paramUrl}/${optimizedImage.name}`, {
+				await fetch(`${PUBLIC_MEDIA_FOLDER}/${paramUrl}/${optimizedImage.name}`, {
 					method: 'DELETE'
 				});
-				await fetch(`/mediafiles/${paramUrl}/thumbnails/${thumbnailImage.name}`, {
+				await fetch(`${PUBLIC_MEDIA_FOLDER}/${paramUrl}/thumbnails/${thumbnailImage.name}`, {
 					method: 'DELETE'
 				});
 			} catch (error) {
@@ -73,7 +79,7 @@
 
 		try {
 			// TODO: Add code to overwrite the existing image
-			const response = await fetch(`/mediafiles/${paramUrl}`, {
+			const response = await fetch(`${PUBLIC_MEDIA_FOLDER}/${paramUrl}`, {
 				method: 'POST',
 				headers: { 'X-Overwrite': 'true' },
 				body: formData
@@ -88,7 +94,7 @@
 				size: data.size,
 				type: data.type
 			};
-			optimizedImageUrl = `/mediafiles/${paramUrl}/${data.name}`;
+			optimizedImageUrl = `${PUBLIC_MEDIA_FOLDER}${paramUrl}/${data.name}`;
 			thumbnailImage = {
 				name: data.name,
 				size: data.size,

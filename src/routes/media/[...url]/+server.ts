@@ -10,12 +10,15 @@ import fs from 'fs';
 import mime from 'mime-types';
 import { error } from '@sveltejs/kit';
 
+import {
+	PUBLIC_MEDIA_FOLDER,
+	PUBLIC_MEDIASERVER_URL, //TODO : ADD PUBLIC_MEDIASERVER_URL  or perhaps use /api/media todo this instead
+	PUBLIC_MEDIA_OUTPUT_FORMAT
+} from '$env/static/public';
+
 // import sharp from 'sharp';
 
 // TODO : Test PUBLIC_MEDIASERVER_URL Function
-// handles GET requests for multiple mediafiles files
-const PUBLIC_MEDIA_FOLDER = process.env.PUBLIC_MEDIA_FOLDER;
-const PUBLIC_MEDIASERVER_URL = process.env.PUBLIC_MEDIASERVER_URL;
 
 // handles GET requests for multiple mediafiles files
 export const GET: RequestHandler = async ({ params }) => {
@@ -68,8 +71,8 @@ export const GET: RequestHandler = async ({ params }) => {
 // 		const files = formData.getAll('file') as File[];
 
 // 		// Create folder if don't exist
-// 		await fs.promises.mkdir(`./mediafiles/${params.url}`, { recursive: true });
-// 		await fs.promises.mkdir(`./mediafiles/${params.url}/thumbnails`, { recursive: true });
+// 		await fs.promises.mkdir(`./${PUBLIC_MEDIA_FOLDER}/${params.url}`, { recursive: true });
+// 		await fs.promises.mkdir(`./${PUBLIC_MEDIA_FOLDER}/${params.url}/thumbnails`, { recursive: true });
 
 // 		for (const file of files) {
 // 			const fileData = await file.arrayBuffer();
@@ -97,12 +100,12 @@ export const GET: RequestHandler = async ({ params }) => {
 // 			}
 
 // 			// Check if file already exists & return existing file
-// 			const filePath = `./mediafiles/${params.url}/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.avif`;
+// 			const filePath = `./${PUBLIC_MEDIA_FOLDER}/${params.url}/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.avif`;
 // 			try {
 // 				await fs.promises.access(filePath);
 // 				if (request.headers.get('X-Overwrite') !== 'true') {
 // 					const fileData = await fs.promises.readFile(filePath);
-// 					const thumbnailData = await fs.promises.readFile(`./mediafiles/${params.url}/thumbnails/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.avif`);
+// 					const thumbnailData = await fs.promises.readFile(`./${PUBLIC_MEDIA_FOLDER}/${params.url}/thumbnails/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.avif`);
 
 // 					return new Response(
 // 						fileData, // remove base64 conversion here
@@ -126,29 +129,29 @@ export const GET: RequestHandler = async ({ params }) => {
 // 				switch (outputFormat) {
 // 					case 'avif':
 // 						optimizedData = await sharp(Buffer.from(fileData)).rotate().avif({ quality: 50 }).toBuffer();
-// 						await fs.promises.writeFile(`./mediafiles/${params.url}/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.avif`, optimizedData);
+// 						await fs.promises.writeFile(`./${PUBLIC_MEDIA_FOLDER}/${params.url}/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.avif`, optimizedData);
 // 						break;
 // 					case 'webp':
 // 						optimizedData = await sharp(Buffer.from(fileData)).rotate().webp({ quality: 80 }).toBuffer();
-// 						await fs.promises.writeFile(`./mediafiles/${params.url}/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.webp`, optimizedData);
+// 						await fs.promises.writeFile(`./${PUBLIC_MEDIA_FOLDER}/${params.url}/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.webp`, optimizedData);
 // 						break;
 // 					default:
-// 						await fs.promises.writeFile(`./mediafiles/${params.url}/${sanitizedUrl}`, Buffer.from(fileData));
+// 						await fs.promises.writeFile(`./${PUBLIC_MEDIA_FOLDER}/${params.url}/${sanitizedUrl}`, Buffer.from(fileData));
 // 				}
 
 // 				// save optimized image as thumbnail and autorotate
 // 				switch (outputFormat) {
 // 					case 'avif':
 // 						thumbnailData = await sharp(Buffer.from(fileData)).rotate().resize(400).avif({ quality: 50 }).toBuffer();
-// 						await fs.promises.writeFile(`./mediafiles/${params.url}/thumbnails/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.avif`, thumbnailData);
+// 						await fs.promises.writeFile(`./${PUBLIC_MEDIA_FOLDER}/${params.url}/thumbnails/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.avif`, thumbnailData);
 // 						break;
 // 					case 'webp':
 // 						thumbnailData = await sharp(Buffer.from(fileData)).rotate().resize(400).webp({ quality: 80 }).toBuffer();
-// 						await fs.promises.writeFile(`./mediafiles/${params.url}/thumbnails/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.webp`, thumbnailData);
+// 						await fs.promises.writeFile(`./${PUBLIC_MEDIA_FOLDER}/${params.url}/thumbnails/${sanitizedUrl.replace(/\.[^/.]+$/, '')}.webp`, thumbnailData);
 // 						break;
 // 					default:
 // 						thumbnailData = await sharp(Buffer.from(fileData)).rotate().resize(400).toBuffer();
-// 						await fs.promises.writeFile(`./mediafiles/${params.url}/thumbnails/${sanitizedUrl}`, thumbnailData);
+// 						await fs.promises.writeFile(`./${PUBLIC_MEDIA_FOLDER}/${params.url}/thumbnails/${sanitizedUrl}`, thumbnailData);
 // 				}
 
 // 				return new Response(
@@ -161,7 +164,7 @@ export const GET: RequestHandler = async ({ params }) => {
 // 					}
 // 				);
 // 			} else {
-// 				await fs.promises.writeFile(`./mediafiles/${params.url}/${sanitizedUrl}`, Buffer.from(fileData));
+// 				await fs.promises.writeFile(`./${PUBLIC_MEDIA_FOLDER}/${params.url}/${sanitizedUrl}`, Buffer.from(fileData));
 // 				return new Response(
 // 					fileData, // remove base64 conversion here
 // 					{
@@ -214,20 +217,20 @@ export const GET: RequestHandler = async ({ params }) => {
 // 		const filename = params.url[params.url.length - 1];
 
 // 		await fs.promises.mkdir(`./trash/${subdirectory}`, { recursive: true });
-// 		await fs.promises.rename(`./mediafiles/${subdirectory}/${filename}`, `./trash/${subdirectory}/${filename}-${new Date().toISOString()}`);
+// 		await fs.promises.rename(`./${PUBLIC_MEDIA_FOLDER}/${subdirectory}/${filename}`, `./trash/${subdirectory}/${filename}-${new Date().toISOString()}`);
 // 		await fs.promises.rename(
-// 			`./mediafiles/${subdirectory}/thumbnails/${filename}`,
+// 			`./${PUBLIC_MEDIA_FOLDER}/${subdirectory}/thumbnails/${filename}`,
 // 			`./trash/${subdirectory}/thumbnails/${filename}-${new Date().toISOString()}`
 // 		); // change the path here
 
-// 		const mediaFiles = await fs.promises.readdir(`./mediafiles/${subdirectory}`);
+// 		const mediaFiles = await fs.promises.readdir(`./${PUBLIC_MEDIA_FOLDER}/${subdirectory}`);
 // 		if (mediaFiles.length === 0) {
-// 			await fs.promises.rmdir(`./mediafiles/${subdirectory}`);
+// 			await fs.promises.rmdir(`./${PUBLIC_MEDIA_FOLDER}/${subdirectory}`);
 // 		}
 
-// 		const thumbnailFiles = await fs.promises.readdir(`./mediafiles/${subdirectory}/thumbnails`); // change the path here
+// 		const thumbnailFiles = await fs.promises.readdir(`./${PUBLIC_MEDIA_FOLDER}/${subdirectory}/thumbnails`); // change the path here
 // 		if (thumbnailFiles.length === 0) {
-// 			await fs.promises.rmdir(`./mediafiles/${subdirectory}/thumbnails`); // change the path here
+// 			await fs.promises.rmdir(`./${PUBLIC_MEDIA_FOLDER}/${subdirectory}/thumbnails`); // change the path here
 // 		}
 
 // 		await deleteExpiredTrashFiles();

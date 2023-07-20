@@ -3,6 +3,8 @@ import { auth } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
 
+import { PUBLIC_MEDIA_FOLDER, PUBLIC_MEDIASERVER_URL } from '$env/static/public';
+
 import fs from 'fs';
 import path from 'path';
 
@@ -24,6 +26,7 @@ export async function load({ params, event }) {
 	try {
 		// Check if media files directory exists
 		const mediaDir = path.resolve('./mediafiles');
+		console.log(mediaDir);
 		if (!fs.existsSync(mediaDir)) {
 			// If it doesn't exist, return an error message
 			return {
