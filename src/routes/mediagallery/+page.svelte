@@ -213,6 +213,7 @@
 
 	//svelte-dnd-action
 	import { dndzone } from 'svelte-dnd-action';
+	import PageTitle from '@src/components/PageTitle.svelte';
 
 	const flipDurationMs = 300;
 
@@ -352,23 +353,8 @@
 </script>
 
 <div class="flex flex-col gap-1">
-	<div class="flex items-center">
-		<!-- hamburger -->
-		{#if $toggleLeftSidebar === 'closed'}
-			<button
-				type="button"
-				on:click={() => toggleLeftSidebar.click()}
-				class="variant-ghost-surface btn-icon mt-1"
-			>
-				<iconify-icon icon="mingcute:menu-fill" width="24" />
-			</button>
-		{/if}
+	<PageTitle name="Media Gallery" icon="bi:images" iconColor="text-primary-500" />
 
-		<!-- Title  with icon -->
-		<h1 class="h1 ml-2 flex items-center gap-1">
-			<iconify-icon icon="bi:images" width="24" class="mr-1 text-red-500 sm:mr-2" /> Media Gallery
-		</h1>
-	</div>
 	<!-- Header block -->
 	<div class="mb-2 flex items-center justify-between border-b-2">
 		{#if view === 'grid'}

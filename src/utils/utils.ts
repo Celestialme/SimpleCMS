@@ -7,6 +7,42 @@ import { contentLanguage } from '@src/stores/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
+import '@src/utils/collectionUpdater';
+import { SvelteComponent } from 'svelte/internal';
+
+
+// Function to convert an object to form data
+export const obj2formData = (obj: any) => {
+    try {
+        // Create a new FormData object
+        const formData = new FormData();
+
+        // Iterate over the keys of the input object
+        for (const key in obj) {
+            // Append each key-value pair to the FormData object as a string
+            formData.append(
+                key,
+                JSON.stringify(obj[key], (key, val) => {
+                    // Handle special cases for certain keys
+                    if (key == 'schema') return undefined;
+                    if (key == 'widget') return val.key;
+                    if (typeof val === 'function') {
+                        return val + '';
+                    }
+                    return val;
+                })
+            );
+        }
+
+        // Return the FormData object
+        return formData;
+    } catch (error) {
+        // Handle any errors that might occur
+        console.error(error);
+        return null;
+    }
+};
+
 
 // Converts data to FormData object
 export const col2formData = async (getData: { [Key: string]: () => any }) => {

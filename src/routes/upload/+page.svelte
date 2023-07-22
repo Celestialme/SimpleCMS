@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { FileDropzone } from '@skeletonlabs/skeleton';
-	import { toggleLeftSidebar } from '@src/stores/store';
 
 	import {
 		PUBLIC_MEDIA_FOLDER,
@@ -35,6 +34,7 @@
 
 	//  file size using the appropriate unit (bytes, kilobytes, megabytes, or gigabytes
 	import { formatSize } from '@src/utils/utils';
+	import PageTitle from '@src/components/PageTitle.svelte';
 
 	const setFile = async (event: any) => {
 		file = event.target.files[0];
@@ -121,21 +121,7 @@
 
 <div class="flex flex-col gap-1">
 	<div class="flex items-center">
-		<!-- hamburger -->
-		{#if $toggleLeftSidebar === 'closed'}
-			<button
-				type="button"
-				on:click={() => toggleLeftSidebar.click()}
-				class="btn-icon variant-ghost-surface mt-1"
-			>
-				<iconify-icon icon="mingcute:menu-fill" width="24" />
-			</button>
-		{/if}
-
-		<!-- Title  with icon -->
-		<h1 class="h1 mb-2 ml-2 flex items-center gap-1">
-			<iconify-icon icon="bi:images" width="24" class="mr-1 text-error-500 sm:mr-2" /> Upload Tester
-		</h1>
+		<PageTitle name="Upload Tester" icon="bi:images" />
 	</div>
 
 	<!-- <FileDropzone /> -->

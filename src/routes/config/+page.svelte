@@ -1,21 +1,9 @@
 <script lang="ts">
-	import { toggleLeftSidebar } from '@src/stores/store';
+	import PageTitle from '@src/components/PageTitle.svelte';
 </script>
 
 <div class="mb-2 flex items-center">
-	<!-- hamburger -->
-	{#if $toggleLeftSidebar === 'closed'}
-		<button
-			type="button"
-			on:click={() => toggleLeftSidebar.click()}
-			class="btn-icon variant-ghost-surface"
-		>
-			<iconify-icon icon="mingcute:menu-fill" width="24" />
-		</button>
-	{/if}
-
-	<!-- Title  with icon -->
-	<h1 class="h1 ml-2 flex items-center">System Configuration</h1>
+	<PageTitle name="System Configuration" />
 </div>
 
 <h2 class="ml-2 mt-8 text-center text-primary-500">Select what you need to customize</h2>
@@ -23,7 +11,7 @@
 	<!-- Collection -->
 	<a href="/collection" class="btn variant-outline-secondary gap-2 py-6">
 		<iconify-icon icon="mingcute:menu-fill" width="24" class="text-tertiary-600" />
-		<p class="uppercase">Sidebar Menue</p>
+		<p class="uppercase">Sidebar Menu</p>
 	</a>
 
 	<!-- builder -->

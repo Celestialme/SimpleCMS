@@ -1,8 +1,18 @@
+import Menu from './Menu';
+import Names from './Names';
+import Posts from './Posts';
+import Posts2 from './Posts2';
+import Relation from './Relation';
+import WidgetTest from './WidgetTest';
+import imageArray from './imageArray';
+
+// List of Collections
 import { writable } from 'svelte/store';
+import '@src/utils/collectionUpdater';
 
 // typesafe-i18n
 import { get } from 'svelte/store';
-import LL from '@src/i18n/i18n-svelte.js';
+import LL from '@src/i18n/i18n-svelte';
 
 export function updateCategories(newColumnsData) {
 	categories = newColumnsData.map((column) => ({
@@ -14,15 +24,6 @@ export function updateCategories(newColumnsData) {
 		}))
 	}));
 }
-
-// List of Collections
-import ImageArray from './imageArray';
-import Menu from './Menu';
-import Posts from './Posts';
-import Names from './Names';
-import Posts2 from './Posts2';
-import Relation from './Relation';
-import WidgetTest from './WidgetTest';
 
 // Display how Collections are sorted and displayed in Categories section
 // TODO Add translations
@@ -44,13 +45,13 @@ let categories = [
 		name: get(LL).CollectionCategory_Menu(),
 		icon: 'bi:menu-button-wide',
 		collections: [{ ...Menu, id: 2.1 }]
-	},
-	{
-		id: 3,
-		name: 'Images',
-		icon: 'bi:images',
-		collections: [{ ...ImageArray, id: 3.1 }]
 	}
+	// {
+	// 	id: 3,
+	// 	name: 'Images',
+	// 	icon: 'bi:images',
+	// 	collections: [{ ...ImageArray, id: 3.1 }]
+	// }
 ];
 
 // TODO: Allow Unassigned collection to be displayed as well

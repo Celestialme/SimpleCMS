@@ -9,6 +9,7 @@
 	//skeleton
 	import { modalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 	import ModalAddCategory from './ModalAddCategory.svelte';
+	import PageTitle from '@src/components/PageTitle.svelte';
 
 	// Modal Trigger - Generate User Registration email Token
 	function modalAddCategory(): void {
@@ -85,26 +86,17 @@
 	}
 </script>
 
-<div class="mb-2 flex items-center">
-	<!-- hamburger -->
-	{#if $toggleLeftSidebar === 'closed'}
-		<button
-			type="button"
-			on:click={() => toggleLeftSidebar.click()}
-			class="btn-icon variant-ghost-surface"
-		>
-			<iconify-icon icon="mingcute:menu-fill" width="24" />
-		</button>
-	{/if}
+<div class="mb-2 flex items-center justify-between">
+	<PageTitle name="Menu Builder" />
 
-	<div class="flex w-full justify-between">
-		<!-- Title  with icon -->
-		<h1 class="h1 ml-2 flex items-center gap-1">Menu Builder</h1>
-		<button type="button" on:click={handleSaveClick} class="btn variant-filled-primary gap-2">
-			<iconify-icon icon="material-symbols:save" width="24" class="text-white" />
-			Save
-		</button>
-	</div>
+	<button
+		type="button"
+		on:click={handleSaveClick}
+		class="btn variant-filled-primary gap-2 !text-white"
+	>
+		<iconify-icon icon="material-symbols:save" width="24" class="text-white" />
+		Save
+	</button>
 </div>
 
 <!-- add an input field and a button here -->

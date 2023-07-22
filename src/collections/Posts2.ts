@@ -30,7 +30,8 @@ let schema: Schema = {
 			label: 'text2'
 		}),
 		widgets.Text({
-			label: 'text3'
+			label: 'text3',
+			translated: false
 		})
 	]
 };

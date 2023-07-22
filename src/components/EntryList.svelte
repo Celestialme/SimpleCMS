@@ -20,7 +20,7 @@
 	import { dndzone } from 'svelte-dnd-action';
 
 	import Loading from './Loading.svelte';
-	let isLoading = true;
+	let isLoading = false;
 	let loadingTimer: any; // recommended time of around 200-300ms
 
 	// typesafe-i18n
@@ -300,7 +300,7 @@
 		isLoading = false;
 	};
 
-	const flipDurationMs = 300;
+	const flipDurationMs = 100;
 
 	// Update items array to be an array of column objects
 	let items = $table.getAllLeafColumns().map((column, index) => ({
@@ -483,9 +483,9 @@
 </div>
 
 {#if columnShow}
+	<!-- transition:slide|global -->
 	<div
 		class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-300 text-center dark:bg-surface-700"
-		transition:slide|global
 	>
 		<div class="text-white dark:text-primary-500">Drag & Drop Columns / Click to hide</div>
 		<!-- toggle all -->
@@ -501,7 +501,7 @@
 				{$LL.TANSTACK_Toggle()}
 			</label>
 			<section
-				class="flex justify-center rounded-md p-2"
+				class="flex flex-wrap justify-center gap-1 rounded-md p-2"
 				use:dndzone={{ items, flipDurationMs }}
 				on:consider={handleDndConsider}
 				on:finalize={handleDndFinalize}

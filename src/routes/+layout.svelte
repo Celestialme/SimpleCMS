@@ -476,7 +476,8 @@ lg:overflow-y-scroll lg:max-h-screen}"
 		<Toast />
 		<div class="m-2">
 			{#key $page.url}
-				<div in:fly={{ x: -200, duration: 200, delay: 200 }} out:fly={{ x: 200, duration: 200 }}>
+				<!-- <div in:fly={{ x: -200, duration: 200 }} out:fly={{ x: 200, duration: 200 }}> -->
+				<div>
 					<slot />
 				</div>
 			{/key}

@@ -21,7 +21,7 @@ let schema: Schema = {
 			translated: true,
 			required: true,
 			icon: 'ri:t-box-line',
-			placeholder: 'Enter Test Placeholder'
+			placeholder: 'Enter Test Placeholder',
 
 			// display: async (data, field, entry) => {
 			// 	return data.translated;

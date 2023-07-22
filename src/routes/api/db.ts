@@ -4,6 +4,9 @@ import schemas from '@src/collections';
 import { fieldsToSchema } from '@src/utils/utils';
 import { dev } from '$app/environment';
 
+import { setup } from '@src/utils/collectionUpdater';
+setup();
+
 // Lucia
 import lucia, { type Session, type User } from 'lucia-auth';
 import adapter from '@lucia-auth/adapter-mongoose';

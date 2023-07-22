@@ -1,8 +1,9 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { toggleLeftSidebar } from '@src/stores/store';
 	import '@src/stores/store';
 	import { roles } from '@src/collections/Auth';
+
+	import PageTitle from '@src/components/PageTitle.svelte';
 
 	export let data: PageData;
 	// console.log(data);
@@ -21,12 +22,12 @@
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import ModalEditAvatar from './ModalEditAvatar.svelte';
 	import ModalEditForm from './ModalEditForm.svelte';
-	import ModalTokenUser from './ModalTokenUser.svelte';
+
 	import { modalStore } from '@skeletonlabs/skeleton';
 	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
+	import AdminArea from './AdminArea.svelte';
 
 	let avatarSrc = user?.avatar;
-	let showUserList = true;
 
 	let id = user?.id;
 	let username = user?.username;
@@ -115,30 +116,6 @@
 		modalStore.trigger(d);
 	}
 
-	// Modal Trigger - Generate User Registration email Token
-	function modalTokenUser(): void {
-		const modalComponent: ModalComponent = {
-			// Pass a reference to your custom component
-			ref: ModalTokenUser,
-
-			// Provide default slot content as a template literal
-			slot: '<p>Edit Form</p>'
-		};
-		const d: ModalSettings = {
-			type: 'component',
-			// NOTE: title, body, response, etc are supported!
-			title: 'Generate a New User Registration Token',
-			body: 'Add Users Email and select a Role & Validity, then press Send.',
-			component: modalComponent,
-
-			// Pass arbitrary data to the component
-			response: (r: any) => {
-				if (r) console.log('response:', r);
-			}
-		};
-		modalStore.trigger(d);
-	}
-
 	function modalConfirm(): void {
 		const d: ModalSettings = {
 			type: 'confirm',
@@ -157,21 +134,7 @@
 </script>
 
 <div class="flex flex-col gap-1">
-	<div class="flex items-center">
-		<!-- hamburger -->
-		{#if $toggleLeftSidebar === 'closed'}
-			<button
-				type="button"
-				on:click={() => toggleLeftSidebar.click()}
-				class="btn-icon variant-ghost-surface mt-1"
-			>
-				<iconify-icon icon="mingcute:menu-fill" width="24" />
-			</button>
-		{/if}
-
-		<!-- Title  with icon -->
-		<h1 class="h1 ml-2 flex items-center gap-1">User Profile</h1>
-	</div>
+	<PageTitle name="User Profile" />
 
 	<div class="grid grid-cols-1 grid-rows-2 gap-1 overflow-hidden md:grid-cols-2 md:grid-rows-1">
 		<!-- Avatar with user info -->
@@ -230,31 +193,9 @@
 			</div>
 		</form>
 	</div>
+
 	<!-- admin area -->
 	{#if user?.role == roles.admin}
-		<div class="border-td mt-2 flex flex-col border-t-2">
-			<p class="h2 mb-4 text-center text-3xl font-bold dark:text-white">{$LL.USER_AdminArea()}</p>
-			<div class=" flex flex-col items-center justify-between gap-2 sm:flex-row">
-				<button
-					on:click={modalTokenUser}
-					class="gradient-primary btn w-full text-white sm:max-w-xs"
-				>
-					<iconify-icon icon="material-symbols:mail" color="white" width="18" class="mr-1" />
-					{$LL.USER_EmailToken()}
-				</button>
-				<button
-					on:click={() => (showUserList = !showUserList)}
-					class="gradient-secondary btn w-full text-white sm:max-w-xs"
-				>
-					<iconify-icon icon="mdi:account-circle" color="white" width="18" class="mr-1" />
-					{showUserList ? $LL.USER_ListCollapse() : $LL.USER_ListShow()}
-				</button>
-			</div>
-		</div>
-
-		{#if showUserList}
-			<!-- <UserList /> -->
-			<p class="mt-3 border text-center">Display Available Users for edit/remove</p>
-		{/if}
+		<AdminArea />
 	{/if}
 </div>

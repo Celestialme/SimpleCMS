@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
-	import { toggleLeftSidebar } from '@src/stores/store';
 	import { goto } from '$app/navigation';
 	import { categories as importedCategories } from '@src/collections/index';
 	import { dndzone } from 'svelte-dnd-action';
+	import PageTitle from '@src/components/PageTitle.svelte';
 
 	const categories = writable(importedCategories);
 
@@ -40,27 +40,7 @@
 
 <!-- Collection builder -->
 <div class="align-centre mb-2 mt-2 flex dark:text-white">
-	<div class="flex items-center justify-between">
-		<!-- hamburger -->
-		{#if $toggleLeftSidebar === 'closed'}
-			<button
-				type="button"
-				on:click={() => toggleLeftSidebar.click()}
-				class="variant-ghost-surface btn-icon mt-1"
-			>
-				<iconify-icon icon="mingcute:menu-fill" width="24" />
-			</button>
-		{/if}
-
-		<!-- Title  with icon -->
-		<h1 class="{!$toggleLeftSidebar ? 'ml-2' : ''} h1 flex items-center gap-1">
-			<iconify-icon
-				icon="dashicons:welcome-widgets-menus"
-				width="24"
-				class="mr-1 text-error-500 sm:mr-2"
-			/> Collection Builder
-		</h1>
-	</div>
+	<PageTitle name="Collection Builder" />
 </div>
 <!-- List of .ts files -->
 <div class="flex flex-col items-center justify-center">

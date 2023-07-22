@@ -6,6 +6,7 @@
 	import { mode } from '@src/stores/store.js';
 	import BuilderFields from './BuilderFields.svelte';
 	import { collection } from '@src/collections/index';
+	import { obj2formData } from '@src/utils/utils';
 
 	export let data;
 
@@ -18,6 +19,20 @@
 	let fields = [];
 
 	$: console.log($collection);
+
+	// Function to save data by sending a POST request to the /api/builder endpoint
+	async function save() {
+		console.log({ ...$collection.fields });
+		const response = await fetch('/api/builder', {
+			method: 'POST',
+			body: obj2formData({ fields: $collection.fields }),
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+		const data = await response.json();
+		// ...
+	}
 
 	export let hasCollections: any;
 </script>
@@ -49,6 +64,7 @@
 			</div>
 		{/if}
 	</div>
+	<button on:click={save} class="text-white"> save </button>
 </div>
 
 <!-- {/if} -->

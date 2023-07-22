@@ -1,19 +1,10 @@
 <script lang="ts">
-	import { toggleLeftSidebar } from '@src/stores/store';
+	import PageTitle from '@src/components/PageTitle.svelte';
 </script>
 
 <div class="mb-2 flex items-center">
-	<!-- hamburger -->
-	{#if $toggleLeftSidebar === 'closed'}
-		<button
-			type="button"
-			on:click={() => toggleLeftSidebar.click()}
-			class="btn-icon variant-ghost-surface"
-		>
-			<iconify-icon icon="mingcute:menu-fill" width="24" />
-		</button>
-	{/if}
+	<PageTitle name="Image Editor" />
 
 	<!-- Title  with icon -->
-	<h1 class="h1 ml-2 flex items-center">Image Editor goes here</h1>
 </div>
+<p class=" ml-2 flex items-center">Image Editor goes here</p>
