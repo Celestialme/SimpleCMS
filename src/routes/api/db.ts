@@ -6,6 +6,8 @@ import adapter from '@lucia-auth/adapter-mongoose';
 import { session, key, UserSchema } from '@src/collections/Auth';
 import { sveltekit } from 'lucia-auth/middleware';
 import { fieldsToSchema } from '@src/utils/utils';
+import { setup } from '@src/utils/collectionUpdater';
+setup();
 mongoose
 	.connect(DB_HOST, {
 		authSource: 'admin',

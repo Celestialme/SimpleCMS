@@ -9,6 +9,8 @@
 	import BuilderFields from './BuilderFields.svelte';
 	import { collection } from '@src/collections';
 	import Toggle from '@src/components/system/buttons/Toggle.svelte';
+	import axios from 'axios';
+	import { obj2formData } from '@src/utils/utils';
 	export let data;
 	user.set(data.user);
 	let widget_keys = Object.keys(widgets);
@@ -16,6 +18,14 @@
 	let name = 'Gen';
 	let fields = [];
 	$: console.log($collection);
+	function save() {
+		console.log({ ...$collection.fields });
+		axios.post(`/api/builder`, obj2formData({ fields: $collection.fields }), {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+	}
 </script>
 
 <div class="body">
@@ -42,6 +52,7 @@
 			</div>
 		{/if}
 	</div>
+	<button on:click={save} class="text-white"> save </button>
 </div>
 
 <style>

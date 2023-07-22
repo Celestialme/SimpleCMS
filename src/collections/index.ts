@@ -1,11 +1,13 @@
-import { writable } from 'svelte/store';
-import ImageArray from './imageArray';
+import ImageArray from './ImageArray';
+import Media from './Media';
+import Menu from './Menu';
 import Posts from './Posts';
 import Posts2 from './Posts2';
 import Posts3 from './Posts3';
-import Menu from './Menu';
 import Relation from './Relation';
-import Media from './media';
+
+import { writable } from 'svelte/store';
+import '@src/utils/collectionUpdater';
 let categories = [
 	{
 		name: 'Collections',

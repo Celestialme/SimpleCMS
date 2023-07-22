@@ -7,6 +7,8 @@ import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
+import '@src/utils/collectionUpdater';
+import { SvelteComponent } from 'svelte/internal';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -39,7 +41,23 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	}
 	return formData;
 };
-
+export const obj2formData = (obj: any) => {
+	const formData = new FormData();
+	for (const key in obj) {
+		formData.append(
+			key,
+			JSON.stringify(obj[key], (key, val) => {
+				if (key == 'schema') return undefined;
+				if (key == 'widget') return val.key;
+				if (typeof val === 'function') {
+					return val + '';
+				}
+				return val;
+			})
+		);
+	}
+	return formData;
+};
 export function saveFiles(data: FormData, collection: string) {
 	let files: any = {};
 	let _files: Array<any> = [];
