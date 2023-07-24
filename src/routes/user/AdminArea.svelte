@@ -1,4 +1,7 @@
 <script lang="ts">
+	import Multibutton from './Multibutton.svelte';
+	import TanstackIcons from '@src/components/TanstackIcons.svelte';
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -30,9 +33,18 @@
 		modalStore.trigger(d);
 	}
 
+	// TanstackFilter
+	import TanstackFilter from '@src/components/TanstackFilter.svelte';
+	let searchValue = '';
+	let searchShow = false;
+	let filterShow = false;
+	let columnShow = false;
+	let density = 'normal';
+
 	// TanstackTable
 	import TanstackTable from '@src/components/TanstackTable.svelte';
 
+	// AdminUser Data
 	let data = [
 		{
 			_id: '9rK2Lr9pLJjS5CK',
@@ -68,7 +80,7 @@
 			_id: '4',
 			email: 'test@example.com',
 			role: 'viewer',
-			username: 'Ctestharlie',
+			username: 'TestCharlie',
 			createdAt: new Date('2023-07-18T19:39:31.420Z'),
 			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
 			__v: 0,
@@ -76,13 +88,13 @@
 		}
 	];
 
-	let columns = [
-		{ Header: 'ID', accessor: '_id', id: '_id' },
-		{ Header: 'Username', accessor: 'username', id: 'username' },
-		{ Header: 'Email', accessor: 'email', id: 'email' },
-		{ Header: 'Role', accessor: 'role', id: 'role' },
-		{ Header: 'Created At', accessor: 'createdAt', id: 'createdAt' },
-		{ Header: 'Updated At', accessor: 'updatedAt', id: 'updatedAt' }
+	let items = [
+		{ Header: 'ID', accessorKey: '_id', id: '_id' },
+		{ Header: 'Username', accessorKey: 'username', id: 'username' },
+		{ Header: 'Email', accessorKey: 'email', id: 'email' },
+		{ Header: 'Role', accessorKey: 'role', id: 'role' },
+		{ Header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
+		{ Header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
 	];
 
 	let showUserList = true;
@@ -106,6 +118,22 @@
 
 	{#if showUserList}
 		<!-- <UserList /> -->
-		<TanstackTable {data} {columns} tableData={data} dataSourceName="AdminArea" />
+		<div class="flex justify-between mt-2">
+			<TanstackFilter
+				bind:searchValue
+				bind:searchShow
+				bind:filterShow
+				bind:columnShow
+				bind:density
+			/>
+			<Multibutton />
+		</div>
+
+		<!-- <p>searchValue: {searchValue}</p>
+		<p>filterShow: {filterShow}</p>
+		<p>columnShow: {columnShow}</p>
+		<p>density: {density}</p> -->
+
+		<TanstackTable {data} {items} tableData={data} dataSourceName="AdminArea" />
 	{/if}
 </div>

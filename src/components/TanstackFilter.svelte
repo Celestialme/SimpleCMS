@@ -2,12 +2,12 @@
 	import { translationStatusOpen } from '@src/stores/store';
 
 	// Define reactive variables to track the state of each element
-	export let searchShow = false;
+
 	export let searchValue = '';
+	export let searchShow = false;
 	export let filterShow = false;
 	export let columnShow = false;
 	export let density = 'normal';
-	export let updateDensity;
 
 	// Define a function to close any open elements
 	function closeOpenStates() {
@@ -30,10 +30,12 @@
 			on:blur={() => (searchShow = false)}
 			on:keydown={(e) => e.key === 'Enter' && (searchShow = false)}
 		/>
+		<!-- TODO: leave input and blur  will not clear results  -->
 		<button
 			type="button"
 			on:click={() => {
 				closeOpenStates();
+				searchValue = '';
 				searchShow = !searchShow;
 			}}
 			class="w-12 border-r border-surface-500"
@@ -111,15 +113,16 @@
 			closeOpenStates();
 			// Update the density variable
 			if (density === 'compact') {
-				updateDensity('normal');
+				density = 'normal';
 			} else if (density === 'normal') {
-				updateDensity('comfortable');
+				density = 'comfortable';
 			} else {
-				updateDensity('compact');
+				density = 'compact';
 			}
 		}}
 		class="variant-ghost-surface btn-icon"
-		><iconify-icon
+	>
+		<iconify-icon
 			icon={density === 'compact'
 				? 'material-symbols:align-space-even-rounded'
 				: density === 'normal'

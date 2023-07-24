@@ -134,6 +134,7 @@
 </script>
 
 <div class="flex flex-col gap-1">
+	<!-- TODO: fix TypeScript, as Icon is already optional? -->
 	<PageTitle name="User Profile" />
 
 	<div class="grid grid-cols-1 grid-rows-2 gap-1 overflow-hidden md:grid-cols-2 md:grid-rows-1">

@@ -118,6 +118,21 @@
 		}
 	};
 
+	let filteredData = tableData;
+	// Create a reactive statement that updates the filteredData array whenever the searchValue changes
+	$: {
+		if (searchValue) {
+			filteredData = tableData.filter((row) => {
+				// Check if any of the values in this row match the search value
+				return Object.values(row).some((value) =>
+					(value as string).toString().toLowerCase().includes(searchValue.toLowerCase())
+				);
+			});
+		} else {
+			filteredData = tableData;
+		}
+	}
+
 	const setSorting = (updater: (arg0: any) => any) => {
 		if (updater instanceof Function) {
 			sorting = updater(sorting);
@@ -208,10 +223,11 @@
 		accessorKey: field.label
 	}));
 
-	console.log('defaultColumns', defaultColumns);
+	//console.log('defaultColumns', defaultColumns);
 
 	const storedValue = localStorage.getItem(`TanstackConfiguration-${$collection.name}`);
 	const columns = storedValue ? JSON.parse(storedValue) : defaultColumns;
+
 	const options = writable<TableOptions<any>>({
 		data: tableData,
 		columns: columns.map((item) => {
@@ -299,10 +315,6 @@
 		items.forEach((item) => {
 			newOrder[item.id] = item.isVisible;
 		});
-
-		// const randomizeColumns = () => {
-		// 	$table.setColumnOrder((_updater) => $table.getAllLeafColumns().map((d) => d.id));
-		// };
 
 		items = items.map((item) => {
 			return {
@@ -512,6 +524,7 @@
 	<Loading />
 {/if}
 
+<!-- Tanstack Table -->
 <div class="table-container">
 	<table
 		class="table table-hover {density === 'compact'
@@ -520,6 +533,7 @@
 			? ''
 			: 'table-comfortable'}"
 	>
+		<!-- Tanstack Header -->
 		<thead class="text-primary-500">
 			{#each $table.getHeaderGroups() as headerGroup}
 				<tr class="divide-x divide-surface-400 border-b">

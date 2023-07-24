@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
 
+	// TanstackFilter
+	let searchValue = '';
+	let filterShow = false;
+	let columnShow = false;
+	let density = 'normal';
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -12,7 +18,7 @@
 		flexRender as flexRenderBugged,
 		getCoreRowModel,
 		getSortedRowModel,
-		getPaginationRowModel
+		getPaginationRowModel // TODO: Update to better getPaginationRowModel
 	} from '@tanstack/svelte-table';
 	import type {
 		ColumnDef,
@@ -22,46 +28,27 @@
 	} from '@tanstack/table-core/src/types';
 
 	export let data: any[];
-	export let searchValue = '';
-	export let columns: any[];
-
-	console.log('columns', columns);
+	export let items: any[];
+	export let dataSourceName: string;
 
 	let filterValues = {};
-
-	$: {
-		columns = columns.map((column) => ({
-			...column,
-			Filter: (rows, id) => {
-				return rows.filter((row) => row.values[id].includes(filterValues[id]));
-			}
-		}));
-	}
-
 	let sorting: any = [];
 	let columnOrder: any[] = [];
 	let columnVisibility = {};
 
-	import TanstackFilter from './TanstackFilter.svelte';
-
-	let filterShow = false;
-	let columnShow = false;
-
-	// Retrieve density from local storage or set to 'normal' if it doesn't exist
-	let density = localStorage.getItem('density') || 'normal';
-
 	// Update density and save to local storage
-	function updateDensity(newDensity) {
-		density = newDensity;
-		localStorage.setItem('density', newDensity);
-	}
+	// function updateDensity(newDensity) {
+	// 	density = newDensity;
+	// 	localStorage.setItem('density', newDensity);
+	// }
 
-	import Loading from './Loading.svelte';
 	import FloatingInput from './system/inputs/floatingInput.svelte';
 	import { flip } from 'svelte/animate';
 	import { slide } from 'svelte/transition';
 	import TanstackIcons from './TanstackIcons.svelte';
-	let isLoading = false;
+
+	import Loading from './Loading.svelte';
+	export let isLoading = false;
 	let loadingTimer: any; // recommended time of around 200-300ms
 
 	export let tableData: any[];
@@ -162,10 +149,15 @@
 		setCurrentPage(parseInt(target.value) - 1);
 	}
 
+	const defaultColumns = JSON.parse(JSON.stringify(items));
+
+	const storedValue = localStorage.getItem(`TanstackConfiguration-${dataSourceName}`);
+	const columnsData = storedValue ? JSON.parse(storedValue) : defaultColumns;
+
 	const options = writable<TableOptions<any>>({
 		data: tableData,
-		columns: columns.map((item) => {
-			return columns.find((col) => col.accessorKey == item.accessorKey);
+		columns: columnsData.map((item: any) => {
+			return defaultColumns.find((col: any) => col.accessorKey == item.accessorKey);
 		}),
 
 		state: {
@@ -246,21 +238,17 @@
 		});
 	}
 
-	//dnd action
-	export let dataSourceName: string;
+	// dnd actions
 	const flipDurationMs = 100;
 
-	columnOrder = columns.map((column) => column.id);
-
 	// Update items array to be an array of column objects
-	let items = columns.map((column) => ({
-		id: column.id,
-		name: column.Header,
-		isVisible: getColumnByName(column.id)?.getIsVisible() ?? true
-	}));
+	//  let items = $table.getAllLeafColumns().map((column, index) => ({
+	// 		id: column.id,
+	// 		name: column.id,
+	// 		isVisible: column.getIsVisible() // Set initial visibility state based on column visibility
+	// 	}));
 
-	//console.log('EntryList item', items);
-
+	// TODO: Don't update table on drag and drop, only on release for performance
 	function handleDndConsider(e: {
 		detail: { items: { id: string; name: string; isVisible: boolean }[] };
 	}) {
@@ -270,28 +258,46 @@
 	function handleDndFinalize(e: {
 		detail: { items: { id: string; name: string; isVisible: boolean }[] };
 	}) {
-		// Update column order based on the results of the dnd action
-		columnOrder = e.detail.items.map((item) => item.id);
+		items = e.detail.items;
 
-		// Update column visibility based on the results of the dnd action
-		const columnVisibility = {};
-		for (const item of e.detail.items) {
-			columnVisibility[item.id] = item.isVisible;
-		}
+		// Update column Order based on new order
+		const newOrder = {};
+		items.forEach((item) => {
+			newOrder[item.id] = item.isVisible;
+		});
 
-		options.update((old) => ({
-			...old,
-			state: {
-				...old.state,
-				columnOrder,
-				columnVisibility
-			}
-		}));
+		items = items.map((item) => {
+			return {
+				...item,
+				getToggleVisibilityHandler() {
+					return () => {
+						const newVisibility = { ...$table.getState().columnVisibility };
+						newVisibility[item.id] = !newVisibility[item.id];
+						$table.setColumnVisibility(newVisibility);
+					};
+				}
+			};
+		});
+
+		$table.setColumnOrder(newOrder);
+
+		var remappedColumns = items.map((item) => {
+			return defaultColumns.find((col: any) => {
+				return col.accessorKey == item.id;
+			});
+		});
+
+		options.update((old) => {
+			return {
+				...old,
+				columns: remappedColumns
+			};
+		});
 
 		localStorage.setItem(
 			`TanstackConfiguration-${dataSourceName}`,
 			JSON.stringify(
-				columns.map((item) => {
+				remappedColumns.map((item) => {
 					return {
 						...item,
 						visible: getColumnByName(item.accessorKey)?.getIsVisible()
@@ -300,7 +306,7 @@
 			)
 		);
 
-		$table.setColumnOrder(columnOrder);
+		table = createSvelteTable(options);
 	}
 
 	// Add toggle Order function to each column object
@@ -317,9 +323,6 @@
 		};
 	});
 
-	// console.log('columnOrder', columnOrder);
-	// console.log('items', items);
-
 	function getColumnByName(name) {
 		return $table.getAllLeafColumns().find((col) => {
 			return col.id == name;
@@ -331,14 +334,12 @@
 	<Loading />
 {:else}
 	<!-- TanstackHeader -->
-	<div class="relative py-2 hidden items-center justify-center gap-2 sm:flex">
-		<TanstackFilter bind:searchValue bind:filterShow bind:columnShow bind:density {updateDensity} />
-	</div>
 	{#if columnShow}
 		<div
 			class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-300 text-center dark:bg-surface-700"
 		>
 			<div class="text-white dark:text-primary-500">Drag & Drop Columns / Click to hide</div>
+
 			<!-- toggle all -->
 			<div class="flex w-full items-center justify-center">
 				<label class="mr-3">
@@ -359,24 +360,24 @@
 					on:consider={handleDndConsider}
 					on:finalize={handleDndFinalize}
 				>
-					{#each columns as column (column.id)}
+					{#each items as item (item.id)}
 						<button
 							class="chip {$table
 								.getAllLeafColumns()
-								.find((col) => col.id == column.id)
+								.find((col) => col.id == item.id)
 								?.getIsVisible() ?? false
 								? 'variant-filled-secondary'
 								: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
 							animate:flip={{ duration: flipDurationMs }}
 							on:click={() => {
-								getColumnByName(column.id)?.toggleVisibility();
+								getColumnByName(item.id)?.toggleVisibility();
 								localStorage.setItem(
-									`TanstackColumnVisibility`,
+									`TanstackColumnVisibility-${dataSourceName}`,
 									JSON.stringify(
-										columns.map((column) => {
+										items.map((item) => {
 											return {
-												accessorKey: column.id,
-												visible: getColumnByName(column.id)?.getIsVisible()
+												accessorKey: item.id,
+												visible: getColumnByName(item.id)?.getIsVisible()
 											};
 										})
 									)
@@ -385,17 +386,18 @@
 						>
 							{#if $table
 								.getAllLeafColumns()
-								.find((col) => col.id == column.id)
+								.find((col) => col.id == item.id)
 								?.getIsVisible() ?? false}
 								<span><iconify-icon icon="fa:check" /></span>
 							{/if}
-							<span class="ml-2 capitalize">{column.Header}</span>
+							<span class="ml-2 capitalize">{item.Header}</span>
 						</button>
 					{/each}
 				</section>
 			</div>
 		</div>
 	{/if}
+
 	<!-- Tanstack Table -->
 	<div class="table-container">
 		<table
@@ -407,57 +409,67 @@
 		>
 			<!-- Tanstack Header -->
 			<thead class="text-primary-500">
-				<th class="border w-8">
-					<TanstackIcons bind:checked={SelectAll} on:click={() => (SelectAll = !SelectAll)} />
-				</th>
+				{#each $table.getHeaderGroups() as headerGroup}
+					<tr class="divide-x border">
+						<th class="border w-8">
+							<TanstackIcons bind:checked={SelectAll} on:click={() => (SelectAll = !SelectAll)} />
+						</th>
+						{#each headerGroup.headers as header}
+							<th>
+								{#if !header.isPlaceholder}
+									<button
+										class:cursor-pointer={header.column.getCanSort()}
+										class:select-none={header.column.getCanSort()}
+										on:keydown
+										on:click={header.column.getToggleSortingHandler()}
+									>
+										<svelte:component
+											this={flexRender(header.column.columnDef.header, header.getContext())}
+										/>
+										{#if header.column.getIsSorted() === 'asc'}
+											<iconify-icon icon="material-symbols:arrow-upward-rounded" width="16" />
+										{:else if header.column.getIsSorted() === 'desc'}
+											<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
+										{/if}
+									</button>
 
-				{#each columns as column}
-					<th
-						class="border"
-						on:click={() =>
-							setSorting((oldSorting) => {
-								const isDesc = oldSorting.find((d) => d.id === column.id)?.desc;
-								return [{ id: column.id, desc: !isDesc }];
-							})}
-					>
-						{column.Header}
-						{#if sorting.find((d) => d.id === column.id)}
-							{#if sorting.find((d) => d.id === column.id).desc}
-								<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
-							{:else}
-								<iconify-icon icon="material-symbols:arrow-upward-rounded" width="16" />
-							{/if}
-						{/if}
-						{#if filterShow}
-							<div transition:slide|global>
-								<FloatingInput
-									type="text"
-									icon="material-symbols:search-rounded"
-									label="Filter ..."
-									bind:value={filterValues[column.accessor]}
-									on:click
-								/>
-							</div>
-						{/if}
-					</th>
+									{#if filterShow}
+										<div transition:slide|global>
+											<FloatingInput
+												type="text"
+												icon="material-symbols:search-rounded"
+												label="Filter ..."
+												on:input={(e) => {
+													// Update filter value for this column
+													header.column.setFilter(e.target.value);
+												}}
+											/>
+										</div>
+									{/if}
+								{/if}
+							</th>
+						{/each}
+					</tr>
 				{/each}
 			</thead>
 
 			<!-- Tanstack Body -->
 			<tbody>
-				{#each filteredData as row}
+				{#each $table.getRowModel().rows as row, index}
 					<tr>
 						<!-- TickRows -->
 						<td class="border">
 							<TanstackIcons
-								bind:checked={$selectedMap[row._id]}
-								on:click={() => selectedMap.update((map) => ({ ...map, [row._id]: !map[row._id] }))}
+								bind:checked={$selectedMap[row.id]}
+								on:click={() => selectedMap.update((map) => ({ ...map, [row.id]: !map[row.id] }))}
 								class="ml-1"
 							/>
 						</td>
 
-						{#each columns as column}
-							<td class="border">{row[column.accessor]}</td>
+						{#each row.getVisibleCells() as cell}
+							<td class="border">
+								{@html cell.getValue()}
+							</td>
 						{/each}
 					</tr>
 				{/each}
@@ -501,9 +513,9 @@
 				{$LL.TANSTACK_Total()}
 
 				{#if $table.getPrePaginationRowModel().rows.length === 1}
-					{$LL.TANSTACK_Row()})
+					{$LL.TANSTACK_Row()}
 				{:else}
-					{$LL.TANSTACK_Rows()})
+					{$LL.TANSTACK_Rows()}
 				{/if}
 			</div>
 
