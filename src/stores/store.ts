@@ -22,6 +22,9 @@ systemLanguage.subscribe((val) => {
 	setLocale(val as Locales);
 });
 
+// TranslationStatus.svelte
+export const translationStatusOpen = writable(false);
+
 // collective data of collection
 export const collectionValue: any = writable({});
 export const mode: Writable<

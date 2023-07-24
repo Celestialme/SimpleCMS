@@ -8,7 +8,6 @@
 import type { RequestHandler } from './$types';
 import fs from 'fs';
 import mime from 'mime-types';
-import { error } from '@sveltejs/kit';
 
 import {
 	PUBLIC_MEDIA_FOLDER,

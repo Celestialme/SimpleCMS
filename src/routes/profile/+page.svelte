@@ -18,7 +18,7 @@
 	<ChangePassword {data} />
 </div>
 
-<style>
+<style lang="postcss">
 	.body {
 		position: fixed;
 		width: 100vw;

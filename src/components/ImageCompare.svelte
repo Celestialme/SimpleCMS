@@ -77,7 +77,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.container {
 		overflow: hidden;
 		position: relative;

@@ -58,6 +58,7 @@
 
 	import FloatingInput from './system/inputs/floatingInput.svelte';
 	import EntryListMultiButton from './EntryList_MultiButton.svelte';
+	import TranslationStatus from './TranslationStatus.svelte';
 
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
@@ -66,7 +67,6 @@
 	let sorting: any = [];
 	let columnOrder: never[] = [];
 	let columnVisibility = {};
-	let globalFilter = '';
 
 	// This function refreshes the data displayed in a table by fetching new data from an API endpoint and updating the tableData and options variables.
 	let refresh = async (collection: typeof $collection) => {
@@ -163,32 +163,6 @@
 		}));
 	};
 
-	const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-		// // Rank the item
-		// const itemRank = rankItem(row.getValue(columnId), value);
-		// // Store the itemRank info
-		// addMeta({
-		// 	itemRank
-		// });
-		// // Return if the item should be filtered in/out
-		// return itemRank.passed;
-	};
-
-	const globalFilterFn: FilterFn<any> = (row, columnId, value, addMeta) => {
-		// if (Array.isArray(value)) {
-		// 	if (value.length === 0) return true;
-		// 	return value.includes(row.getValue(columnId));
-		// }
-		// // Rank the item
-		// const itemRank = rankItem(row.getValue(columnId), value);
-		// // Store the itemRank info
-		// addMeta({
-		// 	itemRank
-		// });
-		// // Return if the item should be filtered in/out
-		// return itemRank.passed;
-	};
-
 	function setCurrentPage(page: number) {
 		options.update((old: any) => {
 			return {
@@ -234,6 +208,8 @@
 		accessorKey: field.label
 	}));
 
+	console.log('defaultColumns', defaultColumns);
+
 	const storedValue = localStorage.getItem(`TanstackConfiguration-${$collection.name}`);
 	const columns = storedValue ? JSON.parse(storedValue) : defaultColumns;
 	const options = writable<TableOptions<any>>({
@@ -241,16 +217,12 @@
 		columns: columns.map((item) => {
 			return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
 		}),
-		filterFns: {
-			fuzzy: fuzzyFilter
-		},
+
 		state: {
 			sorting,
-			columnOrder,
-			globalFilter
+			columnOrder
 		},
 		onSortingChange: setSorting,
-		globalFilterFn: globalFilterFn,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		onColumnOrderChange: setColumnOrder,
@@ -309,6 +281,8 @@
 		isVisible: column.getIsVisible() // Set initial visibility state based on column visibility
 	}));
 
+	//console.log('EntryList item', items);
+
 	function handleDndConsider(e: {
 		detail: { items: { id: string; name: string; isVisible: boolean }[] };
 	}) {
@@ -335,9 +309,9 @@
 				...item,
 				getToggleVisibilityHandler() {
 					return () => {
-						const newOrder = { ...$table.setColumnOrder() };
-						newOrder[item.id] = !newOrder[item.id];
-						$table.setColumnOrder(newOrder);
+						const newVisibility = { ...$table.getState().columnVisibility };
+						newVisibility[item.id] = !newVisibility[item.id];
+						$table.setColumnVisibility(newVisibility);
 					};
 				}
 			};
@@ -380,28 +354,15 @@
 			...item,
 			getToggleVisibilityHandler() {
 				return () => {
-					const newOrder = { ...$table.setColumnOrder() };
-					newOrder[item.id] = !newOrder[item.id];
-					$table.setColumnVisibility(newOrder);
+					const newVisibility = { ...$table.getState().columnVisibility };
+					newVisibility[item.id] = !newVisibility[item.id];
+					$table.setColumnVisibility(newVisibility);
 				};
 			}
 		};
 	});
 	// console.log('columnOrder', columnOrder);
 	// console.log('items', items);
-
-	function searchGrid(searchValue) {
-		// Get the data displayed in the grid
-		let gridData = images;
-
-		// Filter the data based on the search value
-		let filteredData = gridData.filter((item) => {
-			return item.name.toLowerCase().includes(searchValue.toLowerCase());
-		});
-
-		// Update the data displayed in the grid with the filtered data
-		images = filteredData;
-	}
 
 	function getColumnByName(name) {
 		return $table.getAllLeafColumns().find((col) => {
@@ -466,6 +427,7 @@
 
 	<div class="relative hidden items-center justify-center gap-2 sm:flex">
 		<TanstackFilter bind:searchValue bind:filterShow bind:columnShow bind:density {updateDensity} />
+		<TranslationStatus />
 	</div>
 
 	<!-- MultiButton -->
@@ -480,10 +442,10 @@
 		: 'block'} sm:hidden"
 >
 	<TanstackFilter bind:searchValue bind:filterShow bind:columnShow bind:density {updateDensity} />
+	<TranslationStatus />
 </div>
 
 {#if columnShow}
-	<!-- transition:slide|global -->
 	<div
 		class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-300 text-center dark:bg-surface-700"
 	>
@@ -507,13 +469,11 @@
 				on:finalize={handleDndFinalize}
 			>
 				{#each items as item (item.id)}
-					<div
+					<button
 						class="chip {$table
 							.getAllLeafColumns()
-							.find((col) => {
-								return col.id == item.name;
-							})
-							.getIsVisible()
+							.find((col) => col.id == item.name)
+							?.getIsVisible() ?? false
 							? 'variant-filled-secondary'
 							: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
 						animate:flip={{ duration: flipDurationMs }}
@@ -534,14 +494,12 @@
 					>
 						{#if $table
 							.getAllLeafColumns()
-							.find((col) => {
-								return col.id == item.name;
-							})
-							.getIsVisible()}
+							.find((col) => col.id == item.name)
+							?.getIsVisible() ?? false}
 							<span><iconify-icon icon="fa:check" /></span>
 						{/if}
 						<span class="ml-2 capitalize">{item.name}</span>
-					</div>
+					</button>
 				{/each}
 			</section>
 		</div>
@@ -562,7 +520,7 @@
 			? ''
 			: 'table-comfortable'}"
 	>
-		<thead class="!text-primary">
+		<thead class="text-primary-500">
 			{#each $table.getHeaderGroups() as headerGroup}
 				<tr class="divide-x divide-surface-400 border-b">
 					<th class="!w-6">
@@ -576,7 +534,7 @@
 					{#each headerGroup.headers as header}
 						<th class="">
 							{#if !header.isPlaceholder}
-								<div
+								<button
 									class:cursor-pointer={header.column.getCanSort()}
 									class:select-none={header.column.getCanSort()}
 									on:keydown
@@ -590,7 +548,7 @@
 									{:else if header.column.getIsSorted() === 'desc'}
 										<iconify-icon icon="material-symbols:arrow-downward-rounded" width="16" />
 									{/if}
-								</div>
+								</button>
 								{#if filterShow}
 									<div transition:slide|global>
 										<FloatingInput

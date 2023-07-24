@@ -69,7 +69,7 @@
 
 <!-- {/if} -->
 
-<style>
+<style lang="postcss">
 	.body {
 		display: flex;
 		position: fixed;

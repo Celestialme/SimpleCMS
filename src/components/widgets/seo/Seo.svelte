@@ -509,7 +509,7 @@
 	{/each}
 </ul>
 
-<style>
+<style lang="postcss">
 	.input-label {
 		color: gray;
 	}

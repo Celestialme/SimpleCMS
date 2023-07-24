@@ -17,6 +17,14 @@ This FloatingInput component has the following properties:
  -->
 
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+
+	function handleClick(event) {
+		event.stopPropagation();
+		dispatch('click', event);
+	}
+
 	// Define an interface for the input properties
 	interface InputProps {
 		disabled?: boolean;
@@ -89,6 +97,7 @@ This FloatingInput component has the following properties:
 		type={showPassword ? 'text' : type}
 		on:input={handleInput}
 		on:keydown
+		on:click={handleClick}
 		{id}
 		{autocomplete}
 		class="{inputClass} peer relative block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-surface-300 !bg-transparent pl-6 !text-{textColor} focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-400 dark:focus:border-tertiary-500"

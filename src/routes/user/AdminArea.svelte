@@ -1,6 +1,4 @@
 <script lang="ts">
-	import TanstackTable from '@src/components/TanstackTable.svelte';
-
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -32,6 +30,61 @@
 		modalStore.trigger(d);
 	}
 
+	// TanstackTable
+	import TanstackTable from '@src/components/TanstackTable.svelte';
+
+	let data = [
+		{
+			_id: '9rK2Lr9pLJjS5CK',
+			email: 'info@asset-trade.de',
+			role: 'admin',
+			username: 'Rar9',
+			createdAt: new Date('2023-07-18T19:39:31.420Z'),
+			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+			__v: 0,
+			authMethod: 'password'
+		},
+		{
+			_id: '2',
+			email: 'bob@example.com',
+			role: 'viewer',
+			username: 'Bob',
+			createdAt: new Date('2023-07-18T19:39:31.420Z'),
+			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+			__v: 0,
+			authMethod: 'password'
+		},
+		{
+			_id: '3',
+			email: 'charlie@example.com',
+			role: 'viewer',
+			username: 'Charlie',
+			createdAt: new Date('2023-07-18T19:39:31.420Z'),
+			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+			__v: 0,
+			authMethod: 'password'
+		},
+		{
+			_id: '4',
+			email: 'test@example.com',
+			role: 'viewer',
+			username: 'Ctestharlie',
+			createdAt: new Date('2023-07-18T19:39:31.420Z'),
+			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+			__v: 0,
+			authMethod: 'password'
+		}
+	];
+
+	let columns = [
+		{ Header: 'ID', accessor: '_id', id: '_id' },
+		{ Header: 'Username', accessor: 'username', id: 'username' },
+		{ Header: 'Email', accessor: 'email', id: 'email' },
+		{ Header: 'Role', accessor: 'role', id: 'role' },
+		{ Header: 'Created At', accessor: 'createdAt', id: 'createdAt' },
+		{ Header: 'Updated At', accessor: 'updatedAt', id: 'updatedAt' }
+	];
+
 	let showUserList = true;
 </script>
 
@@ -53,8 +106,6 @@
 
 	{#if showUserList}
 		<!-- <UserList /> -->
-		<p class="mt-3 border text-center">Display Available Users for edit/remove</p>
-		table
-		<TanstackTable />
+		<TanstackTable {data} {columns} tableData={data} dataSourceName="AdminArea" />
 	{/if}
 </div>

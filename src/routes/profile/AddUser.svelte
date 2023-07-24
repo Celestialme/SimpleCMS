@@ -63,7 +63,7 @@
 	<button class="btn variant-filled-primary mt-10">Create</button>
 </form>
 
-<style>
+<style lang="postcss">
 	.invalid {
 		color: red;
 		font-size: 0.8rem;

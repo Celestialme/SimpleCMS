@@ -57,7 +57,7 @@
 	</form>
 </div>
 
-<style>
+<style lang="postcss">
 	.invalid {
 		color: red;
 		font-size: 0.8rem;
