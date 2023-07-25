@@ -22,6 +22,7 @@
 	function handleChange(event) {
 		const selectedLanguage = event.target.value.toLowerCase();
 		contentLanguage.set(selectedLanguage);
+		// console.log('selectedLanguage', selectedLanguage);
 	}
 
 	async function saveData() {
@@ -98,6 +99,7 @@
 				</button>
 			{:else}
 				<!-- only show Delete Content -->
+				test
 				<button type="button" on:click={$deleteEntry} class="btn-icon variant-filled-error">
 					<iconify-icon icon="icomoon-free:bin" width="24" />
 				</button>

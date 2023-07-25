@@ -13,8 +13,7 @@
 	// If all of these checks have an impact of 3, then you should get a maximum score of 24 (8 checks * 3 points per check)
 
 	import type { FieldType } from '.';
-	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
-	import { contentLanguage } from '@src/stores/store';
+	import { contentLanguage, defaultContentLanguage } from '@src/stores/store';
 	import { mode, entryData } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 
@@ -30,7 +29,8 @@
 	export let value = $entryData[fieldName] || {};
 
 	let _data = $mode == 'create' ? {} : value;
-	let _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGES;
+	// console.log(_data);
+	let _language = field?.translated ? $contentLanguage : $defaultContentLanguage;
 
 	export const WidgetData = async () => _data;
 
@@ -249,17 +249,17 @@
 		score = Object.values(scores).reduce((acc, x) => acc + x);
 
 		// Debug code to log the scores for each check
-		console.log('Title score:', scores.title_score);
-		console.log('Title numbers score:', scores.title_numbers_score);
-		console.log('Title power words score:', scores.title_power_words_score);
-		console.log('Title CTA score:', scores.title_CTA_score);
+		// console.log('Title score:', scores.title_score);
+		// console.log('Title numbers score:', scores.title_numbers_score);
+		// console.log('Title power words score:', scores.title_power_words_score);
+		// console.log('Title CTA score:', scores.title_CTA_score);
 
-		console.log('Description score:', scores.description_score);
-		console.log('Sentences score:', scores.sentences_score);
-		console.log('Description power words score:', scores.description_power_words_score);
-		console.log('Description CTA score:', scores.description_CTA_score);
+		// console.log('Description score:', scores.description_score);
+		// console.log('Sentences score:', scores.sentences_score);
+		// console.log('Description power words score:', scores.description_power_words_score);
+		// console.log('Description CTA score:', scores.description_CTA_score);
 
-		console.log('Total score:', score);
+		// console.log('Total score:', score);
 
 		return suggestions;
 	}
@@ -294,13 +294,14 @@
 			</div>
 		</div></label
 	>
+	<!-- TODO:specify Title data save -->
 	<input
 		id="title-input"
 		type="text"
 		class="input"
 		placeholder={$LL.WIDGET_Seo_Suggestion_SeoTitle()}
 		required
-		bind:value={title}
+		bind:value={_data[_language]}
 		on:input={handleTitleChange}
 	/>
 </div>
@@ -333,13 +334,14 @@
 			</div>
 		</div>
 	</label>
+	<!-- TODO:specify Description data save -->
 	<textarea
 		id="description-input"
 		name="description-input"
 		placeholder={$LL.WIDGET_Seo_Suggestion_SeoDescription()}
 		rows="2"
 		cols="50"
-		bind:value={description}
+		bind:value={_data[_language]}
 		on:input={handleDescriptionChange}
 		class="input"
 	/>

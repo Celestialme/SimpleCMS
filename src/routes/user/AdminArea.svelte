@@ -89,7 +89,7 @@
 	];
 
 	let items = [
-		{ Header: 'ID', accessorKey: '_id', id: '_id' },
+		// { Header: 'ID', accessorKey: '_id', id: '_id' },
 		{ Header: 'Username', accessorKey: 'username', id: 'username' },
 		{ Header: 'Email', accessorKey: 'email', id: 'email' },
 		{ Header: 'Role', accessorKey: 'role', id: 'role' },

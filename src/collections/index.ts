@@ -6,7 +6,11 @@ import Relation from './Relation';
 import WidgetTest from './WidgetTest';
 import imageArray from './imageArray';
 
+//Don not EDIT due to dynamic Import
+// ------- BEGIN section that gets dynamically updated --------
 // List of Collections
+// ------- END section that gets updated --------
+
 import { writable } from 'svelte/store';
 import '@src/utils/collectionUpdater';
 
@@ -50,12 +54,12 @@ let categories = [
 	// 	id: 3,
 	// 	name: 'Images',
 	// 	icon: 'bi:images',
-	// 	collections: [{ ...ImageArray, id: 3.1 }]
+	// 	collections: [{ ...imageArray, id: 3.1 }]
 	// }
 ];
 
 // TODO: Allow Unassigned collection to be displayed as well
 export { categories };
-let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+const collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
 export default collections;
-export let collection = writable(collections?.[0]); // current collection
+export const collection = writable(collections?.[0]); // current collection

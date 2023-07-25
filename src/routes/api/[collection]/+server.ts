@@ -21,11 +21,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 
 	try {
 		// Find documents in collection after skipping skip documents and limiting to length documents
-		const entryList: Document[] = await collection
-			.find()
-			.select('createdAt updatedAt revision')
-			.skip(skip)
-			.limit(length);
+		const entryList: Document[] = await collection.find().skip(skip).limit(length);
 		// Count total number of documents in collection
 		const totalCount = await collection.countDocuments();
 		// Return new Response object containing JSON stringified object with two properties: entryList and totalCount

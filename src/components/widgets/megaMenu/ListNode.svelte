@@ -21,7 +21,9 @@
 		<div class="arrow" class:expanded />
 	{/if}
 	{self?.Header[$contentLanguage]}
+
 	{#if level < maxDepth}
+		<!-- TODO: level +2 not working -->
 		<button
 			type="button"
 			on:click={() => {

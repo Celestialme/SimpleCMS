@@ -78,6 +78,7 @@
 		data = await fetch(`/api/${$collection.name}?page=${1}&length=${50}`)
 			.then((response) => response.json())
 			.then((data) => data as { entryList: [any]; totalCount: number });
+		console.log(data);
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
@@ -590,6 +591,7 @@
 					on:keydown
 					on:click={() => {
 						entryData.set(data?.entryList[index]);
+						//console.log(data)
 						mode.set('edit');
 						handleSidebarToggle();
 					}}

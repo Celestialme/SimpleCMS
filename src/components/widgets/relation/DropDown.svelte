@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { FieldType } from '.';
-	import { entryData } from '@src/stores/store';
+	import { contentLanguage, entryData } from '@src/stores/store';
 	export let dropDownData: any[] = [];
 
 	export let selected: { display: any; _id: any } | undefined = undefined;
@@ -13,7 +13,7 @@
 	//console.log(dropDownData);
 	Promise.all(
 		dropDownData.map(async (item) => ({
-			display: await field?.display(item, field, $entryData),
+			display: await field?.display(item, field, $entryData, $contentLanguage),
 			_id: item._id
 		}))
 	).then((res) => (options = res));

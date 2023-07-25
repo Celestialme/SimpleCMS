@@ -45,7 +45,7 @@
 	{/key}
 
 	<button type="button" on:click={saveLayer} class="btn variant-filled-primary">
-		<iconify-icon icon="material-symbols:save" width="24" />Save
+		<iconify-icon icon="material-symbols:save" width="24" />Next
 	</button>
 {/if}
 {#if _data && depth == 0}

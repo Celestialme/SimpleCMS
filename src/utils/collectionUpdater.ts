@@ -34,7 +34,7 @@ export async function setup() {
 			const name = file.replace('.ts', '');
 			imports += `import ${name} from './${name}';\n`;
 		}
-		console.log(imports + '\n' + index);
+		//console.log(imports + '\n' + index);
 
 		// Write the new import statements and original contents to the ./src/collections/index.ts file
 		if (!compare(files, saveFiles)) {

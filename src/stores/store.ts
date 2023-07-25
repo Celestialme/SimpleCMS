@@ -14,6 +14,9 @@ export const systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE)
 
 // Create a writable store for contentLanguage with initial value of PUBLIC_CONTENT_LANGUAGES
 export const contentLanguage = writable(Object.keys(JSON.parse(PUBLIC_CONTENT_LANGUAGES))[0]);
+export const defaultContentLanguage = writable(
+	Object.keys(JSON.parse(PUBLIC_CONTENT_LANGUAGES))[0]
+);
 
 // Subscribe to changes in credentials store and update local storage accordingly
 loadAllLocales(); // Load all locales

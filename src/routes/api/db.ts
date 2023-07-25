@@ -5,10 +5,11 @@ import { fieldsToSchema } from '@src/utils/utils';
 import { dev } from '$app/environment';
 
 import { setup } from '@src/utils/collectionUpdater';
+
 setup();
 
 // Lucia
-import lucia, { type Session, type User } from 'lucia-auth';
+import lucia from 'lucia-auth';
 import adapter from '@lucia-auth/adapter-mongoose';
 import { session, key, UserSchema } from '@src/collections/Auth';
 import { sveltekit } from 'lucia-auth/middleware';
@@ -30,9 +31,9 @@ mongoose
 	)
 	.catch((error) => console.error('Error connecting to database:', error));
 
-let collections: { [Key: string]: mongoose.Model<any> } = {};
+const collections: { [Key: string]: mongoose.Model<any> } = {};
 
-for (let schema of schemas) {
+for (const schema of schemas) {
 	const schema_object = new mongoose.Schema(
 		{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
 		{

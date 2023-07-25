@@ -22,17 +22,32 @@ let schema: Schema = {
 				{
 					fields: [
 						widgets.Text({
-							label: 'Header'
+							label: 'Header',
+							translated: false
 						})
 					]
 				},
 				{
 					fields: [
 						widgets.Text({
-							label: 'Header'
+							label: 'Header',
+							translated: false
 						}),
 						widgets.Text({
-							label: 'Header'
+							label: 'Data',
+							translated: false
+						})
+					]
+				},
+				{
+					fields: [
+						widgets.Text({
+							label: 'Header',
+							translated: false
+						}),
+						widgets.Text({
+							label: 'Data',
+							translated: false
 						})
 					]
 				}
