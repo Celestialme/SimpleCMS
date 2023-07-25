@@ -6,7 +6,7 @@ import { redirect } from '@sveltejs/kit';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
 import { auth } from './api/db';
 
-export async function load({ cookies, route, params }) {
+export async function load({ cookies }) {
 	//console.log('load function called');
 	const session = cookies.get(SESSION_COOKIE_NAME) as string;
 	const user = await validate(auth, session);

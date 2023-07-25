@@ -1,16 +1,17 @@
 <script lang="ts">
+	import { toggleLeftSidebar } from '@src/stores/store';
+
 	interface PageTitleProps {
 		name: string;
-		icon?: string;
-		iconColor?: string;
-		iconSize?: string;
+		icon?: string | undefined;
+		iconColor?: string | undefined;
+		iconSize?: string | undefined;
 	}
 
-	export let icon: PageTitleProps['icon'];
 	export let name: PageTitleProps['name'];
+	export let icon: PageTitleProps['icon'];
 	export let iconColor: PageTitleProps['iconColor'] = 'text-error-500';
 	export let iconSize: PageTitleProps['iconSize'] = '30';
-	import { toggleLeftSidebar } from '@src/stores/store';
 </script>
 
 <div class="flex items-center">

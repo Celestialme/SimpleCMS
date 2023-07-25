@@ -2,6 +2,7 @@
 	import Fields from '@src/components/Fields.svelte';
 	import { currentChild, type FieldType } from '.';
 	import { extractData, getFieldName } from '@src/utils/utils';
+
 	import ListNode from './ListNode.svelte';
 	import { entryData, mode } from '@src/stores/store';
 
@@ -22,8 +23,8 @@
 		} else if ($mode == 'edit') {
 			$currentChild = { ..._data, ...(await extractData(fieldsData)) };
 			console.log($currentChild);
-		} else if (_data.children) {
-			_data.children.push({ ...(await extractData(fieldsData)) });
+		} else if ($mode == 'create' && $currentChild.children) {
+			$currentChild.children.push({ ...(await extractData(fieldsData)), children: [] });
 		}
 		_data = _data;
 		//console.log(_data);
@@ -44,8 +45,12 @@
 		/>
 	{/key}
 
-	<button type="button" on:click={saveLayer} class="btn variant-filled-primary">
-		<iconify-icon icon="material-symbols:save" width="24" />Next
+	<button
+		type="button"
+		on:click={saveLayer}
+		class="btn variant-filled-primary dark:text-white mb-4"
+	>
+		<iconify-icon icon="material-symbols:save" width="24" class="dark:text-white" />Next
 	</button>
 {/if}
 {#if _data && depth == 0}

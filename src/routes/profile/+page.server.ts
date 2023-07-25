@@ -10,14 +10,14 @@ import type { User } from '@src/collections/Auth';
 // This function loads the data for the page.
 export async function load(event) {
 	// Get the current user's session.
-	let session = event.cookies.get(SESSION_COOKIE_NAME) as string;
+	const session = event.cookies.get(SESSION_COOKIE_NAME) as string;
 
 	// Validate the user's session.
-	let user = await validate(auth, session);
+	const user = await validate(auth, session);
 
 	// Validate the form data.
-	let addUserForm = await superValidate(event, addUserTokenSchema);
-	let changePasswordForm = await superValidate(event, changePasswordSchema);
+	const addUserForm = await superValidate(event, addUserTokenSchema);
+	const changePasswordForm = await superValidate(event, changePasswordSchema);
 
 	// If the user is logged in, return the data for the page.
 	if (user.status == 200) {
@@ -35,20 +35,20 @@ export async function load(event) {
 export const actions: Actions = {
 	// This action adds a new user to the system.
 	addUser: async (event) => {
-		let addUserForm = await superValidate(event, addUserTokenSchema);
-		let email = addUserForm.data.email;
-		let role = addUserForm.data.role;
-		let expiresIn = addUserForm.data.expiresIn;
+		const addUserForm = await superValidate(event, addUserTokenSchema);
+		const email = addUserForm.data.email;
+		const role = addUserForm.data.role;
+		const expiresIn = addUserForm.data.expiresIn;
 
 		// Check if the email address is already registered.
-		let key = await auth.getKey('email', email).catch(() => null);
+		const key = await auth.getKey('email', email).catch(() => null);
 		if (key) {
 			// The email address is already registered.
 			return { form: addUserForm, message: 'This email is already registered' };
 		}
 
 		// Create a new user.
-		let user: User = await auth
+		const user: User = await auth
 			.createUser({
 				primaryKey: {
 					providerId: 'email',
@@ -93,7 +93,7 @@ export const actions: Actions = {
 			length: 16 // default
 		});
 
-		let token = (await tokenHandler.issue(user.id)).toString();
+		const token = (await tokenHandler.issue(user.id)).toString();
 
 		// TODO: Add svelte email
 		// Send the token to the user via email.
@@ -105,10 +105,10 @@ export const actions: Actions = {
 	// This action changes the password for the current user.
 	changePassword: async (event) => {
 		// Validate the form data.
-		let changePasswordForm = await superValidate(event, changePasswordSchema);
-		let password = changePasswordForm.data.password;
-		let session = event.cookies.get(SESSION_COOKIE_NAME) as string;
-		let user = await validate(auth, session);
+		const changePasswordForm = await superValidate(event, changePasswordSchema);
+		const password = changePasswordForm.data.password;
+		const session = event.cookies.get(SESSION_COOKIE_NAME) as string;
+		const user = await validate(auth, session);
 
 		// The user's session is invalid.
 		if (user.status != 200) {
@@ -126,7 +126,7 @@ export const actions: Actions = {
 		await auth.updateKeyPassword('email', key.providerUserId, password);
 
 		// Update the user's authentication method.
-		let authMethod = 'password';
+		const authMethod = 'password';
 		await auth.updateUserAttributes(key.userId, { authMethod });
 
 		// Return the form data.

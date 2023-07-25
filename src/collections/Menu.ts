@@ -46,7 +46,7 @@ let schema: Schema = {
 							translated: false
 						}),
 						widgets.Text({
-							label: 'Data',
+							label: 'Data2',
 							translated: false
 						})
 					]

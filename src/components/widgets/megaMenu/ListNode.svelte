@@ -22,18 +22,21 @@
 	{/if}
 	{self?.Header[$contentLanguage]}
 
-	{#if level < maxDepth}
-		<!-- TODO: level +2 not working -->
+	{#if level < maxDepth - 1}
 		<button
 			type="button"
 			on:click={() => {
+				$currentChild = self;
 				depth = level + 1;
 				showFields = true;
 				mode.set('create');
 			}}
-			class="btn btn-sm">+</button
+			class="btn-icon variant-soft-secondary"
 		>
+			<iconify-icon icon="icons8:plus" width="28" />
+		</button>
 	{/if}
+
 	<button
 		type="button"
 		on:click={() => {
@@ -43,11 +46,14 @@
 			console.log(self);
 			showFields = true;
 		}}
-		class="btn btn-sm {level == 0 ? 'ml-auto' : ''}">✎</button
+		class="btn-icon variant-soft-tertiary{level == 0 ? 'ml-auto' : ''}"
 	>
+		<iconify-icon icon="mdi:pen" width="28" />
+	</button>
 </button>
+
 {#if self.children?.length > 0 && expanded}
-	<ul>
+	<ul class=" border">
 		{#each self.children as child}
 			<li class="cursor-pointer">
 				<svelte:self
@@ -55,6 +61,7 @@
 					level={level + 1}
 					bind:depth
 					bind:showFields
+					{maxDepth}
 					on:keydown
 					on:click={() => {
 						depth = level;
