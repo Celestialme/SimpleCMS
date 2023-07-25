@@ -127,7 +127,7 @@
 				<!-- Collection Children -->
 				<svelte:fragment slot="content">
 					<!-- filtered by User Role Permission -->
-					{#each category.collections.filter((c) => c?.permissions?.[$user.role]?.read != false) as _collection, index}
+					{#each category.collections.filter((c) => c?.permissions?.[$user?.role]?.read != false) as _collection, index}
 						{#if $toggleLeftSidebar === 'full'}
 							<!-- switchSideBar expanded -->
 							<div

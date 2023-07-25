@@ -1,11 +1,7 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
 
-	// TanstackFilter
-	let searchValue = '';
-	let filterShow = false;
-	let columnShow = false;
-	let density = 'normal';
+	export let density = 'normal';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -31,6 +27,11 @@
 	export let items: any[];
 	export let dataSourceName: string;
 
+	// TanstackFilter export
+	export let searchValue = '';
+	export let filterShow = false;
+	export let columnShow = false;
+
 	let filterValues = {};
 	let sorting: any = [];
 	let columnOrder: any[] = [];
@@ -48,6 +49,7 @@
 	import TanstackIcons from './TanstackIcons.svelte';
 
 	import Loading from './Loading.svelte';
+	import TanstackFilter from './TanstackFilter.svelte';
 	export let isLoading = false;
 	let loadingTimer: any; // recommended time of around 200-300ms
 
@@ -376,6 +378,7 @@
 									JSON.stringify(
 										items.map((item) => {
 											return {
+												// Headers: item.Headers,
 												accessorKey: item.id,
 												visible: getColumnByName(item.id)?.getIsVisible()
 											};
@@ -476,7 +479,8 @@
 			</tbody>
 
 			<!-- Tanstack Footer -->
-			<tfoot>
+			<!-- TODO: only use if footer if required -->
+			<!-- <tfoot>
 				{#each $table.getFooterGroups() as footerGroup}
 					<tr>
 						{#each footerGroup.headers as header}
@@ -490,7 +494,7 @@
 						{/each}
 					</tr>
 				{/each}
-			</tfoot>
+			</tfoot> -->
 		</table>
 
 		<!-- Pagination Desktop -->

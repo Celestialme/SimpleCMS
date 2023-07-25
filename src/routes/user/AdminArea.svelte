@@ -33,6 +33,8 @@
 		modalStore.trigger(d);
 	}
 
+	let showMore = false;
+
 	// TanstackFilter
 	import TanstackFilter from '@src/components/TanstackFilter.svelte';
 	let searchValue = '';
@@ -43,6 +45,10 @@
 
 	// TanstackTable
 	import TanstackTable from '@src/components/TanstackTable.svelte';
+
+	// Lucia
+	// import { page } from '$app/stores';
+	// const user = $page.data.user;
 
 	// AdminUser Data
 	let data = [
@@ -88,8 +94,9 @@
 		}
 	];
 
+	// TODO: Update cookie if items change
 	let items = [
-		// { Header: 'ID', accessorKey: '_id', id: '_id' },
+		{ Header: 'ID', accessorKey: '_id', id: '_id' },
 		{ Header: 'Username', accessorKey: 'username', id: 'username' },
 		{ Header: 'Email', accessorKey: 'email', id: 'email' },
 		{ Header: 'Role', accessorKey: 'role', id: 'role' },
@@ -118,22 +125,52 @@
 
 	{#if showUserList}
 		<!-- <UserList /> -->
-		<div class="flex justify-between mt-2">
-			<TanstackFilter
-				bind:searchValue
-				bind:searchShow
-				bind:filterShow
-				bind:columnShow
-				bind:density
-			/>
-			<Multibutton />
+		<div class="flex flex-col sm:flex-row items-center justify-between my-2">
+			<div class="hidden sm:flex">
+				<TanstackFilter
+					bind:searchValue
+					bind:searchShow
+					bind:filterShow
+					bind:columnShow
+					bind:density
+				/>
+			</div>
+
+			<div class="flex items-center justify-between">
+				<button
+					type="button"
+					on:keydown
+					on:click={() => (showMore = !showMore)}
+					class="btn-icon variant-ghost-surface sm:hidden"
+				>
+					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
+				</button>
+
+				<Multibutton />
+			</div>
+
+			{#if showMore}
+				<div class="sm:hidden">
+					<TanstackFilter
+						bind:searchValue
+						bind:searchShow
+						bind:filterShow
+						bind:columnShow
+						bind:density
+					/>
+				</div>
+			{/if}
 		</div>
 
-		<!-- <p>searchValue: {searchValue}</p>
-		<p>filterShow: {filterShow}</p>
-		<p>columnShow: {columnShow}</p>
-		<p>density: {density}</p> -->
-
-		<TanstackTable {data} {items} tableData={data} dataSourceName="AdminArea" />
+		<TanstackTable
+			{data}
+			{items}
+			tableData={data}
+			dataSourceName="AdminArea"
+			bind:searchValue
+			bind:filterShow
+			bind:columnShow
+			bind:density
+		/>
 	{/if}
 </div>
