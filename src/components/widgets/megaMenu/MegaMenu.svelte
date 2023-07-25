@@ -20,8 +20,8 @@
 		} else if ($mode == 'edit') {
 			$currentChild = { ..._data, ...(await extractData(fieldsData)) };
 			console.log($currentChild);
-		} else if (_data.children) {
-			_data.children.push({ ...(await extractData(fieldsData)) });
+		} else if ($mode == 'create' && $currentChild.children) {
+			$currentChild.children.push({ ...(await extractData(fieldsData)), children: [] });
 		}
 		_data = _data;
 		console.log(_data);

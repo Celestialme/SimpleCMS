@@ -25,6 +25,18 @@ let schema: Schema = {
 							translated: false
 						})
 					]
+				},
+				{
+					fields: [
+						widgets.Text({
+							label: 'Header',
+							translated: false
+						}),
+						widgets.Text({
+							label: 'info2',
+							translated: false
+						})
+					]
 				}
 			]
 		})

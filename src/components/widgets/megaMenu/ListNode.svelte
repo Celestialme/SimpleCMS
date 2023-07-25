@@ -16,9 +16,12 @@
 		<div class="arrow" class:expanded />
 	{/if}
 	{self?.Header[$contentLanguage]}
-	{#if level < maxDepth}
+
+	{console.log(level, maxDepth)}
+	{#if level < maxDepth - 1}
 		<button
 			on:click={() => {
+				$currentChild = self;
 				depth = level + 1;
 				showFields = true;
 				mode.set('create');
@@ -46,6 +49,7 @@
 					level={level + 1}
 					bind:depth
 					bind:showFields
+					{maxDepth}
 					on:click={() => {
 						depth = level;
 						showFields = true;

@@ -9,7 +9,7 @@ export async function setup() {
 	let fs = (await import('fs')).default;
 	files = fs.readdirSync('./src/collections').filter((x) => !['index.ts', 'types.ts', 'Auth.ts'].includes(x));
 	let index = fs.readFileSync('./src/collections/index.ts', 'utf-8');
-	index = index.replace(/import \w+ from .*;\s+/g, '');
+	index = index.replace(/import \w+ from ["']\.\/.*;\s?/g, '');
 	let imports = '';
 	for (let file of files) {
 		let name = file.replace('.ts', '');
