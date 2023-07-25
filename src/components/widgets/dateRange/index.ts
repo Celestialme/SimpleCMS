@@ -2,7 +2,7 @@ import DateRange from './DateRange.svelte';
 import type { Params } from './types';
 import { GuiSchema } from './guiSchema';
 
-import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
+import { defaultContentLanguage } from '@src/stores/store';
 
 const widget = ({
 	label,
@@ -20,7 +20,7 @@ const widget = ({
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return translated
 				? data[contentLanguage] || 'NO entry'
-				: data[PUBLIC_CONTENT_LANGUAGES] || 'NO entry';
+				: data[defaultContentLanguage] || 'NO entry';
 		};
 	}
 

@@ -30,7 +30,7 @@
 
 	let _data = $mode == 'create' ? {} : value;
 	// console.log(_data);
-	let _language = field?.translated ? $contentLanguage : $defaultContentLanguage;
+	let _language = field?.translated ? $contentLanguage : defaultContentLanguage;
 
 	export const WidgetData = async () => _data;
 

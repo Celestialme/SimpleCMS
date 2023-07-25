@@ -12,7 +12,7 @@
 	//console.log('value: ', value);
 
 	let _data = $mode == 'create' ? {} : value;
-	let _language = $defaultContentLanguage;
+	let _language = defaultContentLanguage;
 
 	export const WidgetData = async () => _data;
 

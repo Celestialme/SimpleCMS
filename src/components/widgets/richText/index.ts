@@ -2,26 +2,25 @@ import richText from './richText.svelte';
 import type { Params } from './types';
 import { GuiSchema } from './guiSchema';
 
-import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
+import { defaultContentLanguage } from '@src/stores/store';
 
 const widget = ({
 	label,
 	db_fieldName,
 	display,
-	translated = false, // TODO: no translated need for this widget
-	icon,
+	translated = false, // default no translation
 	// extras
 	placeholder,
 	required
 }: Params) => {
 	if (!display) {
 		// display for table
-		display = async (data, field, entry, contentLanguage) => {
-			//console.log(data);
+		display = async (data: any, field: any, entry: any, contentLanguage: any) => {
+			// console.log(data);
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return translated
 				? data[contentLanguage] || 'NO entry'
-				: data[PUBLIC_CONTENT_LANGUAGES] || 'NO entry';
+				: data[defaultContentLanguage] || 'NO entry';
 		};
 	}
 
