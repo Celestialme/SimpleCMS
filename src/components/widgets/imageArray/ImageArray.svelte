@@ -20,10 +20,10 @@
 	}
 
 	export const WidgetData = async () => {
-		console.log('files:', files);
+		//console.log('files:', files);
 		for (let i = 0; i < files.length; i++) {
 			let fieldsData = _fieldsValue[i];
-			console.log('fieldsData:', fieldsData);
+			//console.log('fieldsData:', fieldsData);
 			debugger;
 			await saveFormData(fieldsData);
 		}
@@ -35,7 +35,7 @@
 	};
 
 	function onChangeHandler(e: Event): void {
-		console.log('file data:', e);
+		//console.log('file data:', e);
 	}
 </script>
 

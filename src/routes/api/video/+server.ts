@@ -11,22 +11,22 @@ function getYouTubeVideoId(url: string) {
 
 const url = 'https://www.youtube.com/watch?v=SYiNtefVRLY';
 const videoId = getYouTubeVideoId(url);
-console.log('Video ID:', videoId);
+//console.log('Video ID:', videoId);
 
 export const POST: RequestHandler = async ({ request }) => {
-	console.log('POST function called');
+	//console.log('POST function called');
 
 	const data = await request.formData();
 	const res = Object.fromEntries(data);
 	const url = res.url.toString();
-	console.log('URL:', url);
+	//console.log('URL:', url);
 
 	const id = getYouTubeVideoId(url);
-	console.log('Video ID:', id);
+	//console.log('Video ID:', id);
 
 	if (id) {
 		const data = await youtube(id);
-		console.log('Data:', data);
+		//console.log('Data:', data);
 
 		return json({
 			videoTitle: data?.videoTitle,

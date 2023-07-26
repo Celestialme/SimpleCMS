@@ -10,39 +10,37 @@ import type { User } from '@src/collections/Auth';
 import '@src/utils/collectionUpdater';
 import { SvelteComponent } from 'svelte/internal';
 
-
 // Function to convert an object to form data
 export const obj2formData = (obj: any) => {
-    try {
-        // Create a new FormData object
-        const formData = new FormData();
+	try {
+		// Create a new FormData object
+		const formData = new FormData();
 
-        // Iterate over the keys of the input object
-        for (const key in obj) {
-            // Append each key-value pair to the FormData object as a string
-            formData.append(
-                key,
-                JSON.stringify(obj[key], (key, val) => {
-                    // Handle special cases for certain keys
-                    if (key == 'schema') return undefined;
-                    if (key == 'widget') return val.key;
-                    if (typeof val === 'function') {
-                        return val + '';
-                    }
-                    return val;
-                })
-            );
-        }
+		// Iterate over the keys of the input object
+		for (const key in obj) {
+			// Append each key-value pair to the FormData object as a string
+			formData.append(
+				key,
+				JSON.stringify(obj[key], (key, val) => {
+					// Handle special cases for certain keys
+					if (key == 'schema') return undefined;
+					if (key == 'widget') return val.key;
+					if (typeof val === 'function') {
+						return val + '';
+					}
+					return val;
+				})
+			);
+		}
 
-        // Return the FormData object
-        return formData;
-    } catch (error) {
-        // Handle any errors that might occur
-        console.error(error);
-        return null;
-    }
+		// Return the FormData object
+		return formData;
+	} catch (error) {
+		// Handle any errors that might occur
+		console.error(error);
+		return null;
+	}
 };
-
 
 // Converts data to FormData object
 export const col2formData = async (getData: { [Key: string]: () => any }) => {
@@ -160,8 +158,8 @@ export function saveFiles(data: FormData, collection: string) {
 
 	for (const file of _files) {
 		const { blob, fieldname } = file;
-		console.log('save blob:', blob);
-		console.log('save fieldname:', fieldname);
+		//console.log('save blob:', blob);
+		//console.log('save fieldname:', fieldname);
 
 		files[fieldname as keyof typeof files] = {
 			name: blob.name,
@@ -170,7 +168,7 @@ export function saveFiles(data: FormData, collection: string) {
 			lastModified: blob.lastModified
 		};
 		const path = _findFieldByTitle(schema, fieldname).path;
-		console.log('save path:', path);
+		//console.log('save path:', path);
 
 		if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
 		(blob as Blob).arrayBuffer().then((arrayBuffer) => {
@@ -185,7 +183,7 @@ export function saveFiles(data: FormData, collection: string) {
 // finds field title that matches the fieldname and returns that field
 function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
 	for (const field of schema.fields) {
-		console.log('field is ', field.db_fieldName, field.label);
+		//console.log('field is ', field.db_fieldName, field.label);
 		if (field.db_fieldName == fieldname || field.label == fieldname) {
 			found.val = true;
 
@@ -262,7 +260,7 @@ export async function saveFormData({
 	_mode?: 'edit' | 'create';
 	id?: string;
 }) {
-	console.log('saveFormData', data);
+	//console.log('saveFormData', data);
 
 	const $mode = _mode || get(mode);
 	const $collection = _collection || get(collection);

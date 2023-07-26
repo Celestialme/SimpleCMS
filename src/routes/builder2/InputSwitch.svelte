@@ -7,7 +7,7 @@
 	export let key: string;
 
 	let inputType: any;
-	console.log(type);
+	//console.log(type);
 
 	switch (type) {
 		case String:

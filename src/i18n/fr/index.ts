@@ -164,6 +164,10 @@ const fr: Translation = {
 	COLLECTION_TEST_Full_Text_Option_Placeholder: 'Enter full text',
 
 	// Widgets
+	WIDGET_MegaMenu_title:
+		"Veuillez saisir un nom pour votre menu avant d'ajouter des catégories de menu.",
+	WIDGET_MegaMenu_Next: 'Suivant',
+
 	WIDGET_Address_SearchMap: 'Search in Map ...',
 	WIDGET_Address_GetAddress: 'Get from Address',
 	WIDGET_Address_GetMap: 'Get from Address',

@@ -162,6 +162,9 @@ const en: BaseTranslation = {
 	COLLECTION_TEST_Full_Text_Option_Placeholder: 'Enter full text',
 
 	// Widgets
+	WIDGET_MegaMenu_title: 'Please enter a name for your menu before adding Menu Categories.',
+	WIDGET_MegaMenu_Next: 'Next',
+
 	WIDGET_Address_SearchMap: 'Search in Map ...',
 	WIDGET_Address_GetAddress: 'Get from Address',
 	WIDGET_Address_GetMap: 'Get from Address',

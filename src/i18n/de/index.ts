@@ -164,6 +164,9 @@ const de: Translation = {
 	COLLECTION_TEST_Full_Text_Option_Placeholder: 'Volltext eingeben',
 
 	// Widgets
+	WIDGET_MegaMenu_title: 'Bitte einen Menünamen eingeben, bevor Sie Menükategorien hinzufügen.',
+	WIDGET_MegaMenu_Next: 'Weiter',
+
 	WIDGET_Address_SearchMap: 'Suche in Karte ...',
 	WIDGET_Address_GetAddress: 'Hole von Adresse',
 	WIDGET_Address_GetMap: 'Adresse Abrufen',

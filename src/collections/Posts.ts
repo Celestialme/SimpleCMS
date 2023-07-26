@@ -2,7 +2,7 @@ import widgets from '@src/components/widgets';
 import { roles } from './Auth';
 import type { Schema } from './types';
 
-let schema: Schema = {
+const schema: Schema = {
 	// Collection Name required
 	name: 'posts',
 
@@ -21,7 +21,7 @@ let schema: Schema = {
 			translated: true,
 			required: true,
 			icon: 'ri:t-box-line',
-			placeholder: 'Enter Test Placeholder',
+			placeholder: 'Enter Test Placeholder'
 
 			// display: async (data, field, entry) => {
 			// 	return data.translated;

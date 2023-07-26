@@ -13,7 +13,7 @@
 	user.set(data.user);
 
 	let widget_keys = Object.keys(widgets);
-	console.log(widgets);
+	//console.log(widgets);
 
 	let name = 'Gen';
 	let fields = [];
@@ -22,7 +22,7 @@
 
 	// Function to save data by sending a POST request to the /api/builder endpoint
 	async function save() {
-		console.log({ ...$collection.fields });
+		//console.log({ ...$collection.fields });
 		const response = await fetch('/api/builder', {
 			method: 'POST',
 			body: obj2formData({ fields: $collection.fields }),

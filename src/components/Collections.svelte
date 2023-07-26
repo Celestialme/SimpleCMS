@@ -83,7 +83,7 @@
 			type="text"
 			bind:value={search}
 			on:input={filterCategories}
-			placeholder="Search …"
+			placeholder={$LL.SBL_Search()}
 			class="input variant-outline-surface mb-2 w-full border !border-surface-400"
 		/>
 	{/if}

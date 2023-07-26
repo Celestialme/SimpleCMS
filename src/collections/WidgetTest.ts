@@ -7,7 +7,7 @@ import type { Schema } from './types';
 import LL from '@src/i18n/i18n-svelte';
 import { get } from 'svelte/store';
 
-let schema: Schema = {
+const schema: Schema = {
 	// Collection Name required
 	name: 'widget-test',
 

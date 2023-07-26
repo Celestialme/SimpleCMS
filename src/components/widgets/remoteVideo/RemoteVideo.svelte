@@ -19,7 +19,7 @@
 	$: myData;
 
 	const handleSubmit = async (event: Event) => {
-		console.log('handleSubmit called');
+		//console.log('handleSubmit called');
 
 		const formData = new FormData();
 		formData.append('url', value);
@@ -27,10 +27,10 @@
 			method: 'POST',
 			body: formData
 		});
-		console.log('Response:', response);
+		//console.log('Response:', response);
 
 		const data = await (await response).json();
-		console.log('Data:', data);
+		//console.log('Data:', data);
 
 		myData = data;
 	};

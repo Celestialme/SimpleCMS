@@ -37,10 +37,10 @@
 	let density = localStorage.getItem('density') || 'normal';
 
 	// Update density and save to local storage
-	function updateDensity(newDensity) {
-		density = newDensity;
-		localStorage.setItem('density', newDensity);
-	}
+	// function updateDensity(newDensity) {
+	// 	density = newDensity;
+	// 	localStorage.setItem('density', newDensity);
+	// }
 
 	import {
 		createSvelteTable,
@@ -78,7 +78,7 @@
 		data = await fetch(`/api/${$collection.name}?page=${1}&length=${50}`)
 			.then((response) => response.json())
 			.then((data) => data as { entryList: [any]; totalCount: number });
-		console.log(data);
+		//console.log(data);
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
@@ -223,8 +223,6 @@
 		id: field.label,
 		accessorKey: field.label
 	}));
-
-	//console.log('defaultColumns', defaultColumns);
 
 	const storedValue = localStorage.getItem(`TanstackConfiguration-${$collection.name}`);
 	const columns = storedValue ? JSON.parse(storedValue) : defaultColumns;
@@ -439,7 +437,7 @@
 	</button>
 
 	<div class="relative hidden items-center justify-center gap-2 sm:flex">
-		<TanstackFilter bind:searchValue bind:filterShow bind:columnShow bind:density {updateDensity} />
+		<TanstackFilter bind:searchValue bind:filterShow bind:columnShow bind:density />
 		<TranslationStatus />
 	</div>
 
@@ -454,11 +452,12 @@
 		? 'hidden'
 		: 'block'} sm:hidden"
 >
-	<TanstackFilter bind:searchValue bind:filterShow bind:columnShow bind:density {updateDensity} />
+	<TanstackFilter bind:searchValue bind:filterShow bind:columnShow bind:density />
 	<TranslationStatus />
 </div>
 
 {#if columnShow}
+	<!-- chip column order -->
 	<div
 		class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-300 text-center dark:bg-surface-700"
 	>

@@ -13,7 +13,7 @@
 	export let file: File | undefined = undefined; // pass file directly from imageArray
 	export let value: any; //fix for file dropzone <ImageUpload> was created with unknown prop 'value'?
 
-	console.log('imageUpload value', value);
+	//console.log('imageUpload value', value);
 	let fieldName = getFieldName(field);
 	let sanitizedFileName: string | undefined = undefined;
 
@@ -24,14 +24,14 @@
 				const signal = controller.signal;
 				const response = await fetch(`/${field?.path}/${$entryData[fieldName].name}`, { signal });
 				const data = await response.blob();
-				console.log('data returned by the server', data); // log the data returned by the server
+				//console.log('data returned by the server', data); // log the data returned by the server
 				let fileList = new DataTransfer();
 				let file = new File([data], $entryData[fieldName].name, {
 					type: $entryData[fieldName].mimetype
 				});
 				fileList.items.add(file);
 				_data = fileList.files;
-				console.log('_data returned', _data); // log the value of _data
+				//console.log('_data returned', _data); // log the value of _data
 			} catch (error) {
 				console.error(error);
 			}

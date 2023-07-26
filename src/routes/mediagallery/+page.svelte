@@ -5,7 +5,6 @@
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
-	import { toggleLeftSidebar } from '@src/stores/store';
 
 	//skeleton
 	import { Avatar } from '@skeletonlabs/skeleton';
@@ -171,22 +170,24 @@
 		}));
 	};
 
+	const storedValue = localStorage.getItem('MediaTanstackConfiguration');
+	const columns = storedValue ? JSON.parse(storedValue) : defaultColumns;
+
 	const options = writable<TableOptions<Images>>({
 		data: defaultData ?? [],
-		columns: localStorage.getItem('MediaTanstackConfiguration')
-			? JSON.parse(localStorage.getItem('MediaTanstackConfiguration')).map((item) => {
-					return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
-			  })
-			: defaultColumns,
+		columns: columns.map((item) => {
+			return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
+		}),
+
 		state: {
 			columnOrder,
 			sorting
 		},
-		onColumnOrderChange: setColumnOrder,
 		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		onColumnVisibilityChange: setColumnVisibility
+		onColumnOrderChange: setColumnOrder,
+		ColumnVisibilityChange: setColumnVisibility
 	});
 
 	const refreshData = () => {
@@ -200,13 +201,6 @@
 				getColumnByName(item.accessorKey)?.toggleVisibility(item.visible);
 			});
 		}
-	};
-
-	const rerender = () => {
-		options.update((options) => ({
-			...options,
-			data: defaultData
-		}));
 	};
 
 	var table = createSvelteTable(options);
@@ -669,10 +663,8 @@
 									<button
 										class="chip {$table
 											.getAllLeafColumns()
-											.find((col) => {
-												return col.id == item.name;
-											})
-											.getIsVisible()
+											.find((col) => col.id == item.name)
+											?.getIsVisible() ?? false
 											? 'variant-filled-secondary'
 											: 'variant-ghost-secondary'} w-100 mr-2 flex items-center justify-center"
 										animate:flip={{ duration: flipDurationMs }}
@@ -693,10 +685,8 @@
 									>
 										{#if $table
 											.getAllLeafColumns()
-											.find((col) => {
-												return col.id == item.name;
-											})
-											.getIsVisible()}
+											.find((col) => col.id == item.name)
+											?.getIsVisible() ?? false}
 											<span><iconify-icon icon="fa:check" /></span>
 										{/if}
 										<span class="ml-2 capitalize">{item.name}</span>

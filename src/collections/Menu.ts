@@ -2,7 +2,7 @@ import widgets from '@src/components/widgets';
 import { roles } from './Auth';
 import type { Schema } from './types';
 
-let schema: Schema = {
+const schema: Schema = {
 	// Collection Name required
 	name: 'Menu',
 
@@ -22,32 +22,38 @@ let schema: Schema = {
 				{
 					fields: [
 						widgets.Text({
-							label: 'Header',
-							translated: false
+							label: 'MenuName',
+							placeholder: 'Enter Menu Name',
+							required: true,
+							translated: true
 						})
 					]
 				},
 				{
 					fields: [
 						widgets.Text({
-							label: 'Header',
-							translated: false
+							label: 'Category Name 1',
+							placeholder: 'Enter Category Level 1 Name',
+							translated: true
 						}),
 						widgets.Text({
-							label: 'Data',
-							translated: false
+							label: 'Category Data 1',
+							placeholder: 'Enter Category Level 1 Data',
+							translated: true
 						})
 					]
 				},
 				{
 					fields: [
 						widgets.Text({
-							label: 'Header',
-							translated: false
+							label: 'Category Name 2',
+							placeholder: 'Enter Category Level 2 Name',
+							translated: true
 						}),
 						widgets.Text({
-							label: 'Data2',
-							translated: false
+							label: 'Category Data2',
+							placeholder: 'Enter Category Level 2 Data',
+							translated: true
 						})
 					]
 				}

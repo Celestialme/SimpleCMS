@@ -545,6 +545,14 @@ type RootTranslation = {
 	 */
 	COLLECTION_TEST_Full_Text_Option_Placeholder: string
 	/**
+	 * P​l​e​a​s​e​ ​e​n​t​e​r​ ​a​ ​n​a​m​e​ ​f​o​r​ ​y​o​u​r​ ​m​e​n​u​ ​b​e​f​o​r​e​ ​a​d​d​i​n​g​ ​M​e​n​u​ ​C​a​t​e​g​o​r​i​e​s​.
+	 */
+	WIDGET_MegaMenu_title: string
+	/**
+	 * N​e​x​t
+	 */
+	WIDGET_MegaMenu_Next: string
+	/**
 	 * S​e​a​r​c​h​ ​i​n​ ​M​a​p​ ​.​.​.
 	 */
 	WIDGET_Address_SearchMap: string
@@ -1561,6 +1569,14 @@ export type TranslationFunctions = {
 	 * Enter full text
 	 */
 	COLLECTION_TEST_Full_Text_Option_Placeholder: () => LocalizedString
+	/**
+	 * Please enter a name for your menu before adding Menu Categories.
+	 */
+	WIDGET_MegaMenu_title: () => LocalizedString
+	/**
+	 * Next
+	 */
+	WIDGET_MegaMenu_Next: () => LocalizedString
 	/**
 	 * Search in Map ...
 	 */

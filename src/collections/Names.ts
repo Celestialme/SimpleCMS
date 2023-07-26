@@ -2,7 +2,7 @@ import widgets from '@src/components/widgets';
 import { roles } from './Auth';
 import type { Schema } from './types';
 
-let schema: Schema = {
+const schema: Schema = {
 	// Collection Name required
 	name: 'names',
 	// Optional & Icon , status, slug

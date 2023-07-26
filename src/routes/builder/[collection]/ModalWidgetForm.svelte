@@ -32,7 +32,7 @@
 	// ------------widget builder ---------------
 	// create an array to store the input values for each widget
 	let inputPopupWidget = [''];
-	console.log(inputPopupWidget);
+	//console.log(inputPopupWidget);
 
 	let popupSettings: PopupSettings = {
 		event: 'focus-click',

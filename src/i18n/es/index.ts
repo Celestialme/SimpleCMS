@@ -162,6 +162,9 @@ const es: Translation = {
 	COLLECTION_TEST_Full_Text_Option_Placeholder: 'Introducir texto completo',
 
 	// Widgets
+	WIDGET_MegaMenu_title: 'Introduzca un nombre para su menú antes de añadir Categorías de menú.',
+	WIDGET_MegaMenu_Next: 'Siguiente',
+
 	WIDGET_Address_SearchMap: 'Buscar en mapa ...',
 	WIDGET_Address_GetAddress: 'Obtener de la dirección',
 	WIDGET_Address_GetMap: 'Obtener dirección',
