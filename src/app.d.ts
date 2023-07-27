@@ -8,6 +8,6 @@ declare global {
 		// interface Platform {}
 	}
 
-	type DISPLAY = (data: any, field: any, entry: any, contentLanguage: string) => Promise<any>;
+	type DISPLAY = ((data: any, field: any, entry: any, contentLanguage: string) => Promise<any>) & { default?: boolean };
 }
 export {};

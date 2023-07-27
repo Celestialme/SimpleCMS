@@ -13,8 +13,7 @@ const pkg = JSON.parse(json);
 const myPlugin = {
 	name: 'log-request-middleware',
 	configureServer(server) {
-		server.watcher.add('./src/collections');
-		server.watcher.on('all', (event, path) => {
+		server.watcher.addListener('all', (event, path) => {
 			if (event == 'change') return;
 			console.log(event, path);
 			updateImports();

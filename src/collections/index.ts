@@ -6,9 +6,7 @@ import Posts2 from './Posts2';
 import Posts3 from './Posts3';
 import Relation from './Relation';
 
- let allCollections=[ImageArray,Media,Menu,Posts,Posts2,Posts3,Relation]
-
-
+let allCollections = [ImageArray, Media, Menu, Posts, Posts2, Posts3, Relation];
 
 import { writable } from 'svelte/store';
 

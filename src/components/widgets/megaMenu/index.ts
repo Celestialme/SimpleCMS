@@ -10,10 +10,12 @@ const widget = ({
 	display,
 	label
 }: Params) => {
-	if (!display)
+	if (!display) {
 		display = async (data, field, entry, contentLanguage) => {
 			return data.Header[contentLanguage];
 		};
+		display.default = true;
+	}
 	let widget: { type: any; key: 'MegaMenu' } = { type: MegaMenu, key: 'MegaMenu' };
 	let field: Params = { schema: {}, db_fieldName, menu, display, label };
 

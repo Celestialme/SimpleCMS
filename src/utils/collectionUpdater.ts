@@ -1,5 +1,7 @@
+import { exec } from 'child_process';
 let files: Array<string> = [];
 let saveFiles: Array<string> = [];
+
 export async function updateImports() {
 	let fs = (await import('fs')).default;
 	files = fs.readdirSync('./src/collections').filter((x) => !['index.ts', 'types.ts', 'Auth.ts'].includes(x));
@@ -16,6 +18,7 @@ export async function updateImports() {
 	if (!compare(files, saveFiles)) {
 		fs.writeFileSync('./src/collections/index.ts', imports + '\n' + allCollections + '\n' + indexFile);
 		saveFiles = files;
+		exec('npx prettier  ./src/collections --write');
 	}
 }
 

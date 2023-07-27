@@ -10,6 +10,7 @@ const widget = ({ label, db_fieldName, display, relation }: Params) => {
 			}
 			return data?.text[contentLanguage];
 		};
+		display.default = true;
 	}
 	let widget: { type: any; key: 'Relation' } = { type: Relation, key: 'Relation' };
 

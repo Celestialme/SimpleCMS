@@ -5,7 +5,10 @@ let schema: Schema = {
 	fields: [
 		widgets.Email({
 			label: 'email',
-			translated: false
+			translated: false,
+			display: async (data, field, entry, contentLanguage) => {
+				return data;
+			}
 		}),
 		widgets.Text({
 			label: 'text',

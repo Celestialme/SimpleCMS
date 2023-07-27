@@ -7,6 +7,7 @@ const widget = ({ label, db_fieldName, display, translated = false }: Params) =>
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGE] || 'NO entry';
 		};
+		display.default = true;
 	}
 	let widget: { type: any; key: 'Text' } = { type: Text, key: 'Text' };
 	let field = {

@@ -47,6 +47,7 @@ export const obj2formData = (obj: any) => {
 			key,
 			JSON.stringify(obj[key], (key, val) => {
 				if (key == 'schema') return undefined;
+				if (key == 'display' && val.default == true) return undefined;
 				if (key == 'widget') return val.key;
 				if (typeof val === 'function') {
 					return val + '';
