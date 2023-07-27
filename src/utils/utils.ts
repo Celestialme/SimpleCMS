@@ -7,8 +7,7 @@ import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
-import '@src/utils/collectionUpdater';
-import { SvelteComponent } from 'svelte/internal';
+
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'

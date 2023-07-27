@@ -1,21 +1,34 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import Path from 'path';
-
 // Gets package.json version info on app start
 // https://kit.svelte.dev/faq#read-package-json
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
+import type vite from 'vite';
+import { updateImports } from './src/utils/collectionUpdater';
 const file = fileURLToPath(new URL('package.json', import.meta.url));
 const json = readFileSync(file, 'utf8');
 const pkg = JSON.parse(json);
 
+const myPlugin = {
+	name: 'log-request-middleware',
+	configureServer(server) {
+		server.watcher.add('./src/collections');
+		server.watcher.on('all', (event, path) => {
+			if (event == 'change') return;
+			console.log(event, path);
+			updateImports();
+		});
+	}
+} as vite.Plugin;
 
-/** @type {import('vite').UserConfig} */
 const config = {
-	plugins: [sveltekit()],
+	plugins: [myPlugin, sveltekit()],
 
-	server: { fs: { allow: ['static', '.'] } },
-	
+	server: {
+		fs: { allow: ['static', '.'] }
+	},
+
 	resolve: {
 		alias: {
 			'@src': Path.resolve('src/'),
@@ -27,5 +40,6 @@ const config = {
 	define: {
 		__VERSION__: JSON.stringify(pkg.version)
 	}
-};
+} as vite.UserConfig;
+
 export default config;

@@ -6,8 +6,12 @@ import Posts2 from './Posts2';
 import Posts3 from './Posts3';
 import Relation from './Relation';
 
+ let allCollections=[ImageArray,Media,Menu,Posts,Posts2,Posts3,Relation]
+
+
+
 import { writable } from 'svelte/store';
-import '@src/utils/collectionUpdater';
+
 let categories = [
 	{
 		name: 'Collections',
@@ -20,7 +24,10 @@ let categories = [
 		collections: [Posts, ImageArray, Menu, Relation, Media]
 	}
 ];
-export { categories };
 let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+let unAssigned = allCollections.filter((x) => !collections.includes(x));
+
+//use this unassigned array
+export { categories, unAssigned };
 export default collections;
 export let collection = writable(collections?.[0]); // current collection

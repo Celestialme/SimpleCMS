@@ -1,23 +1,20 @@
-import { browser } from '$app/environment';
 let files: Array<string> = [];
 let saveFiles: Array<string> = [];
-export async function setup() {
-	if (browser) {
-		return;
-	}
-
+export async function updateImports() {
 	let fs = (await import('fs')).default;
 	files = fs.readdirSync('./src/collections').filter((x) => !['index.ts', 'types.ts', 'Auth.ts'].includes(x));
-	let index = fs.readFileSync('./src/collections/index.ts', 'utf-8');
-	index = index.replace(/import \w+ from ["']\.\/.*;\s?/g, '');
+	let indexFile = fs.readFileSync('./src/collections/index.ts', 'utf-8');
+	indexFile = indexFile.replace(/import \w+ from ["']\.\/.*;\s?/g, '').replace(/let allCollections\s?=\s?.*/g, '');
 	let imports = '';
+	let allCollections = ' let allCollections=[';
 	for (let file of files) {
 		let name = file.replace('.ts', '');
 		imports += `import ${name} from './${name}';\n`;
+		allCollections += `${name},`;
 	}
-	console.log(imports + '\n' + index);
+	allCollections = allCollections.substring(0, allCollections.length - 1) + ']';
 	if (!compare(files, saveFiles)) {
-		fs.writeFileSync('./src/collections/index.ts', imports + '\n' + index);
+		fs.writeFileSync('./src/collections/index.ts', imports + '\n' + allCollections + '\n' + indexFile);
 		saveFiles = files;
 	}
 }
