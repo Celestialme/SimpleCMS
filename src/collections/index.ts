@@ -6,9 +6,9 @@ import Relation from './Relation';
 import WidgetTest from './WidgetTest';
 import imageArray from './imageArray';
 
-//Don not EDIT due to dynamic Import
-// ------- BEGIN section that gets dynamically updated --------
-// List of Collections
+let allCollections = [Menu, Names, Posts, Posts2, Relation, WidgetTest, imageArray];
+
+// Do not EDIT due to dynamic Import
 // ------- END section that gets updated --------
 
 import { writable } from 'svelte/store';
@@ -58,8 +58,10 @@ let categories = [
 	// }
 ];
 
-// TODO: Allow Unassigned collection to be displayed as well
-export { categories };
-const collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+let unAssigned = allCollections.filter((x) => !collections.includes(x));
+
+//use this unassigned array
+export { categories, unAssigned };
 export default collections;
 export const collection = writable(collections?.[0]); // current collection

@@ -100,8 +100,7 @@
 	</div>
 {/if}
 
-<!-- TODO: way is image not loading on edit? -->
-{#if _data && $mode === 'edit'}
-	console.log(_data); // log the value of _data
+<!-- TODO: define image type -->
+<!-- {#if _data && $mode === 'edit'}
 	<img src={URL.createObjectURL(_data[0])} alt="" />
-{/if}
+{/if} -->

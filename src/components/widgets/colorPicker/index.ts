@@ -8,20 +8,16 @@ const widget = ({
 	label,
 	db_fieldName,
 	display,
-	translated = false, // default no translation
 	icon,
 	// extras
 	required
 }: Params) => {
 	if (!display) {
-		// display for table
-		display = async (data: any, field: any, entry: any, contentLanguage: any) => {
-			// console.log(data);
+		display = async (data, field, entry, contentLanguage) => {
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
-			return translated
-				? data[contentLanguage] || 'NO entry'
-				: data[defaultContentLanguage] || 'NO entry';
+			return data[defaultContentLanguage] || 'NO entry';
 		};
+		display.default = true;
 	}
 
 	const widget: { type: any; key: 'ColorPicker' } = { type: ColorPicker, key: 'ColorPicker' };
@@ -31,7 +27,6 @@ const widget = ({
 		schema: { [db_fieldName || label]: { String: String } },
 		label,
 		db_fieldName,
-		translated,
 		icon,
 		// extras
 		required

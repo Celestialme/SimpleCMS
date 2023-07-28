@@ -15,6 +15,14 @@ const schema: Schema = {
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [
+		widgets.Email({
+			label: 'email',
+			translated: false,
+			display: async (data, field, entry, contentLanguage) => {
+				return data;
+			}
+		}),
+
 		widgets.Text({
 			label: 'test',
 			db_fieldName: 'dbtest',
@@ -22,10 +30,6 @@ const schema: Schema = {
 			required: true,
 			icon: 'ri:t-box-line',
 			placeholder: 'Enter Test Placeholder'
-
-			// display: async (data, field, entry) => {
-			// 	return data.translated;
-			// }
 		}),
 
 		widgets.ImageUpload({

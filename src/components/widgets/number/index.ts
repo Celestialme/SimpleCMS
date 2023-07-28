@@ -22,12 +22,11 @@ const widget = ({
 	required
 }: Params) => {
 	if (!display) {
-		// display for table
-		display = async (data: any, field: any, entry: any, contentLanguage: any) => {
-			//console.log(data);
+		display = async (data, field, entry, contentLanguage) => {
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return data[defaultContentLanguage] || 'NO entry';
 		};
+		display.default = true;
 	}
 
 	const widget: { type: any; key: 'Number' } = { type: Number, key: 'Number' };

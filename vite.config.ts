@@ -6,13 +6,28 @@ import Path from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 
+//github Version package.json check
 const file = fileURLToPath(new URL('package.json', import.meta.url));
 const json = readFileSync('package.json', 'utf8');
 const pkg = JSON.parse(json);
 
-/** @type {import('vite').UserConfig} */
+// collection updater
+import type vite from 'vite';
+import { updateImports } from './src/utils/collectionUpdater';
+
+const myPlugin = {
+	name: 'log-request-middleware',
+	configureServer(server) {
+		server.watcher.addListener('all', (event, path) => {
+			if (event == 'change') return;
+			console.log(event, path);
+			updateImports();
+		});
+	}
+} as vite.Plugin;
+
 const config = {
-	plugins: [sveltekit()],
+	plugins: [myPlugin, sveltekit()],
 
 	server: { fs: { allow: ['static', '.'] } },
 
@@ -30,6 +45,6 @@ const config = {
 	},
 
 	output: { preloadStrategy: 'preload-mjs' }
-};
+} as vite.UserConfig;
 
 export default config;

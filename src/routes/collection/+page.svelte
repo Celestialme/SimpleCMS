@@ -1,17 +1,14 @@
 <script lang="ts">
 	import { categories as importedCategories, default as collections } from '@src/collections/index';
-	import { toggleLeftSidebar } from '@src/stores/store';
 	import Unassigned from './Unassigned.svelte';
 	import Board from './Board.svelte';
-	import IconifyPicker from '@src/components/IconifyPicker.svelte';
-	import { updateCategories } from '@src/collections/index';
 
 	//skeleton
 	import { modalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 	import ModalAddCategory from './ModalAddCategory.svelte';
 	import PageTitle from '@src/components/PageTitle.svelte';
 
-	// Modal Trigger - Generate User Registration email Token
+	// Modal Trigger  - New Category
 	function modalAddCategory(): void {
 		const modalComponent: ModalComponent = {
 			// Pass a reference to your custom component

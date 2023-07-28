@@ -17,11 +17,14 @@ const widget = ({
 	display
 }: Params) => {
 	let uploader = fields[0] as ImageUpload_Params;
-	if (!display)
+
+	if (!display) {
 		display = async (data, field, entry, contentLanguage) =>
 			`<img class='max-w-[200px] inline-block' src="/${uploader.path}/${
 				entry[getFieldName(uploader)].name
 			}" />`;
+		display.default = true;
+	}
 
 	const widget: { type: any; key: 'ImageArray' } = { type: ImageArray, key: 'ImageArray' };
 

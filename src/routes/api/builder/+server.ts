@@ -17,8 +17,44 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		// Parse the 'fields' data as an array of fields
 		const fields = JSON.parse(fieldsData) as Array<fields>;
 
+		let content = `
+	
+		import widgets from '../components/widgets';
+		import type { Schema } from './types';
+		let schema: Schema = {
+			name: 'posts1',
+			fields: [
+				${fields.map((field) => {
+					let fieldsString = '';
+					let fieldKeys = Object.keys(field);
+					for (let key of fieldKeys.filter((key) => key != 'widget')) {
+						if (key == 'display') {
+							let _tmp = JSON.stringify(field[key])
+								.replaceAll('\\n', '\n')
+								.replaceAll('\\t', '\t')
+								.replaceAll('\\', '');
+
+							fieldsString += `${key}: ${_tmp.substring(1, _tmp.length - 1)},`;
+						} else {
+							fieldsString += `${key}: ${JSON.stringify(field[key])
+								.replaceAll('\\n', '\n')
+								.replaceAll('\\t', '\t')
+								.replaceAll('\\', '')},`;
+						}
+					}
+					fieldsString = fieldsString.substring(0, fieldsString.length - 1);
+					return `widgets.${field.widget}({
+						${fieldsString}
+					})`;
+				})}
+			]
+		};
+		export default schema;
+		
+		`;
+
 		// Write the fields data to a file
-		fs.writeFileSync('fields.json', JSON.stringify(fields));
+		fs.writeFileSync('./src/collections/New.ts', content);
 
 		// Return a successful response
 		return new Response(null, { status: 200 });

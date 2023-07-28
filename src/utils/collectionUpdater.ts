@@ -1,10 +1,11 @@
+import { exec } from 'child_process';
 import { browser } from '$app/environment';
 
 let files: Array<string> = [];
 let saveFiles: Array<string> = [];
 
-// Function to set up the environment by importing and reading files
-export async function setup() {
+// This function updates the imports in the index file of the collections directory
+export async function updateImports() {
 	try {
 		// Check if the code is running in a browser environment
 		if (browser) {
@@ -12,34 +13,43 @@ export async function setup() {
 		}
 
 		// Import the fs module
-		const fs = (await import('fs')).default;
+		let fs = (await import('fs')).default;
 
-		// Read the contents of the ./src/collections directory and filter out certain files
+		// Read the files in the collections directory and filter out specific files
 		files = fs
 			.readdirSync('./src/collections')
 			.filter((x) => !['index.ts', 'types.ts', 'Auth.ts'].includes(x));
 
-		// Read the contents of the ./src/collections/index.ts file
-		let index = fs.readFileSync('./src/collections/index.ts', 'utf-8');
+		// Read the contents of the index file
+		let indexFile = fs.readFileSync('./src/collections/index.ts', 'utf-8');
 
-		// Remove any existing import statements except for the i18n-svelte import
-		index = index.replace(
-			/(?!import LL from '@src\/i18n\/i18n-svelte';\s+)import \w+ from .*;\s+/g,
-			''
-		);
+		// Remove existing import statements and allCollections declaration from the index file
+		indexFile = indexFile
+			.replace(/import \w+ from ["']\.\/.*;\s?/g, '')
+			.replace(/let allCollections\s?=\s?.*/g, '');
 
-		// Generate new import statements for each file in the ./src/collections directory
+		// Initialize variables to store import statements and allCollections declaration
 		let imports = '';
-		for (const file of files) {
-			const name = file.replace('.ts', '');
-			imports += `import ${name} from './${name}';\n`;
-		}
-		//console.log(imports + '\n' + index);
+		let allCollections = ' let allCollections=[';
 
-		// Write the new import statements and original contents to the ./src/collections/index.ts file
+		// Loop through the files and generate import statements and allCollections declaration
+		for (let file of files) {
+			let name = file.replace('.ts', '');
+			imports += `import ${name} from './${name}';\n`;
+			allCollections += `${name},`;
+		}
+		// Remove trailing comma and close the array declaration
+		allCollections = allCollections.substring(0, allCollections.length - 1) + ']';
+
+		// Check if the files have changed and update the index file if necessary
 		if (!compare(files, saveFiles)) {
-			fs.writeFileSync('./src/collections/index.ts', imports + '\n' + index);
+			fs.writeFileSync(
+				'./src/collections/index.ts',
+				imports + '\n' + allCollections + '\n' + indexFile
+			);
 			saveFiles = files;
+
+			exec('npx prettier ./src/collections --write');
 		}
 	} catch (error) {
 		// Handle any errors that might occur
@@ -48,7 +58,7 @@ export async function setup() {
 }
 
 // Function to compare two arrays for equality
-function compare(arr1, arr2) {
+function compare(arr1: any, arr2: any) {
 	try {
 		// Sort both arrays
 		arr1.sort();

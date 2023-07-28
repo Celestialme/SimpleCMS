@@ -4,21 +4,24 @@
 declare global {
 	/// <reference types="lucia" />
 	declare namespace Lucia {
-		type Auth = import('./lucia.js').Auth;
+		type Auth = import('@src/routes/api/db.ts').Auth;
 		type DatabaseUserAttributes = {};
 		type DatabaseSessionAttributes = {};
 	}
 
 	/// <reference path="./types/**/*.d.ts" />
-	
 	declare type Item = import('svelte-dnd-action').Item;
-declare type DndEvent<ItemType = Item> = import('svelte-dnd-action').DndEvent<ItemType>;
-declare namespace svelteHTML {
-   interface HTMLAttributes<T> {
-     'on:consider'?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
-     'on:finalize'?: (event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }) => void;
-   }
- }
+	declare type DndEvent<ItemType = Item> = import('svelte-dnd-action').DndEvent<ItemType>;
+	declare namespace svelteHTML {
+		interface HTMLAttributes<T> {
+			'on:consider'?: (
+				event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }
+			) => void;
+			'on:finalize'?: (
+				event: CustomEvent<DndEvent<ItemType>> & { target: EventTarget & T }
+			) => void;
+		}
+	}
 
 	namespace App {
 		// interface Error {}
@@ -26,6 +29,11 @@ declare namespace svelteHTML {
 		// interface PageData {}
 		// interface Platform {}
 	}
-	type DISPLAY = (data: any, field: any, entry: any, contentLanguage: string) => Promise<any>;
+
+	type DISPLAY = ((data: any, field: any, entry: any, contentLanguage: string) => Promise<any>) & {
+		default?: boolean;
+	};
 }
+
+// THIS IS IMPORTANT!!!
 export {};

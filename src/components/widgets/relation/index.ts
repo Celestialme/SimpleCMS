@@ -3,17 +3,15 @@ import type { Params } from './types';
 import { GuiSchema } from './guiSchema';
 import { findById } from '@src/utils/utils';
 
-import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
-
 const widget = ({ label, db_fieldName, display, relation }: Params) => {
 	if (!display) {
-		// display for table
 		display = async (data, field, entry, contentLanguage) => {
 			if (typeof data == 'string') {
 				data = await findById(data, relation);
 			}
 			return data?.text[contentLanguage];
 		};
+		display.default = true;
 	}
 
 	const widget: { type: any; key: 'Relation' } = { type: Relation, key: 'Relation' };

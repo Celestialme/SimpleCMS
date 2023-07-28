@@ -7,8 +7,6 @@ import { contentLanguage } from '@src/stores/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
-import '@src/utils/collectionUpdater';
-import { SvelteComponent } from 'svelte/internal';
 
 // Function to convert an object to form data
 export const obj2formData = (obj: any) => {
@@ -24,6 +22,7 @@ export const obj2formData = (obj: any) => {
 				JSON.stringify(obj[key], (key, val) => {
 					// Handle special cases for certain keys
 					if (key == 'schema') return undefined;
+					if (key == 'display' && val.default == true) return undefined;
 					if (key == 'widget') return val.key;
 					if (typeof val === 'function') {
 						return val + '';
@@ -71,8 +70,10 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 };
 
 // Saves POSTS files to disk and returns file information
+
+// TODO: not working s code runs on client
 //import sharp from 'sharp';
-// import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
+//import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
 
 // Saves POSTS files to disk and returns file information
 // export function saveFiles(data: FormData, collection: string) {
@@ -144,7 +145,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 // 	// Sanitize the file name by adding the collection to it and replacing any characters that are not letters, numbers, periods or hyphens with underscores
 // 	return `${collection}-${fileName.replace(/[^a-z0-9.-]/gi, '_').toLowerCase()}`;
 // }
-
+// -----------------------
 export function saveFiles(data: FormData, collection: string) {
 	const files: any = {};
 	const _files: Array<any> = [];
