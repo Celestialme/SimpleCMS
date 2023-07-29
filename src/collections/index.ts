@@ -12,7 +12,6 @@ let allCollections = [Menu, Names, Posts, Posts2, Relation, WidgetTest, imageArr
 // ------- END section that gets updated --------
 
 import { writable } from 'svelte/store';
-import '@src/utils/collectionUpdater';
 
 // typesafe-i18n
 import { get } from 'svelte/store';
