@@ -123,7 +123,6 @@
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 		}
 	});
-
 	export let FormSchemaReset: PageData['resetForm'];
 	const {
 		form: resetForm,
@@ -146,25 +145,41 @@
 		onSubmit: ({ cancel }) => {
 			// handle login form submission
 			if ($allErrors.length > 0) cancel();
+			console.log('allErrors', $allErrors);
 		},
 		onResult: ({ result, cancel }) => {
 			// handle forgot form result
 			if (result.type == 'redirect') {
-				// update variables to display login form
-				PWforgot = false;
-				PWreset = false;
+				// update variables to display reset form
+				PWreset = true;
 
 				// Trigger the toast
-				const t: ToastSettings = {
-					message: 'Password was Changed',
+				// TODO: Toast in conflict with wiggle
+				const t = {
+					message: 'Password reset token was send by Email',
 					// Provide any utility or variant background style:
+					background: 'variant-filled-primary',
 					timeout: 2000,
-					background: 'variant-variant-filled-surfaced',
 					// Add your custom classes here:
 					classes: 'border-1 !rounded-md'
 				};
 				toastStore.trigger(t);
 				return;
+			}
+
+			// handle forgot form error
+			else {
+				// Trigger the toast
+				// TODO: Toast in conflict with wiggle
+				const t = {
+					message: $allErrors,
+					// Provide any utility or variant background style:
+					background: 'variant-filled-primary',
+					timeout: 2000,
+					// Add your custom classes here:
+					classes: 'border-1 !rounded-md'
+				};
+				toastStore.trigger(t);
 			}
 			cancel();
 

@@ -39,8 +39,8 @@
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import Collections from '@src/components/Collections.svelte';
 	import { getDates } from '@src/utils/utils';
-	import type { PageData } from './$types';
-	export let data: PageData;
+	//import type { PageData } from './$types';
+	//export let data: PageData;
 
 	contentLanguage.set($page.params.language);
 
@@ -97,6 +97,7 @@
 				body: JSON.stringify({ authType: 'signOut' })
 			});
 			const data = await resp.json();
+			//console.log('signOut', data);
 			if (resp.status == 200) {
 				$user = data;
 				goto(`/login`);
@@ -105,6 +106,7 @@
 			}
 		} catch (error) {
 			// handle error here
+			console.error(error);
 		}
 	}
 
@@ -150,7 +152,7 @@
 
 	let SignOutTooltip: PopupSettings = {
 		event: 'hover',
-		target: 'SignOut',
+		target: 'SignOutButton',
 		placement: 'right'
 	};
 
@@ -411,7 +413,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 							><iconify-icon icon="uil:signout" width="26" /></button
 						>
 
-						<div class="card variant-filled-secondary z-10 p-2" data-popup="SignOut">
+						<div class="card variant-filled-secondary z-10 p-2" data-popup="SignOutButton">
 							{$LL.SBL_SignOut()}
 							<div class="arrow variant-filled-secondary" />
 						</div>
