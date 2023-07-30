@@ -77,18 +77,19 @@ export const actions: Actions = {
 	// Function for handling the Forgotten Password
 	forgotPW: async (event) => {
 		const pwforgottenForm = await superValidate(event, forgotFormSchema);
-		//console.log('pwforgottenForm', pwforgottenForm);
+		console.log('pwforgottenForm', pwforgottenForm);
 
 		// Validate with Lucia
 		const email = pwforgottenForm.data.email.toLocaleLowerCase();
-
 		const resp = await forgotPW(email, event.cookies);
+		console.log(resp);
 
 		if (resp) {
 			// Return message if form is submitted successfully
 			message(pwforgottenForm, 'SignIn Forgotten form submitted');
 			throw redirect(303, '/');
 		} else {
+			//message(pwforgottenForm, 'Error Email Check Failed');
 			return { form: pwforgottenForm };
 		}
 	},
@@ -239,15 +240,27 @@ async function FirstUsersignUp(
 async function forgotPW(email: string, cookies: Cookies) {
 	const tokenHandler = passwordToken(auth as any, 'register', {
 		expiresIn: 60 * 60, // expiration in 1 hour,
-		length: 43 // default
+		length: 64, // default 43
+		password: '',
+		generate: (length) => {
+			// implement custom token generation algorithm
+			const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+			let result = ''; // set password to empty string
+			for (let i = 0; i < length; i++) {
+				result += characters.charAt(Math.floor(Math.random() * characters.length));
+			}
+			return result;
+		}
 	});
 
 	const key = await auth.getKey('email', email).catch(() => null);
+	//console.log('forgotPW-key', key);
 
 	// The email address does not exist
 	if (!key) return { status: false, message: 'User does not exist' };
 
 	// Send email with reset password link
+
 	const token = (await tokenHandler.issue(key.userId)).toString();
 	console.log('forgotPW', token); // send token to user via email
 
