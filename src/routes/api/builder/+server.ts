@@ -30,7 +30,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 				}
 				fieldsString = fieldsString.substring(0, fieldsString.length - 1);
 				return `widgets.${field.widget}({
-					${fieldsString}
+					${fieldsString.replace(/["']widgets/g, 'widgets').replace(/\)["']/g, ')')}
 				})`;
 			})}
 		]

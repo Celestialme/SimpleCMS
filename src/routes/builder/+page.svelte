@@ -1,26 +1,24 @@
 <script lang="ts">
 	import 'iconify-icon';
 	import '@src/collections';
-	import widgets from '@src/components/widgets';
-	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import Collections from '@src/components/system/drawer/Collections.svelte';
 	import { user } from '@src/stores/load';
 	import { mode } from '@src/stores/store.js';
-	import BuilderFields from './BuilderFields.svelte';
 	import { collection } from '@src/collections';
-	import Toggle from '@src/components/system/buttons/Toggle.svelte';
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
+	import WidgetBuilder from './WidgetBuilder.svelte';
 	export let data;
 	user.set(data.user);
-	let widget_keys = Object.keys(widgets);
-	console.log(widgets);
+
 	let name = 'Gen';
 	let fields = [];
+	let addField = false;
 	$: console.log($collection);
 	function save() {
 		console.log({ ...$collection.fields });
-		axios.post(`/api/builder`, obj2formData({ fields: $collection.fields }), {
+		let data = $mode == 'edit' ? obj2formData({ fields: $collection.fields }) : obj2formData({ fields });
+		axios.post(`/api/builder`, data, {
 			headers: {
 				'Content-Type': 'multipart/form-data'
 			}
@@ -42,14 +40,9 @@
 			<iconify-icon icon="typcn:plus" class="text-white" width="50" />
 		</div>
 		{#if $mode == 'create'}
-			<div>
-				<FloatingInput theme="dark" label="name" name="name" />
-			</div>
+			<WidgetBuilder {fields} bind:addField />
 		{:else if $mode == 'edit'}
-			<div>
-				<FloatingInput theme="dark" label="name" name="name" />
-				<BuilderFields fields={$collection.fields} />
-			</div>
+			<WidgetBuilder fields={$collection.fields} bind:addField />
 		{/if}
 	</div>
 	<button on:click={save} class="text-white"> save </button>

@@ -1,9 +1,9 @@
 import { exec } from 'child_process';
+import fs from 'fs';
 let files: Array<string> = [];
 let saveFiles: Array<string> = [];
 
 export async function updateImports() {
-	let fs = (await import('fs')).default;
 	files = fs.readdirSync('./src/collections').filter((x) => !['index.ts', 'types.ts', 'Auth.ts'].includes(x));
 	let indexFile = fs.readFileSync('./src/collections/index.ts', 'utf-8');
 	indexFile = indexFile.replace(/import \w+ from ["']\.\/.*;\s?/g, '').replace(/let allCollections\s?=\s?.*/g, '');

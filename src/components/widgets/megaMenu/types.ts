@@ -1,16 +1,17 @@
-import Toggle from '@src/components/system/buttons/Toggle.svelte';
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
+import GuiFields from './GuiFields.svelte';
 
 export type Params = {
-	label: string;
-	display?: DISPLAY;
+	widget?: any;
+	schema?: { [Key: string]: any };
 	db_fieldName?: string;
-	translated?: boolean;
+	label: string;
+	menu: any[];
+	display?: DISPLAY;
 };
-
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },
+	menu: { widget: GuiFields, required: true },
 	display: { widget: FloatingInput, required: true },
-	db_fieldName: { widget: FloatingInput, required: true },
-	translated: { widget: Toggle, required: false }
+	db_fieldName: { widget: FloatingInput, required: true }
 };

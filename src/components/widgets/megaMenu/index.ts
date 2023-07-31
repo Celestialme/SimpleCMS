@@ -1,7 +1,7 @@
 import type { Params } from './types';
 import MegaMenu from './MegaMenu.svelte';
 import { writable, type Writable } from 'svelte/store';
-import { GuiSchema } from '../text/types';
+import { GuiSchema } from './types';
 export let currentChild: Writable<any> = writable({});
 const widget = ({
 	// Accept parameters from collection

@@ -1,11 +1,12 @@
 <script lang="ts">
 	export let items;
 	export let selected = items[0];
+	export let label: string = '';
 	let expanded = false;
 </script>
 
 <div class="container">
-	<p on:click={() => (expanded = !expanded)} class:selected={expanded}>{selected}</p>
+	<p on:click={() => (expanded = !expanded)} class:selected={expanded}>{selected || label}</p>
 	{#if expanded}
 		<div class="items">
 			{#each items.filter((item) => item !== selected) as item}
