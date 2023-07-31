@@ -114,7 +114,7 @@ const schema: Schema = {
 			required: true,
 			prefix: 'height',
 			suffix: 'mm',
-			step: 0.01,
+			// step: 0.01,
 			translated: false
 		}),
 
