@@ -10,7 +10,7 @@ export async function load({ cookies }) {
 	//console.log('load function called');
 	const session = cookies.get(SESSION_COOKIE_NAME) as string;
 	const user = await validate(auth, session);
-	// console.log('user:', user);
+	console.log('user:', user);
 	// filters collection  based on reading permissions  and redirects to first left one
 	const _filtered = collections.filter((c) => c?.permissions?.[user.user.role]?.read != false);
 

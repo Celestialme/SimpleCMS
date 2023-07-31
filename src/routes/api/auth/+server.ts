@@ -24,6 +24,7 @@ async function signOut(cookies: Cookies) {
 		cookies.delete(SESSION_COOKIE_NAME);
 		return new Response(JSON.stringify({ status: 200 }));
 	} catch (e) {
+		console.log('signOut', e);
 		return new Response(JSON.stringify({ status: 404 }));
 	}
 }

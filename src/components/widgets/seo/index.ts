@@ -1,8 +1,11 @@
 import Seo from './Seo.svelte';
-import type { Params } from './types';
-import { GuiSchema } from './guiSchema';
 
+import { type Params, GuiSchema } from './types';
 import { defaultContentLanguage } from '@src/stores/store';
+
+// typesafe-i18n
+import { get } from 'svelte/store';
+import LL from '@src/i18n/i18n-svelte.js';
 
 const widget = ({
 	label,
@@ -16,11 +19,13 @@ const widget = ({
 	width
 }: Params) => {
 	if (!display) {
-		display = async (data, field, entry, contentLanguage) => {
+		// display for table
+		display = async (data: any, field: any, entry: any, contentLanguage: any) => {
+			// console.log(data);
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return translated
-				? data[contentLanguage] || 'NO entry'
-				: data[defaultContentLanguage] || 'NO entry';
+				? data[contentLanguage] || get(LL).ENTRYLIST_Untranslated()
+				: data[defaultContentLanguage] || get(LL).ENTRYLIST_Untranslated();
 		};
 		display.default = true;
 	}

@@ -102,6 +102,25 @@ export const actions: Actions = {
 		// Send the token to the user via email.
 		console.log(token);
 
+		// send welcome email
+		//TODO: port to utils not to expose ... remove fetch from backend
+		await event.fetch('/api/sendMail', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				email: email,
+				subject: 'ForgotPassword',
+				message: 'ForgotPassword',
+				templateName: 'ForgotPassword',
+				props: {
+					email: email,
+					token: token
+				}
+			})
+		});
+
 		return { form: addUserForm };
 	},
 

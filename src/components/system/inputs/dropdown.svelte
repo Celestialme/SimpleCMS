@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import Input from './Input.svelte';
+	import Input from './Input2.svelte';
 	export let items: string[] = [];
 	export let placeholder: string = '';
 	let value = '';

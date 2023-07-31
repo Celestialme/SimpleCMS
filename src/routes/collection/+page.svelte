@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { categories as importedCategories, default as collections } from '@src/collections/index';
+
 	import Unassigned from './Unassigned.svelte';
 	import Board from './Board.svelte';
 
@@ -40,6 +41,8 @@
 		modalStore.trigger(d);
 	}
 
+	// let availableCollections = unAssigned;
+	// TODO: display Unassigned  collections only
 	let availableCollections = collections.filter((collection) => {
 		return !importedCategories.some((category) => category.collections.includes(collection));
 	});

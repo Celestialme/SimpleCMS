@@ -336,7 +336,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 								class="relative cursor-pointer flex-col !no-underline"
 							>
 								<Avatar
-									src={avatarSrc ? '/api/media/' + avatarSrc : '/Default_User.svg'}
+									src={avatarSrc ? '/api/mediafiles/' + avatarSrc : '/Default_User.svg'}
 									class="mx-auto hover:bg-surface-500 hover:p-1 {$toggleLeftSidebar === 'full'
 										? 'w-[40px]'
 										: 'w-[35px]'}"

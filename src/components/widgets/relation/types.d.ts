@@ -1,5 +1,4 @@
 import type { Schema } from '@src/collections/types';
-import type { Schema, any } from 'zod';
 
 export type Params = {
 	label: string;

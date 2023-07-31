@@ -15,6 +15,8 @@ const schema: Schema = {
 
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
+
+	// Important All MENU Labels need to be called 'Header' for Menu associate children
 	fields: [
 		widgets.MegaMenu({
 			label: 'Menu',
@@ -22,7 +24,7 @@ const schema: Schema = {
 				{
 					fields: [
 						widgets.Text({
-							label: 'MenuName',
+							label: 'Header',
 							placeholder: 'Enter Menu Name',
 							required: true,
 							translated: true
@@ -32,12 +34,12 @@ const schema: Schema = {
 				{
 					fields: [
 						widgets.Text({
-							label: 'Category Name 1',
+							label: 'Header',
 							placeholder: 'Enter Category Level 1 Name',
 							translated: true
 						}),
 						widgets.Text({
-							label: 'Category Data 1',
+							label: 'Header',
 							placeholder: 'Enter Category Level 1 Data',
 							translated: true
 						})
@@ -46,12 +48,12 @@ const schema: Schema = {
 				{
 					fields: [
 						widgets.Text({
-							label: 'Category Name 2',
+							label: 'Header',
 							placeholder: 'Enter Category Level 2 Name',
 							translated: true
 						}),
 						widgets.Text({
-							label: 'Category Data2',
+							label: 'Header',
 							placeholder: 'Enter Category Level 2 Data',
 							translated: true
 						})

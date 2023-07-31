@@ -1,7 +1,7 @@
 import Relation from './Relation.svelte';
-import type { Params } from './types';
-import { GuiSchema } from './guiSchema';
 import { findById } from '@src/utils/utils';
+
+import type { Params } from './types';
 
 const widget = ({ label, db_fieldName, display, relation }: Params) => {
 	if (!display) {
@@ -26,8 +26,6 @@ const widget = ({ label, db_fieldName, display, relation }: Params) => {
 
 	return { ...field, widget };
 };
-
-widget.GuiSchema = GuiSchema;
 
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

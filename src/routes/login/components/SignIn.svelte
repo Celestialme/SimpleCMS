@@ -98,9 +98,23 @@
 		},
 		onResult: ({ result, cancel }) => {
 			// handle forgot form result
-			if (result.type == 'redirect') {
+			if (result.type == 'error') {
+				// Trigger the toast
+				// TODO: Toast in conflict with wiggle
+				const t = {
+					message: allErrors,
+					// Provide any utility or variant background style:
+					background: 'variant-filled-primary',
+					timeout: 2000,
+					// Add your custom classes here:
+					classes: 'border-1 !rounded-md'
+				};
+				toastStore.trigger(t);
+				return;
+			}
+
+			if (result.type == 'success') {
 				// update variables to display reset form
-				PWforgot: false;
 				PWreset = true;
 
 				// Trigger the toast
@@ -430,6 +444,7 @@ PWreset:{PWreset} -->
 	}
 	.inactive {
 		--width: 10%;
+		z-index: -10;
 	}
 	.hover:hover {
 		border-top-right-radius: 5% 50%;

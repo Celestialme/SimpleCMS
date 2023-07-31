@@ -13,27 +13,27 @@
 
 	let expanded = false;
 
-	let nodes = {
-		node1: {
-			name: 'Menu Name 1',
-			items: [{ id: 'node2' }, { id: 'node3' }, { id: 'node4' }],
-			id: 'node1'
-		},
-		node2: {
-			name: 'Categories 1',
-			items: [{ id: 'node5' }, { id: 'node6' }, { id: 'node7' }, { id: 'node8' }],
-			id: 'node2'
-		},
-		node3: {
-			name: 'Categories 2',
-			items: [{ id: 'node9' }, { id: 'node10' }, { id: 'node11' }, { id: 'node12' }],
-			id: 'node3'
-		}
-	};
+	// let nodes = {
+	// 	node1: {
+	// 		name: 'Menu Name 1',
+	// 		items: [{ id: 'node2' }, { id: 'node3' }, { id: 'node4' }],
+	// 		id: 'node1'
+	// 	},
+	// 	node2: {
+	// 		name: 'Categories 1',
+	// 		items: [{ id: 'node5' }, { id: 'node6' }, { id: 'node7' }, { id: 'node8' }],
+	// 		id: 'node2'
+	// 	},
+	// 	node3: {
+	// 		name: 'Categories 2',
+	// 		items: [{ id: 'node9' }, { id: 'node10' }, { id: 'node11' }, { id: 'node12' }],
+	// 		id: 'node3'
+	// 	}
+	// };
 
-	for (let i = 4; i < 17; i++) {
-		nodes[`node${i}`] = { id: `node${i}`, name: `item ${i}` };
-	}
+	// for (let i = 4; i < 17; i++) {
+	// 	nodes[`node${i}`] = { id: `node${i}`, name: `item ${i}` };
+	// }
 
 	// nodes['node10'].color = 'steelblue';
 	// nodes['node11'].color = 'steelblue';
@@ -42,10 +42,10 @@
 	// nodes['node6'].color = 'forestgreen';
 </script>
 
-<div class="bg-error-600 mb-4">
+<!-- <div class="bg-error-600 mb-4">
 	<h3 class="text-center mb-2">Try dragging your Menu Categories</h3>
 	<Content node={nodes.node1} bind:nodes />
-</div>
+</div> -->
 
 {#if level == 0 && $mode != 'edit'}
 	<div class="text-center border border-x-0 py-2 font-bold mb-2">Menu Name</div>
@@ -74,7 +74,7 @@
 				}}
 				class="input p-2"
 			>
-				{self?.['MenuName'][$contentLanguage]}
+				{self?.Header[$contentLanguage]}
 			</button>
 
 			<!-- Edit Button -->

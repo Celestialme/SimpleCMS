@@ -57,7 +57,7 @@ let widgets = {
 	// Radio - radio button group, allowing only one value to be selected
 	Radio,
 	// Relation - assign relationships to other collections
-	Relation: Relation,
+	Relation, // :Relation,
 	// RemoteVideo - for youtube/vimeo(/Twitch/ticktock), grabbing Title/Duration,Dimension,User
 	RemoteVideo,
 	// Rich Text - fully extensible Lexical Rich Text editor

@@ -12,7 +12,7 @@
 
 <div class="container">
 	{#each fields as field}
-		<p
+		<button
 			on:click={() => {
 				currentFieldKey = field.widget.key;
 				currentField = field;
@@ -20,7 +20,7 @@
 			class="field"
 		>
 			{field.widget.key}
-		</p>
+		</button>
 	{/each}
 </div>
 

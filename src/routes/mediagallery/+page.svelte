@@ -405,8 +405,6 @@
 		<div class="flex items-center justify-center text-center text-xs sm:hidden">
 			<!-- Display Grid / Table -->
 			<div class="flex flex-col items-center justify-center">
-				<p class="text-xs">Display</p>
-				<!-- TODO: Fix mobile space and table/grid is offset? -->
 				<div class="flex sm:divide-x sm:divide-gray-500">
 					{#if view === 'grid'}
 						<button
@@ -423,9 +421,10 @@
 								}
 							}}
 						>
+							<p class="text-xs text-center">Display</p>
 							<iconify-icon
 								icon="material-symbols:grid-view-rounded"
-								height="40"
+								height="42"
 								style={`color: white`}
 							/>
 							<p class="text-xs">Table</p>
@@ -445,11 +444,19 @@
 								}
 							}}
 						>
+							<p class="text-xs text-center">Display</p>
 							<iconify-icon
 								icon="material-symbols:list-alt-outline"
-								height="40"
+								height="44"
 								style={`color: white`}
 							/>
+
+							<!-- TODO: Center mobile labels -->
+							{#if view === 'table'}
+								<p class="text-xs text-center">Grid</p>
+							{:else}
+								<p class="text-xs text-center">Table</p>
+							{/if}
 						</button>
 					{/if}
 				</div>

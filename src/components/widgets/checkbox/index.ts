@@ -1,8 +1,11 @@
 import Checkbox from './Checkbox.svelte';
-import type { Params } from './types';
-import { GuiSchema } from './guiSchema';
 
+import { type Params, GuiSchema } from './types';
 import { defaultContentLanguage } from '@src/stores/store';
+
+// typesafe-i18n
+import { get } from 'svelte/store';
+import LL from '@src/i18n/i18n-svelte.js';
 
 const widget = ({
 	// Accept parameters from collection
@@ -22,9 +25,10 @@ const widget = ({
 			// console.log(data);
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return translated
-				? data[contentLanguage] || 'NO entry'
-				: data[defaultContentLanguage] || 'NO entry';
+				? data[contentLanguage] || get(LL).ENTRYLIST_Untranslated()
+				: data[defaultContentLanguage] || get(LL).ENTRYLIST_Untranslated();
 		};
+		display.default = true;
 	}
 
 	const widget: { type: any; key: 'Checkbox' } = { type: Checkbox, key: 'Checkbox' };

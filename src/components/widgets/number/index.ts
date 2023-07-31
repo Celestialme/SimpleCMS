@@ -1,7 +1,6 @@
 import Number from './Number.svelte';
-import type { Params } from './types';
-import { GuiSchema } from './guiSchema';
 
+import { type Params, GuiSchema } from './types';
 import { defaultContentLanguage } from '@src/stores/store';
 
 const widget = ({

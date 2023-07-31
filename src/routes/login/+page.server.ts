@@ -147,6 +147,7 @@ export const actions: Actions = {
 
 		if (resp.status) {
 			// send welcome email
+			//TODO: port to utils not to expose ... remove fetch from backend
 			await event.fetch('/api/sendMail', {
 				method: 'POST',
 				headers: {

@@ -17,10 +17,10 @@ const schema: Schema = {
 	fields: [
 		widgets.Email({
 			label: 'email',
-			translated: false,
-			display: async (data, field, entry, contentLanguage) => {
-				return data;
-			}
+			translated: false
+			// display: async (data, field, entry, contentLanguage) => {
+			// 	return data;
+			// }
 		}),
 
 		widgets.Text({
@@ -34,7 +34,7 @@ const schema: Schema = {
 
 		widgets.ImageUpload({
 			label: 'image',
-			path: 'mediafiles/posts'
+			path: 'mediafiles/posts' //TODO: remove mediafiles requirement to use 'post' only
 		})
 	]
 };

@@ -367,6 +367,10 @@ type RootTranslation = {
 	 */
 	LOGIN_ZOD_Forgotten_email: RequiredParams<'link' | 'token'>
 	/**
+	 * -​ ​U​n​t​r​a​n​s​l​a​t​e​d​ ​-
+	 */
+	ENTRYLIST_Untranslated: string
+	/**
 	 * C​r​e​a​t​e
 	 */
 	ENTRYLIST_Create: string
@@ -1391,6 +1395,10 @@ export type TranslationFunctions = {
 	 * Hi there,<br><br>We received a request to reset your password. Your password reset token is:<br><br>{token}<br> <br>Please follow the link below to reset your password:<br>{link}<br><br>If you did not request this reset, please disregard this message.<br><br>Best regards,<br>The Support Team
 	 */
 	LOGIN_ZOD_Forgotten_email: (arg: { link: string, token: string }) => LocalizedString
+	/**
+	 * - Untranslated -
+	 */
+	ENTRYLIST_Untranslated: () => LocalizedString
 	/**
 	 * Create
 	 */

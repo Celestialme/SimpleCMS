@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Multibutton from './Multibutton.svelte';
-	import TanstackIcons from '@src/components/TanstackIcons.svelte';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -46,11 +45,14 @@
 	// TanstackTable
 	import TanstackTable from '@src/components/TanstackTable.svelte';
 
-	// Lucia
-	// import { page } from '$app/stores';
-	// const user = $page.data.user;
-
 	// AdminUser Data
+	import { page } from '$app/stores';
+	const user = $page.data.user;
+
+	//let data = user;
+	console.log('auth_data', user);
+	// use data here
+
 	let data = [
 		{
 			_id: '9rK2Lr9pLJjS5CK',
@@ -97,6 +99,7 @@
 	// TODO: Update cookie if items change
 	let items = [
 		{ Header: 'ID', accessorKey: '_id', id: '_id' },
+		// { Header: 'ID', accessorKey: 'id', id: 'id' },
 		{ Header: 'Username', accessorKey: 'username', id: 'username' },
 		{ Header: 'Email', accessorKey: 'email', id: 'email' },
 		{ Header: 'Role', accessorKey: 'role', id: 'role' },
@@ -136,7 +139,7 @@
 				/>
 			</div>
 
-			<div class="flex items-center justify-between">
+			<div class="flex items-center justify-between gap-2">
 				<button
 					type="button"
 					on:keydown
