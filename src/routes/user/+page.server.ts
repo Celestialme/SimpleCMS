@@ -5,7 +5,7 @@ import { superValidate } from 'sveltekit-superforms/server';
 import { addUserTokenSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { passwordToken } from '@lucia-auth/tokens';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
-import type { User } from '@src/collections/Auth';
+//import type { User } from '@src/collections/Auth';
 
 // Load function to check if user is authenticated
 export async function load(event) {

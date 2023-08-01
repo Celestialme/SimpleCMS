@@ -3,7 +3,7 @@
 </script>
 
 <div class="mb-2 flex items-center">
-	<PageTitle name="Image Editor" />
+	<PageTitle name="Image Editor" icon="" />
 
 	<!-- Title  with icon -->
 </div>

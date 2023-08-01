@@ -79,7 +79,7 @@
 <!-- @component This example creates a simple form modal. -->
 
 <div class="modal-example-form {cBase}">
-	<header class={`text-center text-primary-500 ${cHeader}`}>
+	<header class={`text-center dark:text-primary-500 ${cHeader}`}>
 		{$modalStore[0]?.title ?? '(title missing)'}
 	</header>
 	<article class="text-center text-sm">

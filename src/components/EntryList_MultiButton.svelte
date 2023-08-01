@@ -3,7 +3,14 @@
 	import LL from '@src/i18n/i18n-svelte';
 
 	import { createEventDispatcher } from 'svelte';
-	import { mode, handleSidebarToggle, storeListboxValue } from '@src/stores/store';
+	import {
+		mode,
+		handleSidebarToggle,
+		storeListboxValue,
+		toggleLeftSidebar,
+		screenWidth
+	} from '@src/stores/store';
+	import { get } from 'svelte/store';
 
 	const dispatch = createEventDispatcher();
 
@@ -14,6 +21,9 @@
 		mode.set($storeListboxValue);
 		dispatch($storeListboxValue);
 		dropdownOpen = false;
+		if (get(screenWidth) === 'mobile') {
+			toggleLeftSidebar.clickBack();
+		}
 
 		// Automatically switch the correct sidebar
 		handleSidebarToggle();

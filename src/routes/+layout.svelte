@@ -51,6 +51,9 @@
 		if (!$page.url.href.includes('user')) {
 			goto(`/user`);
 		}
+		if (get(screenWidth) === 'mobile') {
+			toggleLeftSidebar.clickBack();
+		}
 	};
 
 	// typesafe-i18n
@@ -171,6 +174,7 @@
 	import HeaderControls from '@src/components/HeaderControls.svelte';
 
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 
 	let dates = { created: '', updated: '', revision: '' };
 
@@ -244,7 +248,7 @@
 {#if $page.url.pathname === '/login'}
 	<slot />
 {:else}<AppShell
-		slotSidebarLeft="!overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
+		slotSidebarLeft="pt-2 !overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10
 {$toggleLeftSidebar === 'full' ? 'w-[220px]' : 'w-fit'}
 {$toggleLeftSidebar === 'closed' ? 'hidden' : 'block'}
@@ -284,7 +288,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 			<!-- sidebar collapse button -->
 			<button
 				type="button"
-				class="absolute -right-3 top-2 flex items-center justify-center !rounded-full border-2 border-surface-300"
+				class="absolute -right-3 top-4 flex items-center justify-center !rounded-full border-2 border-surface-300"
 				on:keydown
 				on:click={() => {
 					toggleLeftSidebar.clickSwitchSideBar();
@@ -367,7 +371,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 							on:change={handleLocaleChange}
 							class="{$toggleLeftSidebar === 'full'
 								? 'px-2.5 py-2'
-								: 'px-2 py-1.5'} btn-icon variant-filled-surface appearance-none rounded-full uppercase text-white"
+								: 'btn-icon-sm'} btn-icon variant-filled-surface appearance-none rounded-full uppercase text-white"
 						>
 							{#each locales as locale}
 								<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
@@ -421,7 +425,14 @@ lg:overflow-y-scroll lg:max-h-screen}"
 
 					<!-- System Configuration -->
 					<div class={$toggleLeftSidebar === 'full' ? 'order-5' : 'order-6'}>
-						<button class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white">
+						<button
+							class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white"
+							on:click={() => {
+								if (get(screenWidth) === 'mobile') {
+									toggleLeftSidebar.clickBack();
+								}
+							}}
+						>
 							<a href="/config" use:popup={ConfigTooltip}>
 								<iconify-icon icon="material-symbols:build-circle" width="32" />
 							</a>
@@ -487,9 +498,11 @@ lg:overflow-y-scroll lg:max-h-screen}"
 
 		<svelte:fragment slot="pageFooter">
 			{#if $mode !== 'view'}
-				<h2 class="text-center font-bold uppercase text-primary-500">{$collection.name} Info:</h2>
+				<h2 class="text-center font-bold uppercase !text-sm text-primary-500">
+					{$collection.name} Info:
+				</h2>
 
-				<div class="mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
+				<div class="mt-2 mb-1 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
 					<!-- Labels -->
 					{#each Object.keys(dates) as key}
 						<div class="capitalize">{key}:</div>

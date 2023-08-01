@@ -207,26 +207,23 @@
 	//workaround for svelte-table bug
 	let flexRender = flexRenderBugged as (...args: Parameters<typeof flexRenderBugged>) => any;
 
+	//tick logic
 	let SelectAll = false;
 	let selectedMap = writable({});
 
-	$: {
-		if (SelectAll) {
-			selectedMap.update((map) => {
-				filteredData.forEach((row) => {
-					map[row._id] = true;
-				});
-				return map;
+	// TODO:debug why the first 2 row don't get selected?
+	function updateSelectedMap(selectAll: boolean) {
+		selectedMap.update((map) => {
+			filteredData.forEach((row) => {
+				map[row._id] = selectAll;
 			});
-		} else {
-			selectedMap.update((map) => {
-				filteredData.forEach((row) => {
-					map[row._id] = false;
-				});
-				return map;
-			});
-		}
+			//console.log('filteredData:', filteredData); // Log the value of filteredData
+			//console.log('selectedMap:', map); // Log the value of selectedMap
+			return map;
+		});
 	}
+	$: updateSelectedMap(SelectAll);
+
 	$: {
 		filteredData = tableData.filter((row) => {
 			return Object.entries(filterValues).every(([key, value]) => {
@@ -458,7 +455,7 @@
 
 			<!-- Tanstack Body -->
 			<tbody>
-				{#each $table.getRowModel().rows as row, index}
+				{#each $table.getRowModel().rows as row}
 					<tr>
 						<!-- TickRows -->
 						<td class="border">

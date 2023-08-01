@@ -62,7 +62,7 @@
 		{/if}
 
 		<!-- Collection type with icon -->
-		<div class="mr-1 flex {!$toggleLeftSidebar ? 'ml-2' : 'ml-0'}">
+		<div class="flex {!$toggleLeftSidebar ? 'ml-2' : 'ml-1'}">
 			{#if $collection.icon}
 				<div class="flex items-center justify-center">
 					<iconify-icon icon={$collection.icon} width="24" class="text-error-500" />
@@ -87,39 +87,16 @@
 				<span class="hidden md:block">Save</span>
 			</button>
 
-			{#if $screenWidth === 'mobile' && $mode === 'edit'}
-				<!-- DropDown to show more Buttons -->
-				<button
-					type="button"
-					on:keydown
-					on:click={() => (showMore = !showMore)}
-					class="btn-icon variant-ghost-surface sm:hidden"
-				>
-					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
-				</button>
-			{:else}
-				<!-- only show Delete Content -->
-
-				<button type="button" on:click={$deleteEntry} class="btn-icon variant-filled-error">
-					<iconify-icon icon="icomoon-free:bin" width="24" />
-				</button>
-			{/if}
+			<!-- DropDown to show more Buttons -->
+			<button
+				type="button"
+				on:keydown
+				on:click={() => (showMore = !showMore)}
+				class="btn-icon variant-ghost-surface"
+			>
+				<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
+			</button>
 		{/if}
-
-		<!-- TODO: Show translation Status -->
-
-		<!-- Select Content Language -->
-		<!-- Mobile -->
-		<!-- TODO: hide arrow for x mobile -->
-		<select
-			class="md:appearance-auto variant-ghost-surface m-0 rounded border-surface-500 text-white sm:appearance-none md:hidden"
-			bind:value={$contentLanguage}
-			on:change={handleChange}
-		>
-			{#each Object.keys(options) as value}
-				<option {value}>{value.toUpperCase()}</option>
-			{/each}
-		</select>
 
 		<!-- Desktop -->
 		<select
@@ -140,7 +117,7 @@
 </header>
 
 {#if showMore}
-	<div class="mt-2 flex justify-center gap-2">
+	<div class="pt-2 -mx-2 flex justify-center items-center gap-10">
 		<div class="flex flex-col items-center justify-center">
 			<!-- Delete Content -->
 			<button type="button" on:click={$deleteEntry} class="btn-icon variant-filled-error">
@@ -158,5 +135,23 @@
 				<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">Clone</div>
 			</div>
 		{/if}
+
+		<!-- TODO: Show translation Status -->
+
+		<!-- Select Content Language -->
+		<!-- Mobile -->
+		<!-- TODO: hide arrow for x mobile -->
+		<div class="flex flex-col items-center justify-center">
+			<select
+				class="md:appearance-auto variant-ghost-surface m-0 rounded text-white sm:appearance-none md:hidden"
+				bind:value={$contentLanguage}
+				on:change={handleChange}
+			>
+				{#each Object.keys(options) as value}
+					<option {value}>{value.toUpperCase()}</option>
+				{/each}
+			</select>
+			<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">Language</div>
+		</div>
 	</div>
 {/if}

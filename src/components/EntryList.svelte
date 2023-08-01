@@ -402,7 +402,7 @@
 		{/if}
 		<!-- Collection type with icon -->
 		<!-- TODO: Translate Collection Name -->
-		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : 'ml-1'}">
+		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : 'ml-1 sm:ml-2'}">
 			{#if categories}<div class="mb-2 text-xs capitalize text-surface-500 dark:text-surface-300">
 					{categories[0].name}
 				</div>{/if}

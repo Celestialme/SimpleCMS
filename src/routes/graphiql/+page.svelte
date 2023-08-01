@@ -3,7 +3,7 @@
 </script>
 
 <div class="mb-2 flex items-center">
-	<PageTitle name="Graphql explorer" />
+	<PageTitle name="Graphql explorer" icon="" />
 </div>
 <!-- Title  with icon -->
 <p class="ml-2 flex items-center">Graphql explorer goes here</p>

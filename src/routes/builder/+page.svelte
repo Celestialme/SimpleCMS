@@ -40,7 +40,7 @@
 
 <!-- Collection builder -->
 <div class="align-centre mb-2 mt-2 flex dark:text-white">
-	<PageTitle name="Collection Builder" />
+	<PageTitle name="Collection Builder" icon="" />
 </div>
 <!-- List of .ts files -->
 <div class="flex flex-col items-center justify-center">

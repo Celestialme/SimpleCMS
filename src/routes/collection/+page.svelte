@@ -87,7 +87,7 @@
 </script>
 
 <div class="mb-2 flex items-center justify-between">
-	<PageTitle name="Menu Builder" />
+	<PageTitle name="Menu Builder" icon="" />
 
 	<button
 		type="button"

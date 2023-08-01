@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections/index';
-	import { mode, toggleLeftSidebar } from '@src/stores/store';
-	import { user } from '@src/stores/store';
+	import { user, mode, screenWidth, toggleLeftSidebar } from '@src/stores/store';
 
 	export let modeSet: typeof $mode = 'view';
 
@@ -12,6 +11,7 @@
 	import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
+	import { get } from 'svelte/store';
 
 	const popupCollections: PopupSettings = {
 		event: 'hover',
@@ -171,6 +171,11 @@
 		<a
 			href="/mediagallery"
 			class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white"
+			on:click={() => {
+				if (get(screenWidth) === 'mobile') {
+					toggleLeftSidebar.clickBack();
+				}
+			}}
 		>
 			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-primary-600" />
 			<p class="mr-auto text-center uppercase">{$LL.CollectionCategory_Media()}</p>
@@ -180,6 +185,11 @@
 		<a
 			href="/mediagallery"
 			class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2"
+			on:click={() => {
+				if (get(screenWidth) === 'mobile') {
+					toggleLeftSidebar.clickBack();
+				}
+			}}
 		>
 			<p class="text-xs uppercase">{$LL.CollectionCategory_Media()}</p>
 			<iconify-icon icon="bi:images" width="24" class="text-primary-600" />

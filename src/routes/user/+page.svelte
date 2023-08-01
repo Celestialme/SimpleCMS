@@ -135,11 +135,11 @@
 
 <div class="flex flex-col gap-1">
 	<!-- TODO: fix TypeScript, as Icon is already optional? -->
-	<PageTitle name="User Profile" />
+	<PageTitle name="User Profile" icon="" />
 
 	<div class="grid grid-cols-1 grid-rows-2 gap-1 overflow-hidden md:grid-cols-2 md:grid-rows-1">
 		<!-- Avatar with user info -->
-		<div class="relative mx-2 mt-1 flex flex-col items-center justify-center gap-2">
+		<div class="relative flex flex-col items-center justify-center gap-1">
 			<Avatar
 				src={avatarSrc ? '/api/' + avatarSrc : '/Default_User.svg'}
 				initials="AV"
@@ -147,19 +147,22 @@
 				class="w-32"
 			/>
 
+			<!-- edit button -->
 			<button
 				on:click={modalEditAvatar}
 				class="gradient-primary w-30 badge absolute top-8 text-white sm:top-4"
 				>{$LL.USER_Edit_Avatar()}</button
 			>
-
+			<!--User ID -->
 			<div class="gradient-secondary badge mt-1 w-full max-w-xs text-white">
 				{$LL.USER_ID()}:<span class="ml-2">{id}</span>
 			</div>
+			<!-- Role -->
 			<div class="gradient-tertiary badge w-full max-w-xs text-white">
 				{$LL.USER_Role()}:<span class="ml-2">{role}</span>
 			</div>
 		</div>
+
 		<!-- user fields -->
 		<form>
 			<label
@@ -174,7 +177,8 @@
 				>{$LL.USER_Password()}:
 				<input bind:value={password} name="password" type="password" disabled class="input" />
 			</label>
-			<div class="my-2 flex flex-col justify-between gap-2 sm:flex-row sm:justify-between sm:gap-1">
+			<div class="mt-2 flex flex-col justify-between gap-2 sm:flex-row sm:justify-between sm:gap-1">
+				<!-- Edit Modal Button -->
 				<button class="gradient-secondary btn text-white md:w-auto" on:click={modalUserForm}>
 					<iconify-icon
 						icon="bi:pencil-fill"
@@ -183,6 +187,7 @@
 						class="mr-1"
 					/>{$LL.USER_Edit()}:
 				</button>
+				<!-- Delete Modal Button -->
 				<button on:click={modalConfirm} class="gradient-error btn text-white"
 					><iconify-icon
 						icon="bi:trash3-fill"

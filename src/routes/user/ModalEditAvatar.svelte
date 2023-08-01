@@ -123,7 +123,7 @@
 				src={avatarSrc
 					? avatarSrc.startsWith('data')
 						? avatarSrc
-						: '/api/' + avatarSrc
+						: '/api/mediafiles' + avatarSrc
 					: '/Default_User.svg'}
 				rounded-full
 				class="mx-auto mb-3 w-32"

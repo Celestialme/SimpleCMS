@@ -22,7 +22,7 @@
 			on:click={() => toggleLeftSidebar.click()}
 			class="variant-ghost-surface btn-icon mt-1"
 		>
-			<iconify-icon icon="mingcute:menu-fill" width="30" />
+			<iconify-icon icon="mingcute:menu-fill" width="24" />
 		</button>
 	{/if}
 

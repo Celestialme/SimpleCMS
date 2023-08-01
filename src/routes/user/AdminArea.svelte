@@ -50,7 +50,7 @@
 	const user = $page.data.user;
 
 	//let data = user;
-	console.log('auth_data', user);
+	//console.log('auth_data', user);
 	// use data here
 
 	let data = [
@@ -93,6 +93,16 @@
 			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
 			__v: 0,
 			authMethod: 'password'
+		},
+		{
+			_id: '5',
+			email: 'test@example.com',
+			role: 'viewer',
+			username: 'TestCharlie',
+			createdAt: new Date('2023-07-18T19:39:31.420Z'),
+			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+			__v: 0,
+			authMethod: 'password'
 		}
 	];
 
@@ -111,7 +121,7 @@
 </script>
 
 <div class="border-td mt-2 flex flex-col border-t-2">
-	<p class="h2 mb-4 text-center text-3xl font-bold dark:text-white">{$LL.USER_AdminArea()}</p>
+	<p class="h2 my-2 text-center text-3xl font-bold dark:text-white">{$LL.USER_AdminArea()}</p>
 	<div class=" flex flex-col items-center justify-between gap-2 sm:flex-row">
 		<button on:click={modalTokenUser} class="gradient-primary btn w-full text-white sm:max-w-xs">
 			<iconify-icon icon="material-symbols:mail" color="white" width="18" class="mr-1" />

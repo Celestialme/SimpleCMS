@@ -3,7 +3,7 @@
 </script>
 
 <div class="mb-2 flex items-center">
-	<PageTitle name="System Configuration" />
+	<PageTitle name="System Configuration" icon="" />
 </div>
 
 <h2 class="ml-2 mt-8 text-center text-primary-500">Select what you need to customize</h2>
