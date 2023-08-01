@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { FieldType } from '.';
-	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 	import { defaultContentLanguage } from '@src/stores/store';
 	import { mode, entryData } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';

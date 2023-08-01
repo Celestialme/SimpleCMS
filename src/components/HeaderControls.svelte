@@ -99,7 +99,7 @@
 				</button>
 			{:else}
 				<!-- only show Delete Content -->
-				test
+
 				<button type="button" on:click={$deleteEntry} class="btn-icon variant-filled-error">
 					<iconify-icon icon="icomoon-free:bin" width="24" />
 				</button>

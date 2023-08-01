@@ -36,11 +36,34 @@ const schema: Schema = {
 						widgets.Text({
 							label: 'Header',
 							placeholder: 'Enter Category Level 1 Name',
+							required: true,
 							translated: true
 						}),
 						widgets.Text({
-							label: 'Header',
-							placeholder: 'Enter Category Level 1 Data',
+							label: 'Description',
+							placeholder: 'Enter Description Level 1',
+							required: true,
+							translated: true
+						}),
+						widgets.ImageUpload({
+							label: 'Image'
+						}),
+
+						widgets.Text({
+							label: 'Title',
+							placeholder: 'Image Title',
+							required: true,
+							translated: true
+						}),
+						widgets.Text({
+							label: 'Alt Text',
+							placeholder: 'Image Alt Text',
+							required: true,
+							translated: true
+						}),
+
+						widgets.Seo({
+							label: 'Seo',
 							translated: true
 						})
 					]
@@ -50,11 +73,35 @@ const schema: Schema = {
 						widgets.Text({
 							label: 'Header',
 							placeholder: 'Enter Category Level 2 Name',
+							required: true,
 							translated: true
 						}),
 						widgets.Text({
-							label: 'Header',
-							placeholder: 'Enter Category Level 2 Data',
+							label: 'Description',
+							placeholder: 'Enter Description Level 2',
+							required: true,
+							translated: true
+						}),
+
+						widgets.ImageUpload({
+							label: 'Image'
+						}),
+
+						widgets.Text({
+							label: 'Title',
+							placeholder: 'Image Title',
+							required: true,
+							translated: true
+						}),
+						widgets.Text({
+							label: 'Alt Text',
+							placeholder: 'Image Alt Text',
+							required: true,
+							translated: true
+						}),
+
+						widgets.Seo({
+							label: 'Seo',
 							translated: true
 						})
 					]

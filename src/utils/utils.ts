@@ -21,6 +21,7 @@ export const obj2formData = (obj: any) => {
 				key,
 				JSON.stringify(obj[key], (key, val) => {
 					// Handle special cases for certain keys
+					if (!val && val !== false) return undefined;
 					if (key == 'schema') return undefined;
 					if (key == 'display' && val.default == true) return undefined;
 					if (key == 'widget') return val.key;

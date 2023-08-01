@@ -1,16 +1,19 @@
 <script lang="ts">
-	export let items;
+	export let items: any;
 	export let selected = items[0];
 	export let label: string = '';
+
 	let expanded = false;
 </script>
 
 <div class="container">
-	<p on:click={() => (expanded = !expanded)} class:selected={expanded}>{selected || label}</p>
+	<button on:click={() => (expanded = !expanded)} class:selected={expanded}
+		>{selected || label}</button
+	>
 	{#if expanded}
 		<div class="items">
 			{#each items.filter((item) => item !== selected) as item}
-				<p
+				<button
 					class="item"
 					on:click={() => {
 						selected = item;
@@ -18,7 +21,7 @@
 					}}
 				>
 					{item}
-				</p>
+				</button>
 			{/each}
 		</div>
 	{/if}

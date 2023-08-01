@@ -3,6 +3,10 @@ import Number from './Number.svelte';
 import { type Params, GuiSchema } from './types';
 import { defaultContentLanguage } from '@src/stores/store';
 
+// typesafe-i18n
+import { get } from 'svelte/store';
+import LL from '@src/i18n/i18n-svelte.js';
+
 const widget = ({
 	label,
 	db_fieldName,
@@ -23,7 +27,7 @@ const widget = ({
 	if (!display) {
 		display = async (data, field, entry, contentLanguage) => {
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
-			return data[defaultContentLanguage] || 'NO entry';
+			return data[defaultContentLanguage] || get(LL).ENTRYLIST_Untranslated();
 		};
 		display.default = true;
 	}

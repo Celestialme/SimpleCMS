@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Content from './Content.svelte';
-
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
 	import { contentLanguage } from '@src/stores/store';
@@ -12,87 +10,106 @@
 	export let maxDepth = 0;
 
 	let expanded = false;
-
-	// let nodes = {
-	// 	node1: {
-	// 		name: 'Menu Name 1',
-	// 		items: [{ id: 'node2' }, { id: 'node3' }, { id: 'node4' }],
-	// 		id: 'node1'
-	// 	},
-	// 	node2: {
-	// 		name: 'Categories 1',
-	// 		items: [{ id: 'node5' }, { id: 'node6' }, { id: 'node7' }, { id: 'node8' }],
-	// 		id: 'node2'
-	// 	},
-	// 	node3: {
-	// 		name: 'Categories 2',
-	// 		items: [{ id: 'node9' }, { id: 'node10' }, { id: 'node11' }, { id: 'node12' }],
-	// 		id: 'node3'
-	// 	}
-	// };
-
-	// for (let i = 4; i < 17; i++) {
-	// 	nodes[`node${i}`] = { id: `node${i}`, name: `item ${i}` };
-	// }
-
-	// nodes['node10'].color = 'steelblue';
-	// nodes['node11'].color = 'steelblue';
-	// nodes['node14'].color = 'orange';
-	// nodes['node15'].color = 'orange';
-	// nodes['node6'].color = 'forestgreen';
 </script>
 
-<!-- <div class="bg-error-600 mb-4">
-	<h3 class="text-center mb-2">Try dragging your Menu Categories</h3>
-	<Content node={nodes.node1} bind:nodes />
-</div> -->
+<button
+	on:click={() => (expanded = !expanded)}
+	class="relative justify-center items-center flex gap-2"
+	style="margin-left:{20 * level}px"
+>
+	{#if self.children?.length > 0}
+		<iconify-icon
+			icon="mdi:chevron-down"
+			width="30"
+			class:expanded
+			class=" btn-icon btn-icon-sm bg-red-500"
+		/>
+	{/if}
+
+	{self?.Header[$contentLanguage]}
+
+	<!-- {console.log(level, maxDepth)} -->
+	{#if level < maxDepth - 1}
+		<!-- add  Button children -->
+		<button
+			on:click={() => {
+				$currentChild = self;
+				depth = level + 1;
+				showFields = true;
+				mode.set('create');
+			}}
+			class="btn-icon variant-filled-primary"
+		>
+			<iconify-icon icon="icons8:plus" width="28" />
+		</button>
+	{/if}
+	<!-- Edit Button children -->
+	<button
+		on:click={() => {
+			$currentChild = self;
+			$mode = 'edit';
+			depth = level;
+			console.log(self);
+			showFields = true;
+		}}
+		class="btn-icon variant-filled-surface {level == 0 ? 'ml-auto' : ''}"
+		><iconify-icon icon="mdi:pen" width="28" class="" />
+	</button>
+</button>
+
+{#if self.children?.length > 0 && expanded}
+	<ul>
+		{#each self.children as child}
+			<li class="cursor-pointer">
+				<svelte:self
+					self={child}
+					level={level + 1}
+					bind:depth
+					bind:showFields
+					{maxDepth}
+					on:click={() => {
+						depth = level;
+						showFields = true;
+					}}
+				/>
+			</li>
+		{/each}
+	</ul>
+{/if}
 
 {#if level == 0 && $mode != 'edit'}
 	<div class="text-center border border-x-0 py-2 font-bold mb-2">Menu Name</div>
 
-	<button
-		on:keydown
-		on:click={() => (expanded = !expanded)}
-		class="relative mb-2"
-		style="margin-left:{20 * level}px"
-	>
-		{#if self.children?.length > 0}
-			<div class="arrow" class:expanded />
-		{/if}
-		<!-- {console.log('self', self)}
-	    {console.log('$contentLanguage', $contentLanguage)} -->
+	<div class="flex items-center gap-2">
+		<!-- Menu Name -->
+		<button
+			on:click={() => {
+				$currentChild = self;
+				$mode = 'edit';
+				depth = level;
+				//console.log(self);
+				showFields = true;
+			}}
+			class="input p-2"
+		>
+			{self?.Header[$contentLanguage]}
+		</button>
 
-		<div class="flex items-center gap-2">
-			<!-- Mene Name -->
-			<button
-				on:click={() => {
-					$currentChild = self;
-					$mode = 'edit';
-					depth = level;
-					//console.log(self);
-					showFields = true;
-				}}
-				class="input p-2"
-			>
-				{self?.Header[$contentLanguage]}
-			</button>
-
-			<!-- Edit Button -->
-			<button
-				type="button"
-				on:click={() => {
-					$currentChild = self;
-					$mode = 'edit';
-					depth = level;
-					//console.log(self);
-					showFields = true;
-				}}
-				class="btn-icon variant-soft-tertiary{level == 0 ? 'ml-auto' : ''}"
-			>
-				<iconify-icon icon="mdi:pen" width="28" />
-			</button>
-		</div>
-	</button>
+		<!-- Edit Button -->
+		<button
+			type="button"
+			on:click={() => {
+				$currentChild = self;
+				$mode = 'edit';
+				depth = level;
+				//console.log(self);
+				showFields = true;
+			}}
+			class="btn-icon variant-soft-tertiary{level == 0 ? 'ml-auto' : ''}"
+		>
+			<iconify-icon icon="mdi:pen" width="28" />
+		</button>
+	</div>
 
 	<div class="text-center border border-x-0 py-2 font-bold mb-2">Enter your Menu Categories</div>
 
@@ -106,15 +123,17 @@
 				showFields = true;
 				mode.set('create');
 			}}
-			class="btn-icon variant-soft-secondary"
-		>
+			class="btn variant-filled-primary font-bold !text-white gap-2 mb-2"
+			>Add new Category
+
 			<iconify-icon icon="icons8:plus" width="28" />
 		</button>
 	{/if}
 
 	<!-- Categories Children-->
-	{#if self.children?.length > 0 && expanded}
-		<ul>
+	<!-- {#if self.children?.length > 0 && expanded} -->
+	{#if self.children?.length > 0}
+		<ul class="relative border p-2">
 			{#each self.children as child}
 				<li class="cursor-pointer">
 					<svelte:self
@@ -135,21 +154,8 @@
 	{/if}
 {/if}
 
-<style lang="postcss">
-	.arrow {
-		position: absolute;
-		left: -20px;
-		top: 40%;
-		transform: translateY(-50%);
-		border: solid black;
-		border-width: 0 3px 3px 0;
-		display: inline-block;
-		padding: 3px;
-		transform: rotate(-45deg);
-		margin-right: 10px;
-		transition: transform 0.1s ease-in;
-	}
+<style>
 	.expanded {
-		transform: rotate(45deg);
+		transform: rotate(-90deg);
 	}
 </style>

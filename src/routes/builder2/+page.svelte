@@ -22,7 +22,7 @@
 		//console.log({ ...$collection.fields });
 		let data =
 			$mode == 'edit' ? obj2formData({ fields: $collection.fields }) : obj2formData({ fields });
-		fetch(`/api/builder`, {
+		await fetch(`/api/builder`, {
 			method: 'POST',
 			body: data,
 			headers: {

@@ -99,8 +99,3 @@
 		</div>
 	</div>
 {/if}
-
-<!-- TODO: define image type -->
-<!-- {#if _data && $mode === 'edit'}
-	<img src={URL.createObjectURL(_data[0])} alt="" />
-{/if} -->

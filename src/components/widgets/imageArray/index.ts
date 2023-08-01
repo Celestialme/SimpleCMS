@@ -5,8 +5,6 @@ import { GuiSchema } from './guiSchema';
 import type { Params as ImageUpload_Params } from '../imageUpload/types';
 import { getFieldName } from '@src/utils/utils.js';
 
-import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
-
 const widget = ({
 	// Accept parameters from collection
 	db_fieldName,

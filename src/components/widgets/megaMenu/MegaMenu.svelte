@@ -37,6 +37,22 @@
 		mode.set(saveMode);
 		depth = 0;
 	}
+
+	async function deleteLayer() {
+		// if (!_data) {
+		// 	_data = { ...(await extractData(fieldsData)), children: [] };
+		// } else if ($mode == 'edit') {
+		// 	$currentChild = { ..._data, ...(await extractData(fieldsData)) };
+		// 	//console.log($currentChild);
+		// } else if ($mode == 'create' && $currentChild.children) {
+		// 	$currentChild.children.push({ ...(await extractData(fieldsData)), children: [] });
+		// }
+		// _data = _data;
+		// //console.log('MegMenu Data', _data);
+		// showFields = false;
+		// mode.set(saveMode);
+		// depth = 0;
+	}
 </script>
 
 {#if !_data}
@@ -45,7 +61,13 @@
 	</p>
 {/if}
 
+<!-- TODO this should only show on child edit -->
+<!-- {#if _data || showFields}
+	<p class="font-bold text-center">Enter Categories</p>
+	{/if} -->
+
 {#if !_data || showFields}
+	<!-- TODO: fix save on enter  on:keydown={saveLayer} -->
 	{#key depth}
 		{(fieldsData = {}) && ''}
 		<Fields
@@ -56,14 +78,29 @@
 		/>
 	{/key}
 
-	<button
-		type="button"
-		on:click={saveLayer}
-		class="btn variant-filled-primary dark:text-white mb-4"
-	>
-		<iconify-icon icon="carbon:next-filled" width="24" class="dark:text-white mr-1" />
-		{$LL.WIDGET_MegaMenu_Next()}
-	</button>
+	<div class="flex items-center justify-between">
+		<!-- Next Button -->
+		<button
+			type="button"
+			on:click={saveLayer}
+			class="btn variant-filled-primary dark:text-white mb-4"
+		>
+			<iconify-icon icon="carbon:next-filled" width="24" class="dark:text-white mr-1" />
+			{$LL.WIDGET_MegaMenu_Next()}
+		</button>
+
+		{#if _data}
+			<!-- remove/delete Button -->
+			<button
+				type="button"
+				on:click={deleteLayer}
+				class="btn variant-filled-error dark:text-white mb-4"
+			>
+				<iconify-icon icon="mdi:trash-can-outline" width="24" class="dark:text-white mr-1" />
+				Remove
+			</button>
+		{/if}
+	</div>
 {/if}
 
 {#if _data && depth == 0}
