@@ -3,7 +3,7 @@
 	import { contentLanguage, defaultContentLanguage } from '@src/stores/store';
 	import { mode, entryData } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
-
+	console.log('contentLanguage', $contentLanguage);
 	export let field: FieldType;
 
 	let fieldName = getFieldName(field);
@@ -12,7 +12,51 @@
 	let _data = $mode == 'create' ? {} : value;
 	let _language = defaultContentLanguage;
 	let valid = true;
+
+	let numberInput: HTMLInputElement;
+	let language = $contentLanguage;
+
 	export const WidgetData = async () => _data;
+
+	function handleInput(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const value = target.value;
+		const decimalSeparator = getDecimalSeparator(language);
+		if (value[value.length - 1] !== decimalSeparator) {
+			const number = parseFloat(
+				value
+					.replace(new RegExp(`[^0-9${decimalSeparator}]`, 'g'), '')
+					.replace(decimalSeparator, '.')
+			);
+			if (!isNaN(number)) {
+				target.value = new Intl.NumberFormat(language, { maximumFractionDigits: 20 }).format(
+					number
+				);
+			} else {
+				target.value = value;
+			}
+		}
+	}
+
+	function getDecimalSeparator(language: string) {
+		const numberWithDecimalSeparator = new Intl.NumberFormat(language).format(1.1);
+		return numberWithDecimalSeparator.substring(1, 2);
+	}
+
+	$: if (numberInput) {
+		const value = numberInput.value;
+		const decimalSeparator = getDecimalSeparator(language);
+		const number = parseFloat(
+			value.replace(new RegExp(`[^0-9${decimalSeparator}]`, 'g'), '').replace(decimalSeparator, '.')
+		);
+		if (!isNaN(number)) {
+			numberInput.value = new Intl.NumberFormat(language, { maximumFractionDigits: 20 }).format(
+				number
+			);
+		} else {
+			numberInput.value = value;
+		}
+	}
 
 	// Reactive statement to update count
 	$: count = _data[_language]?.length ?? 0;
@@ -31,22 +75,6 @@
 			return '!variant-ghost-surface';
 		}
 	};
-
-	// define a function to handle input events
-	// TODO handle  ,  or . for fractions and reformate on language switch
-	function handleInput(event: Event) {
-		// get the entered value
-		let enteredValue = (event.target as HTMLInputElement).value;
-
-		// remove any non-digit characters
-		enteredValue = enteredValue.replace(/\D/g, '');
-
-		// format the entered value as an integer
-		enteredValue = new Intl.NumberFormat($contentLanguage).format(Number(enteredValue));
-
-		// update the _data[_language] property with the formatted value
-		_data[_language] = enteredValue;
-	}
 </script>
 
 <div class="btn-group variant-filled-surface flex w-full rounded">
@@ -57,7 +85,8 @@
 	<input
 		type="text"
 		bind:value={_data[_language]}
-		on:input={handleInput}
+		bind:this={numberInput}
+		on:input|preventDefault={handleInput}
 		name={field?.db_fieldName}
 		id={field?.db_fieldName}
 		placeholder={field?.placeholder && field?.placeholder !== ''

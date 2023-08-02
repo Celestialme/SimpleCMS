@@ -28,6 +28,7 @@
 	});
 </script>
 
+<!-- TODO: Check User Role to fix page switch media to collection -->
 {#if $collection.permissions?.[$user.role]?.write != false}
 	<!-- Desktop Right Sidebar -->
 	{#if $mode == 'view'}
