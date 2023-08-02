@@ -444,7 +444,6 @@ PWreset:{PWreset} -->
 	}
 	.inactive {
 		--width: 10%;
-		z-index: -10;
 	}
 	.hover:hover {
 		border-top-right-radius: 5% 50%;
