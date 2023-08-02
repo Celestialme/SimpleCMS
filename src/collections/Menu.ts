@@ -4,41 +4,18 @@ let schema: Schema = {
 	name: 'Menu',
 	fields: [
 		widgets.MegaMenu({
-			label: 'Menu',
 			menu: [
+				{ fields: [widgets.Text({ label: 'Header', translated: true })] },
 				{
 					fields: [
-						widgets.Text({
-							label: 'Header',
-							translated: false
-						})
-					]
-				},
-				{
-					fields: [
-						widgets.Text({
-							label: 'Header',
-							translated: false
-						}),
-						widgets.Text({
-							label: 'info',
-							translated: false
-						})
-					]
-				},
-				{
-					fields: [
-						widgets.Text({
-							label: 'Header',
-							translated: false
-						}),
-						widgets.Text({
-							label: 'info2',
-							translated: false
-						})
+						widgets.Text({ label: 'Header', translated: true }),
+						widgets.Text({ label: 'link', translated: true }),
+						widgets.Text({ label: 'info', translated: true }),
+						widgets.Text({ label: 'info3', translated: true })
 					]
 				}
-			]
+			],
+			label: 'Menu'
 		})
 	]
 };

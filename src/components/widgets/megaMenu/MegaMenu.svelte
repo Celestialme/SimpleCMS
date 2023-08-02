@@ -18,8 +18,10 @@
 		if (!_data) {
 			_data = { ...(await extractData(fieldsData)), children: [] };
 		} else if ($mode == 'edit') {
-			$currentChild = { ..._data, ...(await extractData(fieldsData)) };
-			console.log($currentChild);
+			let _data = await extractData(fieldsData);
+			for (let key in _data) {
+				$currentChild[key] = _data[key];
+			}
 		} else if ($mode == 'create' && $currentChild.children) {
 			$currentChild.children.push({ ...(await extractData(fieldsData)), children: [] });
 		}

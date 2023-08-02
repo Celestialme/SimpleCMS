@@ -1,12 +1,12 @@
 import ImageArray from './ImageArray';
 import Media from './Media';
 import Menu from './Menu';
-import Posts from './Posts';
+import Posts1 from './Posts1';
 import Posts2 from './Posts2';
 import Posts3 from './Posts3';
 import Relation from './Relation';
 
-let allCollections = [ImageArray, Media, Menu, Posts, Posts2, Posts3, Relation];
+let allCollections = [ImageArray, Media, Menu, Posts1, Posts2, Posts3, Relation];
 
 import { writable } from 'svelte/store';
 
@@ -19,7 +19,7 @@ let categories = [
 	{
 		name: 'posts',
 		icon: 'bi:images',
-		collections: [Posts, ImageArray, Menu, Relation, Media]
+		collections: [Posts1, ImageArray, Menu, Relation, Media]
 	}
 ];
 let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections

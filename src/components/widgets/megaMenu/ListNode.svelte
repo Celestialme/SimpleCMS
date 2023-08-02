@@ -16,8 +16,6 @@
 		<div class="arrow" class:expanded />
 	{/if}
 	{self?.Header[$contentLanguage]}
-
-	{console.log(level, maxDepth)}
 	{#if level < maxDepth - 1}
 		<button
 			on:click={() => {
