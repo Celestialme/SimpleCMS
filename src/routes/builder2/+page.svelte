@@ -11,18 +11,25 @@
 
 	user.set(data.user);
 
-	let name = 'Gen';
+	let name = $mode == 'edit' ? $collection.name : '';
 	let fields = [];
 	let addField = false;
 
 	$: console.log($collection);
 
 	// Function to save data by sending a POST request to the /api/builder endpoint
-	async function save() {
+	function save() {
 		//console.log({ ...$collection.fields });
+
 		let data =
-			$mode == 'edit' ? obj2formData({ fields: $collection.fields }) : obj2formData({ fields });
-		await fetch(`/api/builder`, {
+			$mode == 'edit'
+				? obj2formData({
+						oldName: $collection.name,
+						collectionName: name,
+						fields: $collection.fields
+				  })
+				: obj2formData({ fields });
+		fetch(``, {
 			method: 'POST',
 			body: data,
 			headers: {
@@ -30,6 +37,9 @@
 			}
 		});
 	}
+	collection.subscribe((_) => {
+		name = $mode == 'edit' ? $collection.name : '';
+	});
 
 	//export let hasCollections: any;
 </script>
@@ -37,6 +47,7 @@
 <!-- {#if hasCollections}
 	<p>Please use the /builder first.</p>
 {:else} -->
+
 <div class="body">
 	<section class="left_panel">
 		<Collections modeSet={'edit'} />
@@ -51,9 +62,9 @@
 			<iconify-icon icon="typcn:plus" class="text-white" width="50" />
 		</button>
 		{#if $mode == 'create'}
-			<WidgetBuilder {fields} bind:addField />
+			<WidgetBuilder {fields} bind:addField bind:collectionName={name} />
 		{:else if $mode == 'edit'}
-			<WidgetBuilder fields={$collection.fields} bind:addField />
+			<WidgetBuilder fields={$collection.fields} bind:addField bind:collectionName={name} />
 		{/if}
 	</div>
 	<button on:click={save} class="btn variant-filled-primary text-white"> Save </button>
