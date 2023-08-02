@@ -155,6 +155,13 @@ const schema: Schema = {
 			required: true
 		}),
 
+		widgets.RichText({
+			label: 'RichText',
+			db_fieldName: 'RichText',
+			icon: 'ri:t-box-line',
+			required: true
+		}),
+
 		widgets.Seo({
 			label: 'Seo',
 			db_fieldName: 'Seo',

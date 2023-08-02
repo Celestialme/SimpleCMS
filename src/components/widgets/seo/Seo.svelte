@@ -34,6 +34,17 @@
 
 	export const WidgetData = async () => _data;
 
+	//save both fields
+	if (!_data[_language]) {
+		_data[_language] = {};
+	}
+
+	_data[_language] = {
+		...value,
+		title: _data[_language].title || '',
+		description: _data[_language].description || ''
+	};
+
 	// get current page url
 	import { onMount } from 'svelte';
 
@@ -44,10 +55,15 @@
 	});
 
 	let title = '';
-	let titleCharacterWidth = 0;
+	if (value.title) {
+		title = value.title;
+	}
 	let description = '';
+	if (value.description) {
+		description = value.description;
+	}
+	let titleCharacterWidth = 0;
 	let descriptionCharacterWidth = 0;
-
 	let SeoPreviewToggle = false;
 
 	function calculateCharacterWidth(character: string, fontSize: number, fontFamily: string) {
@@ -301,7 +317,7 @@
 		class="input"
 		placeholder={$LL.WIDGET_Seo_Suggestion_SeoTitle()}
 		required
-		bind:value={_data[_language]}
+		bind:value={_data[_language].title}
 		on:input={handleTitleChange}
 	/>
 </div>
@@ -341,7 +357,7 @@
 		placeholder={$LL.WIDGET_Seo_Suggestion_SeoDescription()}
 		rows="2"
 		cols="50"
-		bind:value={_data[_language]}
+		bind:value={_data[_language].description}
 		on:input={handleDescriptionChange}
 		class="input"
 	/>
