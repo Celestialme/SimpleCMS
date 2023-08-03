@@ -22,7 +22,7 @@ export const actions: Actions = {
 	default: async ({ request }) => {
 		let formData = await request.formData();
 		let fieldsData = formData.get('fields') as string;
-		let oldName = JSON.parse(formData.get('oldName') as string);
+		let originalName = JSON.parse(formData.get('originalName') as string);
 		let collectionName = JSON.parse(formData.get('collectionName') as string);
 		let fields = JSON.parse(fieldsData) as Array<fields>;
 		goThrough(fields);
@@ -49,8 +49,8 @@ export const actions: Actions = {
 			console.log('run');
 		}
 		content = content.replace(/["'](display)["']\s?:\s?["'](.*?)["']/, '$1:$2');
-		if (oldName != collectionName) {
-			fs.renameSync(`./src/collections/${oldName}.ts`, `./src/collections/${collectionName}.ts`);
+		if (originalName && originalName != collectionName) {
+			fs.renameSync(`./src/collections/${originalName}.ts`, `./src/collections/${collectionName}.ts`);
 		}
 		fs.writeFileSync(`./src/collections/${collectionName}.ts`, content);
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Button from '@src/components/system/buttons/Button.svelte';
 	import WidgetBuilder from '@src/routes/builder/WidgetBuilder.svelte';
 	export let value: Array<{ fields: Array<any> }> = [];
 	console.log(value);
@@ -6,8 +7,9 @@
 
 <div class="container border p-2">
 	<p>Menu Fields</p>
+	<Button on:click={() => (value = [...value, { fields: [] }])}>Add Level</Button>
 	{#each value as level, index}
-		<div>
+		<div class="level">
 			<p>level {index + 1}</p>
 			<WidgetBuilder fields={level.fields} />
 		</div>
@@ -23,5 +25,11 @@
 		align-items: center;
 		box-sizing: border-box;
 		overflow: auto;
+	}
+	.level {
+		text-align: center;
+		border: 1px dashed white;
+		padding: 15px;
+		margin: 10px;
 	}
 </style>
