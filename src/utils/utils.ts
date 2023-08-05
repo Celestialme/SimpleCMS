@@ -7,7 +7,7 @@ import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
-
+import { PUBLIC_MEDIA_FOLDER } from '$env/static/public';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -75,9 +75,9 @@ export function saveFiles(data: FormData, collection: string) {
 		files[fieldname as keyof typeof files] = { name: blob.name, size: blob.size, type: blob.type, lastModified: blob.lastModified };
 		let path = _findFieldByTitle(schema, fieldname).path;
 
-		if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
+		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}`)) fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}`, { recursive: true });
 		(blob as Blob).arrayBuffer().then((arrayBuffer) => {
-			fs.writeFileSync(path + '/' + blob.name, Buffer.from(arrayBuffer));
+			fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${blob.name}`, Buffer.from(arrayBuffer));
 		});
 	}
 	return files;
