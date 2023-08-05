@@ -110,7 +110,7 @@ const es: Translation = {
 		'Hola,<br><br>Hemos recibido una solicitud para restablecer su contraseña. El token de restablecimiento de contraseña es:<br><br>{token:string}<br><br>Por favor, sigue el siguiente enlace para restablecer tu contraseña:<br>{link:string}<br><br>Si no has solicitado este restablecimiento, por favor, ignora este mensaje.<br><br>Atentamente,<br>Su equipo de soporte',
 
 	// Entry List
-	ENTRYLIST_Untranslated: '- Sin traducir -',
+	ENTRYLIST_Untranslated: 'Sin datos',
 	ENTRYLIST_Create: 'Crear',
 	ENTRYLIST_Publish: 'Publicar',
 	ENTRYLIST_Unpublish: 'Archivar',

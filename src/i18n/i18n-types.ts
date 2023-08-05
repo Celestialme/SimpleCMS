@@ -367,7 +367,7 @@ type RootTranslation = {
 	 */
 	LOGIN_ZOD_Forgotten_email: RequiredParams<'link' | 'token'>
 	/**
-	 * -​ ​U​n​t​r​a​n​s​l​a​t​e​d​ ​-
+	 * N​o​ ​D​a​t​a
 	 */
 	ENTRYLIST_Untranslated: string
 	/**
@@ -1396,7 +1396,7 @@ export type TranslationFunctions = {
 	 */
 	LOGIN_ZOD_Forgotten_email: (arg: { link: string, token: string }) => LocalizedString
 	/**
-	 * - Untranslated -
+	 * No Data
 	 */
 	ENTRYLIST_Untranslated: () => LocalizedString
 	/**

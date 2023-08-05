@@ -111,7 +111,7 @@ const de: Translation = {
 		'Hallo,<br><br>Wir haben eine Anfrage erhalten, Ihr Passwort zurückzusetzen. Ihr Passwort-Reset-Token lautet:<br><br>{token:string}<br><br>Bitte folgen Sie dem untenstehenden Link, um Ihr Passwort zurückzusetzen:<br>{link:string}<br><br>Falls Sie diese Rücksetzung nicht angefordert haben, ignorieren Sie bitte diese Nachricht.<br><br>Mit freundlichen Grüßen,<br>Ihr Support Team',
 
 	// Entry List
-	ENTRYLIST_Untranslated: '- Nicht übersetzt -',
+	ENTRYLIST_Untranslated: 'Keine Daten',
 	ENTRYLIST_Create: 'Erstellen',
 	ENTRYLIST_Publish: 'Publizieren',
 	ENTRYLIST_Unpublish: 'Archivieren',

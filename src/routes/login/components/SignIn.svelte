@@ -137,6 +137,7 @@
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 		}
 	});
+
 	export let FormSchemaReset: PageData['resetForm'];
 	const {
 		form: resetForm,
@@ -339,12 +340,14 @@ PWreset:{PWreset} -->
 						<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />
 					{/if}
 
+					<!-- back button  -->
+					<!-- TODO: Add Superform reset -->
 					<button
 						type="button"
 						class="btn-icon variant-filled-surface"
 						on:click={() => {
-							PWforgot == false;
-							PWreset == true;
+							PWforgot = false;
+							PWreset = false;
 						}}
 					>
 						<iconify-icon icon="mdi:arrow-left-circle" width="38" />

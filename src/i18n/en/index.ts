@@ -110,7 +110,7 @@ const en: BaseTranslation = {
 		'Hi there,<br><br>We received a request to reset your password. Your password reset token is:<br><br>{token:string}<br> <br>Please follow the link below to reset your password:<br>{link:string}<br><br>If you did not request this reset, please disregard this message.<br><br>Best regards,<br>The Support Team',
 
 	// Entry List
-	ENTRYLIST_Untranslated: '- Untranslated -',
+	ENTRYLIST_Untranslated: 'No Data',
 	ENTRYLIST_Create: 'Create',
 	ENTRYLIST_Publish: 'Publish',
 	ENTRYLIST_Unpublish: 'Unpublish',

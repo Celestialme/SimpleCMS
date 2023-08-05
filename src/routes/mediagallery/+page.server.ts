@@ -3,7 +3,7 @@ import { auth } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
 
-import { PUBLIC_MEDIA_FOLDER, PUBLIC_MEDIASERVER_URL } from '$env/static/public';
+import { PUBLIC_MEDIA_FOLDER } from '$env/static/public';
 
 import fs from 'fs';
 import path from 'path';
@@ -14,7 +14,7 @@ function ensureDirectoryExists(dirPath: string) {
 		fs.mkdirSync(dirPath);
 	}
 }
-
+//TODO: Error 500 if no Folder exists
 export async function load({ params, event }) {
 	// TODO: Auth breaks media Gallery
 	// Check if user has a valid session
@@ -25,6 +25,7 @@ export async function load({ params, event }) {
 	// }
 	try {
 		// Check if media files directory exists
+		//const mediaDir = path.resolve(PUBLIC_MEDIA_FOLDER);
 		const mediaDir = path.resolve('./mediafiles');
 		console.log(mediaDir);
 		if (!fs.existsSync(mediaDir)) {

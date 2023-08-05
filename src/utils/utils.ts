@@ -1,4 +1,5 @@
 import fs from 'fs';
+import axios from 'axios';
 import schemas, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
@@ -7,6 +8,12 @@ import { contentLanguage } from '@src/stores/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
+
+export const config = {
+	headers: {
+		'Content-Type': 'multipart/form-data'
+	}
+};
 
 // Function to convert an object to form data
 export const obj2formData = (obj: any) => {
@@ -233,16 +240,14 @@ export let fieldsToSchema = (fields: Array<any>) => {
 // Finds documents in collection that match query
 export async function find(query: object, collection: Schema) {
 	if (!collection) return;
-	const _query = JSON.stringify(query);
-	const response = await fetch(`/api/find?collection=${collection.name}&query=${_query}`);
-	return response.json();
+	let _query = JSON.stringify(query);
+	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
 }
 
 // Finds document in collection with specified ID
 export async function findById(id: string, collection: Schema) {
 	if (!id || !collection) return;
-	const response = await fetch(`/api/find?collection=${collection.name}&id=${id}`);
-	return response.json();
+	return (await axios.get(`/api/find?collection=${collection.name}&id=${id}`)).data;
 }
 
 // Returns field's database field name or label
@@ -250,7 +255,6 @@ export function getFieldName(field: any) {
 	return (field?.db_fieldName || field?.label) as string;
 }
 
-// Saves FormData to database
 export async function saveFormData({
 	data,
 	_collection,
@@ -262,32 +266,22 @@ export async function saveFormData({
 	_mode?: 'edit' | 'create';
 	id?: string;
 }) {
-	//console.log('saveFormData', data);
-
-	const $mode = _mode || get(mode);
-	const $collection = _collection || get(collection);
-	const $entryData = get(entryData);
-	const formData = data instanceof FormData ? data : await col2formData(data);
+	let $mode = _mode || get(mode);
+	let $collection = _collection || get(collection);
+	let $entryData = get(entryData);
+	let formData = data instanceof FormData ? data : await col2formData(data);
 	if (_mode === 'edit' && !id) {
 		throw new Error('ID is required for edit mode.');
 	}
 	if (!formData) return;
 	switch ($mode) {
-		case 'create': {
-			const createResponse = await fetch(`/api/${$collection.name}`, {
-				method: 'POST',
-				body: formData
-			});
-			return createResponse.json();
-		}
-		case 'edit': {
+		case 'create':
+			return await axios.post(`/api/${$collection.name}`, formData, config).then((res) => res.data);
+		case 'edit':
 			formData.append('_id', id || $entryData._id);
-			const editResponse = await fetch(`/api/${$collection.name}`, {
-				method: 'PATCH',
-				body: formData
-			});
-			return editResponse.json();
-		}
+			return await axios
+				.patch(`/api/${$collection.name}`, formData, config)
+				.then((res) => res.data);
 	}
 }
 

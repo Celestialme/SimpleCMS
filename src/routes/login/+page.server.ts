@@ -82,7 +82,7 @@ export const actions: Actions = {
 		// Validate with Lucia
 		const email = pwforgottenForm.data.email.toLocaleLowerCase();
 		const resp = await forgotPW(email, event.cookies);
-		console.log(resp);
+		console.log('forgotPW Validate', resp);
 
 		if (resp) {
 			// Return message if form is submitted successfully
@@ -126,7 +126,7 @@ export const actions: Actions = {
 		const token = signUpForm.data.token;
 
 		const key = await auth.getKey('email', email).catch(() => null);
-		console.log('key', key);
+		console.log('signUp key', key);
 		let resp: { status: boolean; message?: string } = { status: false };
 		const isFirst = (await mongoose.models['auth_key'].countDocuments()) == 0;
 
@@ -139,7 +139,7 @@ export const actions: Actions = {
 		} else if (key && key.passwordDefined == false) {
 			// unfinished account exists
 			// TODO: Fix for my logic
-			resp = await finishRegistration(username, email, password, token, event.cookies);
+			resp = await finishRegistration(username, email, password, token, event.cookies, event);
 			console.log('resp', resp);
 		} else if (!key && !isFirst) {
 			resp = { status: false, message: 'This user was not defined by admin' };
@@ -183,7 +183,7 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 		if (!key || !key.passwordDefined) return { status: false, message: 'Invalid Credentials' };
 		const session = await auth.createSession(key.userId);
 		const sessionCookie = auth.createSessionCookie(session);
-		console.log(sessionCookie);
+		console.log('signIn sessionCookie', sessionCookie);
 		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
 		const authMethod = 'password';

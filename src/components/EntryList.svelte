@@ -11,6 +11,8 @@
 	} from '@src/stores/store';
 	import { contentLanguage } from '@src/stores/store';
 
+	import axios from 'axios';
+
 	import { writable } from 'svelte/store';
 	import { flip } from 'svelte/animate';
 	import { slide } from 'svelte/transition';
@@ -75,9 +77,9 @@
 		}, 400);
 
 		data = undefined;
-		data = await fetch(`/api/${$collection.name}?page=${1}&length=${50}`)
-			.then((response) => response.json())
-			.then((data) => data as { entryList: [any]; totalCount: number });
+		data = await axios
+			.get(`/api/${$collection.name}?page=${1}&length=${50}`)
+			.then((response) => response.data as { entryList: [any]; totalCount: number });
 		//console.log(data);
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {

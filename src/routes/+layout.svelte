@@ -34,6 +34,7 @@
 
 	import { fly } from 'svelte/transition';
 
+	import axios from 'axios';
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import ControlPanel from '@src/components/ControlPanel.svelte';
@@ -91,25 +92,20 @@
 
 	//signOut
 	async function signOut() {
-		try {
-			const resp = await fetch(`/api/auth`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ authType: 'signOut' })
-			});
-			const data = await resp.json();
-			//console.log('signOut', data);
-			if (resp.status == 200) {
-				$user = data;
-				goto(`/login`);
-			} else {
-				// handle non-200 response status here
-			}
-		} catch (error) {
-			// handle error here
-			console.error(error);
+		let resp = (
+			await axios.post(
+				`/api/auth`,
+				{ authType: 'signOut' },
+				{
+					headers: {
+						'content-type': 'multipart/form-data'
+					}
+				}
+			)
+		).data;
+		if (resp.status == 200) {
+			$user = resp;
+			goto(`/login`);
 		}
 	}
 

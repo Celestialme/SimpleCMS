@@ -195,4 +195,35 @@
 			<iconify-icon icon="bi:images" width="24" class="text-primary-600" />
 		</a>
 	{/if}
+
+	<!-- GalleryNew -->
+	{#if $toggleLeftSidebar === 'full'}
+		<!-- switchSideBar expanded -->
+		<a
+			href="/mediagallery2"
+			class="btn mt-1.5 flex flex-row items-center justify-start bg-surface-600 py-2 pl-2 text-white"
+			on:click={() => {
+				if (get(screenWidth) === 'mobile') {
+					toggleLeftSidebar.clickBack();
+				}
+			}}
+		>
+			<iconify-icon icon="bi:images" width="24" class="px-2 py-1 text-primary-600" />
+			<p class="mr-auto text-center uppercase">New Gallery</p>
+		</a>
+	{:else}
+		<!-- switchSideBar collapsed -->
+		<a
+			href="/mediagallery2"
+			class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2"
+			on:click={() => {
+				if (get(screenWidth) === 'mobile') {
+					toggleLeftSidebar.clickBack();
+				}
+			}}
+		>
+			<p class="text-xs uppercase">New Gallery</p>
+			<iconify-icon icon="bi:images" width="24" class="text-primary-600" />
+		</a>
+	{/if}
 </div>

@@ -4,6 +4,7 @@
 	import { user } from '@src/stores/store';
 	import { mode } from '@src/stores/store.js';
 	import { collection } from '@src/collections/index';
+	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
 
@@ -19,8 +20,7 @@
 
 	// Function to save data by sending a POST request to the /api/builder endpoint
 	function save() {
-		//console.log({ ...$collection.fields });
-
+		console.log({ ...$collection.fields });
 		let data =
 			$mode == 'edit'
 				? obj2formData({
@@ -29,9 +29,7 @@
 						fields: $collection.fields
 				  })
 				: obj2formData({ fields });
-		fetch(``, {
-			method: 'POST',
-			body: data,
+		axios.post(``, data, {
 			headers: {
 				'Content-Type': 'multipart/form-data'
 			}
@@ -72,7 +70,7 @@
 
 <!-- {/if} -->
 
-<style>
+<style lang="postcss">
 	.body {
 		display: flex;
 		position: fixed;

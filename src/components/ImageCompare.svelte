@@ -47,7 +47,7 @@
 	on:resize={resize}
 />
 
-<div class="container" {style} on:touchstart={start} on:mousedown={start}>
+<button class="container" {style} on:touchstart={start} on:mousedown={start}>
 	<img
 		bind:this={img}
 		src={after}
@@ -75,7 +75,7 @@
 		<div class="arrow-left" />
 		<div class="arrow-right" />
 	</div>
-</div>
+</button>
 
 <style lang="postcss">
 	.container {

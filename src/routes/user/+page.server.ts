@@ -100,7 +100,7 @@ export const actions: Actions = {
 
 		// TODO: Add svelte email or on Forgotten form?
 		// Send the token to the user via email.
-		console.log(token);
+		console.log('addUser', token);
 
 		// send welcome email
 		//TODO: port to utils not to expose ... remove fetch from backend
