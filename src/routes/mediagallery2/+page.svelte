@@ -14,10 +14,7 @@
 	import LL from '@src/i18n/i18n-svelte';
 
 	//Get message from +page.server.ts
-	export let hasCollections;
-	export let hasMediaFiles;
-	export let hasPermission;
-	export let errorMessage;
+	export let errorMessage = '';
 	//console.log('error', errorMessage);
 
 	//skeleton
@@ -81,7 +78,7 @@
 		localStorage.setItem('GalleryUserPreference', userPreference);
 	}
 
-	// Table Data
+	// // Table Data
 	let data = [
 		{
 			_id: '9rK2Lr9pLJjS5CK',
@@ -94,16 +91,6 @@
 			Path: 'path'
 		}
 	];
-
-	// Use the value of the data prop provided by +page.server.ts
-	//export let data: any[];
-
-	// Column Definition
-	// let items = [
-	//   { Header: 'Name', accessorKey: 'name', id: 'name' },
-	//   { Header: 'Path', accessorKey: 'path', id: 'path' },
-	// ];
-
 	// Column Definition
 	let items = [
 		{ Header: 'ID', accessorKey: '_id', id: '_id' },
@@ -115,6 +102,27 @@
 		{ Header: 'Image', accessorKey: 'image', id: 'image' },
 		{ Header: 'Path', accessorKey: 'path', id: 'path' }
 	];
+
+	// // In your Svelte component, define an interface for the media file object
+	// interface MediaFile {
+	// 	image: string;
+	// 	name: string;
+	// 	path: string;
+	// 	thumbnail?: string;
+	// 	size?: string;
+	// }
+
+	// // Define the 'data' variable using the 'MediaFile' interface
+	// export let data: MediaFile[]; // This ensures that 'data' is an array of 'MediaFile' objects
+
+	// // Define the 'items' variable as an array of column definitions based on the MediaFile interface
+	// let items = [
+	// 	{ Header: 'Image', accessorKey: 'image', id: 'image' },
+	// 	{ Header: 'Name', accessorKey: 'name', id: 'name' },
+	// 	{ Header: 'Path', accessorKey: 'path', id: 'path' },
+	// 	{ Header: 'Thumbnail', accessorKey: 'thumbnail', id: 'thumbnail' },
+	// 	{ Header: 'Size', accessorKey: 'size', id: 'size' }
+	// ];
 </script>
 
 <div class="flex flex-col gap-1">
@@ -297,12 +305,14 @@
 			</div>
 		</div>
 	</div>
-
-	{#if !errorMessage}
+	<!-- Render the error message if it exists -->
+	{#if errorMessage}
+		<p class="h2 text-center text-error-500">{errorMessage}</p>
+	{:else}
 		<!-- Grid display -->
 		{#if view == 'grid'}
 			<div class="mx-auto flex flex-wrap gap-2">
-				Grid here<!-- {#each data as image}
+				{#each data as file}
 					<div
 						class={`card ${
 							gridSize === 'small'
@@ -312,24 +322,8 @@
 								: 'card-large'
 						}`}
 					>
-						
 						<section class="p-4 text-center">
-							{#if image.image.endsWith('.pdf')}
-								<iconify-icon
-									icon="vscode-icons:file-type-pdf2"
-									width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'}
-								/>
-							{:else if image.image.endsWith('.xlsx') || image.image.endsWith('.xls')}
-								<iconify-icon
-									icon="vscode-icons:file-type-excel"
-									width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'}
-								/>
-							{:else if image.image.endsWith('.docx') || image.image.endsWith('.doc')}
-								<iconify-icon
-									icon="vscode-icons:file-type-word"
-									width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'}
-								/>
-							{:else if image.image.endsWith('.jpg') || image.image.endsWith('.jpeg') || image.image.endsWith('.png') || image.image.endsWith('.svg') || image.image.endsWith('.webp') || image.image.endsWith('.avif')}
+							{#if file.thumbnail}
 								<img
 									class={`inline-block object-cover object-center ${
 										gridSize === 'small'
@@ -338,14 +332,11 @@
 											? 'h-36 w-36'
 											: 'h-80 w-80'
 									}`}
-									src={image.image}
-									alt={image.name}
+									src={file.thumbnail}
+									alt={file.name}
 								/>
 							{:else}
-								<iconify-icon
-									icon="noto-v1:question-mark"
-									width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'}
-								/>
+								<!-- Add code for rendering fallback image or message -->
 							{/if}
 						</section>
 						<footer
@@ -355,12 +346,13 @@
 							}`}
 						>
 							<div class="flex-col">
-								<div class="mb-1 line-clamp-2 font-semibold text-primary-500">{image.name}</div>
-								<div class="line-clamp-1">{image.path}</div>
+								<div class="mb-1 line-clamp-2 font-semibold text-primary-500">{file.name}</div>
+								<div class="line-clamp-1">{file.path}</div>
+								<div class="line-clamp-1">{file.size}</div>
 							</div>
 						</footer>
 					</div>
-				{/each} -->
+				{/each}
 			</div>
 		{:else}
 			<TanstackTable
@@ -374,8 +366,5 @@
 				bind:density
 			/>
 		{/if}
-	{:else}
-		<!-- Render error message -->
-		<p class="h2 text-center text-error-500">errorMessage not showing: {errorMessage}</p>
 	{/if}
 </div>
