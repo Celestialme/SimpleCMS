@@ -3,21 +3,27 @@
 	import type { FieldType } from './';
 	import { entryData, mode } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
+	import { collection } from '@src/collections';
 	export let field: FieldType;
 	let _data: FileList;
-	export const WidgetData = async () => _data;
+	let updated = false;
+	export const WidgetData = async () => (updated ? _data : null);
 	export let file: File | undefined = undefined; // pass file directly from imageArray
 	console.log(file);
 	let fieldName = getFieldName(field);
 	function setFile(node: HTMLInputElement) {
-		node.onchange = (e) => (_data = (e.target as HTMLInputElement).files as FileList);
+		node.onchange = (e) => {
+			if ((e.target as HTMLInputElement).files?.length == 0) return;
+			updated = true;
+			_data = (e.target as HTMLInputElement).files as FileList;
+		};
 
 		if (file instanceof File) {
 			let fileList = new DataTransfer();
 			fileList.items.add(file);
 			_data = node.files = fileList.files;
 		} else if ($mode === 'edit') {
-			axios.get(`/media/${field?.path}/${$entryData[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
+			axios.get(`/media/${field?.path}/${$collection.name}/original/${$entryData[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
 				let fileList = new DataTransfer();
 				let file = new File([data], $entryData[fieldName].name, {
 					type: $entryData[fieldName].mimetype

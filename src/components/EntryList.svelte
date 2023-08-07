@@ -18,7 +18,13 @@
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
 				for (let field of collection.fields) {
-					obj[field.label] = await field.display?.(entry[field.label], field, entry, $contentLanguage);
+					obj[field.label] = await field.display?.({
+						data: entry[field.label],
+						collection: $collection.name,
+						field,
+						entry,
+						contentLanguage: $contentLanguage
+					});
 				}
 				obj._id = entry._id;
 				return obj;

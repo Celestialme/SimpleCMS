@@ -1,4 +1,5 @@
 import fs from 'fs';
+
 import schemas, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
@@ -7,7 +8,8 @@ import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
-import { PUBLIC_MEDIA_FOLDER } from '$env/static/public';
+import { PUBLIC_MEDIA_FOLDER, PUBLIC_IMAGE_SIZES } from '$env/static/public';
+import { browser } from '$app/environment';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -59,9 +61,15 @@ export const obj2formData = (obj: any) => {
 	}
 	return formData;
 };
-export function saveFiles(data: FormData, collection: string) {
+export async function saveFiles(data: FormData, collection: string) {
+	if (browser) return;
+	let sharp = (await import('sharp')).default;
 	let files: any = {};
 	let _files: Array<any> = [];
+	console.log(PUBLIC_IMAGE_SIZES);
+	let env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
+	const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
+
 	let schema = schemas.find((schema) => schema.name === collection);
 	for (let [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {
@@ -75,9 +83,23 @@ export function saveFiles(data: FormData, collection: string) {
 		files[fieldname as keyof typeof files] = { name: blob.name, size: blob.size, type: blob.type, lastModified: blob.lastModified };
 		let path = _findFieldByTitle(schema, fieldname).path;
 
-		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}`)) fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}`, { recursive: true });
+		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collection}`)) {
+			for (let size in SIZES) {
+				fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collection}/${size}`, { recursive: true });
+			}
+		}
+		for (let size in SIZES) {
+			if (size == 'original') continue;
+			let arrayBuffer = await blob.arrayBuffer();
+			const thumbnailBuffer = await sharp(Buffer.from(arrayBuffer))
+				.rotate() // Rotate image according to EXIF data
+				.resize({ width: SIZES[size] })
+				.toFormat('avif', { quality: 80 })
+				.toBuffer();
+			fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collection}/${size}/${blob.name}`, thumbnailBuffer);
+		}
 		(blob as Blob).arrayBuffer().then((arrayBuffer) => {
-			fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${blob.name}`, Buffer.from(arrayBuffer));
+			fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collection}/original/${blob.name}`, Buffer.from(arrayBuffer));
 		});
 	}
 	return files;

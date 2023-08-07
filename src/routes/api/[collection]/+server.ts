@@ -28,7 +28,7 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 	}
 	let _id = data.get('_id');
 	formData = parse(formData);
-	let files = saveFiles(data, params.collection);
+	let files = await saveFiles(data, params.collection);
 
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, { ...formData, ...files }, { upsert: true })));
 };
@@ -45,7 +45,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 		}
 	}
 	if (!collection) return new Response('collection not found!!');
-	let files = saveFiles(data, params.collection);
+	let files = await saveFiles(data, params.collection);
 
 	return new Response(JSON.stringify(await collection.insertMany({ ...body, ...files })));
 };
