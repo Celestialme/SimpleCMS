@@ -10,7 +10,7 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"target": "ES2022", // which level of JS support to target
+		"target": "ES2020", // which level of JS support to target
 		"types": ["@sveltejs/kit"],
 		"noImplicitAny": false,
 		"baseUrl": ".",
@@ -22,7 +22,11 @@
 			"@root/*": ["./*"],
 			"@i18n/*": ["src/i18n"]
 		}
-	}
+	},
+	"includes": ["src/**/*.ts", "src/**/*.svelte", "types/**/*.ts"],
+	"excludes": ["node_modules/**", "**/*.test.ts"],
+	"noUnusedLocals": true,
+	"noUnusedParameters": true
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
 	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes

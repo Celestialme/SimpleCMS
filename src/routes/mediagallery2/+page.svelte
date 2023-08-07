@@ -78,7 +78,7 @@
 		localStorage.setItem('GalleryUserPreference', userPreference);
 	}
 
-	// // Table Data
+	// Table Data
 	let data = [
 		{
 			_id: '9rK2Lr9pLJjS5CK',
@@ -101,36 +101,79 @@
 		{ Header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' },
 		{ Header: 'Image', accessorKey: 'image', id: 'image' },
 		{ Header: 'Path', accessorKey: 'path', id: 'path' }
-	];
+	 ];
 
-	// // In your Svelte component, define an interface for the media file object
-	// interface MediaFile {
-	// 	image: string;
-	// 	name: string;
-	// 	path: string;
-	// 	thumbnail?: string;
-	// 	size?: string;
-	// }
+// 	// define an interface for the media file object
+// 	interface MediaFile {
+// 		image: string;
+// 		name: string;
+// 		path: string;
+// 		thumbnail?: string;
+// 		size?: string;
+// 	}
 
-	// // Define the 'data' variable using the 'MediaFile' interface
-	// export let data: MediaFile[]; // This ensures that 'data' is an array of 'MediaFile' objects
+// 	// Define the 'data' variable using the 'MediaFile' interface
+// 	export let data: MediaFile[] = [];
 
-	// // Define the 'items' variable as an array of column definitions based on the MediaFile interface
-	// let items = [
-	// 	{ Header: 'Image', accessorKey: 'image', id: 'image' },
-	// 	{ Header: 'Name', accessorKey: 'name', id: 'name' },
-	// 	{ Header: 'Path', accessorKey: 'path', id: 'path' },
-	// 	{ Header: 'Thumbnail', accessorKey: 'thumbnail', id: 'thumbnail' },
-	// 	{ Header: 'Size', accessorKey: 'size', id: 'size' }
-	// ];
+
+	// Define the 'items' variable as an array of column definitions based on the MediaFile interface
+// 	let items = [
+//   { Header: 'Image', accessorKey: 'image', id: 'image' },
+//   { Header: 'Name', accessorKey: 'name', id: 'name' },
+//   { Header: 'Path', accessorKey: 'path', id: 'path' },
+//   { Header: 'Thumbnail', accessorKey: 'thumbnail', id: 'thumbnail' },
+//   { Header: 'Size', accessorKey: 'size', id: 'size' }
+// ];
+
+// TODO: Fix Grid search
+function searchGrid(searchValue) {
+		// Get the data displayed in the grid
+		let gridData = images;
+
+		// Filter the data based on the search value
+		let filteredData = gridData.filter((item) => {
+			// Check if the image name or path contains the search query
+			return (
+				item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+				item.path.toLowerCase().includes(searchValue.toLowerCase())
+			);
+		});
+
+		// Update the data displayed in the grid with the filtered data
+		images = filteredData;
+	}
 </script>
 
 <div class="flex flex-col gap-1">
 	<PageTitle name="Media Gallery2" icon="bi:images" iconColor="text-primary-500" />
 
 	<div class="flex items-center justify-between">
-		<TanstackFilter bind:searchValue bind:searchShow bind:filterShow bind:columnShow bind:density />
+		{#if view == 'grid'}
+		<!-- TODO: add actual search -->
+			<!-- search input grid -->
+			<div class="btn-group variant-filled-surface">
+				<input
+					type="text"
+					class="input"
+					placeholder="Search Grid..."
+					on:input={(event) => {
+						if (event.target instanceof HTMLInputElement) {
+							//console.log(event.target.value);
+							searchGrid(event.target.value);
+						}
+					}}
+				/>
+				<button type="submit" class="btn-icon">
+					<iconify-icon icon="material-symbols:search" width="24" />
+				</button>
+			</div>
+		{:else}
 
+		<div>
+			<TanstackFilter bind:searchValue bind:searchShow bind:filterShow bind:columnShow bind:density />
+		</div>
+		{/if}
+		<div class="flex items-center justify-center gap-4">
 		<!-- Header block -->
 		<!-- Mobile -->
 		<div class="flex items-center justify-center text-center text-xs sm:hidden">
@@ -303,7 +346,7 @@
 					</button>
 				{/if}
 			</div>
-		</div>
+		</div></div>
 	</div>
 	<!-- Render the error message if it exists -->
 	{#if errorMessage}
