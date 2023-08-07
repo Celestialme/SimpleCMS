@@ -23,7 +23,7 @@
 			fileList.items.add(file);
 			_data = node.files = fileList.files;
 		} else if ($mode === 'edit') {
-			axios.get(`/media/${field?.path}/${$collection.name}/original/${$entryData[fieldName].name}`, { responseType: 'blob' }).then(({ data }) => {
+			axios.get($entryData[fieldName].thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
 				let fileList = new DataTransfer();
 				let file = new File([data], $entryData[fieldName].name, {
 					type: $entryData[fieldName].mimetype

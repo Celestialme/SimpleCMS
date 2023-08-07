@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import schemas, { collection } from '../collections';
+import collections, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import axios from 'axios';
@@ -61,7 +61,7 @@ export const obj2formData = (obj: any) => {
 	}
 	return formData;
 };
-export async function saveFiles(data: FormData, collection: string) {
+export async function saveFiles(data: FormData, collectionName: string) {
 	if (browser) return;
 	let sharp = (await import('sharp')).default;
 	let files: any = {};
@@ -70,7 +70,7 @@ export async function saveFiles(data: FormData, collection: string) {
 	let env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
 	const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
 
-	let schema = schemas.find((schema) => schema.name === collection);
+	let collection = collections.find((collection) => collection.name === collectionName);
 	for (let [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {
 			_files.push({ blob: fieldData, fieldname });
@@ -79,27 +79,39 @@ export async function saveFiles(data: FormData, collection: string) {
 
 	for (let file of _files) {
 		let { blob, fieldname } = file;
+		let name = removeExtension(blob.name);
+		let path = _findFieldByTitle(collection, fieldname).path;
+		let url = `/media/${path}/${collectionName}/original/${blob.name}`;
+		files[fieldname as keyof typeof files] = {
+			original: { name: blob.name, url, size: blob.size, type: blob.type, lastModified: blob.lastModified }
+		};
 
-		files[fieldname as keyof typeof files] = { name: blob.name, size: blob.size, type: blob.type, lastModified: blob.lastModified };
-		let path = _findFieldByTitle(schema, fieldname).path;
-
-		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collection}`)) {
+		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}`)) {
 			for (let size in SIZES) {
-				fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collection}/${size}`, { recursive: true });
+				fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${size}`, { recursive: true });
 			}
 		}
 		for (let size in SIZES) {
 			if (size == 'original') continue;
+			let fullName = `${name}.avif`;
 			let arrayBuffer = await blob.arrayBuffer();
 			const thumbnailBuffer = await sharp(Buffer.from(arrayBuffer))
 				.rotate() // Rotate image according to EXIF data
 				.resize({ width: SIZES[size] })
 				.toFormat('avif', { quality: 80 })
 				.toBuffer();
-			fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collection}/${size}/${blob.name}`, thumbnailBuffer);
+			fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${size}/${fullName}`, thumbnailBuffer);
+			let url = `/media/${path}/${collectionName}/${size}/${fullName}`;
+			files[fieldname as keyof typeof files][size] = {
+				name: fullName,
+				url,
+				size: blob.size,
+				type: 'image/avif',
+				lastModified: blob.lastModified
+			};
 		}
 		(blob as Blob).arrayBuffer().then((arrayBuffer) => {
-			fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collection}/original/${blob.name}`, Buffer.from(arrayBuffer));
+			fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${blob.name}`, Buffer.from(arrayBuffer));
 		});
 	}
 	return files;
@@ -200,4 +212,12 @@ export async function validate(auth: Auth, sessionID: string | null) {
 	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
 	if (!resp) return { user: {} as User, status: 404 };
 	return { user: resp.user as User, status: 200 };
+}
+function removeExtension(fileName) {
+	const lastDotIndex = fileName.lastIndexOf('.');
+	if (lastDotIndex === -1) {
+		// If the file has no extension, return the original fileName
+		return fileName;
+	}
+	return fileName.slice(0, lastDotIndex);
 }
