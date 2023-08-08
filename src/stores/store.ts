@@ -23,6 +23,9 @@ systemLanguage.subscribe((val) => {
 	setLocale(val as Locales);
 });
 
+// loading indicator
+export const loadingProgress = writable(0);
+
 // TranslationStatus.svelte
 export const translationStatusOpen = writable(false);
 

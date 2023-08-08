@@ -1,67 +1,62 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import type { FieldType } from '.';
-	import { entryData, mode } from '@src/stores/store';
+	import axios from 'axios';
+	import type { FieldType } from './';
+	import { entryData, mode, loadingProgress } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
-
+	import { collection } from '@src/collections';
 	import { FileDropzone } from '@skeletonlabs/skeleton';
 
-	export let field: FieldType | undefined;
 	let _data: FileList;
+	let updated = false;
 
-	export const WidgetData = async () => _data;
+	export let field: FieldType;
+	export const WidgetData = async () => (updated ? _data : null);
 	export let file: File | undefined = undefined; // pass file directly from imageArray
-	export let value: any; //fix for file dropzone <ImageUpload> was created with unknown prop 'value'?
+	console.log(file);
 
-	//console.log('imageUpload value', value);
 	let fieldName = getFieldName(field);
 	let sanitizedFileName: string | undefined = undefined;
 
-	onMount(async () => {
-		if ($mode === 'edit') {
-			try {
-				const controller = new AbortController();
-				const signal = controller.signal;
-				const response = await fetch(`/${field?.path}/${$entryData[fieldName].name}`, { signal });
-				const data = await response.blob();
-				//console.log('data returned by the server', data); // log the data returned by the server
+	function setFile(node: HTMLInputElement) {
+		// Reset loading progress
+		loadingProgress.set(0);
+
+		node.onchange = (e) => {
+			if ((e.target as HTMLInputElement).files?.length == 0) return;
+			updated = true;
+			_data = (e.target as HTMLInputElement).files as FileList;
+		};
+
+		if (file instanceof File) {
+			let fileList = new DataTransfer();
+			fileList.items.add(file);
+			_data = node.files = fileList.files;
+		} else if ($mode === 'edit') {
+			axios.get($entryData[fieldName].thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
 				let fileList = new DataTransfer();
 				let file = new File([data], $entryData[fieldName].name, {
 					type: $entryData[fieldName].mimetype
 				});
 				fileList.items.add(file);
-				_data = fileList.files;
-				//console.log('_data returned', _data); // log the value of _data
-			} catch (error) {
-				console.error(error);
-			}
+				_data = node.files = fileList.files;
+			});
 		}
-	});
-
-	$: if (file instanceof File) {
-		let fileList = new DataTransfer();
-		fileList.items.add(file);
-		_data = fileList.files;
-	}
-
-	function setFile(e: Event) {
-		const node = e.target as HTMLInputElement;
-		const files = node.files as FileList;
-
-		if (files && files[0]) {
-			const file = files[0];
-			sanitizedFileName = file.name.replace(/[^a-zA-Z0-9_.]/g, '');
-			const sanitizedFile = new File([file], sanitizedFileName, { type: file.type });
-
-			let fileList = new DataTransfer();
-			fileList.items.add(sanitizedFile);
-			_data = fileList.files;
-		}
+		// All files processed, set loading progress to 100%
+		loadingProgress.set(100);
 	}
 </script>
 
+<input
+	use:setFile
+	name={fieldName}
+	class="w-full cursor-pointer rounded-lg border border-surface-300 bg-surface-50 text-sm text-surface-900 focus:outline-none dark:border-surface-600 dark:bg-surface-700 dark:text-surface-400 dark:placeholder-surface-400"
+	type="file"
+/>
+
+<!-- TODO: Add skeleton DropZone for better User experience-->
 <!-- <FileDropzone /> -->
-<FileDropzone
+
+<!-- <FileDropzone
 	name={fieldName}
 	accept="image/*,image/webp,image/avif,image/svg+xml"
 	on:change={setFile}
@@ -73,9 +68,14 @@
 		><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment
 	>
 	<svelte:fragment slot="meta">PNG, JPG, GIF, WEBP, AVIF, and SVG allowed.</svelte:fragment>
-</FileDropzone>
+</FileDropzone> -->
 
-<!-- image preview -->
+<!-- Display loading progress -->
+{#if $loadingProgress !== 100}
+	<p>Loading Progress: {$loadingProgress}%</p>
+{/if}
+
+<!-- Image preview -->
 <!-- TODO: add further EXIF data for better media gallery search. -->
 {#if _data}
 	<div class="flex flex-col items-center md:flex-row">

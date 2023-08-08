@@ -1,13 +1,22 @@
 import fs from 'fs';
 import axios from 'axios';
-import schemas, { collection } from '../collections';
+import collections, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import { get } from 'svelte/store';
 import { contentLanguage } from '@src/stores/store';
 import { entryData, mode } from '@src/stores/store';
+
+// lucia
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
+
+import {
+	PUBLIC_MEDIA_FOLDER,
+	PUBLIC_IMAGE_SIZES,
+	PUBLIC_MEDIA_OUTPUT_FORMAT
+} from '$env/static/public';
+import { browser } from '$app/environment';
 
 export const config = {
 	headers: {
@@ -78,132 +87,135 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 };
 
 // Saves POSTS files to disk and returns file information
+export async function saveFiles(data: FormData, collectionName: string) {
+	if (browser) return;
+	let sharp = (await import('sharp')).default;
+	let files: any = {};
+	let _files: Array<any> = [];
+	//console.log('PUBLIC_IMAGE_SIZES:', PUBLIC_IMAGE_SIZES);
 
-// TODO: not working s code runs on client
-//import sharp from 'sharp';
-//import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
+	let env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
+	const SIZES = { ...env_sizes, original: 0, thumbnail: 200 } as const;
 
-// Saves POSTS files to disk and returns file information
-// export function saveFiles(data: FormData, collection: string) {
-// 	let files: any = {};
-// 	let _files: Array<any> = [];
-// 	let schema = schemas.find((schema) => schema.name === collection);
+	let collection = collections.find((collection) => collection.name === collectionName);
+	//console.log('collection:', collection);
 
-// 	const maxUploadSize = 100 * 1024 * 1024; // 100MB
-// 	const publicMediaOutputFormat: 'avif' | 'webp' | undefined = PUBLIC_MEDIA_OUTPUT_FORMAT as 'avif' | 'webp' | undefined;
-// 	const supportedFileTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
-
-// 	for (let [fieldname, fieldData] of data.entries()) {
-// 		if (fieldData instanceof Blob) {
-// 			// Check if the file size exceeds the maximum upload size
-// 			if (fieldData.size > maxUploadSize) {
-// 				throw new Error(`File size exceeds the maximum upload size of ${maxUploadSize} bytes`);
-// 			}
-// 			// Check if the file type is supported
-// 			if (!supportedFileTypes.includes(fieldData.type)) {
-// 				throw new Error(`Unsupported file type: ${fieldData.type}`);
-// 			}
-// 			_files.push({ blob: fieldData, fieldname });
-// 		}
-// 	}
-
-// 	for (let file of _files) {
-// 		let { blob, fieldname } = file;
-// 		let path = _findFieldByTitle(schema, fieldname).path;
-// 		let fileName = sanitizeFileName(blob.name, collection);
-// 		let filePath = `${path}/${fileName}`;
-
-// 		// Create folder if it doesn't exist
-// 		if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
-// 		// Check if the file already exists and throw an error if it does
-// 		if (fs.existsSync(filePath)) {
-// 			throw new Error(`File already exists: ${filePath}`);
-// 		}
-
-// 		files[fieldname as keyof typeof files] = { name: fileName, size: blob.size, type: blob.type, lastModified: blob.lastModified };
-
-// 		(blob as Blob).arrayBuffer().then(async (arrayBuffer) => {
-// 			// Optimize image files using sharp.js with a compression quality of 80% for webp and 50% for avif
-// 			if (publicMediaOutputFormat && ['webp', 'avif'].includes(publicMediaOutputFormat)) {
-// 				const compressionQuality = publicMediaOutputFormat === 'webp' ? 80 : 50;
-// 				const optimizedImageBuffer = await sharp(Buffer.from(arrayBuffer))
-// 					.rotate() // Rotate image according to EXIF data
-// 					.toFormat(publicMediaOutputFormat, { quality: compressionQuality })
-// 					.toBuffer();
-// 				fs.writeFileSync(filePath, optimizedImageBuffer);
-
-// 				// Create a reduced thumbnail using sharp.js with a compression quality of 80% for webp and 50% for avif
-// 				const thumbnailBuffer = await sharp(Buffer.from(arrayBuffer))
-// 					.rotate() // Rotate image according to EXIF data
-// 					.resize(320, 320)
-// 					.toFormat(publicMediaOutputFormat, { quality: compressionQuality })
-// 					.toBuffer();
-// 				const thumbnailPath = `${path}/thumbnail-${fileName}`;
-// 				fs.writeFileSync(thumbnailPath, thumbnailBuffer);
-// 				files[fieldname].thumbnail = thumbnailPath;
-// 			} else {
-// 				fs.writeFileSync(filePath, Buffer.from(arrayBuffer));
-// 			}
-// 		});
-// 	}
-// 	return files;
-// }
-
-// function sanitizeFileName(fileName: string, collection: string) {
-// 	// Sanitize the file name by adding the collection to it and replacing any characters that are not letters, numbers, periods or hyphens with underscores
-// 	return `${collection}-${fileName.replace(/[^a-z0-9.-]/gi, '_').toLowerCase()}`;
-// }
-// -----------------------
-export function saveFiles(data: FormData, collection: string) {
-	const files: any = {};
-	const _files: Array<any> = [];
-	const schema = schemas.find((schema) => schema.name === collection);
-
-	for (const [fieldname, fieldData] of data.entries()) {
+	for (let [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {
 			_files.push({ blob: fieldData, fieldname });
 		}
 	}
 
-	for (const file of _files) {
-		const { blob, fieldname } = file;
-		//console.log('save blob:', blob);
-		//console.log('save fieldname:', fieldname);
+	for (let file of _files) {
+		let { blob, fieldname } = file;
+		let name = removeExtension(blob.name);
+		let sanitizedFileName = sanitize(name);
+		// TODO Define collection IDs
+		let id = _findFieldByTitle(collection, fieldname).id;
+		console.log('id', id);
+		let path = _findFieldByTitle(collection, fieldname).path;
+		console.log('path', path);
+		let url = `/media/${path}/${collectionName}/${id}/original/${sanitizedFileName}`;
+		console.log('url', url);
 
+		let outputFormat = PUBLIC_MEDIA_OUTPUT_FORMAT || 'original';
+		let mimeType =
+			outputFormat === 'webp' ? 'image/webp' : outputFormat === 'avif' ? 'image/avif' : blob.type;
+
+		// display more image data
 		files[fieldname as keyof typeof files] = {
-			name: blob.name,
-			size: blob.size,
-			type: blob.type,
-			lastModified: blob.lastModified
+			original: {
+				name: sanitizedFileName,
+				url,
+				size: blob.size,
+				type: mimeType,
+				lastModified: blob.lastModified
+			}
 		};
-		const path = _findFieldByTitle(schema, fieldname).path;
-		//console.log('save path:', path);
 
-		if (!fs.existsSync(path)) fs.mkdirSync(path, { recursive: true });
-		(blob as Blob).arrayBuffer().then((arrayBuffer) => {
-			fs.writeFileSync(path + '/' + blob.name, Buffer.from(arrayBuffer));
+		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}`)) {
+			for (let size in SIZES) {
+				fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/${size}`, {
+					recursive: true
+				});
+			}
+		}
 
-			console.log('save filePath:', path + '/' + blob.name);
-		});
+		// Original, Thumbnail and responsive images as PUBLIC_IMAGE_SIZES
+		// Image type according to PUBLIC_MEDIA_OUTPUT_FORMAT 'o'rignial, webp, avif'
+		for (let size in SIZES) {
+			if (size == 'original') continue;
+			let fullName =
+				outputFormat === 'original'
+					? `${sanitizedFileName}.${blob.type.split('/')[1]}`
+					: `${sanitizedFileName}.${outputFormat}`;
+			let arrayBuffer = await blob.arrayBuffer();
+			const thumbnailBuffer = await sharp(Buffer.from(arrayBuffer))
+				.rotate() // Rotate image according to EXIF data
+				.resize({ width: SIZES[size] })
+				.toFormat(outputFormat === 'webp' ? 'webp' : 'avif', {
+					quality: outputFormat === 'webp' ? 80 : 50
+				})
+				.toBuffer();
+
+			fs.writeFileSync(
+				`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/${size}/${fullName}`,
+				thumbnailBuffer
+			);
+			let url = `/media/${path}/${collectionName}/${id}/${size}/${fullName}`;
+			files[fieldname as keyof typeof files][size] = {
+				name: fullName,
+				url,
+				size: blob.size,
+				type: mimeType,
+				lastModified: blob.lastModified
+			};
+		}
+
+		if (outputFormat !== 'original') {
+			const optimizedOriginalBuffer = await sharp(Buffer.from(await blob.arrayBuffer()))
+				.rotate() // Rotate image according to EXIF data
+				.toFormat(outputFormat === 'webp' ? 'webp' : 'avif', {
+					quality: outputFormat === 'webp' ? 80 : 50
+				})
+				.toBuffer();
+
+			fs.writeFileSync(
+				`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/original/${sanitizedFileName}.${outputFormat}`,
+				optimizedOriginalBuffer
+			);
+		} else {
+			(blob as Blob).arrayBuffer().then((arrayBuffer) => {
+				fs.writeFileSync(
+					`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/original/${sanitizedFileName}.${
+						blob.type.split('/')[1]
+					}`,
+					Buffer.from(arrayBuffer)
+				);
+			});
+		}
 	}
 	return files;
 }
 
+function sanitize(str: string) {
+	return str.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+}
+
 // finds field title that matches the fieldname and returns that field
-function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
+function _findFieldByTitle(schema: any, fieldname: string): any {
 	for (const field of schema.fields) {
 		//console.log('field is ', field.db_fieldName, field.label);
 		if (field.db_fieldName == fieldname || field.label == fieldname) {
-			found.val = true;
-
 			return field;
 		} else if (field.fields && field.fields.length > 0) {
-			return _findFieldByTitle(field, fieldname, found);
+			let result = _findFieldByTitle(field, fieldname);
+			if (result) {
+				return result;
+			}
 		}
 	}
-	if (!found) {
-		throw new Error('FIELD NOT FOUND');
-	}
+	return null;
 }
 
 // takes an object and recursively parses any values that can be converted to JSON
@@ -409,21 +421,11 @@ export async function getDates(collectionName: string) {
 	}
 }
 
-//TODO: is this actually required as all is done via DB?
-// Replaces the locale slug in a URL.
-//
-// If the `full` argument is set to `true`, the full URL is returned as a string.
-// e.g. https://mywebsite.com/en/blog/article-1 => https://mywebsite.com/de/blog/article-1
-//
-// Otherwise (default) the URL relative to the base is returned.
-// e.g. https://mywebsite.com/en/blog/article-1 => /de/blog/article-1
-export const replaceLocaleInUrl = (url: URL, locale: string, full = false): string => {
-	const [, , ...rest] = url.pathname.split('/');
-	const new_pathname = `/${[locale, ...rest].join('/')}`;
-	if (!full) {
-		return `${new_pathname}${url.search}`;
+function removeExtension(fileName) {
+	const lastDotIndex = fileName.lastIndexOf('.');
+	if (lastDotIndex === -1) {
+		// If the file has no extension, return the original fileName
+		return fileName;
 	}
-	const newUrl = new URL(url.toString());
-	newUrl.pathname = new_pathname;
-	return newUrl.toString();
-};
+	return fileName.slice(0, lastDotIndex);
+}

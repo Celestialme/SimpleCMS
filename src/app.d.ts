@@ -30,9 +30,13 @@ declare global {
 		// interface Platform {}
 	}
 
-	type DISPLAY = ((data: any, field: any, entry: any, contentLanguage: string) => Promise<any>) & {
-		default?: boolean;
-	};
+	type DISPLAY = (({
+		data: any,
+		collection: any,
+		field: any,
+		entry: any,
+		contentLanguage: string
+	}) => Promise<any>) & { default?: boolean };
 }
 
 // THIS IS IMPORTANT!!!

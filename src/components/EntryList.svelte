@@ -77,20 +77,21 @@
 		}, 400);
 
 		data = undefined;
-		data = await axios
+		data = (await axios
 			.get(`/api/${$collection.name}?page=${1}&length=${50}`)
-			.then((response) => response.data as { entryList: [any]; totalCount: number });
+			.then((data) => data.data)) as { entryList: [any]; totalCount: number };
 		//console.log(data);
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
 				for (let field of collection.fields) {
-					obj[field.label] = await field.display?.(
-						entry[field.label],
+					obj[field.label] = await field.display?.({
+						data: entry[field.label],
+						collection: $collection.name,
 						field,
 						entry,
-						$contentLanguage
-					);
+						contentLanguage: $contentLanguage
+					});
 				}
 				obj._id = entry._id;
 				return obj;
@@ -114,7 +115,7 @@
 		// READ CONFIG FROM LOCAL STORAGE AND APPLY THE VISIBILITY
 		if (localStorage.getItem(`TanstackConfiguration-${$collection.name}`)) {
 			JSON.parse(localStorage.getItem(`TanstackConfiguration-${$collection.name}`)).forEach(
-				(item) => {
+				(item: any) => {
 					getColumnByName(item.accessorKey)?.toggleVisibility(item.visible);
 				}
 			);

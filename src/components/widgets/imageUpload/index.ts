@@ -14,8 +14,8 @@ const widget = ({
 	path = ''
 }: Params) => {
 	if (!display) {
-		display = async (data, field, entry, contentLanguage) => {
-			return `<img class='max-w-[200px] inline-block' src="/${path}/${data?.name}" />`;
+		display = async ({ data, collection, field, entry, contentLanguage }) => {
+			return `<img class='max-w-[200px] inline-block' src="${data?.thumbnail.url}" />`;
 		};
 		display.default = true;
 	}

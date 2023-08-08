@@ -20,6 +20,8 @@ const myPlugin = {
 	configureServer(server) {
 		server.watcher.addListener('all', (event, path) => {
 			if (event == 'change') return;
+			if (!path.includes('src\\collections') && !path.includes('src/collections')) return;
+
 			console.log(event, path);
 			updateImports();
 		});

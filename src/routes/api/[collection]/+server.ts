@@ -8,8 +8,10 @@ export const GET: RequestHandler = async ({ params, url }) => {
 	const page = parseInt(url.searchParams.get('page') as string) || 1;
 	// Retrieve collection specified in params object
 	const collection = collections[params.collection];
+
 	// TODO: Create an index on the fields that are commonly used in queries to speed up find operation
-	//collection.createIndex({ field1: 1 });
+	// collection.createIndex({ field1: 1 });
+
 	// Retrieve value of length key from search parameters of url object and parse it as integer. If value is not valid integer, assign Infinity to length variable
 	const length = parseInt(url.searchParams.get('length') as string) || Infinity;
 	// Validate length against predefined rules or constraints
@@ -69,7 +71,7 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 	// }
 
 	// Call saveFiles function with arguments data and params.collection and assign its return value to variable files
-	const files = saveFiles(data, params.collection);
+	const files = await saveFiles(data, params.collection);
 
 	// Return new Response object containing JSON stringified result of updating one document in collection where its _id property matches _id, with properties from both formData and files objects, with option to upsert
 	return new Response(
@@ -81,6 +83,10 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 export const POST: RequestHandler = async ({ params, request }) => {
 	// Retrieve the collection specified in the params object
 	const collection = collections[params.collection];
+
+	// Validate collection against predefined rules or constraints
+	if (!collection) return new Response('Collection not found');
+
 	// Retrieve the form data from the request object
 	const data = await request.formData();
 	// Create an empty object named body
@@ -95,23 +101,14 @@ export const POST: RequestHandler = async ({ params, request }) => {
 			body[key] = data.get(key) as string;
 		}
 	}
-	// If collection is not found, return a new Response object with message 'collection not found!!'
-	if (!collection) return new Response('collection not found!!');
-
-	// TODO: Validate body against predefined rules or constraints
-	// if (!body.field1 || typeof body.field1 !== 'string') {
-	// 	return new Response('Invalid value for field1');
-	// }
-	// if (!body.field2 || typeof body.field2 !== 'number') {
-	// 	return new Response('Invalid value for field2');
-	// }
-
-	// Call saveFiles function with arguments data and params.collection and assign its return value to a variable named files
-	const files = saveFiles(data, params.collection);
 
 	try {
+		// Call saveFiles function with arguments data and params.collection and assign its return value to a variable named files
+		const files = await saveFiles(data, params.collection);
+
 		// Insert many documents into collection with properties from both body and files objects
 		const result = await collection.insertMany({ ...body, ...files });
+
 		// Return a new Response object containing a JSON stringified result
 		return new Response(JSON.stringify(result));
 	} catch (e) {
@@ -123,43 +120,33 @@ export const POST: RequestHandler = async ({ params, request }) => {
 // Export an asynchronous function named DELETE that is a RequestHandler
 // TODO: deleted files to a trash folder and automatically removing files from the trash folder after 30 days
 export const DELETE: RequestHandler = async ({ params, request }) => {
-	// Retrieve the collection specified in the params object
-	const collection = collections[params.collection];
-	// Retrieve the form data from the request object
-	const data = await request.formData();
+	// Retrieve collection specified in params object
+	let collection = collections[params.collection];
+	// Retrieve data from request object
+	let data = await request.formData();
 
-	// Get the value of the ids key from the form data and parse it as a JSON object
+	// Retrieve value of ids key from data object and parse it as JSON
 	let ids = data.get('ids') as string;
-	ids = JSON.parse(ids);
-
-	// Validate ids against predefined rules or constraints
-	if (!Array.isArray(ids) || ids.length === 0) {
+	try {
+		ids = JSON.parse(ids);
+	} catch (e) {
 		return new Response('Invalid value for ids');
 	}
 
-	// Move deleted files to trash folder
-	// for (const id of ids) {
-	// 	// Get the file path and name based on the collection and id
-
-	// 	// Move the file to the trash folder
-	// 	await fs.promises.rename(filePath, `./trash/${fileName}`);
-	// }
-
-	// Log the value of ids and its type to the console
-	// console.log(ids);
-	// console.log(typeof ids);
+	// Validate ids against predefined rules or constraints
+	if (!Array.isArray(ids)) {
+		return new Response('Invalid value for ids');
+	}
 
 	try {
-		// Delete many documents from the collection where their _id property is in the array of ids
+		// Delete documents in collection with _id in ids array
 		const result = await collection.deleteMany({
 			_id: {
 				$in: ids
 			}
 		});
-		// Return a new Response object containing a JSON stringified result
 		return new Response(JSON.stringify(result));
 	} catch (e) {
-		// Return an error message if an error occurs
-		return new Response('An error occurred while deleting data from the collection');
+		return new Response('An error occurred while deleting documents from the collection');
 	}
 };

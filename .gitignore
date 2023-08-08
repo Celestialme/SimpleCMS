@@ -12,5 +12,5 @@ vite.config.ts.timestamp-*
 package-lock.json
 /tmp
 trash/
-mediafiles/
+mediaFiles/
 
