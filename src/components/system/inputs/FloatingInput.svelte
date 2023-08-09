@@ -34,7 +34,7 @@
 	<iconify-icon icon={leading_icon} class={iconClass} />
 
 	<input
-		class={twMerge('bg-transparent text-white', inputClass)}
+		class={twMerge('bg-transparent text-black', inputClass)}
 		bind:this={inputElement}
 		use:initInput
 		placeholder=" "
@@ -42,6 +42,7 @@
 		{name}
 		id="input"
 		bind:value
+		class:text-white={theme == 'dark'}
 	/>
 	<label for="input" class="text-xs text-gray-400"
 		>{label}
