@@ -1,7 +1,6 @@
-import type { Params } from './types';
+import { type Params, GuiSchema } from './types';
 import MegaMenu from './MegaMenu.svelte';
 import { writable, type Writable } from 'svelte/store';
-import { GuiSchema } from './types';
 export let currentChild: Writable<any> = writable({});
 const widget = ({
 	// Accept parameters from collection
@@ -11,7 +10,7 @@ const widget = ({
 	label
 }: Params) => {
 	if (!display) {
-		display = async (data, field, entry, contentLanguage) => {
+		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			return data.Header[contentLanguage];
 		};
 		display.default = true;

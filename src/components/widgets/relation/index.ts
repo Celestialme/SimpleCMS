@@ -1,10 +1,9 @@
 import { findById } from '@src/utils/utils';
 import Relation from './Relation.svelte';
-import type { Params } from './types';
-import { GuiSchema } from '../text/types';
+import { type Params, GuiSchema } from './types';
 const widget = ({ label, db_fieldName, display, relation }: Params) => {
 	if (!display) {
-		display = async (data, field, entry, contentLanguage) => {
+		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			if (typeof data == 'string') {
 				data = await findById(data, relation);
 			}

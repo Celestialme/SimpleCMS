@@ -4,10 +4,11 @@ import Menu from './Menu';
 import Posts1 from './Posts1';
 import Posts2 from './Posts2';
 import Posts3 from './Posts3';
+import rel from './rel';
 import Relation from './Relation';
 import thumbs from './thumbs';
 
-let allCollections = [ImageArray, Media, Menu, Posts1, Posts2, Posts3, Relation, thumbs];
+let allCollections = [ImageArray, Media, Menu, Posts1, Posts2, Posts3, rel, Relation, thumbs];
 
 import { writable } from 'svelte/store';
 

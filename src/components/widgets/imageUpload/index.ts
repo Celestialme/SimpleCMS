@@ -1,6 +1,5 @@
-import type { Params } from './types';
+import { type Params, GuiSchema } from './types';
 import ImageUpload from './ImageUpload.svelte';
-import { GuiSchema } from '../text/types';
 const widget = ({ label, db_fieldName, display, path = '' }: Params) => {
 	if (!display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {

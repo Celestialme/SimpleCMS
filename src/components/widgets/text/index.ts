@@ -3,7 +3,7 @@ import Text from './Text.svelte';
 import { GuiSchema, type Params } from './types';
 const widget = ({ label, db_fieldName, display, translated = false }: Params) => {
 	if (!display) {
-		display = async (data, field, entry, contentLanguage) => {
+		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGE] || 'NO entry';
 		};
