@@ -2,6 +2,7 @@
 	import type { Schema } from '@src/collections/types';
 	import { allCollections } from '@src/collections';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
+	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 	export let value: Schema | string = '';
 	export let theme: 'dark' | 'light' = 'dark';
 	export let label = '';
@@ -14,4 +15,4 @@
 	$: value = _value;
 </script>
 
-<FloatingInput bind:value={_value} type="text" bind:label name={label} {theme} />
+<DropDown items={Object.keys(allCollections)} bind:selected={_value} label="Select Collection" />
