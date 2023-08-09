@@ -1,13 +1,8 @@
+import Posts2 from './Posts2';
 import widgets from '../components/widgets';
-import Posts from './Posts2';
 import type { Schema } from './types';
 let schema: Schema = {
 	name: 'relation',
-	fields: [
-		widgets.Relation({
-			label: 'relation',
-			relation: Posts
-		})
-	]
+	fields: [widgets.Relation({ label: 'relation', relation: Posts2 })]
 };
 export default schema;

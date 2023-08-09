@@ -49,11 +49,13 @@ export const obj2formData = (obj: any) => {
 			key,
 			JSON.stringify(obj[key], (key, val) => {
 				if (!val && val !== false) return undefined;
-				if (key == 'schema') return undefined;
-				if (key == 'display' && val.default == true) return undefined;
-				if (key == 'widget') return val.key;
-				if (typeof val === 'function') {
-					return val + '';
+				else if (key == 'schema') return undefined;
+				else if (key == 'display' && val.default == true) return undefined;
+				else if (key == 'display') return '🗑️' + val + '🗑️';
+				else if (key == 'widget') return { key: val.key };
+				else if (key == 'relation') return '🗑️' + val + '🗑️';
+				else if (typeof val === 'function') {
+					return '🗑️' + val + '🗑️';
 				}
 				return val;
 			})
@@ -221,3 +223,4 @@ function removeExtension(fileName) {
 	}
 	return fileName.slice(0, lastDotIndex);
 }
+export let asAny = (value: any) => value;

@@ -7,6 +7,7 @@
 	import Fields from '@src/components/Fields.svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import Icon from '@iconify/svelte';
+	import { collection } from '@src/collections';
 	export let field: FieldType | undefined;
 	let fieldName = getFieldName(field);
 	export let value = $entryData[fieldName];
@@ -51,7 +52,7 @@
 		} else {
 			data = await extractData(fieldsData);
 		}
-		display = await field?.display(data, field, $entryData, $contentLanguage);
+		display = await field?.display({ data, field, collection: $collection, entry: $entryData, contentLanguage: $contentLanguage });
 	})(expanded);
 </script>
 

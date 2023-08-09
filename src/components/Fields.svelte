@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { collection } from '@src/collections';
 	import { collectionValue } from '@src/stores/store';
-	import { getFieldName } from '@src/utils/utils';
+	import { asAny, getFieldName } from '@src/utils/utils';
 	export let fields: typeof $collection.fields | undefined = undefined;
-	let asAny = (value: any) => value;
+
 	export let root = true; // if Fields is not part of any widget.
 	export let fieldsData = {};
 	export let customData = {};

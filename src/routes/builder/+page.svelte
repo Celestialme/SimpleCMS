@@ -20,7 +20,7 @@
 		console.log({ ...$collection.fields });
 		let data =
 			$mode == 'edit'
-				? obj2formData({ oldName: $collection.name, collectionName: name, fields: $collection.fields })
+				? obj2formData({ originalName: $collection.name, collectionName: name, fields: $collection.fields })
 				: obj2formData({ fields, collectionName: name });
 		axios.post(``, data, {
 			headers: {

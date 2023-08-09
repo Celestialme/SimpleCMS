@@ -8,13 +8,13 @@ export async function updateImports() {
 	let indexFile = fs.readFileSync('./src/collections/index.ts', 'utf-8');
 	indexFile = indexFile.replace(/import \w+ from ["']\.\/.*;\s?/g, '').replace(/let allCollections\s?=\s?.*/g, '');
 	let imports = '';
-	let allCollections = ' let allCollections=[';
+	let allCollections = ' let allCollections={';
 	for (let file of files) {
 		let name = file.replace('.ts', '');
 		imports += `import ${name} from './${name}';\n`;
 		allCollections += `${name},`;
 	}
-	allCollections = allCollections.substring(0, allCollections.length - 1) + ']';
+	allCollections = allCollections.substring(0, allCollections.length - 1) + '}';
 	if (!compare(files, saveFiles)) {
 		fs.writeFileSync('./src/collections/index.ts', imports + '\n' + allCollections + '\n' + indexFile);
 		saveFiles = files;
