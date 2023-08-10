@@ -1,5 +1,7 @@
 import type { Schema } from '@src/collections/types';
 
+import GuiField from './GuiField.svelte';
+
 export type Params = {
 	label: string;
 	display?: DISPLAY;
@@ -8,4 +10,16 @@ export type Params = {
 	widget?: any;
 	schema?: any;
 	relation: Schema;
+};
+
+export let GuiSchema = {
+	label: { widget: FloatingInput, required: true },
+	display: { widget: FloatingInput, required: true },
+	db_fieldName: { widget: FloatingInput, required: true },
+	// Widget Specific parameters
+	relation: {
+		widget: GuiField,
+		required: true,
+		imports: ['import {relation} from "./{relation}"']
+	}
 };

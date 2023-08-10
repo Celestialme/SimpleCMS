@@ -11,30 +11,30 @@ import path from 'path';
 
 // Move the function outside the load function so it can be accessed from the Svelte component
 async function getAllFilesFromMediaFilesFolder(mediaDir, user) {
-  // Read the contents of the media files folder
-  const files = await fs.promises.readdir(mediaDir);
+	// Read the contents of the media files folder
+	const files = await fs.promises.readdir(mediaDir);
 
-  // Map the file names to objects representing the media files
-  const mediaFiles = files.map((file) => {
-    const filePath = path.join(mediaDir, file);
-    const fileExt = path.extname(filePath).toLowerCase();
-    const fileName = path.parse(file).name;
-    let thumbnail: any;
+	// Map the file names to objects representing the media files
+	const mediaFiles = files.map((file) => {
+		const filePath = path.join(mediaDir, file);
+		const fileExt = path.extname(filePath).toLowerCase();
+		const fileName = path.parse(file).name;
+		let thumbnail: any;
 
-    if (['.jpeg', '.jpg', '.png', '.webp', '.avif', '.tiff'].includes(fileExt)) {
-      const collectionDir = path.relative(mediaDir, path.dirname(filePath));
-      thumbnail = `${PUBLIC_MEDIA_FOLDER}/thumbnails/${collectionDir}/${fileName}.avif`;
-    } else if (fileExt === '.docx') {
-      thumbnail = `<iconify-icon icon="vscode-icons:file-type-word"></iconify-icon>`;
-    } else if (fileExt === '.xlsx') {
-      thumbnail = `<iconify-icon icon="vscode-icons:file-type-excel"></iconify-icon>`;
-    } else if (fileExt === '.pptx') {
-      thumbnail = `<iconify-icon icon="vscode-icons:file-type-powerpoint"></iconify-icon>`;
-    } else if (fileExt === '.pdf') {
-      thumbnail = `<iconify-icon icon="vscode-icons:file-type-pdf2"></iconify-icon>`;
-    } else if (fileExt === '.svg') {
-      thumbnail = `${PUBLIC_MEDIA_FOLDER}/${file}`;
-    }
+		if (['.jpeg', '.jpg', '.png', '.webp', '.avif', '.tiff'].includes(fileExt)) {
+			const collectionDir = path.relative(mediaDir, path.dirname(filePath));
+			thumbnail = `${PUBLIC_MEDIA_FOLDER}/thumbnails/${collectionDir}/${fileName}.avif`;
+		} else if (fileExt === '.docx') {
+			thumbnail = `<iconify-icon icon="vscode-icons:file-type-word"></iconify-icon>`;
+		} else if (fileExt === '.xlsx') {
+			thumbnail = `<iconify-icon icon="vscode-icons:file-type-excel"></iconify-icon>`;
+		} else if (fileExt === '.pptx') {
+			thumbnail = `<iconify-icon icon="vscode-icons:file-type-powerpoint"></iconify-icon>`;
+		} else if (fileExt === '.pdf') {
+			thumbnail = `<iconify-icon icon="vscode-icons:file-type-pdf2"></iconify-icon>`;
+		} else if (fileExt === '.svg') {
+			thumbnail = `${PUBLIC_MEDIA_FOLDER}/${file}`;
+		}
 
 		// Check if the user has permission to view this media file based on their role
 		let hasPermission = false;

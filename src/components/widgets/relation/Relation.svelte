@@ -2,6 +2,7 @@
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
 	import { extractData, find, findById, getFieldName, saveFormData } from '@src/utils/utils';
+	import { collection } from '@src/collections';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
 	import { contentLanguage } from '@src/stores/store';
@@ -62,7 +63,7 @@
 		} else {
 			data = await extractData(fieldsData);
 		}
-		display = await field?.display(data, field, $entryData, $contentLanguage);
+		display = await field?.display({ data, field, collection: $collection, entry: $entryData, contentLanguage: $contentLanguage });
 	})(expanded);
 </script>
 

@@ -12,7 +12,6 @@
 	import { contentLanguage } from '@src/stores/store';
 
 	import axios from 'axios';
-
 	import { writable } from 'svelte/store';
 	import { flip } from 'svelte/animate';
 	import { slide } from 'svelte/transition';
@@ -64,8 +63,10 @@
 
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
-	let deleteMap: any = {};
-	let deleteAll = false;
+
+	let tickMap = {}; // Object to track ticked rows
+	let tickAll = false;
+
 	let sorting: any = [];
 	let columnOrder: never[] = [];
 	let columnVisibility = {};
@@ -106,8 +107,8 @@
 				return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
 			})
 		}));
-		deleteMap = {};
-		deleteAll = false;
+		tickMap = {};
+		tickAll= false;
 
 		clearTimeout(loadingTimer);
 		isLoading = false;
@@ -219,8 +220,8 @@
 	}
 
 	$: refresh($collection);
-	$: process_deleteAll(deleteAll);
-	$: Object.values(deleteMap).includes(true) ? mode.set('delete') : mode.set('view');
+	$: process_tickAll(tickAll);
+	$: Object.values(tickMap).includes(true) ? mode.set('delete') : mode.set('view');
 
 	const defaultColumns = $collection.fields.map((field) => ({
 		id: field.label,
@@ -252,42 +253,32 @@
 	//workaround for svelte-table bug
 	let flexRender = flexRenderBugged as (...args: Parameters<typeof flexRenderBugged>) => any;
 
-	//tick all
-	function process_deleteAll(deleteAll: boolean) {
-		if (deleteAll) {
+	// Tick All
+	function process_tickAll(tickAll: boolean) {
+		if (tickAll) {
 			for (let item in tableData) {
-				deleteMap[item] = true;
+				tickMap[item] = true;
 			}
 		} else {
-			for (let item in deleteMap) {
-				deleteMap[item] = false;
+			for (let item in tickMap) {
+				tickMap[item] = false;
 			}
 		}
 	}
 
-	// tick rows
+	// Tick Row Process Entry (formerly $deleteEntry)processEntry function
 	$deleteEntry = async () => {
-		loadingTimer = setTimeout(() => {
-			isLoading = true;
-		}, 400);
-
 		let deleteList: Array<string> = [];
-		for (let item in deleteMap) {
-			//console.log(tableData[item]);
-			deleteMap[item] && deleteList.push(tableData[item]._id);
+		for (let item in tickMap) {
+			console.log(tableData[item]);
+			tickMap[item] && deleteList.push(tableData[item]._id);
 		}
 		if (deleteList.length == 0) return;
 		let formData = new FormData();
 		formData.append('ids', JSON.stringify(deleteList));
-		await fetch(`/api/${$collection.name}`, {
-			method: 'DELETE',
-			body: formData
-		});
+		await axios.delete(`/api/${$collection.name}`, { data: formData });
 		refresh($collection);
 		mode.set('view');
-
-		clearTimeout(loadingTimer);
-		isLoading = false;
 	};
 
 	const flipDurationMs = 100;
@@ -520,8 +511,7 @@
 		</div>
 	</div>
 {/if}
-<!-- <p>deleteAll={deleteAll}</p>
-<p>deleteMap={JSON.stringify(deleteMap)}</p> -->
+
 <!-- Tanstack Table -->
 {#if isLoading}
 	<Loading />
@@ -541,11 +531,7 @@
 			{#each $table.getHeaderGroups() as headerGroup}
 				<tr class="divide-x divide-surface-400 border-b">
 					<th class="!w-6">
-						<TanstackIcons bind:checked={deleteAll} />
-						<!-- <TanstackIcons bind:cross={unpublishAll} />
-						<TanstackIcons bind:checked={publishAll} />						
-						<TanstackIcons bind:checked={cloneAll} />
-						<TanstackIcons bind:checked={scheduleAll} /> -->
+						<TanstackIcons bind:checked={tickAll} />
 					</th>
 
 					{#each headerGroup.headers as header}
@@ -599,7 +585,7 @@
 					}}
 				>
 					<td>
-						<TanstackIcons bind:checked={deleteMap[index]} class="ml-1" />
+						<TanstackIcons bind:checked={tickMap[index]} class="ml-1" />
 						<!-- <TanstackIcons bind:cross={unpublishMap[index]} />
 						<TanstackIcons bind:checked={publishMap[index]} />						
 						<TanstackIcons bind:checked={cloneMap[index]} />

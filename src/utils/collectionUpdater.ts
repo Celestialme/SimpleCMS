@@ -21,8 +21,7 @@ export async function updateImports() {
 
 	// Initialize variables to store import statements and allCollections declaration
 	let imports = '';
-	let allCollections = ' let allCollections=[';
-
+	let allCollections = ' let allCollections={';
 	// Loop through the files and generate import statements and allCollections declaration
 	for (let file of files) {
 		let name = file.replace('.ts', '');
@@ -31,7 +30,7 @@ export async function updateImports() {
 	}
 
 	// Remove trailing comma and close the array declaration
-	allCollections = allCollections.substring(0, allCollections.length - 1) + ']';
+	allCollections = allCollections.substring(0, allCollections.length - 1) + '}';
 
 	// Check if the files have changed and update the index file if necessary
 	if (!compare(files, saveFiles)) {

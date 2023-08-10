@@ -4,29 +4,29 @@
 
 	const dispatch = createEventDispatcher();
 
-	export let cross = false;
+	export let iconMode = "cross";
 	export let checked = false;
 
-	// console.log('checked in TanstackIcons:', checked);
-	// console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
+	console.log('checked in TanstackIcons:', checked);
+ 	console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
+
+	function handleIconClick() {
+		checked = !checked;
+		dispatch('iconClick');
+
+		// Update storeListboxValue based on current value and desired behavior
+		if ($storeListboxValue === 'create') {
+			storeListboxValue.set('delete');
+		} 
+	}
 </script>
 
 <button
 	class="flex h-[26px] w-[26px] items-center justify-center rounded-md border-2 border-surface-800 dark:border-surface-400 {$$props.class}"
 	on:keydown
-	on:click|stopPropagation={() => {
-		checked = !checked;
-		dispatch('iconClick');
-		// update storeListboxValue based on current value and desired behavior
-		if ($storeListboxValue === 'create') {
-			storeListboxValue.set('delete');
-		} else if ($storeListboxValue === 'publish') {
-			storeListboxValue.set('unpublish');
-		}
-		// add additional cases as needed
-	}}
+	on:click|stopPropagation={handleIconClick}
 >
-	{#if checked && !cross}
+{#if checked && iconMode === "cross"}
 		<!--Red Cross icon 3d-->
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -179,8 +179,9 @@
 				</linearGradient>
 			</defs>
 		</svg>
-	{:else if cross && !checked}
-		<!--Green Check icon 3d--><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+		{:else if checked && iconMode === "tick"}
+		<!--Green Check icon 3d-->
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 			<defs>
 				<filter id="j" color-interpolation-filters="sRGB">
 					<feGaussianBlur stdDeviation="2.42583" />

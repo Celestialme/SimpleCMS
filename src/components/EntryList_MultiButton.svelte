@@ -18,16 +18,17 @@
 	let { actionname, buttonClass, iconValue } = getButtonAndIconValues($storeListboxValue);
 
 	function handleButtonClick() {
-		mode.set($storeListboxValue);
-		dispatch($storeListboxValue);
-		dropdownOpen = false;
-		if (get(screenWidth) === 'mobile') {
-			toggleLeftSidebar.clickBack();
-		}
+    mode.set($storeListboxValue);
+    dispatch($storeListboxValue);
+    dropdownOpen = false;
+    if (get(screenWidth) === 'mobile') {
+        toggleLeftSidebar.clickBack();
+    }
 
-		// Automatically switch the correct sidebar
-		handleSidebarToggle();
-	}
+    
+    // Automatically switch the correct sidebar
+    handleSidebarToggle();
+}
 
 	function handleOptionClick(value) {
 		storeListboxValue.set(value);
@@ -37,7 +38,7 @@
 		dropdownOpen = false;
 	}
 
-	function getButtonAndIconValues(storeListboxValue: Mode) {
+	function getButtonAndIconValues(storeListboxValue:string) {
 		let actionname = '';
 		let buttonClass = '';
 		let iconValue = '';
@@ -90,7 +91,10 @@
 	}
 
 	// a reactive statement that runs whenever mode.set is updated
-	//$: if (mode.set === “create”) { switchSideBar.update((value) => !value); toggleRightSidebar.update((value) => !value); }
+
+$: {
+		({ actionname, buttonClass, iconValue } = getButtonAndIconValues($storeListboxValue));
+	}
 </script>
 
 <div class=" inline-flex rounded">
@@ -154,6 +158,7 @@
 					</button>
 				</li>
 			{/if}
+			
 			{#if $storeListboxValue !== 'unpublish'}
 				<li>
 					<button

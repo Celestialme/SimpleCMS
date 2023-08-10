@@ -58,10 +58,10 @@ let categories = [
 ];
 
 let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
-let unAssigned = allCollections.filter((x) => !collections.includes(x));
+let unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
 //console.log('index-unAssigned', unAssigned);
 
 //use this unassigned array
-export { categories, unAssigned };
+export { categories, unAssigned, allCollections };
 export default collections;
 export const collection = writable(collections?.[0]); // current collection
