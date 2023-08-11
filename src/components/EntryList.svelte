@@ -108,7 +108,7 @@
 			})
 		}));
 		tickMap = {};
-		tickAll= false;
+		tickAll = false;
 
 		clearTimeout(loadingTimer);
 		isLoading = false;
@@ -586,15 +586,12 @@
 				>
 					<td>
 						<TanstackIcons bind:checked={tickMap[index]} class="ml-1" />
-						<!-- <TanstackIcons bind:cross={unpublishMap[index]} />
-						<TanstackIcons bind:checked={publishMap[index]} />						
-						<TanstackIcons bind:checked={cloneMap[index]} />
-						<TanstackIcons bind:checked={scheduleMap[index]} /> -->
 					</td>
 
 					{#each row.getVisibleCells() as cell}
 						<td>
-							{@html cell.getValue()}
+							{cell.getValue()}
+							<!-- {@html cell.getValue()} -->
 						</td>
 					{/each}
 				</tr>

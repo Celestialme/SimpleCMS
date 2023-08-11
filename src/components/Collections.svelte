@@ -91,7 +91,7 @@
 	<!-- TODO: Apply Tooltip for collapsed  -->
 	<Accordion regionControl="bg-surface-500 uppercase text-white hover:!bg-surface-400">
 		<!-- Collection Parents -->
-		{#each filteredCategories as category, index}
+		{#each filteredCategories as category}
 			<AccordionItem
 				bind:open={category.open}
 				regionPanel={`divide-y divide-black my-0 ${
@@ -135,7 +135,7 @@
 								tabindex={index}
 								class="-mx-4 flex flex-row items-center py-1 pl-3 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
 								on:keydown
-								on:click={(e) => {
+								on:click={() => {
 									mode.set(modeSet);
 									$collection = _collection;
 								}}
@@ -150,7 +150,7 @@
 								tabindex={index}
 								class="-mx-4 flex flex-col items-center py-1 hover:bg-surface-400 hover:text-white dark:text-black hover:dark:text-white"
 								on:keydown
-								on:click={(e) => {
+								on:click={() => {
 									mode.set(modeSet);
 									$collection = _collection;
 								}}

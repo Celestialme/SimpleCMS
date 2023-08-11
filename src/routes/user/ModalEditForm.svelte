@@ -180,14 +180,13 @@
 				>{$LL.USER_NewPassword()}<span class="ml-2 text-error-500">*</span></label
 			>
 
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="absolute right-2 top-2" on:click={() => (showPassword = !showPassword)}>
+			<button class="absolute right-2 top-2" on:click={() => (showPassword = !showPassword)}>
 				{#if showPassword}
 					<iconify-icon icon="bi:eye-fill" color="base" width="24" />
 				{:else}
 					<iconify-icon icon="bi:eye-slash-fill" class="text-surface-500" width="24" />
 				{/if}
-			</div>
+			</button>
 
 			{#if errorStatus.password.status}
 				<div class="absolute left-0 top-11 text-xs text-error-500">
@@ -235,13 +234,13 @@
 				>{/if}
 
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<div class="absolute right-2 top-2" on:click={() => (showPassword = !showPassword)}>
+			<button class="absolute right-2 top-2" on:click={() => (showPassword = !showPassword)}>
 				{#if showPassword}
 					<iconify-icon icon="bi:eye-fill" color="base" width="24" />
 				{:else}
 					<iconify-icon icon="bi:eye-slash-fill" class="text-surface-500" width="24" />
 				{/if}
-			</div>
+			</button>
 
 			{#if errorStatus.confirm.status}
 				<div class="absolute left-0 top-11 text-xs text-error-500">

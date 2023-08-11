@@ -24,7 +24,7 @@
 		}
 	},
 	"includes": ["src/**/*.ts", "src/**/*.svelte", "types/**/*.ts"],
-	"excludes": ["node_modules/**", "**/*.test.ts"],
+
 	"noUnusedLocals": true,
 	"noUnusedParameters": true
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias

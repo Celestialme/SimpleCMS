@@ -61,7 +61,7 @@ export const actions: Actions = {
 					role
 				}
 			})
-			.catch((_) => null);
+			.catch(() => null);
 
 		if (!user) {
 			// An unknown error occurred.

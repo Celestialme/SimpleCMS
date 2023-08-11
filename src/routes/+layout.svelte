@@ -112,18 +112,16 @@
 	//skeleton
 	import {
 		AppShell,
-		AppBar,
 		Avatar,
 		Modal,
-		ProgressBar,
 		popup,
 		Toast,
-		toastStore,
 		setModeUserPrefers,
 		setModeCurrent
 	} from '@skeletonlabs/skeleton';
-	import { modeOsPrefers, modeUserPrefers, modeCurrent } from '@skeletonlabs/skeleton';
-	import type { ToastSettings, PopupSettings } from '@skeletonlabs/skeleton';
+
+	import { modeCurrent } from '@skeletonlabs/skeleton';
+	import type { PopupSettings } from '@skeletonlabs/skeleton';
 
 	//required for popups to function
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
@@ -182,7 +180,8 @@
 		}
 	});
 </script>
-<div >
+
+<div>
 	Mode <span class="font-bold text-primary-500">{$mode}</span>
 </div>
 

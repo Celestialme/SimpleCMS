@@ -26,7 +26,8 @@ export async function load({ params, event }) {
 	try {
 		// Check if media files directory exists
 		//const mediaDir = path.resolve(PUBLIC_MEDIA_FOLDER);
-		const mediaDir = path.resolve('./mediafiles');
+		const mediaDir = path.resolve(PUBLIC_MEDIA_FOLDER);
+
 		console.log(mediaDir);
 		if (!fs.existsSync(mediaDir)) {
 			// If it doesn't exist, return an error message
@@ -37,7 +38,7 @@ export async function load({ params, event }) {
 		}
 
 		// Check if media files cached directory exists
-		const cachedDir = path.resolve('./mediafiles/thumbnails');
+		const cachedDir = path.resolve(`${PUBLIC_MEDIA_FOLDER}/thumbnails`);
 		ensureDirectoryExists(cachedDir);
 
 		const collections = fs.readdirSync(mediaDir);
@@ -61,21 +62,30 @@ export async function load({ params, event }) {
 				const filePath = path.join(mediaDir, collection || '', file);
 				const fileExt = path.extname(filePath).toLowerCase();
 				const fileName = path.parse(file).name;
-				let thumbnail;
+				let thumbnail: any;
 
-				if (['.jpeg', '.jpg', '.png', '.webp', '.tiff'].includes(fileExt)) {
-					thumbnail = `/mediafiles/thumbnails/${collection || ''}/${fileName}.avif`;
-				} else if (['.docx', '.xlsx', '.pptx'].includes(fileExt)) {
-					thumbnail = `/path/to/your/icon/file.svg`;
+				if (['.jpeg', '.jpg', '.png', '.webp', '.avif', '.tiff'].includes(fileExt)) {
+					const collectionDir = path.relative(mediaDir, path.dirname(filePath));
+					thumbnail = `${PUBLIC_MEDIA_FOLDER}/thumbnails/${collectionDir}/${fileName}.avif`;
+				} else if (fileExt === '.docx') {
+					thumbnail = `<iconify-icon icon="vscode-icons:file-type-word"></iconify-icon>`;
+				} else if (fileExt === '.xlsx') {
+					thumbnail = `<iconify-icon icon="vscode-icons:file-type-excel"></iconify-icon>`;
+				} else if (fileExt === '.pptx') {
+					thumbnail = `<iconify-icon icon="vscode-icons:file-type-powerpoint"></iconify-icon>`;
+				} else if (fileExt === '.pdf') {
+					thumbnail = `<iconify-icon icon="vscode-icons:file-type-pdf2"></iconify-icon>`;
+				} else if (fileExt === '.svg') {
+					thumbnail = `${PUBLIC_MEDIA_FOLDER}/${file}`;
 				}
 
 				// TODO: Add user permission check
 				const hasPermission = true;
 
 				return {
-					image: `/mediafiles/${collection || ''}/${file}`,
+					image: `${PUBLIC_MEDIA_FOLDER}/${collection || ''}/${file}`,
 					name: file,
-					path: `/mediafiles/${collection || ''}`,
+					path: `${PUBLIC_MEDIA_FOLDER}/${collection || ''}`,
 					thumbnail,
 					hasPermission
 				};

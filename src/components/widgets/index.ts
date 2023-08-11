@@ -22,7 +22,7 @@ import RichText from './richText';
 import Seo from './seo';
 import Text from './text';
 
-let widgets = {
+const widgets = {
 	// Address flexible Address fields
 	//Address,
 	// Checkbox - boolean true / false checkbox

@@ -90,37 +90,37 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 // Saves POSTS files to disk and returns file information
 export async function saveFiles(data: FormData, collectionName: string) {
 	if (browser) return;
-	let sharp = (await import('sharp')).default;
-	let files: any = {};
-	let _files: Array<any> = [];
+	const sharp = (await import('sharp')).default;
+	const files: any = {};
+	const _files: Array<any> = [];
 	//console.log('PUBLIC_IMAGE_SIZES:', PUBLIC_IMAGE_SIZES);
 
-	let env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
+	const env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
 	const SIZES = { ...env_sizes, original: 0, thumbnail: 200 } as const;
 
-	let collection = collections.find((collection) => collection.name === collectionName);
+	const collection = collections.find((collection) => collection.name === collectionName);
 	//console.log('collection:', collection);
 
-	for (let [fieldname, fieldData] of data.entries()) {
+	for (const [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {
 			_files.push({ blob: fieldData, fieldname });
 		}
 	}
 
-	for (let file of _files) {
-		let { blob, fieldname } = file;
-		let name = removeExtension(blob.name);
-		let sanitizedFileName = sanitize(name);
+	for (const file of _files) {
+		const { blob, fieldname } = file;
+		const name = removeExtension(blob.name);
+		const sanitizedFileName = sanitize(name);
 		// TODO Define collection IDs
-		let id = _findFieldByTitle(collection, fieldname).id;
+		const id = _findFieldByTitle(collection, fieldname).id;
 		console.log('id', id);
-		let path = _findFieldByTitle(collection, fieldname).path;
+		const path = _findFieldByTitle(collection, fieldname).path;
 		console.log('path', path);
-		let url = `/media/${path}/${collectionName}/${id}/original/${sanitizedFileName}`;
+		const url = `/media/${path}/${collectionName}/${id}/original/${sanitizedFileName}`;
 		console.log('url', url);
 
-		let outputFormat = PUBLIC_MEDIA_OUTPUT_FORMAT || 'original';
-		let mimeType =
+		const outputFormat = PUBLIC_MEDIA_OUTPUT_FORMAT || 'original';
+		const mimeType =
 			outputFormat === 'webp' ? 'image/webp' : outputFormat === 'avif' ? 'image/avif' : blob.type;
 
 		// display more image data
@@ -135,7 +135,7 @@ export async function saveFiles(data: FormData, collectionName: string) {
 		};
 
 		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}`)) {
-			for (let size in SIZES) {
+			for (const size in SIZES) {
 				fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/${size}`, {
 					recursive: true
 				});
@@ -144,13 +144,13 @@ export async function saveFiles(data: FormData, collectionName: string) {
 
 		// Original, Thumbnail and responsive images as PUBLIC_IMAGE_SIZES
 		// Image type according to PUBLIC_MEDIA_OUTPUT_FORMAT 'o'rignial, webp, avif'
-		for (let size in SIZES) {
+		for (const size in SIZES) {
 			if (size == 'original') continue;
-			let fullName =
+			const fullName =
 				outputFormat === 'original'
 					? `${sanitizedFileName}.${blob.type.split('/')[1]}`
 					: `${sanitizedFileName}.${outputFormat}`;
-			let arrayBuffer = await blob.arrayBuffer();
+			const arrayBuffer = await blob.arrayBuffer();
 			const thumbnailBuffer = await sharp(Buffer.from(arrayBuffer))
 				.rotate() // Rotate image according to EXIF data
 				.resize({ width: SIZES[size] })
@@ -163,7 +163,7 @@ export async function saveFiles(data: FormData, collectionName: string) {
 				`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/${size}/${fullName}`,
 				thumbnailBuffer
 			);
-			let url = `/media/${path}/${collectionName}/${id}/${size}/${fullName}`;
+			const url = `/media/${path}/${collectionName}/${id}/${size}/${fullName}`;
 			files[fieldname as keyof typeof files][size] = {
 				name: fullName,
 				url,
