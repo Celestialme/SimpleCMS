@@ -4,11 +4,13 @@ import { validate } from '@src/utils/utils';
 import { superValidate } from 'sveltekit-superforms/server';
 import { addUserTokenSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { passwordToken } from '@lucia-auth/tokens';
-import { SESSION_COOKIE_NAME } from 'lucia-auth';
+import { SESSION_COOKIE_NAME, type Key } from 'lucia-auth';
+import mongoose from 'mongoose';
 //import type { User } from '@src/collections/Auth';
 
 // Load function to check if user is authenticated
 export async function load(event) {
+	let allUsers = await getAllUsers();
 	// Get session data from cookies
 	const session = event.cookies.get(SESSION_COOKIE_NAME) as string;
 
@@ -22,6 +24,7 @@ export async function load(event) {
 	// If user is authenticated, return the data for the page.
 	if (user.status == 200) {
 		return {
+			allUsers,
 			user: user.user,
 			addUserForm,
 			changePasswordForm
@@ -155,3 +158,15 @@ export const actions: Actions = {
 		return { form: changePasswordForm };
 	}
 };
+
+async function getAllUsers() {
+	const AUTH_KEY = mongoose.models['auth_key'];
+	let keys = await AUTH_KEY.find({});
+	let users = [];
+	for (let key of keys) {
+		let user = await auth.getUser(key['user_id']);
+		user.email = key._id.split(':')[1];
+		users.push(user);
+	}
+	return users;
+}

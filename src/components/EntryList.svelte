@@ -590,8 +590,8 @@
 
 					{#each row.getVisibleCells() as cell}
 						<td>
-							{cell.getValue()}
-							<!-- {@html cell.getValue()} -->
+							<!-- {cell.getValue()} -->
+							{@html cell.getValue()}
 						</td>
 					{/each}
 				</tr>

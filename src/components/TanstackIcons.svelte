@@ -4,11 +4,11 @@
 
 	const dispatch = createEventDispatcher();
 
-	export let iconMode = "cross";
+	export let iconMode = 'cross';
 	export let checked = false;
 
 	console.log('checked in TanstackIcons:', checked);
- 	console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
+	console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
 
 	function handleIconClick() {
 		checked = !checked;
@@ -17,7 +17,7 @@
 		// Update storeListboxValue based on current value and desired behavior
 		if ($storeListboxValue === 'create') {
 			storeListboxValue.set('delete');
-		} 
+		}
 	}
 </script>
 
@@ -26,7 +26,7 @@
 	on:keydown
 	on:click|stopPropagation={handleIconClick}
 >
-{#if checked && iconMode === "cross"}
+	{#if checked && iconMode === 'cross'}
 		<!--Red Cross icon 3d-->
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -179,7 +179,7 @@
 				</linearGradient>
 			</defs>
 		</svg>
-		{:else if checked && iconMode === "tick"}
+	{:else if checked && iconMode === 'tick'}
 		<!--Green Check icon 3d-->
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 			<defs>

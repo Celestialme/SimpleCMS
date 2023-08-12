@@ -3,7 +3,7 @@
 
 	// Define reactive variables to track the state of each element
 
-	export let searchValue = '';
+	export let globalSearchValue = '';
 	export let searchShow = false;
 	export let filterShow = false;
 	export let columnShow = false;
@@ -26,7 +26,7 @@
 			type="text"
 			placeholder="Search..."
 			class="varient-ghost-surface input h-12 w-64 outline-none transition-all duration-500 ease-in-out"
-			bind:value={searchValue}
+			bind:value={globalSearchValue}
 			on:blur={() => (searchShow = false)}
 			on:keydown={(e) => e.key === 'Enter' && (searchShow = false)}
 		/>
@@ -35,7 +35,7 @@
 			type="button"
 			on:click={() => {
 				closeOpenStates();
-				searchValue = '';
+				globalSearchValue = '';
 				searchShow = !searchShow;
 			}}
 			class="w-12 border-r border-surface-500"
@@ -47,12 +47,12 @@
 				role="button"
 				on:click={() => {
 					closeOpenStates();
-					searchValue = '';
+					globalSearchValue = '';
 				}}
 				on:keydown={(event) => {
 					if (event.key === 'Enter' || event.key === ' ') {
 						closeOpenStates();
-						searchValue = '';
+						globalSearchValue = '';
 					}
 				}}
 			/>

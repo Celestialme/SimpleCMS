@@ -4,7 +4,7 @@
 
 	// TanstackFilter
 	import TanstackFilter from '@src/components/TanstackFilter.svelte';
-	let searchValue = '';
+	let globalSearchValue = '';
 	let searchShow = false;
 	let filterShow = false;
 	let columnShow = false;
@@ -101,32 +101,31 @@
 		{ Header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' },
 		{ Header: 'Image', accessorKey: 'image', id: 'image' },
 		{ Header: 'Path', accessorKey: 'path', id: 'path' }
-	 ];
+	];
 
-// 	// define an interface for the media file object
-// 	interface MediaFile {
-// 		image: string;
-// 		name: string;
-// 		path: string;
-// 		thumbnail?: string;
-// 		size?: string;
-// 	}
+	// 	// define an interface for the media file object
+	// 	interface MediaFile {
+	// 		image: string;
+	// 		name: string;
+	// 		path: string;
+	// 		thumbnail?: string;
+	// 		size?: string;
+	// 	}
 
-// 	// Define the 'data' variable using the 'MediaFile' interface
-// 	export let data: MediaFile[] = [];
-
+	// 	// Define the 'data' variable using the 'MediaFile' interface
+	// 	export let data: MediaFile[] = [];
 
 	// Define the 'items' variable as an array of column definitions based on the MediaFile interface
-// 	let items = [
-//   { Header: 'Image', accessorKey: 'image', id: 'image' },
-//   { Header: 'Name', accessorKey: 'name', id: 'name' },
-//   { Header: 'Path', accessorKey: 'path', id: 'path' },
-//   { Header: 'Thumbnail', accessorKey: 'thumbnail', id: 'thumbnail' },
-//   { Header: 'Size', accessorKey: 'size', id: 'size' }
-// ];
+	// 	let items = [
+	//   { Header: 'Image', accessorKey: 'image', id: 'image' },
+	//   { Header: 'Name', accessorKey: 'name', id: 'name' },
+	//   { Header: 'Path', accessorKey: 'path', id: 'path' },
+	//   { Header: 'Thumbnail', accessorKey: 'thumbnail', id: 'thumbnail' },
+	//   { Header: 'Size', accessorKey: 'size', id: 'size' }
+	// ];
 
-// TODO: Fix Grid search
-function searchGrid(searchValue) {
+	// TODO: Fix Grid search
+	function searchGrid(searchValue) {
 		// Get the data displayed in the grid
 		let gridData = images;
 
@@ -149,7 +148,7 @@ function searchGrid(searchValue) {
 
 	<div class="flex items-center justify-between">
 		{#if view == 'grid'}
-		<!-- TODO: add actual search -->
+			<!-- TODO: add actual search -->
 			<!-- search input grid -->
 			<div class="btn-group variant-filled-surface">
 				<input
@@ -168,185 +167,198 @@ function searchGrid(searchValue) {
 				</button>
 			</div>
 		{:else}
-
-		<div>
-			<TanstackFilter bind:searchValue bind:searchShow bind:filterShow bind:columnShow bind:density />
-		</div>
+			<div>
+				<TanstackFilter
+					bind:searchValue={globalSearchValue}
+					bind:searchShow
+					bind:filterShow
+					bind:columnShow
+					bind:density
+				/>
+			</div>
 		{/if}
 		<div class="flex items-center justify-center gap-4">
-		<!-- Header block -->
-		<!-- Mobile -->
-		<div class="flex items-center justify-center text-center text-xs sm:hidden">
-			<!-- Display Grid / Table -->
-			<div class="flex flex-col items-center justify-center">
-				<div class="flex sm:divide-x sm:divide-gray-500">
-					{#if view === 'grid'}
-						<button
-							class="btn flex flex-col items-center justify-center px-1"
-							on:keydown
-							on:click={() => {
-								view = 'table';
-								storeUserPreference(view, gridSize, tableSize);
-							}}
-							on:keydown={(e) => {
-								if (e.key === 'Enter' || e.key === ' ') {
+			<!-- Header block -->
+			<!-- Mobile -->
+			<div class="flex items-center justify-center text-center text-xs sm:hidden">
+				<!-- Display Grid / Table -->
+				<div class="flex flex-col items-center justify-center">
+					<div class="flex sm:divide-x sm:divide-gray-500">
+						{#if view === 'grid'}
+							<button
+								class="btn flex flex-col items-center justify-center px-1"
+								on:keydown
+								on:click={() => {
 									view = 'table';
 									storeUserPreference(view, gridSize, tableSize);
-								}
-							}}
-						>
-							<p class="text-xs text-center">Display</p>
-							<iconify-icon
-								icon="material-symbols:grid-view-rounded"
-								height="42"
-								style={`color: white`}
-							/>
-							<p class="text-xs">Table</p>
-						</button>
-					{:else}
-						<button
-							class="btn flex flex-col items-center justify-center px-1"
-							on:keydown
-							on:click={() => {
-								view = 'grid';
-								storeUserPreference(view, gridSize, tableSize);
-							}}
-							on:keydown={(e) => {
-								if (e.key === 'Enter' || e.key === ' ') {
+								}}
+								on:keydown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										view = 'table';
+										storeUserPreference(view, gridSize, tableSize);
+									}
+								}}
+							>
+								<p class="text-xs text-center">Display</p>
+								<iconify-icon
+									icon="material-symbols:grid-view-rounded"
+									height="42"
+									style={`color: white`}
+								/>
+								<p class="text-xs">Table</p>
+							</button>
+						{:else}
+							<button
+								class="btn flex flex-col items-center justify-center px-1"
+								on:keydown
+								on:click={() => {
 									view = 'grid';
 									storeUserPreference(view, gridSize, tableSize);
-								}
-							}}
-						>
-							<p class="text-xs text-center">Display</p>
-							<iconify-icon
-								icon="material-symbols:list-alt-outline"
-								height="44"
-								style={`color: white`}
-							/>
+								}}
+								on:keydown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										view = 'grid';
+										storeUserPreference(view, gridSize, tableSize);
+									}
+								}}
+							>
+								<p class="text-xs text-center">Display</p>
+								<iconify-icon
+									icon="material-symbols:list-alt-outline"
+									height="44"
+									style={`color: white`}
+								/>
 
-							<!-- TODO: Center mobile labels -->
-							{#if view === 'table'}
-								<p class="text-xs text-center">Grid</p>
-							{:else}
-								<p class="text-xs text-center">Table</p>
-							{/if}
-						</button>
-					{/if}
+								<!-- TODO: Center mobile labels -->
+								{#if view === 'table'}
+									<p class="text-xs text-center">Grid</p>
+								{:else}
+									<p class="text-xs text-center">Table</p>
+								{/if}
+							</button>
+						{/if}
+					</div>
+				</div>
+
+				<!-- switch between small, medium, and large images -->
+				<div class="flex flex-col items-center">
+					<p class="text-xs">Size</p>
+					<div class="flex divide-x divide-surface-500">
+						{#if (view === 'grid' && gridSize === 'small') || (view === 'table' && tableSize === 'small')}
+							<button type="button" class="px-1" on:click={handleClick}>
+								<iconify-icon
+									icon="material-symbols:background-grid-small-sharp"
+									height="40"
+									style={`color: white`}
+								/>
+								<p class="text-xs">Small</p>
+							</button>
+						{:else if (view === 'grid' && gridSize === 'medium') || (view === 'table' && tableSize === 'medium')}
+							<button type="button" class="px-1" on:click={handleClick}>
+								<iconify-icon
+									icon="material-symbols:grid-on-sharp"
+									height="40"
+									style={`color: white`}
+								/>
+								<p class="text-xs">Medium</p>
+							</button>
+						{:else}
+							<button type="button" class="px-1" on:click={handleClick}>
+								<iconify-icon
+									icon="material-symbols:grid-view"
+									height="40"
+									style={`color: white`}
+								/>
+								<p class="text-xs">Large</p>
+							</button>
+						{/if}
+					</div>
+				</div>
+			</div>
+			<!-- Desktop -->
+			<!-- Display Grid / Table -->
+			<div class="hidden flex-col items-center sm:flex">
+				Display
+				<div class="flex divide-x divide-gray-500">
+					<button
+						class="px-2"
+						on:keydown
+						on:click={() => {
+							view = 'grid';
+							storeUserPreference(view, gridSize, tableSize);
+						}}
+						on:keydown={(e) => {
+							if (e.key === 'Enter' || e.key === ' ') {
+								view = 'grid';
+								storeUserPreference(view, gridSize, tableSize);
+							}
+						}}
+					>
+						<iconify-icon
+							icon="material-symbols:grid-view-rounded"
+							height="40"
+							style={`color: ${view === 'grid' ? 'white' : 'grey'}`}
+						/>
+						<br />Grid
+					</button>
+					<button
+						class="px-2"
+						on:keydown
+						on:click={() => {
+							view = 'table';
+							storeUserPreference(view, gridSize, tableSize);
+						}}
+						on:keydown={(e) => {
+							if (e.key === 'Enter' || e.key === ' ') {
+								view = 'table';
+								storeUserPreference(view, gridSize, tableSize);
+							}
+						}}
+					>
+						<iconify-icon
+							icon="material-symbols:list-alt-outline"
+							height="40"
+							style={`color: ${view === 'table' ? 'white' : 'grey'}`}
+						/>
+						<br />Table
+					</button>
 				</div>
 			</div>
 
 			<!-- switch between small, medium, and large images -->
-			<div class="flex flex-col items-center">
-				<p class="text-xs">Size</p>
-				<div class="flex divide-x divide-surface-500">
+			<div class="hidden flex-col items-center sm:flex">
+				Size
+				<div class="flex divide-x divide-gray-500">
 					{#if (view === 'grid' && gridSize === 'small') || (view === 'table' && tableSize === 'small')}
-						<button type="button" class="px-1" on:click={handleClick}>
+						<button type="button" class="px-1 md:px-2" on:click={handleClick}>
 							<iconify-icon
 								icon="material-symbols:background-grid-small-sharp"
 								height="40"
 								style={`color: white`}
 							/>
-							<p class="text-xs">Small</p>
+							<br />Small
 						</button>
 					{:else if (view === 'grid' && gridSize === 'medium') || (view === 'table' && tableSize === 'medium')}
-						<button type="button" class="px-1" on:click={handleClick}>
+						<button type="button" class="px-1 md:px-2" on:click={handleClick}>
 							<iconify-icon
 								icon="material-symbols:grid-on-sharp"
 								height="40"
 								style={`color: white`}
 							/>
-							<p class="text-xs">Medium</p>
+							<br />Medium
 						</button>
 					{:else}
-						<button type="button" class="px-1" on:click={handleClick}>
-							<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: white`} />
-							<p class="text-xs">Large</p>
+						<button type="button" class="px-1 md:px-2" on:click={handleClick}>
+							<iconify-icon
+								icon="material-symbols:grid-view"
+								height="40"
+								style={`color: white`}
+							/><br />Large
 						</button>
 					{/if}
 				</div>
 			</div>
 		</div>
-		<!-- Desktop -->
-		<!-- Display Grid / Table -->
-		<div class="hidden flex-col items-center sm:flex">
-			Display
-			<div class="flex divide-x divide-gray-500">
-				<button
-					class="px-2"
-					on:keydown
-					on:click={() => {
-						view = 'grid';
-						storeUserPreference(view, gridSize, tableSize);
-					}}
-					on:keydown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
-							view = 'grid';
-							storeUserPreference(view, gridSize, tableSize);
-						}
-					}}
-				>
-					<iconify-icon
-						icon="material-symbols:grid-view-rounded"
-						height="40"
-						style={`color: ${view === 'grid' ? 'white' : 'grey'}`}
-					/>
-					<br />Grid
-				</button>
-				<button
-					class="px-2"
-					on:keydown
-					on:click={() => {
-						view = 'table';
-						storeUserPreference(view, gridSize, tableSize);
-					}}
-					on:keydown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
-							view = 'table';
-							storeUserPreference(view, gridSize, tableSize);
-						}
-					}}
-				>
-					<iconify-icon
-						icon="material-symbols:list-alt-outline"
-						height="40"
-						style={`color: ${view === 'table' ? 'white' : 'grey'}`}
-					/>
-					<br />Table
-				</button>
-			</div>
-		</div>
-
-		<!-- switch between small, medium, and large images -->
-		<div class="hidden flex-col items-center sm:flex">
-			Size
-			<div class="flex divide-x divide-gray-500">
-				{#if (view === 'grid' && gridSize === 'small') || (view === 'table' && tableSize === 'small')}
-					<button type="button" class="px-1 md:px-2" on:click={handleClick}>
-						<iconify-icon
-							icon="material-symbols:background-grid-small-sharp"
-							height="40"
-							style={`color: white`}
-						/>
-						<br />Small
-					</button>
-				{:else if (view === 'grid' && gridSize === 'medium') || (view === 'table' && tableSize === 'medium')}
-					<button type="button" class="px-1 md:px-2" on:click={handleClick}>
-						<iconify-icon
-							icon="material-symbols:grid-on-sharp"
-							height="40"
-							style={`color: white`}
-						/>
-						<br />Medium
-					</button>
-				{:else}
-					<button type="button" class="px-1 md:px-2" on:click={handleClick}>
-						<iconify-icon icon="material-symbols:grid-view" height="40" style={`color: white`} /><br
-						/>Large
-					</button>
-				{/if}
-			</div>
-		</div></div>
 	</div>
 	<!-- Render the error message if it exists -->
 	{#if errorMessage}
@@ -403,7 +415,7 @@ function searchGrid(searchValue) {
 				{items}
 				tableData={data}
 				dataSourceName="AdminArea"
-				bind:searchValue
+				bind:globalSearchValue
 				bind:filterShow
 				bind:columnShow
 				bind:density

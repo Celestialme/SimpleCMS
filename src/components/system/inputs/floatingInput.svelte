@@ -61,7 +61,7 @@ This FloatingInput component has the following properties:
 	export let type: 'password' | 'text' | 'email' = 'text';
 	export let value: InputProps['value'] = '';
 	export let tabindex: number = 0;
-
+	let inputElement: HTMLInputElement;
 	function getAutocompleteValue(label: string | undefined): string {
 		if (label === undefined) {
 			return '';
@@ -86,22 +86,26 @@ This FloatingInput component has the following properties:
 		showPassword = !showPassword;
 	};
 
-	const handleInput = (e: Event) => {
-		value = (e.target as HTMLInputElement).value;
-		if (onInput) onInput(value);
-	};
+	function initInput(node: HTMLInputElement) {
+		node.type = type;
+	}
+	$: if (type === 'password')
+		showPassword
+			? inputElement && (inputElement.type = 'text')
+			: inputElement && (inputElement.type = 'password');
 </script>
 
 <div class="group relative w-full">
 	<input
-		type={showPassword ? 'text' : type}
-		on:input={handleInput}
+		use:initInput
+		bind:this={inputElement}
+		on:input
 		on:keydown
 		on:click={handleClick}
+		bind:value
 		{id}
 		{autocomplete}
 		class="{inputClass} peer relative block w-full appearance-none !rounded-none !border-0 !border-b-2 !border-surface-300 !bg-transparent pl-6 !text-{textColor} focus:border-tertiary-600 focus:outline-none focus:ring-0 dark:border-surface-400 dark:focus:border-tertiary-500"
-		{value}
 		{name}
 		{required}
 		{disabled}

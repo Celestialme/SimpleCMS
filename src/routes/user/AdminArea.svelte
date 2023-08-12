@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Multibutton from './Multibutton.svelte';
-
+	import type { PageData } from './$types';
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
 	// Skeleton
 	import ModalTokenUser from './ModalTokenUser.svelte';
 	import { modalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
-
+	export let data: PageData;
 	// Modal Trigger - Generate User Registration email Token
 	function modalTokenUser(): void {
 		const modalComponent: ModalComponent = {
@@ -36,7 +36,7 @@
 
 	// TanstackFilter
 	import TanstackFilter from '@src/components/TanstackFilter.svelte';
-	let searchValue = '';
+	let globalSearchValue = '';
 	let searchShow = false;
 	let filterShow = false;
 	let columnShow = false;
@@ -47,74 +47,78 @@
 
 	// AdminUser Data
 	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 	const user = $page.data.user;
-
+	let tableData = [];
 	//let data = user;
 	//console.log('auth_data', user);
 	// use data here
 
-	let data = [
-		{
-			_id: '9rK2Lr9pLJjS5CK',
-			email: 'info@asset-trade.de',
-			role: 'admin',
-			username: 'Rar9',
-			createdAt: new Date('2023-07-18T19:39:31.420Z'),
-			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
-			__v: 0,
-			authMethod: 'password'
-		},
-		{
-			_id: '2',
-			email: 'bob@example.com',
-			role: 'viewer',
-			username: 'Bob',
-			createdAt: new Date('2023-07-18T19:39:31.420Z'),
-			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
-			__v: 0,
-			authMethod: 'password'
-		},
-		{
-			_id: '3',
-			email: 'charlie@example.com',
-			role: 'viewer',
-			username: 'Charlie',
-			createdAt: new Date('2023-07-18T19:39:31.420Z'),
-			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
-			__v: 0,
-			authMethod: 'password'
-		},
-		{
-			_id: '4',
-			email: 'test@example.com',
-			role: 'viewer',
-			username: 'TestCharlie',
-			createdAt: new Date('2023-07-18T19:39:31.420Z'),
-			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
-			__v: 0,
-			authMethod: 'password'
-		},
-		{
-			_id: '5',
-			email: 'test@example.com',
-			role: 'viewer',
-			username: 'TestCharlie',
-			createdAt: new Date('2023-07-18T19:39:31.420Z'),
-			updatedAt: new Date('2023-07-20T12:01:14.619Z'),
-			__v: 0,
-			authMethod: 'password'
-		}
-	];
-
+	// let data = [
+	// 	{
+	// 		_id: '9rK2Lr9pLJjS5CK',
+	// 		email: 'info@asset-trade.de',
+	// 		role: 'admin',
+	// 		username: 'Rar9',
+	// 		createdAt: new Date('2023-07-18T19:39:31.420Z'),
+	// 		updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+	// 		__v: 0,
+	// 		authMethod: 'password'
+	// 	},
+	// 	{
+	// 		_id: '2',
+	// 		email: 'bob@example.com',
+	// 		role: 'viewer',
+	// 		username: 'Bob',
+	// 		createdAt: new Date('2023-07-18T19:39:31.420Z'),
+	// 		updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+	// 		__v: 0,
+	// 		authMethod: 'password'
+	// 	},
+	// 	{
+	// 		_id: '3',
+	// 		email: 'charlie@example.com',
+	// 		role: 'viewer',
+	// 		username: 'Charlie',
+	// 		createdAt: new Date('2023-07-18T19:39:31.420Z'),
+	// 		updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+	// 		__v: 0,
+	// 		authMethod: 'password'
+	// 	},
+	// 	{
+	// 		_id: '4',
+	// 		email: 'test@example.com',
+	// 		role: 'viewer',
+	// 		username: 'TestCharlie',
+	// 		createdAt: new Date('2023-07-18T19:39:31.420Z'),
+	// 		updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+	// 		__v: 0,
+	// 		authMethod: 'password'
+	// 	},
+	// 	{
+	// 		_id: '5',
+	// 		email: 'test@example.com',
+	// 		role: 'viewer',
+	// 		username: 'TestCharlie',
+	// 		createdAt: new Date('2023-07-18T19:39:31.420Z'),
+	// 		updatedAt: new Date('2023-07-20T12:01:14.619Z'),
+	// 		__v: 0,
+	// 		authMethod: 'password'
+	// 	}
+	// ];
+	onMount(async () => {
+		tableData = data.allUsers;
+		console.log(tableData);
+	});
 	// TODO: Update cookie if items change
 	let items = [
-		{ Header: 'ID', accessorKey: '_id', id: '_id' },
-		// { Header: 'ID', accessorKey: 'id', id: 'id' },
-		{ Header: 'Username', accessorKey: 'username', id: 'username' },
-		{ Header: 'Email', accessorKey: 'email', id: 'email' },
-		{ Header: 'Role', accessorKey: 'role', id: 'role' },
-		{ Header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
-		{ Header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
+		// { header: 'ID', accessorKey: '_id', id: '_id' },
+		{ header: 'ID', accessorKey: 'id', id: 'id' },
+		{ header: 'Username', accessorKey: 'username', id: 'username' },
+		{ header: 'Email', accessorKey: 'email', id: 'email' },
+		{ header: 'Role', accessorKey: 'role', id: 'role' },
+		{ header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
+		{ header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
 	];
 
 	let showUserList = true;
@@ -141,7 +145,7 @@
 		<div class="flex flex-col sm:flex-row items-center justify-between my-2">
 			<div class="hidden sm:flex">
 				<TanstackFilter
-					bind:searchValue
+					bind:globalSearchValue
 					bind:searchShow
 					bind:filterShow
 					bind:columnShow
@@ -165,7 +169,7 @@
 			{#if showMore}
 				<div class="sm:hidden">
 					<TanstackFilter
-						bind:searchValue
+						bind:globalSearchValue
 						bind:searchShow
 						bind:filterShow
 						bind:columnShow
@@ -174,16 +178,17 @@
 				</div>
 			{/if}
 		</div>
-
-		<TanstackTable
-			{data}
-			{items}
-			tableData={data}
-			dataSourceName="AdminArea"
-			bind:searchValue
-			bind:filterShow
-			bind:columnShow
-			bind:density
-		/>
+		{#if tableData.length > 0}
+			<TanstackTable
+				data={tableData}
+				{items}
+				{tableData}
+				dataSourceName="AdminArea"
+				bind:globalSearchValue
+				bind:filterShow
+				bind:columnShow
+				bind:density
+			/>
+		{/if}
 	{/if}
 </div>

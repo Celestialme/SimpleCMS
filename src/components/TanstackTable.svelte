@@ -8,12 +8,12 @@
 
 	//svelte-dnd-action
 	import { dndzone } from 'svelte-dnd-action';
-
 	import {
 		createSvelteTable,
 		flexRender as flexRenderBugged,
 		getCoreRowModel,
 		getSortedRowModel,
+		getFilteredRowModel,
 		getPaginationRowModel // TODO: Update to better getPaginationRowModel
 	} from '@tanstack/svelte-table';
 	import type {
@@ -28,10 +28,11 @@
 	export let dataSourceName: string;
 
 	// TanstackFilter export
-	export let searchValue = '';
+	export let globalSearchValue = '';
 	export let filterShow = false;
 	export let columnShow = false;
 
+	let columnSearchValue: Array<{ id: string; value: string }> = [];
 	let filterValues = {};
 	let sorting: any = [];
 	let columnOrder: any[] = [];
@@ -50,25 +51,12 @@
 
 	import Loading from './Loading.svelte';
 	import TanstackFilter from './TanstackFilter.svelte';
+	import { asAny } from '@src/utils/utils';
 	export let isLoading = false;
 	let loadingTimer: any; // recommended time of around 200-300ms
 
 	export let tableData: any[];
 	let filteredData = tableData;
-
-	// Create a reactive statement that updates the filteredData array whenever the searchValue changes
-	$: {
-		if (searchValue) {
-			filteredData = tableData.filter((row) => {
-				// Check if any of the values in this row match the search value
-				return Object.values(row).some((value) =>
-					(value as string).toString().toLowerCase().includes(searchValue.toLowerCase())
-				);
-			});
-		} else {
-			filteredData = tableData;
-		}
-	}
 
 	const setSorting = (updater: (arg0: any) => any) => {
 		if (updater instanceof Function) {
@@ -164,11 +152,14 @@
 
 		state: {
 			sorting,
-			columnOrder
+			columnOrder,
+			globalFilter: globalSearchValue,
+			columnFilters: columnSearchValue
 		},
 		onSortingChange: setSorting,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
+		getFilteredRowModel: getFilteredRowModel(),
 		onColumnOrderChange: setColumnOrder,
 		ColumnVisibilityChange: setColumnVisibility
 	});
@@ -176,18 +167,17 @@
 	var table = createSvelteTable(options);
 
 	$: {
-		if (searchValue) {
-			filteredData = tableData.filter((row) => {
-				// Check if any of the values in this row match the search value
-				return Object.values(row).some((value) =>
-					(value as string).toString().toLowerCase().includes(searchValue.toLowerCase())
-				);
-			});
-		} else {
-			filteredData = tableData;
-		}
+		// Create a reactive statement that updates the filteredData array whenever the searchValue changes
 
+		options.update((old) => ({
+			...old,
+			state: {
+				...old.state,
+				globalFilter: globalSearchValue
+			}
+		}));
 		// Sort data based on current sorting state
+		console.log($options);
 		if (sorting.length > 0) {
 			const sortColumn = sorting[0];
 			filteredData.sort((a, b) => {
@@ -214,8 +204,9 @@
 	// TODO:debug why the first 2 row don't get selected?
 	function updateSelectedMap(selectAll: boolean) {
 		selectedMap.update((map) => {
-			filteredData.forEach((row) => {
-				map[row._id] = selectAll;
+			filteredData.forEach((row, index) => {
+				console.log(row);
+				map[index] = selectAll;
 			});
 			//console.log('filteredData:', filteredData); // Log the value of filteredData
 			//console.log('selectedMap:', map); // Log the value of selectedMap
@@ -223,19 +214,6 @@
 		});
 	}
 	$: updateSelectedMap(SelectAll);
-
-	$: {
-		filteredData = tableData.filter((row) => {
-			return Object.entries(filterValues).every(([key, value]) => {
-				// Type guard to narrow down the type of the value
-				if (typeof value === 'string') {
-					return row[key].toString().toLowerCase().includes(value.toLowerCase());
-				} else {
-					return false;
-				}
-			});
-		});
-	}
 
 	// dnd actions
 	const flipDurationMs = 100;
@@ -390,7 +368,7 @@
 								?.getIsVisible() ?? false}
 								<span><iconify-icon icon="fa:check" /></span>
 							{/if}
-							<span class="ml-2 capitalize">{item.Header}</span>
+							<span class="ml-2 capitalize">{item.header}</span>
 						</button>
 					{/each}
 				</section>
@@ -412,9 +390,9 @@
 				{#each $table.getHeaderGroups() as headerGroup}
 					<tr class="divide-x border">
 						<th class="border w-8">
-							<TanstackIcons bind:checked={SelectAll} on:click={() => (SelectAll = !SelectAll)} />
+							<TanstackIcons bind:checked={SelectAll} />
 						</th>
-						{#each headerGroup.headers as header}
+						{#each headerGroup.headers as header, index}
 							<th>
 								{#if !header.isPlaceholder}
 									<button
@@ -434,14 +412,34 @@
 									</button>
 
 									{#if filterShow}
+										{!columnSearchValue[index] &&
+											(columnSearchValue[index] = {
+												id: header.column.id,
+												value: ''
+											}) &&
+											''}
 										<div transition:slide|global>
 											<FloatingInput
 												type="text"
 												icon="material-symbols:search-rounded"
 												label="Filter ..."
+												bind:value={columnSearchValue[index].value}
 												on:input={(e) => {
 													// Update filter value for this column
-													header.column.setFilter(e.target.value);
+													columnSearchValue[index] = {
+														id: header.column.id,
+														value: asAny(e).target.value
+													};
+													options.update((old) => ({
+														...old,
+														state: {
+															...old.state,
+
+															columnFilters: [...columnSearchValue].filter((item) => {
+																return item?.value?.length > 0;
+															})
+														}
+													}));
 												}}
 											/>
 										</div>

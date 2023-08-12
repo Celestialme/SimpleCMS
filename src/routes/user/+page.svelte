@@ -202,6 +202,6 @@
 
 	<!-- admin area -->
 	{#if user?.role == roles.admin}
-		<AdminArea />
+		<AdminArea {data} />
 	{/if}
 </div>

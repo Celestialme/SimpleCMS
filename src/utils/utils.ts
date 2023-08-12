@@ -112,11 +112,10 @@ export async function saveFiles(data: FormData, collectionName: string) {
 		const name = removeExtension(blob.name);
 		const sanitizedFileName = sanitize(name);
 		// TODO Define collection IDs
-		const id = _findFieldByTitle(collection, fieldname).id;
-		console.log('id', id);
+
 		const path = _findFieldByTitle(collection, fieldname).path;
 		console.log('path', path);
-		const url = `/media/${path}/${collectionName}/${id}/original/${sanitizedFileName}`;
+		const url = `/media/${path}/${collectionName}/original/${sanitizedFileName}`;
 		console.log('url', url);
 
 		const outputFormat = PUBLIC_MEDIA_OUTPUT_FORMAT || 'original';
@@ -134,9 +133,9 @@ export async function saveFiles(data: FormData, collectionName: string) {
 			}
 		};
 
-		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}`)) {
+		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}`)) {
 			for (const size in SIZES) {
-				fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/${size}`, {
+				fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${size}`, {
 					recursive: true
 				});
 			}
@@ -160,10 +159,10 @@ export async function saveFiles(data: FormData, collectionName: string) {
 				.toBuffer();
 
 			fs.writeFileSync(
-				`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/${size}/${fullName}`,
+				`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${size}/${fullName}`,
 				thumbnailBuffer
 			);
-			const url = `/media/${path}/${collectionName}/${id}/${size}/${fullName}`;
+			const url = `/media/${path}/${collectionName}/${size}/${fullName}`;
 			files[fieldname as keyof typeof files][size] = {
 				name: fullName,
 				url,
@@ -182,13 +181,13 @@ export async function saveFiles(data: FormData, collectionName: string) {
 				.toBuffer();
 
 			fs.writeFileSync(
-				`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/original/${sanitizedFileName}.${outputFormat}`,
+				`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${sanitizedFileName}.${outputFormat}`,
 				optimizedOriginalBuffer
 			);
 		} else {
 			(blob as Blob).arrayBuffer().then((arrayBuffer) => {
 				fs.writeFileSync(
-					`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${id}/original/${sanitizedFileName}.${
+					`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${sanitizedFileName}.${
 						blob.type.split('/')[1]
 					}`,
 					Buffer.from(arrayBuffer)
