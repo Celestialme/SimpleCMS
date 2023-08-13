@@ -146,7 +146,7 @@ This FloatingInput component has the following properties:
 	{/if}
 </div>
 
-<style lang="postcss">
+<style>
 	div {
 		display: flex;
 		align-items: center;

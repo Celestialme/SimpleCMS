@@ -158,7 +158,7 @@
 	<div class="arrow bg-surface-100-800-token" />
 </div>
 
-<style lang="postcss">
+<style>
 	label {
 		min-width: 100px;
 	}

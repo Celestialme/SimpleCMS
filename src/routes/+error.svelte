@@ -51,7 +51,9 @@
 		</div>
 
 		<h1 class="text-5xl font-extrabold tracking-widest text-surface-400">
-			{#if $page.error} {$page.error.message} {/if}
+			{#if $page.error}
+				{$page.error.message}
+			{/if}
 		</h1>
 
 		<p class="text-lg text-white">{$LL.ERROR_Wrong()}</p>
@@ -64,7 +66,7 @@
 	</main>
 {/if}
 
-<style lang="postcss">
+<style>
 	@keyframes rotation {
 		0% {
 			transform: rotate(0turn);

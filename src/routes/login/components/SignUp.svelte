@@ -219,7 +219,7 @@
 	<SignupIcon show={active == 0 || active == undefined} />
 </section>
 
-<style lang="postcss">
+<style>
 	.hide {
 		transition: 0s;
 		opacity: 0;

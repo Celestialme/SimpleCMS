@@ -650,17 +650,3 @@
 		</div>
 	</div>
 {/if}
-
-<style lang="postcss">
-	.table tbody td {
-		@apply !py-1.5;
-	}
-
-	.table-compact tbody td {
-		@apply !py-0.5;
-	}
-
-	.table-comfortable tbody td {
-		@apply !py-3.5;
-	}
-</style>

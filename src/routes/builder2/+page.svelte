@@ -23,7 +23,11 @@
 		console.log({ ...$collection.fields });
 		let data =
 			$mode == 'edit'
-			? obj2formData({ originalName: $collection.name, collectionName: name, fields: $collection.fields })
+				? obj2formData({
+						originalName: $collection.name,
+						collectionName: name,
+						fields: $collection.fields
+				  })
 				: obj2formData({ fields });
 		axios.post(``, data, {
 			headers: {
@@ -66,7 +70,7 @@
 
 <!-- {/if} -->
 
-<style lang="postcss">
+<style>
 	.body {
 		display: flex;
 		position: fixed;

@@ -1,5 +1,6 @@
 import fs from 'fs';
 import axios from 'axios';
+
 import collections, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
@@ -87,19 +88,35 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	return formData;
 };
 
+// Helper function to sanitize file names
+function sanitize(str: string) {
+	return str.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+}
+
+export async function phashOriginal(file: File) {
+	console.log('phashOriginal:', 'phashOriginal called');
+	const phash = (await import('sharp-phash')).phash;
+	const arrayBuffer = await file.arrayBuffer();
+	const hash = await phash(Buffer.from(arrayBuffer));
+	console.log('phashOriginal:', hash);
+
+	return hash;
+}
+
 // Saves POSTS files to disk and returns file information
+//TODO: add optimization progress status
+
 export async function saveFiles(data: FormData, collectionName: string) {
 	if (browser) return;
+
 	const sharp = (await import('sharp')).default;
 	const files: any = {};
 	const _files: Array<any> = [];
-	//console.log('PUBLIC_IMAGE_SIZES:', PUBLIC_IMAGE_SIZES);
 
 	const env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
 	const SIZES = { ...env_sizes, original: 0, thumbnail: 200 } as const;
 
 	const collection = collections.find((collection) => collection.name === collectionName);
-	//console.log('collection:', collection);
 
 	for (const [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {
@@ -107,99 +124,97 @@ export async function saveFiles(data: FormData, collectionName: string) {
 		}
 	}
 
-	for (const file of _files) {
-		const { blob, fieldname } = file;
-		const name = removeExtension(blob.name);
-		const sanitizedFileName = sanitize(name);
-		// TODO Define collection IDs
-
-		const path = _findFieldByTitle(collection, fieldname).path;
-		console.log('path', path);
-		const url = `/media/${path}/${collectionName}/original/${sanitizedFileName}`;
-		console.log('url', url);
-
-		const outputFormat = PUBLIC_MEDIA_OUTPUT_FORMAT || 'original';
-		const mimeType =
-			outputFormat === 'webp' ? 'image/webp' : outputFormat === 'avif' ? 'image/avif' : blob.type;
-
-		// display more image data
-		files[fieldname as keyof typeof files] = {
-			original: {
-				name: sanitizedFileName,
-				url,
-				size: blob.size,
-				type: mimeType,
-				lastModified: blob.lastModified
-			}
-		};
-
-		if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}`)) {
-			for (const size in SIZES) {
-				fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${size}`, {
-					recursive: true
-				});
-			}
-		}
-
-		// Original, Thumbnail and responsive images as PUBLIC_IMAGE_SIZES
-		// Image type according to PUBLIC_MEDIA_OUTPUT_FORMAT 'o'rignial, webp, avif'
+	// Check if directories exist and create them if necessary
+	const path = _findFieldByTitle(collection, _files[0].fieldname).path;
+	if (!fs.existsSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}`)) {
 		for (const size in SIZES) {
-			if (size == 'original') continue;
-			const fullName =
-				outputFormat === 'original'
-					? `${sanitizedFileName}.${blob.type.split('/')[1]}`
-					: `${sanitizedFileName}.${outputFormat}`;
-			const arrayBuffer = await blob.arrayBuffer();
-			const thumbnailBuffer = await sharp(Buffer.from(arrayBuffer))
-				.rotate() // Rotate image according to EXIF data
-				.resize({ width: SIZES[size] })
-				.toFormat(outputFormat === 'webp' ? 'webp' : 'avif', {
-					quality: outputFormat === 'webp' ? 80 : 50
-				})
-				.toBuffer();
-
-			fs.writeFileSync(
-				`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${size}/${fullName}`,
-				thumbnailBuffer
-			);
-			const url = `/media/${path}/${collectionName}/${size}/${fullName}`;
-			files[fieldname as keyof typeof files][size] = {
-				name: fullName,
-				url,
-				size: blob.size,
-				type: mimeType,
-				lastModified: blob.lastModified
-			};
-		}
-
-		if (outputFormat !== 'original') {
-			const optimizedOriginalBuffer = await sharp(Buffer.from(await blob.arrayBuffer()))
-				.rotate() // Rotate image according to EXIF data
-				.toFormat(outputFormat === 'webp' ? 'webp' : 'avif', {
-					quality: outputFormat === 'webp' ? 80 : 50
-				})
-				.toBuffer();
-
-			fs.writeFileSync(
-				`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${sanitizedFileName}.${outputFormat}`,
-				optimizedOriginalBuffer
-			);
-		} else {
-			(blob as Blob).arrayBuffer().then((arrayBuffer) => {
-				fs.writeFileSync(
-					`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${sanitizedFileName}.${
-						blob.type.split('/')[1]
-					}`,
-					Buffer.from(arrayBuffer)
-				);
+			fs.mkdirSync(`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${size}`, {
+				recursive: true
 			});
 		}
 	}
-	return files;
-}
 
-function sanitize(str: string) {
-	return str.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+	await Promise.all(
+		_files.map(async (file) => {
+			const { blob, fieldname } = file;
+			const name = removeExtension(blob.name);
+			const sanitizedFileName = sanitize(name);
+
+			const url = `/media/${path}/${collectionName}/original/${sanitizedFileName}`;
+
+			const outputFormat = PUBLIC_MEDIA_OUTPUT_FORMAT || 'original';
+			const mimeType =
+				outputFormat === 'webp' ? 'image/webp' : outputFormat === 'avif' ? 'image/avif' : blob.type;
+
+			files[fieldname as keyof typeof files] = {
+				original: {
+					name: sanitizedFileName,
+					url,
+					size: blob.size,
+					type: mimeType,
+					lastModified: blob.lastModified
+				}
+			};
+
+			await Promise.all(
+				Object.keys(SIZES).map(async (size) => {
+					if (size == 'original') return;
+					const fullName =
+						outputFormat === 'original'
+							? `${sanitizedFileName}.${blob.type.split('/')[1]}`
+							: `${sanitizedFileName}.${outputFormat}`;
+					const arrayBuffer = await blob.arrayBuffer();
+
+					const thumbnailBuffer = await sharp(Buffer.from(arrayBuffer))
+						.rotate()
+						.resize({ width: SIZES[size] })
+						.toFormat(outputFormat === 'webp' ? 'webp' : 'avif', {
+							quality: size === 'original' ? 100 : outputFormat === 'webp' ? 80 : 50,
+							progressive: true
+						})
+						.toBuffer();
+
+					fs.writeFileSync(
+						`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/${size}/${fullName}`,
+						thumbnailBuffer
+					);
+					const url = `/media/${path}/${collectionName}/${size}/${fullName}`;
+					files[fieldname as keyof typeof files][size] = {
+						name: fullName,
+						url,
+						size: blob.size,
+						type: mimeType,
+						lastModified: blob.lastModified
+					};
+				})
+			);
+
+			if (outputFormat !== 'original') {
+				const optimizedOriginalBuffer = await sharp(Buffer.from(await blob.arrayBuffer()))
+					.rotate()
+					.toFormat(outputFormat === 'webp' ? 'webp' : 'avif', {
+						quality: outputFormat === 'webp' ? 80 : 50
+					})
+					.toBuffer();
+
+				fs.writeFileSync(
+					`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${sanitizedFileName}.${outputFormat}`,
+					optimizedOriginalBuffer
+				);
+			} else {
+				blob.arrayBuffer().then((arrayBuffer) => {
+					fs.writeFileSync(
+						`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${sanitizedFileName}.${
+							blob.type.split('/')[1]
+						}`,
+						Buffer.from(arrayBuffer)
+					);
+				});
+			}
+		})
+	);
+
+	return files;
 }
 
 // finds field title that matches the fieldname and returns that field
@@ -209,7 +224,7 @@ function _findFieldByTitle(schema: any, fieldname: string): any {
 		if (field.db_fieldName == fieldname || field.label == fieldname) {
 			return field;
 		} else if (field.fields && field.fields.length > 0) {
-			let result = _findFieldByTitle(field, fieldname);
+			const result = _findFieldByTitle(field, fieldname);
 			if (result) {
 				return result;
 			}
@@ -239,7 +254,7 @@ export function parse(obj: any) {
 }
 
 // Converts fields to schema object
-export let fieldsToSchema = (fields: Array<any>) => {
+export const fieldsToSchema = (fields: Array<any>) => {
 	// removes widget, so it does not set up in db
 	let schema: any = {};
 	for (const field of fields) {
@@ -252,7 +267,7 @@ export let fieldsToSchema = (fields: Array<any>) => {
 // Finds documents in collection that match query
 export async function find(query: object, collection: Schema) {
 	if (!collection) return;
-	let _query = JSON.stringify(query);
+	const _query = JSON.stringify(query);
 	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
 }
 
@@ -278,10 +293,10 @@ export async function saveFormData({
 	_mode?: 'edit' | 'create';
 	id?: string;
 }) {
-	let $mode = _mode || get(mode);
-	let $collection = _collection || get(collection);
-	let $entryData = get(entryData);
-	let formData = data instanceof FormData ? data : await col2formData(data);
+	const $mode = _mode || get(mode);
+	const $collection = _collection || get(collection);
+	const $entryData = get(entryData);
+	const formData = data instanceof FormData ? data : await col2formData(data);
 	if (_mode === 'edit' && !id) {
 		throw new Error('ID is required for edit mode.');
 	}
@@ -430,4 +445,4 @@ function removeExtension(fileName) {
 	return fileName.slice(0, lastDotIndex);
 }
 
-export let asAny = (value: any) => value;
+export const asAny = (value: any) => value;

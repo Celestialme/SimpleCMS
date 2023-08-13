@@ -527,7 +527,7 @@
 	{/each}
 </ul>
 
-<style lang="postcss">
+<style>
 	.input-label {
 		color: gray;
 	}

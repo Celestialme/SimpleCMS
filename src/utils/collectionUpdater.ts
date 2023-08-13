@@ -23,8 +23,8 @@ export async function updateImports() {
 	let imports = '';
 	let allCollections = ' let allCollections={';
 	// Loop through the files and generate import statements and allCollections declaration
-	for (let file of files) {
-		let name = file.replace('.ts', '');
+	for (const file of files) {
+		const name = file.replace('.ts', '');
 		imports += `import ${name} from './${name}';\n`;
 		allCollections += `${name},`;
 	}

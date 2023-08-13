@@ -1,62 +1,86 @@
 <script lang="ts">
 	import axios from 'axios';
+
 	import type { FieldType } from './';
 	import { entryData, mode, loadingProgress } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 	import { collection } from '@src/collections';
-	import { FileDropzone } from '@skeletonlabs/skeleton';
+	import { FileDropzone, ProgressBar } from '@skeletonlabs/skeleton';
+	import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
 
 	let _data: FileList;
+
 	let updated = false;
+	let hashValue: string | undefined; // Explicitly define the type
 
 	export let field: FieldType;
 	export const WidgetData = async () => (updated ? _data : null);
 	export let file: File | undefined = undefined; // pass file directly from imageArray
-	console.log(file);
 
 	let fieldName = getFieldName(field);
-	let sanitizedFileName: string | undefined = undefined;
+	let optimizedFileName: string | undefined = undefined;
 
-	function setFile(node: HTMLInputElement) {
+	async function setFile(event: Event) {
+		const node = event.target as HTMLInputElement;
+
 		// Reset loading progress
 		loadingProgress.set(0);
 
-		node.onchange = (e) => {
-			if ((e.target as HTMLInputElement).files?.length == 0) return;
+		if (node.files?.length === 0) {
+			//console.log('setFile:', 'No files selected');
+			return;
+		}
+
+		// Handle file selection
+		const handleFileSelection = async (files: FileList) => {
+			console.log('handleFileSelection:', 'Function called');
+
 			updated = true;
-			_data = (e.target as HTMLInputElement).files as FileList;
+			_data = files;
+
+			// Calculate perceptual hash
+			if (_data.length > 0) {
+				try {
+					// Use image-phash to calculate perceptual hash
+					const arrayBuffer = await _data[0].arrayBuffer();
+					// hashValue = await pHash(new Uint8Array(arrayBuffer));
+					hashValue = 'phash not working';
+				} catch (error) {
+					console.error('handleFileSelection:', 'Error calculating hash:', error);
+				}
+			}
+
+			// All files processed, set loading progress to 100%
+			loadingProgress.set(100);
 		};
 
-		if (file instanceof File) {
-			let fileList = new DataTransfer();
+		// Check if the input has files selected
+		if (node.files) {
+			handleFileSelection(node.files);
+		} else if (file instanceof File) {
+			const fileList = new DataTransfer();
 			fileList.items.add(file);
-			_data = node.files = fileList.files;
+			handleFileSelection(fileList.files);
+
+			//TODO: Image Preview not working for edit anymore
 		} else if ($mode === 'edit') {
 			axios.get($entryData[fieldName].thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
-				let fileList = new DataTransfer();
-				let file = new File([data], $entryData[fieldName].name, {
+				const fileList = new DataTransfer();
+				const file = new File([data], $entryData[fieldName].name, {
 					type: $entryData[fieldName].mimetype
 				});
 				fileList.items.add(file);
-				_data = node.files = fileList.files;
+				handleFileSelection(fileList.files);
 			});
 		}
+
 		// All files processed, set loading progress to 100%
 		loadingProgress.set(100);
 	}
 </script>
 
-<input
-	use:setFile
-	name={fieldName}
-	class="w-full cursor-pointer rounded-lg border border-surface-300 bg-surface-50 text-sm text-surface-900 focus:outline-none dark:border-surface-600 dark:bg-surface-700 dark:text-surface-400 dark:placeholder-surface-400"
-	type="file"
-/>
-
 <!-- TODO: Add skeleton DropZone for better User experience-->
-<!-- <FileDropzone /> -->
-
-<!-- <FileDropzone
+<FileDropzone
 	name={fieldName}
 	accept="image/*,image/webp,image/avif,image/svg+xml"
 	on:change={setFile}
@@ -68,14 +92,9 @@
 		><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment
 	>
 	<svelte:fragment slot="meta">PNG, JPG, GIF, WEBP, AVIF, and SVG allowed.</svelte:fragment>
-</FileDropzone> -->
+</FileDropzone>
 
-<!-- Display loading progress -->
-{#if $loadingProgress !== 100}
-	<p>Loading Progress: {$loadingProgress}%</p>
-{/if}
-
-<!-- Image preview -->
+<!-- Image preview --><!-- Image preview -->
 <!-- TODO: add further EXIF data for better media gallery search. -->
 {#if _data}
 	<div class="flex flex-col items-center md:flex-row">
@@ -87,15 +106,30 @@
 			<p>Uploaded File: <span class="text-primary-500">{_data[0].name}</span></p>
 			<p>File size: <span class="text-primary-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
 			<p>MIME type: <span class="text-primary-500">{_data[0].type}</span></p>
+			<p>Perceptual hash: <span class="text-error-500">{hashValue}</span></p>
 
 			<br />
 
-			<!-- TODO image save as optimizes avif with sanitizedFileName -->
-			<p class="text-lg font-semibold text-primary-500">Optimized as AVIF:</p>
-
-			<p>Uploaded File: <span class="text-primary-500">{sanitizedFileName}</span></p>
-			<p>File size: <span class="text-error-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
-			<p>MIME type: <span class="text-error-500">image/avif</span></p>
+			<!-- Display loading progress -->
+			{#if $loadingProgress != 100}
+				<p class="text-lg font-semibold text-primary-500">
+					Optimized as <span class="uppercase">{PUBLIC_MEDIA_OUTPUT_FORMAT}: </span>
+				</p>
+				<ProgressBar
+					label="Image Optimization"
+					value={$loadingProgress}
+					max={100}
+					meter="bg-surface-900-50-token"
+				/>
+			{:else if optimizedFileName}
+				<p class="text-lg font-semibold text-primary-500">
+					Optimized as <span class="uppercase">{PUBLIC_MEDIA_OUTPUT_FORMAT}: </span>
+				</p>
+				<!-- Display optimized status once the WebP/AVIF file is generated -->
+				<p>Uploaded File: <span class="text-primary-500">{optimizedFileName}</span></p>
+				<p>File size: <span class="text-error-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
+				<p>MIME type: <span class="text-error-500">image/{PUBLIC_MEDIA_OUTPUT_FORMAT}</span></p>
+			{/if}
 		</div>
 	</div>
 {/if}

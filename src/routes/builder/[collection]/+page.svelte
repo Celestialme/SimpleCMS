@@ -352,7 +352,7 @@
 	</TabGroup>
 </div>
 
-<style lang="postcss">
+<style>
 	.options-table {
 		display: grid;
 		grid-template-columns: max-content 1fr;

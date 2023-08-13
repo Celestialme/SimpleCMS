@@ -7,8 +7,8 @@
 	export let iconMode = 'cross';
 	export let checked = false;
 
-	console.log('checked in TanstackIcons:', checked);
-	console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
+	//console.log('checked in TanstackIcons:', checked);
+	//console.log('storeListboxValue in TanstackIcons:', $storeListboxValue);
 
 	function handleIconClick() {
 		checked = !checked;
