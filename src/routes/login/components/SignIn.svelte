@@ -93,14 +93,21 @@
 			// Submit email as lowercase only
 			$forgotForm.email = $forgotForm.email.toLowerCase();
 
+			console.log('onSubmit:', forgotForm);
+
 			// handle login form submission
 			if ($allErrors.length > 0) cancel();
 		},
+
 		onResult: ({ result, cancel }) => {
+			console.log('onResult:', result); // log the result object
+			console.log('onResult Type:', result.type); // log the error messages type
+
 			// handle forgot form result
-			if (result.type == 'error') {
+			if (result.type === 'error') {
+				console.log('onResult error:', allErrors); // log the error messages
+
 				// Trigger the toast
-				// TODO: Toast in conflict with wiggle
 				const t = {
 					message: allErrors,
 					// Provide any utility or variant background style:
@@ -113,12 +120,13 @@
 				return;
 			}
 
-			if (result.type == 'success') {
-				// update variables to display reset form
+			if (result.type === 'success') {
+				console.log('onResult success'); // log success message
+
+				// update variables to display reset form page
 				PWreset = true;
 
 				// Trigger the toast
-				// TODO: Toast in conflict with wiggle
 				const t = {
 					message: 'Password reset token was send by Email',
 					// Provide any utility or variant background style:
@@ -130,6 +138,8 @@
 				toastStore.trigger(t);
 				return;
 			}
+
+			console.log('onResult cancel'); // log cancel message
 			cancel();
 
 			// add wiggle animation to form element
@@ -160,18 +170,55 @@
 		onSubmit: ({ cancel }) => {
 			// handle login form submission
 			if ($allErrors.length > 0) cancel();
-			console.log('allErrors', $allErrors);
+			console.log('onResult error:', forgotAllErrors); // log the error messages
 		},
+
 		onResult: ({ result, cancel }) => {
-			// handle forgot form result
-			if (result.type == 'redirect') {
+			console.log('onResult:', result); // log the result object
+
+			if (result.type === 'error') {
+				console.log('onResult error:', allErrors); // log the error messages
+
+				// Extract and format error messages
+				let errorMessages = '';
+				allErrors.subscribe((errors) => {
+					errorMessages = errors.map((error) => error.messages.join(', ')).join('; ');
+				});
+
+				// Trigger the toast
+				const t = {
+					message: errorMessages,
+					background: 'variant-filled-primary',
+					timeout: 2000,
+					classes: 'border-1 !rounded-md'
+				};
+				toastStore.trigger(t);
+			} else if (result.type === 'success') {
+				console.log('onResult success'); // log success message
+
+				// update variables to display reset form
+				PWreset = true;
+
+				// Trigger the toast
+				const t = {
+					message: 'Password reset token was sent by Email',
+					// Provide any utility or variant background style:
+					background: 'variant-filled-primary',
+					timeout: 2000,
+					// Add your custom classes here:
+					classes: 'border-1 !rounded-md'
+				};
+				toastStore.trigger(t);
+			} else if (result.type === 'redirect') {
+				console.log('onResult redirect'); // log redirect message
+
 				// update variables to display reset form
 				PWreset = true;
 
 				// Trigger the toast
 				// TODO: Toast in conflict with wiggle
 				const t = {
-					message: 'Password reset token was send by Email',
+					message: 'Password reset token was sent by Email',
 					// Provide any utility or variant background style:
 					background: 'variant-filled-primary',
 					timeout: 2000,
@@ -179,26 +226,12 @@
 					classes: 'border-1 !rounded-md'
 				};
 				toastStore.trigger(t);
-				return;
 			}
 
-			// handle forgot form error
-			else {
-				// Trigger the toast
-				// TODO: Toast in conflict with wiggle
-				const t = {
-					message: $allErrors,
-					// Provide any utility or variant background style:
-					background: 'variant-filled-primary',
-					timeout: 2000,
-					// Add your custom classes here:
-					classes: 'border-1 !rounded-md'
-				};
-				toastStore.trigger(t);
-			}
+			console.log('onResult cancel'); // log cancel message
 			cancel();
 
-			// add wiggle animation to form element
+			// add wiggle animation to form element (only if result type is not "success" or "redirect")
 			formElement.classList.add('wiggle');
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 		}
@@ -209,9 +242,6 @@
 
 <Toast />
 
-<!-- TODO:improve this logic so only one value is required -->
-<!-- PWforgot:{PWforgot}
-PWreset:{PWreset} -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <section
 	on:click
@@ -330,6 +360,12 @@ PWreset:{PWreset} -->
 					</span>
 				{/if}
 
+				{#if $forgotAllErrors && !$forgotErrors.email}
+					<span class="invalid text-xs text-error-500">
+						{$forgotAllErrors}
+					</span>
+				{/if}
+
 				<div class="mt-4 flex items-center justify-between">
 					<button type="submit" class="btn variant-filled-surface">
 						{$LL.LOGIN_SendResetMail()}
@@ -341,7 +377,7 @@ PWreset:{PWreset} -->
 					{/if}
 
 					<!-- back button  -->
-					<!-- TODO: Add Superform reset -->
+					<!-- TODO: Add Superforms reset -->
 					<button
 						type="button"
 						class="btn-icon variant-filled-surface"

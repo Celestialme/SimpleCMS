@@ -75,7 +75,7 @@
 	// @ts-expect-error reading from vite.config.jss
 	const pkg = __VERSION__;
 
-	// darkmode
+	// dark mode
 	const toggleTheme = () => {
 		$modeCurrent = !$modeCurrent;
 		setModeUserPrefers($modeCurrent);

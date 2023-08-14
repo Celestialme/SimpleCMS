@@ -3,7 +3,7 @@
 	import { contentLanguage, defaultContentLanguage } from '@src/stores/store';
 	import { mode, entryData } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
-	console.log('contentLanguage', $contentLanguage);
+	//console.log('contentLanguage', $contentLanguage);
 	export let field: FieldType;
 
 	let fieldName = getFieldName(field);

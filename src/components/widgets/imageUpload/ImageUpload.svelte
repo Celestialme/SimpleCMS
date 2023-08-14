@@ -33,7 +33,7 @@
 
 		// Handle file selection
 		const handleFileSelection = async (files: FileList) => {
-			console.log('handleFileSelection:', 'Function called');
+			//console.log('handleFileSelection:', 'Function called');
 
 			updated = true;
 			_data = files;

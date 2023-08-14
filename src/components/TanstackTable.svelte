@@ -177,7 +177,7 @@
 			}
 		}));
 		// Sort data based on current sorting state
-		console.log($options);
+		//console.log($options);
 		if (sorting.length > 0) {
 			const sortColumn = sorting[0];
 			filteredData.sort((a, b) => {
@@ -205,7 +205,7 @@
 	function updateSelectedMap(selectAll: boolean) {
 		selectedMap.update((map) => {
 			filteredData.forEach((row, index) => {
-				console.log(row);
+				//console.log(row);
 				map[index] = selectAll;
 			});
 			//console.log('filteredData:', filteredData); // Log the value of filteredData
@@ -463,14 +463,11 @@
 								class="ml-1"
 							/>
 						</td>
-
 						{#each row.getVisibleCells() as cell}
 							<td class="border">
-								{#if $table.getAllLeafColumns()[index].columnDef.cell}
-            {$table.getAllLeafColumns()[index].columnDef.cell(cell)}
-          {:else}
-            {@html cell.getValue()}
-          {/if}
+								<svelte:component
+									this={flexRender(cell.column.columnDef.cell, cell.getContext())}
+								/>
 							</td>
 						{/each}
 					</tr>

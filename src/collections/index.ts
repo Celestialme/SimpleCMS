@@ -6,7 +6,7 @@ import Relation from './Relation';
 import WidgetTest from './WidgetTest';
 import imageArray from './imageArray';
 
-let allCollections = [Menu, Names, Posts, Posts2, Relation, WidgetTest, imageArray];
+const allCollections = [Menu, Names, Posts, Posts2, Relation, WidgetTest, imageArray];
 
 // Do not EDIT due to dynamic Import
 // ------- END section that gets updated --------
@@ -57,8 +57,8 @@ let categories = [
 	// }
 ];
 
-let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
-let unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
+const collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+const unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
 //console.log('index-unAssigned', unAssigned);
 
 //use this unassigned array

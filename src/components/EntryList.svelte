@@ -270,7 +270,7 @@
 	$deleteEntry = async () => {
 		let deleteList: Array<string> = [];
 		for (let item in tickMap) {
-			console.log(tableData[item]);
+			//console.log(tableData[item]);
 			tickMap[item] && deleteList.push(tableData[item]._id);
 		}
 		if (deleteList.length == 0) return;

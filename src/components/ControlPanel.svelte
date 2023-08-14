@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { collection } from '@src/collections/index';
 	import { collectionValue, mode, deleteEntry, handleSidebarToggle } from '@src/stores/store';
-	//console.log('collection', collection);
 
 	import { saveFormData, getDates } from '@src/utils/utils';
 	import { user } from '@src/stores/store';

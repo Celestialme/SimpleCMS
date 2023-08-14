@@ -161,10 +161,10 @@ export const actions: Actions = {
 
 async function getAllUsers() {
 	const AUTH_KEY = mongoose.models['auth_key'];
-	let keys = await AUTH_KEY.find({});
-	let users = [];
-	for (let key of keys) {
-		let user = await auth.getUser(key['user_id']);
+	const keys = await AUTH_KEY.find({});
+	const users = [];
+	for (const key of keys) {
+		const user = await auth.getUser(key['user_id']);
 		user.email = key._id.split(':')[1];
 		users.push(user);
 	}

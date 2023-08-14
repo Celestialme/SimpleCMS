@@ -36,7 +36,7 @@
 	let showMoreUser = false;
 	let showUserList = false;
 	let showMoreToken = false;
-	let showUsertoken = false; 
+	let showUsertoken = false;
 
 	// TanstackFilter
 	import TanstackFilter from '@src/components/TanstackFilter.svelte';
@@ -48,34 +48,61 @@
 
 	// TanstackTable
 	import TanstackTable from '@src/components/TanstackTable.svelte';
+	import { flexRender } from '@tanstack/svelte-table';
 
 	// AdminUser Data
 	import { onMount } from 'svelte';
 	import Role from './Role.svelte';
 
 	let tableData = [];
-
+	// TODO: Fix to show all user not Users sessions
 	onMount(async () => {
 		tableData = data.allUsers;
-		//console.log(tableData);
+		console.log(tableData);
 	});
 
 	// Display Columns
 	let items = [
 		{ header: 'ID', accessorKey: 'id', id: 'id' },
-  // TODO: Add Avatar { header: 'Avatar', accessorKey: 'avatar', id: 'avatar', cell: (info) => flexRender(Avatar, { src: info.row.original.avatar, width: 'w-8' }) },
-  { header: 'Username', accessorKey: 'username', id: 'username' },
-  { header: 'Email', accessorKey: 'email', id: 'email' },
-  { header: 'Role', accessorKey: 'role', id: 'role', cell: (info) => flexRender(Role, { value: info.getValue() }) },
+		// TODO: Add Avatar { header: 'Avatar', accessorKey: 'avatar', id: 'avatar', cell: (info) => flexRender(Avatar, { src: info.row.original.avatar, width: 'w-8' }) },
+		{ header: 'Username', accessorKey: 'username', id: 'username' },
+		{ header: 'Email', accessorKey: 'email', id: 'email' },
+		{
+			header: 'Role',
+			accessorKey: 'role',
+			id: 'role',
+			cell: (info: any) => flexRender(Role, { value: info.getValue() })
+		},
 		{ header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
 		{ header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
 	];
 
+	// let tableDataUserToken = []
 
-// Dummy Data and Items for Second Table (User Tokens)
+	// onMount(async () => {
+	// 	tableData = data.user.;
+	// 	//console.log(tableData);
+	// });
+	// Dummy Data and Items for Second Table (User Tokens)
 	let tableDataUserToken = [
-		{ id: 1, username: 'user1', email: 'user1@example.com', role: 'User', token: 'token1', createdAt: '2023-08-14', updatedAt: '2023-08-14' },
-		{ id: 2, username: 'user2', email: 'user2@example.com', role: 'Admin', token: 'token2', createdAt: '2023-08-14', updatedAt: '2023-08-14' },
+		{
+			id: 1,
+			username: 'user1',
+			email: 'user1@example.com',
+			role: 'User',
+			token: 'token1',
+			createdAt: '2023-08-14',
+			updatedAt: '2023-08-14'
+		},
+		{
+			id: 2,
+			username: 'user2',
+			email: 'user2@example.com',
+			role: 'Admin',
+			token: 'token2',
+			createdAt: '2023-08-14',
+			updatedAt: '2023-08-14'
+		}
 		// ... add more dummy data ...
 	];
 
@@ -83,7 +110,12 @@
 		{ header: 'ID', accessorKey: 'id', id: 'id' },
 		{ header: 'Username', accessorKey: 'username', id: 'username' },
 		{ header: 'Email', accessorKey: 'email', id: 'email' },
-		{ header: 'Role', accessorKey: 'role', id: 'role', cell: (info) => flexRender(Role, { value: info.getValue() }) },
+		{
+			header: 'Role',
+			accessorKey: 'role',
+			id: 'role',
+			cell: (info) => flexRender(Role, { value: info.getValue() })
+		},
 		{ header: 'Token', accessorKey: 'token', id: 'token' },
 		{ header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
 		{ header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
@@ -171,7 +203,7 @@
 	{/if}
 
 	{#if showUsertoken}
-		<!-- <User Token invite/> -->
+		<!-- User Token invites -->
 		<div class="flex flex-col sm:flex-row items-center justify-between my-2">
 			<div class="hidden sm:flex">
 				<TanstackFilter
@@ -211,7 +243,7 @@
 		{#if tableData.length > 0}
 			<TanstackTable
 				data={tableDataUserToken}
-				items={itemsUserToken} 
+				items={itemsUserToken}
 				{tableData}
 				dataSourceName="AdminArea"
 				bind:globalSearchValue

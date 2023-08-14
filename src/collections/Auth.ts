@@ -32,7 +32,7 @@ export type User = Modify<
 	}
 >;
 
-// TODO: would be nice t get this into environment file
+// TODO: would be nice to get this into environment file
 export const roles = {
 	admin: 'admin',
 	developer: 'developer',

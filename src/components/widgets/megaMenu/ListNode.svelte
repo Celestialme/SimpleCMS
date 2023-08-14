@@ -49,8 +49,8 @@
 			$currentChild = self;
 			$mode = 'edit';
 			depth = level;
-			console.log(self);
 			showFields = true;
+			//console.log(self);
 		}}
 		class="btn-icon variant-filled-surface {level == 0 ? 'ml-auto' : ''}"
 		><iconify-icon icon="mdi:pen" width="28" class="" />

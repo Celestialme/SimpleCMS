@@ -2,7 +2,7 @@
 	import WidgetBuilder from '@src/routes/builder2/WidgetBuilder.svelte';
 
 	export let value: Array<{ fields: Array<any> }> = [];
-	console.log(value);
+	//console.log(value);
 </script>
 
 <div class="container border p-2">

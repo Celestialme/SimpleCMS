@@ -11,7 +11,7 @@ import {
 	signUpFormSchema
 } from '@src/utils/formSchemas';
 import { auth } from '@src/routes/api/db';
-import { passwordToken } from '@lucia-auth/tokens';
+import { Token, passwordToken } from '@lucia-auth/tokens';
 import type { User } from '@src/collections/Auth';
 
 // load and validate login and sign up forms
@@ -80,17 +80,56 @@ export const actions: Actions = {
 		console.log('pwforgottenForm', pwforgottenForm);
 
 		// Validate with Lucia
-		const email = pwforgottenForm.data.email.toLocaleLowerCase();
-		const resp = await forgotPW(email, event.cookies);
+		let resp: { status: boolean; message?: string } = { status: false };
 		console.log('forgotPW Validate', resp);
+		const email = pwforgottenForm.data.email.toLocaleLowerCase();
+		console.log('forgotPW email', email);
+		const checkMail = await forgotPWCheck(email);
+		console.log('forgotPW checkMail', checkMail);
 
-		if (resp) {
+		if (email && checkMail.success) {
+			// Email format is valid and email exists in DB
+			console.log('Email is valid and found in DB');
+			resp = { status: true, message: checkMail.message };
+		} else if (email && !checkMail.success) {
+			// Email format is valid but email doesn't exist in DB
+			console.log('Email is valid but not found in DB');
+			resp = { status: false, message: checkMail.message };
+		} else if (!email && !checkMail) {
+			// Email format invalid and email doesn't exist in DB
+			console.log('Email is invalid and not found in DB');
+			resp = { status: false, message: 'Invalid Email' };
+		}
+
+		if (resp.status) {
+			console.log('resp.status is true');
+
+			// Get the token from the checkMail result
+			const token = checkMail.token;
+			console.log('forgotPW token', token);
+
+			// send welcome email
+			await event.fetch('/api/sendMail', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					email: email,
+					subject: 'Forgotten Password',
+					message: 'Forgotten Password',
+					templateName: 'forgottenPassword',
+					props: {
+						email: email,
+						token: token
+					}
+				})
+			});
 			// Return message if form is submitted successfully
 			message(pwforgottenForm, 'SignIn Forgotten form submitted');
-			throw redirect(303, '/');
 		} else {
-			//message(pwforgottenForm, 'Error Email Check Failed');
-			return { form: pwforgottenForm };
+			console.log('resp.status is false');
+			return { form: pwforgottenForm, message: resp.message || 'Unknown error' };
 		}
 	},
 
@@ -103,7 +142,7 @@ export const actions: Actions = {
 		const password = pwresetForm.data.password;
 		const token = pwresetForm.data.token;
 
-		const resp = await resetPW(password, token, event.cookies);
+		const resp = await resetPWCheck(password, token, event.cookies);
 
 		if (resp) {
 			// Return message if form is submitted successfully
@@ -183,7 +222,7 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 		if (!key || !key.passwordDefined) return { status: false, message: 'Invalid Credentials' };
 		const session = await auth.createSession(key.userId);
 		const sessionCookie = auth.createSessionCookie(session);
-		console.log('signIn sessionCookie', sessionCookie);
+		//console.log('signIn sessionCookie', sessionCookie);
 		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
 		const authMethod = 'password';
@@ -238,15 +277,23 @@ async function FirstUsersignUp(
 	return { status: true };
 }
 
-async function forgotPW(email: string, cookies: Cookies) {
+interface ForgotPWCheckResult {
+	status?: boolean;
+	success?: boolean;
+	message: string;
+	token?: string;
+}
+async function forgotPWCheck(email: string): Promise<ForgotPWCheckResult> {
 	const tokenHandler = passwordToken(auth as any, 'register', {
 		expiresIn: 60 * 60, // expiration in 1 hour,
 		length: 64, // default 43
-		password: '',
 		generate: (length) => {
 			// implement custom token generation algorithm
 			const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
 			let result = ''; // set password to empty string
+			if (length === undefined) {
+				length = 43; // set a default value for length if it is undefined
+			}
 			for (let i = 0; i < length; i++) {
 				result += characters.charAt(Math.floor(Math.random() * characters.length));
 			}
@@ -255,38 +302,49 @@ async function forgotPW(email: string, cookies: Cookies) {
 	});
 
 	const key = await auth.getKey('email', email).catch(() => null);
-	//console.log('forgotPW-key', key);
+	console.log('forgotPWCheck-key', key);
 
 	// The email address does not exist
 	if (!key) return { status: false, message: 'User does not exist' };
 
-	// Send email with reset password link
-
+	// TODO:Send email with reset password link
 	const token = (await tokenHandler.issue(key.userId)).toString();
-	console.log('forgotPW', token); // send token to user via email
+	console.log('forgotPWCheck Token', token); // send token to user via email
 
-	return true;
+	return { success: true, message: 'Password reset token sent by Email', token: token };
 }
 
-async function resetPW(password: string, token: string, cookies: Cookies) {
-	// TODO: fix change of password to overwrite
-	// const token = password;
-	// const key = await auth.getKey('email', email).catch(() => null);
-	// if (!key) return { status: false, message: 'user does not exist' };
+async function resetPWCheck(password: string, token: string, cookies: Cookies) {
+	console.log('Starting password reset process...');
+
 	const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
 	try {
+		// Obtain the key using auth.getKey based on your authentication system
+		const key = await auth.getKey('resetToken', token).catch(() => null);
+		if (!key) {
+			console.log('Invalid token: Key not found.');
+			return { status: false, message: 'invalid token' };
+		}
+
+		// Validate the token
+		console.log('Validating token...');
 		await tokenHandler.validate(token, key.userId);
+
+		// Create a new session and set the session cookie
+		console.log('Creating session and setting session cookie...');
 		const session = await auth.createSession(key.userId);
 		const sessionCookie = auth.createSessionCookie(session);
 		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+
+		// Update user's authentication method
+		console.log('Updating user attributes...');
 		const authMethod = 'token';
 		await auth.updateUserAttributes(key.userId, { authMethod });
-		// Set the credentials cookie
-		// cookies.set('credentials', JSON.stringify({ username: key.username, session: key.sessionId }), {
-		// 	path: '/'
-		// });
+
+		console.log('Password reset successful.');
 		return { status: true };
 	} catch (e) {
+		console.error('Password reset failed:', e);
 		return { status: false, message: 'invalid token' };
 	}
 }

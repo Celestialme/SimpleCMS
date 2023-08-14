@@ -31,6 +31,8 @@
 	export let token: EmailProps['token'];
 	export let expires_at: EmailProps['token'];
 
+	console.log('EmailProps Token: ', token);
+
 	let currentTime = new Date();
 	let expirationTime = expires_at ? new Date(expires_at) : new Date();
 	let timeDiff = expirationTime.getTime() - currentTime.getTime();
