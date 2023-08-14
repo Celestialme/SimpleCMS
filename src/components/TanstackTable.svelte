@@ -466,7 +466,11 @@
 
 						{#each row.getVisibleCells() as cell}
 							<td class="border">
-								{@html cell.getValue()}
+								{#if $table.getAllLeafColumns()[index].columnDef.cell}
+            {$table.getAllLeafColumns()[index].columnDef.cell(cell)}
+          {:else}
+            {@html cell.getValue()}
+          {/if}
 							</td>
 						{/each}
 					</tr>

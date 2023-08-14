@@ -33,7 +33,10 @@
 		modalStore.trigger(d);
 	}
 
-	let showMore = false;
+	let showMoreUser = false;
+	let showUserList = false;
+	let showMoreToken = false;
+	let showUsertoken = false; 
 
 	// TanstackFilter
 	import TanstackFilter from '@src/components/TanstackFilter.svelte';
@@ -48,6 +51,7 @@
 
 	// AdminUser Data
 	import { onMount } from 'svelte';
+	import Role from './Role.svelte';
 
 	let tableData = [];
 
@@ -59,19 +63,31 @@
 	// Display Columns
 	let items = [
 		{ header: 'ID', accessorKey: 'id', id: 'id' },
-		// TODO add Avatar display  via cell: (info) => flexRender(Avatar, {src: info.row.original.avatar,width: 'w-8'})},
-
-		{ header: 'Username', accessorKey: 'username', id: 'username' },
-		{ header: 'Email', accessorKey: 'email', id: 'email' },
-
-		// TODO add different Role display  via cell: (info) => flexRender(Role, { value: info.getValue()})
-		{ header: 'Role', accessorKey: 'role', id: 'role' },
+  // TODO: Add Avatar { header: 'Avatar', accessorKey: 'avatar', id: 'avatar', cell: (info) => flexRender(Avatar, { src: info.row.original.avatar, width: 'w-8' }) },
+  { header: 'Username', accessorKey: 'username', id: 'username' },
+  { header: 'Email', accessorKey: 'email', id: 'email' },
+  { header: 'Role', accessorKey: 'role', id: 'role', cell: (info) => flexRender(Role, { value: info.getValue() }) },
 		{ header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
 		{ header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
 	];
 
-	let showUserList = false;
-	let showUsertoken = false;
+
+// Dummy Data and Items for Second Table (User Tokens)
+	let tableDataUserToken = [
+		{ id: 1, username: 'user1', email: 'user1@example.com', role: 'User', token: 'token1', createdAt: '2023-08-14', updatedAt: '2023-08-14' },
+		{ id: 2, username: 'user2', email: 'user2@example.com', role: 'Admin', token: 'token2', createdAt: '2023-08-14', updatedAt: '2023-08-14' },
+		// ... add more dummy data ...
+	];
+
+	let itemsUserToken = [
+		{ header: 'ID', accessorKey: 'id', id: 'id' },
+		{ header: 'Username', accessorKey: 'username', id: 'username' },
+		{ header: 'Email', accessorKey: 'email', id: 'email' },
+		{ header: 'Role', accessorKey: 'role', id: 'role', cell: (info) => flexRender(Role, { value: info.getValue() }) },
+		{ header: 'Token', accessorKey: 'token', id: 'token' },
+		{ header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
+		{ header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
+	];
 </script>
 
 <div class="border-td mt-2 flex flex-col border-t-2">
@@ -119,7 +135,7 @@
 				<button
 					type="button"
 					on:keydown
-					on:click={() => (showMore = !showMore)}
+					on:click={() => (showMoreUser = !showMoreUser)}
 					class="btn-icon variant-ghost-surface sm:hidden"
 				>
 					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
@@ -128,7 +144,7 @@
 				<Multibutton />
 			</div>
 
-			{#if showMore}
+			{#if showMoreUser}
 				<div class="sm:hidden">
 					<TanstackFilter
 						bind:globalSearchValue
@@ -155,7 +171,7 @@
 	{/if}
 
 	{#if showUsertoken}
-		<!-- <UserList /> -->
+		<!-- <User Token invite/> -->
 		<div class="flex flex-col sm:flex-row items-center justify-between my-2">
 			<div class="hidden sm:flex">
 				<TanstackFilter
@@ -171,7 +187,7 @@
 				<button
 					type="button"
 					on:keydown
-					on:click={() => (showMore = !showMore)}
+					on:click={() => (showMoreToken = !showMoreToken)}
 					class="btn-icon variant-ghost-surface sm:hidden"
 				>
 					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
@@ -180,7 +196,7 @@
 				<Multibutton />
 			</div>
 
-			{#if showMore}
+			{#if showMoreToken}
 				<div class="sm:hidden">
 					<TanstackFilter
 						bind:globalSearchValue
@@ -194,8 +210,8 @@
 		</div>
 		{#if tableData.length > 0}
 			<TanstackTable
-				data={tableData}
-				{items}
+				data={tableDataUserToken}
+				items={itemsUserToken} 
 				{tableData}
 				dataSourceName="AdminArea"
 				bind:globalSearchValue
