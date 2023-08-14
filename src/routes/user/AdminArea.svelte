@@ -5,6 +5,7 @@
 	import LL from '@src/i18n/i18n-svelte';
 
 	// Skeleton
+	import { Avatar } from '@skeletonlabs/skeleton';
 	import ModalTokenUser from './ModalTokenUser.svelte';
 	import { modalStore, type ModalComponent, type ModalSettings } from '@skeletonlabs/skeleton';
 	export let data: PageData;
@@ -46,20 +47,24 @@
 	import TanstackTable from '@src/components/TanstackTable.svelte';
 
 	// AdminUser Data
-	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 
 	let tableData = [];
 
 	onMount(async () => {
 		tableData = data.allUsers;
-		console.log(tableData);
+		//console.log(tableData);
 	});
-	// TODO: Update cookie if items change
+
+	// Display Columns
 	let items = [
 		{ header: 'ID', accessorKey: 'id', id: 'id' },
+		// TODO add Avatar display  via cell: (info) => flexRender(Avatar, {src: info.row.original.avatar,width: 'w-8'})},
+
 		{ header: 'Username', accessorKey: 'username', id: 'username' },
 		{ header: 'Email', accessorKey: 'email', id: 'email' },
+
+		// TODO add different Role display  via cell: (info) => flexRender(Role, { value: info.getValue()})
 		{ header: 'Role', accessorKey: 'role', id: 'role' },
 		{ header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
 		{ header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
