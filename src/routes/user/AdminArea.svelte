@@ -33,10 +33,20 @@
 		modalStore.trigger(d);
 	}
 
-	let showMoreUser = false;
 	let showUserList = false;
-	let showMoreToken = false;
+	let showMoreUserList = false;
 	let showUsertoken = false;
+	let showMoreUserToken = false;
+
+	function toggleUserList() {
+		showUserList = !showUserList;
+		if (showUsertoken) showUsertoken = false;
+	}
+
+	function toggleUserToken() {
+		showUsertoken = !showUsertoken;
+		if (showUserList) showUserList = false;
+	}
 
 	// TanstackFilter
 	import TanstackFilter from '@src/components/TanstackFilter.svelte';
@@ -132,19 +142,13 @@
 		</button>
 
 		<!-- Show User Token -->
-		<button
-			on:click={() => (showUsertoken = !showUsertoken)}
-			class="gradient-tertiary btn w-full text-white sm:max-w-xs"
-		>
+		<button on:click={toggleUserToken} class="gradient-tertiary btn w-full text-white sm:max-w-xs">
 			<iconify-icon icon="material-symbols:key-outline" color="white" width="18" class="mr-1" />
 			{showUsertoken ? 'Hide User Token' : 'Show User Token'}
 		</button>
 
 		<!-- Show User List -->
-		<button
-			on:click={() => (showUserList = !showUserList)}
-			class="gradient-secondary btn w-full text-white sm:max-w-xs"
-		>
+		<button on:click={toggleUserList} class="gradient-secondary btn w-full text-white sm:max-w-xs">
 			<iconify-icon icon="mdi:account-circle" color="white" width="18" class="mr-1" />
 			{showUserList ? $LL.USER_ListCollapse() : $LL.USER_ListShow()}
 		</button>
@@ -167,7 +171,7 @@
 				<button
 					type="button"
 					on:keydown
-					on:click={() => (showMoreUser = !showMoreUser)}
+					on:click={() => (showMoreUserList = !showMoreUserList)}
 					class="btn-icon variant-ghost-surface sm:hidden"
 				>
 					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
@@ -176,7 +180,7 @@
 				<Multibutton />
 			</div>
 
-			{#if showMoreUser}
+			{#if showMoreUserList}
 				<div class="sm:hidden">
 					<TanstackFilter
 						bind:globalSearchValue
@@ -219,7 +223,7 @@
 				<button
 					type="button"
 					on:keydown
-					on:click={() => (showMoreToken = !showMoreToken)}
+					on:click={() => (showMoreUserToken = !showMoreUserToken)}
 					class="btn-icon variant-ghost-surface sm:hidden"
 				>
 					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
@@ -228,7 +232,7 @@
 				<Multibutton />
 			</div>
 
-			{#if showMoreToken}
+			{#if showMoreUserToken}
 				<div class="sm:hidden">
 					<TanstackFilter
 						bind:globalSearchValue
@@ -240,7 +244,8 @@
 				</div>
 			{/if}
 		</div>
-		{#if tableData.length > 0}
+
+		{#if tableDataUserToken.length > 0}
 			<TanstackTable
 				data={tableDataUserToken}
 				items={itemsUserToken}

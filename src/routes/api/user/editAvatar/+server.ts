@@ -135,7 +135,7 @@ export const POST: RequestHandler<Partial<Record<string, string>>, string | null
 					);
 				}
 				// Update the user's avatar field in the MongoDB database
-				await  .findOneAndUpdate(
+				await UserSchema.findOneAndUpdate(
 					{
 						_id: UserSchema._id
 					},

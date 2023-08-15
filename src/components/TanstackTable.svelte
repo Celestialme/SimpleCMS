@@ -33,16 +33,9 @@
 	export let columnShow = false;
 
 	let columnSearchValue: Array<{ id: string; value: string }> = [];
-	let filterValues = {};
 	let sorting: any = [];
 	let columnOrder: any[] = [];
 	let columnVisibility = {};
-
-	// Update density and save to local storage
-	// function updateDensity(newDensity) {
-	// 	density = newDensity;
-	// 	localStorage.setItem('density', newDensity);
-	// }
 
 	import FloatingInput from './system/inputs/floatingInput.svelte';
 	import { flip } from 'svelte/animate';
@@ -50,9 +43,9 @@
 	import TanstackIcons from './TanstackIcons.svelte';
 
 	import Loading from './Loading.svelte';
-	import TanstackFilter from './TanstackFilter.svelte';
 	import { asAny } from '@src/utils/utils';
 	export let isLoading = false;
+
 	let loadingTimer: any; // recommended time of around 200-300ms
 
 	export let tableData: any[];
@@ -218,13 +211,6 @@
 	// dnd actions
 	const flipDurationMs = 100;
 
-	// Update items array to be an array of column objects
-	//  let items = $table.getAllLeafColumns().map((column, index) => ({
-	// 		id: column.id,
-	// 		name: column.id,
-	// 		isVisible: column.getIsVisible() // Set initial visibility state based on column visibility
-	// 	}));
-
 	// TODO: Don't update table on drag and drop, only on release for performance
 	function handleDndConsider(e: {
 		detail: { items: { id: string; name: string; isVisible: boolean }[] };
@@ -305,6 +291,15 @@
 			return col.id == name;
 		});
 	}
+
+	function calculateAvailablePageSizes(totalRows, pageSizeOptions) {
+		const availableSizes = pageSizeOptions.filter((size) => size <= totalRows);
+		return availableSizes;
+	}
+
+	const pageSizeOptions = [10, 25, 50, 100, 500, 1000, 2000, 5000, 10000]; // You can adjust this array as needed
+
+	$: availablePageSizes = calculateAvailablePageSizes(filteredData.length, pageSizeOptions);
 </script>
 
 {#if isLoading}
@@ -507,8 +502,8 @@
 						$table.getPrePaginationRowModel().rows.length / $table.getState().pagination.pageSize
 					)}</span
 				>
-				- (<span class="text-black dark:text-white"
-					>{$table.getPrePaginationRowModel().rows.length}</span
+				- (<span class="text-black dark:text-white">
+					{$table.getPrePaginationRowModel().rows.length}</span
 				>
 				{$LL.TANSTACK_Total()}
 
@@ -516,7 +511,7 @@
 					{$LL.TANSTACK_Row()}
 				{:else}
 					{$LL.TANSTACK_Rows()}
-				{/if}
+				{/if})
 			</div>
 
 			<!-- number of pages -->
@@ -527,9 +522,10 @@
 					on:change={setPageSize}
 					class="select variant-ghost hidden max-w-[100px] rounded py-2 text-sm text-surface-500 dark:text-white sm:block"
 				>
-					{#each [10, 25, 50, 100, 500].filter((pageSize) => pageSize <= $table.getPrePaginationRowModel().rows.length) as pageSize}
+					{#each availablePageSizes as pageSize}
 						<option value={pageSize}>
-							{pageSize} Rows
+							{pageSize}
+							{$LL.TANSTACK_Rows()}
 						</option>
 					{/each}
 				</select>
@@ -616,7 +612,7 @@
 					on:change={setPageSize}
 					class="select max-w-[100px] text-sm sm:hidden"
 				>
-					{#each [10, 25, 50, 100, 500].filter((pageSize) => pageSize <= $table.getPrePaginationRowModel().rows.length) as pageSize}
+					{#each availablePageSizes as pageSize}
 						<option value={pageSize}>
 							{pageSize}
 							{$LL.TANSTACK_Rows()}
