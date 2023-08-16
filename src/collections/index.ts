@@ -1,12 +1,13 @@
+import ImageArray from './ImageArray';
+import Media from './Media';
 import Menu from './Menu';
 import Names from './Names';
 import Posts from './Posts';
 import Posts2 from './Posts2';
 import Relation from './Relation';
 import WidgetTest from './WidgetTest';
-import imageArray from './imageArray';
 
-const allCollections = [Menu, Names, Posts, Posts2, Relation, WidgetTest, imageArray];
+const allCollections = { ImageArray, Media, Menu, Names, Posts, Posts2, Relation, WidgetTest };
 
 // Do not EDIT due to dynamic Import
 // ------- END section that gets updated --------
@@ -40,7 +41,8 @@ let categories = [
 			{ ...Names, id: 1.2 },
 			{ ...Posts2, id: 1.3 },
 			{ ...Relation, id: 1.4 },
-			{ ...WidgetTest, id: 1.5 }
+			{ ...Media, id: 1.5 },
+			{ ...WidgetTest, id: 1.6 }
 		]
 	},
 	{

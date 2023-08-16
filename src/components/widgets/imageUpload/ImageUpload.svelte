@@ -1,5 +1,7 @@
 <script lang="ts">
 	import axios from 'axios';
+	//import sharp from 'sharp';
+	//import { saveImages } from '@src/utils/utils';
 
 	import type { FieldType } from './';
 	import { entryData, mode, loadingProgress } from '@src/stores/store';
@@ -9,9 +11,7 @@
 	import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
 
 	let _data: FileList;
-
 	let updated = false;
-	let hashValue: string | undefined; // Explicitly define the type
 
 	export let field: FieldType;
 	export const WidgetData = async () => (updated ? _data : null);
@@ -19,6 +19,9 @@
 
 	let fieldName = getFieldName(field);
 	let optimizedFileName: string | undefined = undefined;
+	let optimizedFileSize: number | undefined = undefined;
+	let optimizedMimeType: string | undefined = undefined;
+	let hashValue: string | undefined; // Explicitly define the type
 
 	async function setFile(event: Event) {
 		const node = event.target as HTMLInputElement;
@@ -79,7 +82,6 @@
 	}
 </script>
 
-<!-- TODO: Add skeleton DropZone for better User experience-->
 <FileDropzone
 	name={fieldName}
 	accept="image/*,image/webp,image/avif,image/svg+xml"
@@ -106,7 +108,7 @@
 			<p>Uploaded File: <span class="text-primary-500">{_data[0].name}</span></p>
 			<p>File size: <span class="text-primary-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
 			<p>MIME type: <span class="text-primary-500">{_data[0].type}</span></p>
-			<p>Perceptual hash: <span class="text-error-500">{hashValue}</span></p>
+			<p>Hash: <span class="text-error-500">{hashValue}</span></p>
 
 			<br />
 
@@ -121,14 +123,26 @@
 					max={100}
 					meter="bg-surface-900-50-token"
 				/>
-			{:else if optimizedFileName}
+				<!-- Display optimized image information -->
+
 				<p class="text-lg font-semibold text-primary-500">
 					Optimized as <span class="uppercase">{PUBLIC_MEDIA_OUTPUT_FORMAT}: </span>
 				</p>
 				<!-- Display optimized status once the WebP/AVIF file is generated -->
 				<p>Uploaded File: <span class="text-primary-500">{optimizedFileName}</span></p>
 				<p>File size: <span class="text-error-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
-				<p>MIME type: <span class="text-error-500">image/{PUBLIC_MEDIA_OUTPUT_FORMAT}</span></p>
+
+				<p>MIME type: <span class="text-error-500">{optimizedMimeType}</span></p>
+			{:else if optimizedFileName}
+				<!-- only load once optimizsed -->
+				<p class="text-lg font-semibold text-primary-500">
+					Optimized as <span class="uppercase">{PUBLIC_MEDIA_OUTPUT_FORMAT}: </span>
+				</p>
+				<!-- Display optimized status once the WebP/AVIF file is generated -->
+				<p>Uploaded File: <span class="text-primary-500">{optimizedFileName}</span></p>
+				<p>File size: <span class="text-error-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
+
+				<p>MIME type: <span class="text-error-500">{optimizedMimeType}</span></p>
 			{/if}
 		</div>
 	</div>

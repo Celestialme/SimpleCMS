@@ -1,4 +1,7 @@
+import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 import { sveltekit } from '@sveltejs/kit/vite';
+// import { config } from 'vite';
+
 import Path from 'path';
 
 // Gets package.json version info on app start
@@ -29,7 +32,11 @@ const myPlugin = {
 } as vite.Plugin;
 
 const config = {
-	plugins: [myPlugin, sveltekit()],
+	plugins: [
+		myPlugin, 
+		sveltekit(), 
+		purgeCss(),
+	],
 
 	server: { fs: { allow: ['static', '.'] } },
 

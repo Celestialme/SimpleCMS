@@ -18,6 +18,7 @@ import {
 	PUBLIC_MEDIA_OUTPUT_FORMAT
 } from '$env/static/public';
 import { browser } from '$app/environment';
+import crypto from 'crypto';
 
 export const config = {
 	headers: {
@@ -93,20 +94,10 @@ function sanitize(str: string) {
 	return str.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
 }
 
-export async function phashOriginal(file: File) {
-	console.log('phashOriginal:', 'phashOriginal called');
-	const phash = (await import('sharp-phash')).phash;
-	const arrayBuffer = await file.arrayBuffer();
-	const hash = await phash(Buffer.from(arrayBuffer));
-	console.log('phashOriginal:', hash);
-
-	return hash;
-}
-
 // Saves POSTS files to disk and returns file information
 //TODO: add optimization progress status
 
-export async function saveFiles(data: FormData, collectionName: string) {
+export async function saveImages(data: FormData, collectionName: string) {
 	if (browser) return;
 
 	const sharp = (await import('sharp')).default;
@@ -140,7 +131,11 @@ export async function saveFiles(data: FormData, collectionName: string) {
 			const name = removeExtension(blob.name);
 			const sanitizedFileName = sanitize(name);
 
-			const url = `/media/${path}/${collectionName}/original/${sanitizedFileName}`;
+			const arrayBuffer = await blob.arrayBuffer();
+			const buffer = Buffer.from(arrayBuffer);
+			const hash = crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
+
+			const url = `/media/${path}/${collectionName}/original/${hash}-${sanitizedFileName}`;
 
 			const outputFormat = PUBLIC_MEDIA_OUTPUT_FORMAT || 'original';
 			const mimeType =
@@ -148,7 +143,7 @@ export async function saveFiles(data: FormData, collectionName: string) {
 
 			files[fieldname as keyof typeof files] = {
 				original: {
-					name: sanitizedFileName,
+					name: `${hash}-${sanitizedFileName}`,
 					url,
 					size: blob.size,
 					type: mimeType,
@@ -161,8 +156,8 @@ export async function saveFiles(data: FormData, collectionName: string) {
 					if (size == 'original') return;
 					const fullName =
 						outputFormat === 'original'
-							? `${sanitizedFileName}.${blob.type.split('/')[1]}`
-							: `${sanitizedFileName}.${outputFormat}`;
+							? `${hash}-${sanitizedFileName}.${blob.type.split('/')[1]}`
+							: `${hash}-${sanitizedFileName}.${outputFormat}`;
 					const arrayBuffer = await blob.arrayBuffer();
 
 					const thumbnailBuffer = await sharp(Buffer.from(arrayBuffer))
@@ -189,8 +184,9 @@ export async function saveFiles(data: FormData, collectionName: string) {
 				})
 			);
 
+			let optimizedOriginalBuffer: Buffer;
 			if (outputFormat !== 'original') {
-				const optimizedOriginalBuffer = await sharp(Buffer.from(await blob.arrayBuffer()))
+				optimizedOriginalBuffer = await sharp(Buffer.from(await blob.arrayBuffer()))
 					.rotate()
 					.toFormat(outputFormat === 'webp' ? 'webp' : 'avif', {
 						quality: outputFormat === 'webp' ? 80 : 50
@@ -198,19 +194,28 @@ export async function saveFiles(data: FormData, collectionName: string) {
 					.toBuffer();
 
 				fs.writeFileSync(
-					`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${sanitizedFileName}.${outputFormat}`,
+					`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${hash}-${sanitizedFileName}.${outputFormat}`,
 					optimizedOriginalBuffer
 				);
 			} else {
-				blob.arrayBuffer().then((arrayBuffer) => {
-					fs.writeFileSync(
-						`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${sanitizedFileName}.${
-							blob.type.split('/')[1]
-						}`,
-						Buffer.from(arrayBuffer)
-					);
-				});
+				const arrayBuffer = await blob.arrayBuffer();
+				optimizedOriginalBuffer = Buffer.from(arrayBuffer);
+				fs.writeFileSync(
+					`${PUBLIC_MEDIA_FOLDER}/${path}/${collectionName}/original/${hash}-${sanitizedFileName}.${
+						blob.type.split('/')[1]
+					}`,
+					optimizedOriginalBuffer
+				);
 			}
+
+			// Add the optimized original file data to the files object
+			files[fieldname as keyof typeof files]['optimizedOriginal'] = {
+				name: `${hash}-${sanitizedFileName}.${outputFormat}`,
+				url: `/media/${path}/${collectionName}/original/${hash}-${sanitizedFileName}.${outputFormat}`,
+				size: optimizedOriginalBuffer.byteLength,
+				type: mimeType,
+				lastModified: blob.lastModified
+			};
 		})
 	);
 

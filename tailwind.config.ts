@@ -1,18 +1,28 @@
-/** @type {import('tailwindcss').Config} */
+import { join } from 'path';
+import type { Config } from 'tailwindcss';
+import forms from '@tailwindcss/forms';
+import typography from '@tailwindcss/typography';
 
-export default {
+// Import the Skeleton plugin
+import { skeleton } from '@skeletonlabs/tw-plugin';
+// Import Custom Theme
+import { SimpleCMSTheme } from './SimpleCMSTheme';
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+	// Opt for dark mode to be handled via the class method
 	darkMode: 'class',
 
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
-		// Path for the Skeleton NPM package and files:
-		require('path').join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
+		// Append Path for the Skeleton NPM package and files:
+		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
+
 	theme: {
 		extend: {
 			screens: {
-				// Start with default and use xs/sm/md/lg/xl/2xl
-
+				//----------------- min-width------------------------------------------------
 				xs: '360px', // => @media (min-width: 360px) { ... }
 				sm: '567px', // => @media (min-width: 576px) { ... }
 				md: '768px', // => @media (min-width: 768px) { ... }
@@ -30,10 +40,16 @@ export default {
 			}
 		}
 	},
+
 	plugins: [
-		require('@tailwindcss/forms'),
-		require('prettier-plugin-tailwindcss'),
-		// The Skeleton plugin to the end of this list
-		...require('@skeletonlabs/skeleton/tailwind/skeleton.cjs')()
+		forms,
+		typography,
+		// Append the Skeleton plugin (after other plugins)
+		//skeleton({ themes: { preset: [{ name: "skeleton", enhancements: true }]}}),
+		skeleton({
+			themes: {
+				custom: [SimpleCMSTheme]
+			}
+		})
 	]
-};
+} satisfies Config;

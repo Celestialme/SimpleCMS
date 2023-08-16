@@ -17,11 +17,11 @@ export async function updateImports() {
 	// Remove existing import statements and allCollections declaration from the index file
 	indexFile = indexFile
 		.replace(/import \w+ from ["']\.\/.*;\s?/g, '')
-		.replace(/let allCollections\s?=\s?.*/g, '');
+		.replace(/const allCollections\s?=\s?.*/g, '');
 
 	// Initialize variables to store import statements and allCollections declaration
 	let imports = '';
-	let allCollections = ' let allCollections={';
+	let allCollections = ' const allCollections={';
 	// Loop through the files and generate import statements and allCollections declaration
 	for (const file of files) {
 		const name = file.replace('.ts', '');

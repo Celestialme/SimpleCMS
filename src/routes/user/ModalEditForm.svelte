@@ -8,7 +8,10 @@
 	export let parent: any;
 
 	// Skelton & Stores
-	import { modalStore } from '@skeletonlabs/skeleton';
+
+	import { getModalStore } from '@skeletonlabs/skeleton';
+
+	const modalStore = getModalStore();
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';

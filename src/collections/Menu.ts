@@ -46,9 +46,11 @@ const schema: Schema = {
 							translated: true
 						}),
 						widgets.ImageUpload({
-							label: 'Image'
+							label: 'image',
+							required: true,
+							icon: 'material-symbols:image-outline',
+							path: 'global'
 						}),
-
 						widgets.Text({
 							label: 'Title',
 							placeholder: 'Image Title',

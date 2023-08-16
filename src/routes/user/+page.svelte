@@ -23,7 +23,9 @@
 	import ModalEditAvatar from './ModalEditAvatar.svelte';
 	import ModalEditForm from './ModalEditForm.svelte';
 
-	import { modalStore } from '@skeletonlabs/skeleton';
+	import { getModalStore } from '@skeletonlabs/skeleton';
+
+	const modalStore = getModalStore();
 	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 	import AdminArea from './AdminArea.svelte';
 

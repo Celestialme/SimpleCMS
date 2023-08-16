@@ -10,7 +10,7 @@ export type Params = {
 	icon?: string;
 
 	// Widget Specific parameters
-	path: string;
+	path: (string & {}) | 'global' | 'unique';
 	required?: boolean;
 };
 

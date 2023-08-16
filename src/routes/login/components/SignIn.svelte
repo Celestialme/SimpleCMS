@@ -12,7 +12,8 @@
 	import CMSLogo from './icons/Logo.svelte';
 
 	// skeleton
-	import { Toast, toastStore } from '@skeletonlabs/skeleton';
+	import { Toast, getToastStore } from '@skeletonlabs/skeleton';
+	const toastStore = getToastStore();
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 
 	// typesafe-i18n

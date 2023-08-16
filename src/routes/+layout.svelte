@@ -1,12 +1,5 @@
 <script lang="ts">
 	// Your selected Skeleton theme:
-	//import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
-	import '../theme.postcss';
-	// This contains the bulk of Skeletons required styles:
-	// NOTE: this will be renamed skeleton.css in the v2.x release.
-	import '@skeletonlabs/skeleton/styles/skeleton.css';
-
-	// Finally, your application's global stylesheet (sometimes labeled 'app.css')
 	import '../app.postcss';
 
 	// Icons from https://icon-sets.iconify.design/
@@ -111,17 +104,21 @@
 
 	//skeleton
 	import {
+		initializeStores,
 		AppShell,
 		Avatar,
 		Modal,
+		getModalStore,
 		popup,
 		Toast,
 		setModeUserPrefers,
 		setModeCurrent
 	} from '@skeletonlabs/skeleton';
 
+	initializeStores();
+
 	import { modeCurrent } from '@skeletonlabs/skeleton';
-	import type { PopupSettings } from '@skeletonlabs/skeleton';
+	import type { PopupSettings, ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
 
 	//required for popups to function
 	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
@@ -181,9 +178,9 @@
 	});
 </script>
 
-<!--<div>-->
-<!--	Mode <span class="font-bold text-primary-500">{$mode}</span>-->
-<!--</div>-->
+<div>
+	Mode <span class="font-bold text-primary-500">{$mode}</span>
+</div>
 
 <!-- TODO: Fix Right And mobile Version of sidebars -->
 <!-- <div
@@ -272,7 +269,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 					<button
 						type="button"
 						on:click={() => toggleLeftSidebar.clickBack()}
-						class="btn-icon variant-ghost-surface mt-1"
+						class="variant-ghost-surface btn-icon mt-1"
 					>
 						<iconify-icon icon="mingcute:menu-fill" width="24" />
 					</button>
@@ -353,7 +350,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 							</button>
 							<div class="card variant-filled-secondary p-4" data-popup="User">
 								{$LL.SBL_User()}
-								<div class="arrow variant-filled-secondary" />
+								<div class="variant-filled-secondary arrow" />
 							</div>
 						</button>
 					</div>
@@ -369,7 +366,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 							on:change={handleLocaleChange}
 							class="{$toggleLeftSidebar === 'full'
 								? 'px-2.5 py-2'
-								: 'btn-icon-sm'} btn-icon variant-filled-surface appearance-none rounded-full uppercase text-white"
+								: 'btn-icon-sm'} variant-filled-surface btn-icon appearance-none rounded-full uppercase text-white"
 						>
 							{#each locales as locale}
 								<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
@@ -377,7 +374,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 						</select>
 						<div class="card variant-filled-secondary p-4" data-popup="SystemLanguage">
 							{$LL.SBL_SystemLanguage()}
-							<div class="arrow variant-filled-secondary" />
+							<div class="variant-filled-secondary arrow" />
 						</div>
 					</div>
 
@@ -400,7 +397,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 						<!-- Popup Tooltip with the arrow element -->
 						<div class="card variant-filled-secondary p-2" data-popup="SwitchTheme">
 							{`Switch to ${!$modeCurrent ? 'Light' : 'Dark'} Mode`}
-							<div class="arrow variant-filled-secondary" />
+							<div class="variant-filled-secondary arrow" />
 						</div>
 					</div>
 
@@ -417,7 +414,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 
 						<div class="card variant-filled-secondary z-10 p-2" data-popup="SignOutButton">
 							{$LL.SBL_SignOut()}
-							<div class="arrow variant-filled-secondary" />
+							<div class="variant-filled-secondary arrow" />
 						</div>
 					</div>
 
@@ -437,7 +434,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 
 							<div class="card variant-filled-secondary z-10 p-2" data-popup="Config">
 								System Configuration
-								<div class="arrow variant-filled-secondary" />
+								<div class="variant-filled-secondary arrow" />
 							</div>
 						</button>
 					</div>
@@ -453,7 +450,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 
 								<div class="card variant-filled-secondary p-4" data-popup="Github">
 									Github Discussion
-									<div class="arrow variant-filled-secondary" />
+									<div class="variant-filled-secondary arrow" />
 								</div>
 							</button>
 						</a>
@@ -465,7 +462,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 							<span
 								class="{$toggleLeftSidebar === 'full'
 									? 'py-1'
-									: 'py-0'} badge variant-filled-primary rounded-xl text-black hover:text-white"
+									: 'py-0'} variant-filled-primary badge rounded-xl text-black hover:text-white"
 								>{#if $toggleLeftSidebar === 'full'}{$LL.SBL_Version()}{/if}{pkg}</span
 							>
 						</a>
@@ -496,11 +493,11 @@ lg:overflow-y-scroll lg:max-h-screen}"
 
 		<svelte:fragment slot="pageFooter">
 			{#if $mode !== 'view'}
-				<h2 class="text-center font-bold uppercase !text-sm text-primary-500">
+				<h2 class="text-center !text-sm font-bold uppercase text-primary-500">
 					{$collection.name} Info:
 				</h2>
 
-				<div class="mt-2 mb-1 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
+				<div class="mb-1 mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
 					<!-- Labels -->
 					{#each Object.keys(dates) as key}
 						<div class="capitalize">{key}:</div>

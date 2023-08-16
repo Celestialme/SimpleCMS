@@ -1,12 +1,8 @@
 <script lang="ts">
 	// Collection Creation
-	import { TabGroup, Tab, Autocomplete, popup, Modal, modalStore } from '@skeletonlabs/skeleton';
-	import type {
-		AutocompleteOption,
-		PopupSettings,
-		ModalSettings,
-		ModalComponent
-	} from '@skeletonlabs/skeleton';
+	import { TabGroup, Tab, Modal, getModalStore } from '@skeletonlabs/skeleton';
+	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
+	const modalStore = getModalStore();
 	import VerticalList from '@src/components/VerticalList.svelte';
 	import IconifyPicker from '@src/components/IconifyPicker.svelte';
 

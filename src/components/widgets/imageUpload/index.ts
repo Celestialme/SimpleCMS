@@ -11,7 +11,7 @@ const widget = ({
 	// extras
 	icon,
 	required,
-	path = ''
+	path = 'unique'
 }: Params) => {
 	if (!display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {

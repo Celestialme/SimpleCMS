@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import { collections } from '@src/routes/api/db';
-import { parse, saveFiles } from '@src/utils/utils';
+import { parse, saveImages } from '@src/utils/utils';
 
 // Export an asynchronous function named GET that is a RequestHandler
 export const GET: RequestHandler = async ({ params, url }) => {
@@ -70,8 +70,8 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 	// 	return new Response('Invalid value for field2');
 	// }
 
-	// Call saveFiles function with arguments data and params.collection and assign its return value to variable files
-	const files = await saveFiles(data, params.collection);
+	// Call saveImages function with arguments data and params.collection and assign its return value to variable files
+	const files = await saveImages(data, params.collection);
 
 	// Return new Response object containing JSON stringified result of updating one document in collection where its _id property matches _id, with properties from both formData and files objects, with option to upsert
 	return new Response(
@@ -103,8 +103,8 @@ export const POST: RequestHandler = async ({ params, request }) => {
 	}
 
 	try {
-		// Call saveFiles function with arguments data and params.collection and assign its return value to a variable named files
-		const files = await saveFiles(data, params.collection);
+		// Call saveImages function with arguments data and params.collection and assign its return value to a variable named files
+		const files = await saveImages(data, params.collection);
 
 		// Insert many documents into collection with properties from both body and files objects
 		const result = await collection.insertMany({ ...body, ...files });
