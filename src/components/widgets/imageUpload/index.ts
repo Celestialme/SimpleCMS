@@ -1,6 +1,6 @@
 import { type Params, GuiSchema } from './types';
 import ImageUpload from './ImageUpload.svelte';
-const widget = ({ label, db_fieldName, display, path = '' }: Params) => {
+const widget = ({ label, db_fieldName, display, path = 'unique' }: Params) => {
 	if (!display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			return `<img class='max-w-[200px] inline-block' src="${data?.thumbnail.url}" />`;

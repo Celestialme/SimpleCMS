@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 import { collections } from '@src/routes/api/db';
-import { parse, saveFiles } from '@src/utils/utils';
+import { parse, saveImages } from '@src/utils/utils';
 export const GET: RequestHandler = async ({ params, url }) => {
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let collection = collections[params.collection];
@@ -28,7 +28,7 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 	}
 	let _id = data.get('_id');
 	formData = parse(formData);
-	let files = await saveFiles(data, params.collection);
+	let files = await saveImages(data, params.collection);
 
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, { ...formData, ...files }, { upsert: true })));
 };
@@ -45,7 +45,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 		}
 	}
 	if (!collection) return new Response('collection not found!!');
-	let files = await saveFiles(data, params.collection);
+	let files = await saveImages(data, params.collection);
 
 	return new Response(JSON.stringify(await collection.insertMany({ ...body, ...files })));
 };
