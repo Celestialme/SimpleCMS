@@ -178,9 +178,9 @@
 	});
 </script>
 
-<div>
+<!-- <div>
 	Mode <span class="font-bold text-primary-500">{$mode}</span>
-</div>
+</div> -->
 
 <!-- TODO: Fix Right And mobile Version of sidebars -->
 <!-- <div

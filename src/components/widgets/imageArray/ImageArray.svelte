@@ -11,8 +11,8 @@
 
 	let _fieldsValue: any = [];
 	let files: any = [];
+	let name: any;
 
-	let name;
 	if (field.db_fieldName) {
 		name = field.db_fieldName;
 	} else {

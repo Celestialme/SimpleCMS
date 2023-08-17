@@ -1,14 +1,17 @@
-import mongoose from 'mongoose';
-import { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } from '$env/static/private';
 import schemas from '@src/collections';
 import { fieldsToSchema } from '@src/utils/utils';
 import { dev } from '$app/environment';
+import { get, writable, type Writable } from 'svelte/store';
 
 // Lucia
 import lucia from 'lucia-auth';
 import adapter from '@lucia-auth/adapter-mongoose';
 import { session, key, UserSchema } from '@src/collections/Auth';
 import { sveltekit } from 'lucia-auth/middleware';
+
+// mongoose
+import mongoose from 'mongoose';
+import { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } from '$env/static/private';
 
 // Turn off strict mode for query filters. Default in Mongodb 7
 mongoose.set('strictQuery', false);
@@ -27,26 +30,23 @@ mongoose
 	)
 	.catch((error) => console.error('Error connecting to database:', error));
 
-const collections: { [Key: string]: mongoose.Model<any> } = {};
+const collections: Writable<{ [Key: string]: mongoose.Model<any> }> = writable({});
 
-for (const schema of schemas) {
-	const schema_object = new mongoose.Schema(
-		{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
-		{
-			typeKey: '$type',
-			strict: false,
-			timestamps: { currentTime: () => Date.now() }
-		}
-	);
-	// Check if a model with the same name already exists
-	if (mongoose.models[schema.name]) {
-		// If it does, retrieve the existing model
-		collections[schema.name] = mongoose.model(schema.name);
-	} else {
-		// If it doesn't, create a new model and assign it to the collections object
-		collections[schema.name] = mongoose.model(schema.name, schema_object);
+schemas.subscribe((schemas) => {
+	for (const schema of schemas) {
+		const schema_object = new mongoose.Schema(
+			{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
+			{
+				typeKey: '$type',
+				strict: false,
+				timestamps: { currentTime: () => Date.now() }
+			}
+		);
+		get(collections)[schema.name] = mongoose.models[schema.name]
+			? mongoose.model(schema.name)
+			: mongoose.model(schema.name, schema_object);
 	}
-}
+});
 
 !mongoose.models['auth_session'] &&
 	mongoose.model('auth_session', new mongoose.Schema({ ...session }, { _id: false }));

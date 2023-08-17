@@ -27,7 +27,7 @@
 	{/if}
 </div>
 
-<style>
+<style lang="postcss">
 	.container {
 		border-radius: 5px;
 		overflow: hidden;

@@ -7,7 +7,7 @@
 
 <div class="container border p-2">
 	<p>Menu Fields</p>
-	<button on:click={() => (value = [...value, { fields: [] }])} class="btn variant-filled-primary"
+	<button on:click={() => (value = [...value, { fields: [] }])} class="variant-filled-primary btn"
 		>Add Level</button
 	>
 	{#each value as level, index}
@@ -18,7 +18,7 @@
 	{/each}
 </div>
 
-<style>
+<style lang="postcss">
 	.container {
 		color: white;
 		width: 99%;

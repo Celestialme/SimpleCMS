@@ -77,7 +77,7 @@
 	</div>
 </button>
 
-<style>
+<style lang="postcss">
 	.container {
 		overflow: hidden;
 		position: relative;

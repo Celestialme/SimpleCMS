@@ -32,11 +32,7 @@ const myPlugin = {
 } as vite.Plugin;
 
 const config = {
-	plugins: [
-		myPlugin, 
-		sveltekit(), 
-		purgeCss(),
-	],
+	plugins: [myPlugin, sveltekit(), purgeCss()],
 
 	server: { fs: { allow: ['static', '.'] } },
 

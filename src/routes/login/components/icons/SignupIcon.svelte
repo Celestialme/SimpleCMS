@@ -29,7 +29,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.hide {
 		animation: _hide 0.5s forwards;
 	}

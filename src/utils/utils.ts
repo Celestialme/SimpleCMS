@@ -107,7 +107,7 @@ export async function saveImages(data: FormData, collectionName: string) {
 	const env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
 	const SIZES = { ...env_sizes, original: 0, thumbnail: 200 } as const;
 
-	const collection = collections.find((collection) => collection.name === collectionName);
+	const collection = get(collections).find((collection) => collection.name === collectionName);
 
 	for (const [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {

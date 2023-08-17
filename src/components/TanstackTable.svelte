@@ -23,7 +23,7 @@
 		FilterFn
 	} from '@tanstack/table-core/src/types';
 
-	export let data: any[];
+	export const data: any[] = [];
 	export let items: any[];
 	export let dataSourceName: string;
 
@@ -384,7 +384,7 @@
 			<thead class="text-primary-500">
 				{#each $table.getHeaderGroups() as headerGroup}
 					<tr class="divide-x border">
-						<th class="border w-8">
+						<th class="w-8 border">
 							<TanstackIcons bind:checked={SelectAll} />
 						</th>
 						{#each headerGroup.headers as header, index}
@@ -533,7 +533,7 @@
 
 			<!-- next/previous pages -->
 			<div
-				class="btn-group variant-ghost inline-flex text-surface-500 transition duration-150 ease-in-out dark:text-white [&>*+*]:border-surface-500"
+				class="variant-ghost btn-group inline-flex text-surface-500 transition duration-150 ease-in-out dark:text-white [&>*+*]:border-surface-500"
 			>
 				<button
 					type="button"

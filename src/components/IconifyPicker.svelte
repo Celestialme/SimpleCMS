@@ -144,21 +144,21 @@
 				disabled={start === 0}
 				on:keydown
 				on:click={prevPage}
-				class="btn btn-sm variant-filled-primary">Previous</button
+				class="variant-filled-primary btn btn-sm">Previous</button
 			>
 			<!-- Disable the next button if there are less than 50 icons in the current page -->
 			<button
 				disabled={icons.length < 50}
 				on:keydown
 				on:click={nextPage}
-				class="btn btn-sm variant-filled-primary">Next</button
+				class="variant-filled-primary btn btn-sm">Next</button
 			>
 		</div>
 	</div>
-	<div class="arrow bg-surface-100-800-token" />
+	<div class="bg-surface-100-800-token arrow" />
 </div>
 
-<style>
+<style lang="postcss">
 	label {
 		min-width: 100px;
 	}

@@ -311,7 +311,7 @@
 					>{/if}
 
 				<div class="mt-4 flex items-center justify-between">
-					<button type="submit" class="btn variant-filled-surface">
+					<button type="submit" class="variant-filled-surface btn">
 						{$LL.LOGIN_SignIn()}
 						<!-- Loading indicators -->
 						{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
@@ -319,7 +319,7 @@
 
 					<button
 						type="button"
-						class="btn variant-ringed-surface text-black"
+						class="variant-ringed-surface btn text-black"
 						on:click={() => {
 							PWforgot = true;
 							PWreset = false;
@@ -368,7 +368,7 @@
 				{/if}
 
 				<div class="mt-4 flex items-center justify-between">
-					<button type="submit" class="btn variant-filled-surface">
+					<button type="submit" class="variant-filled-surface btn">
 						{$LL.LOGIN_SendResetMail()}
 					</button>
 
@@ -381,7 +381,7 @@
 					<!-- TODO: Add Superforms reset -->
 					<button
 						type="button"
-						class="btn-icon variant-filled-surface"
+						class="variant-filled-surface btn-icon"
 						on:click={() => {
 							PWforgot = false;
 							PWreset = false;
@@ -453,7 +453,7 @@
 					</span>
 				{/if}
 
-				<button type="submit" class="btn variant-filled-surface ml-2 mt-6">
+				<button type="submit" class="variant-filled-surface btn ml-2 mt-6">
 					{$LL.LOGIN_ResetPasswordSave()}
 					<!-- Loading indicators -->
 					{#if $resetDelayed}
@@ -467,7 +467,7 @@
 	<SigninIcon show={active == 1 || active == undefined} />
 </section>
 
-<style>
+<style lang="postcss">
 	.hide {
 		transition: 0s;
 		opacity: 0;

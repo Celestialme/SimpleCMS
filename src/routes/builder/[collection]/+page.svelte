@@ -286,11 +286,11 @@
 				</div>
 
 				<div class="flex justify-between">
-					<a href="/builder" class="btn variant-filled-secondary mt-2">Cancel</a>
+					<a href="/builder" class="variant-filled-secondary btn mt-2">Cancel</a>
 					<button
 						type="button"
 						on:click={() => (tabSet = 1)}
-						class="btn variant-filled-primary mt-2">Next</button
+						class="variant-filled-primary btn mt-2">Next</button
 					>
 				</div>
 
@@ -312,7 +312,7 @@
 						<div
 							class="border-blue variant-ghost-secondary my-2 flex w-full items-center gap-6 rounded-md border p-1 text-center text-primary-500"
 						>
-							<div class="marker: badge variant-outline-primary rounded-full text-white">
+							<div class="marker: variant-outline-primary badge rounded-full text-white">
 								{item.id}
 							</div>
 							<div class="text-white">{item.name}</div>
@@ -323,7 +323,7 @@
 				</VerticalList>
 
 				<div class=" border-surface-400-500-token border-t text-center">
-					<button class="btn variant-filled-tertiary mt-2" on:click={modalComponentForm}
+					<button class="variant-filled-tertiary btn mt-2" on:click={modalComponentForm}
 						>Add more Fields</button
 					>
 				</div>
@@ -331,12 +331,12 @@
 					<button
 						type="button"
 						on:click={() => (tabSet = 0)}
-						class="btn variant-filled-secondary mt-2 justify-end">Previous</button
+						class="variant-filled-secondary btn mt-2 justify-end">Previous</button
 					>
 					<button
 						type="button"
 						on:click={onCompleteHandler}
-						class="btn variant-filled-primary mt-2 justify-end dark:text-black">Save</button
+						class="variant-filled-primary btn mt-2 justify-end dark:text-black">Save</button
 					>
 				</div>
 
@@ -348,7 +348,7 @@
 	</TabGroup>
 </div>
 
-<style>
+<style lang="postcss">
 	.options-table {
 		display: grid;
 		grid-template-columns: max-content 1fr;

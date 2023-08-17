@@ -54,7 +54,7 @@ This FloatingInput component has the following properties:
 	export let minlength: InputProps['minlength'] = undefined;
 	export let maxlength: InputProps['maxlength'] = undefined;
 	export let name: InputProps['name'] = '';
-	export let onInput: InputProps['onInput'] = (value) => {};
+	export const onInput: InputProps['onInput'] = (value) => {};
 	export let required: InputProps['required'] = false;
 	export let showPasswordBackgroundColor: InputProps['showPasswordBackgroundColor'] = 'light';
 	export let textColor: InputProps['textColor'] = '!text-error-500';
@@ -146,7 +146,7 @@ This FloatingInput component has the following properties:
 	{/if}
 </div>
 
-<style>
+<style lang="postcss">
 	div {
 		display: flex;
 		align-items: center;

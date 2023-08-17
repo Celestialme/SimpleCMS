@@ -14,7 +14,7 @@
 
 <button
 	on:click={() => (expanded = !expanded)}
-	class="relative justify-center items-center flex gap-2"
+	class="relative flex items-center justify-center gap-2"
 	style="margin-left:{20 * level}px"
 >
 	{#if self.children?.length > 0}
@@ -38,7 +38,7 @@
 				showFields = true;
 				mode.set('create');
 			}}
-			class="btn-icon variant-filled-primary"
+			class="variant-filled-primary btn-icon"
 		>
 			<iconify-icon icon="icons8:plus" width="28" />
 		</button>
@@ -52,7 +52,7 @@
 			showFields = true;
 			//console.log(self);
 		}}
-		class="btn-icon variant-filled-surface {level == 0 ? 'ml-auto' : ''}"
+		class="variant-filled-surface btn-icon {level == 0 ? 'ml-auto' : ''}"
 		><iconify-icon icon="mdi:pen" width="28" class="" />
 	</button>
 </button>
@@ -78,7 +78,7 @@
 {/if}
 
 {#if level == 0 && $mode != 'edit'}
-	<div class="text-center border border-x-0 py-2 font-bold mb-2">Menu Name</div>
+	<div class="mb-2 border border-x-0 py-2 text-center font-bold">Menu Name</div>
 
 	<div class="flex items-center gap-2">
 		<!-- Menu Name -->
@@ -111,7 +111,7 @@
 		</button>
 	</div>
 
-	<div class="text-center border border-x-0 py-2 font-bold mb-2">Enter your Menu Categories</div>
+	<div class="mb-2 border border-x-0 py-2 text-center font-bold">Enter your Menu Categories</div>
 
 	<!-- Categories Parent-->
 	{#if level < maxDepth - 1}
@@ -123,7 +123,7 @@
 				showFields = true;
 				mode.set('create');
 			}}
-			class="btn variant-filled-primary font-bold !text-white gap-2 mb-2"
+			class="variant-filled-primary btn mb-2 gap-2 font-bold !text-white"
 			>Add new Category
 
 			<iconify-icon icon="icons8:plus" width="28" />
@@ -154,7 +154,7 @@
 	{/if}
 {/if}
 
-<style>
+<style lang="postcss">
 	.expanded {
 		transform: rotate(-90deg);
 	}

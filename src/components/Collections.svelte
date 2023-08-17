@@ -21,6 +21,7 @@
 
 	// Search Collections
 	let search = '';
+
 	interface Category {
 		id: number;
 		name: string;
@@ -40,10 +41,10 @@
 		status?: 'published' | 'unpublished' | 'draft' | 'schedule' | 'cloned';
 	}
 
-	let filteredCategories: Category[] = categories;
+	let filteredCategories: Category[] = ($categories as Category[]) || [];
 
 	function filterCategories() {
-		filteredCategories = categories.reduce((acc: Category[], category) => {
+		filteredCategories = ($categories as Category[]).reduce((acc: Category[], category) => {
 			const filteredCollections = category.collections.filter((collection) =>
 				collection.name.toLowerCase().includes(search.toLowerCase())
 			);
@@ -73,7 +74,7 @@
 				toggleLeftSidebar.click('full');
 				// searchShow = true;
 			}}
-			class="btn variant-filled-surface mb-2 w-full"
+			class="variant-filled-surface btn mb-2 w-full"
 		>
 			<iconify-icon icon="ic:outline-search" width="24" />
 		</button>
@@ -120,7 +121,7 @@
 					{/if}
 					<div class="card variant-filled-secondary p-4" data-popup="popupHover">
 						<p>{category.name}</p>
-						<div class="arrow variant-filled-secondary" />
+						<div class="variant-filled-secondary arrow" />
 					</div>
 				</svelte:fragment>
 
@@ -137,7 +138,7 @@
 								on:keydown
 								on:click={() => {
 									mode.set(modeSet);
-									$collection = _collection;
+									collection.set(_collection);
 								}}
 							>
 								<iconify-icon icon={_collection.icon} width="24" class="px-2 py-1 text-error-600" />
@@ -152,7 +153,7 @@
 								on:keydown
 								on:click={() => {
 									mode.set(modeSet);
-									$collection = _collection;
+									collection.set(_collection);
 								}}
 							>
 								<p class="text-xs capitalize">{_collection.name}</p>
@@ -184,7 +185,7 @@
 		<!-- switchSideBar collapsed -->
 		<a
 			href="/mediagallery"
-			class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2"
+			class="variant-filled-surface btn mt-2 flex flex-col items-center py-1 pl-2"
 			on:click={() => {
 				if (get(screenWidth) === 'mobile') {
 					toggleLeftSidebar.clickBack();
@@ -215,7 +216,7 @@
 		<!-- switchSideBar collapsed -->
 		<a
 			href="/mediagallery2"
-			class="btn variant-filled-surface mt-2 flex flex-col items-center py-1 pl-2"
+			class="variant-filled-surface btn mt-2 flex flex-col items-center py-1 pl-2"
 			on:click={() => {
 				if (get(screenWidth) === 'mobile') {
 					toggleLeftSidebar.clickBack();

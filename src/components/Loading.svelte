@@ -31,7 +31,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	#loader {
 		animation: rotate 3s cubic-bezier(0.26, 1.36, 0.74, -0.29) infinite;
 	}

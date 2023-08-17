@@ -10,6 +10,12 @@ const schema: Schema = {
 	icon: 'bi:card-text',
 	slug: ' names',
 
+	permissions: {
+		[roles.admin]: {
+			read: false
+		}
+	},
+
 	// Defined Fields that are used in Collection
 	// Inspect Widget fields for possible options
 	fields: [

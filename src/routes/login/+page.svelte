@@ -170,7 +170,7 @@
 	{/if}
 </div>
 
-<style>
+<style lang="postcss">
 	.body {
 		width: 100vw;
 		height: 100vh;

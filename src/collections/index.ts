@@ -1,69 +1,38 @@
-import ImageArray from './ImageArray';
-import Media from './Media';
-import Menu from './Menu';
-import Names from './Names';
-import Posts from './Posts';
-import Posts2 from './Posts2';
-import Relation from './Relation';
-import WidgetTest from './WidgetTest';
+import { get, writable, type Writable } from 'svelte/store';
+import { type Schema, imports } from './types';
+import axios from 'axios';
+import { browser } from '$app/environment';
+import { categories } from './config';
 
-const allCollections = { ImageArray, Media, Menu, Names, Posts, Posts2, Relation, WidgetTest };
+const collections: Writable<Array<Schema>> = writable([]);
+const collection: Writable<Schema> = writable();
 
-// Do not EDIT due to dynamic Import
-// ------- END section that gets updated --------
-
-import { writable } from 'svelte/store';
-
-// typesafe-i18n
-import { get } from 'svelte/store';
-import LL from '@src/i18n/i18n-svelte';
-
-export function updateCategories(newColumnsData) {
-	categories = newColumnsData.map((column) => ({
-		id: column.id,
-		name: column.name,
-		icon: column.icon,
-		collections: column.items.map((item) => ({
-			...item
-		}))
-	}));
-}
-
-// Display how Collections are sorted and displayed in Categories section
-// TODO Add translations
-let categories = [
-	{
-		id: 1,
-		name: get(LL).CollectionCategory_Collection(),
-		icon: 'bi:collection',
-		collections: [
-			{ ...Posts, id: 1.1 },
-			{ ...Names, id: 1.2 },
-			{ ...Posts2, id: 1.3 },
-			{ ...Relation, id: 1.4 },
-			{ ...Media, id: 1.5 },
-			{ ...WidgetTest, id: 1.6 }
-		]
-	},
-	{
-		id: 2,
-		name: get(LL).CollectionCategory_Menu(),
-		icon: 'bi:menu-button-wide',
-		collections: [{ ...Menu, id: 2.1 }]
+async function setup() {
+	let files: any;
+	const _imports = {} as any;
+	if (browser) {
+		files = (await axios.get('/api/collections')).data;
+	} else {
+		const fs = (await import('fs')).default;
+		files = fs
+			.readdirSync('src/collections')
+			.filter((x) => !['index.ts', 'types.ts', 'Auth.ts', 'config.ts'].includes(x));
 	}
-	// {
-	// 	id: 3,
-	// 	name: 'Images',
-	// 	icon: 'bi:images',
-	// 	collections: [{ ...imageArray, id: 3.1 }]
-	// }
-];
+	for (const file of files) {
+		_imports[file.replace('.ts', '')] = (await import(/* @vite-ignore */ `./${file}`)).default;
+	}
+	imports.set(_imports);
+	collections.set(
+		get(categories)
+			.map((x) => x.collections)
+			.reduce((x, acc) => x.concat(acc))
+	); // returns all collections
 
-const collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
-const unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
-//console.log('index-unAssigned', unAssigned);
+	// current collection
+}
+const unAssigned = Object.values(imports).filter((x) => !get(collections).includes(x));
+setup();
 
 //use this unassigned array
-export { categories, unAssigned, allCollections };
+export { categories, collection, unAssigned };
 export default collections;
-export const collection = writable(collections?.[0]); // current collection

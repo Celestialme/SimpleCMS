@@ -55,7 +55,7 @@
 			<button
 				type="button"
 				on:click={() => toggleLeftSidebar.click()}
-				class="btn-icon variant-ghost-surface"
+				class="variant-ghost-surface btn-icon"
 			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
@@ -63,12 +63,13 @@
 
 		<!-- Collection type with icon -->
 		<div class="flex {!$toggleLeftSidebar ? 'ml-2' : 'ml-1'}">
-			{#if $collection.icon}
+			{#if $collection && $collection.icon}
 				<div class="flex items-center justify-center">
 					<iconify-icon icon={$collection.icon} width="24" class="text-error-500" />
 				</div>
 			{/if}
-			{#if categories}
+
+			{#if categories && categories[0]}
 				<div class="ml-2 flex flex-col text-left text-gray-400 dark:text-gray-300">
 					<div class="text-sm font-bold uppercase text-primary-500">{$mode}:</div>
 					<div class="text-xs capitalize">
@@ -82,7 +83,7 @@
 	<div class="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
 		{#if $screenWidth !== 'desktop'}
 			<!-- Save Content -->
-			<button type="button" on:click={saveData} class="btn-icon variant-filled-primary md:btn">
+			<button type="button" on:click={saveData} class="variant-filled-primary btn-icon md:btn">
 				<iconify-icon icon="material-symbols:save" width="24" class="text-white" />
 				<span class="hidden md:block">Save</span>
 			</button>
@@ -92,7 +93,7 @@
 				type="button"
 				on:keydown
 				on:click={() => (showMore = !showMore)}
-				class="btn-icon variant-ghost-surface"
+				class="variant-ghost-surface btn-icon"
 			>
 				<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
 			</button>
@@ -110,17 +111,17 @@
 		</select>
 
 		<!-- Cancel -->
-		<button type="button" on:click={handleCancel} class="btn-icon variant-ghost-surface">
+		<button type="button" on:click={handleCancel} class="variant-ghost-surface btn-icon">
 			<iconify-icon icon="material-symbols:close" width="24" />
 		</button>
 	</div>
 </header>
 
 {#if showMore}
-	<div class="pt-2 -mx-2 flex justify-center items-center gap-10">
+	<div class="-mx-2 flex items-center justify-center gap-10 pt-2">
 		<div class="flex flex-col items-center justify-center">
 			<!-- Delete Content -->
-			<button type="button" on:click={$deleteEntry} class="btn-icon variant-filled-error">
+			<button type="button" on:click={$deleteEntry} class="variant-filled-error btn-icon">
 				<iconify-icon icon="icomoon-free:bin" width="24" />
 			</button>
 			<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">Delete</div>
@@ -129,7 +130,7 @@
 		<!-- Clone Content -->
 		{#if $mode == 'edit'}
 			<div class="flex flex-col items-center justify-center">
-				<button type="button" on:click={cloneData} class="btn-icon variant-filled-secondary">
+				<button type="button" on:click={cloneData} class="variant-filled-secondary btn-icon">
 					<iconify-icon icon="fa-solid:clone" width="24" />
 				</button>
 				<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">Clone</div>

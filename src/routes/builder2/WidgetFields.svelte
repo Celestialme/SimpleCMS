@@ -39,7 +39,7 @@
 	</div>
 {/if}
 
-<style>
+<style lang="postcss">
 	.container {
 		margin-bottom: 20px;
 		padding: 20px 2px;

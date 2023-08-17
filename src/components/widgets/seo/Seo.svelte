@@ -377,7 +377,7 @@
 			on:click={() => (SeoPreviewToggle = !SeoPreviewToggle)}
 			class="{SeoPreviewToggle
 				? 'hidden'
-				: 'block'} btn btn-sm variant-filled-tertiary flex items-center justify-center"
+				: 'block'} variant-filled-tertiary btn btn-sm flex items-center justify-center"
 		>
 			<iconify-icon icon="ion:desktop-outline" width="20" class="mr-1" />
 			Desktop
@@ -387,7 +387,7 @@
 			on:click={() => (SeoPreviewToggle = !SeoPreviewToggle)}
 			class="{SeoPreviewToggle
 				? 'block'
-				: 'hidden'} btn variant-filled-tertiary flex items-center justify-center"
+				: 'hidden'} variant-filled-tertiary btn flex items-center justify-center"
 		>
 			<iconify-icon icon="bi:phone" width="18" class="mr-1" />
 			Mobile
@@ -527,7 +527,7 @@
 	{/each}
 </ul>
 
-<style>
+<style lang="postcss">
 	.input-label {
 		color: gray;
 	}

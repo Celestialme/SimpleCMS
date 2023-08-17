@@ -155,8 +155,8 @@ devDependencies:
     specifier: ^4.4.9
     version: 4.4.9(@types/node@20.5.0)
   vite-plugin-tailwind-purgecss:
-    specifier: 0.1.1
-    version: 0.1.1(vite@4.4.9)
+    specifier: 0.1.2
+    version: 0.1.2(vite@4.4.9)
   zod:
     specifier: ^3.22.1
     version: 3.22.1
@@ -5628,8 +5628,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite-plugin-tailwind-purgecss@0.1.1(vite@4.4.9):
-    resolution: {integrity: sha512-1Koyam/WSdIvRSYCp1ZxNhVf5itniOUVwBKEUxrrcUPGOIQys39pTEajqiZti0fZNv1khu+9eCm0k+cEiMC76w==}
+  /vite-plugin-tailwind-purgecss@0.1.2(vite@4.4.9):
+    resolution: {integrity: sha512-xbBQNT2TDNnhauK36iDucMsyu2prXebpteJoSkxMxM7KoE1O4ejFR+mV+hptKM3nJl7WQFaoCgQ/IH1uiPsCnw==}
     peerDependencies:
       vite: ^4.1.1
     dependencies:

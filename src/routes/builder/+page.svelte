@@ -4,6 +4,7 @@
 	import { categories as importedCategories } from '@src/collections/index';
 	import { dndzone } from 'svelte-dnd-action';
 	import PageTitle from '@src/components/PageTitle.svelte';
+	import { get } from 'svelte/store';
 
 	const categories = writable(importedCategories);
 
@@ -13,16 +14,31 @@
 		draggedCategory = event.detail.items[event.detail.draggedElIndex];
 	};
 
-	const handleDndFinalize = (event) => {
+	function handleDndFinalize(event) {
 		const newCategories = event.detail.items;
+
 		categories.update((oldCategories) => {
-			const oldIndex = oldCategories.findIndex((category) => category.id === draggedCategory.id);
-			const newIndex = newCategories.findIndex((category) => category.id === draggedCategory.id);
-			oldCategories.splice(oldIndex, 1);
-			oldCategories.splice(newIndex, 0, draggedCategory);
-			return oldCategories;
+			const oldCategoriesArray = get(oldCategories);
+
+			// Find the index of the draggedCategory in the oldCategories array
+			const oldIndex = oldCategoriesArray.findIndex((category) => category === draggedCategory);
+			const newIndex = newCategories.findIndex((category) => category === draggedCategory);
+
+			if (oldIndex === -1 || newIndex === -1) {
+				return oldCategoriesArray; // No changes needed
+			}
+
+			// Create a copy of the oldCategories array
+			const newCategoriesArray = [...oldCategoriesArray];
+
+			// Perform the array manipulation using splice
+			const [removed] = newCategoriesArray.splice(oldIndex, 1);
+			newCategoriesArray.splice(newIndex, 0, removed);
+
+			// Return the updated array
+			return newCategoriesArray;
 		});
-	};
+	}
 
 	function handleCreateNewCollection() {
 		goto(`/builder/new`);
@@ -85,10 +101,10 @@
 
 <!-- buttons -->
 <div class="flex items-center justify-between gap-2">
-	<button class="btn variant-filled-tertiary mt-4" on:click={handleCreateNewCategory}
+	<button class="variant-filled-tertiary btn mt-4" on:click={handleCreateNewCategory}
 		>Create New Category</button
 	>
-	<button class="btn variant-filled-primary mt-4" on:click={handleCreateNewCollection}
+	<button class="variant-filled-primary btn mt-4" on:click={handleCreateNewCollection}
 		>Create New Collection</button
 	>
 </div>

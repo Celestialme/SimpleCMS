@@ -199,7 +199,7 @@
 
 			{#if response}<span class="text-xs text-error-500">{response}</span>{/if}
 
-			<button type="submit" class="btn variant-filled mt-4 uppercase"
+			<button type="submit" class="variant-filled btn mt-4 uppercase"
 				>{$LL.LOGIN_SignUp()}
 				<!-- Loading indicators -->
 				{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
@@ -219,7 +219,7 @@
 	<SignupIcon show={active == 0 || active == undefined} />
 </section>
 
-<style>
+<style lang="postcss">
 	.hide {
 		transition: 0s;
 		opacity: 0;

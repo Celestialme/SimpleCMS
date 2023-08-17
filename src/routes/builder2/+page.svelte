@@ -16,11 +16,8 @@
 	let fields = [];
 	let addField = false;
 
-	$: console.log($collection);
-
 	// Function to save data by sending a POST request to the /api/builder endpoint
 	function save() {
-		console.log({ ...$collection.fields });
 		let data =
 			$mode == 'edit'
 				? obj2formData({
@@ -65,12 +62,12 @@
 			<WidgetBuilder fields={$collection.fields} bind:addField bind:collectionName={name} />
 		{/if}
 	</div>
-	<button on:click={save} class="btn variant-filled-primary text-white"> Save </button>
+	<button on:click={save} class="variant-filled-primary btn text-white"> Save </button>
 </div>
 
 <!-- {/if} -->
 
-<style>
+<style lang="postcss">
 	.body {
 		display: flex;
 		position: fixed;

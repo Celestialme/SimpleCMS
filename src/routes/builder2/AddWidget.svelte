@@ -41,7 +41,7 @@
 	</div>
 {/if}
 
-<style>
+<style lang="postcss">
 	.properties {
 		position: fixed;
 		flex-direction: column;
