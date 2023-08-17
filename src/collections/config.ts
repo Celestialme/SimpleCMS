@@ -1,7 +1,9 @@
 import { writable, type Writable } from 'svelte/store';
 export let categories: Writable<{ name: string; icon: string; collections: any[] }[]> = writable([]);
 import { imports } from '@src/collections/types';
+
 imports.subscribe((imports) => {
+	if (!imports) return;
 	categories.set([
 		{
 			name: 'Collections',

@@ -12,5 +12,5 @@ export interface Schema {
 	status?: 'published' | 'unpublished' | 'draft';
 	permissions?: permissions;
 }
-type Imports = 'ImageArray' | 'Media' | 'Menu' | 'Posts1' | 'Posts2' | 'Posts3' | 'Relation' | 'thumbs';
-export let imports = writable({}) as Writable<{ [Key in Imports]: Schema }>;
+type Imports = "ImageArray" | "Media" | "Menu" | "Posts1" | "Posts2" | "Posts3" | "Relation" | "thumbs";
+export let imports = writable() as Writable<{ [Key in Imports]: Schema }>;

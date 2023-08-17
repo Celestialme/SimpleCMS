@@ -15,9 +15,8 @@
 	let name = $mode == 'edit' ? $collection.name : '';
 	let fields = [];
 	let addField = false;
-	$: console.log($collection);
+
 	function save() {
-		console.log({ ...$collection.fields });
 		let data =
 			$mode == 'edit'
 				? obj2formData({ originalName: $collection.name, collectionName: name, fields: $collection.fields })
