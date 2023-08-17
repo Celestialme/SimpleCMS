@@ -1,32 +1,35 @@
-import ImageArray from './ImageArray';
-import Media from './Media';
-import Menu from './Menu';
-import Posts1 from './Posts1';
-import Posts2 from './Posts2';
-import Posts3 from './Posts3';
-import Relation from './Relation';
-import thumbs from './thumbs';
+import { get, writable, type Writable } from 'svelte/store';
+import { type Schema, imports } from './types';
+import axios from 'axios';
+import { browser } from '$app/environment';
 
-let allCollections = { ImageArray, Media, Menu, Posts1, Posts2, Posts3, Relation, thumbs };
-
-import { writable } from 'svelte/store';
-
-let categories = [
-	{
-		name: 'Collections',
-		icon: 'bi:collection',
-		collections: [Posts2, Posts3, thumbs]
-	},
-	{
-		name: 'posts',
-		icon: 'bi:images',
-		collections: [Posts1, ImageArray, Menu, Relation, Media]
+let collections: Writable<Array<Schema>> = writable([]);
+let collection: Writable<Schema> = writable();
+import { categories } from './config';
+async function setup() {
+	let files;
+	let _imports = {} as any;
+	if (browser) {
+		files = (await axios.get('/api/collections')).data;
+	} else {
+		let fs = (await import('fs')).default;
+		files = fs.readdirSync('src/collections').filter((x) => !['index.ts', 'types.ts', 'Auth.ts', 'config.ts'].includes(x));
 	}
-];
-let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
-let unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
+	for (let file of files) {
+		_imports[file.replace('.ts', '')] = (await import(`./${file}`)).default;
+	}
+	imports.set(_imports);
+	collections.set(
+		get(categories)
+			.map((x) => x.collections)
+			.reduce((x, acc) => x.concat(acc))
+	); // returns all collections
+
+	// current collection
+}
+let unAssigned = Object.values(imports).filter((x) => !get(collections).includes(x));
+setup();
 
 //use this unassigned array
-export { categories, unAssigned, allCollections };
+export { categories, collection, unAssigned };
 export default collections;
-export let collection = writable(collections?.[0]); // current collection

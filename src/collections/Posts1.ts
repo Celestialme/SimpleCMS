@@ -4,11 +4,10 @@ let schema: Schema = {
 	name: 'posts1',
 	fields: [
 		widgets.Email({
-			display: async (data, field, entry, contentLanguage) => {
+			display: async ({ data, field, entry, contentLanguage }) => {
 				return data[contentLanguage];
 			},
-			label: 'email',
-			translated: false
+			label: 'email'
 		}),
 		widgets.Text({ label: 'text', translated: false }),
 		widgets.ImageUpload({ label: 'image', path: 'media/images' })
