@@ -31,11 +31,11 @@ export async function load({ cookies, route, params }) {
 
 			// filters collection based on reading permissions and redirects to first left one
 			const _filtered = get(collections).filter(
-				(c) => c?.permissions?.[user.user.role]?.read != false
+				(c) => c?.permissions?.[user.user.role.name]?.read != false
 			);
 			throw redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGES}/${_filtered[0].name}`);
 		}
-		if (collection?.permissions?.[user.user.role]?.read == false) {
+		if (collection?.permissions?.[user.user.role.name]?.read == false) {
 			throw error(404, {
 				message: 'No Access to this collection'
 			});

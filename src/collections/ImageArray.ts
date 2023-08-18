@@ -14,12 +14,12 @@ const schema: Schema = {
 	// Inspect Widget fields for possible options
 	fields: [
 		widgets.ImageArray({
-			label: 'images',
+			label: 'imagesArray',
 			imageUploadTitle: 'image',
 			fields: [
 				widgets.ImageUpload({
 					label: 'image',
-					path: 'mediafiles/images'
+					path: 'global'
 				}),
 				widgets.Text({
 					label: 'title',

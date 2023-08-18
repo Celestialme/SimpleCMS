@@ -90,7 +90,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 };
 
 // Helper function to sanitize file names
-function sanitize(str: string) {
+export async function sanitize(str: string) {
 	return str.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
 }
 

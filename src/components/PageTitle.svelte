@@ -26,7 +26,7 @@
 		</button>
 	{/if}
 
-	<h1 class="h1 ml-2 flex items-center gap-1">
+	<h1 class="h1 ml-2 flex items-center gap-1 font-bold">
 		<!-- Icon -->
 		{#if icon}
 			<iconify-icon {icon} width={iconSize} class={`mr-1 ${iconColor} sm:mr-2`} />

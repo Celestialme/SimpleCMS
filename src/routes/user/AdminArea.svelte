@@ -62,6 +62,7 @@
 	// TanstackTable
 	import TanstackTable from '@src/components/TanstackTable.svelte';
 	import { flexRender } from '@tanstack/svelte-table';
+	import moment from 'moment';
 
 	// AdminUser Data
 	import { onMount } from 'svelte';
@@ -69,37 +70,67 @@
 
 	let tableData = [];
 	let tableDataUserToken = [];
-	// TODO: Fix to show all user not Users sessions
-	onMount(async () => {
-		tableData = data.allUsers;
-		tableDataUserToken = data.tokens;
-		console.log(tableData);
-	});
 
-	// Display Columns
+	//Load Table data
+	onMount(async () => {
+		// Load All available Users
+		tableData = data.allUsers;
+
+		// Load all Send Registration Tokens
+		tableDataUserToken = data.tokens;
+	});
+	// console.log(tableData);
+
+	// Display User Columns
 	let items = [
+		{
+			header: 'Avatar',
+			accessorKey: 'avatar',
+			id: 'avatar',
+			//TODO: update Avatar size if density changes as table does not refresh)
+			cell: (info: any) =>
+				flexRender(Avatar, {
+					src: info.row.original.avatar,
+					width: density === 'comfortable' ? 'w-12' : 'w-8'
+				})
+		},
 		{ header: 'ID', accessorKey: 'id', id: 'id' },
-		// TODO: Add Avatar { header: 'Avatar', accessorKey: 'avatar', id: 'avatar', cell: (info) => flexRender(Avatar, { src: info.row.original.avatar, width: 'w-8' }) },
 		{ header: 'Username', accessorKey: 'username', id: 'username' },
-		{ header: 'Email', accessorKey: 'email', id: 'email' },
 		{
 			header: 'Role',
 			accessorKey: 'role',
 			id: 'role',
 			cell: (info: any) => flexRender(Role, { value: info.getValue() })
 		},
-		{ header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
-		{ header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
+		{ header: 'Email', accessorKey: 'email', id: 'email' },
+		{
+			header: 'Last Access',
+			accessorKey: 'updatedAt',
+			id: 'updatedAt',
+			accessorFn: (cell: any) => moment(cell.updatedAt).fromNow()
+		},
+
+		{
+			header: 'Active Sessions',
+			accessorKey: 'activeSessions',
+			id: 'activeSessions'
+		},
+		{
+			header: 'Expires In',
+			accessorKey: 'lastAccess',
+			id: 'lastAccess',
+			accessorFn: (cell: any) =>
+				cell.lastAccess ? moment(cell.lastAccess.active_expires).fromNow() : 'N/A'
+		},
+		{
+			header: 'Member For',
+			accessorKey: 'createdAt',
+			id: 'createdAt',
+			accessorFn: (cell: any) => moment(cell.createdAt).fromNow()
+		}
 	];
 
-	// let tableDataUserToken = []
-
-	// onMount(async () => {
-	// 	tableData = data.user.;
-	// 	//console.log(tableData);
-	// });
-	// Dummy Data and Items for Second Table (User Tokens)
-
+	// Display Active User Registration Tokens
 	let itemsUserToken = [
 		{ header: 'ID', accessorKey: 'id', id: 'id' },
 		{ header: 'Username', accessorKey: 'username', id: 'username' },
@@ -108,10 +139,20 @@
 			header: 'Role',
 			accessorKey: 'role',
 			id: 'role',
-			cell: (info) => flexRender(Role, { value: info.getValue() })
+			cell: (info: any) => flexRender(Role, { value: info.getValue() })
 		},
-		{ header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
-		{ header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
+		{
+			header: 'Created At',
+			accessorKey: 'createdAt',
+			id: 'createdAt',
+			accessorFn: (cell: any) => moment(cell.createdAt).fromNow()
+		},
+		{
+			header: 'Updated At',
+			accessorKey: 'updatedAt',
+			id: 'updatedAt',
+			accessorFn: (cell: any) => moment(cell.updatedAt).fromNow()
+		}
 	];
 </script>
 
@@ -124,11 +165,16 @@
 			{$LL.USER_EmailToken()}
 		</button>
 
-		<!-- Show User Token -->
-		<button on:click={toggleUserToken} class="gradient-tertiary btn w-full text-white sm:max-w-xs">
-			<iconify-icon icon="material-symbols:key-outline" color="white" width="18" class="mr-1" />
-			{showUsertoken ? 'Hide User Token' : 'Show User Token'}
-		</button>
+		{#if !tableDataUserToken}
+			<!-- Show User Token -->
+			<button
+				on:click={toggleUserToken}
+				class="gradient-tertiary btn w-full text-white sm:max-w-xs"
+			>
+				<iconify-icon icon="material-symbols:key-outline" color="white" width="18" class="mr-1" />
+				{showUsertoken ? 'Hide User Token' : 'Show User Token'}
+			</button>
+		{/if}
 
 		<!-- Show User List -->
 		<button on:click={toggleUserList} class="gradient-secondary btn w-full text-white sm:max-w-xs">
@@ -155,7 +201,7 @@
 					type="button"
 					on:keydown
 					on:click={() => (showMoreUserList = !showMoreUserList)}
-					class="btn-icon variant-ghost-surface sm:hidden"
+					class="variant-ghost-surface btn-icon sm:hidden"
 				>
 					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
 				</button>
@@ -175,6 +221,7 @@
 				</div>
 			{/if}
 		</div>
+
 		{#if tableData.length > 0}
 			<TanstackTable
 				data={tableData}
@@ -207,7 +254,7 @@
 					type="button"
 					on:keydown
 					on:click={() => (showMoreUserToken = !showMoreUserToken)}
-					class="btn-icon variant-ghost-surface sm:hidden"
+					class="variant-ghost-surface btn-icon sm:hidden"
 				>
 					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
 				</button>

@@ -88,8 +88,7 @@
 	import { user } from '@src/stores/store';
 	//console.log('user', $user);
 
-	// $: avatarSrc = user?.avatar;
-	$: avatarSrc = '';
+	$: avatarSrc = $user?.avatar;
 
 	//signOut
 	async function signOut() {
@@ -178,13 +177,13 @@
 
 	let dates = { created: '', updated: '', revision: '' };
 
-	// onMount(async () => {
-	// 	try {
-	// 		dates = await getDates($collection.name);
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// });
+	onMount(async () => {
+		try {
+			dates = await getDates($collection.name);
+		} catch (error) {
+			console.error(error);
+		}
+	});
 </script>
 
 <!-- <div>
@@ -293,7 +292,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 				<!-- sidebar collapse button -->
 				<button
 					type="button"
-					class="border-surface-300 absolute -right-3 top-4 flex items-center justify-center !rounded-full border-2"
+					class="absolute -right-3 top-4 flex items-center justify-center !rounded-full border-2 border-surface-300"
 					on:keydown
 					on:click={() => {
 						toggleLeftSidebar.clickSwitchSideBar();
@@ -305,14 +304,14 @@ lg:overflow-y-scroll lg:max-h-screen}"
 						<iconify-icon
 							icon="bi:arrow-left-circle-fill"
 							width="30"
-							class="text-surface-500 hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600 rotate-180 rounded-full bg-white hover:cursor-pointer"
+							class="rotate-180 rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
 						/>
 					{:else}
 						<!-- Icon expanded -->
 						<iconify-icon
 							icon="bi:arrow-left-circle-fill"
 							width="30"
-							class="text-surface-500 hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600 rounded-full bg-white hover:cursor-pointer"
+							class="rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
 						/>
 					{/if}
 				</button>
@@ -322,9 +321,9 @@ lg:overflow-y-scroll lg:max-h-screen}"
 
 				<!-- Sidebar Left Footer -->
 				<div
-					class="dark:from-surface-800 dark:via-surface-700 dark:to-surface-500 mb-2 mt-auto bg-white dark:bg-gradient-to-r"
+					class="mb-2 mt-auto bg-white dark:bg-gradient-to-r dark:from-surface-800 dark:via-surface-700 dark:to-surface-500"
 				>
-					<div class="border-surface-400 mx-1 mb-1 border-t" />
+					<div class="mx-1 mb-1 border-t border-surface-400" />
 
 					<div
 						class="{$toggleLeftSidebar === 'full'
@@ -345,8 +344,8 @@ lg:overflow-y-scroll lg:max-h-screen}"
 									class="relative cursor-pointer flex-col !no-underline"
 								>
 									<Avatar
-										src={avatarSrc ? '/api/mediafiles/' + avatarSrc : '/Default_User.svg'}
-										class="hover:bg-surface-500 mx-auto hover:p-1 {$toggleLeftSidebar === 'full'
+										src={avatarSrc ? avatarSrc : '/Default_User.svg'}
+										class="mx-auto hover:bg-surface-500 hover:p-1 {$toggleLeftSidebar === 'full'
 											? 'w-[40px]'
 											: 'w-[35px]'}"
 									/>
@@ -431,7 +430,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 						<!-- System Configuration -->
 						<div class={$toggleLeftSidebar === 'full' ? 'order-5' : 'order-6'}>
 							<button
-								class="btn-icon hover:bg-surface-500 pt-1.5 hover:text-white"
+								class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white"
 								on:click={() => {
 									if (get(screenWidth) === 'mobile') {
 										toggleLeftSidebar.clickBack();
@@ -503,7 +502,7 @@ lg:overflow-y-scroll lg:max-h-screen}"
 
 			<svelte:fragment slot="pageFooter">
 				{#if $mode !== 'view'}
-					<h2 class="text-primary-500 text-center !text-sm font-bold uppercase">
+					<h2 class="text-center !text-sm font-bold uppercase text-primary-500">
 						{$collection.name} Info:
 					</h2>
 

@@ -38,10 +38,11 @@ async function getAllFilesFromMediaFilesFolder(mediaDir, user) {
 
 		// Check if the user has permission to view this media file based on their role
 		let hasPermission = false;
-		if (user.role === 'admin') {
+		// TODO: FIX User from Auth so this wont break
+		if (user.role.name === 'admin') {
 			// If the user is an admin, they have permission to view all media files
 			hasPermission = true;
-		} else if (user.role === 'member' && file.startsWith(user.username)) {
+		} else if (user.role.name === 'member' && file.startsWith(user.username)) {
 			// If the user is a member and the file name starts with their username, they have permission to view this media file
 			hasPermission = true;
 		}

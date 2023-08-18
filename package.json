@@ -62,6 +62,7 @@
 		"iconify-icon": "^1.0.8",
 		"lucia-auth": "^1.8.0",
 		"mime-types": "^2.1.35",
+		"moment": "^2.29.4",
 		"mongoose": "^7.4.3",
 		"nodemailer": "^6.9.4",
 		"pdf-thumbnail": "^1.0.6",

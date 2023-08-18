@@ -6,6 +6,8 @@ const schema: Schema = {
 	// Collection Name required
 	name: 'image upload',
 
+	icon: 'bi:images',
+
 	fields: [
 		widgets.ImageUpload({
 			label: 'image',

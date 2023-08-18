@@ -37,12 +37,6 @@
 	// Retrieve density from local storage or set to 'normal' if it doesn't exist
 	let density = localStorage.getItem('density') || 'normal';
 
-	// Update density and save to local storage
-	// function updateDensity(newDensity) {
-	// 	density = newDensity;
-	// 	localStorage.setItem('density', newDensity);
-	// }
-
 	import {
 		createSvelteTable,
 		flexRender as flexRenderBugged,
@@ -78,7 +72,7 @@
 			isLoading = true;
 		}, 400);
 
-		console.log($collection);
+		//console.log($collection);
 
 		if ($collection.name == '') return;
 
@@ -87,7 +81,7 @@
 			.get(`/api/${$collection.name}?page=${1}&length=${50}`)
 			.then((data) => data.data)) as { entryList: [any]; totalCount: number };
 
-		console.log(data);
+		//console.log(data);
 
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {

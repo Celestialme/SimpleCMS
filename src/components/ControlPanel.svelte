@@ -18,17 +18,17 @@
 
 	let dates = { created: '', updated: '', revision: '' };
 
-	// onMount(async () => {
-	// 	try {
-	// 		dates = await getDates($collection.name);
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// });
+	onMount(async () => {
+		try {
+			dates = await getDates($collection.name);
+		} catch (error) {
+			console.error(error);
+		}
+	});
 </script>
 
 <!-- TODO: Check User Role to fix page switch media to collection -->
-{#if $collection.permissions?.[$user.role]?.write != false}
+{#if $collection.permissions?.[$user.role.name]?.write != false}
 	<!-- Desktop Right Sidebar -->
 	{#if $mode == 'view'}
 		<button
@@ -66,16 +66,15 @@
 			<footer class="-mx-1 mb-2 text-white">
 				<h2 class="text-center font-bold uppercase text-primary-500">{$collection.name} Info:</h2>
 
-				<!-- <div class="mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
-				
+				<div class="mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
 					{#each Object.keys(dates) as key}
 						<div class="capitalize">{key}:</div>
 					{/each}
-					
+
 					{#each Object.values(dates) as value}
 						<div class="text-primary-500">{value}</div>
 					{/each}
-				</div> -->
+				</div>
 			</footer>
 		</div>
 	{:else if $mode == 'delete'}
