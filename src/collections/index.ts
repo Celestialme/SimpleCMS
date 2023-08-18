@@ -7,7 +7,7 @@ import { categories } from './config';
 const collections: Writable<Array<Schema>> = writable([]);
 const collection: Writable<Schema> = writable({ name: '', fields: [] } as Schema);
 
-async function setup() {
+export async function setup() {
 	let files: any;
 	const _imports = {} as any;
 	if (browser) {

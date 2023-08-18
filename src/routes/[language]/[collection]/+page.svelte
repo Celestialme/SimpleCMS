@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import collections, { collection } from '@src/collections';
+	import collections, { collection, setup } from '@src/collections';
 	import { collectionValue, mode } from '@src/stores/store';
 	import type { Schema } from '@src/collections/types';
 	import type { LayoutServerData } from '../$types';
@@ -16,17 +16,6 @@
 	let ForwardBackward: boolean = false;
 
 	// Set the value of the collection store to the collection object from the collections array that has a name property that matches the current page's collection parameter
-	collections.subscribe((s) => {
-		console.log(s);
-		if (s.length > 0 && $page?.params?.collection) {
-			// Use the shorthand syntax for updating stores
-			$collection = $collections.find((x) => x.name === $page.params.collection) as Schema;
-			console.log($collections.find((x) => x.name === $page.params.collection));
-			console.log($page.params.collection);
-			console.log($collection);
-		}
-		// current collection
-	});
 
 	// Set the value of the credentials store to the user property of the data variable
 	user.set(data.user);

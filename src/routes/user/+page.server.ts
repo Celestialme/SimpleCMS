@@ -11,6 +11,7 @@ import mongoose from 'mongoose';
 // Load function to check if user is authenticated
 export async function load(event) {
 	let allUsers = await getAllUsers();
+	let tokens = await getTokens();
 	// Get session data from cookies
 	const session = event.cookies.get(SESSION_COOKIE_NAME) as string;
 
@@ -25,6 +26,7 @@ export async function load(event) {
 	if (user.status == 200) {
 		return {
 			allUsers,
+			tokens,
 			user: user.user,
 			addUserForm,
 			changePasswordForm
@@ -161,11 +163,22 @@ export const actions: Actions = {
 
 async function getAllUsers() {
 	const AUTH_KEY = mongoose.models['auth_key'];
-	const keys = await AUTH_KEY.find({});
-	const users = [];
+	const keys = await AUTH_KEY.find({ primary_key: true });
+	const users = [] as any;
 	for (const key of keys) {
 		const user = await auth.getUser(key['user_id']);
 		user.email = key._id.split(':')[1];
+		users.push(user);
+	}
+	return users;
+}
+async function getTokens() {
+	const AUTH_KEY = mongoose.models['auth_key'];
+	const tokens = await AUTH_KEY.find({ primary_key: false });
+	const users = [] as any;
+	for (const token of tokens) {
+		const user = await auth.getUser(token['user_id']);
+		user.email = token._id.split(':')[1];
 		users.push(user);
 	}
 	return users;

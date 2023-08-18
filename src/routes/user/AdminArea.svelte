@@ -68,9 +68,11 @@
 	import Role from './Role.svelte';
 
 	let tableData = [];
+	let tableDataUserToken = [];
 	// TODO: Fix to show all user not Users sessions
 	onMount(async () => {
 		tableData = data.allUsers;
+		tableDataUserToken = data.tokens;
 		console.log(tableData);
 	});
 
@@ -97,39 +99,17 @@
 	// 	//console.log(tableData);
 	// });
 	// Dummy Data and Items for Second Table (User Tokens)
-	let tableDataUserToken = [
-		{
-			id: 1,
-			username: 'user1',
-			email: 'user1@example.com',
-			role: 'User',
-			token: 'token1',
-			createdAt: '2023-08-14',
-			updatedAt: '2023-08-14'
-		},
-		{
-			id: 2,
-			username: 'user2',
-			email: 'user2@example.com',
-			role: 'Admin',
-			token: 'token2',
-			createdAt: '2023-08-14',
-			updatedAt: '2023-08-14'
-		}
-		// ... add more dummy data ...
-	];
 
 	let itemsUserToken = [
 		{ header: 'ID', accessorKey: 'id', id: 'id' },
 		{ header: 'Username', accessorKey: 'username', id: 'username' },
-		{ header: 'Email', accessorKey: 'email', id: 'email' },
+		{ header: 'Token', accessorKey: 'email', id: 'email' },
 		{
 			header: 'Role',
 			accessorKey: 'role',
 			id: 'role',
 			cell: (info) => flexRender(Role, { value: info.getValue() })
 		},
-		{ header: 'Token', accessorKey: 'token', id: 'token' },
 		{ header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
 		{ header: 'Updated At', accessorKey: 'updatedAt', id: 'updatedAt' }
 	];
@@ -159,7 +139,7 @@
 
 	{#if showUserList}
 		<!-- <UserList /> -->
-		<div class="flex flex-col sm:flex-row items-center justify-between my-2">
+		<div class="my-2 flex flex-col items-center justify-between sm:flex-row">
 			<div class="hidden sm:flex">
 				<TanstackFilter
 					bind:globalSearchValue
@@ -211,7 +191,7 @@
 
 	{#if showUsertoken}
 		<!-- User Token invites -->
-		<div class="flex flex-col sm:flex-row items-center justify-between my-2">
+		<div class="my-2 flex flex-col items-center justify-between sm:flex-row">
 			<div class="hidden sm:flex">
 				<TanstackFilter
 					bind:globalSearchValue
@@ -252,7 +232,7 @@
 			<TanstackTable
 				data={tableDataUserToken}
 				items={itemsUserToken}
-				{tableData}
+				tableData={tableDataUserToken}
 				dataSourceName="AdminArea"
 				bind:globalSearchValue
 				bind:filterShow

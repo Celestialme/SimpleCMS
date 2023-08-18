@@ -131,11 +131,11 @@
 		const target = e.target as HTMLInputElement;
 		setCurrentPage(parseInt(target.value) - 1);
 	}
-
-	const defaultColumns = JSON.parse(JSON.stringify(items));
+	console.log(items);
+	const defaultColumns = items;
 
 	const storedValue = localStorage.getItem(`TanstackConfiguration-${dataSourceName}`);
-	const columnsData = storedValue ? JSON.parse(storedValue) : defaultColumns;
+	const columnsData = items;
 
 	const options = writable<TableOptions<any>>({
 		data: tableData,
@@ -308,9 +308,9 @@
 	<!-- TanstackHeader -->
 	{#if columnShow}
 		<div
-			class="rounded-b-0 flex flex-col justify-center rounded-t-md border-b bg-surface-300 text-center dark:bg-surface-700"
+			class="rounded-b-0 bg-surface-300 dark:bg-surface-700 flex flex-col justify-center rounded-t-md border-b text-center"
 		>
-			<div class="text-white dark:text-primary-500">Drag & Drop Columns / Click to hide</div>
+			<div class="dark:text-primary-500 text-white">Drag & Drop Columns / Click to hide</div>
 
 			<!-- toggle all -->
 			<div class="flex w-full items-center justify-center">
@@ -374,7 +374,7 @@
 	<!-- Tanstack Table -->
 	<div class="table-container">
 		<table
-			class="table table-hover {density === 'compact'
+			class="table-hover table {density === 'compact'
 				? 'table-compact'
 				: density === 'normal'
 				? ''
@@ -459,7 +459,7 @@
 							/>
 						</td>
 						{#each row.getVisibleCells() as cell}
-							<td class="border">
+							<td class="break-all border">
 								<svelte:component
 									this={flexRender(cell.column.columnDef.cell, cell.getContext())}
 								/>
@@ -489,9 +489,9 @@
 		</table>
 
 		<!-- Pagination Desktop -->
-		<div class="my-3 flex items-center justify-around text-surface-500">
+		<div class="text-surface-500 my-3 flex items-center justify-around">
 			<!-- show & count rows -->
-			<div class="hidden text-sm text-surface-500 dark:text-surface-400 md:block">
+			<div class="text-surface-500 dark:text-surface-400 hidden text-sm md:block">
 				{$LL.TANSTACK_Page()}
 				<span class="text-black dark:text-white">{$table.getState().pagination.pageIndex + 1}</span>
 				{$LL.TANSTACK_of()}
@@ -520,7 +520,7 @@
 				<select
 					value={$table.getState().pagination.pageSize}
 					on:change={setPageSize}
-					class="select variant-ghost hidden max-w-[100px] rounded py-2 text-sm text-surface-500 dark:text-white sm:block"
+					class="select variant-ghost text-surface-500 hidden max-w-[100px] rounded py-2 text-sm dark:text-white sm:block"
 				>
 					{#each availablePageSizes as pageSize}
 						<option value={pageSize}>
@@ -533,7 +533,7 @@
 
 			<!-- next/previous pages -->
 			<div
-				class="variant-ghost btn-group inline-flex text-surface-500 transition duration-150 ease-in-out dark:text-white [&>*+*]:border-surface-500"
+				class="variant-ghost btn-group text-surface-500 [&>*+*]:border-surface-500 inline-flex transition duration-150 ease-in-out dark:text-white"
 			>
 				<button
 					type="button"

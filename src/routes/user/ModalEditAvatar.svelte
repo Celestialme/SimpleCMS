@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
+	const user = $page.data.user;
+
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: any;
@@ -11,17 +13,15 @@
 
 	const modalStore = getModalStore();
 
-	// Lucia
-	const user = $page.data.user;
-
 	// skeleton
 	import { FileDropzone } from '@skeletonlabs/skeleton';
 	let files: FileList;
 
 	import { Avatar } from '@skeletonlabs/skeleton';
+	import axios from 'axios';
 
-	let avatarSrc = user?.avatar;
-
+	export let avatarSrc;
+	let _avatarSrc: undefined | string = undefined;
 	function onChange(e: Event) {
 		files = (e.target as HTMLInputElement).files!;
 
@@ -30,7 +30,7 @@
 
 		fileReader.onload = (e) => {
 			if (e.target instanceof FileReader) {
-				avatarSrc = e.target.result as string;
+				_avatarSrc = e.target.result as string;
 			}
 		};
 
@@ -73,9 +73,10 @@
 	// We've created a custom submit function to pass the response and close the modal.
 	async function onFormSubmit(): Promise<void> {
 		// Check if files were selected
+
 		if (!files) return;
 
-		const file = files[files.length - 1];
+		const file = files[0];
 
 		try {
 			avatarSchema.parse({
@@ -90,15 +91,25 @@
 		const formData = new FormData();
 		if (file) {
 			formData.append('avatar', file);
+			formData.append('userID', user.id);
 		}
-		const response = await fetch('/upload-avatar', {
-			method: 'POST',
-			body: formData
-		});
+		const response = await axios.post(
+			'/api/user/saveAvatar',
 
+			formData,
+
+			{
+				headers: {
+					'content-type': 'multipart/form-data'
+				}
+			}
+		);
+		if (response.status === 200) {
+			$avatarSrc = response.data.url;
+		}
 		// Pass the response to the parent component and close the modal
 		if ($modalStore[0].response) {
-			$modalStore[0].response({ dataURL: avatarSrc, response });
+			$modalStore[0].response({ dataURL: $avatarSrc, response });
 		}
 		modalStore.close();
 	}
@@ -112,7 +123,7 @@
 <!-- @component This example creates a simple form modal. -->
 
 <div class="modal-avatar {cBase}">
-	<header class={`text-center text-primary-500 ${cHeader}`}>
+	<header class={`text-primary-500 text-center ${cHeader}`}>
 		{$modalStore[0]?.title ?? '(title missing)'}
 	</header>
 	<article class="text-center text-sm">
@@ -121,13 +132,9 @@
 	<!-- Enable for debugging: -->
 	<!-- <pre>{JSON.stringify(formData, null, 2)}</pre> -->
 	<form class="modal-form {cForm}">
-		<div class="grid grid-cols-1 grid-rows-{avatarSrc ? '1' : '2'} items-center justify-center">
+		<div class="grid grid-cols-1 grid-rows-{$avatarSrc ? '1' : '2'} items-center justify-center">
 			<Avatar
-				src={avatarSrc
-					? avatarSrc.startsWith('data')
-						? avatarSrc
-						: '/api/media' + avatarSrc
-					: '/Default_User.svg'}
+				src={_avatarSrc ? _avatarSrc : $avatarSrc ? $avatarSrc : '/Default_User.svg'}
 				rounded-full
 				class="mx-auto mb-3 w-32"
 			/>

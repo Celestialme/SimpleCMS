@@ -3,7 +3,6 @@
 	import { popup } from '@skeletonlabs/skeleton';
 	import type { PopupSettings } from '@skeletonlabs/skeleton';
 	import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
-	i;
 	import { getModalStore } from '@skeletonlabs/skeleton';
 
 	const modalStore = getModalStore();
@@ -145,7 +144,7 @@
 </script>
 
 <!-- Multibutton group-->
-<div class="btn-group rounded-md relative text-white">
+<div class="btn-group relative rounded-md text-white">
 	<!-- Action button  -->
 
 	<button
@@ -154,12 +153,12 @@
 			getButtonAndIconValues(listboxValue, listboxValue);
 		}}
 		class="{getButtonAndIconValues(listboxValue)
-			.buttonClass} hover:bg-primary-400 uppercase font-semibold"
+			.buttonClass} hover:bg-primary-400 font-semibold uppercase"
 	>
 		<iconify-icon
 			icon={getButtonAndIconValues(listboxValue).iconValue}
 			width="20"
-			class="text-white mr-2"
+			class="mr-2 text-white"
 		/>
 		{listboxValue ?? 'create'}
 	</button>
@@ -167,13 +166,13 @@
 	<span class="border border-white" />
 
 	<!-- Dropdown button -->
-	<button class="bg-surface-500 hover:!bg-surface-800 rounded-r-sm divide-x-2" use:popup={Combobox}>
+	<button class="bg-surface-500 hover:!bg-surface-800 divide-x-2 rounded-r-sm" use:popup={Combobox}>
 		<iconify-icon icon="mdi:chevron-down" width="20" class="text-white" />
 	</button>
 </div>
 <!-- Dropdown/Listbox -->
 <div
-	class="card w-48 z-10 bg-surface-500 text-white overflow-hiddens rounded-sm"
+	class="card bg-surface-500 overflow-hiddens z-10 w-48 rounded-sm text-white"
 	data-popup="Combobox"
 >
 	<ListBox

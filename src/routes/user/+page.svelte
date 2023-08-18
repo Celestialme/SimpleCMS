@@ -28,8 +28,9 @@
 	const modalStore = getModalStore();
 	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 	import AdminArea from './AdminArea.svelte';
+	import { writable } from 'svelte/store';
 
-	let avatarSrc = user?.avatar;
+	let avatarSrc = writable(user?.avatar);
 
 	let id = user?.id;
 	let username = user?.username;
@@ -78,7 +79,8 @@
 		const modalComponent: ModalComponent = {
 			// Pass a reference to your custom component
 			ref: ModalEditAvatar,
-			props: {},
+			props: { avatarSrc },
+
 			// Add your props as key/value pairs
 			// props: { background: 'bg-pink-500' },
 			// Provide default slot content as a template literal
@@ -89,31 +91,31 @@
 			// NOTE: title, body, response, etc are supported!
 			title: 'Edit your Avatar',
 			body: 'Upload new Avatar Image und then press Save.',
-			component: modalComponent,
+			component: modalComponent
 			// Pass arbitrary data to the component
-			response: async (r: { dataURL: string }) => {
-				if (r) {
-					const formData = new FormData();
-					formData.append('dataurl', r.dataURL);
+			// response: async (r: { dataURL: string }) => {
+			// 	if (r) {
+			// 		const formData = new FormData();
+			// 		formData.append('dataurl', r.dataURL);
 
-					try {
-						const res = await fetch('/api/user/editAvatar', {
-							method: 'POST',
-							body: formData
-						});
+			// 		try {
+			// 			const res = await fetch('/api/user/editAvatar', {
+			// 				method: 'POST',
+			// 				body: formData
+			// 			});
 
-						if (res.status === 200) {
-							const data = await res.json();
-							await invalidateAll();
-							const resizedDataUrl = data.path;
-							avatarSrc = resizedDataUrl;
-						}
-					} catch (err) {
-						console.log(err);
-						alert('Error uploading image');
-					}
-				}
-			}
+			// 			if (res.status === 200) {
+			// 				const data = await res.json();
+			// 				await invalidateAll();
+			// 				const resizedDataUrl = data.path;
+			// 				avatarSrc = resizedDataUrl;
+			// 			}
+			// 		} catch (err) {
+			// 			console.log(err);
+			// 			alert('Error uploading image');
+			// 		}
+			// 	}
+			// }
 		};
 		modalStore.trigger(d);
 	}
@@ -143,7 +145,7 @@
 		<!-- Avatar with user info -->
 		<div class="relative flex flex-col items-center justify-center gap-1">
 			<Avatar
-				src={avatarSrc ? '/api/' + avatarSrc : '/Default_User.svg'}
+				src={$avatarSrc ? $avatarSrc : '/Default_User.svg'}
 				initials="AV"
 				rounded-none
 				class="w-32"
