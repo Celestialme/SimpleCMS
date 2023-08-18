@@ -14,6 +14,7 @@
 	let refresh = async (collection: typeof $collection) => {
 		data = undefined;
 		data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as { entryList: [any]; totalCount: number };
+
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};

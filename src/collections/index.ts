@@ -4,9 +4,9 @@ import axios from 'axios';
 import { browser } from '$app/environment';
 
 let collections: Writable<Array<Schema>> = writable([]);
-let collection: Writable<Schema> = writable();
+let collection: Writable<Schema> = writable({ name: '', fields: [] } as Schema);
 import { categories } from './config';
-async function setup() {
+export async function setup() {
 	let files;
 	let _imports = {} as any;
 	if (browser) {
@@ -28,7 +28,6 @@ async function setup() {
 	// current collection
 }
 let unAssigned = Object.values(imports).filter((x) => !get(collections).includes(x));
-setup();
 
 //use this unassigned array
 export { categories, collection, unAssigned };
