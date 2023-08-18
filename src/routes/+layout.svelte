@@ -169,13 +169,13 @@
 
 	let dates = { created: '', updated: '', revision: '' };
 
-	onMount(async () => {
-		try {
-			dates = await getDates($collection.name);
-		} catch (error) {
-			console.error(error);
-		}
-	});
+	// onMount(async () => {
+	// 	try {
+	// 		dates = await getDates($collection.name);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// });
 </script>
 
 <!-- <div>

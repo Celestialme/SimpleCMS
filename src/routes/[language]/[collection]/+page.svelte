@@ -17,8 +17,15 @@
 
 	// Set the value of the collection store to the collection object from the collections array that has a name property that matches the current page's collection parameter
 	collections.subscribe((s) => {
-		if (s.length > 0 && $page?.params?.collection)
-			collection.set($collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
+		console.log(s);
+		if (s.length > 0 && $page?.params?.collection) {
+			// Use the shorthand syntax for updating stores
+			$collection = $collections.find((x) => x.name === $page.params.collection) as Schema;
+			console.log($collections.find((x) => x.name === $page.params.collection));
+			console.log($page.params.collection);
+			console.log($collection);
+		}
+		// current collection
 	});
 
 	// Set the value of the credentials store to the user property of the data variable
@@ -33,9 +40,11 @@
 	};
 
 	// Subscribe to changes in the collection store
-	collection.subscribe((_) => {
+	collection.subscribe((_collection) => {
 		// Reset the value of the collectionValue store
-		$collectionValue = {};
+		if (!_collection) {
+			$collectionValue = {};
+		}
 
 		if (!ForwardBackward) {
 			// If ForwardBackward is false and the current route is a collection route

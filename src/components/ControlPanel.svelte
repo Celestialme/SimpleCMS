@@ -18,13 +18,13 @@
 
 	let dates = { created: '', updated: '', revision: '' };
 
-	onMount(async () => {
-		try {
-			dates = await getDates($collection.name);
-		} catch (error) {
-			console.error(error);
-		}
-	});
+	// onMount(async () => {
+	// 	try {
+	// 		dates = await getDates($collection.name);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// });
 </script>
 
 <!-- TODO: Check User Role to fix page switch media to collection -->
@@ -34,14 +34,14 @@
 		<button
 			type="button"
 			on:click={() => mode.set('create')}
-			class=" btn variant-filled-primary mt-2"
+			class=" variant-filled-primary btn mt-2"
 		>
 			<iconify-icon icon="mdi:pen" width="24" />Create
 		</button>
 	{:else if ['edit', 'create'].includes($mode)}
 		<div class="mx-2 mt-2 flex h-screen flex-col justify-between">
 			<header class=" text-error-500">
-				<button type="button" on:click={saveData} class="btn variant-filled-primary w-full gap-2">
+				<button type="button" on:click={saveData} class="variant-filled-primary btn w-full gap-2">
 					<iconify-icon icon="material-symbols:save" width="24" class="text-white" />
 					Save {$collection.name}
 				</button>
@@ -50,7 +50,7 @@
 					<button
 						type="button"
 						on:click={$deleteEntry}
-						class="btn variant-filled-error mt-2 w-full"
+						class="variant-filled-error btn mt-2 w-full"
 					>
 						<iconify-icon icon="icomoon-free:bin" width="24" />Delete {$collection.name}
 					</button>
@@ -66,20 +66,20 @@
 			<footer class="-mx-1 mb-2 text-white">
 				<h2 class="text-center font-bold uppercase text-primary-500">{$collection.name} Info:</h2>
 
-				<div class="mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
-					<!-- Labels -->
+				<!-- <div class="mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
+				
 					{#each Object.keys(dates) as key}
 						<div class="capitalize">{key}:</div>
 					{/each}
-					<!-- Data -->
+					
 					{#each Object.values(dates) as value}
 						<div class="text-primary-500">{value}</div>
 					{/each}
-				</div>
+				</div> -->
 			</footer>
 		</div>
 	{:else if $mode == 'delete'}
-		<button type="button" on:click={$deleteEntry} class="btn variant-filled-success">
+		<button type="button" on:click={$deleteEntry} class="variant-filled-success btn">
 			<iconify-icon icon="icomoon-free:bin" width="24" />Delete
 		</button>
 	{/if}

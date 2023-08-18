@@ -16,12 +16,12 @@ imports.subscribe((imports) => {
 		{
 			name: get(LL).CollectionCategory_Collection(),
 			icon: 'bi:collection',
-			collections: [imports.Posts2, imports.Names, imports.WidgetTest]
+			collections: [imports.Posts, imports.Names, imports.WidgetTest]
 		},
 		{
 			name: 'posts',
 			icon: 'bi:images',
-			collections: [imports.Posts, imports.ImageArray, imports.Relation, imports.Media]
+			collections: [imports.Posts2, imports.ImageArray, imports.Relation, imports.Media]
 		},
 		{
 			name: get(LL).CollectionCategory_Menu(),

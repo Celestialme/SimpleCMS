@@ -137,8 +137,8 @@ devDependencies:
     specifier: ^3.5.0
     version: 3.5.0(postcss@8.4.28)(svelte@4.2.0)
   svelte-dnd-action:
-    specifier: ^0.9.24
-    version: 0.9.24(svelte@4.2.0)
+    specifier: ^0.9.25
+    version: 0.9.25(svelte@4.2.0)
   sveltekit-superforms:
     specifier: ^1.5.3
     version: 1.5.3(@sveltejs/kit@1.22.6)(svelte@4.2.0)(zod@3.22.1)
@@ -155,8 +155,8 @@ devDependencies:
     specifier: ^4.4.9
     version: 4.4.9(@types/node@20.5.0)
   vite-plugin-tailwind-purgecss:
-    specifier: 0.1.2
-    version: 0.1.2(vite@4.4.9)
+    specifier: 0.1.3
+    version: 0.1.3(vite@4.4.9)
   zod:
     specifier: ^3.22.1
     version: 3.22.1
@@ -5205,8 +5205,8 @@ packages:
       - sugarss
     dev: true
 
-  /svelte-dnd-action@0.9.24(svelte@4.2.0):
-    resolution: {integrity: sha512-rp+LqH4Pq8uYVko6Qpe9hvQeJkrmG0erT8N0DffLYeFFp2u1cxpj/icB0j4eJNqYPfHQYEyo1nyol4tnq+iOew==}
+  /svelte-dnd-action@0.9.25(svelte@4.2.0):
+    resolution: {integrity: sha512-6cW+5b+xYn2w1KaYdzdMiWOn4wzFq9KHpWMyYwixN4M+94RFw9Sn8GiRI0EPFoT5r6/RVD3d3lZ/OjllZlpYbg==}
     peerDependencies:
       svelte: '>=3.23.0'
     dependencies:
@@ -5628,8 +5628,8 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite-plugin-tailwind-purgecss@0.1.2(vite@4.4.9):
-    resolution: {integrity: sha512-xbBQNT2TDNnhauK36iDucMsyu2prXebpteJoSkxMxM7KoE1O4ejFR+mV+hptKM3nJl7WQFaoCgQ/IH1uiPsCnw==}
+  /vite-plugin-tailwind-purgecss@0.1.3(vite@4.4.9):
+    resolution: {integrity: sha512-VVz9fwKBEEFSbj/rKxtwtczvoSrIqbzbo6S+MT7gH0CsmKNwlx947VMoV8B085ocxGCuFlddOPRDszNXLi2nTQ==}
     peerDependencies:
       vite: ^4.1.1
     dependencies:

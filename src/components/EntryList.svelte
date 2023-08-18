@@ -72,16 +72,23 @@
 	let columnVisibility = {};
 
 	// This function refreshes the data displayed in a table by fetching new data from an API endpoint and updating the tableData and options variables.
+
 	let refresh = async (collection: typeof $collection) => {
 		loadingTimer = setTimeout(() => {
 			isLoading = true;
 		}, 400);
 
+		console.log($collection);
+
+		if ($collection.name == '') return;
+
 		data = undefined;
 		data = (await axios
 			.get(`/api/${$collection.name}?page=${1}&length=${50}`)
 			.then((data) => data.data)) as { entryList: [any]; totalCount: number };
-		//console.log(data);
+
+		console.log(data);
+
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
@@ -98,6 +105,9 @@
 				return obj;
 			})
 		);
+
+		console.log(tableData);
+
 		const storedValue = localStorage.getItem(`TanstackConfiguration-${$collection.name}`);
 		const columns = storedValue ? JSON.parse(storedValue) : defaultColumns;
 		options.update((options) => ({
@@ -107,6 +117,7 @@
 				return defaultColumns.find((col) => col.accessorKey == item.accessorKey);
 			})
 		}));
+
 		tickMap = {};
 		tickAll = false;
 
@@ -389,7 +400,7 @@
 					// console.log('Hamburger clicked');
 					toggleLeftSidebar.click();
 				}}
-				class="btn-icon variant-ghost-surface mt-1"
+				class="variant-ghost-surface btn-icon mt-1"
 			>
 				<iconify-icon icon="mingcute:menu-fill" width="24" />
 			</button>
@@ -397,8 +408,10 @@
 		<!-- Collection type with icon -->
 		<!-- TODO: Translate Collection Name -->
 		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : 'ml-1 sm:ml-2'}">
-			{#if categories}<div class="mb-2 text-xs capitalize text-surface-500 dark:text-surface-300">
-					{categories[0].name}
+			{#if $categories.length}<div
+					class="mb-2 text-xs capitalize text-surface-500 dark:text-surface-300"
+				>
+					{$categories[0].name}
 				</div>{/if}
 			<div
 				class="-mt-2 flex justify-start text-sm font-bold uppercase dark:text-white md:text-2xl lg:text-xl"
@@ -425,7 +438,7 @@
 		type="button"
 		on:keydown
 		on:click={() => (searchShow = !searchShow)}
-		class="btn-icon variant-ghost-surface sm:hidden"
+		class="variant-ghost-surface btn-icon sm:hidden"
 	>
 		<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
 	</button>
@@ -657,7 +670,7 @@
 
 		<!-- next/previous pages -->
 		<div
-			class="btn-group variant-ghost inline-flex text-surface-500 transition duration-150 ease-in-out dark:text-white [&>*+*]:border-surface-500"
+			class="variant-ghost btn-group inline-flex text-surface-500 transition duration-150 ease-in-out dark:text-white [&>*+*]:border-surface-500"
 		>
 			<button
 				type="button"

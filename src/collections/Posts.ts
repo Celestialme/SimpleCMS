@@ -18,10 +18,10 @@ const schema: Schema = {
 		widgets.Email({
 			label: 'email',
 			icon: 'material-symbols:mail',
-			translated: false,
-			display: async ({ data, field, entry, contentLanguage }) => {
-				return data[contentLanguage];
-			}
+			translated: false
+			// display: async ({ data, field, entry, contentLanguage }) => {
+			// 	return data[contentLanguage];
+			// }
 		}),
 
 		widgets.Text({
