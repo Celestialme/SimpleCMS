@@ -6,7 +6,7 @@ import {
 } from '$env/static/private';
 
 export const GET: RequestHandler = async () => {
-	var tokensProvided = {
+	const tokensProvided = {
 		google: false,
 		twitch: false,
 		tiktok: false

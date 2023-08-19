@@ -78,23 +78,15 @@
 		localStorage.setItem('GalleryUserPreference', userPreference);
 	}
 
-	// Table Data
-	let data = [
-		{
-			_id: '9rK2Lr9pLJjS5CK',
-			email: 'info@asset-trade.de',
-			role: 'admin',
-			username: 'Rar9',
-			createdAt: 'createdAt',
-			updatedAt: 'updatedAt',
-			Image: 'image',
-			Path: 'path'
-		}
-	];
+	// dummy data for testing
+	export let data: string[] = [];
+
+	console.log('Data received in component:', data);
+
 	// Column Definition
 	let items = [
 		{ Header: 'ID', accessorKey: '_id', id: '_id' },
-		{ Header: 'Username', accessorKey: 'username', id: 'username' },
+		{ Header: 'Name', accessorKey: 'name', id: 'name' },
 		{ Header: 'Email', accessorKey: 'email', id: 'email' },
 		{ Header: 'Role', accessorKey: 'role', id: 'role' },
 		{ Header: 'Created At', accessorKey: 'createdAt', id: 'createdAt' },
@@ -103,54 +95,33 @@
 		{ Header: 'Path', accessorKey: 'path', id: 'path' }
 	];
 
-	// 	// define an interface for the media file object
-	// 	interface MediaFile {
-	// 		image: string;
-	// 		name: string;
-	// 		path: string;
-	// 		thumbnail?: string;
-	// 		size?: string;
-	// 	}
-
-	// 	// Define the 'data' variable using the 'MediaFile' interface
-	// 	export let data: MediaFile[] = [];
-
-	// Define the 'items' variable as an array of column definitions based on the MediaFile interface
-	// 	let items = [
-	//   { Header: 'Image', accessorKey: 'image', id: 'image' },
-	//   { Header: 'Name', accessorKey: 'name', id: 'name' },
-	//   { Header: 'Path', accessorKey: 'path', id: 'path' },
-	//   { Header: 'Thumbnail', accessorKey: 'thumbnail', id: 'thumbnail' },
-	//   { Header: 'Size', accessorKey: 'size', id: 'size' }
-	// ];
-
 	// TODO: Fix Grid search
-	function searchGrid(searchValue) {
-		// Get the data displayed in the grid
-		let gridData = images;
+	// function searchGrid(searchValue) {
+	// 	// Get the data displayed in the grid
+	// 	let gridData = data;
 
-		// Filter the data based on the search value
-		let filteredData = gridData.filter((item) => {
-			// Check if the image name or path contains the search query
-			return (
-				item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-				item.path.toLowerCase().includes(searchValue.toLowerCase())
-			);
-		});
+	// 	// Filter the data based on the search value
+	// 	let filteredData = gridData.filter((item) => {
+	// 		// Check if the image name or path contains the search query
+	// 		return (
+	// 			item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+	// 			// item.path.toLowerCase().includes(searchValue.toLowerCase())
+	// 		);
+	// 	});
 
-		// Update the data displayed in the grid with the filtered data
-		images = filteredData;
-	}
+	// 	// Update the data displayed in the grid with the filtered data
+	// 	data = filteredData;
+	// }
 </script>
 
 <div class="flex flex-col gap-1">
-	<PageTitle name="Media Gallery2" icon="bi:images" iconColor="text-primary-500" />
+	<PageTitle name="Media Gallery" icon="bi:images" iconColor="text-primary-500" />
 
 	<div class="flex items-center justify-between">
 		{#if view == 'grid'}
 			<!-- TODO: add actual search -->
 			<!-- search input grid -->
-			<div class="btn-group variant-filled-surface">
+			<div class="variant-filled-surface btn-group">
 				<input
 					type="text"
 					class="input"
@@ -158,7 +129,7 @@
 					on:input={(event) => {
 						if (event.target instanceof HTMLInputElement) {
 							//console.log(event.target.value);
-							searchGrid(event.target.value);
+							// searchGrid(event.target.value);
 						}
 					}}
 				/>
@@ -168,13 +139,13 @@
 			</div>
 		{:else}
 			<div>
-				<TanstackFilter
+				<!-- <TanstackFilter
 					bind:searchValue={globalSearchValue}
 					bind:searchShow
 					bind:filterShow
 					bind:columnShow
 					bind:density
-				/>
+				/> -->
 			</div>
 		{/if}
 		<div class="flex items-center justify-center gap-4">
@@ -199,7 +170,7 @@
 									}
 								}}
 							>
-								<p class="text-xs text-center">Display</p>
+								<p class="text-center text-xs">Display</p>
 								<iconify-icon
 									icon="material-symbols:grid-view-rounded"
 									height="42"
@@ -222,7 +193,7 @@
 									}
 								}}
 							>
-								<p class="text-xs text-center">Display</p>
+								<p class="text-center text-xs">Display</p>
 								<iconify-icon
 									icon="material-symbols:list-alt-outline"
 									height="44"
@@ -231,9 +202,9 @@
 
 								<!-- TODO: Center mobile labels -->
 								{#if view === 'table'}
-									<p class="text-xs text-center">Grid</p>
+									<p class="text-center text-xs">Grid</p>
 								{:else}
-									<p class="text-xs text-center">Table</p>
+									<p class="text-center text-xs">Table</p>
 								{/if}
 							</button>
 						{/if}
@@ -366,51 +337,16 @@
 	{:else}
 		<!-- Grid display -->
 		{#if view == 'grid'}
-			<div class="mx-auto flex flex-wrap gap-2">
-				{#each data as file}
-					<div
-						class={`card ${
-							gridSize === 'small'
-								? 'card-small'
-								: gridSize === 'medium'
-								? 'card-medium'
-								: 'card-large'
-						}`}
-					>
-						<section class="p-4 text-center">
-							{#if file.thumbnail}
-								<img
-									class={`inline-block object-cover object-center ${
-										gridSize === 'small'
-											? 'h-16 w-16'
-											: gridSize === 'medium'
-											? 'h-36 w-36'
-											: 'h-80 w-80'
-									}`}
-									src={file.thumbnail}
-									alt={file.name}
-								/>
-							{:else}
-								<!-- Add code for rendering fallback image or message -->
-							{/if}
-						</section>
-						<footer
-							class={`card-footer mt-1 flex h-14 w-full items-center justify-center break-all rounded-sm bg-surface-600 p-0 text-center text-xs text-white`}
-							style={`max-width: ${
-								gridSize === 'small' ? '6rem' : gridSize === 'medium' ? '12rem' : '24rem'
-							}`}
-						>
-							<div class="flex-col">
-								<div class="mb-1 line-clamp-2 font-semibold text-primary-500">{file.name}</div>
-								<div class="line-clamp-1">{file.path}</div>
-								<div class="line-clamp-1">{file.size}</div>
-							</div>
-						</footer>
-					</div>
-				{/each}
-			</div>
+			GRID
+
+			{data}
+
+			{#each data as file, index}
+				<!-- date here -->
+			{/each}
 		{:else}
-			<TanstackTable
+			Table
+			<!-- <TanstackTable
 				{data}
 				{items}
 				tableData={data}
@@ -419,7 +355,7 @@
 				bind:filterShow
 				bind:columnShow
 				bind:density
-			/>
+			/> -->
 		{/if}
 	{/if}
 </div>

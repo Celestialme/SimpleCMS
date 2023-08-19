@@ -13,7 +13,7 @@ export type Params = {
 	menu: any[];
 };
 
-export let GuiSchema = {
+export const GuiSchema = {
 	label: { widget: Input, required: true },
 	display: { widget: Input, required: true },
 	db_fieldName: { widget: Input, required: true },

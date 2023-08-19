@@ -90,7 +90,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 };
 
 // Helper function to sanitize file names
-export async function sanitize(str: string) {
+export function sanitize(str: string) {
 	return str.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
 }
 
@@ -130,6 +130,9 @@ export async function saveImages(data: FormData, collectionName: string) {
 			const { blob, fieldname } = file;
 			const name = removeExtension(blob.name);
 			const sanitizedFileName = sanitize(name);
+
+			console.log('Original filename:', blob.name);
+			console.log('Sanitized filename:', sanitizedFileName);
 
 			const arrayBuffer = await blob.arrayBuffer();
 			const buffer = Buffer.from(arrayBuffer);

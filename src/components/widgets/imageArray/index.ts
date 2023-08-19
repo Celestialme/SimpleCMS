@@ -14,10 +14,10 @@ const widget = ({
 	label,
 	display
 }: Params) => {
-	let uploader = fields[0] as ImageUpload_Params;
+	const uploader = fields[0] as ImageUpload_Params;
 
 	if (!display) {
-		display = async (data, field, entry, contentLanguage) =>
+		display = async ({ data, collection, field, entry, contentLanguage }) =>
 			`<img class='max-w-[200px] inline-block' src="/${uploader.path}/${
 				entry[getFieldName(uploader)].name
 			}" />`;

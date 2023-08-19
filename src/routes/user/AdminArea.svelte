@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Multibutton from './Multibutton.svelte';
 	import type { PageData } from './$types';
+
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
 
@@ -90,7 +91,7 @@
 			//TODO: update Avatar size if density changes as table does not refresh)
 			cell: (info: any) =>
 				flexRender(Avatar, {
-					src: info.row.original.avatar,
+					src: info.row.original.avatar || '/Default_User.svg', // Use default avatar if avatar is empty
 					width: density === 'comfortable' ? 'w-12' : 'w-8'
 				})
 		},

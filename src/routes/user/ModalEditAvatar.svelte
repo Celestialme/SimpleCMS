@@ -18,6 +18,7 @@
 	let files: FileList;
 
 	export let avatarSrc: any;
+
 	let _avatarSrc: undefined | string = undefined;
 
 	function onChange(e: Event) {
@@ -115,12 +116,23 @@
 		modalStore.close();
 	}
 
-	//Delete Avatar
-	async function deleteAvatar(): Promise<void> {
-		//TODO Avatar Image deletion add model for confirmation
-		modalStore.close();
-	}
+	// Function to delete the user's avatar
+	async function deleteAvatar() {
+		try {
+			const response = await axios.post('/api/user/deleteAvatar', { userID: user.id });
 
+			if (response.status === 200) {
+				// Clear the _avatarSrc variable and update the avatarSrc store
+				_avatarSrc = undefined;
+				avatarSrc.set('/Default_User.svg'); // Set default avatar or empty
+
+				// Close the modal after successful deletion
+				modalStore.close();
+			}
+		} catch (error) {
+			console.error('Error deleting avatar:', error);
+		}
+	}
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
 	const cHeader = 'text-2xl font-bold';
@@ -176,13 +188,18 @@
 	</form>
 
 	<footer class="modal-footer {parent.regionFooter} justify-between">
-		<button type="button" on:click={deleteAvatar} class="variant-filled-error btn">
-			<iconify-icon icon="icomoon-free:bin" width="24" />Delete
-		</button>
-		<div>
-			<button class="btn {parent.buttonNeutral}" on:click={parent.onClose}
-				>{parent.buttonTextCancel}</button
-			>
+		{#if $avatarSrc !== '/Default_User.svg'}
+			<button type="button" on:click={deleteAvatar} class="variant-filled-error btn">
+				<iconify-icon icon="icomoon-free:bin" width="24" />Delete
+			</button>
+		{:else}
+			<div></div>
+			<!-- Empty div when using the default avatar -->
+		{/if}
+		<div class="flex justify-between">
+			<button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>
+				{parent.buttonTextCancel}
+			</button>
 			<button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Save</button>
 		</div>
 	</footer>

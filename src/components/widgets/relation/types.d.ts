@@ -12,7 +12,7 @@ export type Params = {
 	relation: Schema;
 };
 
-export let GuiSchema = {
+export const GuiSchema = {
 	label: { widget: FloatingInput, required: true },
 	display: { widget: FloatingInput, required: true },
 	db_fieldName: { widget: FloatingInput, required: true },

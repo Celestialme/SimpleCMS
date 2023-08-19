@@ -195,7 +195,7 @@ export async function tiktok(url: string) {
 }
 
 export async function getTokensProvided() {
-	let tokensProvided = {
+	const tokensProvided = {
 		google: false,
 		twitch: false
 	};

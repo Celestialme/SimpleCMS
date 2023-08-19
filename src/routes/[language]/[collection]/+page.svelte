@@ -29,11 +29,9 @@
 	};
 
 	// Subscribe to changes in the collection store
-	collection.subscribe((_collection) => {
+	collection.subscribe((_) => {
 		// Reset the value of the collectionValue store
-		if (!_collection) {
-			$collectionValue = {};
-		}
+		$collectionValue = {};
 
 		if (!ForwardBackward) {
 			// If ForwardBackward is false and the current route is a collection route

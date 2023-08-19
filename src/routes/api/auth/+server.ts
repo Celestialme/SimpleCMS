@@ -5,9 +5,9 @@ import { SESSION_COOKIE_NAME } from 'lucia-auth';
 
 // Define a POST request handler function
 export const POST: RequestHandler = async ({ request, cookies }) => {
-	let formData = await request.formData();
+	const formData = await request.formData();
 
-	let authType = formData.get('authType') as 'signOut';
+	const authType = formData.get('authType') as 'signOut';
 
 	if (authType == 'signOut') {
 		return await signOut(cookies);
@@ -19,7 +19,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 // Define an asynchronous function to sign out a user
 async function signOut(cookies: Cookies) {
 	try {
-		let sessionID = cookies.get(SESSION_COOKIE_NAME) as string;
+		const sessionID = cookies.get(SESSION_COOKIE_NAME) as string;
 		await auth.invalidateSession(sessionID);
 		cookies.delete(SESSION_COOKIE_NAME);
 		return new Response(JSON.stringify({ status: 200 }));

@@ -257,6 +257,7 @@
 			};
 		});
 
+		// Update localStorage with the remapped columns configuration
 		localStorage.setItem(
 			`TanstackConfiguration-${dataSourceName}`,
 			JSON.stringify(

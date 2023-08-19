@@ -24,12 +24,12 @@ export async function load(event: any) {
 
 export const actions: Actions = {
 	default: async ({ request }) => {
-		let formData = await request.formData();
-		let fieldsData = formData.get('fields') as string;
-		let originalName = JSON.parse(formData.get('originalName') as string);
-		let collectionName = JSON.parse(formData.get('collectionName') as string);
-		let fields = JSON.parse(fieldsData) as Array<fields>;
-		let imports = goThrough(fields);
+		const formData = await request.formData();
+		const fieldsData = formData.get('fields') as string;
+		const originalName = JSON.parse(formData.get('originalName') as string);
+		const collectionName = JSON.parse(formData.get('collectionName') as string);
+		const fields = JSON.parse(fieldsData) as Array<fields>;
+		const imports = goThrough(fields);
 
 		let content = `
 		${imports}
@@ -61,15 +61,15 @@ export const actions: Actions = {
 
 function goThrough(object: any, imports: Set<string> = new Set()) {
 	if (object instanceof Object) {
-		for (let key in object) {
-			let field = object[key];
+		for (const key in object) {
+			const field = object[key];
 			goThrough(field, imports);
 			if (field.widget) {
-				let widget = widgets[field.widget.key];
-				for (let key in widget.GuiSchema) {
+				const widget = widgets[field.widget.key];
+				for (const key in widget.GuiSchema) {
 					if (!widget.GuiSchema[key].imports) continue;
-					for (let _import of widget.GuiSchema[key].imports) {
-						let replacement = field[key].replaceAll('🗑️', '').trim();
+					for (const _import of widget.GuiSchema[key].imports) {
+						const replacement = field[key].replaceAll('🗑️', '').trim();
 						imports.add(_import.replaceAll(`{${key}}`, replacement));
 					}
 				}

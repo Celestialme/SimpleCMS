@@ -9,7 +9,7 @@ import { defaultContentLanguage } from '@src/stores/store';
 import { get } from 'svelte/store';
 import LL from '@src/i18n/i18n-svelte.js';
 
-export let currentChild: Writable<any> = writable({});
+export const currentChild: Writable<any> = writable({});
 
 const widget = ({
 	// Accept parameters from collection

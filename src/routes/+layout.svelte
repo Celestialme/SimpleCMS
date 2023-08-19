@@ -84,11 +84,13 @@
 	};
 
 	// Lucia
-	// TODO: Fix User DATA
+	// TODO: Fix User DATA and have avatar image update
 	import { user } from '@src/stores/store';
-	//console.log('user', $user);
+	//console.log('userstore', $user);
+	const user2 = $page.data.user;
+	//console.log('userpage', user2.avatar);
 
-	$: avatarSrc = $user?.avatar;
+	$: avatarSrc = user2?.avatar;
 
 	//signOut
 	async function signOut() {
@@ -177,13 +179,13 @@
 
 	let dates = { created: '', updated: '', revision: '' };
 
-	onMount(async () => {
-		try {
-			dates = await getDates($collection.name);
-		} catch (error) {
-			console.error(error);
-		}
-	});
+	// onMount(async () => {
+	// 	try {
+	// 		dates = await getDates($collection.name);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// });
 </script>
 
 <!-- <div>

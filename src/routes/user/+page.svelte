@@ -91,31 +91,13 @@
 			// NOTE: title, body, response, etc are supported!
 			title: 'Edit your Avatar',
 			body: 'Upload new Avatar Image und then press Save.',
-			component: modalComponent
+			component: modalComponent,
 			// Pass arbitrary data to the component
-			// response: async (r: { dataURL: string }) => {
-			// 	if (r) {
-			// 		const formData = new FormData();
-			// 		formData.append('dataurl', r.dataURL);
-
-			// 		try {
-			// 			const res = await fetch('/api/user/editAvatar', {
-			// 				method: 'POST',
-			// 				body: formData
-			// 			});
-
-			// 			if (res.status === 200) {
-			// 				const data = await res.json();
-			// 				await invalidateAll();
-			// 				const resizedDataUrl = data.path;
-			// 				avatarSrc = resizedDataUrl;
-			// 			}
-			// 		} catch (err) {
-			// 			console.log(err);
-			// 			alert('Error uploading image');
-			// 		}
-			// 	}
-			// }
+			response: (r: { dataURL: string }) => {
+				if (r) {
+					avatarSrc.set(r.dataURL); // Update the avatarSrc store with the new URL
+				}
+			}
 		};
 		modalStore.trigger(d);
 	}

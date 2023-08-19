@@ -37,7 +37,7 @@ const schema: Schema = {
 			label: 'image',
 			required: true,
 			icon: 'material-symbols:image-outline',
-			path: 'images' //TODO: remove mediafiles requirement to use 'post' only
+			path: 'images' //This save to image folder, and is not globally available
 		})
 	]
 };

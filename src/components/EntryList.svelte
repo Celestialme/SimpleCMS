@@ -72,7 +72,7 @@
 			isLoading = true;
 		}, 400);
 
-		//console.log($collection);
+		//console.log('collection', $collection);
 
 		if ($collection.name == '') return;
 
@@ -81,7 +81,7 @@
 			.get(`/api/${$collection.name}?page=${1}&length=${50}`)
 			.then((data) => data.data)) as { entryList: [any]; totalCount: number };
 
-		//console.log(data);
+		//console.log('data', data);
 
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {

@@ -4,15 +4,19 @@ import { validate } from '@src/utils/utils';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
 import { get } from 'svelte/store';
 
-import collections from '@src/collections';
+import collections, { setup } from '@src/collections';
 
 import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 import { locales } from '@src/i18n/i18n-util';
 
 export async function load({ cookies, route, params }) {
+	await setup();
+
 	const session = cookies.get(SESSION_COOKIE_NAME) as string;
 	const user = await validate(auth, session);
 	const collection = get(collections).find((c) => c.name == params.collection);
+
+	//console.log(get(collections));
 
 	if (user.user.authMethod == 'token') {
 		throw redirect(302, `/user`);

@@ -3,6 +3,9 @@ import ImageUpload from './ImageUpload.svelte';
 import { type Params, GuiSchema } from './types';
 import { defaultContentLanguage } from '@src/stores/store';
 
+// import { Avatar } from '@skeletonlabs/skeleton';
+// Avatar <Avatar src="${data?.thumbnail.url} " width="w-32" rounded="rounded"/>
+
 const widget = ({
 	// Accept parameters from collection
 	label,
@@ -14,8 +17,8 @@ const widget = ({
 	path = 'unique'
 }: Params) => {
 	if (!display) {
-		display = async ({ data, collection, field, entry, contentLanguage }) => {
-			return `<img class='max-w-[200px] inline-block' src="${data?.thumbnail.url}" />`;
+		display = async ({ data }) => {
+			return `<img class='max-w-[200px]  max-h-[150px] inline-block' src="${data?.thumbnail.url}" />`;
 		};
 		display.default = true;
 	}

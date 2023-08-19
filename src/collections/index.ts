@@ -31,7 +31,6 @@ export async function setup() {
 	// current collection
 }
 const unAssigned = Object.values(imports).filter((x) => !get(collections).includes(x));
-setup();
 
 //use this unassigned array
 export { categories, collection, unAssigned };
