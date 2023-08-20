@@ -8,6 +8,7 @@ const collections: Writable<Array<Schema>> = writable([]);
 const collection: Writable<Schema> = writable({ name: '', fields: [] } as Schema);
 
 export async function setup() {
+	console.log('Setup function called');
 	let files: any;
 	const _imports = {} as any;
 	if (browser) {

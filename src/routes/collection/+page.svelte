@@ -44,21 +44,19 @@
 
 	// let availableCollections = unAssigned;
 	// TODO: display Unassigned  collections only
-	let availableCollections = collections.filter((collection) => {
-		return !importedCategories.some((category) => category.collections.includes(collection));
+	let availableCollections = $collections.filter((collection) => {
+		return !$importedCategories.some((category) => category.collections.includes(collection));
 	});
 
-	let columnsData = [
-		...importedCategories.map((category) => ({
-			id: category.id,
-			name: category.name,
-			icon: category.icon,
-			items: category.collections.map((collection) => ({
-				id: collection.id,
-				name: collection.name
-			}))
+	let columnsData = $importedCategories.map((category, categoryIndex) => ({
+		id: `${categoryIndex + 1}`,
+		name: category.name,
+		icon: category.icon,
+		items: category.collections.map((collection, collectionIndex) => ({
+			id: `${categoryIndex + 1}.${collectionIndex + 1}`,
+			name: collection.name
 		}))
-	];
+	}));
 
 	function handleUnassignedUpdated(newItems) {
 		//console.log('Updated unassigned items:', newItems); // <-- add this line
@@ -93,7 +91,7 @@
 	<button
 		type="button"
 		on:click={handleSaveClick}
-		class="btn variant-filled-primary gap-2 !text-white"
+		class="variant-filled-primary btn gap-2 !text-white"
 	>
 		<iconify-icon icon="material-symbols:save" width="24" class="text-white" />
 		Save
@@ -105,7 +103,7 @@
 	<button
 		on:click={modalAddCategory}
 		type="button"
-		class="btn-sm variant-filled-tertiary rounded-md">Add New Category</button
+		class="variant-filled-tertiary btn-sm rounded-md">Add New Category</button
 	>
 </div>
 

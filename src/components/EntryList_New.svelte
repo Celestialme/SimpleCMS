@@ -40,7 +40,7 @@
 			.get(`/api/${$collection.name}?page=${1}&length=${50}`)
 			.then((data) => data.data)) as { entryList: [any]; totalCount: number };
 
-		console.log(data);
+		//console.log(data);
 
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {
@@ -59,7 +59,7 @@
 			})
 		);
 
-		console.log(tableData);
+		//console.log(tableData);
 	};
 </script>
 

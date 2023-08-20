@@ -86,64 +86,72 @@
 	name={fieldName}
 	accept="image/*,image/webp,image/avif,image/svg+xml"
 	on:change={setFile}
+	slotMeta="opacity-100"
 >
 	<svelte:fragment slot="lead"
-		><iconify-icon icon="fa6-solid:file-arrow-up" width="45" /></svelte:fragment
+		>{#if !_data}<iconify-icon icon="fa6-solid:file-arrow-up" width="45" />{/if}</svelte:fragment
 	>
-	<svelte:fragment slot="message"
-		><span class="font-bold">Upload a file</span> or drag & drop</svelte:fragment
-	>
-	<svelte:fragment slot="meta">PNG, JPG, GIF, WEBP, AVIF, and SVG allowed.</svelte:fragment>
+	<svelte:fragment slot="message">
+		{#if !_data}<span class="font-bold text-primary-500">Upload a file</span> or drag & drop
+		{:else}<span class="font-bold text-primary-500">Replace {_data[0].name}</span> or drag & drop
+		{/if}
+	</svelte:fragment>
+	<svelte:fragment slot="meta">
+		{#if !_data}<p class="mt-1 text-sm opacity-75">
+				PNG, JPG, GIF, WEBP, AVIF, and SVG allowed.
+			</p>{/if}
+		<!-- Image preview and file info-->
+
+		{#if _data}
+			<div class="flex flex-col items-center !opacity-100 md:flex-row">
+				<div class="flex justify-center md:mr-4">
+					<img src={URL.createObjectURL(_data[0])} alt="" class="mt-4 h-60 rounded-md border" />
+				</div>
+				<div class="mt-2 text-center md:text-left">
+					<p class="text-lg font-semibold text-primary-500">Uploaded File:</p>
+					<p>Uploaded File: <span class="text-primary-500">{_data[0].name}</span></p>
+					<p>
+						File size: <span class="text-primary-500">{(_data[0].size / 1024).toFixed(2)} KB</span>
+					</p>
+					<p>MIME type: <span class="text-primary-500">{_data[0].type}</span></p>
+
+					<br />
+
+					<!-- Display loading progress -->
+					{#if $loadingProgress != 100}
+						<ProgressBar
+							label="Image Optimization"
+							value={$loadingProgress}
+							max={100}
+							meter="bg-surface-900-50-token"
+						/>
+
+						<!-- Display optimized image information -->
+						<p class="text-lg font-semibold text-primary-500">
+							Optimized as <span class="uppercase">{PUBLIC_MEDIA_OUTPUT_FORMAT}: </span>
+						</p>
+						<!-- Display optimized status once the WebP/AVIF file is generated -->
+						<p>Uploaded File: <span class="text-primary-500">{optimizedFileName}</span></p>
+						<p>
+							File size: <span class="text-error-500">{(_data[0].size / 1024).toFixed(2)} KB</span>
+						</p>
+
+						<p>MIME type: <span class="text-error-500">{optimizedMimeType}</span></p>
+						<p>Hash: <span class="text-error-500">{hashValue}</span></p>
+					{:else if optimizedFileName}
+						<!-- display optimized on mode edit -->
+
+						<!-- Display optimized status once the WebP/AVIF file is generated -->
+						<p>File Name: <span class="text-primary-500">{optimizedFileName}</span></p>
+						<p>
+							File size: <span class="text-error-500">{(_data[0].size / 1024).toFixed(2)} KB</span>
+						</p>
+
+						<p>MIME type: <span class="text-error-500">{optimizedMimeType}</span></p>
+						<p>Hash: <span class="text-error-500">{hashValue}</span></p>
+					{/if}
+				</div>
+			</div>
+		{/if}
+	</svelte:fragment>
 </FileDropzone>
-
-<!-- Image preview --><!-- Image preview -->
-<!-- TODO: add further EXIF data for better media gallery search. -->
-{#if _data}
-	<div class="flex flex-col items-center md:flex-row">
-		<div class="flex justify-center md:mr-4">
-			<img src={URL.createObjectURL(_data[0])} alt="" class="mt-4 h-60 rounded-md border" />
-		</div>
-		<div class="mt-2 text-center md:text-left">
-			<p class="text-lg font-semibold text-primary-500">Uploaded File:</p>
-			<p>Uploaded File: <span class="text-primary-500">{_data[0].name}</span></p>
-			<p>File size: <span class="text-primary-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
-			<p>MIME type: <span class="text-primary-500">{_data[0].type}</span></p>
-			<p>Hash: <span class="text-error-500">{hashValue}</span></p>
-
-			<br />
-
-			<!-- Display loading progress -->
-			{#if $loadingProgress != 100}
-				<p class="text-lg font-semibold text-primary-500">
-					Optimized as <span class="uppercase">{PUBLIC_MEDIA_OUTPUT_FORMAT}: </span>
-				</p>
-				<ProgressBar
-					label="Image Optimization"
-					value={$loadingProgress}
-					max={100}
-					meter="bg-surface-900-50-token"
-				/>
-				<!-- Display optimized image information -->
-
-				<p class="text-lg font-semibold text-primary-500">
-					Optimized as <span class="uppercase">{PUBLIC_MEDIA_OUTPUT_FORMAT}: </span>
-				</p>
-				<!-- Display optimized status once the WebP/AVIF file is generated -->
-				<p>Uploaded File: <span class="text-primary-500">{optimizedFileName}</span></p>
-				<p>File size: <span class="text-error-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
-
-				<p>MIME type: <span class="text-error-500">{optimizedMimeType}</span></p>
-			{:else if optimizedFileName}
-				<!-- only load once optimizsed -->
-				<p class="text-lg font-semibold text-primary-500">
-					Optimized as <span class="uppercase">{PUBLIC_MEDIA_OUTPUT_FORMAT}: </span>
-				</p>
-				<!-- Display optimized status once the WebP/AVIF file is generated -->
-				<p>Uploaded File: <span class="text-primary-500">{optimizedFileName}</span></p>
-				<p>File size: <span class="text-error-500">{(_data[0].size / 1024).toFixed(2)} KB</span></p>
-
-				<p>MIME type: <span class="text-error-500">{optimizedMimeType}</span></p>
-			{/if}
-		</div>
-	</div>
-{/if}

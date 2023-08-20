@@ -74,7 +74,7 @@
 		modalStore.trigger(d);
 	}
 
-	// Modal Trigger - Edit avatar
+	// Modal Trigger - Edit Avatar
 	function modalEditAvatar(): void {
 		const modalComponent: ModalComponent = {
 			// Pass a reference to your custom component
@@ -102,6 +102,7 @@
 		modalStore.trigger(d);
 	}
 
+	// Modal Confirm
 	function modalConfirm(): void {
 		const d: ModalSettings = {
 			type: 'confirm',

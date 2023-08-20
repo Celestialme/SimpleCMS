@@ -52,7 +52,7 @@
 
 	let email = '';
 	// define default role
-	let roleSelected = Object.values(roles)[0];
+	let roleSelected = Object.values(roles)[1];
 
 	let errorStatus = {
 		email: { status: false, msg: '' },
@@ -168,14 +168,14 @@
 								: 'variant-ghost-secondary'}"
 							on:click={() => {
 								// filterRole(r);
-								roleSelected = r;
+								roleSelected = r.name;
 							}}
 							on:keypress
 							role="button"
 							tabindex="0"
 						>
 							{#if roleSelected === r}<span><iconify-icon icon="fa:check" /></span>{/if}
-							<span class="capitalize">{r}</span>
+							<span class="capitalize">{r.name}</span>
 						</span>
 					{/each}
 				</div>

@@ -131,9 +131,6 @@ export async function saveImages(data: FormData, collectionName: string) {
 			const name = removeExtension(blob.name);
 			const sanitizedFileName = sanitize(name);
 
-			console.log('Original filename:', blob.name);
-			console.log('Sanitized filename:', sanitizedFileName);
-
 			const arrayBuffer = await blob.arrayBuffer();
 			const buffer = Buffer.from(arrayBuffer);
 			const hash = crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);

@@ -15,7 +15,7 @@ export async function load({ cookies }) {
 	//console.log('user:', user);
 
 	// filters collection  based on reading permissions  and redirects to first left one
-	console.log(get(collections));
+	//console.log(get(collections));
 	const _filtered = get(collections).filter(
 		(c) => c?.permissions?.[user.user.role.name]?.read != false
 	); // filters collection  based on reading permissions  and redirects to first left one

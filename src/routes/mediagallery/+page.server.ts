@@ -37,10 +37,6 @@ export async function load({ params, event }) {
 			};
 		}
 
-		// Check if media files cached directory exists
-		const cachedDir = path.resolve(`${PUBLIC_MEDIA_FOLDER}/thumbnails`);
-		ensureDirectoryExists(cachedDir);
-
 		const collections = fs.readdirSync(mediaDir);
 
 		const images = collections.flatMap((item) => {

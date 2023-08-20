@@ -1,28 +1,26 @@
+import { get } from 'svelte/store';
+import collections from '@src/collections';
+
 export const resolvers = {
 	Query: {
-		posts: async (parent, args, context) => {
-			// Check if the user is authorized to access the data
-			if (!context.user || !context.user.isAuthorized) {
-				throw new Error('Unauthorized');
-			}
+		// Test hello
+		hello: () => 'SvelteKit - GraphQL Yoga works on SimpleCMS',
 
-			// Fetch the data from the MongoDB database
-			const posts = await context.db.collection('posts').find().toArray();
+		//Dynamic Collection
+		...get(collections).reduce((acc, collection) => {
+			acc[collection.name] = async (parent: any, args: any, context: any) => {
+				// Check if the user is authorized to access the data
+				if (!context.user || !context.user.isAuthorized) {
+					throw new Error('Unauthorized');
+				}
 
-			// Return the data
-			return posts;
-		},
-		names: async (parent, args, context) => {
-			// Check if the user is authorized to access the data
-			if (!context.user || !context.user.isAuthorized) {
-				throw new Error('Unauthorized');
-			}
+				// Fetch the data from the MongoDB database
+				const data = await context.db.collection(collection.name).find().toArray();
 
-			// Fetch the data from the MongoDB database
-			const names = await context.db.collection('names').find().toArray();
-
-			// Return the data
-			return names;
-		}
+				// Return the data
+				return data;
+			};
+			return acc;
+		}, {})
 	}
 };

@@ -14,7 +14,7 @@ const schema: Schema = {
 	// Inspect Widget fields for possible options
 	fields: [
 		widgets.ImageArray({
-			label: 'imagesArray',
+			label: 'Images Array',
 			imageUploadTitle: 'image',
 			fields: [
 				widgets.ImageUpload({
@@ -22,8 +22,15 @@ const schema: Schema = {
 					path: 'global'
 				}),
 				widgets.Text({
-					label: 'title',
-					db_fieldName: 'title'
+					label: 'Image Title',
+					db_fieldName: 'title',
+					placeholder: 'Enter Title'
+				}),
+				widgets.Text({
+					label: 'Alt Text',
+					db_fieldName: 'alt',
+					placeholder: 'Enter Alt Text',
+					required: true
 				})
 			]
 		})

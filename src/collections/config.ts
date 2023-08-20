@@ -1,4 +1,4 @@
-import { get, writable, type Writable } from 'svelte/store';
+import { writable, type Writable } from 'svelte/store';
 
 export const categories: Writable<{ name: string; icon: string; collections: any[] }[]> = writable(
 	[]
@@ -6,25 +6,22 @@ export const categories: Writable<{ name: string; icon: string; collections: any
 
 import { imports } from '@src/collections/types';
 
-// typesafe-i18n
-import LL from '@src/i18n/i18n-svelte';
-
-// TODO Add translations
+//TODO wont work wih Graphql it i18n is used for name translation
 imports.subscribe((imports) => {
 	if (!imports) return;
 	categories.set([
 		{
-			name: get(LL).CollectionCategory_Collection(),
+			name: 'Collections',
 			icon: 'bi:collection',
 			collections: [imports.Posts, imports.Names, imports.WidgetTest]
 		},
 		{
-			name: 'posts',
+			name: 'Posts',
 			icon: 'bi:images',
 			collections: [imports.Posts2, imports.ImageArray, imports.Relation, imports.Media]
 		},
 		{
-			name: get(LL).CollectionCategory_Menu(),
+			name: 'Menu',
 			icon: 'bi:menu-button-wide',
 			collections: [imports.Menu]
 		}

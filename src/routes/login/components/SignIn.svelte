@@ -445,6 +445,7 @@
 					label={$LL.LOGIN_Token()}
 					icon="mdi:lock"
 					iconColor="black"
+					textColor="black"
 				/>
 
 				{#if $resetErrors.token}
