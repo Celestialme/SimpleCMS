@@ -20,6 +20,7 @@ mongoose.set('strictQuery', false);
 let collections: Writable<{ [Key: string]: mongoose.Model<any> }> = writable({});
 
 schemas.subscribe((schemas) => {
+	if (!schemas.length) return;
 	for (let schema of schemas) {
 		const schema_object = new mongoose.Schema(
 			{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
