@@ -33,8 +33,6 @@
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import Collections from '@src/components/Collections.svelte';
 	import { getDates } from '@src/utils/utils';
-	//import type { PageData } from './$types';
-	//export let data: PageData;
 
 	contentLanguage.set($page.params.language);
 

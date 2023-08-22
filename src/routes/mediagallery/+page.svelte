@@ -1,6 +1,7 @@
 <script lang="ts">
 	import PageTitle from '@src/components/PageTitle.svelte';
 	import TanstackTable from '@src/components/TanstackTable.svelte';
+	import { formatSize } from '@src/utils/utils';
 
 	// TanstackFilter
 	import TanstackFilter from '@src/components/TanstackFilter.svelte';
@@ -9,9 +10,6 @@
 	let filterShow = false;
 	let columnShow = false;
 	let density = 'normal';
-
-	// typesafe-i18n
-	import LL from '@src/i18n/i18n-svelte';
 
 	//Get message from +page.server.ts
 	export let errorMessage = '';
@@ -85,9 +83,10 @@
 		props: {
 			data: {
 				path: string;
+				directory: string;
 				name: string;
 				size: number;
-				dimensions: [number, number];
+				hash: any;
 			}[];
 		};
 	} = { props: { data: [] } };
@@ -97,73 +96,48 @@
 	// Column Definition
 	let items = [
 		{
-			Header: 'Image',
+			header: 'Image',
 			accessorKey: 'image',
 			id: 'image',
-			cell: (info) =>
+			cell: (info: any) =>
 				flexRender(Avatar, {
 					src: info.row.original.path,
 					width: `${tableSize === 'small' ? 'w-6' : tableSize === 'medium' ? 'w-10' : 'w-14'}`
 				})
 		},
-		{ Header: 'Name', accessorKey: 'name', id: 'name' },
-		{ Header: 'Size', accessorKey: 'size', id: 'size' },
-		{ Header: 'Dimensions', accessorKey: 'dimensions', id: 'dimensions' },
-		{ Header: 'Path', accessorKey: 'path', id: 'path' }
+		{ header: 'Name', accessorKey: 'name', id: 'name' },
+		{
+			header: 'Size',
+			accessorKey: 'size',
+			id: 'size',
+			cell: (info: any) => {
+				return formatSize(info.row.original.size);
+			}
+		},
+		{
+			header: 'Hash',
+			accessorKey: 'hash',
+			id: 'hash'
+		},
+		{ header: 'Path', accessorKey: 'path', id: 'path' }
 	];
-
-	// TODO: Fix Grid search
-	function searchGrid(searchValue) {
-		// Get the original data
-		let originalData = data.props.data;
-
-		// Filter the data based on the search value
-		let filteredData = originalData.filter((item) => {
-			return (
-				item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
-				item.path.toLowerCase().includes(searchValue.toLowerCase())
-			);
-		});
-
-		// Update the data displayed in the grid with the filtered data
-		data.props.data = filteredData;
-	}
 </script>
 
 <div class="flex flex-col gap-1">
 	<PageTitle name="Media Gallery" icon="bi:images" iconColor="text-primary-500" />
 
 	<div class="flex items-center justify-between">
-		{#if view == 'grid'}
-			<!-- TODO: add actual search -->
-			<!-- search input grid -->
-			<div class="variant-filled-surface btn-group">
-				<input
-					type="text"
-					class="input"
-					placeholder="Search Grid..."
-					on:input={(event) => {
-						if (event.target instanceof HTMLInputElement) {
-							//console.log(event.target.value);
-							// searchGrid(event.target.value);
-						}
-					}}
-				/>
-				<button type="submit" class="btn-icon">
-					<iconify-icon icon="material-symbols:search" width="24" />
-				</button>
-			</div>
-		{:else}
-			<div>
-				<TanstackFilter
-					bind:searchValue={globalSearchValue}
-					bind:searchShow
-					bind:filterShow
-					bind:columnShow
-					bind:density
-				/>
-			</div>
-		{/if}
+		<!-- Search -->
+		<div>
+			<TanstackFilter
+				bind:globalSearchValue
+				bind:searchShow
+				bind:filterShow
+				bind:columnShow
+				bind:density
+			/>
+		</div>
+
 		<div class="flex items-center justify-center gap-4">
 			<!-- Header block -->
 			<!-- Mobile -->
@@ -393,7 +367,7 @@
 							{/if}
 						</section>
 						<footer
-							class={`card-footer mt-1 flex h-14 w-full items-center justify-center break-all rounded-sm bg-surface-600 p-0 text-center text-xs text-white`}
+							class={`card-footer mt-1 flex w-full items-center justify-center break-all rounded-sm bg-surface-600 p-0 text-center text-xs text-white`}
 							style={`max-width: ${
 								gridSize === 'small' ? '6rem' : gridSize === 'medium' ? '12rem' : '24rem'
 							}`}
@@ -401,6 +375,8 @@
 							<div class="flex-col">
 								<div class="mb-1 line-clamp-2 font-semibold text-primary-500">{image.name}</div>
 								<div class="line-clamp-1">{image.path}</div>
+								<div class="line-clamp-1 text-tertiary-500">{formatSize(image.size)}</div>
+								<div class="line-clamp-1">{image.hash}</div>
 							</div>
 						</footer>
 					</div>
