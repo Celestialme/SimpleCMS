@@ -12,13 +12,12 @@
 	import { goto } from '$app/navigation';
 	export let data: LayoutServerData;
 	let ForwardBackward: boolean = false; // if using browser history
-
+	collection.set(collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
 	console.log(data);
 	user.set(data.user);
 	globalThis.onpopstate = async () => {
 		ForwardBackward = true;
-
-		collection.set($collections.find((x) => x.name === $page.params.collection) as Schema);
+		collection.set(collections.find((x) => x.name === $page.params.collection) as Schema);
 	};
 	collection.subscribe((_) => {
 		$collectionValue = {};

@@ -1,11 +1,9 @@
 import type { RequestHandler } from './$types';
 import { collections } from '@src/routes/api/db';
 import { parse, saveImages } from '@src/utils/utils';
-import { get } from 'svelte/store';
 export const GET: RequestHandler = async ({ params, url }) => {
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
-
-	let collection = get(collections)[params.collection];
+	let collection = collections[params.collection];
 	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
 	let skip = (page - 1) * length;
 
@@ -18,7 +16,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 };
 
 export const PATCH: RequestHandler = async ({ params, request }) => {
-	let collection = get(collections)[params.collection];
+	let collection = collections[params.collection];
 	let data = await request.formData();
 	let formData: any = {};
 	for (let key of data.keys()) {
@@ -36,7 +34,7 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 };
 
 export const POST: RequestHandler = async ({ params, request }) => {
-	let collection = get(collections)[params.collection];
+	let collection = collections[params.collection];
 	let data = await request.formData();
 	let body: any = {};
 	for (let key of data.keys()) {
@@ -53,7 +51,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 };
 
 export const DELETE: RequestHandler = async ({ params, request }) => {
-	let collection = get(collections)[params.collection];
+	let collection = collections[params.collection];
 	let data = await request.formData();
 
 	let ids = data.get('ids') as string;

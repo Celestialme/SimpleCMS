@@ -5,13 +5,12 @@ import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
 import { locales } from '@src/i18n/i18n-util';
 import collections from '@src/collections';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
-import { get } from 'svelte/store';
 
 export async function load({ cookies, route, params }) {
 	let session = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await validate(auth, session);
-	let collection = get(collections).find((c) => c.name == params.collection);
-	console.log(get(collections));
+	let collection = collections.find((c) => c.name == params.collection);
+
 	if (user.user.authMethod == 'token') {
 		throw redirect(302, `/profile`);
 	}
@@ -24,7 +23,7 @@ export async function load({ cookies, route, params }) {
 	if (user.status == 200) {
 		if (route.id != '/[language]/[collection]') {
 			//else if language and collection both set in url
-			let _filtered = get(collections).filter((c) => c?.permissions?.[user.user.role]?.read != false); // filters collection  based on reading permissions  and redirects to first left one
+			let _filtered = collections.filter((c) => c?.permissions?.[user.user.role]?.read != false); // filters collection  based on reading permissions  and redirects to first left one
 			throw redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGE}/${_filtered[0].name}`);
 		}
 		if (collection?.permissions?.[user.user.role]?.read == false) {

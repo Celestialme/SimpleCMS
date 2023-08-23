@@ -1,45 +1,32 @@
-import { get, writable, type Writable } from 'svelte/store';
-import { type Schema, imports } from './types';
-import axios from 'axios';
-import { browser, dev } from '$app/environment';
-let collections: Writable<Array<Schema>> = writable([]);
-let collection: Writable<Schema> = writable({ name: '', fields: [] } as Schema);
-import { categories } from './config';
-import { getCollections } from '@src/routes/api/collections/getCollections';
-export async function setup() {
-	let files;
-	if (browser) {
-		files = (await axios.get('/api/collections')).data;
-	} else {
-		files = getCollections();
+import ImageArray from './ImageArray';
+import Media from './Media';
+import Menu from './Menu';
+import Posts1 from './Posts1';
+import Posts2 from './Posts2';
+import Posts3 from './Posts3';
+import Relation from './Relation';
+import thumbs from './thumbs';
+
+let allCollections = { ImageArray, Media, Menu, Posts1, Posts2, Posts3, Relation, thumbs };
+
+import { writable } from 'svelte/store';
+
+let categories = [
+	{
+		name: 'Collections',
+		icon: 'bi:collection',
+		collections: [Posts2, Posts3, thumbs]
+	},
+	{
+		name: 'posts',
+		icon: 'bi:images',
+		collections: [Posts1, ImageArray, Menu, Relation, Media]
 	}
-	console.log(files);
-	let _imports = {} as any;
-
-	for (let file in files) {
-		if (dev) {
-			_imports[file.replace('.ts', '')] = (await import(`./${file}`)).default;
-		} else {
-			const blob = new Blob([files[file]], { type: 'application/javascript' });
-			const blobUrl = URL.createObjectURL(blob);
-
-			_imports[file.replace('.ts', '').replace('.js', '')] = (await import(blobUrl)).default;
-		}
-	}
-	imports.set(_imports);
-
-	collections.set(
-		get(categories)
-			.map((x) => x.collections)
-			.reduce((x, acc) => x.concat(acc))
-	); // returns all collections
-
-	// current collection
-}
-setup();
-if (get(collections).length == 0) setup();
-let unAssigned = Object.values(imports).filter((x) => !get(collections).includes(x));
+];
+let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+let unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
 
 //use this unassigned array
-export { categories, collection, unAssigned };
+export { categories, unAssigned, allCollections };
 export default collections;
+export let collection = writable(collections?.[0]); // current collection
