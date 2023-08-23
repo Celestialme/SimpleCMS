@@ -19,7 +19,7 @@
 		storeListboxValue
 	} from '@src/stores/store';
 
-	import collections, { collection, setup } from '@src/collections/index';
+	import collections, { collection } from '@src/collections/index';
 	// Use handleSidebarToggle as a reactive statement to automatically switch the correct sidebar
 	$: handleSidebarToggle;
 
@@ -38,14 +38,14 @@
 
 	let handleClick: any;
 	let finished = false;
-	setup().then(async () => {
-		await tick();
-		$collection = $collections.find((x) => x.name === $page.params.collection) as Schema;
-		finished = true;
-		if (!$collection) {
-			$collection = $collections[0];
-		}
-	});
+	// setup().then(async () => {
+	// 	await tick();
+	// 	$collection = $collections.find((x) => x.name === $page.params.collection) as Schema;
+	// 	finished = true;
+	// 	if (!$collection) {
+	// 		$collection = $collections[0];
+	// 	}
+	// });
 	// update the handleClick function when the systemLanguage store value changes
 	$: handleClick = () => {
 		if (!$page.url.href.includes('user')) {

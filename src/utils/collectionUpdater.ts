@@ -1,21 +1,46 @@
+import { exec } from 'child_process';
 import fs from 'fs';
+let files: Array<string> = [];
+let saveFiles: Array<string> = [];
 
 export async function updateImports() {
-	// Read all files in the './src/collections' directory
-	const files = fs
+	files = fs
 		.readdirSync('./src/collections')
-		// Filter out the files named 'index.ts', 'types.ts', 'Auth.ts', and 'config.ts'
-		.filter((x) => !['index.ts', 'types.ts', 'Auth.ts', 'config.ts'].includes(x));
+		.filter((x) => !['index.ts', 'types.ts', 'Auth.ts'].includes(x));
+	let indexFile = fs.readFileSync('./src/collections/index.ts', 'utf-8');
+	indexFile = indexFile
+		.replace(/import \w+ from ["']\.\/.*;\s?/g, '')
+		.replace(/let allCollections\s?=\s?.*/g, '');
+	let imports = '';
+	let allCollections = ' let allCollections={';
+	for (const file of files) {
+		const name = file.replace('.ts', '');
+		imports += `import ${name} from './${name}';\n`;
+		allCollections += `${name},`;
+	}
+	allCollections = allCollections.substring(0, allCollections.length - 1) + '}';
+	if (!compare(files, saveFiles)) {
+		fs.writeFileSync(
+			'./src/collections/index.ts',
+			imports + '\n' + allCollections + '\n' + indexFile
+		);
+		saveFiles = files;
+		exec('npx prettier  ./src/collections --write');
+	}
+}
 
-	// Read the contents of the './src/collections/types.ts' file
-	let typesFile = fs.readFileSync('./src/collections/types.ts', 'utf-8');
+function compare(arr1, arr2) {
+	arr1.sort();
+	arr2.sort();
+	if (arr1.length !== arr2.length) {
+		return false;
+	}
 
-	// Map the remaining file names to a string of union types
-	const imports = files.map((x) => `"${x.replace('.ts', '')}"`).join(' | ');
+	for (let i = 0; i < arr1.length; i++) {
+		if (arr1[i] !== arr2[i]) {
+			return false;
+		}
+	}
 
-	// Update the 'Imports' type in the 'types.ts' file with the new string of union types
-	typesFile = typesFile.replace(/type Imports\s*=\s*.*;/, 'type Imports = ' + imports + ';');
-
-	// Write the updated 'types.ts' file back to disk
-	fs.writeFileSync('./src/collections/types.ts', typesFile);
+	return true;
 }

@@ -1,14 +1,13 @@
 import type { RequestHandler } from './$types';
 import { collections } from '@src/routes/api/db';
 import { parse, saveImages } from '@src/utils/utils';
-import { get } from 'svelte/store';
 
 // Export an asynchronous function named GET that is a RequestHandler
 export const GET: RequestHandler = async ({ params, url }) => {
 	// Retrieve value of page key from search parameters of url object and parse it as integer. If value is not valid integer, assign 1 to page variable
 	const page = parseInt(url.searchParams.get('page') as string) || 1;
 	// Retrieve collection specified in params object
-	const collection = get(collections)[params.collection];
+	const collection = collections[params.collection];
 
 	// TODO: Create an index on the fields that are commonly used in queries to speed up find operation
 	// collection.createIndex({ field1: 1 });
@@ -43,7 +42,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 // Export an asynchronous function named PATCH that is a RequestHandler
 export const PATCH: RequestHandler = async ({ params, request }) => {
 	// Retrieve the collection specified in the params object
-	const collection = get(collections)[params.collection];
+	const collection = collections[params.collection];
 	// Retrieve the form data from the request object
 	const data = await request.formData();
 	// Create an empty object named formData
@@ -83,7 +82,7 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 // Export an asynchronous function named POST that is a RequestHandler
 export const POST: RequestHandler = async ({ params, request }) => {
 	// Retrieve the collection specified in the params object
-	const collection = get(collections)[params.collection];
+	const collection = collections[params.collection];
 
 	// Validate collection against predefined rules or constraints
 	if (!collection) return new Response('Collection not found');
@@ -122,7 +121,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 // TODO: deleted files to a trash folder and automatically removing files from the trash folder after 30 days
 export const DELETE: RequestHandler = async ({ params, request }) => {
 	// Retrieve collection specified in params object
-	const collection = get(collections)[params.collection];
+	const collection = collections[params.collection];
 	// Retrieve data from request object
 	const data = await request.formData();
 

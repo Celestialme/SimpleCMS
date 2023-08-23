@@ -1,7 +1,6 @@
 import schemas from '@src/collections';
 import { fieldsToSchema } from '@src/utils/utils';
 import { dev } from '$app/environment';
-import { get, writable, type Writable } from 'svelte/store';
 
 // Lucia
 import lucia from 'lucia-auth';
@@ -30,23 +29,21 @@ mongoose
 	)
 	.catch((error) => console.error('Error connecting to database:', error));
 
-const collections: Writable<{ [Key: string]: mongoose.Model<any> }> = writable({});
+const collections: { [Key: string]: mongoose.Model<any> } = {};
 
-schemas.subscribe((schemas) => {
-	for (const schema of schemas) {
-		const schema_object = new mongoose.Schema(
-			{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
-			{
-				typeKey: '$type',
-				strict: false,
-				timestamps: { currentTime: () => Date.now() }
-			}
-		);
-		get(collections)[schema.name] = mongoose.models[schema.name]
-			? mongoose.model(schema.name)
-			: mongoose.model(schema.name, schema_object);
-	}
-});
+for (const schema of schemas) {
+	const schema_object = new mongoose.Schema(
+		{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
+		{
+			typeKey: '$type',
+			strict: false,
+			timestamps: { currentTime: () => Date.now() }
+		}
+	);
+	collections[schema.name] = mongoose.models[schema.name]
+		? mongoose.model(schema.name)
+		: mongoose.model(schema.name, schema_object);
+}
 
 !mongoose.models['auth_session'] &&
 	mongoose.model('auth_session', new mongoose.Schema({ ...session }, { _id: false }));

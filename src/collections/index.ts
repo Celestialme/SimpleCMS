@@ -1,38 +1,37 @@
-import { get, writable, type Writable } from 'svelte/store';
-import { type Schema, imports } from './types';
-import axios from 'axios';
-import { browser } from '$app/environment';
-import { categories } from './config';
+import ImageArray from './ImageArray';
+import Media from './Media';
+import Menu from './Menu';
+import Posts from './Posts';
+import Posts2 from './Posts2';
+import Names from './Names';
+import Relation from './Relation';
+import WidgetTest from './WidgetTest';
 
-const collections: Writable<Array<Schema>> = writable([]);
-const collection: Writable<Schema> = writable({ name: '', fields: [] } as Schema);
+const allCollections = { ImageArray, Media, Menu, Posts, Posts2, Names, Relation, WidgetTest };
 
-export async function setup() {
-	console.log('Setup function called');
-	let files: any;
-	const _imports = {} as any;
-	if (browser) {
-		files = (await axios.get('/api/collections')).data;
-	} else {
-		const fs = (await import('fs')).default;
-		files = fs
-			.readdirSync('src/collections')
-			.filter((x) => !['index.ts', 'types.ts', 'Auth.ts', 'config.ts'].includes(x));
+import { writable } from 'svelte/store';
+
+const categories = [
+	{
+		name: 'Collections',
+		icon: 'bi:collection',
+		collections: [Posts, Names, WidgetTest]
+	},
+	{
+		name: 'Posts',
+		icon: 'bi:images',
+		collections: [Posts2, ImageArray, Relation, Media]
+	},
+	{
+		name: 'Menu',
+		icon: 'bi:menu-button-wide',
+		collections: [Menu]
 	}
-	for (const file of files) {
-		_imports[file.replace('.ts', '')] = (await import(/* @vite-ignore */ `./${file}`)).default;
-	}
-	imports.set(_imports);
-	collections.set(
-		get(categories)
-			.map((x) => x.collections)
-			.reduce((x, acc) => x.concat(acc))
-	); // returns all collections
-
-	// current collection
-}
-const unAssigned = Object.values(imports).filter((x) => !get(collections).includes(x));
+];
+const collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
+const unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
 
 //use this unassigned array
-export { categories, collection, unAssigned };
+export { categories, unAssigned, allCollections };
 export default collections;
+export const collection = writable(collections?.[0]); // current collection

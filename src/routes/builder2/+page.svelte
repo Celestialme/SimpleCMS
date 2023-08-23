@@ -7,6 +7,7 @@
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
+	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
 
 	export let data;
 
@@ -25,7 +26,7 @@
 						collectionName: name,
 						fields: $collection.fields
 				  })
-				: obj2formData({ fields });
+				: obj2formData({ fields, collectionName: name });
 		axios.post(``, data, {
 			headers: {
 				'Content-Type': 'multipart/form-data'
@@ -57,12 +58,18 @@
 			<iconify-icon icon="typcn:plus" class="text-white" width="50" />
 		</button>
 		{#if $mode == 'create'}
-			<WidgetBuilder {fields} bind:addField bind:collectionName={name} />
+			<div>
+				<FloatingInput label="name" name="name" bind:value={name} />
+				<WidgetBuilder {fields} bind:addField />
+			</div>
 		{:else if $mode == 'edit'}
-			<WidgetBuilder fields={$collection.fields} bind:addField bind:collectionName={name} />
+			<div>
+				<FloatingInput label="name" name="name" bind:value={name} />
+				<WidgetBuilder fields={$collection.fields} bind:addField />
+			</div>
 		{/if}
 	</div>
-	<button on:click={save} class="variant-filled-primary btn text-white"> Save </button>
+	<button on:click={save} class="text-white"> save </button>
 </div>
 
 <!-- {/if} -->

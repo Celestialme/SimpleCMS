@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import collections, { collection, setup } from '@src/collections';
+	import collections, { collection } from '@src/collections';
 	import { collectionValue, mode } from '@src/stores/store';
 	import type { Schema } from '@src/collections/types';
 	import type { LayoutServerData } from '../$types';
@@ -16,6 +16,7 @@
 	let ForwardBackward: boolean = false;
 
 	// Set the value of the collection store to the collection object from the collections array that has a name property that matches the current page's collection parameter
+	collection.set(collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
 
 	// Set the value of the credentials store to the user property of the data variable
 	user.set(data.user);
@@ -25,7 +26,7 @@
 		ForwardBackward = true; // Set ForwardBackward to true to indicate that the user is navigating using the browser's forward or backward buttons
 
 		// Update the value of the collection store based on the current page's collection parameter
-		collection.set($collections.find((x) => x.name === $page.params.collection) as Schema);
+		collection.set(collections.find((x) => x.name === $page.params.collection) as Schema);
 	};
 
 	// Subscribe to changes in the collection store
