@@ -96,7 +96,6 @@ export function sanitize(str: string) {
 
 // Saves POSTS files to disk and returns file information
 //TODO: add optimization progress status
-
 export async function saveImages(data: FormData, collectionName: string) {
 	if (browser) return;
 
@@ -107,7 +106,7 @@ export async function saveImages(data: FormData, collectionName: string) {
 	const env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
 	const SIZES = { ...env_sizes, original: 0, thumbnail: 200 } as const;
 
-	const collection = get(collections).find((collection) => collection.name === collectionName);
+	const collection = collections.find((collection) => collection.name === collectionName);
 
 	for (const [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {
