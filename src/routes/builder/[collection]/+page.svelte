@@ -349,19 +349,6 @@
 </div>
 
 <style lang="postcss">
-	.options-table {
-		display: grid;
-		grid-template-columns: max-content 1fr;
-		gap: 1rem;
-	}
-	.options-table label {
-		text-transform: capitalize;
-	}
-	.options-table input[type='text'],
-	.options-table input[type='number'] {
-		max-width: 24rem;
-	}
-
 	label {
 		min-width: 100px;
 	}

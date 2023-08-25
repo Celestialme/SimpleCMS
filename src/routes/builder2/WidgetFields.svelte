@@ -55,7 +55,7 @@
 		border-radius: 12px;
 		min-width: 300px;
 	}
-	p.field {
+	/* p.field {
 		text-align: center;
 		color: black;
 		padding: 10px;
@@ -67,7 +67,7 @@
 	}
 	p.field:hover {
 		background-color: #4fdc4f;
-	}
+	} */
 	.properties {
 		position: fixed;
 		flex-direction: column;

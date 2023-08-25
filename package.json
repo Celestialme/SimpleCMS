@@ -66,7 +66,7 @@
 		"lucia-auth": "^1.8.0",
 		"mime-types": "^2.1.35",
 		"moment": "^2.29.4",
-		"mongoose": "^7.4.4",
+		"mongoose": "^7.4.5",
 		"nodemailer": "^6.9.4",
 		"pdf-thumbnail": "^1.0.6",
 		"svelte-email": "^0.0.4",

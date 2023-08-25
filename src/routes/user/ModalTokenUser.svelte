@@ -28,54 +28,63 @@
 	const cHeader = 'text-2xl font-bold';
 	const cForm = 'border border-surface-500 p-4 space-y-4 rounded-container-token';
 
-	// let response;
-	// console.log(data);
-	// let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
-	// 	id: 'addUser',
-	// 	validators: addUserTokenSchema,
-	// 	defaultValidator: 'clear',
-	// 	applyAction: true,
-	// 	taintedMessage: '',
-	// 	dataType: 'json',
+	let response: any;
+	//console.log(data);
 
-	// 	onSubmit: ({ cancel }) => {
-	// 		if ($allErrors.length > 0) cancel();
-	// 	},
-	// 	onResult: ({ result, cancel }) => {
-	// 		cancel();
-	// 		if (result.type == 'success') {
-	// 			response = result.data?.message;
-	// 		}
-	// 	}
-	// });
-	// $form.role = 'User';
+	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
+		id: 'addUser',
+		validators: addUserTokenSchema,
+		defaultValidator: 'clear',
+		applyAction: true,
+		taintedMessage: '',
+		dataType: 'json',
+
+		onSubmit: ({ cancel }) => {
+			if ($allErrors.length > 0) cancel();
+		},
+		onResult: ({ result, cancel }) => {
+			cancel();
+			if (result.type == 'success') {
+				response = result.data?.message;
+			}
+		}
+	});
+	$form.role = 'User';
+
+	// Define errorStatus
+	let errorStatus: Record<string, { status: boolean; msg: string }> = {
+		email: { status: false, msg: '' },
+		role: { status: false, msg: '' },
+		expiresIn: { status: false, msg: '' },
+		valid: { status: false, msg: '' }
+	};
 
 	let email = '';
 	// define default role
 	let roleSelected = Object.values(roles)[1];
 
-	let errorStatus = {
-		email: { status: false, msg: '' },
-		role: { status: false, msg: '' },
-		valid: { status: false, msg: '' }
-	};
+	// Token Expires in Duration
+	let expiresIn: number;
+	let expiresInSelected: string = '12 hrs'; // Initialize expiresInSelected with a default value
 
-	// Token Valid Duration
-	let validSelected = '12 hrs';
-	let valids: Record<string, boolean> = {
-		'2 hrs': false,
-		'12 hrs': true,
-		'2 days': false,
-		'1 week': false
-	};
-
-	function filterValid(valid: string): void {
-		for (const v in valids) {
-			if (v !== valid) {
-				valids[v] = false;
-			}
-		}
-		valids[valid] = !valids[valid];
+	switch (expiresInSelected) {
+		case '2 hrs':
+			expiresIn = 2 * 60 * 60 * 1000;
+			break;
+		case '12 hrs': //default expires value
+			expiresIn = 12 * 60 * 60 * 1000;
+			break;
+		case '2 days':
+			expiresIn = 2 * 24 * 60 * 60 * 1000;
+			break;
+		case '1 week':
+			expiresIn = 7 * 24 * 60 * 60 * 1000;
+			break;
+		default:
+			errorStatus['expiresIn'].status = true;
+			errorStatus['expiresIn'].msg = 'Invalid value for token validity';
+			// Cancel function needs to be defined here or you can perform a different action
+			break;
 	}
 </script>
 
@@ -91,61 +100,14 @@
 
 	<!-- Enable for debugging: -->
 	<!-- <pre>{JSON.stringify(formData, null, 2)}</pre> -->
-	<form
-		class="modal-form {cForm}"
-		method="post"
-		action="?/addUser"
-		use:enhance={({ data, cancel }) => {
-			data.append('role', roleSelected);
-
-			let expires_in = 120;
-			// converting it in milliseconds
-			switch (validSelected) {
-				case '2 hrs':
-					expires_in = 2 * 60 * 60 * 1000;
-					break;
-				case '12 hrs':
-					expires_in = 12 * 60 * 60 * 1000;
-					break;
-				case '2 Days':
-					expires_in = 48 * 60 * 60 * 1000;
-					break;
-				case '1 Week':
-					expires_in = 7 * 24 * 60 * 60 * 1000;
-					break;
-				case '1 Month':
-					expires_in = 30 * 24 * 60 * 60 * 1000;
-					break;
-				default:
-					errorStatus['valid'].status = true;
-					errorStatus['valid'].msg = 'Invalid value for token validity';
-					cancel();
-			}
-			data.append('expires_in', expires_in.toString());
-
-			return async ({ result }) => {
-				if (result.type === 'success') {
-					modalStore.close();
-				}
-
-				if (result.type === 'failure') {
-					result?.data?.errors &&
-						// @ts-ignore
-						result?.data?.errors.forEach((error) => {
-							errorStatus[error.field].status = true;
-							errorStatus[error.field].msg = error.message;
-						});
-				}
-			};
-		}}
-	>
+	<form class="modal-form {cForm}" method="post" action="?/addUser" use:enhance>
 		<!-- Email field -->
 		<div class="group relative z-0 mb-6 w-full">
 			<FloatingInput
 				label={$LL.LOGIN_EmailAddress()}
 				icon="mdi:email"
 				type="email"
-				bind:value={email}
+				bind:value={$form.email}
 				required
 			/>
 
@@ -168,14 +130,14 @@
 								: 'variant-ghost-secondary'}"
 							on:click={() => {
 								// filterRole(r);
-								roleSelected = r.name;
+								roleSelected = r;
 							}}
 							on:keypress
 							role="button"
 							tabindex="0"
 						>
 							{#if roleSelected === r}<span><iconify-icon icon="fa:check" /></span>{/if}
-							<span class="capitalize">{r.name}</span>
+							<span class="capitalize">{r}</span>
 						</span>
 					{/each}
 				</div>
@@ -187,25 +149,26 @@
 			<div class="sm:w-1/4">Token validity:</div>
 			<div class="flex-auto">
 				<div class="flex flex-wrap gap-2 space-x-2">
-					{#each Object.keys(valids) as v}
+					{#each ['2 hrs', '12 hrs', '2 days', '1 week'] as v}
 						<span
-							class="chip {valids[v] ? 'variant-filled-tertiary' : 'variant-ghost-secondary'}"
+							class="chip {expiresInSelected === v
+								? 'variant-filled-tertiary'
+								: 'variant-ghost-secondary'}"
 							on:click={() => {
-								filterValid(v);
-								validSelected = v;
+								expiresInSelected = v;
 							}}
 							on:keypress
 							role="button"
 							tabindex="0"
 						>
-							{#if valids[v]}<span><iconify-icon icon="fa:check" /></span>{/if}
+							{#if expiresInSelected === v}<span><iconify-icon icon="fa:check" /></span>{/if}
 							<span class="capitalize">{v}</span>
 						</span>
 					{/each}
 				</div>
-				{#if errorStatus.valid.status}
+				{#if errorStatus.expiresIn.status}
 					<div class="mt-1 text-xs text-error-500">
-						{errorStatus.valid.msg}
+						{errorStatus.expiresIn.msg}
 					</div>
 				{/if}
 			</div>
