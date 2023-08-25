@@ -18,7 +18,19 @@ const widget = ({
 	required
 }: Params) => {
 	if (!display) {
-		display = async (data, field, entry, contentLanguage) => {
+		display = async ({
+			data,
+			collection,
+			field,
+			entry,
+			contentLanguage
+		}: {
+			data: any;
+			collection: any;
+			field: any;
+			entry: any;
+			contentLanguage: string;
+		}) => {
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return data[defaultContentLanguage] || get(LL).ENTRYLIST_Untranslated();
 		};

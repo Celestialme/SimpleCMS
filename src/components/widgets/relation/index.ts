@@ -5,7 +5,19 @@ import type { Params } from './types';
 
 const widget = ({ label, db_fieldName, display, relation }: Params) => {
 	if (!display) {
-		display = async (data, field, entry, contentLanguage) => {
+		display = async ({
+			data,
+			collection,
+			field,
+			entry,
+			contentLanguage
+		}: {
+			data: any;
+			collection: any;
+			field: any;
+			entry: any;
+			contentLanguage: string;
+		}) => {
 			if (typeof data == 'string') {
 				data = await findById(data, relation);
 			}
