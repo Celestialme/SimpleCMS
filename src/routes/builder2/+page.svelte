@@ -36,13 +36,7 @@
 	collection.subscribe((_) => {
 		name = $mode == 'edit' ? $collection.name : '';
 	});
-
-	//export let hasCollections: any;
 </script>
-
-<!-- {#if hasCollections}
-	<p>Please use the /builder first.</p>
-{:else} -->
 
 <div class="body">
 	<section class="left_panel">
@@ -71,8 +65,6 @@
 	</div>
 	<button on:click={save} class="text-white"> save </button>
 </div>
-
-<!-- {/if} -->
 
 <style lang="postcss">
 	.body {

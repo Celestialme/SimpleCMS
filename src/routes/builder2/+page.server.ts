@@ -2,17 +2,15 @@ import { redirect, type Actions } from '@sveltejs/kit';
 import { auth } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
-
 import widgets from '@src/components/widgets';
 import fs from 'fs';
 
 type Widget = typeof widgets;
 type fields = ReturnType<Widget[keyof Widget]>;
 
-export async function load(event: any) {
+export async function load(event) {
 	const session = event.cookies.get(SESSION_COOKIE_NAME) as string;
 	const user = await validate(auth, session);
-
 	if (user.status == 200) {
 		return {
 			user: user.user
@@ -32,18 +30,18 @@ export const actions: Actions = {
 		const imports = goThrough(fields);
 
 		let content = `
-		${imports}
-		import widgets from '../components/widgets';
-		import type { Schema } from './types';
-		let schema: Schema = {
-			name: '${collectionName}',
-			fields: [
-				${fields}
-			]
-		};
-		export default schema;
-		
-		`;
+	${imports}
+	import widgets from '../components/widgets';
+	import type { Schema } from './types';
+	let schema: Schema = {
+		name: '${collectionName}',
+		fields: [
+			${fields}
+		]
+	};
+	export default schema;
+	
+	`;
 		content = content.replace(/\\n|\\t/g, '').replace(/\\/g, '');
 
 		content = content.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
@@ -75,17 +73,17 @@ function goThrough(object: any, imports: Set<string> = new Set()) {
 				}
 
 				object[key] = `🗑️widgets.${object[key].widget.key}(
-						${JSON.stringify(object[key], (key, value) => {
-							if (key == 'widget') {
-								return undefined;
-							}
-							if (typeof value == 'string') {
-								//console.log(value);
-								return value.replace(/\s*🗑️\s*/g, '🗑️').trim();
-							}
-							return value;
-						})}
-					)🗑️`;
+					${JSON.stringify(object[key], (key, value) => {
+						if (key == 'widget') {
+							return undefined;
+						}
+						if (typeof value == 'string') {
+							console.log(value);
+							return value.replace(/\s*🗑️\s*/g, '🗑️').trim();
+						}
+						return value;
+					})}
+				)🗑️`;
 			}
 		}
 	}

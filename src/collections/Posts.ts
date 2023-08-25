@@ -12,8 +12,10 @@ const schema: Schema = {
 	status: 'published',
 	slug: 'posts',
 
+	// Collection Permissions by user Roles
+
 	// Defined Fields that are used in Collection
-	// Inspect Widget fields for possible options
+	// Widget fields can be inspected for individual options
 	fields: [
 		widgets.Email({
 			label: 'email',

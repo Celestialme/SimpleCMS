@@ -1,4 +1,3 @@
-import { get } from 'svelte/store';
 import collections from '@src/collections';
 
 export const resolvers = {
@@ -7,7 +6,7 @@ export const resolvers = {
 		hello: () => 'SvelteKit - GraphQL Yoga works on SimpleCMS',
 
 		//Dynamic Collection
-		...get(collections).reduce((acc, collection) => {
+		...collections.reduce((acc, collection) => {
 			acc[collection.name] = async (parent: any, args: any, context: any) => {
 				// Check if the user is authorized to access the data
 				if (!context.user || !context.user.isAuthorized) {

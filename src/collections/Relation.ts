@@ -11,8 +11,10 @@ const schema: Schema = {
 	// See for possible Icons https://icon-sets.iconify.design/
 	icon: 'mdi:relation-many-to-many',
 
+	// Collection Permissions by user Roles
+
 	// Defined Fields that are used in Collection
-	// Inspect Widget fields for possible options
+	// Widget fields can be inspected for individual options
 	fields: [
 		widgets.Relation({
 			db_fieldName: 'relation',

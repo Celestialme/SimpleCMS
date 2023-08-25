@@ -13,8 +13,10 @@ const schema: Schema = {
 	status: 'published',
 	slug: 'menu',
 
+	// Collection Permissions by user Roles
+
 	// Defined Fields that are used in Collection
-	// Inspect Widget fields for possible options
+	// Widget fields can be inspected for individual options
 
 	// Important All MENU Labels need to be called 'Header' for Menu associate children
 	fields: [

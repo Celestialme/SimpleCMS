@@ -11,19 +11,19 @@ const schema: Schema = {
 	// Collection Name required
 	name: 'widget-test',
 
-	// Collection Permissions by user Roles
-	permissions: {
-		[roles.user]: {
-			read: false
-		}
-	},
-
 	// Optional & Icon , status, slug
 	// See for possible Icons https://icon-sets.iconify.design/
 	icon: 'bi:card-text',
 
+	// Collection Permissions by user Roles
+	permissions: {
+		[roles.user.name]: {
+			read: false
+		}
+	},
+
 	// Defined Fields that are used in Collection
-	// Inspect Widget fields for possible options
+	// Widget fields can be inspected for individual options
 	fields: [
 		widgets.Text({
 			db_fieldName: 'First',

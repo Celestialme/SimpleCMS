@@ -12,7 +12,7 @@ export async function updateImports() {
 		.replace(/import \w+ from ["']\.\/.*;\s?/g, '')
 		.replace(/let allCollections\s?=\s?.*/g, '');
 	let imports = '';
-	let allCollections = ' let allCollections={';
+	let allCollections = ' const allCollections={';
 	for (const file of files) {
 		const name = file.replace('.ts', '');
 		imports += `import ${name} from './${name}';\n`;

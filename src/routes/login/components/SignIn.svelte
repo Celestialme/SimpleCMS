@@ -108,9 +108,15 @@
 			if (result.type === 'error') {
 				console.log('onResult error:', allErrors); // log the error messages
 
+				// Transform the array of error messages into a single string
+				let errorMessages = '';
+				forgotAllErrors.subscribe((errors) => {
+					errorMessages = errors.map((error) => error.messages.join(', ')).join('; ');
+				});
+
 				// Trigger the toast
 				const t = {
-					message: allErrors,
+					message: errorMessages,
 					// Provide any utility or variant background style:
 					background: 'variant-filled-primary',
 					timeout: 2000,

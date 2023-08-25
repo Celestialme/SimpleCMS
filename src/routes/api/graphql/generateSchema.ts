@@ -1,11 +1,12 @@
 // src/routes/api/graphql/generateSchema.ts
 import { buildSchema } from 'graphql';
-import { get } from 'svelte/store';
 import collections from '@src/collections';
 
 // Generate the GraphQL types and fields based on the collection schemas
-const types = get(collections).map((collection) => {
-	const fields = collection.fields.map((field) => `${field.label}: ${field.type}`).join('\n');
+const types = collections.map((collection) => {
+	const fields = collection.fields
+		.map((field) => `${field.label}: ${field.schema.type}`)
+		.join('\n');
 
 	return `
     type ${collection.name} {
@@ -19,9 +20,7 @@ const types = get(collections).map((collection) => {
 const query = `
   type Query {
     hello: String
-    ${get(collections)
-			.map((collection) => `${collection.name}s: [${collection.name}]`)
-			.join('\n')}
+    ${collections.map((collection) => `${collection.name}s: [${collection.name}]`).join('\n')}
   }
 `;
 

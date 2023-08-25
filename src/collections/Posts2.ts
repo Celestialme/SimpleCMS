@@ -8,10 +8,10 @@ const schema: Schema = {
 
 	// Collection Permissions by user Roles
 	permissions: {
-		[roles.user]: {
+		[roles.user.name]: {
 			read: false
 		},
-		[roles.admin]: {
+		[roles.admin.name]: {
 			write: false
 		}
 	},
@@ -21,7 +21,7 @@ const schema: Schema = {
 	icon: 'bi:card-text',
 
 	// Defined Fields that are used in Collection
-	// Inspect Widget fields for possible options
+	// Widget fields can be inspected for individual options
 	fields: [
 		widgets.Text({
 			label: 'text'

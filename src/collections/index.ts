@@ -1,13 +1,22 @@
 import ImageArray from './ImageArray';
 import Media from './Media';
 import Menu from './Menu';
+import Names from './Names';
 import Posts from './Posts';
 import Posts2 from './Posts2';
-import Names from './Names';
 import Relation from './Relation';
 import WidgetTest from './WidgetTest';
 
-const allCollections = { ImageArray, Media, Menu, Posts, Posts2, Names, Relation, WidgetTest };
+const allCollections = {
+	ImageArray,
+	Media,
+	Menu,
+	Names,
+	Posts,
+	Posts2,
+	Relation,
+	WidgetTest
+};
 
 import { writable } from 'svelte/store';
 
@@ -31,7 +40,7 @@ const categories = [
 const collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
 const unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
 
-//use this unassigned array
+// use this unassigned array
 export { categories, unAssigned, allCollections };
 export default collections;
 export const collection = writable(collections?.[0]); // current collection

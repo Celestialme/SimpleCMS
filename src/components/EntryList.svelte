@@ -402,10 +402,10 @@
 		<!-- Collection type with icon -->
 		<!-- TODO: Translate Collection Name -->
 		<div class="mr-1 flex flex-col {!$toggleLeftSidebar ? 'ml-2' : 'ml-1 sm:ml-2'}">
-			{#if $categories.length}<div
+			{#if categories.length}<div
 					class="mb-2 text-xs capitalize text-surface-500 dark:text-surface-300"
 				>
-					{$categories[0].name}
+					{categories[0].name}
 				</div>{/if}
 			<div
 				class="-mt-2 flex justify-start text-sm font-bold uppercase dark:text-white md:text-2xl lg:text-xl"

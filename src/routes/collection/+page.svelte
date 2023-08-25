@@ -44,11 +44,11 @@
 
 	// let availableCollections = unAssigned;
 	// TODO: display Unassigned  collections only
-	let availableCollections = $collections.filter((collection) => {
-		return !$importedCategories.some((category) => category.collections.includes(collection));
+	let availableCollections = collections.filter((collection) => {
+		return !importedCategories.some((category) => category.collections.includes(collection));
 	});
 
-	let columnsData = $importedCategories.map((category, categoryIndex) => ({
+	let columnsData = importedCategories.map((category, categoryIndex) => ({
 		id: `${categoryIndex + 1}`,
 		name: category.name,
 		icon: category.icon,

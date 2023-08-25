@@ -6,11 +6,10 @@
 
 	contentLanguage.set($page.params.language);
 	let finished = false;
-	// setup().then(() => {
-	// 	collection.set(collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
-	// 	console.log($collection);
-	// 	finished = true;
-	// });
+
+	collection.set(collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
+	console.log($collection);
+	finished = true;
 </script>
 
 {#if finished}

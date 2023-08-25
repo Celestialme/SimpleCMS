@@ -1,9 +1,8 @@
 <script lang="ts">
 	import widgets from '@src/components/widgets';
 	import InputSwitch from './InputSwitch.svelte';
-
+	import { asAny } from '@src/utils/utils';
 	export let fields: Array<any> = [];
-
 	let widget_keys = Object.keys(widgets) as unknown as keyof typeof widgets;
 
 	let inputValue = '';
@@ -14,6 +13,9 @@
 	$: if (currentFieldKey) {
 		guiSchema = widgets[currentFieldKey].GuiSchema;
 	}
+	let destruct = (node: HTMLDivElement) => {
+		node.remove();
+	};
 </script>
 
 <div class="container">
@@ -27,6 +29,11 @@
 		>
 			{field.widget.key}
 		</button>
+		<div use:destruct>
+			{#each Object.entries(widgets[field.widget.key].GuiSchema) as [property, value]}
+				<InputSwitch bind:value={field[property]} widget={asAny(value).widget} key={property} />
+			{/each}
+		</div>
 	{/each}
 </div>
 

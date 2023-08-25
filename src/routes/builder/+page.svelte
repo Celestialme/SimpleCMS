@@ -4,7 +4,7 @@
 	import { categories as importedCategories } from '@src/collections/index';
 	import { dndzone } from 'svelte-dnd-action';
 	import PageTitle from '@src/components/PageTitle.svelte';
-	import { get } from 'svelte/store';
+	// import { get } from 'svelte/store';
 
 	const categories = writable(importedCategories);
 
@@ -18,7 +18,7 @@
 		const newCategories = event.detail.items;
 
 		categories.update((oldCategories) => {
-			const oldCategoriesArray = get(oldCategories);
+			const oldCategoriesArray = oldCategories;
 
 			// Find the index of the draggedCategory in the oldCategories array
 			const oldIndex = oldCategoriesArray.findIndex((category) => category === draggedCategory);

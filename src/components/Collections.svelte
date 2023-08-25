@@ -41,10 +41,10 @@
 		status?: 'published' | 'unpublished' | 'draft' | 'schedule' | 'cloned';
 	}
 
-	let filteredCategories: Category[] = ($categories as Category[]) || [];
+	let filteredCategories: Category[] = (categories as Category[]) || [];
 
 	function filterCategories() {
-		filteredCategories = ($categories as Category[]).reduce((acc: Category[], category) => {
+		filteredCategories = (categories as Category[]).reduce((acc: Category[], category) => {
 			const filteredCollections = category.collections.filter((collection) =>
 				collection.name.toLowerCase().includes(search.toLowerCase())
 			);
@@ -128,7 +128,7 @@
 				<!-- Collection Children -->
 				<svelte:fragment slot="content">
 					<!-- filtered by User Role Permission -->
-					{#each category.collections.filter((c) => c?.permissions?.[$user?.role]?.read != false) as _collection, index}
+					{#each category.collections.filter((c) => c?.permissions?.[$user?.role.name]?.read != false) as _collection, index}
 						{#if $toggleLeftSidebar === 'full'}
 							<!-- switchSideBar expanded -->
 							<div

@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let value;
+	export let value: any;
 	export let widget: any;
 	export let key: string;
 
