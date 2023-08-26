@@ -1,8 +1,10 @@
 import type { RequestHandler } from './$types';
-import { collections } from '@src/routes/api/db';
+import { getCollectionModels } from '@src/routes/api/db';
 import { parse, saveImages } from '@src/utils/utils';
 export const GET: RequestHandler = async ({ params, url }) => {
+	let collections = await getCollectionModels();
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
+	console.log(collections);
 	let collection = collections[params.collection];
 	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
 	let skip = (page - 1) * length;
@@ -16,6 +18,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 };
 
 export const PATCH: RequestHandler = async ({ params, request }) => {
+	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
 	let data = await request.formData();
 	let formData: any = {};
@@ -34,6 +37,7 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 };
 
 export const POST: RequestHandler = async ({ params, request }) => {
+	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
 	let data = await request.formData();
 	let body: any = {};
@@ -51,6 +55,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 };
 
 export const DELETE: RequestHandler = async ({ params, request }) => {
+	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
 	let data = await request.formData();
 

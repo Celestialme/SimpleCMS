@@ -1,32 +1,54 @@
-import ImageArray from './ImageArray';
-import Media from './Media';
-import Menu from './Menu';
-import Posts1 from './Posts1';
-import Posts2 from './Posts2';
-import Posts3 from './Posts3';
-import Relation from './Relation';
-import thumbs from './thumbs';
-
-let allCollections = { ImageArray, Media, Menu, Posts1, Posts2, Posts3, Relation, thumbs };
-
-import { writable } from 'svelte/store';
-
-let categories = [
-	{
-		name: 'Collections',
-		icon: 'bi:collection',
-		collections: [Posts2, Posts3, thumbs]
-	},
-	{
-		name: 'posts',
-		icon: 'bi:images',
-		collections: [Posts1, ImageArray, Menu, Relation, Media]
-	}
-];
-let collections = categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)); // returns all collections
-let unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
+import { writable, type Writable } from 'svelte/store';
+let categories: Writable<Array<any>> = writable();
+let collections: Writable<Array<any>> = writable();
+let imports: any = {};
+getImports().then((imports) => {
+	console.log(imports);
+	let _categories = [
+		{
+			name: 'Collections',
+			icon: 'bi:collection',
+			collections: [imports.Posts2, imports.Posts3, imports.Thumbs]
+		},
+		{
+			name: 'posts',
+			icon: 'bi:images',
+			collections: [imports.Posts1, imports.ImageArray, imports.Menu, imports.Relation, imports.Media]
+		}
+	];
+	categories.set(_categories);
+	collections.set(_categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc))); // returns all collections
+});
+// let unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
 
 //use this unassigned array
-export { categories, unAssigned, allCollections };
+
+export { categories };
 export default collections;
 export let collection = writable(collections?.[0]); // current collection
+
+async function getImports() {
+	if (Object.keys(imports).length) return imports;
+	// let files = fs.readdirSync('build/collections').filter((x) => !['index.ts', 'types.ts', 'Auth.ts', 'config.ts'].includes(x));
+	// for (let file of files) {
+	// 	let name = file.replace('.ts', '');
+	// 	imports[name] = await import('src/collections/' + file);
+	// }
+
+	let modules = import.meta.glob(['./*.ts', '!./index.ts', '!./types.ts', '!./Auth.ts', '!./config.ts']);
+
+	console.log('_modules', modules);
+	for (let module in modules) {
+		imports[module.replace('.ts', '').replace('./', '')] = ((await modules[module]()) as any).default;
+	}
+	return imports;
+}
+export async function getCollections() {
+	return new Promise<any>((resolve) => {
+		collections.subscribe((collections) => {
+			if (collections?.length > 0) {
+				resolve(collections);
+			}
+		});
+	});
+}
