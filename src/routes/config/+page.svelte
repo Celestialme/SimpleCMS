@@ -35,6 +35,12 @@
 	<!-- Graphql -->
 	<a href="/api/graphql" class="variant-outline-secondary btn gap-2 py-6">
 		<iconify-icon icon="teenyicons:graphql-solid" width="24" class="text-tertiary-600" />
-		<p class="uppercase">Graphql Editor</p>
+		<p class="uppercase">Graphql Api</p>
+	</a>
+
+	<!-- Graphiql -->
+	<a href="/graphiql" class="variant-outline-secondary btn gap-2 py-6">
+		<iconify-icon icon="teenyicons:graphql-solid" width="24" class="text-tertiary-600" />
+		<p class="uppercase">Graphiql Editor</p>
 	</a>
 </div>
