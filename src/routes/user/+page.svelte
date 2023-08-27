@@ -188,7 +188,7 @@
 	</div>
 
 	<!-- admin area -->
-	{#if user?.role == roles.admin.name}
+	{#if user?.role == roles.admin}
 		<AdminArea {data} />
 	{/if}
 </div>

@@ -5,11 +5,11 @@
 	export let fields = [];
 </script>
 
-{#if addField}
-	<AddWidget {fields} bind:addField />
-{:else}
-	<div class="text-center">
-		<button class="btn text-white" on:click={() => (addField = true)}>Add Field</button>
+<div class="flex flex-col">
+	{#if addField}
+		<AddWidget {fields} bind:addField />
+	{:else}
+		<button class="btn text-primary-500" on:click={() => (addField = true)}>Add Field</button>
 		<WidgetFields {fields} />
-	</div>
-{/if}
+	{/if}
+</div>

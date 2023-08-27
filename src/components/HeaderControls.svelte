@@ -12,6 +12,7 @@
 	import { cloneData, deleteData } from '@src/utils/utils';
 	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 	import { saveFormData } from '@src/utils/utils';
+	import { user } from '@src/stores/store';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -83,34 +84,39 @@
 
 	<div class="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
 		{#if $screenWidth !== 'desktop'}
-			<!-- Save Content -->
-			<button type="button" on:click={saveData} class="variant-filled-primary btn-icon md:btn">
-				<iconify-icon icon="material-symbols:save" width="24" class="text-white" />
-				<span class="hidden md:block">Save</span>
-			</button>
+			<!-- TODO: Check User Role to fix page switch media to collection -->
+			{#if $collection.permissions?.[$user.role]?.write != false}
+				<!-- Save Content -->
+				<button type="button" on:click={saveData} class="variant-filled-primary btn-icon md:btn">
+					<iconify-icon icon="material-symbols:save" width="24" class="text-white" />
+					<span class="hidden md:block">Save</span>
+				</button>
 
-			<!-- DropDown to show more Buttons -->
-			<button
-				type="button"
-				on:keydown
-				on:click={() => (showMore = !showMore)}
-				class="variant-ghost-surface btn-icon"
+				<!-- DropDown to show more Buttons -->
+				<button
+					type="button"
+					on:keydown
+					on:click={() => (showMore = !showMore)}
+					class="variant-ghost-surface btn-icon"
+				>
+					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
+				</button>
+			{/if}
+
+			<!-- Desktop -->
+			<select
+				class="variant-ghost-surface hidden rounded border-surface-500 text-white md:block"
+				bind:value={$contentLanguage}
+				on:change={handleChange}
 			>
-				<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
-			</button>
+				{#each Object.entries(options) as [value, label]}
+					<option {value}>{label}</option>
+				{/each}
+			</select>
+		{:else}
+			<!-- TODO: find better rule -->
+			<button class="variant-ghost-error btn">No Permission</button>
 		{/if}
-
-		<!-- Desktop -->
-		<select
-			class="variant-ghost-surface hidden rounded border-surface-500 text-white md:block"
-			bind:value={$contentLanguage}
-			on:change={handleChange}
-		>
-			{#each Object.entries(options) as [value, label]}
-				<option {value}>{label}</option>
-			{/each}
-		</select>
-
 		<!-- Cancel -->
 		<button type="button" on:click={handleCancel} class="variant-ghost-surface btn-icon">
 			<iconify-icon icon="material-symbols:close" width="24" />
@@ -118,7 +124,7 @@
 	</div>
 </header>
 
-{#if showMore}
+{#if showMore && $collection.permissions?.[$user.role]?.write != false}
 	<div class="-mx-2 flex items-center justify-center gap-10 pt-2">
 		<div class="flex flex-col items-center justify-center">
 			<!-- Delete Content -->

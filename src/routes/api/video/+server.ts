@@ -3,50 +3,61 @@ import { tiktok, twitch, vimeo, youtube } from '@src/components/widgets/remoteVi
 
 // Extracts the video ID from a YouTube URL
 function getYouTubeVideoId(url: string) {
-	const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+	const regExp =
+		/^(?:https?:\/\/)?(?:www\.)?youtube\.com\/(?:watch\?v=|embed\/|v\/|u\/\w\/|watch\?.+&v=)([^#&?]+).*$/;
 	const match = url.match(regExp);
 
-	return match && match[2].length === 11 ? match[2] : null;
+	return match ? match[1] : null;
 }
 
-const url = 'https://www.youtube.com/watch?v=SYiNtefVRLY';
-const videoId = getYouTubeVideoId(url);
-//console.log('Video ID:', videoId);
-
 export const POST: RequestHandler = async ({ request }) => {
-	//console.log('POST function called');
+	console.log('POST function called');
 
-	const data = await request.formData();
-	const res = Object.fromEntries(data);
-	const url = res.url.toString();
-	//console.log('URL:', url);
+	try {
+		const data = await request.formData();
+		const res = Object.fromEntries(data);
+		const url = res.url.toString();
+		console.log('URL:', url);
 
-	const id = getYouTubeVideoId(url);
-	//console.log('Video ID:', id);
+		// Use a lookup object to map the URL to the corresponding function
+		const videoServices = {
+			'youtube.com': youtube,
+			'vimeo.com': vimeo,
+			'tiktok.com': tiktok,
+			'twitch.tv': twitch
+		};
 
-	if (id) {
-		const data = await youtube(id);
-		//console.log('Data:', data);
+		// Use the URL class to parse the URL
+		const parsedUrl = new URL(url);
+		// Get the hostname from the URL
+		const hostname = parsedUrl.hostname;
 
+		// Check if the hostname matches any of the video services
+		if (videoServices[hostname]) {
+			let videoData: any;
+			if (hostname === 'youtube.com') {
+				const videoId = getYouTubeVideoId(url);
+				if (videoId) {
+					videoData = await videoServices[hostname](videoId);
+				} else {
+					throw new Error('Invalid YouTube URL');
+				}
+			} else {
+				videoData = await videoServices[hostname](url);
+			}
+			return json(videoData);
+			console.log('json:', json);
+		} else {
+			return json({
+				videoTitle: 'Invalid URL',
+				videoThumbnail: '',
+				videoUrl: ''
+			});
+		}
+	} catch (error) {
+		console.error('Error:', error);
 		return json({
-			videoTitle: data?.videoTitle,
-			videoThumbnail: data?.videoThumbnail,
-			videoUrl: data?.videoUrl,
-			user_name: data?.channelTitle,
-			upload_date: data?.publishedAt,
-			duration: data?.duration,
-			width: data?.width,
-			height: data?.height
-		});
-	} else if (url.includes('vimeo.com')) {
-		// Handle Vimeo URLs here
-	} else if (url.includes('tiktok.com')) {
-		// Handle TikTok URLs here
-	} else if (url.includes('twitch.tv')) {
-		// Handle Twitch URLs here
-	} else {
-		return json({
-			videoTitle: 'Invalid URL',
+			videoTitle: 'An error occurred',
 			videoThumbnail: '',
 			videoUrl: ''
 		});

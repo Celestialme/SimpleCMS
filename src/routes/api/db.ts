@@ -15,6 +15,7 @@ import { DB_HOST, DB_NAME, DB_USER, DB_PASSWORD } from '$env/static/private';
 // Turn off strict mode for query filters. Default in Mongodb 7
 mongoose.set('strictQuery', false);
 
+// Connect to MongoDB database using imported environment variables
 mongoose
 	.connect(DB_HOST, {
 		authSource: 'admin',
@@ -29,8 +30,10 @@ mongoose
 	)
 	.catch((error) => console.error('Error connecting to database:', error));
 
+// Initialize collections object
 const collections: { [Key: string]: mongoose.Model<any> } = {};
 
+// Set up collections in the database using imported schemas
 for (const schema of schemas) {
 	const schema_object = new mongoose.Schema(
 		{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
@@ -45,6 +48,7 @@ for (const schema of schemas) {
 		: mongoose.model(schema.name, schema_object);
 }
 
+// Set up authentication collections if they don't already exist
 !mongoose.models['auth_session'] &&
 	mongoose.model('auth_session', new mongoose.Schema({ ...session }, { _id: false }));
 !mongoose.models['auth_key'] &&
@@ -55,6 +59,7 @@ for (const schema of schemas) {
 		new mongoose.Schema({ ...UserSchema }, { _id: false, timestamps: true })
 	);
 
+// Set up authentication using Lucia and export auth object
 const auth = lucia({
 	adapter: adapter(mongoose),
 
@@ -71,4 +76,5 @@ const auth = lucia({
 	middleware: sveltekit()
 });
 
+// Export collections and auth objects
 export { collections, auth };

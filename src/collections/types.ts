@@ -3,7 +3,7 @@ import type { roles } from './Auth';
 
 // Define a new `permissions` type using a mapped type for read & write
 type permissions = {
-	[K in keyof typeof roles]?: {
+	[K in (typeof roles)[keyof typeof roles]]?: {
 		read?: boolean;
 		write?: boolean;
 	};

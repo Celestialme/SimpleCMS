@@ -14,6 +14,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 
 	// Retrieve value of length key from search parameters of url object and parse it as integer. If value is not valid integer, assign Infinity to length variable
 	const length = parseInt(url.searchParams.get('length') as string) || Infinity;
+
 	// Validate length against predefined rules or constraints
 	if (length < 1) {
 		return new Response('Invalid value for length');

@@ -605,7 +605,7 @@
 		</div>
 
 		<!-- Pagination Mobile-->
-		<div class="flex flex-col items-center justify-center gap-2 md:hidden">
+		<div class="mb-2 flex flex-col items-center justify-center gap-2 md:hidden">
 			{#if $table.getPrePaginationRowModel().rows.length > 10}
 				<!-- number of pages -->
 				<select

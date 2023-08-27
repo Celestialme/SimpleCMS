@@ -37,15 +37,7 @@
 	contentLanguage.set($page.params.language);
 
 	let handleClick: any;
-	let finished = false;
-	// setup().then(async () => {
-	// 	await tick();
-	// 	$collection = $collections.find((x) => x.name === $page.params.collection) as Schema;
-	// 	finished = true;
-	// 	if (!$collection) {
-	// 		$collection = $collections[0];
-	// 	}
-	// });
+
 	// update the handleClick function when the systemLanguage store value changes
 	$: handleClick = () => {
 		if (!$page.url.href.includes('user')) {
@@ -246,278 +238,276 @@
 	<meta property="og:image" content="/SimpleCMS_Logo_Round.png" />
 	<meta property="og:type" content="website" />
 </svelte:head>
-{#if finished}
-	<!-- hack as root +layout cannot be overwritten ? -->
-	{#if $page.url.pathname === '/login'}
-		<slot />
-	{:else}<AppShell
-			slotSidebarLeft="pt-2 !overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
+
+<!-- hack as root +layout cannot be overwritten ? -->
+{#if $page.url.pathname === '/login'}
+	<slot />
+{:else}<AppShell
+		slotSidebarLeft="pt-2 !overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10
 {$toggleLeftSidebar === 'full' ? 'w-[220px]' : 'w-fit'}
 {$toggleLeftSidebar === 'closed' ? 'hidden' : 'block'}
 lg:overflow-y-scroll lg:max-h-screen}"
-			slotSidebarRight="h-full relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center
+		slotSidebarRight="h-full relative border-r w-[200px] flex flex-col items-center bg-white border-l border-surface-300 dark:bg-gradient-to-r dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center
 	{$toggleRightSidebar === 'closed' ? 'hidden' : 'block'}"
-			slotPageHeader="relative bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1  border-b 
+		slotPageHeader="relative bg-white dark:bg-gradient-to-t dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1  border-b 
 	{$togglePageHeader === 'closed' ? 'hidden' : 'block'}"
-			slotPageFooter="relative bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1  border-t 
+		slotPageFooter="relative bg-white dark:bg-gradient-to-b dark:from-surface-600 dark:via-surface-700 dark:to-surface-900 text-center px-1  border-t 
 	{$togglePageFooter === 'closed' ? 'hidden' : 'block'}"
-		>
-			<svelte:fragment slot="sidebarLeft">
-				<!-- Corporate Identity Full-->
-				{#if $toggleLeftSidebar === 'full'}
-					<a href="/" class="t flex pt-2 !no-underline">
-						<SimpleCmsLogo fill="red" className="h-8" />
+	>
+		<svelte:fragment slot="sidebarLeft">
+			<!-- Corporate Identity Full-->
+			{#if $toggleLeftSidebar === 'full'}
+				<a href="/" class="t flex pt-2 !no-underline">
+					<SimpleCmsLogo fill="red" className="h-8" />
 
-						<span class="pl-1 text-2xl font-bold text-black dark:text-white">{PUBLIC_SITENAME}</span
-						>
-					</a>
-				{:else}
-					<!-- Corporate Identity Collapsed-->
-					<div class="flex justify-start gap-1.5">
-						<button
-							type="button"
-							on:click={() => toggleLeftSidebar.clickBack()}
-							class="variant-ghost-surface btn-icon mt-1"
-						>
-							<iconify-icon icon="mingcute:menu-fill" width="24" />
-						</button>
-
-						<a href="/" class="flex pt-2 !no-underline">
-							<SimpleCmsLogo fill="red" className="h-9  mr-2" />
-						</a>
-					</div>
-				{/if}
-
-				<!-- sidebar collapse button -->
-				<button
-					type="button"
-					class="absolute -right-3 top-4 flex items-center justify-center !rounded-full border-2 border-surface-300"
-					on:keydown
-					on:click={() => {
-						toggleLeftSidebar.clickSwitchSideBar();
-						userPreferredState.set($toggleLeftSidebar === 'full' ? 'collapsed' : 'full');
-					}}
-				>
-					{#if $toggleLeftSidebar !== 'full'}
-						<!-- Icon Collapsed -->
-						<iconify-icon
-							icon="bi:arrow-left-circle-fill"
-							width="30"
-							class="rotate-180 rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
-						/>
-					{:else}
-						<!-- Icon expanded -->
-						<iconify-icon
-							icon="bi:arrow-left-circle-fill"
-							width="30"
-							class="rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
-						/>
-					{/if}
-				</button>
-
-				<!--SideBar Middle -->
-				<Collections />
-
-				<!-- Sidebar Left Footer -->
-				<div
-					class="mb-2 mt-auto bg-white dark:bg-gradient-to-r dark:from-surface-800 dark:via-surface-700 dark:to-surface-500"
-				>
-					<div class="mx-1 mb-1 border-t border-surface-400" />
-
-					<div
-						class="{$toggleLeftSidebar === 'full'
-							? 'grid-cols-3 grid-rows-3'
-							: 'grid-cols-2 grid-rows-2'} grid items-center justify-center overflow-hidden"
+					<span class="pl-1 text-2xl font-bold text-black dark:text-white">{PUBLIC_SITENAME}</span>
+				</a>
+			{:else}
+				<!-- Corporate Identity Collapsed-->
+				<div class="flex justify-start gap-1.5">
+					<button
+						type="button"
+						on:click={() => toggleLeftSidebar.clickBack()}
+						class="variant-ghost-surface btn-icon mt-1"
 					>
-						<!-- Avatar with user settings -->
-						<div class={$toggleLeftSidebar === 'full' ? 'order-1 row-span-2' : 'order-1'}>
+						<iconify-icon icon="mingcute:menu-fill" width="24" />
+					</button>
+
+					<a href="/" class="flex pt-2 !no-underline">
+						<SimpleCmsLogo fill="red" className="h-9  mr-2" />
+					</a>
+				</div>
+			{/if}
+
+			<!-- sidebar collapse button -->
+			<button
+				type="button"
+				class="absolute -right-3 top-4 flex items-center justify-center !rounded-full border-2 border-surface-300"
+				on:keydown
+				on:click={() => {
+					toggleLeftSidebar.clickSwitchSideBar();
+					userPreferredState.set($toggleLeftSidebar === 'full' ? 'collapsed' : 'full');
+				}}
+			>
+				{#if $toggleLeftSidebar !== 'full'}
+					<!-- Icon Collapsed -->
+					<iconify-icon
+						icon="bi:arrow-left-circle-fill"
+						width="30"
+						class="rotate-180 rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
+					/>
+				{:else}
+					<!-- Icon expanded -->
+					<iconify-icon
+						icon="bi:arrow-left-circle-fill"
+						width="30"
+						class="rounded-full bg-white text-surface-500 hover:cursor-pointer hover:bg-error-600 dark:text-surface-600 dark:hover:bg-error-600"
+					/>
+				{/if}
+			</button>
+
+			<!--SideBar Middle -->
+			<Collections />
+
+			<!-- Sidebar Left Footer -->
+			<div
+				class="mb-2 mt-auto bg-white dark:bg-gradient-to-r dark:from-surface-800 dark:via-surface-700 dark:to-surface-500"
+			>
+				<div class="mx-1 mb-1 border-t border-surface-400" />
+
+				<div
+					class="{$toggleLeftSidebar === 'full'
+						? 'grid-cols-3 grid-rows-3'
+						: 'grid-cols-2 grid-rows-2'} grid items-center justify-center overflow-hidden"
+				>
+					<!-- Avatar with user settings -->
+					<div class={$toggleLeftSidebar === 'full' ? 'order-1 row-span-2' : 'order-1'}>
+						<button
+							class="btn-icon md:row-span-2"
+							use:popup={UserTooltip}
+							on:click={handleClick}
+							on:keypress={handleClick}
+						>
 							<button
-								class="btn-icon md:row-span-2"
-								use:popup={UserTooltip}
 								on:click={handleClick}
 								on:keypress={handleClick}
+								class="relative cursor-pointer flex-col !no-underline"
 							>
-								<button
-									on:click={handleClick}
-									on:keypress={handleClick}
-									class="relative cursor-pointer flex-col !no-underline"
-								>
-									<Avatar
-										src={avatarSrc ? avatarSrc : '/Default_User.svg'}
-										class="mx-auto hover:bg-surface-500 hover:p-1 {$toggleLeftSidebar === 'full'
-											? 'w-[40px]'
-											: 'w-[35px]'}"
-									/>
-									<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
-										{#if $toggleLeftSidebar === 'full'}
-											{#if $user?.username}
-												<div class="text-[10px] uppercase">{$user?.username}</div>
-											{/if}
+								<Avatar
+									src={avatarSrc ? avatarSrc : '/Default_User.svg'}
+									class="mx-auto hover:bg-surface-500 hover:p-1 {$toggleLeftSidebar === 'full'
+										? 'w-[40px]'
+										: 'w-[35px]'}"
+								/>
+								<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
+									{#if $toggleLeftSidebar === 'full'}
+										{#if $user?.username}
+											<div class="text-[10px] uppercase">{$user?.username}</div>
 										{/if}
-									</div>
-								</button>
-								<div class="card variant-filled-secondary p-4" data-popup="User">
-									{$LL.SBL_User()}
-									<div class="variant-filled-secondary arrow" />
+									{/if}
 								</div>
 							</button>
-						</div>
+							<div class="card variant-filled-secondary p-4" data-popup="User">
+								{$LL.SBL_User()}
+								<div class="variant-filled-secondary arrow" />
+							</div>
+						</button>
+					</div>
 
-						<!-- TODO: Fix Tooltip overflow -->
-						<!-- System Language i18n Handling -->
-						<div
-							class={$toggleLeftSidebar === 'full' ? 'order-3 row-span-2  ' : 'order-2'}
-							use:popup={SystemLanguageTooltip}
+					<!-- TODO: Fix Tooltip overflow -->
+					<!-- System Language i18n Handling -->
+					<div
+						class={$toggleLeftSidebar === 'full' ? 'order-3 row-span-2  ' : 'order-2'}
+						use:popup={SystemLanguageTooltip}
+					>
+						<select
+							bind:value={selectedLocale}
+							on:change={handleLocaleChange}
+							class="{$toggleLeftSidebar === 'full'
+								? 'px-2.5 py-2'
+								: 'btn-icon-sm'} variant-filled-surface btn-icon appearance-none rounded-full uppercase text-white"
 						>
-							<select
-								bind:value={selectedLocale}
-								on:change={handleLocaleChange}
-								class="{$toggleLeftSidebar === 'full'
-									? 'px-2.5 py-2'
-									: 'btn-icon-sm'} variant-filled-surface btn-icon appearance-none rounded-full uppercase text-white"
-							>
-								{#each locales as locale}
-									<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
-								{/each}
-							</select>
-							<div class="card variant-filled-secondary p-4" data-popup="SystemLanguage">
-								{$LL.SBL_SystemLanguage()}
+							{#each locales as locale}
+								<option value={locale} selected={locale === $systemLanguage}>{locale}</option>
+							{/each}
+						</select>
+						<div class="card variant-filled-secondary p-4" data-popup="SystemLanguage">
+							{$LL.SBL_SystemLanguage()}
+							<div class="variant-filled-secondary arrow" />
+						</div>
+					</div>
+
+					<!-- light/dark mode switch -->
+					<div class="{$toggleLeftSidebar === 'full' ? 'order-2' : 'order-3'}  ">
+						<button
+							use:popup={SwitchThemeTooltip}
+							on:click={toggleTheme}
+							class="btn-icon hover:bg-surface-500 hover:text-white"
+						>
+							{#if !$modeCurrent}
+								<iconify-icon icon="bi:sun" width="22" />
+							{:else}
+								<iconify-icon icon="bi:moon-fill" width="22" />
+							{/if}
+
+							<!-- TODO: tooltip overflow -->
+						</button>
+
+						<!-- Popup Tooltip with the arrow element -->
+						<div class="card variant-filled-secondary p-2" data-popup="SwitchTheme">
+							{`Switch to ${!$modeCurrent ? 'Light' : 'Dark'} Mode`}
+							<div class="variant-filled-secondary arrow" />
+						</div>
+					</div>
+
+					<!-- Lucia Sign Out -->
+					<div class={$toggleLeftSidebar === 'full' ? 'order-4' : 'order-4'}>
+						<button
+							use:popup={SignOutTooltip}
+							on:click={signOut}
+							type="submit"
+							value="Sign out"
+							class="btn-icon hover:bg-surface-500 hover:text-white"
+							><iconify-icon icon="uil:signout" width="26" /></button
+						>
+
+						<div class="card variant-filled-secondary z-10 p-2" data-popup="SignOutButton">
+							{$LL.SBL_SignOut()}
+							<div class="variant-filled-secondary arrow" />
+						</div>
+					</div>
+
+					<!-- System Configuration -->
+					<div class={$toggleLeftSidebar === 'full' ? 'order-5' : 'order-6'}>
+						<button
+							class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white"
+							on:click={() => {
+								if (get(screenWidth) === 'mobile') {
+									toggleLeftSidebar.clickBack();
+								}
+							}}
+						>
+							<a href="/config" use:popup={ConfigTooltip}>
+								<iconify-icon icon="material-symbols:build-circle" width="32" />
+							</a>
+
+							<div class="card variant-filled-secondary z-10 p-2" data-popup="Config">
+								System Configuration
 								<div class="variant-filled-secondary arrow" />
 							</div>
-						</div>
+						</button>
+					</div>
 
-						<!-- light/dark mode switch -->
-						<div class="{$toggleLeftSidebar === 'full' ? 'order-2' : 'order-3'}  ">
+					<!-- Github discussions -->
+					<div class="{$toggleLeftSidebar === 'full' ? 'order-7' : 'order-7 hidden'} ">
+						<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
 							<button
-								use:popup={SwitchThemeTooltip}
-								on:click={toggleTheme}
+								use:popup={GithubTooltip}
 								class="btn-icon hover:bg-surface-500 hover:text-white"
 							>
-								{#if !$modeCurrent}
-									<iconify-icon icon="bi:sun" width="22" />
-								{:else}
-									<iconify-icon icon="bi:moon-fill" width="22" />
-								{/if}
+								<iconify-icon icon="grommet-icons:github" width="30" />
 
-								<!-- TODO: tooltip overflow -->
-							</button>
-
-							<!-- Popup Tooltip with the arrow element -->
-							<div class="card variant-filled-secondary p-2" data-popup="SwitchTheme">
-								{`Switch to ${!$modeCurrent ? 'Light' : 'Dark'} Mode`}
-								<div class="variant-filled-secondary arrow" />
-							</div>
-						</div>
-
-						<!-- Lucia Sign Out -->
-						<div class={$toggleLeftSidebar === 'full' ? 'order-4' : 'order-4'}>
-							<button
-								use:popup={SignOutTooltip}
-								on:click={signOut}
-								type="submit"
-								value="Sign out"
-								class="btn-icon hover:bg-surface-500 hover:text-white"
-								><iconify-icon icon="uil:signout" width="26" /></button
-							>
-
-							<div class="card variant-filled-secondary z-10 p-2" data-popup="SignOutButton">
-								{$LL.SBL_SignOut()}
-								<div class="variant-filled-secondary arrow" />
-							</div>
-						</div>
-
-						<!-- System Configuration -->
-						<div class={$toggleLeftSidebar === 'full' ? 'order-5' : 'order-6'}>
-							<button
-								class="btn-icon pt-1.5 hover:bg-surface-500 hover:text-white"
-								on:click={() => {
-									if (get(screenWidth) === 'mobile') {
-										toggleLeftSidebar.clickBack();
-									}
-								}}
-							>
-								<a href="/config" use:popup={ConfigTooltip}>
-									<iconify-icon icon="material-symbols:build-circle" width="32" />
-								</a>
-
-								<div class="card variant-filled-secondary z-10 p-2" data-popup="Config">
-									System Configuration
+								<div class="card variant-filled-secondary p-4" data-popup="Github">
+									Github Discussion
 									<div class="variant-filled-secondary arrow" />
 								</div>
 							</button>
-						</div>
+						</a>
+					</div>
 
-						<!-- Github discussions -->
-						<div class="{$toggleLeftSidebar === 'full' ? 'order-7' : 'order-7 hidden'} ">
-							<a href="https://github.com/Rar9/SimpleCMS/discussions" target="blank">
-								<button
-									use:popup={GithubTooltip}
-									class="btn-icon hover:bg-surface-500 hover:text-white"
-								>
-									<iconify-icon icon="grommet-icons:github" width="30" />
-
-									<div class="card variant-filled-secondary p-4" data-popup="Github">
-										Github Discussion
-										<div class="variant-filled-secondary arrow" />
-									</div>
-								</button>
-							</a>
-						</div>
-
-						<!-- CMS Version -->
-						<div class={$toggleLeftSidebar === 'full' ? 'order-6' : 'order-5'}>
-							<a href="https://github.com/Rar9/SimpleCMS/" target="blank">
-								<span
-									class="{$toggleLeftSidebar === 'full'
-										? 'py-1'
-										: 'py-0'} variant-filled-primary badge rounded-xl text-black hover:text-white"
-									>{#if $toggleLeftSidebar === 'full'}{$LL.SBL_Version()}{/if}{pkg}</span
-								>
-							</a>
-						</div>
+					<!-- CMS Version -->
+					<div class={$toggleLeftSidebar === 'full' ? 'order-6' : 'order-5'}>
+						<a href="https://github.com/Rar9/SimpleCMS/" target="blank">
+							<span
+								class="{$toggleLeftSidebar === 'full'
+									? 'py-1'
+									: 'py-0'} variant-filled-primary badge rounded-xl text-black hover:text-white"
+								>{#if $toggleLeftSidebar === 'full'}{$LL.SBL_Version()}{/if}{pkg}</span
+							>
+						</a>
 					</div>
 				</div>
-			</svelte:fragment>
-
-			<svelte:fragment slot="sidebarRight">
-				<ControlPanel />
-			</svelte:fragment>
-
-			<svelte:fragment slot="pageHeader">
-				<HeaderControls />
-			</svelte:fragment>
-
-			<!-- Router Slot -->
-			<Modal />
-			<Toast />
-			<div class="m-2">
-				{#key $page.url}
-					<!-- <div in:fly|global={{ x: -200, duration: 200 }} out:fly|global={{ x: 200, duration: 200 }}> -->
-					<div>
-						<slot />
-					</div>
-				{/key}
 			</div>
+		</svelte:fragment>
 
-			<svelte:fragment slot="pageFooter">
-				{#if $mode !== 'view'}
-					<h2 class="text-center !text-sm font-bold uppercase text-primary-500">
-						{$collection.name} Info:
-					</h2>
+		<svelte:fragment slot="sidebarRight">
+			<ControlPanel />
+		</svelte:fragment>
 
-					<div class="mb-1 mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
-						<!-- Labels -->
-						{#each Object.keys(dates) as key}
-							<div class="capitalize">{key}:</div>
-						{/each}
-						<!-- Data -->
-						{#each Object.values(dates) as value}
-							<div class="text-primary-500">{value}</div>
-						{/each}
-					</div>
-				{/if}
-			</svelte:fragment>
-		</AppShell>
-	{/if}
+		<svelte:fragment slot="pageHeader">
+			<HeaderControls />
+		</svelte:fragment>
+
+		<!-- Router Slot -->
+		<Modal />
+		<Toast />
+		<div class="m-2">
+			{#key $page.url}
+				<!-- <div in:fly|global={{ x: -200, duration: 200 }} out:fly|global={{ x: 200, duration: 200 }}> -->
+				<div>
+					<slot />
+				</div>
+			{/key}
+		</div>
+
+		<svelte:fragment slot="pageFooter">
+			{#if $mode !== 'view'}
+				<h2 class="text-center !text-sm font-bold uppercase text-primary-500">
+					{$collection.name} Info:
+				</h2>
+
+				<div class="mb-1 mt-2 grid grid-cols-3 items-center gap-x-2 text-[12px] leading-tight">
+					<!-- Labels -->
+					{#each Object.keys(dates) as key}
+						<div class="capitalize">{key}:</div>
+					{/each}
+					<!-- Data -->
+					{#each Object.values(dates) as value}
+						<div class="text-primary-500">{value}</div>
+					{/each}
+				</div>
+			{/if}
+		</svelte:fragment>
+	</AppShell>
 {/if}

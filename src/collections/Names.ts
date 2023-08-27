@@ -13,7 +13,7 @@ const schema: Schema = {
 
 	// Collection Permissions by user Roles
 	permissions: {
-		[roles.admin.name]: {
+		[roles.admin]: {
 			read: false
 		}
 	},
@@ -29,8 +29,8 @@ const schema: Schema = {
 		}),
 		widgets.Text({
 			label: 'Last Name',
-
-			icon: 'ri:t-box-line'
+			icon: 'ri:t-box-line',
+			placeholder: 'Enter Last Name'
 		})
 	]
 };

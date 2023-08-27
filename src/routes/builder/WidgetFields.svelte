@@ -1,8 +1,9 @@
 <script lang="ts">
 	import widgets from '@src/components/widgets';
 	import InputSwitch from './InputSwitch.svelte';
-	import { asAny } from '@src/utils/utils';
+
 	export let fields: Array<any> = [];
+
 	let widget_keys = Object.keys(widgets) as unknown as keyof typeof widgets;
 
 	let inputValue = '';
@@ -13,49 +14,44 @@
 	$: if (currentFieldKey) {
 		guiSchema = widgets[currentFieldKey].GuiSchema;
 	}
-	let destruct = (node: HTMLDivElement) => {
-		node.remove();
-	};
 </script>
 
-<div class="container">
+<div class="variant-filled btn-group-vertical">
+	<!-- list of widgets fields -->
 	{#each fields as field}
 		<button
 			on:click={() => {
 				currentFieldKey = field.widget.key;
 				currentField = field;
 			}}
-			class="field"
 		>
 			{field.widget.key}
 		</button>
-		<div use:destruct>
-			{#each Object.entries(widgets[field.widget.key].GuiSchema) as [property, value]}
-				<InputSwitch bind:value={field[property]} widget={asAny(value).widget} key={property} />
-			{/each}
-		</div>
 	{/each}
 </div>
 
 {#if currentField}
-	<div class="properties">
-		<button class="btn" on:click={() => (currentField = null)}>close</button>
+	<div class="container">
 		{#each Object.entries(guiSchema) as [property, value]}
 			<InputSwitch bind:value={currentField[property]} widget={value.widget} key={property} />
 		{/each}
+		<!-- close Button -->
+		<button class="variant-filled-tertiary btn float-right" on:click={() => (currentField = null)}
+			>Close</button
+		>
 	</div>
 {/if}
 
-<style lang="postcss">
+<style>
 	.container {
 		margin-bottom: 20px;
 		padding: 20px 2px;
 		background-color: #333637;
-		box-shadow: 4px 7px 20px 1px #ffffff69;
+
 		border-radius: 12px;
 		min-width: 300px;
 	}
-	/* p.field {
+	p.field {
 		text-align: center;
 		color: black;
 		padding: 10px;
@@ -67,7 +63,7 @@
 	}
 	p.field:hover {
 		background-color: #4fdc4f;
-	} */
+	}
 	.properties {
 		position: fixed;
 		flex-direction: column;

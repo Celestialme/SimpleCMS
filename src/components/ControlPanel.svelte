@@ -78,8 +78,12 @@
 			</footer>
 		</div>
 	{:else if $mode == 'delete'}
+		<!-- no permission -->
 		<button type="button" on:click={$deleteEntry} class="variant-filled-success btn">
 			<iconify-icon icon="icomoon-free:bin" width="24" />Delete
 		</button>
 	{/if}
+{:else}
+	<!-- TODO: find better rule -->
+	<button class="variant-ghost-error btn mt-2">No Permission</button>
 {/if}

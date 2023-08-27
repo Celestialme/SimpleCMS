@@ -22,7 +22,7 @@
 	</div>
 {:else}
 	<div class="properties">
-		<button class="btn" on:click={() => (selected_widget = null)}>close</button>
+		<button class="btn text-primary-500" on:click={() => (selected_widget = null)}>Close</button>
 
 		{#each Object.entries(guiSchema) as [property, value]}
 			<InputSwitch bind:value={field[property]} widget={value.widget} key={property} />

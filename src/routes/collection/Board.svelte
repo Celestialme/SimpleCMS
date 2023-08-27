@@ -22,11 +22,11 @@
 		onFinalUpdate([...columns]);
 	}
 
-	const dispatch = createEventDispatcher();
+	// const dispatch = createEventDispatcher();
 
-	function handleColumnNameClick(column) {
-		dispatch('columnnameclick', column);
-	}
+	// function handleColumnNameClick(column) {
+	// 	dispatch('columnnameclick', column);
+	// }
 </script>
 
 <section

@@ -4,7 +4,7 @@ import { validate } from '@src/utils/utils';
 import { superValidate } from 'sveltekit-superforms/server';
 import { addUserTokenSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { passwordToken } from '@lucia-auth/tokens';
-import { SESSION_COOKIE_NAME, type Key } from 'lucia-auth';
+import { SESSION_COOKIE_NAME } from 'lucia-auth';
 import mongoose from 'mongoose';
 //import type { User } from '@src/collections/Auth';
 

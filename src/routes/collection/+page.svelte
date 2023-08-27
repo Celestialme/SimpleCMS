@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { categories as importedCategories, default as collections } from '@src/collections/index';
-
 	import Unassigned from './Unassigned.svelte';
 	import Board from './Board.svelte';
 
@@ -10,7 +9,7 @@
 	import ModalAddCategory from './ModalAddCategory.svelte';
 	import PageTitle from '@src/components/PageTitle.svelte';
 
-	// Modal Trigger  - New Category
+	// Modal Trigger - New Category
 	function modalAddCategory(): void {
 		const modalComponent: ModalComponent = {
 			// Pass a reference to your custom component
@@ -38,6 +37,39 @@
 					console.log('response:', r);
 				}
 			}
+		};
+		modalStore.trigger(d);
+	}
+
+	// Modal Trigger - New Collection
+	//TODO: still needs work
+	function modalAddCollection(): void {
+		const modalComponent: ModalComponent = {
+			// Pass a reference to your custom component
+			ref: ModalAddCategory,
+
+			// Provide default slot content as a template literal
+			slot: '<p>Edit Form</p>'
+		};
+		const d: ModalSettings = {
+			type: 'component',
+			title: 'Add New Collection',
+			body: 'Enter Unique Name and an Icon for your new Collection',
+			component: modalComponent
+			// response: (r: any) => {
+			// 	if (r) {
+			// 		columnsData = [
+			// 			...columnsData,
+			// 			{
+			// 				id: r.newCategoryName.toLowerCase().replace(/\s/g, '-'),
+			// 				name: r.newCategoryName,
+			// 				icon: r.newCategoryIcon,
+			// 				items: []
+			// 			}
+			// 		];
+			// 		console.log('response:', r);
+			// 	}
+			// }
 		};
 		modalStore.trigger(d);
 	}
@@ -99,16 +131,26 @@
 </div>
 
 <!-- add an input field and a button here -->
-<div class="my-1 ml-1 flex-col rounded-sm bg-surface-500 p-2 text-center">
+<div class="my-1 ml-1 flex flex-col justify-around gap-1 rounded-sm bg-surface-500 p-2 sm:flex-row">
 	<button
 		on:click={modalAddCategory}
 		type="button"
-		class="variant-filled-tertiary btn-sm rounded-md">Add New Category</button
+		class="variant-filled-tertiary btn-sm rounded-md">Add Category</button
+	>
+	<!-- add new Collection-->
+	<!-- TODO: only show  when Category exists -->
+	<button
+		on:click={modalAddCollection}
+		type="button"
+		class="variant-filled-success btn-sm rounded-md">Add Collection</button
 	>
 </div>
+{#if !columnsData}
+	<p class="my-2 text-center">Create a first collection to get started</p>
+{:else}
+	<!-- display unassigned collections -->
+	<Unassigned items={availableCollections} onDrop={handleUnassignedUpdated} />
 
-<!-- display unassigned collections -->
-<Unassigned items={availableCollections} onDrop={handleUnassignedUpdated} />
-
-<!-- display collections -->
-<Board columns={columnsData} onFinalUpdate={handleBoardUpdated} />
+	<!-- display collections -->
+	<Board columns={columnsData} onFinalUpdate={handleBoardUpdated} />
+{/if}

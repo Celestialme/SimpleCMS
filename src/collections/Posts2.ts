@@ -8,10 +8,10 @@ const schema: Schema = {
 
 	// Collection Permissions by user Roles
 	permissions: {
-		[roles.user.name]: {
+		[roles.user]: {
 			read: false
 		},
-		[roles.admin.name]: {
+		[roles.admin]: {
 			write: false
 		}
 	},
@@ -24,13 +24,13 @@ const schema: Schema = {
 	// Widget fields can be inspected for individual options
 	fields: [
 		widgets.Text({
-			label: 'text'
+			label: 'Text'
 		}),
 		widgets.Text({
-			label: 'text2'
+			label: 'Text2'
 		}),
 		widgets.Text({
-			label: 'text3',
+			label: 'Text3',
 			translated: false
 		})
 	]
