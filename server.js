@@ -1,22 +1,12 @@
-async function start() {
-	import('./build/index.js')
-		.then(({ server }) => {
-			server.post('/api/close', (req, res) => {
-				process.exit(0);
-			});
-			server.get('/api/close', (req, res) => {
-				process.exit(0);
-			});
-			server.routes.reverse();
-			process.on('exit', () => {
-				console.log('exiting');
-			});
-		})
-		.catch((e) => {
-			setTimeout(() => {
-				start();
-			}, 10);
-		});
-}
+import { server } from './build/index.js';
+import fs from 'fs';
+import serve from 'serve-static';
+import path from 'path';
 
-start();
+server.get('/api/getCollections', (req, res) => {
+	let files = fs.readdirSync('./collections');
+	files = files.filter((file) => file !== 'config.js');
+	res.end(JSON.stringify(files));
+});
+server.use('/api/collections', serve('./collections'));
+server.routes.reverse();
