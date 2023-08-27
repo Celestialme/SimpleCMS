@@ -4,6 +4,7 @@ import axios from 'axios';
 import collections, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
+import { get } from 'svelte/store';
 import { contentLanguage } from '@src/stores/store';
 import { entryData, mode } from '@src/stores/store';
 
@@ -95,7 +96,6 @@ export function sanitize(str: string) {
 
 // Saves POSTS files to disk and returns file information
 //TODO: add optimization progress status
-
 export async function saveImages(data: FormData, collectionName: string) {
 	if (browser) return;
 

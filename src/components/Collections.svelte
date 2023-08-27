@@ -41,23 +41,30 @@
 		status?: 'published' | 'unpublished' | 'draft' | 'schedule' | 'cloned';
 	}
 
-	let filteredCategories: Category[] = (categories as Category[]) || [];
+	// Define filteredCategories variable as an array of Category objects
+	let filteredCategories: Category[] = ($categories as Category[]) || [];
 
+	// Define filterCategories function
 	function filterCategories() {
-		filteredCategories = (categories as Category[]).reduce((acc: Category[], category) => {
+		// Reduce $categories array to create new array of filtered categories
+		filteredCategories = ($categories as Category[]).reduce((acc: Category[], category) => {
+			// Filter collections in current category by name
 			const filteredCollections = category.collections.filter((collection) =>
 				collection.name.toLowerCase().includes(search.toLowerCase())
 			);
+			// Add new category object to accumulator with filtered collections and open property set to true if search is not empty
 			if (
 				filteredCollections.length > 0 ||
 				(search === '' && category.name.toLowerCase().includes(search.toLowerCase()))
 			) {
+				// Add new category object to accumulator with filtered collections and open property set to true if search is not empty
 				acc.push({
 					...category,
 					collections: filteredCollections,
 					open: filteredCollections.length > 0 && search !== ''
 				});
 			}
+			// Return accumulator
 			return acc;
 		}, []);
 	}

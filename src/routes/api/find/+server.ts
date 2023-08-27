@@ -1,10 +1,10 @@
 import type { RequestHandler } from './$types';
-import { collections } from '@src/routes/api/db';
+import { collectionsModels } from '@src/routes/api/db';
 
 // Define GET request handler
 export const GET: RequestHandler = async ({ url }) => {
 	// Get collection and id from URL search parameters
-	const collection = collections[url.searchParams.get('collection') as string];
+	const collection = collectionsModels[url.searchParams.get('collection') as string];
 	const id = url.searchParams.get('id') as string | null;
 
 	// If id is provided, find document by id and return response

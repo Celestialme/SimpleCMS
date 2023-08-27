@@ -31,10 +31,4 @@
 		<iconify-icon icon="bi:images" width="24" class="text-error-600" />
 		<p class="uppercase">Image Editor</p>
 	</a>
-
-	<!-- Graphql -->
-	<a href="/api/graphql" class="variant-outline-secondary btn gap-2 py-6">
-		<iconify-icon icon="teenyicons:graphql-solid" width="24" class="text-tertiary-600" />
-		<p class="uppercase">Graphql Editor</p>
-	</a>
 </div>

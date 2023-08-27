@@ -1,9 +1,10 @@
 import type { RequestHandler } from './$types';
-import { collections } from '@src/routes/api/db';
+import { getCollectionModels } from '@src/routes/api/db';
 import { parse, saveImages } from '@src/utils/utils';
 
 // Export an asynchronous function named GET that is a RequestHandler
 export const GET: RequestHandler = async ({ params, url }) => {
+	const collections = await getCollectionModels();
 	// Retrieve value of page key from search parameters of url object and parse it as integer. If value is not valid integer, assign 1 to page variable
 	const page = parseInt(url.searchParams.get('page') as string) || 1;
 	// Retrieve collection specified in params object
@@ -42,6 +43,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 
 // Export an asynchronous function named PATCH that is a RequestHandler
 export const PATCH: RequestHandler = async ({ params, request }) => {
+	const collections = await getCollectionModels();
 	// Retrieve the collection specified in the params object
 	const collection = collections[params.collection];
 	// Retrieve the form data from the request object
@@ -82,6 +84,7 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 
 // Export an asynchronous function named POST that is a RequestHandler
 export const POST: RequestHandler = async ({ params, request }) => {
+	const collections = await getCollectionModels();
 	// Retrieve the collection specified in the params object
 	const collection = collections[params.collection];
 
@@ -121,6 +124,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 // Export an asynchronous function named DELETE that is a RequestHandler
 // TODO: deleted files to a trash folder and automatically removing files from the trash folder after 30 days
 export const DELETE: RequestHandler = async ({ params, request }) => {
+	const collections = await getCollectionModels();
 	// Retrieve collection specified in params object
 	const collection = collections[params.collection];
 	// Retrieve data from request object
@@ -128,6 +132,7 @@ export const DELETE: RequestHandler = async ({ params, request }) => {
 
 	// Retrieve value of ids key from data object and parse it as JSON
 	let ids = data.get('ids') as string;
+	console.log(ids);
 	try {
 		ids = JSON.parse(ids);
 	} catch (e) {

@@ -13,7 +13,17 @@ const schema: Schema = {
 	status: 'published',
 	slug: 'menu',
 
-	// Collection Permissions by user Roles
+	/**
+	 * Specifies access rights for user roles.
+	 * `read` and `write` properties define read/write access for each role.
+	 */
+	permissions: {
+		[roles.admin]: {
+			read: true,
+			write: true
+		}
+		// other roles...
+	},
 
 	// Defined Fields that are used in Collection
 	// Widget fields can be inspected for individual options
@@ -88,7 +98,8 @@ const schema: Schema = {
 						}),
 
 						widgets.ImageUpload({
-							label: 'Image'
+							label: 'Image',
+							path: 'global'
 						}),
 
 						widgets.Text({

@@ -1,4 +1,4 @@
-import schemas from '@src/collections';
+import collections from '@src/collections';
 import { fieldsToSchema } from '@src/utils/utils';
 import { dev } from '$app/environment';
 
@@ -31,21 +31,31 @@ mongoose
 	.catch((error) => console.error('Error connecting to database:', error));
 
 // Initialize collections object
-const collections: { [Key: string]: mongoose.Model<any> } = {};
+const collectionsModels: { [Key: string]: mongoose.Model<any> } = {};
 
 // Set up collections in the database using imported schemas
-for (const schema of schemas) {
-	const schema_object = new mongoose.Schema(
-		{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
-		{
-			typeKey: '$type',
-			strict: false,
-			timestamps: { currentTime: () => Date.now() }
-		}
-	);
-	collections[schema.name] = mongoose.models[schema.name]
-		? mongoose.model(schema.name)
-		: mongoose.model(schema.name, schema_object);
+export async function getCollectionModels() {
+	return new Promise<any>((resolve) => {
+		const unsubscribe = collections.subscribe((collections) => {
+			if (collections) {
+				for (const schema of collections) {
+					const schema_object = new mongoose.Schema(
+						{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
+						{
+							typeKey: '$type',
+							strict: false,
+							timestamps: { currentTime: () => Date.now() }
+						}
+					);
+					collectionsModels[schema.name] = mongoose.models[schema.name]
+						? mongoose.model(schema.name)
+						: mongoose.model(schema.name, schema_object);
+				}
+				resolve(collectionsModels);
+				unsubscribe();
+			}
+		});
+	});
 }
 
 // Set up authentication collections if they don't already exist
@@ -77,4 +87,4 @@ const auth = lucia({
 });
 
 // Export collections and auth objects
-export { collections, auth };
+export { collectionsModels, auth };

@@ -13,8 +13,9 @@ const schema: Schema = {
 
 	// Collection Permissions by user Roles
 	permissions: {
-		[roles.admin]: {
-			read: false
+		[roles.user]: {
+			read: false,
+			write: false
 		}
 	},
 
