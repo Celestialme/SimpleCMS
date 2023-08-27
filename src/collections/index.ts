@@ -8,7 +8,7 @@ getImports().then((imports) => {
 		{
 			name: 'Collections',
 			icon: 'bi:collection',
-			collections: [imports.Posts2, imports.Posts3, imports.Thumbs]
+			collections: [imports.Posts2, imports.Posts3, imports.thumbs]
 		},
 		{
 			name: 'posts',
@@ -29,11 +29,6 @@ export let collection = writable(collections?.[0]); // current collection
 
 async function getImports() {
 	if (Object.keys(imports).length) return imports;
-	// let files = fs.readdirSync('build/collections').filter((x) => !['index.ts', 'types.ts', 'Auth.ts', 'config.ts'].includes(x));
-	// for (let file of files) {
-	// 	let name = file.replace('.ts', '');
-	// 	imports[name] = await import('src/collections/' + file);
-	// }
 
 	let modules = import.meta.glob(['./*.ts', '!./index.ts', '!./types.ts', '!./Auth.ts', '!./config.ts']);
 
