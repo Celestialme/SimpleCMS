@@ -1,12 +1,15 @@
 import type { RequestHandler } from './$types';
+import { collections as collectionsMain } from '@src/stores/collections';
 import { collections } from '@src/routes/api/db';
 import { parse, saveImages } from '@src/utils/utils';
-export const GET: RequestHandler = async ({ params, url }) => {
+export const GET: RequestHandler = async ({ params, url, fetch }) => {
+    await collectionsMain.updateCollection(await fetch("/getCollectionsFile"));
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let collection = collections[params.collection];
 	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
 	let skip = (page - 1) * length;
 
+    console.log(collections)
 	return new Response(
 		JSON.stringify({
 			entryList: await collection.find().skip(skip).limit(length),

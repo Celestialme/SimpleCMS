@@ -11,7 +11,7 @@
 </script>
 
 <div class="container">
-	{#if $collection.permissions?.[$user.role]?.write != false}
+	{#if $collection?.permissions?.[$user.role]?.write != false}
 		{#if $mode == 'view'}
 			<Button on:click={() => mode.set('create')}>Create</Button>
 		{:else if ['edit', 'create'].includes($mode)}

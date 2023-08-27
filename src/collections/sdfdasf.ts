@@ -1,8 +1,9 @@
-import thumbs from './thumbs';
 import widgets from '../components/widgets';
 import type { Schema } from './types';
 let schema: Schema = {
-	name: 'relation',
-	fields: [widgets.Relation({ label: 'relation', relation: thumbs })]
+	name: 'sdfdasf',
+	fields: [
+		widgets.Text({ translated: true, db_fieldName: 'gsfdgsfd', label: 'gsfdgsfd' })
+	]
 };
 export default schema;

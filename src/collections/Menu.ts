@@ -1,6 +1,6 @@
 import widgets from '../components/widgets';
-import type { Schema } from './types';
-let schema: Schema = {
+console.log(widgets);
+let schema = {
 	name: 'Menu',
 	fields: [
 		widgets.MegaMenu({

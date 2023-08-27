@@ -4,9 +4,11 @@ import { validate } from '@src/utils/utils';
 import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
 import { locales } from '@src/i18n/i18n-util';
 import collections from '@src/collections';
+import { collections as collectionsStore } from '@src/stores/collections';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
 
-export async function load({ cookies, route, params }) {
+export async function load({ cookies, route, params, fetch }) {
+    await collectionsStore.updateCollection(await fetch("/getCollectionsFile"))
 	let session = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await validate(auth, session);
 	let collection = collections.find((c) => c.name == params.collection);

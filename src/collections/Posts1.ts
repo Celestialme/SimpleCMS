@@ -8,10 +8,11 @@ let schema: Schema = {
 				return data[contentLanguage];
 			},
 			label: 'email',
+            db_fieldName: 'email',
 			translated: false
 		}),
-		widgets.Text({ label: 'text', translated: false }),
-		widgets.ImageUpload({ label: 'image', path: 'media/images' })
+		widgets.Text({ label: 'text', db_fieldName: 'text', translated: false }),
+		widgets.ImageUpload({ label: 'image', db_fieldName: 'image', path: 'media/images' })
 	]
 };
 export default schema;

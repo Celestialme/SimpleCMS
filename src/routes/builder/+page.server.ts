@@ -44,9 +44,9 @@ export const actions: Actions = {
 
 		content = content.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
 		if (originalName && originalName != collectionName) {
-			fs.renameSync(`./src/collections/${originalName}.ts`, `./src/collections/${collectionName}.ts`);
+			fs.renameSync(`${import.meta.env.collections}${originalName}.ts`, `${import.meta.env.collections}${collectionName}.ts`);
 		}
-		fs.writeFileSync(`./src/collections/${collectionName}.ts`, content);
+		fs.writeFileSync(`${import.meta.env.collections}/${collectionName}.ts`, content);
 
 		return null;
 	}

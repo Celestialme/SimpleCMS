@@ -5,7 +5,7 @@ import Path from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import type vite from 'vite';
-import { updateImports } from './src/utils/collectionUpdater';
+import { loadCollections } from './src/collectionsPlugin';
 const file = fileURLToPath(new URL('package.json', import.meta.url));
 const json = readFileSync(file, 'utf8');
 const pkg = JSON.parse(json);
@@ -17,13 +17,16 @@ const myPlugin = {
 			if (event == 'change') return;
 			if (!path.includes('src\\collections') && !path.includes('src/collections')) return;
 			console.log(event, path);
-			updateImports();
 		});
 	}
 } as vite.Plugin;
 
 const config = {
-	plugins: [myPlugin, sveltekit()],
+	plugins: [
+        loadCollections(),
+        myPlugin,
+        sveltekit()
+    ],
 
 	server: {
 		fs: { allow: ['static', '.'] }

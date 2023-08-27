@@ -13,7 +13,7 @@
 	let deleteAll = false;
 	let refresh = async (collection: typeof $collection) => {
 		data = undefined;
-		data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as { entryList: [any]; totalCount: number };
+		data = (await axios.get(`/api/${collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as { entryList: [any]; totalCount: number };
 
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {
@@ -21,7 +21,7 @@
 				for (let field of collection.fields) {
 					obj[field.label] = await field.display?.({
 						data: entry[field.label],
-						collection: $collection.name,
+						collection: collection.name,
 						field,
 						entry,
 						contentLanguage: $contentLanguage

@@ -52,7 +52,7 @@
 		} else {
 			data = await extractData(fieldsData);
 		}
-		display = await field?.display({ data, field, collection: $collection, entry: $entryData, contentLanguage: $contentLanguage });
+		display = await field?.display({ data, field, collection: $collection ?? {}, entry: $entryData, contentLanguage: $contentLanguage });
 	})(expanded);
 </script>
 

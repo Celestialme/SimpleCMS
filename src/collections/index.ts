@@ -1,6 +1,6 @@
-import ImageArray from './ImageArray';
-import Media from './Media';
-import Menu from './Menu';
+//import ImageArray from './ImageArray';
+//import Media from './Media';
+/*import Menu from './Menu';
 import Posts1 from './Posts1';
 import Posts2 from './Posts2';
 import Posts3 from './Posts3';
@@ -29,4 +29,19 @@ let unAssigned = Object.values(allCollections).filter((x) => !collections.includ
 //use this unassigned array
 export { categories, unAssigned, allCollections };
 export default collections;
-export let collection = writable(collections?.[0]); // current collection
+export let collection = writable(collections?.[0]); // current collection*/
+import { writable } from "svelte/store";
+//let allCollections = Object.fromEntries(get(collectionsMain)?.map(x => [x.name, x.collectionImport]) ?? [])
+let allCollections = {} as any
+const collections = [] as any[];
+const categories = [
+    {
+        name: "Collections",
+        icon: "bi:collection",
+        collections: collections
+    }
+]
+const unAssigned = [];
+export { categories, unAssigned, allCollections };
+export default collections
+export let collection = writable(collections?.[0])
