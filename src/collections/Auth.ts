@@ -65,9 +65,3 @@ export type User = Modify<
 		authMethod: 'password' | 'token';
 	}
 >;
-
-export let roles = {
-	admin: 'admin',
-	user: 'user',
-	developer: 'developer'
-} as const;

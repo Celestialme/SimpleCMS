@@ -1,15 +1,19 @@
+import { roles } from './types.js';
 let schema = {
-	name: 'posts2',
-	fields: [
-		globalThis.widgets.Email({
-			display: async (data, field, entry, contentLanguage) => {
-				return data[contentLanguage];
-			},
-			label: 'email',
-			translated: false
-		}),
-		globalThis.widgets.Text({ label: 'text', translated: false }),
-		globalThis.widgets.ImageUpload({ label: 'image', path: 'media/images' })
-	]
+    name: 'posts2',
+    permissions: {
+        [roles.admin]: {
+            read: false
+        }
+    },
+    fields: [
+        globalThis.widgets.Text({
+            label: 'text',
+            translated: true
+        }),
+        globalThis.widgets.Text({
+            label: 'text2'
+        })
+    ]
 };
 export default schema;

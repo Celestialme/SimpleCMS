@@ -1,5 +1,9 @@
 import type widgets from '@src/components/widgets';
-import type { roles } from './Auth';
+export let roles = {
+	admin: 'admin',
+	user: 'user',
+	developer: 'developer'
+} as const;
 
 type permissions = {
 	[K in (typeof roles)[keyof typeof roles]]?: { read?: boolean; write?: boolean };

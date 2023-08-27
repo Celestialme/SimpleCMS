@@ -1,5 +1,5 @@
 import widgets from '../components/widgets';
-import { roles } from './Auth';
+import { roles } from './types';
 import type { Schema } from './types';
 let schema: Schema = {
 	name: 'posts3',
