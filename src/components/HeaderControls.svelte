@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections/index';
+
 	import {
 		collectionValue,
 		deleteEntry,
@@ -70,11 +71,11 @@
 				</div>
 			{/if}
 
-			{#if categories && categories[0]}
+			{#if $categories && $categories[0]}
 				<div class="ml-2 flex flex-col text-left text-gray-400 dark:text-gray-300">
 					<div class="text-sm font-bold uppercase text-primary-500">{$mode}:</div>
 					<div class="text-xs capitalize">
-						{categories[0].name}
+						{$categories[0].name}
 						<span class=" uppercase text-primary-500">{$collection.name}</span>
 					</div>
 				</div>
@@ -83,9 +84,9 @@
 	</div>
 
 	<div class="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
-		{#if $screenWidth !== 'desktop'}
-			<!-- TODO: Check User Role to fix page switch media to collection -->
-			{#if $collection.permissions?.[$user.role]?.write != false}
+		<!-- Check if user role has access to collection -->
+		{#if $collection.permissions?.[$user.role]?.write != false}
+			{#if $screenWidth !== 'desktop'}
 				<!-- Save Content -->
 				<button type="button" on:click={saveData} class="variant-filled-primary btn-icon md:btn">
 					<iconify-icon icon="material-symbols:save" width="24" class="text-white" />
@@ -101,22 +102,23 @@
 				>
 					<iconify-icon icon="material-symbols:filter-list-rounded" width="30" />
 				</button>
-			{/if}
 
-			<!-- Desktop -->
-			<select
-				class="variant-ghost-surface hidden rounded border-surface-500 text-white md:block"
-				bind:value={$contentLanguage}
-				on:change={handleChange}
-			>
-				{#each Object.entries(options) as [value, label]}
-					<option {value}>{label}</option>
-				{/each}
-			</select>
+				<!-- Desktop -->
+				<select
+					class="variant-ghost-surface hidden rounded border-surface-500 text-white md:block"
+					bind:value={$contentLanguage}
+					on:change={handleChange}
+				>
+					{#each Object.entries(options) as [value, label]}
+						<option {value}>{label}</option>
+					{/each}
+				</select>
+			{/if}
 		{:else}
-			<!-- TODO: find better rule -->
-			<button class="variant-ghost-error btn">No Permission</button>
+			<!-- TODO: Show Restriction -->
+			<button class="variant-ghost-error btn break-words">No Permission</button>
 		{/if}
+
 		<!-- Cancel -->
 		<button type="button" on:click={handleCancel} class="variant-ghost-surface btn-icon">
 			<iconify-icon icon="material-symbols:close" width="24" />

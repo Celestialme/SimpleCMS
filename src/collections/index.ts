@@ -84,6 +84,7 @@ async function getImports() {
 		// If running in browser environment
 		if (browser) {
 			const files = ((await axios.get('/api/getCollections')) as any).data;
+			// console.log('browser files', files);
 
 			// Dynamically import returned files from /api/collections/
 			for (const file of files) {
@@ -98,6 +99,7 @@ async function getImports() {
 			// If not running in browser environment
 		} else {
 			const files = ((await axios.get('http://127.0.0.1:3000/api/getCollections')) as any).data;
+			// console.log('server files', files);
 
 			// Dynamically import returned files from folder specified by import.meta.env.collectionsFolder
 			for (const file of files) {
@@ -110,7 +112,7 @@ async function getImports() {
 			}
 		}
 	}
-	console.log(imports);
+	//console.log(imports);
 
 	return imports;
 }

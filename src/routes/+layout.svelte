@@ -20,6 +20,7 @@
 	} from '@src/stores/store';
 
 	import { getCollections } from '@src/collections';
+
 	import collections, { collection } from '@src/collections/index';
 	// Use handleSidebarToggle as a reactive statement to automatically switch the correct sidebar
 	$: handleSidebarToggle;
@@ -170,18 +171,17 @@
 
 	let dates = { created: '', updated: '', revision: '' };
 
-	onMount(async () => {
-		try {
-			dates = await getDates($collection.name);
-		} catch (error) {
-			console.error(error);
-		}
-	});
+	// onMount(async () => {
+	// 	try {
+	// 		dates = await getDates($collection.name);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// });
 
 	// SEO
-	export let SeoTitle = '{PUBLIC_SITENAME} - powered with sveltekit';
-	export let SeoDescription =
-		'{PUBLIC_SITENAME} - a modern, powerful, and easy-to-use CMS powered by SvelteKit. Manage your content with ease & take advantage of the latest web technologies.';
+	const SeoTitle = `${PUBLIC_SITENAME} - powered with sveltekit`;
+	const SeoDescription = `${PUBLIC_SITENAME} - a modern, powerful, and easy-to-use CMS powered by SvelteKit. Manage your content with ease & take advantage of the latest web technologies.`;
 </script>
 
 <!-- <div>
