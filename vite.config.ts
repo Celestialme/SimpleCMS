@@ -8,7 +8,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
 let parsed = Path.parse(__dirname);
-let collectionsFolder = '/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/') + '/collections/';
+let collectionsFolderJS = '/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/') + '/collections/';
+let collectionsFolderTS = '/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/') + '/src/collections/';
 const file = fileURLToPath(new URL('package.json', import.meta.url));
 const json = readFileSync(file, 'utf8');
 const pkg = JSON.parse(json);
@@ -20,7 +21,8 @@ const config = {
 			config() {
 				return {
 					define: {
-						'import.meta.env.collectionsFolder': JSON.stringify(collectionsFolder)
+						'import.meta.env.collectionsFolderJS': JSON.stringify(collectionsFolderJS),
+						'import.meta.env.collectionsFolderTS': JSON.stringify(collectionsFolderTS)
 					}
 				};
 			}

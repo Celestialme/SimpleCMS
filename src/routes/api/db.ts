@@ -6,7 +6,7 @@ import adapter from '@lucia-auth/adapter-mongoose';
 import { session, key, UserSchema } from '@src/collections/Auth';
 import { sveltekit } from 'lucia-auth/middleware';
 import { fieldsToSchema } from '@src/utils/utils';
-import { get } from 'svelte/store';
+import type { Unsubscriber } from 'svelte/store';
 
 mongoose
 	.connect(DB_HOST, {
@@ -18,23 +18,28 @@ mongoose
 	.then(() => console.log('---------------------connected-----------------------'));
 mongoose.set('strictQuery', false);
 let collectionsModels: { [Key: string]: mongoose.Model<any> } = {};
+let unsubscribe: Unsubscriber | undefined;
 export async function getCollectionModels() {
 	return new Promise<any>((resolve) => {
-		let unsubscribe = collections.subscribe((collections) => {
+		unsubscribe = collections.subscribe((collections) => {
 			if (collections) {
-				for (let schema of collections) {
+				for (let collection of collections) {
 					const schema_object = new mongoose.Schema(
-						{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
+						{ ...fieldsToSchema(collection.fields), createdAt: Number, updatedAt: Number },
 						{
 							typeKey: '$type',
 							strict: false,
 							timestamps: { currentTime: () => Date.now() }
 						}
 					);
-					collectionsModels[schema.name] = mongoose.models[schema.name] ? mongoose.model(schema.name) : mongoose.model(schema.name, schema_object);
+					collectionsModels[collection.name] = mongoose.models[collection.name]
+						? mongoose.model(collection.name)
+						: mongoose.model(collection.name, schema_object);
 				}
+
+				unsubscribe && unsubscribe();
+				unsubscribe = undefined;
 				resolve(collectionsModels);
-				unsubscribe();
 			}
 		});
 	});
