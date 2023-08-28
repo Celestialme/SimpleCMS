@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 	import { collection, categories } from '@src/collections/index';
+	import { saveFormData, cloneData, deleteData } from '@src/utils/utils';
 
 	import {
+		user,
 		collectionValue,
 		deleteEntry,
 		mode,
@@ -10,10 +13,6 @@
 		handleSidebarToggle,
 		contentLanguage
 	} from '@src/stores/store';
-	import { cloneData, deleteData } from '@src/utils/utils';
-	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
-	import { saveFormData } from '@src/utils/utils';
-	import { user } from '@src/stores/store';
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -21,20 +20,20 @@
 	// Manually parse the object from JSON string
 	let options = JSON.parse(PUBLIC_CONTENT_LANGUAGES.replace(/'/g, '"'));
 
-	function handleChange(event) {
+	function handleChange(event: any) {
 		const selectedLanguage = event.target.value.toLowerCase();
 		contentLanguage.set(selectedLanguage);
 		// console.log('selectedLanguage', selectedLanguage);
 	}
 
+	// function to Save Data
 	async function saveData() {
 		await saveFormData({ data: $collectionValue });
-		// a function to undo the changes made by handleButtonClick
 		mode.set('view' || 'edit');
 		handleSidebarToggle();
 	}
 
-	// a function to undo the changes made by handleButtonClick
+	// function to undo the changes made by handleButtonClick
 	function handleCancel() {
 		mode.set('view');
 		handleSidebarToggle();
@@ -85,6 +84,7 @@
 
 	<div class="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
 		<!-- Check if user role has access to collection -->
+
 		{#if $collection.permissions?.[$user.role]?.write != false}
 			{#if $screenWidth !== 'desktop'}
 				<!-- Save Content -->
@@ -125,7 +125,6 @@
 		</button>
 	</div>
 </header>
-
 {#if showMore && $collection.permissions?.[$user.role]?.write != false}
 	<div class="-mx-2 flex items-center justify-center gap-10 pt-2">
 		<div class="flex flex-col items-center justify-center">

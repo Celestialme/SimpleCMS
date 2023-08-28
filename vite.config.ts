@@ -18,8 +18,11 @@ import Path from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
 const parsed = Path.parse(__dirname);
-const collectionsFolder =
+
+const collectionsFolderJS =
 	'/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/') + '/collections/';
+const collectionsFolderTS =
+	'/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/') + '/src/collections/';
 
 const config = {
 	plugins: [
@@ -28,7 +31,8 @@ const config = {
 			config() {
 				return {
 					define: {
-						'import.meta.env.collectionsFolder': JSON.stringify(collectionsFolder)
+						'import.meta.env.collectionsFolderJS': JSON.stringify(collectionsFolderJS),
+						'import.meta.env.collectionsFolderTS': JSON.stringify(collectionsFolderTS)
 					}
 				};
 			}

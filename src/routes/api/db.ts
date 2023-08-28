@@ -1,6 +1,7 @@
 import collections from '@src/collections';
 import { fieldsToSchema } from '@src/utils/utils';
 import { dev } from '$app/environment';
+import type { Unsubscriber } from 'svelte/store';
 
 // Lucia
 import lucia from 'lucia-auth';
@@ -33,26 +34,38 @@ mongoose
 // Initialize collections object
 const collectionsModels: { [Key: string]: mongoose.Model<any> } = {};
 
+let unsubscribe: Unsubscriber | undefined;
+
 // Set up collections in the database using imported schemas
 export async function getCollectionModels() {
+	// Return a new Promise that resolves with the collectionsModels object
 	return new Promise<any>((resolve) => {
-		const unsubscribe = collections.subscribe((collections) => {
+		// Subscribe to the collections store
+		unsubscribe = collections.subscribe((collections) => {
+			// If collections are defined
 			if (collections) {
-				for (const schema of collections) {
+				// Iterate over each collection
+				for (const collection of collections) {
+					// Create a new mongoose schema using the collection's fields and timestamps
 					const schema_object = new mongoose.Schema(
-						{ ...fieldsToSchema(schema.fields), createdAt: Number, updatedAt: Number },
+						{ ...fieldsToSchema(collection.fields), createdAt: Number, updatedAt: Number },
 						{
 							typeKey: '$type',
 							strict: false,
 							timestamps: { currentTime: () => Date.now() }
 						}
 					);
-					collectionsModels[schema.name] = mongoose.models[schema.name]
-						? mongoose.model(schema.name)
-						: mongoose.model(schema.name, schema_object);
+
+					// Add the mongoose model for the collection to the collectionsModels object
+					collectionsModels[collection.name] = mongoose.models[collection.name]
+						? mongoose.model(collection.name)
+						: mongoose.model(collection.name, schema_object);
 				}
+
+				// Unsubscribe from the collections store and resolve the Promise with the collectionsModels object
+				unsubscribe && unsubscribe();
+				unsubscribe = undefined;
 				resolve(collectionsModels);
-				unsubscribe();
 			}
 		});
 	});

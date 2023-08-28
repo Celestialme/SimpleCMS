@@ -20,8 +20,8 @@
 	} from '@src/stores/store';
 
 	import { getCollections } from '@src/collections';
+	import { collection } from '@src/collections/index';
 
-	import collections, { collection } from '@src/collections/index';
 	// Use handleSidebarToggle as a reactive statement to automatically switch the correct sidebar
 	$: handleSidebarToggle;
 
@@ -250,6 +250,7 @@
 	<meta property="twitter:url" content={$page.url.href} />
 </svelte:head>
 
+<!-- Wait for dynamic Collection import -->
 {#await getCollections()}
 	<div class="flex h-screen items-center justify-center">
 		<p class="text-lg font-semibold">Loading collections...</p>
@@ -258,7 +259,8 @@
 	<!-- hack as root +layout cannot be overwritten ? -->
 	{#if $page.url.pathname === '/login'}
 		<slot />
-	{:else}<AppShell
+	{:else}
+		<AppShell
 			slotSidebarLeft="pt-2 !overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10
 {$toggleLeftSidebar === 'full' ? 'w-[220px]' : 'w-fit'}

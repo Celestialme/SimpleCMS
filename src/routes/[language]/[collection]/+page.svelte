@@ -14,6 +14,7 @@
 
 	// Declare a ForwardBackward variable to track whether the user is navigating using the browser's forward or backward buttons
 	let ForwardBackward: boolean = false;
+	console.log(data);
 
 	// Set the value of the collection store to the collection object from the collections array that has a name property that matches the current page's collection parameter
 	collection.set($collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
@@ -36,7 +37,7 @@
 
 		if (!ForwardBackward) {
 			// If ForwardBackward is false and the current route is a collection route
-			goto(`/${$page.params.language}/${$collection.name}`); // Update the page's URL to include the current collection's name
+			goto(`/${$page.params.language}/${$collection.name}`);
 		}
 		// Reset ForwardBackward to false
 		ForwardBackward = false;

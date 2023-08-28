@@ -1,6 +1,8 @@
 import { server } from './build/index.js';
 import fs from 'fs';
 import serve from 'serve-static';
+import ts from 'typescript';
+globalThis.ts = ts;
 
 // Define route handler for GET /api/getCollections
 server.get('/api/getCollections', (req, res) => {
@@ -16,3 +18,4 @@ server.get('/api/getCollections', (req, res) => {
 server.use('/api/collections', serve('./collections'));
 // Reverse server routes
 server.routes.reverse();
+console.log(import.meta.cache);

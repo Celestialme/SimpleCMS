@@ -6,10 +6,11 @@ import { SESSION_COOKIE_NAME } from 'lucia-auth';
 import { auth } from './api/db';
 
 export async function load({ cookies }) {
-	//console.log('load function called');
+	// Get the session cookie
 	const session = cookies.get(SESSION_COOKIE_NAME) as string;
+
+	// Validate the user's session
 	const user = await validate(auth, session);
-	//console.log('user:', user);
 
 	//console.log('collections', collections);
 	// filters collection  based on reading permissions and redirects to first left one

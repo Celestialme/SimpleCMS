@@ -1,52 +1,55 @@
 import { browser, building, dev } from '$app/environment';
 import axios from 'axios';
-import { writable, type Writable } from 'svelte/store';
+import { writable, type Unsubscriber, type Writable } from 'svelte/store';
 import '@src/components/widgets';
 import { createCategories } from './config';
 
 // Define writable stores and imports object
 const categories: Writable<Array<any>> = writable();
 const collections: Writable<Array<any>> = writable();
-const imports: any = {};
+let imports: any = {};
+let rnd = Math.random();
 
 // Dynamic Import of Categories and Collections even from build system
-getImports().then(async (imports) => {
-	//console.log(imports);
+export const updateCollections = async (recompile: boolean = false) => {
+	if (recompile) rnd = Math.random();
 
-	// Create categories using createCategories function and imports object
-	let _categories = createCategories(imports);
+	await getImports().then(async (imports) => {
+		//console.log(imports);
 
-	// If not running in development or building mode
-	if (!dev && !building) {
-		// Define config file name
-		const config = 'config.js';
-		console.log('--------------------Config-Dynamic-Import---------------------------');
+		// Create categories using createCategories function and imports object
+		let _categories = createCategories(imports);
 
-		// Dynamically import createCategories function from either /api/collections/ or folder specified by import.meta.env.collectionsFolder
-		const { createCategories } = browser
-			? await import(
-					/* @vite-ignore */
-					'/api/collections/' + config
-			  )
-			: await import(
-					/* @vite-ignore */
-					import.meta.env.collectionsFolder + config
-			  );
+		// If not running in development or building mode
+		if (!dev && !building) {
+			// Define config file name
+			const config = 'config.js' + rnd;
+			console.log('--------------------Config-Dynamic-Import---------------------------');
 
-		// Create categories using new version of createCategories function and imports object
-		_categories = createCategories(imports);
-	}
+			const { createCategories } = browser
+				? await import('/api/collections/' + config)
+				: await import(import.meta.env.collectionsFolderJS + config);
 
-	// For each category Filter out undefined collections
-	for (const _category of _categories) {
-		_category.collections = _category.collections.filter((x) => !!x == true);
-	}
+			// Create categories using new version of createCategories function and imports object
+			_categories = createCategories(imports);
+			console.log(createCategories.toString());
+		}
 
-	// Set value of categories store to array of categories
-	categories.set(_categories);
-	// Set value of collections store to array containing all collections from all categories
-	collections.set(_categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)));
-});
+		// For each category Filter out undefined collections
+		for (const _category of _categories) {
+			_category.collections = _category.collections.filter((x) => !!x == true);
+		}
+
+		// Set value of categories store to array of categories
+		// console.log(_categories);
+		categories.set(_categories);
+
+		// Set value of collections store to array containing all collections from all categories
+		collections.set(_categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc)));
+	});
+};
+
+updateCollections();
 
 // use this unassigned array
 // const unAssigned = Object.values(collection).filter((x) => !collections.includes(x));
@@ -60,7 +63,7 @@ export const collection = writable(collections?.[0]); // current collection
 async function getImports() {
 	// If imports object is not empty, return its current value
 	if (Object.keys(imports).length) return imports;
-
+	imports = {};
 	// If running in development or building mode
 	if (dev || building) {
 		// Dynamically import all TypeScript files in current directory, except for specified files
@@ -113,7 +116,6 @@ async function getImports() {
 		}
 	}
 	//console.log(imports);
-
 	return imports;
 }
 
