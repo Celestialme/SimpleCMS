@@ -2,9 +2,9 @@
 	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 	import { collection, categories } from '@src/collections/index';
 	import { saveFormData, cloneData, deleteData } from '@src/utils/utils';
+	import { page } from '$app/stores';
 
 	import {
-		user,
 		collectionValue,
 		deleteEntry,
 		mode,
@@ -85,7 +85,7 @@
 	<div class="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
 		<!-- Check if user role has access to collection -->
 
-		{#if $collection.permissions?.[$user.role]?.write != false}
+		{#if $collection.permissions?.[$page.data.user.role]?.write != false}
 			{#if $screenWidth !== 'desktop'}
 				<!-- Save Content -->
 				<button type="button" on:click={saveData} class="variant-filled-primary btn-icon md:btn">
@@ -125,7 +125,7 @@
 		</button>
 	</div>
 </header>
-{#if showMore && $collection.permissions?.[$user.role]?.write != false}
+{#if showMore && $collection.permissions?.[$page.data.user.role]?.write != false}
 	<div class="-mx-2 flex items-center justify-center gap-10 pt-2">
 		<div class="flex flex-col items-center justify-center">
 			<!-- Delete Content -->

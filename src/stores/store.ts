@@ -8,6 +8,7 @@ import type { User } from '@src/collections/Auth';
 
 // Create a writable store for user with initial value from local storage
 export const user: Writable<User> = writable();
+export const avatarSrc: Writable<string> = writable();
 
 // Create a writable store for systemLanguage with initial value of PUBLIC_SYSTEM_LANGUAGE
 export const systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);

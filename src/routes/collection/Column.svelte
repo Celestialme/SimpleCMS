@@ -11,10 +11,10 @@
 	}
 
 	const flipDurationMs = 200;
-	export let name;
-	export let items;
-	export let icon;
-	export let onDrop;
+	export let name: string;
+	export let items: any;
+	export let icon: string;
+	export let onDrop: any;
 
 	function handleDndConsiderCards(e) {
 		console.warn('got consider', name);

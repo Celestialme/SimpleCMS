@@ -26,6 +26,10 @@ export const actions: Actions = {
 		const fieldsData = formData.get('fields') as string;
 		const originalName = JSON.parse(formData.get('originalName') as string);
 		const collectionName = JSON.parse(formData.get('collectionName') as string);
+		const collectionIcon = JSON.parse(formData.get('collectionIcon') as string);
+		const collectionStatus = JSON.parse(formData.get('collectionStatus') as string);
+		const collectionSlug = JSON.parse(formData.get('collectionSlug') as string);
+
 		const fields = JSON.parse(fieldsData) as Array<fields>;
 		const imports = goThrough(fields);
 
@@ -33,8 +37,11 @@ export const actions: Actions = {
 	${imports}
 	import widgets from '../components/widgets';
 	import type { Schema } from './types';
-	let schema: Schema = {
+	const schema: Schema = {
 		name: '${collectionName}',
+		icon: '${collectionIcon}',
+		status: '${collectionStatus}',
+		slug: '${collectionSlug}',
 		fields: [
 			${fields}
 		]

@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { categories as importedCategories, default as collections } from '@src/collections/index';
+	import {
+		categories as importedCategories,
+		default as collections,
+		unAssigned
+	} from '@src/collections/index';
 	import Unassigned from './Unassigned.svelte';
 	import Board from './Board.svelte';
 
@@ -8,6 +12,7 @@
 	const modalStore = getModalStore();
 	import ModalAddCategory from './ModalAddCategory.svelte';
 	import PageTitle from '@src/components/PageTitle.svelte';
+	import { unknown } from 'zod';
 
 	// Modal Trigger - New Category
 	function modalAddCategory(): void {
@@ -74,30 +79,34 @@
 		modalStore.trigger(d);
 	}
 
-	// let availableCollections = unAssigned;
-	// TODO: display Unassigned  collections only
-	let availableCollections = collections.filter((collection) => {
-		return !importedCategories.some((category) => category.collections.includes(collection));
-	});
+	// Define the structure of an unassigned collection
+	let unAssignedCollections = $unAssigned.map((unAssignedCollection, collectionIndex) => ({
+		id: `${collectionIndex + 1}`,
+		name: 'Unassigned',
+		icon: 'Unassigned',
+		items: unAssignedCollection.collections.map((collection: any, collectionIndex: number) => ({
+			id: `${collectionIndex + 1}`,
+			name: collection.name
+		}))
+	}));
 
-	let columnsData = importedCategories.map((category, categoryIndex) => ({
+	// Define the structure of an Assigned collection
+	let availableCollection = $importedCategories.map((category, categoryIndex) => ({
 		id: `${categoryIndex + 1}`,
 		name: category.name,
 		icon: category.icon,
-		items: category.collections.map((collection, collectionIndex) => ({
+		items: category.collections.map((collection: any, collectionIndex: number) => ({
 			id: `${categoryIndex + 1}.${collectionIndex + 1}`,
 			name: collection.name
 		}))
 	}));
 
 	function handleUnassignedUpdated(newItems) {
-		//console.log('Updated unassigned items:', newItems); // <-- add this line
-		availableCollections = newItems;
+		UnassingedCollections = newItems;
 	}
 
 	function handleBoardUpdated(newColumnsData) {
-		// if you wanted to update a database or a server, this is where you would do it
-		columnsData = newColumnsData;
+		availableCollection = newColumnsData;
 	}
 
 	async function handleSaveClick() {
@@ -106,7 +115,7 @@
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(columnsData)
+			body: JSON.stringify(availableCollection)
 		});
 
 		if (response.ok) {
@@ -145,12 +154,12 @@
 		class="variant-filled-success btn-sm rounded-md">Add Collection</button
 	>
 </div>
-{#if !columnsData}
+{#if !availableCollection}
 	<p class="my-2 text-center">Create a first collection to get started</p>
 {:else}
 	<!-- display unassigned collections -->
-	<Unassigned items={availableCollections} onDrop={handleUnassignedUpdated} />
+	<Unassigned items={UnassingedCollections} onDrop={handleUnassignedUpdated} />
 
 	<!-- display collections -->
-	<Board columns={columnsData} onFinalUpdate={handleBoardUpdated} />
+	<Board columns={availableCollection} onFinalUpdate={handleBoardUpdated} />
 {/if}

@@ -2,16 +2,28 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { getCollectionModels } from '../db';
 import fs from 'fs';
 import { updateCollections } from '@src/collections';
+import { dev } from '$app/environment';
 
+// Define an async GET request handler
 export const GET: RequestHandler = async ({ params, url }) => {
-	// Read the contents of the collectionsFolderTS directory and filter out Auth.ts and index.ts
+	// Check if the collections folder exists, if not, create it
+	if (!fs.existsSync(import.meta.env.collectionsFolderJS)) {
+		fs.mkdirSync(import.meta.env.collectionsFolderJS);
+	}
+
+	// Read the files in the collections folder and filter out Auth.ts and index.ts
 	const files = fs
 		.readdirSync(import.meta.env.collectionsFolderTS)
 		.filter((file) => !['Auth.ts', 'index.ts'].includes(file));
 
-	// Iterate over each file in the files array
+	// If in development mode, import typescript
+	if (dev) {
+		globalThis.ts = await import('typescript');
+	}
+
+	// Loop through the files
 	for (const file of files) {
-		// Read the contents of the file
+		// Read the content of the file
 		const content = fs.readFileSync(`${import.meta.env.collectionsFolderTS}/${file}`, {
 			encoding: 'utf-8'
 		});
@@ -23,23 +35,20 @@ export const GET: RequestHandler = async ({ params, url }) => {
 			}
 		}).outputText;
 
-		// Replace import statements and references to widgets with globalThis.widgets
+		// Replace import statements and references to widgets
 		code = code
 			.replace(/import widgets from .*\n/g, '')
 			.replace(/widgets/g, 'globalThis.widgets')
 			.replace(/(\bfrom\s+["']\..*)(["'])/g, '$1.js$2');
 
-		// Write the transpiled code to the collectionsFolderJS directory
+		// Write the transpiled code to a new file with a .js extension
 		fs.writeFileSync(
 			`${import.meta.env.collectionsFolderJS}/${file.trim().replace(/\.ts$/g, '.js')}`,
 			code
 		);
 	}
-
-	// Update collections and log collection models
+	// Update the collections and log the collection models
 	await updateCollections(true);
 	console.log(await getCollectionModels());
-
-	// Return a response with a 200 status code
 	return new Response(null, { status: 200 });
 };

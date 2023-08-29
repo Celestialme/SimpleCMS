@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { collection } from '@src/collections/index';
 	import { collectionValue, mode, deleteEntry, handleSidebarToggle } from '@src/stores/store';
+	import { page } from '$app/stores';
 
 	import { saveFormData, getDates } from '@src/utils/utils';
 	import { user } from '@src/stores/store';
@@ -28,7 +29,8 @@
 </script>
 
 <!--  Check User Role collection Permission-->
-{#if $collection.permissions?.[$user.role]?.write != false}
+
+{#if $collection.permissions?.[$page.data.user.role]?.write != false}
 	<!-- Desktop Right Sidebar -->
 	{#if $mode == 'view'}
 		<button

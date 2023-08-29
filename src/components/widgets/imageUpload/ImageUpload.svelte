@@ -1,8 +1,5 @@
 <script lang="ts">
 	import axios from 'axios';
-	//import sharp from 'sharp';
-	//import { saveImages } from '@src/utils/utils';
-
 	import type { FieldType } from './';
 	import { entryData, mode, loadingProgress } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
@@ -69,7 +66,9 @@
 		} else if ($mode === 'edit') {
 			axios.get($entryData[fieldName].thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
 				const fileList = new DataTransfer();
-				const file = new File([data], $entryData[fieldName].name, {
+
+				// Return Thumbnail Image
+				const file = new File([data], $entryData[fieldName].thumbnail.name, {
 					type: $entryData[fieldName].mimetype
 				});
 				fileList.items.add(file);

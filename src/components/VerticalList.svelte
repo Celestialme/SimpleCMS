@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { dndzone } from 'svelte-dnd-action';
 	import type { DndEvent } from 'svelte-dnd-action';
+	import { number } from 'zod';
 
-	export let items;
-	export let flipDurationMs;
+	export let items: any;
+	export let flipDurationMs: number;
 	export let handleDndConsider: (e: CustomEvent<DndEvent>) => void;
 	export let handleDndFinalize: (e: CustomEvent<DndEvent>) => void;
-	export let headers;
+	export let headers: any;
 </script>
 
 <div>

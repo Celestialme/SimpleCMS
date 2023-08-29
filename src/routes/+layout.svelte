@@ -8,7 +8,10 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import {
+		avatarSrc,
+		collectionValue,
 		mode,
+		defaultContentLanguage,
 		handleSidebarToggle,
 		screenWidth,
 		userPreferredState,
@@ -20,7 +23,8 @@
 	} from '@src/stores/store';
 
 	import { getCollections } from '@src/collections';
-	import { collection } from '@src/collections/index';
+
+	import collections, { collection } from '@src/collections';
 
 	// Use handleSidebarToggle as a reactive statement to automatically switch the correct sidebar
 	$: handleSidebarToggle;
@@ -76,13 +80,9 @@
 	};
 
 	// Lucia
-	// TODO: Fix User DATA and have avatar image update
-	import { user } from '@src/stores/store';
-	//console.log('userstore', $user);
-	const user2 = $page.data.user;
-	//console.log('userpage', user2.avatar);
+	const user = $page.data.user;
 
-	$: avatarSrc = user2?.avatar;
+	avatarSrc.set(user?.avatar);
 
 	//signOut
 	async function signOut() {
@@ -98,7 +98,7 @@
 			)
 		).data;
 		if (resp.status == 200) {
-			$user = resp;
+			$page.data.user = resp;
 			goto(`/login`);
 		}
 	}
@@ -168,8 +168,38 @@
 	import { onMount, tick } from 'svelte';
 	import { get } from 'svelte/store';
 	import type { Schema } from '@src/collections/types';
+	import Loading from '@src/components/Loading.svelte';
 
 	let dates = { created: '', updated: '', revision: '' };
+
+	// Declare a ForwardBackward variable to track whether the user is navigating using the browser's forward or backward buttons
+	let ForwardBackward: boolean = false;
+
+	globalThis.onpopstate = async () => {
+		// Set up an event listener for the popstate event
+		ForwardBackward = true; // Set ForwardBackward to true to indicate that the user is navigating using the browser's forward or backward buttons
+
+		// Update the value of the collection store based on the current page's collection parameter
+		collection.set($collections.find((x) => x.name === $page.params.collection) as Schema);
+	};
+
+	// Subscribe to changes in the collection store and do redirects
+	let initial = true;
+	collection.subscribe((_) => {
+		console.log(!$collection, !$page.params.language);
+		if (!$collection) return;
+
+		// Reset the value of the collectionValue store
+		$collectionValue = {};
+
+		if (!ForwardBackward && initial != true) {
+			// If ForwardBackward is false and the current route is a collection route
+			goto(`/${$contentLanguage || defaultContentLanguage}/${$collection.name}`);
+		}
+		initial = false;
+		// Reset ForwardBackward to false
+		ForwardBackward = false;
+	});
 
 	// onMount(async () => {
 	// 	try {
@@ -251,9 +281,10 @@
 </svelte:head>
 
 <!-- Wait for dynamic Collection import -->
+<!-- TODO: Optimize this as this is not needed for ever page -->
 {#await getCollections()}
 	<div class="flex h-screen items-center justify-center">
-		<p class="text-lg font-semibold">Loading collections...</p>
+		<Loading />
 	</div>
 {:then}
 	<!-- hack as root +layout cannot be overwritten ? -->
@@ -354,15 +385,15 @@ lg:overflow-y-scroll lg:max-h-screen}"
 									class="relative cursor-pointer flex-col !no-underline"
 								>
 									<Avatar
-										src={avatarSrc ? avatarSrc : '/Default_User.svg'}
+										src={$avatarSrc ? $avatarSrc : '/Default_User.svg'}
 										class="mx-auto hover:bg-surface-500 hover:p-1 {$toggleLeftSidebar === 'full'
 											? 'w-[40px]'
 											: 'w-[35px]'}"
 									/>
 									<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
 										{#if $toggleLeftSidebar === 'full'}
-											{#if $user?.username}
-												<div class="text-[10px] uppercase">{$user?.username}</div>
+											{#if user?.username}
+												<div class="text-[10px] uppercase">{user?.username}</div>
 											{/if}
 										{/if}
 									</div>

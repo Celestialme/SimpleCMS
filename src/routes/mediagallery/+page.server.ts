@@ -40,13 +40,13 @@ export async function load(event: any) {
 		uniqueImageFiles.map(async (file) => {
 			const filePath = `${PUBLIC_MEDIA_FOLDER}/${file}`;
 			const fileName = path.basename(file);
-			console.log('Processing file:', fileName);
+			//console.log('Processing file:', fileName);
 
 			const parts = fileName.split('-');
 			const hash = parts[0];
 			const imageName = parts.slice(1).join('-');
-			console.log('Hash:', hash);
-			console.log('Image Name:', imageName);
+			//console.log('Hash:', hash);
+			//console.log('Image Name:', imageName);
 
 			const hasPermission = hasFilePermission(user, file);
 

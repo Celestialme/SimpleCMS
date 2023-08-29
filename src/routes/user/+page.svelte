@@ -29,8 +29,10 @@
 	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 	import AdminArea from './AdminArea.svelte';
 	import { writable } from 'svelte/store';
+	import { avatarSrc } from '@src/stores/store';
 
-	let avatarSrc = writable(user?.avatar);
+	// let avatarSrc = writable(user?.avatar);
+	avatarSrc.set(user?.avatar);
 
 	let id = user?.id;
 	let username = user?.username;

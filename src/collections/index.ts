@@ -7,6 +7,8 @@ import { createCategories } from './config';
 // Define writable stores and imports object
 const categories: Writable<Array<any>> = writable();
 const collections: Writable<Array<any>> = writable();
+const unAssigned: Writable<Array<string>> = writable([]);
+
 let imports: any = {};
 let rnd = Math.random();
 
@@ -27,12 +29,12 @@ export const updateCollections = async (recompile: boolean = false) => {
 			console.log('--------------------Config-Dynamic-Import---------------------------');
 
 			const { createCategories } = browser
-				? await import('/api/collections/' + config)
-				: await import(import.meta.env.collectionsFolderJS + config);
+				? await import(/* @vite-ignore */ '/api/collections/' + config)
+				: await import(/* @vite-ignore */ import.meta.env.collectionsFolderJS + config);
 
 			// Create categories using new version of createCategories function and imports object
 			_categories = createCategories(imports);
-			console.log(createCategories.toString());
+			//console.log(createCategories.toString());
 		}
 
 		// For each category Filter out undefined collections
@@ -41,7 +43,7 @@ export const updateCollections = async (recompile: boolean = false) => {
 		}
 
 		// Set value of categories store to array of categories
-		// console.log(_categories);
+		console.log(_categories);
 		categories.set(_categories);
 
 		// Set value of collections store to array containing all collections from all categories
@@ -51,18 +53,21 @@ export const updateCollections = async (recompile: boolean = false) => {
 
 updateCollections();
 
-// use this unassigned array
-// const unAssigned = Object.values(collection).filter((x) => !collections.includes(x));
+// Output unassigned collections
+collections.subscribe((value) => {
+	const unAssigned = Object.values(imports).filter((x) => !value.includes(x));
+	console.log('unAssigned', unAssigned);
+});
 
 // Export stores and functions
-export { categories };
+export { categories, unAssigned };
 export default collections;
 export const collection = writable(collections?.[0]); // current collection
 
 // Define getImports function to dynamically populate imports object
-async function getImports() {
+async function getImports(recompile: boolean = false) {
 	// If imports object is not empty, return its current value
-	if (Object.keys(imports).length) return imports;
+	if (Object.keys(imports).length && !recompile) return imports;
 	imports = {};
 	// If running in development or building mode
 	if (dev || building) {
@@ -101,7 +106,7 @@ async function getImports() {
 
 			// If not running in browser environment
 		} else {
-			const files = ((await axios.get('http://127.0.0.1:3000/api/getCollections')) as any).data;
+			const files = ((await axios.get('http://127.0.0.1:4173/api/getCollections')) as any).data;
 			// console.log('server files', files);
 
 			// Dynamically import returned files from folder specified by import.meta.env.collectionsFolder
@@ -119,13 +124,18 @@ async function getImports() {
 	return imports;
 }
 
+let unsubscribe: Unsubscriber | undefined;
+
 // Define getCollections function to return a promise that resolves with the value of the collections store
+
 export async function getCollections() {
+	// console.log('getting collections');
 	return new Promise<any>((resolve) => {
-		// Subscribe to changes in collections store
-		collections.subscribe((collections) => {
-			// If collections store is non-empty, resolve promise with its value
+		unsubscribe = collections.subscribe((collections) => {
 			if (collections?.length > 0) {
+				collection.set(collections[0]);
+				unsubscribe && unsubscribe();
+				unsubscribe = undefined;
 				resolve(collections);
 			}
 		});
