@@ -25,7 +25,7 @@
 		} else if ($mode === 'edit') {
 			axios.get($entryData[fieldName].thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
 				let fileList = new DataTransfer();
-				let file = new File([data], $entryData[fieldName].name, {
+				let file = new File([data], $entryData[fieldName].thumbnail.name, {
 					type: $entryData[fieldName].mimetype
 				});
 				fileList.items.add(file);

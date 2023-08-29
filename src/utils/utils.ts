@@ -87,6 +87,25 @@ export async function saveImages(data: FormData, collectionName: string) {
 		let hash = crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
 		let path = _findFieldByTitle(collection, fieldname).path;
 		let name = removeExtension(blob.name);
+		//original image
+
+		let url;
+		if (path == 'global') {
+			url = `images/original/${hash}-${blob.name}`;
+		} else if (path == 'unique') {
+			url = `images/${collectionName}/original/${hash}-${blob.name}`;
+		} else {
+			url = `images/${path}/original/${hash}-${blob.name}`;
+		}
+		files[fieldname as keyof typeof files] = {
+			original: { name: `${hash}-${blob.name}`, url, size: blob.size, type: blob.type, lastModified: blob.lastModified }
+		};
+
+		if (!fs.existsSync(Path.dirname(`${PUBLIC_MEDIA_FOLDER}/${url}`))) {
+			fs.mkdirSync(Path.dirname(`${PUBLIC_MEDIA_FOLDER}/${url}`), { recursive: true });
+		}
+
+		fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${url}`, buffer);
 		for (let size in SIZES) {
 			if (size == 'original') continue;
 			let fullName = `${hash}-${name}.avif`;
@@ -117,26 +136,6 @@ export async function saveImages(data: FormData, collectionName: string) {
 				lastModified: blob.lastModified
 			};
 		}
-
-		//original image
-
-		let url;
-		if (path == 'global') {
-			url = `images/original/${hash}-${blob.name}`;
-		} else if (path == 'unique') {
-			url = `images/${collectionName}/original/${hash}-${blob.name}`;
-		} else {
-			url = `images/${path}/original/${hash}-${blob.name}`;
-		}
-		files[fieldname as keyof typeof files] = {
-			original: { name: blob.name, url, size: blob.size, type: blob.type, lastModified: blob.lastModified }
-		};
-
-		if (!fs.existsSync(Path.dirname(`${PUBLIC_MEDIA_FOLDER}/${url}`))) {
-			fs.mkdirSync(Path.dirname(`${PUBLIC_MEDIA_FOLDER}/${url}`), { recursive: true });
-		}
-
-		fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${url}`, buffer);
 	}
 	return files;
 }
