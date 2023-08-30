@@ -2,16 +2,12 @@
 	import 'iconify-icon';
 	import '@src/collections';
 	import Collections from '@src/components/system/drawer/Collections.svelte';
-	import { user } from '@src/stores/load';
 	import { mode } from '@src/stores/store.js';
 	import { collection } from '@src/collections';
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
-	export let data;
-	user.set(data.user);
-
 	let name = $mode == 'edit' ? $collection.name : '';
 	let fields = [];
 	let addField = false;

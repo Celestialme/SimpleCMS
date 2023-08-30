@@ -4,7 +4,6 @@ import { setLocale } from '@src/i18n/i18n-svelte';
 import type { Locales } from '@src/i18n/i18n-types';
 import { loadAllLocales } from '@src/i18n/i18n-util.sync';
 import { writable, type Writable } from 'svelte/store';
-export let user: Writable<User> = writable();
 export let systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);
 export let contentLanguage: Writable<string> = writable(PUBLIC_CONTENT_LANGUAGE);
 

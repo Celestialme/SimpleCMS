@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { user } from '@src/stores/load';
 	import axios from 'axios';
 	import Button from '../buttons/Button.svelte';
 	import Collections from './Collections.svelte';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 	async function signOut() {
 		let resp = (
 			await axios.post(
@@ -18,7 +16,6 @@
 			)
 		).data;
 		if (resp.status == 200) {
-			$user = resp;
 			goto(`/login`);
 		}
 	}

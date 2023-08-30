@@ -3,15 +3,17 @@
 	import Button from './system/buttons/Button.svelte';
 	import { collectionValue, mode, deleteEntry } from '@src/stores/store';
 	import { saveFormData } from '@src/utils/utils';
-	import { user } from '@src/stores/load';
+	import { page } from '$app/stores';
+	import type { User } from '@src/collections/Auth';
 	async function saveData() {
 		await saveFormData({ data: $collectionValue });
 		mode.set('view');
 	}
+	let user: User = $page.data.user;
 </script>
 
 <div class="container">
-	{#if $collection.permissions?.[$user.role]?.write != false}
+	{#if $collection.permissions?.[user.role]?.write != false}
 		{#if $mode == 'view'}
 			<Button on:click={() => mode.set('create')}>Create</Button>
 		{:else if ['edit', 'create'].includes($mode)}
