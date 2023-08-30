@@ -1,6 +1,5 @@
 import { roles } from './types.js';
 let schema = {
-    name: 'posts2',
     permissions: {
         [roles.admin]: {
             read: false

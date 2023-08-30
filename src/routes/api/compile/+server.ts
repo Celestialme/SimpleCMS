@@ -4,19 +4,19 @@ import fs from 'fs';
 import { updateCollections } from '@src/collections';
 import { dev } from '$app/environment';
 import Path from 'path';
+globalThis.__filename = '';
 export const GET: RequestHandler = async ({ params, url }) => {
 	if (!fs.existsSync(import.meta.env.collectionsFolderJS)) {
 		fs.mkdirSync(import.meta.env.collectionsFolderJS);
 	}
+	let ts = await import('typescript');
 	let files = fs.readdirSync(import.meta.env.collectionsFolderTS).filter((file) => !['Auth.ts', 'index.ts'].includes(file));
-	if (dev) {
-		globalThis.ts = await import('typescript');
-	}
+
 	for (let file of files) {
 		let content = fs.readFileSync(`${import.meta.env.collectionsFolderTS}/${file}`, { encoding: 'utf-8' });
-		let code = globalThis.ts.transpileModule(content, {
+		let code = ts.transpileModule(content, {
 			compilerOptions: {
-				target: globalThis.ts.ScriptTarget.ESNext
+				target: ts.ScriptTarget.ESNext
 			}
 		}).outputText;
 		code = code

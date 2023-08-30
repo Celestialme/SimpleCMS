@@ -2,7 +2,6 @@ import widgets from '../components/widgets';
 import { roles } from './types';
 import type { Schema } from './types';
 let schema: Schema = {
-	name: 'posts3',
 	permissions: {
 		[roles.user]: {
 			read: false

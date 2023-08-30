@@ -4,7 +4,6 @@ import { parse, saveImages } from '@src/utils/utils';
 export const GET: RequestHandler = async ({ params, url }) => {
 	let collections = await getCollectionModels();
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
-	console.log(collections);
 	let collection = collections[params.collection];
 	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
 	let skip = (page - 1) * length;

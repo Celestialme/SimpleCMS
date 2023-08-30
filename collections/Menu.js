@@ -1,5 +1,4 @@
 let schema = {
-    name: 'Menu',
     fields: [
         globalThis.globalThis.widgets.MegaMenu({
             menu: [

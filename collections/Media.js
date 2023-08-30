@@ -1,5 +1,4 @@
 let schema = {
-    name: 'image upload',
     fields: [
         globalThis.widgets.ImageUpload({
             label: 'image',

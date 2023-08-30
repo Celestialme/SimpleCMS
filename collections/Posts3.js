@@ -1,6 +1,5 @@
 import { roles } from './types.js';
 let schema = {
-    name: 'posts3',
     permissions: {
         [roles.user]: {
             read: false

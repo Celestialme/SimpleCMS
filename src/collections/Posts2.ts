@@ -3,7 +3,6 @@ import { roles } from './types';
 import type { Schema } from './types';
 
 let schema: Schema = {
-	name: 'posts2',
 	permissions: {
 		[roles.admin]: {
 			read: false

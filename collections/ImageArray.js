@@ -1,5 +1,4 @@
 let schema = {
-    name: 'images',
     fields: [
         globalThis.widgets.ImageArray({
             label: 'images',

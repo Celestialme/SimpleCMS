@@ -9,7 +9,7 @@ const widget = ({ label, db_fieldName, display, translated = false }: Params) =>
 		};
 		display.default = true;
 	}
-	let widget: { type: any; key: 'Text' } = { type: Text, key: 'Text' };
+	let widget: { type: any; key: 'Text' } = { type: Text, key: 'Text' } as const;
 	let field = {
 		display,
 		schema: { [db_fieldName || label]: { String: String } },

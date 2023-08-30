@@ -1,7 +1,6 @@
 import widgets from '@src/components/widgets';
 import type { Schema } from './types';
 let schema: Schema = {
-	name: 'images',
 	fields: [
 		widgets.ImageArray({
 			label: 'images',
