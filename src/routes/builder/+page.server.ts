@@ -32,7 +32,6 @@ export const actions: Actions = {
 	import widgets from '../components/widgets';
 	import type { Schema } from './types';
 	let schema: Schema = {
-		name: '${collectionName}',
 		fields: [
 			${fields}
 		]
@@ -44,9 +43,9 @@ export const actions: Actions = {
 
 		content = content.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
 		if (originalName && originalName != collectionName) {
-			fs.renameSync(`./src/collections/${originalName}.ts`, `./src/collections/${collectionName}.ts`);
+			fs.renameSync(`${import.meta.env.collectionsFolderTS}/${originalName}.ts`, `${import.meta.env.collectionsFolderTS}/${collectionName}.ts`);
 		}
-		fs.writeFileSync(`./src/collections/${collectionName}.ts`, content);
+		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/${collectionName}.ts`, content);
 
 		return null;
 	}
