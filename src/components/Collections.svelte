@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { collection, categories } from '@src/collections/index';
-	import { user, mode, screenWidth, toggleLeftSidebar } from '@src/stores/store';
+	import { mode, screenWidth, toggleLeftSidebar } from '@src/stores/store';
+	import { page } from '$app/stores';
+	import type { User } from '@src/collections/Auth';
+
+	let user: User = $page.data.user;
 
 	export let modeSet: typeof $mode = 'view';
 
@@ -135,7 +139,7 @@
 				<!-- Collection Children -->
 				<svelte:fragment slot="content">
 					<!-- filtered by User Role Permission -->
-					{#each category.collections.filter((c) => c?.permissions?.[$user?.role]?.read != false) as _collection, index}
+					{#each category.collections.filter((c) => c?.permissions?.[user?.role]?.read != false) as _collection, index}
 						{#if $toggleLeftSidebar === 'full'}
 							<!-- switchSideBar expanded -->
 							<div

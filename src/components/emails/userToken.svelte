@@ -3,6 +3,11 @@
 	import { dev } from '$app/environment';
 	import { HOST_DEV, HOST_PROD } from '$env/static/private';
 
+	import { page } from '$app/stores';
+	import type { User } from '@src/collections/Auth';
+
+	const username: User = $page.data.user.username;
+
 	export let tokenLink = dev ? HOST_DEV : HOST_PROD;
 
 	// svelte-email

@@ -2,8 +2,10 @@
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import { dev } from '$app/environment';
 
-	import { user } from '@src/stores/store';
-	const username = $user?.username;
+	import { page } from '$app/stores';
+	import type { User } from '@src/collections/Auth';
+
+	const username: User = $page.data.user.username;
 
 	import { HOST_DEV, HOST_PROD } from '$env/static/private';
 	export let tokenLink = dev ? HOST_DEV : HOST_PROD;

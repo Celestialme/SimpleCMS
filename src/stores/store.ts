@@ -6,8 +6,7 @@ import type { Locales } from '@src/i18n/i18n-types';
 import { loadAllLocales } from '@src/i18n/i18n-util.sync';
 import type { User } from '@src/collections/Auth';
 
-// Create a writable store for user with initial value from local storage
-export const user: Writable<User> = writable();
+// Create a writable store for Avatar
 export const avatarSrc: Writable<string> = writable();
 
 // Create a writable store for systemLanguage with initial value of PUBLIC_SYSTEM_LANGUAGE

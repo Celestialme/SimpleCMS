@@ -1,17 +1,12 @@
 <script lang="ts">
 	import '@src/collections';
 	import Collections from '@src/components/Collections.svelte';
-	import { user } from '@src/stores/store';
 	import { mode } from '@src/stores/store.js';
 	import { collection } from '@src/collections/index';
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
-
-	export let data;
-
-	user.set(data.user);
 
 	let name = $mode == 'edit' ? $collection.name : '';
 	let fields = [];
