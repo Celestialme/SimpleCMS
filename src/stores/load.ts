@@ -15,6 +15,7 @@ export let categories: Writable<
 	}>
 > = writable();
 export let collections: Writable<Array<Schema>> = writable();
+export let unAssigned: Writable<Array<Schema>> = writable();
 export let collection: Writable<Schema> = writable();
 loadAllLocales();
 systemLanguage.subscribe((val) => {

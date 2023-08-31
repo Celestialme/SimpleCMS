@@ -8,7 +8,7 @@ export function createCategories(imports) {
 		{
 			name: 'posts',
 			icon: 'bi:images',
-			collections: [imports.Posts1, imports.ImageArray, imports.Menu, imports.Relation, imports.Media]
+			collections: [imports.ImageArray, imports.Menu, imports.Relation, imports.Media]
 		}
 	];
 }

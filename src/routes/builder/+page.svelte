@@ -3,7 +3,7 @@
 	import '@src/collections';
 	import Collections from '@src/components/system/drawer/Collections.svelte';
 	import { mode } from '@src/stores/store.js';
-	import { collection } from '@src/stores/load';
+	import { collection, unAssigned } from '@src/stores/load';
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
@@ -33,6 +33,8 @@
 		<Collections modeSet={'edit'} />
 	</section>
 	<div class="right_panel">
+		<p class="text-white">unAssigned Collections</p>
+		<p class="text-white">{$unAssigned.map((x) => x.name)}</p>
 		<div
 			class="add_new"
 			on:click={() => {

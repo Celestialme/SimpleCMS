@@ -2,11 +2,12 @@ import { browser, building, dev } from '$app/environment';
 import axios from 'axios';
 import { createCategories } from './config';
 import { getCollectionFiles } from '@src/routes/api/getCollections/getCollectionFiles';
-import { categories, collections } from '@src/stores/load';
+import { categories, collections, unAssigned } from '@src/stores/load';
 import type { Unsubscriber } from 'svelte/store';
 import { initWidgets } from '@src/components/widgets';
+import type { Schema } from './types';
 initWidgets();
-let imports: any = {};
+let imports: { [Key: string]: Schema } = {};
 let rnd = Math.random();
 export let updateCollections = async (recompile: boolean = false) => {
 	if (recompile) rnd = Math.random();
@@ -24,14 +25,13 @@ export let updateCollections = async (recompile: boolean = false) => {
 		for (let _category of _categories) {
 			_category.collections = _category.collections.filter((x) => !!x == true);
 		}
+		let _collections = _categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc));
 		categories.set(_categories);
-		collections.set(_categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc))); // returns all collections
+		collections.set(_collections); // returns all collections
+		unAssigned.set(Object.values(imports).filter((x) => !_collections.includes(x)));
 	});
 };
 updateCollections();
-// let unAssigned = Object.values(allCollections).filter((x) => !collections.includes(x));
-
-//use this unassigned array
 
 export { categories };
 
