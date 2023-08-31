@@ -1,6 +1,6 @@
 <script lang="ts">
 	//import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
-	import { roles } from '@src/collections/Auth';
+import type { roles } from './types';
 	export let value: string;
 	// TODO| Add i18n PUBLIC_TRANSLATIONS
 	// Grab Users from one Location only

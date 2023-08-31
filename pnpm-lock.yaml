@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@envelop/graphql-jit':
-    specifier: 6.0.1
-    version: 6.0.1(@envelop/core@4.0.0)(graphql@16.8.0)
+    specifier: 6.0.2
+    version: 6.0.2(@envelop/core@4.0.1)(graphql@16.8.0)
   '@floating-ui/dom':
     specifier: ^1.5.1
     version: 1.5.1
@@ -140,8 +140,8 @@ devDependencies:
     specifier: ^3.0.3
     version: 3.0.3(prettier@3.0.3)(svelte@4.2.0)
   prettier-plugin-tailwindcss:
-    specifier: ^0.5.3
-    version: 0.5.3(prettier-plugin-svelte@3.0.3)(prettier@3.0.3)
+    specifier: ^0.5.4
+    version: 0.5.4(prettier-plugin-svelte@3.0.3)(prettier@3.0.3)
   sharp:
     specifier: ^0.32.5
     version: 0.32.5
@@ -202,22 +202,22 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@envelop/core@4.0.0:
-    resolution: {integrity: sha512-6usEZO86hWT0ZajAbhOX0QXlV++lrlEmu8br6KQVvyXOxttiHADIibgfzb3GtSI7RnnJDnrcRb7Jynv6Lca3iQ==}
+  /@envelop/core@4.0.1:
+    resolution: {integrity: sha512-uBLI7ql3hZopz7vMi9UDAb9HWzKw4STKiqg4QT+lb+tu5ZNaeuJ4fom2rrmgITz38B85QZOhZrGyVrlJXxfDzw==}
     engines: {node: '>=16.0.0'}
     dependencies:
-      '@envelop/types': 4.0.0
+      '@envelop/types': 4.0.1
       tslib: 2.6.2
     dev: false
 
-  /@envelop/graphql-jit@6.0.1(@envelop/core@4.0.0)(graphql@16.8.0):
-    resolution: {integrity: sha512-3oZfcLAAQKXnJudyJwwn2ffaFomzaIjtFvh7z8mx+PIiTuAM0wEsOKqfTwVLwZ+WtNktVq+p2hMfu6N+8o+8Ew==}
+  /@envelop/graphql-jit@6.0.2(@envelop/core@4.0.1)(graphql@16.8.0):
+    resolution: {integrity: sha512-9kUKNHvWbcQG8zFFWxyVMRgl1ch2jxvS8/Xi39kl3ecah6iZPiIRqRFEL6qaCVDrr6WJGN4Wap/xgPgdik4UPA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
-      '@envelop/core': ^4.0.0
+      '@envelop/core': ^4.0.1
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
-      '@envelop/core': 4.0.0
+      '@envelop/core': 4.0.1
       graphql: 16.8.0
       graphql-jit: 0.8.4(graphql@16.8.0)
       lru-cache: 10.0.1
@@ -230,8 +230,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@envelop/types@4.0.0:
-    resolution: {integrity: sha512-dmBK16VVfKCkqYYemvE+gt1cPBP0d9CbYO4yjNhSSYy9K+w6+Lw48wOLK238mSR339PNAvwj/JW/qzNy2llggA==}
+  /@envelop/types@4.0.1:
+    resolution: {integrity: sha512-ULo27/doEsP7uUhm2iTnElx13qTO6I5FKvmLoX41cpfuw8x6e0NUFknoqhEsLzAbgz8xVS5mjwcxGCXh4lDYzg==}
     engines: {node: '>=16.0.0'}
     dependencies:
       tslib: 2.6.2
@@ -1623,8 +1623,8 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.10
-      caniuse-lite: 1.0.30001524
-      fraction.js: 4.3.0
+      caniuse-lite: 1.0.30001525
+      fraction.js: 4.3.4
       normalize-range: 0.1.2
       picocolors: 1.0.0
       postcss: 8.4.29
@@ -1710,8 +1710,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001524
-      electron-to-chromium: 1.4.505
+      caniuse-lite: 1.0.30001525
+      electron-to-chromium: 1.4.506
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
     dev: true
@@ -1773,8 +1773,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /caniuse-lite@1.0.30001524:
-    resolution: {integrity: sha512-Jj917pJtYg9HSJBF95HVX3Cdr89JUyLT4IZ8SvM5aDRni95swKgYi3TgYLH5hnGfPE/U1dg6IfZ50UsIlLkwSA==}
+  /caniuse-lite@1.0.30001525:
+    resolution: {integrity: sha512-/3z+wB4icFt3r0USMwxujAqRvaD/B7rvGTsKhbhSQErVrJvkZCLhgNLJxU8MevahQVH6hCU9FsHdNUFbiwmE7Q==}
     dev: true
 
   /chalk@2.4.2:
@@ -2139,8 +2139,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: false
 
-  /electron-to-chromium@1.4.505:
-    resolution: {integrity: sha512-0A50eL5BCCKdxig2SsCXhpuztnB9PfUgRMojj5tMvt8O54lbwz3t6wNgnpiTRosw5QjlJB7ixhVyeg8daLQwSQ==}
+  /electron-to-chromium@1.4.506:
+    resolution: {integrity: sha512-xxGct4GPAKSRlrLBtJxJFYy74W11zX6PO9GyHgl/U+2s3Dp0ZEwAklDfNHXOWcvH7zWMpsmgbR0ggEuaYAVvHA==}
     dev: true
 
   /encodeurl@1.0.2:
@@ -2639,8 +2639,8 @@ packages:
       mime-types: 2.1.35
     dev: false
 
-  /fraction.js@4.3.0:
-    resolution: {integrity: sha512-btalnXjFelOv2cy86KzHWhUuMb622/AD8ce/MCH9C36xe7QRXjJZA+19fP+G5LT0fdRcbOHErMI3SPM11ZaVDg==}
+  /fraction.js@4.3.4:
+    resolution: {integrity: sha512-pwiTgt0Q7t+GHZA4yaLjObx4vXmmdcS0iSJ19o8d/goUGgItX9UZWKWNnLHehxviD8wU2IWRsnR8cD5+yOJP2Q==}
     dev: true
 
   /fresh@0.5.2:
@@ -2859,7 +2859,7 @@ packages:
     peerDependencies:
       graphql: ^15.2.0 || ^16.0.0
     dependencies:
-      '@envelop/core': 4.0.0
+      '@envelop/core': 4.0.1
       '@graphql-tools/executor': 1.2.0(graphql@16.8.0)
       '@graphql-tools/schema': 10.0.0(graphql@16.8.0)
       '@graphql-tools/utils': 10.0.5(graphql@16.8.0)
@@ -4231,8 +4231,8 @@ packages:
       svelte: 4.2.0
     dev: true
 
-  /prettier-plugin-tailwindcss@0.5.3(prettier-plugin-svelte@3.0.3)(prettier@3.0.3):
-    resolution: {integrity: sha512-M5K80V21yM+CTm/FEFYRv9/9LyInYbCSXpIoPAKMm8zy89IOwdiA2e4JVbcO7tvRtAQWz32zdj7/WKcsmFyAVg==}
+  /prettier-plugin-tailwindcss@0.5.4(prettier-plugin-svelte@3.0.3)(prettier@3.0.3):
+    resolution: {integrity: sha512-QZzzB1bID6qPsKHTeA9qPo1APmmxfFrA5DD3LQ+vbTmAnY40eJI7t9Q1ocqel2EKMWNPLJqdTDWZj1hKYgqSgg==}
     engines: {node: '>=14.21.3'}
     peerDependencies:
       '@ianvs/prettier-plugin-sort-imports': '*'

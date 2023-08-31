@@ -8,7 +8,10 @@
 	const modalStore = getModalStore();
 	import ModalAddCategory from './ModalAddCategory.svelte';
 	import PageTitle from '@src/components/PageTitle.svelte';
-	import { unknown } from 'zod';
+	import { generateUniqueId } from '@src/utils/utils';
+
+	// Usage
+	const uniqueId = generateUniqueId();
 
 	// Modal Trigger - New Category
 	function modalAddCategory(): void {
@@ -76,9 +79,9 @@
 	}
 
 	// Define the structure of an unassigned collection
-	let UnassingedCollections = $unAssigned.map((unAssigned, collectionIndex) => ({
-		id: `${collectionIndex + 1}`,
-		name: 'Unassigned',
+	let UnassingedCollections = $unAssigned.map((collection, collectionIndex) => ({
+		id: generateUniqueId(),
+		name: collection.name,
 		icon: 'Unassigned',
 		items: $unAssigned.map((collection: any, collectionIndex: number) => ({
 			id: `${collectionIndex + 1}`,
@@ -88,7 +91,7 @@
 
 	// Define the structure of an Assigned collection
 	let availableCollection = $categories.map((category, categoryIndex) => ({
-		id: `${categoryIndex + 1}`,
+		id: generateUniqueId(),
 		name: category.name,
 		icon: category.icon,
 		items: category.collections.map((collection: any, collectionIndex: number) => ({
@@ -97,14 +100,28 @@
 		}))
 	}));
 
+	// Update the assigned collection where the item was dropped
 	function handleUnassignedUpdated(newItems) {
-		UnassingedCollections = newItems;
+		const [targetCategoryIndex, targetCollectionIndex] = findTargetIndices(newItems);
+
+		if (targetCategoryIndex !== -1 && targetCollectionIndex !== -1) {
+			const targetCollection =
+				availableCollection[targetCategoryIndex].collections[targetCollectionIndex];
+			targetCollection.items.push(newItems); // Add the dropped unassigned collection to the target collection
+		}
+
+		// Update the state to reflect the changes
+		availableCollection = [...availableCollection];
+
+		// Call the function to handle the updated data
+		handleBoardUpdated(availableCollection);
 	}
 
 	function handleBoardUpdated(newColumnsData) {
 		availableCollection = newColumnsData;
 	}
 
+	// When saving changes
 	async function handleSaveClick() {
 		const response = await fetch('/api/update_categories', {
 			method: 'POST',
@@ -115,6 +132,8 @@
 		});
 
 		if (response.ok) {
+			// Update the config.ts file with the modified availableCollection
+			updateConfigFile(availableCollection); // Implement this function
 			console.log('Categories updated');
 		} else {
 			console.error('Error updating categories');

@@ -561,4 +561,8 @@ lg:overflow-y-scroll lg:max-h-screen}"
 			</svelte:fragment>
 		</AppShell>
 	{/if}
+{:catch error}
+	<div class="text-error-500">
+		An error occurred: {error.message}
+	</div>
 {/await}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { roles } from '@src/collections/Auth';
+	import type { roles } from './types';
 	// define default role
 	let roleSelected = Object.values(roles)[0];
 

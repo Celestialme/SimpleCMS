@@ -1,6 +1,11 @@
 <script lang="ts">
-	import { collection } from '@src/stores/store';
-	import { collectionValue, mode, deleteEntry, handleSidebarToggle } from '@src/stores/store';
+	import {
+		collection,
+		collectionValue,
+		mode,
+		deleteEntry,
+		handleSidebarToggle
+	} from '@src/stores/store';
 	import { page } from '$app/stores';
 	import type { User } from '@src/collections/Auth';
 	import { saveFormData, getDates } from '@src/utils/utils';
@@ -30,7 +35,7 @@
 
 <!--  Check User Role collection Permission-->
 
-{#if $collection.permissions?.[user.role]?.write != false}
+{#if collection.permissions?.[user.role]?.write != false}
 	<!-- Desktop Right Sidebar -->
 	{#if $mode == 'view'}
 		<button

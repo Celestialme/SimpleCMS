@@ -5,8 +5,7 @@ import { redirect } from '@sveltejs/kit';
 import { auth } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
-
-import { roles } from '@src/collections/Auth';
+import { roles } from '@src/collections/types';
 
 function hasFilePermission(user: any, file: string): boolean {
 	const { role, username } = user;

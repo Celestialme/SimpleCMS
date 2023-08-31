@@ -3,6 +3,9 @@
 	import { collection, categories } from '@src/stores/store';
 	import { saveFormData, cloneData, deleteData } from '@src/utils/utils';
 	import { page } from '$app/stores';
+	import type { User } from '@src/collections/Auth';
+
+	let user: User = $page.data.user;
 
 	import {
 		collectionValue,
@@ -64,17 +67,17 @@
 
 		<!-- Collection type with icon -->
 		<div class="flex {!$toggleLeftSidebar ? 'ml-2' : 'ml-1'}">
-			{#if $collection && $collection.icon}
+			{#if collection && collection.icon}
 				<div class="flex items-center justify-center">
-					<iconify-icon icon={$collection.icon} width="24" class="text-error-500" />
+					<iconify-icon icon={collection.icon} width="24" class="text-error-500" />
 				</div>
 			{/if}
 
-			{#if $categories && $categories[0]}
+			{#if categories && categories[0]}
 				<div class="ml-2 flex flex-col text-left text-gray-400 dark:text-gray-300">
 					<div class="text-sm font-bold uppercase text-primary-500">{$mode}:</div>
 					<div class="text-xs capitalize">
-						{$categories[0].name}
+						{categories[0].name}
 						<span class=" uppercase text-primary-500">{$collection.name}</span>
 					</div>
 				</div>
@@ -85,7 +88,7 @@
 	<div class="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
 		<!-- Check if user role has access to collection -->
 
-		{#if $collection.permissions?.[$page.data.user.role]?.write != false}
+		{#if collection.permissions?.[user.role]?.write != false}
 			{#if $screenWidth !== 'desktop'}
 				<!-- Save Content -->
 				<button type="button" on:click={saveData} class="variant-filled-primary btn-icon md:btn">
@@ -125,7 +128,7 @@
 		</button>
 	</div>
 </header>
-{#if showMore && $collection.permissions?.[$page.data.user.role]?.write != false}
+{#if showMore && $collection.permissions?.[user?.role]?.write != false}
 	<div class="-mx-2 flex items-center justify-center gap-10 pt-2">
 		<div class="flex flex-col items-center justify-center">
 			<!-- Delete Content -->

@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import axios from 'axios';
-
+	import { page } from '$app/stores';
 	const user = $page.data.user;
 
 	// Props

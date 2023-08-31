@@ -7,8 +7,6 @@
 
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
 	import { addUserTokenSchema } from '@src/utils/formSchemas';
-	import { roles } from '@src/collections/Auth';
-	//console.log('roles: ', roles);
 
 	// Props
 	/** Exposes parent props to this component. */
@@ -22,6 +20,7 @@
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
+	import { roles } from '@src/collections/types';
 
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4';

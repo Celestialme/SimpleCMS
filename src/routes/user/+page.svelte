@@ -1,12 +1,10 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import '@src/stores/store';
-	import { roles } from '@src/collections/Auth';
 
 	import PageTitle from '@src/components/PageTitle.svelte';
 
 	export let data: PageData;
-	// console.log(data);
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -15,8 +13,6 @@
 	import { page } from '$app/stores';
 	import { invalidateAll } from '$app/navigation';
 	const user = $page.data.user;
-
-	// import UserList from './UserList/UserList.svelte';
 
 	// Skeleton
 	import { Avatar } from '@skeletonlabs/skeleton';
@@ -28,8 +24,8 @@
 	const modalStore = getModalStore();
 	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 	import AdminArea from './AdminArea.svelte';
-	import { writable } from 'svelte/store';
 	import { avatarSrc } from '@src/stores/store';
+	import { roles } from '@src/collections/types';
 
 	// let avatarSrc = writable(user?.avatar);
 	avatarSrc.set(user?.avatar);
