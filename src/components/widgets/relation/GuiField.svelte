@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Schema } from '@src/collections/types';
-	import collections from '@src/collections';
-	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
+	import { collections } from '@src/stores/load';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 	export let value: Schema | string = '';
 	export let theme: 'dark' | 'light' = 'dark';

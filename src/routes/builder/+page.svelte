@@ -3,7 +3,7 @@
 	import '@src/collections';
 	import Collections from '@src/components/system/drawer/Collections.svelte';
 	import { mode } from '@src/stores/store.js';
-	import { collection } from '@src/collections';
+	import { collection } from '@src/stores/load';
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';

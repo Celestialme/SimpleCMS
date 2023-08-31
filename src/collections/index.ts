@@ -1,11 +1,11 @@
 import { browser, building, dev } from '$app/environment';
 import axios from 'axios';
-import { writable, type Unsubscriber, type Writable } from 'svelte/store';
-import '@src/components/widgets';
 import { createCategories } from './config';
 import { getCollectionFiles } from '@src/routes/api/getCollections/getCollectionFiles';
-let categories: Writable<Array<any>> = writable();
-let collections: Writable<Array<any>> = writable();
+import { categories, collections } from '@src/stores/load';
+import type { Unsubscriber } from 'svelte/store';
+import { initWidgets } from '@src/components/widgets';
+initWidgets();
 let imports: any = {};
 let rnd = Math.random();
 export let updateCollections = async (recompile: boolean = false) => {
@@ -34,8 +34,6 @@ updateCollections();
 //use this unassigned array
 
 export { categories };
-export default collections;
-export let collection = writable(collections?.[0]); // current collection
 
 async function getImports(recompile: boolean = false) {
 	if (Object.keys(imports).length && !recompile) return imports;

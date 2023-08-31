@@ -1,7 +1,6 @@
 <script lang="ts">
 	export let data: PageData;
-	import type { PageData, SubmitFunction } from './$types';
-	import '@src/stores/load';
+	import type { PageData } from './$types';
 	import LL from '@src/i18n/i18n-svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
@@ -11,7 +10,7 @@
 	import { roles } from '@src/collections/types';
 	let response;
 	console.log(data);
-	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
+	let { form, allErrors, errors, enhance } = superForm(data.addUserForm, {
 		id: 'addUser',
 		validators: addUserSchema,
 		defaultValidator: 'clear',

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { collection } from '@src/collections';
+	import { collection } from '@src/stores/load';
 	import Button from './system/buttons/Button.svelte';
 	import { collectionValue, mode, deleteEntry } from '@src/stores/store';
 	import { saveFormData } from '@src/utils/utils';

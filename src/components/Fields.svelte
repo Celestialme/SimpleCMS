@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { collection } from '@src/collections';
 	import { collectionValue } from '@src/stores/store';
+	import { collection } from '@src/stores/load';
 	import { asAny, getFieldName } from '@src/utils/utils';
 	export let fields: typeof $collection.fields | undefined = undefined;
 

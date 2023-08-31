@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '@src/stores/store';
 	import SignIn from './components/SignIn.svelte';
 	import SignUp from './components/SignUp.svelte';
 	import RoundLogo from './components/icons/RoundLogo.svelte';

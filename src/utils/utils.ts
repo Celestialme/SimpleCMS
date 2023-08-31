@@ -1,11 +1,11 @@
 import fs from 'fs';
 import Path from 'path';
-import collections, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
+import { collections, collection } from '@src/stores/load';
 import type { Auth } from 'lucia-auth';
 import type { User } from '@src/collections/Auth';
 import { PUBLIC_MEDIA_FOLDER, PUBLIC_IMAGE_SIZES } from '$env/static/public';

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } from '$env/static/private';
-import collections from '@src/collections';
-import lucia, { type Session, type User } from 'lucia-auth';
+import { collections } from '@src/stores/load';
+import lucia from 'lucia-auth';
 import adapter from '@lucia-auth/adapter-mongoose';
 import { session, key, UserSchema } from '@src/collections/Auth';
 import { sveltekit } from 'lucia-auth/middleware';
@@ -32,6 +32,7 @@ export async function getCollectionModels() {
 							timestamps: { currentTime: () => Date.now() }
 						}
 					);
+					if (!collection.name) return;
 					collectionsModels[collection.name] = mongoose.models[collection.name]
 						? mongoose.model(collection.name)
 						: mongoose.model(collection.name, schema_object);

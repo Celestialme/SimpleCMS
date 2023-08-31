@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { collection } from '@src/collections';
+	import { collection } from '@src/stores/load';
 	import { mode } from '@src/stores/store';
 	import { categories } from '@src/collections';
 	import { page } from '$app/stores';

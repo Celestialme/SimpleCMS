@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { collection } from '@src/collections';
 	import { mode, entryData, deleteEntry } from '@src/stores/store';
 	import axios from 'axios';
 	import DeleteIcon from './DeleteIcon.svelte';
 	import { writable } from 'svelte/store';
 	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel } from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
-	import { contentLanguage } from '@src/stores/load';
+	import { contentLanguage, collection } from '@src/stores/load';
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
 	let deleteMap: any = {};

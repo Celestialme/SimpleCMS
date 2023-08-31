@@ -4,7 +4,7 @@
 	import Fields from '@src/components/Fields.svelte';
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
-	import collections, { collection } from '@src/collections';
+	import { collections, collection } from '@src/stores/load';
 	import { page } from '$app/stores';
 	import type { Schema } from '@src/collections/types';
 	import { goto } from '$app/navigation';

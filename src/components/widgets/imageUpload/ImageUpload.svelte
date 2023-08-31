@@ -3,7 +3,6 @@
 	import type { FieldType } from './';
 	import { entryData, mode } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
-	import { collection } from '@src/collections';
 	export let field: FieldType;
 	let _data: FileList;
 	let updated = false;
