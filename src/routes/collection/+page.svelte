@@ -1,9 +1,5 @@
 <script lang="ts">
-	import {
-		categories as importedCategories,
-		default as collections,
-		unAssigned
-	} from '@src/collections/index';
+	import { categories, collection, unAssigned } from '@src/stores/store';
 	import Unassigned from './Unassigned.svelte';
 	import Board from './Board.svelte';
 
@@ -30,8 +26,8 @@
 			component: modalComponent,
 			response: (r: any) => {
 				if (r) {
-					columnsData = [
-						...columnsData,
+					availableCollection = [
+						...availableCollection,
 						{
 							id: r.newCategoryName.toLowerCase().replace(/\s/g, '-'),
 							name: r.newCategoryName,
@@ -80,18 +76,18 @@
 	}
 
 	// Define the structure of an unassigned collection
-	let unAssignedCollections = $unAssigned.map((unAssignedCollection, collectionIndex) => ({
+	let UnassingedCollections = $unAssigned.map((unAssigned, collectionIndex) => ({
 		id: `${collectionIndex + 1}`,
 		name: 'Unassigned',
 		icon: 'Unassigned',
-		items: unAssignedCollection.collections.map((collection: any, collectionIndex: number) => ({
+		items: $unAssigned.map((collection: any, collectionIndex: number) => ({
 			id: `${collectionIndex + 1}`,
 			name: collection.name
 		}))
 	}));
 
 	// Define the structure of an Assigned collection
-	let availableCollection = $importedCategories.map((category, categoryIndex) => ({
+	let availableCollection = $categories.map((category, categoryIndex) => ({
 		id: `${categoryIndex + 1}`,
 		name: category.name,
 		icon: category.icon,

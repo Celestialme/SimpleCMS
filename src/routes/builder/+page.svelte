@@ -2,7 +2,7 @@
 	import '@src/collections';
 	import Collections from '@src/components/Collections.svelte';
 	import { mode } from '@src/stores/store.js';
-	import { collection } from '@src/collections/index';
+	import { collection, unAssigned } from '@src/stores/store';
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
@@ -38,7 +38,8 @@
 	<section class="left_panel">
 		<Collections modeSet={'edit'} />
 	</section>
-
+	<p class="text-white">unAssigned Collections</p>
+	<p class="text-white">{$unAssigned.map((x) => x.name)}</p>
 	<div class="flex w-full flex-col items-center">
 		<button
 			on:click={() => {

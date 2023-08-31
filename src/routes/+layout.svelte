@@ -9,6 +9,8 @@
 	import { goto } from '$app/navigation';
 	import {
 		avatarSrc,
+		collections,
+		collection,
 		collectionValue,
 		mode,
 		defaultContentLanguage,
@@ -23,8 +25,6 @@
 	} from '@src/stores/store';
 
 	import { getCollections } from '@src/collections';
-
-	import collections, { collection } from '@src/collections';
 
 	// Use handleSidebarToggle as a reactive statement to automatically switch the correct sidebar
 	$: handleSidebarToggle;

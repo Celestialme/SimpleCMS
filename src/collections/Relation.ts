@@ -1,11 +1,10 @@
 import widgets from '@src/components/widgets';
 import Posts from './Names';
-import { roles } from './Auth';
+import { roles } from './types';
 import type { Schema } from './types';
 
 const schema: Schema = {
-	// Collection Name required
-	name: 'relation 2 posts',
+	// Collection Name comming from filename
 
 	// Optional & Icon , status, slug
 	// See for possible Icons https://icon-sets.iconify.design/

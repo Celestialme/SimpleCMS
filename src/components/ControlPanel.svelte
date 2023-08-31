@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { collection } from '@src/collections/index';
+	import { collection } from '@src/stores/store';
 	import { collectionValue, mode, deleteEntry, handleSidebarToggle } from '@src/stores/store';
 	import { page } from '$app/stores';
 	import type { User } from '@src/collections/Auth';
@@ -19,13 +19,13 @@
 
 	let dates = { created: '', updated: '', revision: '' };
 
-	onMount(async () => {
-		try {
-			dates = await getDates($collection.name);
-		} catch (error) {
-			console.error(error);
-		}
-	});
+	// onMount(async () => {
+	// 	try {
+	// 		dates = await getDates(collection.name);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// });
 </script>
 
 <!--  Check User Role collection Permission-->

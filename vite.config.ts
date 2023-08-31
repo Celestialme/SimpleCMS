@@ -5,6 +5,7 @@ import { sveltekit } from '@sveltejs/kit/vite';
 // https://kit.svelte.dev/faq#read-package-json
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
+import { compile } from './src/routes/api/compile/compile';
 
 //github Version package.json check
 //const file = fileURLToPath(new URL('package.json', import.meta.url));
@@ -15,6 +16,8 @@ const pkg = JSON.parse(json);
 import type vite from 'vite';
 import Path from 'path';
 
+const file = fileURLToPath(new URL('package.json', import.meta.url));
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
 const parsed = Path.parse(__dirname);
@@ -23,6 +26,8 @@ const collectionsFolderJS =
 	'/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/') + '/collections/';
 const collectionsFolderTS =
 	'/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/') + '/src/collections/';
+
+compile({ collectionsFolderJS, collectionsFolderTS });
 
 const config = {
 	plugins: [

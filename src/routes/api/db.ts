@@ -1,4 +1,4 @@
-import collections from '@src/collections';
+import { collections } from '@src/stores/store';
 import { fieldsToSchema } from '@src/utils/utils';
 import { dev } from '$app/environment';
 import type { Unsubscriber } from 'svelte/store';
@@ -57,6 +57,7 @@ export async function getCollectionModels() {
 					);
 
 					// Add the mongoose model for the collection to the collectionsModels object
+					if (!collection.name) return;
 					collectionsModels[collection.name] = mongoose.models[collection.name]
 						? mongoose.model(collection.name)
 						: mongoose.model(collection.name, schema_object);

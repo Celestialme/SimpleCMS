@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { Schema } from '@src/collections/types';
-	import collections from '@src/collections';
+	import { collections } from '@src/stores/store';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 
 	export let value: Schema | string = '';
-	export let theme: 'dark' | 'light' = 'dark';
-	export let label = '';
+	export const theme: 'dark' | 'light' = 'dark';
+	export const label = '';
 
 	let _value =
 		typeof value == 'string'

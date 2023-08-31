@@ -3,7 +3,6 @@
 	import type { FieldType } from './';
 	import { entryData, mode, loadingProgress } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
-	import { collection } from '@src/collections';
 	import { FileDropzone, ProgressBar } from '@skeletonlabs/skeleton';
 	import { PUBLIC_MEDIA_OUTPUT_FORMAT } from '$env/static/public';
 

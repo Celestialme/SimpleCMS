@@ -1,10 +1,9 @@
 import widgets from '@src/components/widgets';
-import { roles } from './Auth';
+import { roles } from './types';
 import type { Schema } from './types';
 
 const schema: Schema = {
-	// Collection Name required
-	name: 'posts2',
+	// Collection Name comming from filename
 
 	// Collection Permissions by user Roles
 	permissions: {

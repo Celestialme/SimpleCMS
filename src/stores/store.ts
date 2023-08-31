@@ -4,7 +4,18 @@ import { PUBLIC_SYSTEM_LANGUAGE, PUBLIC_CONTENT_LANGUAGES } from '$env/static/pu
 import { setLocale } from '@src/i18n/i18n-svelte';
 import type { Locales } from '@src/i18n/i18n-types';
 import { loadAllLocales } from '@src/i18n/i18n-util.sync';
-import type { User } from '@src/collections/Auth';
+import type { Schema } from '@src/collections/types';
+
+export const categories: Writable<
+	Array<{
+		name: string;
+		icon: string;
+		collections: Array<Schema>;
+	}>
+> = writable();
+export const collections: Writable<Array<Schema>> = writable();
+export const unAssigned: Writable<Array<Schema>> = writable();
+export const collection: Writable<Schema> = writable();
 
 // Create a writable store for Avatar
 export const avatarSrc: Writable<string> = writable();

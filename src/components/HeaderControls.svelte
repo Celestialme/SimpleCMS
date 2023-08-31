@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
-	import { collection, categories } from '@src/collections/index';
+	import { collection, categories } from '@src/stores/store';
 	import { saveFormData, cloneData, deleteData } from '@src/utils/utils';
 	import { page } from '$app/stores';
 

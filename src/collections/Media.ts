@@ -1,10 +1,9 @@
 import widgets from '../components/widgets';
-import { roles } from './Auth';
+import { roles } from './types';
 import type { Schema } from './types';
 
 const schema: Schema = {
-	// Collection Name required
-	name: 'image upload',
+	// Collection Name comming from filename
 
 	// Optional & Icon , status, slug
 	// See for possible Icons https://icon-sets.iconify.design/

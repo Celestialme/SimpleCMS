@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { collection, categories } from '@src/collections/index';
-	import { mode, screenWidth, toggleLeftSidebar } from '@src/stores/store';
+	import { mode, screenWidth, toggleLeftSidebar, collection, categories } from '@src/stores/store';
 	import { page } from '$app/stores';
 	import type { User } from '@src/collections/Auth';
 

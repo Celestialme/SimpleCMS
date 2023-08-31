@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-	import collections, { collection } from '@src/collections';
-	import { collectionValue, mode } from '@src/stores/store';
+	import { collectionValue, mode, collections, collection } from '@src/stores/store';
 	import type { Schema } from '@src/collections/types';
 
 	import Fields from '@src/components/Fields.svelte';

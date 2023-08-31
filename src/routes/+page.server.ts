@@ -1,5 +1,6 @@
 import { PUBLIC_SYSTEM_LANGUAGE } from '$env/static/public';
 import { getCollections } from '@src/collections';
+import { collections } from '@src/stores/store';
 import { validate } from '@src/utils/utils';
 import { redirect } from '@sveltejs/kit';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
