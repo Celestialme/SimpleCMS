@@ -1,10 +1,16 @@
-import fs from 'fs/promises'; // Use fs.promises for asynchronous file operations
+import fs from 'fs/promises';
 import path from 'path';
 
 export async function updateConfigFile(request: any) {
+	console.log('updateConfigFile called');
 	// Get the data from the request body
 	const data = request.body;
 	console.log('data', data);
+
+	// Remove the id property from the collections
+	for (const collection of data.collections) {
+		delete collection.id;
+	}
 
 	// Define the path to the config.ts file
 	const configFilePath = path.join(process.cwd(), 'src', 'collections', 'config.ts');
@@ -25,7 +31,7 @@ export async function updateConfigFile(request: any) {
 		// Return a success response
 		return {
 			status: 200,
-			body: 'Config file updated successfully'
+			body: 'Config file updated successfully by API'
 		};
 	} catch (error) {
 		// Return an error response

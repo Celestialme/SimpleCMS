@@ -77,7 +77,7 @@
 	}
 
 	// Define the structure of an unassigned collection
-	let UnassingedCollections = $unAssigned.map((collection) => ({
+	let UnassignedCollections = $unAssigned.map((collection) => ({
 		id: generateUniqueId(),
 		name: collection.name,
 		icon: collection.icon,
@@ -89,7 +89,7 @@
 	}));
 
 	// Define the structure of an Assigned collection
-	let availableCollection = $categories.map((category) => ({
+	export let availableCollection = $categories.map((category) => ({
 		id: generateUniqueId(),
 		name: category.name,
 		icon: category.icon,
@@ -108,8 +108,8 @@
 
 	// Update the Unassigned collection where the item was dropped
 	function handleUnassignedUpdated(newItems: any) {
-		UnassingedCollections = newItems;
-		console.log('Current UnassingedCollections:', UnassingedCollections);
+		UnassignedCollections = newItems;
+		console.log('handleUnassignedUpdated:', UnassignedCollections);
 	}
 
 	//Saving changes to the config.ts
@@ -121,6 +121,7 @@
 				headers: {
 					'Content-Type': 'application/json'
 				},
+
 				body: JSON.stringify(availableCollection)
 			});
 
@@ -168,7 +169,7 @@
 	<p class="my-2 text-center">Create a first collection to get started</p>
 {:else}
 	<!-- display unassigned collections -->
-	<Unassigned items={UnassingedCollections} onDrop={handleUnassignedUpdated} />
+	<Unassigned items={UnassignedCollections} onDrop={handleUnassignedUpdated} />
 
 	<!-- display collections -->
 	<Board columns={availableCollection} onFinalUpdate={handleBoardUpdated} />
