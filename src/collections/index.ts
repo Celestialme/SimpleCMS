@@ -25,8 +25,8 @@ export const updateCollections = async (recompile: boolean = false) => {
 			// Define config file name
 			const config = 'config.js' + rnd;
 			const { createCategories } = browser
-				? await import('/api/importCollection/' + config)
-				: await import(import.meta.env.collectionsFolderJS + config);
+				? await import(/* @vite-ignore */ '/api/importCollection/' + config)
+				: await import(/* @vite-ignore */ import.meta.env.collectionsFolderJS + config);
 
 			// Create categories using new version of createCategories function and imports object
 			_categories = createCategories(imports);
@@ -83,7 +83,9 @@ async function getImports(recompile: boolean = false) {
 
 			for (const file of files) {
 				const name = file.replace(/.js$/, '');
-				const collection = (await import('/api/importCollection/' + file + '?' + rnd)).default;
+				const collection = (
+					await import(/* @vite-ignore */ '/api/importCollection/' + file + '?' + rnd)
+				).default;
 				collection.name = name;
 				imports[name] = collection;
 			}
@@ -95,8 +97,9 @@ async function getImports(recompile: boolean = false) {
 			// Dynamically import returned files from folder specified by import.meta.env.collectionsFolder
 			for (const file of files) {
 				const name = file.replace(/.js$/, '');
-				const collection = (await import(import.meta.env.collectionsFolderJS + file + '?' + rnd))
-					.default;
+				const collection = (
+					await import(/* @vite-ignore */ import.meta.env.collectionsFolderJS + file + '?' + rnd)
+				).default;
 				collection.name = name;
 				imports[name] = collection;
 			}

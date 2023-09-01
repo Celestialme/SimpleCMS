@@ -31,7 +31,18 @@
 
 	import { contentLanguage } from '@src/stores/store';
 
-	import { fly } from 'svelte/transition';
+	//smooth view transitions via browser (only chrome)
+	import { onNavigate } from '$app/navigation';
+	onNavigate((navigation) => {
+		if (!(document as any).startViewTransition) return;
+
+		return new Promise((resolve) => {
+			(document as any).startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 
 	import axios from 'axios';
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';

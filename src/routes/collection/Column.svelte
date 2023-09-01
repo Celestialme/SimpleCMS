@@ -17,17 +17,17 @@
 	export let onDrop: any;
 
 	function handleDndConsiderCards(e) {
-		console.warn('got consider', name);
+		//console.warn('got', name);
 		items = e.detail.items;
 	}
 
 	function handleDndFinalizeCards(e) {
+		//console.warn('drop', name);
 		onDrop(e.detail.items);
 	}
 
 	function handleCollectionClick(collectionName: string) {
 		// Define the logic for handling the click on a collection
-		// For example, you might want to navigate to the edit page for the selected collection
 		goto(`/collection/${collectionName}/edit`);
 	}
 </script>

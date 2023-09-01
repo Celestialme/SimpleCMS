@@ -9,9 +9,7 @@
 	import ModalAddCategory from './ModalAddCategory.svelte';
 	import PageTitle from '@src/components/PageTitle.svelte';
 	import { generateUniqueId } from '@src/utils/utils';
-
-	// Usage
-	const uniqueId = generateUniqueId();
+	import { updateConfigFile } from '../api/collections/updateConfig';
 
 	// Modal Trigger - New Category
 	function modalAddCategory(): void {
@@ -79,64 +77,61 @@
 	}
 
 	// Define the structure of an unassigned collection
-	let UnassingedCollections = $unAssigned.map((collection, collectionIndex) => ({
+	let UnassingedCollections = $unAssigned.map((collection) => ({
 		id: generateUniqueId(),
 		name: collection.name,
-		icon: 'Unassigned',
+		icon: collection.icon,
 		items: $unAssigned.map((collection: any, collectionIndex: number) => ({
-			id: `${collectionIndex + 1}`,
-			name: collection.name
+			id: generateUniqueId(),
+			name: collection.name,
+			icon: collection.icon
 		}))
 	}));
 
 	// Define the structure of an Assigned collection
-	let availableCollection = $categories.map((category, categoryIndex) => ({
+	let availableCollection = $categories.map((category) => ({
 		id: generateUniqueId(),
 		name: category.name,
 		icon: category.icon,
 		items: category.collections.map((collection: any, collectionIndex: number) => ({
-			id: `${categoryIndex + 1}.${collectionIndex + 1}`,
-			name: collection.name
+			id: generateUniqueId(),
+			name: collection.name,
+			icon: collection.icon
 		}))
 	}));
 
-	// Update the assigned collection where the item was dropped
-	function handleUnassignedUpdated(newItems) {
-		const [targetCategoryIndex, targetCollectionIndex] = findTargetIndices(newItems);
-
-		if (targetCategoryIndex !== -1 && targetCollectionIndex !== -1) {
-			const targetCollection =
-				availableCollection[targetCategoryIndex].collections[targetCollectionIndex];
-			targetCollection.items.push(newItems); // Add the dropped unassigned collection to the target collection
-		}
-
-		// Update the state to reflect the changes
-		availableCollection = [...availableCollection];
-
-		// Call the function to handle the updated data
-		handleBoardUpdated(availableCollection);
-	}
-
-	function handleBoardUpdated(newColumnsData) {
+	// Update the Assigned collection(s) where the item was dropped
+	function handleBoardUpdated(newColumnsData: any) {
 		availableCollection = newColumnsData;
+		console.log('handleBoardUpdated:', availableCollection);
 	}
 
-	// When saving changes
-	async function handleSaveClick() {
-		const response = await fetch('/api/update_categories', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(availableCollection)
-		});
+	// Update the Unassigned collection where the item was dropped
+	function handleUnassignedUpdated(newItems: any) {
+		UnassingedCollections = newItems;
+		console.log('Current UnassingedCollections:', UnassingedCollections);
+	}
 
-		if (response.ok) {
-			// Update the config.ts file with the modified availableCollection
-			updateConfigFile(availableCollection); // Implement this function
-			console.log('Categories updated');
-		} else {
-			console.error('Error updating categories');
+	//Saving changes to the config.ts
+	async function handleSaveClick() {
+		try {
+			// Make a POST request to the /api/updateConfig endpoint with the new data
+			const response = await fetch('/api/updateConfig', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(availableCollection)
+			});
+
+			// Check if the update was successful
+			if (response.ok) {
+				console.log('Config file updated successfully');
+			} else {
+				console.error('Error updating config file');
+			}
+		} catch (error) {
+			console.error('Error updating config file:', error);
 		}
 	}
 </script>
