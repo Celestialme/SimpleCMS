@@ -1,26 +1,25 @@
 <script lang="ts">
 	export let data: PageData;
-	import type { PageData, SubmitFunction } from './$types';
+	import type { PageData } from './$types';
 	import '@src/stores/store';
+
+	//superforms
 	import { superForm } from 'sveltekit-superforms/client';
-	//import { enhance } from '$app/forms';
+	import { addUserTokenSchema } from '@src/utils/formSchemas';
 
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
-	import { addUserTokenSchema } from '@src/utils/formSchemas';
+	import { roles } from '@src/collections/types';
 
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: any;
 
 	// Skelton & Stores
-
 	import { getModalStore } from '@skeletonlabs/skeleton';
-
 	const modalStore = getModalStore();
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
-	import { roles } from '@src/collections/types';
 
 	// Base Classes
 	const cBase = 'card p-4 w-modal shadow-xl space-y-4';
@@ -29,8 +28,8 @@
 
 	let response: any;
 	//console.log(data);
-
-	let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
+	const { form, constraints, allErrors, errors, enhance } = superForm(data, {
+		// const { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
 		id: 'addUser',
 		validators: addUserTokenSchema,
 		defaultValidator: 'clear',
@@ -48,43 +47,23 @@
 			}
 		}
 	});
+
 	$form.role = 'User';
 
-	// Define errorStatus
-	let errorStatus: Record<string, { status: boolean; msg: string }> = {
-		email: { status: false, msg: '' },
-		role: { status: false, msg: '' },
-		expiresIn: { status: false, msg: '' },
-		valid: { status: false, msg: '' }
-	};
-
-	let email = '';
 	// define default role
 	let roleSelected = Object.values(roles)[1];
 
-	// Token Expires in Duration
-	let expiresIn: number;
-	let expiresInSelected: string = '12 hrs'; // Initialize expiresInSelected with a default value
+	/// Calculate expiration time in seconds based on expiresIn value
+	let expiresIn = '2 hrs'; // Set the default validity
+	let expirationTime;
 
-	switch (expiresInSelected) {
-		case '2 hrs':
-			expiresIn = 2 * 60 * 60 * 1000;
-			break;
-		case '12 hrs': //default expires value
-			expiresIn = 12 * 60 * 60 * 1000;
-			break;
-		case '2 days':
-			expiresIn = 2 * 24 * 60 * 60 * 1000;
-			break;
-		case '1 week':
-			expiresIn = 7 * 24 * 60 * 60 * 1000;
-			break;
-		default:
-			errorStatus['expiresIn'].status = true;
-			errorStatus['expiresIn'].msg = 'Invalid value for token validity';
-			// Cancel function needs to be defined here or you can perform a different action
-			break;
-	}
+	// Define the validity options and their corresponding seconds
+	const validityOptions = [
+		{ label: '2 hrs', value: '2 hrs', seconds: 2 * 60 * 60 },
+		{ label: '12 hrs', value: '12 hrs', seconds: 12 * 60 * 60 },
+		{ label: '2 days', value: '2 days', seconds: 2 * 24 * 60 * 60 },
+		{ label: '1 week', value: '1 week', seconds: 7 * 24 * 60 * 60 }
+	];
 </script>
 
 <!-- @component This example creates a simple form modal. -->
@@ -110,9 +89,9 @@
 				required
 			/>
 
-			{#if errorStatus.email.status}
+			{#if $errors.email}
 				<div class="absolute left-0 top-11 text-xs text-error-500">
-					{errorStatus.email.msg}
+					{$errors.email}
 				</div>
 			{/if}
 		</div>
@@ -135,7 +114,9 @@
 							role="button"
 							tabindex="0"
 						>
-							{#if roleSelected === r}<span><iconify-icon icon="fa:check" /></span>{/if}
+							{#if roleSelected === r}
+								<span><iconify-icon icon="fa:check" /></span>
+							{/if}
 							<span class="capitalize">{r}</span>
 						</span>
 					{/each}
@@ -148,26 +129,27 @@
 			<div class="sm:w-1/4">Token validity:</div>
 			<div class="flex-auto">
 				<div class="flex flex-wrap gap-2 space-x-2">
-					{#each ['2 hrs', '12 hrs', '2 days', '1 week'] as v}
+					{#each validityOptions as option}
 						<span
-							class="chip {expiresInSelected === v
+							class="chip {expiresIn === option.value
 								? 'variant-filled-tertiary'
 								: 'variant-ghost-secondary'}"
 							on:click={() => {
-								expiresInSelected = v;
+								expiresIn = option.value;
+								expirationTime = option.seconds;
 							}}
 							on:keypress
 							role="button"
 							tabindex="0"
 						>
-							{#if expiresInSelected === v}<span><iconify-icon icon="fa:check" /></span>{/if}
-							<span class="capitalize">{v}</span>
+							{#if expiresIn === option.value}<span><iconify-icon icon="fa:check" /></span>{/if}
+							<span class="capitalize">{option.label}</span>
 						</span>
 					{/each}
 				</div>
-				{#if errorStatus.expiresIn.status}
+				{#if $errors.expiresIn}
 					<div class="mt-1 text-xs text-error-500">
-						{errorStatus.expiresIn.msg}
+						{$errors.expiresIn}
 					</div>
 				{/if}
 			</div>
