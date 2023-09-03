@@ -380,7 +380,7 @@
 
 					<!-- Loading indicators -->
 					{#if $forgotDelayed}
-						<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />
+						<img src="/Spinner.svg" alt="Loading.." class="ml-4 h-6" />
 					{/if}
 
 					<!-- back button  -->
@@ -464,7 +464,7 @@
 					{$LL.LOGIN_ResetPasswordSave()}
 					<!-- Loading indicators -->
 					{#if $resetDelayed}
-						<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />
+						<img src="/Spinner.svg" alt="Loading.." class="ml-4 h-6" />
 					{/if}
 				</button>
 			</form>

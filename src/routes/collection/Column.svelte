@@ -57,7 +57,10 @@
 			>
 				<iconify-icon icon="mdi:drag" width="18" class=" pl-0.5" />
 
-				<span class="break-word">{item.name}</span>
+				<span class="break-word flex items-center gap-2">
+					<iconify-icon icon={item.icon} width="18" class="text-error-500" />
+					{item.name}</span
+				>
 
 				<button class="text-black" on:click={() => handleCollectionClick(item.name)}
 					><iconify-icon icon="mdi:pen" width="18" class="pr-0.5" /></button

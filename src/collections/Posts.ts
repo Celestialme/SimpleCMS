@@ -18,8 +18,7 @@ const schema: Schema = {
 	fields: [
 		widgets.Email({
 			label: 'email',
-			icon: 'material-symbols:mail',
-			translated: false
+			icon: 'material-symbols:mail'
 			// display: async (data, field, entry, contentLanguage) => {
 			// 	return data[contentLanguage];
 			// },

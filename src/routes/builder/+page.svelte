@@ -22,7 +22,7 @@
 						fields: $collection.fields
 				  })
 				: obj2formData({ fields, collectionName: name });
-		axios.post(``, data, {
+		axios.post(`?/saveCollection`, data, {
 			headers: {
 				'Content-Type': 'multipart/form-data'
 			}

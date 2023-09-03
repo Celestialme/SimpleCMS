@@ -1,24 +1,24 @@
 // Configure how Collections are sorted & displayed in Categories section
 // TODO Add translations
-export function createCategories(imports: any) {
+export function createCategories(collection: any) {
 	return [
 		{
 			name: 'Collections',
 			icon: 'bi:collection',
 			collections: [
-				imports.Posts,
-				imports.Names,
-				imports.Posts2,
-				imports.Names2,
-				imports.Relation,
-				imports.Media,
-				imports.WidgetTest
+				collection.Posts,
+				collection.Names,
+				collection.Posts2,
+				collection.Names2,
+				collection.Relation,
+				collection.Media,
+				collection.WidgetTest
 			]
 		},
 		{
 			name: 'Menu',
 			icon: 'bi:menu-button-wide',
-			collections: [imports.Menu]
+			collections: [collection.Menu]
 		}
 	];
 }

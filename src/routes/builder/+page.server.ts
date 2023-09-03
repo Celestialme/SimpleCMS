@@ -1,9 +1,13 @@
 import { redirect, type Actions } from '@sveltejs/kit';
-import { auth } from '../api/db';
+import { auth, getCollectionModels } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
 import widgets from '@src/components/widgets';
 import fs from 'fs';
+import prettier from 'prettier';
+//import prettierConfig from '@root/.prettierrc.json';
+import { updateCollections } from '@src/collections';
+import { compile } from '../api/compile/compile';
 
 type Widget = typeof widgets;
 type fields = ReturnType<Widget[keyof Widget]>;
@@ -21,15 +25,11 @@ export async function load(event) {
 }
 
 export const actions: Actions = {
-	default: async ({ request }) => {
+	saveCollection: async ({ request }) => {
 		const formData = await request.formData();
 		const fieldsData = formData.get('fields') as string;
 		const originalName = JSON.parse(formData.get('originalName') as string);
 		const collectionName = JSON.parse(formData.get('collectionName') as string);
-		const collectionIcon = JSON.parse(formData.get('collectionIcon') as string);
-		const collectionStatus = JSON.parse(formData.get('collectionStatus') as string);
-		const collectionSlug = JSON.parse(formData.get('collectionSlug') as string);
-
 		const fields = JSON.parse(fieldsData) as Array<fields>;
 		const imports = goThrough(fields);
 
@@ -37,11 +37,7 @@ export const actions: Actions = {
 	${imports}
 	import widgets from '../components/widgets';
 	import type { Schema } from './types';
-	const schema: Schema = {
-		name: '${collectionName}',
-		icon: '${collectionIcon}',
-		status: '${collectionStatus}',
-		slug: '${collectionSlug}',
+	let schema: Schema = {
 		fields: [
 			${fields}
 		]
@@ -52,15 +48,35 @@ export const actions: Actions = {
 		content = content.replace(/\\n|\\t/g, '').replace(/\\/g, '');
 
 		content = content.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
+		//content = prettier.format(content, { ...prettierConfig });
 		if (originalName && originalName != collectionName) {
 			fs.renameSync(
-				`./src/collections/${originalName}.ts`,
-				`./src/collections/${collectionName}.ts`
+				`${import.meta.env.collectionsFolderTS}/${originalName}.ts`,
+				`${import.meta.env.collectionsFolderTS}/${collectionName}.ts`
 			);
 		}
-		fs.writeFileSync(`./src/collections/${collectionName}.ts`, content);
-
+		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/${collectionName}.ts`, content);
+		await compile();
+		await updateCollections(true);
+		await getCollectionModels();
 		return null;
+	},
+
+	saveConfig: async ({ request }) => {
+		const formData = await request.formData();
+		const categories = formData.get('categories') as string;
+		let config = `
+		export function createCategories(collections) {
+			return ${categories}
+	
+		}
+		`;
+		config = config.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
+		//config = prettier.format(config, { ...prettierConfig });
+		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/config.ts`, config);
+		await compile();
+		await updateCollections(true);
+		await getCollectionModels();
 	}
 };
 
