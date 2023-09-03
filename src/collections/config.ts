@@ -1,14 +1,6 @@
-export function createCategories(imports) {
+export function createCategories(collections) {
 	return [
-		{
-			name: 'Collections',
-			icon: 'bi:collection',
-			collections: [imports.Posts2, imports.Posts3, imports.thumbs]
-		},
-		{
-			name: 'posts',
-			icon: 'bi:images',
-			collections: [imports.ImageArray, imports.Menu, imports.Relation, imports.Media]
-		}
+		{ name: 'Collections', icon: 'bi:collection', collections: [collections.Posts2, collections.Posts3, collections.thumbs] },
+		{ name: 'posts', icon: 'bi:images', collections: [collections.ImageArray, collections.Menu, collections.Relation] }
 	];
 }

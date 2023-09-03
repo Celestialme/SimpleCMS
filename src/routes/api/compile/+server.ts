@@ -2,7 +2,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { getCollectionModels } from '../db';
 import { updateCollections } from '@src/collections';
 import { compile } from './compile';
-globalThis.__filename = '';
+
 export const GET: RequestHandler = async () => {
 	await compile();
 	await updateCollections(true);

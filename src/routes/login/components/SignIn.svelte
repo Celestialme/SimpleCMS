@@ -10,7 +10,7 @@
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import LoginRecover from './LoginRecover.svelte';
-	import CheckIcon from '@src/components/system/buttons/CheckIcon.svelte';
+	import EnableIcon from '@src/components/system/buttons/EnableIcon.svelte';
 	export let formSchema: PageData['loginForm'];
 	export let recoverFormSchema: PageData['recoverForm'];
 	let loginRecover = false;
@@ -75,7 +75,7 @@
 				{...$constraints.password}
 				label={$form.isToken ? 'token' : $LL.LOGIN_Password()}
 			>
-				<CheckIcon bind:checked={$form.isToken} icon={'oi:lock-locked'} class="absolute right-[30px]" />
+				<EnableIcon bind:checked={$form.isToken} icon={'oi:lock-locked'} class="absolute right-[30px]" />
 			</FloatingInput>
 
 			{#if $errors.password}<span class="invalid">{$errors.password}</span>{/if}

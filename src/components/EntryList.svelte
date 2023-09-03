@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { mode, entryData, deleteEntry } from '@src/stores/store';
 	import axios from 'axios';
-	import DeleteIcon from './DeleteIcon.svelte';
+	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { writable } from 'svelte/store';
 	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel } from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
 	import { contentLanguage, collection } from '@src/stores/load';
+	import DeleteIcon from './system/icons/DeleteIcon.svelte';
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
 	let deleteMap: any = {};
@@ -86,7 +87,7 @@
 	<thead>
 		{#each $table.getHeaderGroups() as headerGroup}
 			<tr>
-				<th class="!pl-[25px]"> <DeleteIcon bind:checked={deleteAll} /> </th>
+				<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={DeleteIcon} /> </th>
 				{#each headerGroup.headers as header}
 					<th>
 						{#if !header.isPlaceholder}
@@ -105,7 +106,7 @@
 					mode.set('edit');
 				}}
 			>
-				<td class="!pl-[25px]"> <DeleteIcon bind:checked={deleteMap[index]} /> </td>
+				<td class="!pl-[25px]"> <CheckBox bind:checked={deleteMap[index]} svg={DeleteIcon} /> </td>
 				{#each row.getVisibleCells() as cell}
 					<td>
 						{@html cell.getValue()}

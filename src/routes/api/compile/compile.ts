@@ -3,6 +3,7 @@ export async function compile({
 	collectionsFolderJS = import.meta.env.collectionsFolderJS,
 	collectionsFolderTS = import.meta.env.collectionsFolderTS
 } = {}) {
+	globalThis.__filename = '';
 	if (!fs.existsSync(collectionsFolderJS)) {
 		fs.mkdirSync(collectionsFolderJS);
 	}

@@ -1,12 +1,39 @@
 <script lang="ts">
-	import { collection } from '@src/stores/load';
+	import { collection, unAssigned } from '@src/stores/load';
 	import { mode } from '@src/stores/store';
 	import { categories } from '@src/collections';
 	import { page } from '$app/stores';
 	import type { User } from '@src/collections/Auth';
+	import CheckIcon from '@src/components/system/icons/CheckIcon.svelte';
+	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
+	import { asAny, obj2formData } from '@src/utils/utils';
+	import Button from '../buttons/Button.svelte';
+	import axios from 'axios';
 	export let modeSet: typeof $mode = 'view';
 	let expanded: any = {};
 	let user: User = $page.data.user;
+	let checked = {};
+	for (let category of $categories) {
+		for (let collection of category.collections) {
+			checked[collection.name as string] = true;
+		}
+	}
+	function saveConfig() {
+		let _categories: { name: string; icon: string; collections: string[] }[] = [];
+		for (let category of $categories) {
+			_categories.push({
+				name: category.name,
+				icon: category.icon,
+				collections: category.collections.map((x) => `🗑️collections.${x.name}🗑️` as string)
+			});
+		}
+
+		axios.post(`?/saveConfig`, obj2formData({ categories: _categories }), {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+	}
 </script>
 
 {#each $categories as category, index}
@@ -21,7 +48,7 @@
 	</div>
 	<div class:expand={expanded[index]} class="wrapper">
 		<div class={expanded[index] ? 'delayed-overflow' : 'overflow-hidden'}>
-			{#each category.collections.filter((c) => c?.permissions?.[user.role]?.read != false) as _collection}
+			{#each category.collections.filter((c) => modeSet == 'edit' || c?.permissions?.[user.role]?.read != false) as _collection}
 				<p
 					class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
 					on:click={(e) => {
@@ -29,12 +56,53 @@
 						collection.set(_collection);
 					}}
 				>
-					{_collection.name}
+					{#if modeSet == 'edit'}
+						<CheckBox
+							bind:checked={checked[asAny(_collection.name)]}
+							callback={() => {
+								checked = checked;
+								category.collections = category.collections.filter((x) => x.name != _collection.name);
+								$unAssigned = [...$unAssigned, _collection];
+							}}
+							svg={CheckIcon}
+						/>
+					{/if}
+					<span class="mx-auto">
+						{_collection.name}
+					</span>
 				</p>
 			{/each}
+			{#if modeSet == 'edit' && $unAssigned.length > 0}
+				<div class="border-b-2" />
+				{#each $unAssigned as _collection}
+					<p
+						class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
+						on:click={(e) => {
+							mode.set(modeSet);
+							collection.set(_collection);
+						}}
+					>
+						<CheckBox
+							bind:checked={checked[asAny(_collection.name)]}
+							callback={() => {
+								checked = checked;
+								category.collections.push(_collection);
+								$unAssigned = $unAssigned.filter((x) => x.name != _collection.name);
+							}}
+							svg={CheckIcon}
+						/>
+						<span class="mx-auto">
+							{_collection.name}
+						</span>
+					</p>
+				{/each}
+			{/if}
 		</div>
 	</div>
 {/each}
+{#if modeSet == 'edit'}
+	<Button class="w-full mt-2" on:click={saveConfig}>Save Collections</Button>
+{/if}
 
 <style>
 	.wrapper {

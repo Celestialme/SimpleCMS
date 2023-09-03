@@ -1,9 +1,13 @@
 import { redirect, type Actions } from '@sveltejs/kit';
-import { auth } from '../api/db';
+import { auth, getCollectionModels } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
 import widgets from '@src/components/widgets';
 import fs from 'fs';
+import prettier from 'prettier';
+import prettierConfig from '@root/.prettierrc.json';
+import { updateCollections } from '@src/collections';
+import { compile } from '../api/compile/compile';
 type Widget = typeof widgets;
 type fields = ReturnType<Widget[keyof Widget]>;
 export async function load(event) {
@@ -19,7 +23,7 @@ export async function load(event) {
 }
 
 export const actions: Actions = {
-	default: async ({ request }) => {
+	saveCollection: async ({ request }) => {
 		let formData = await request.formData();
 		let fieldsData = formData.get('fields') as string;
 		let originalName = JSON.parse(formData.get('originalName') as string);
@@ -42,12 +46,32 @@ export const actions: Actions = {
 		content = content.replace(/\\n|\\t/g, '').replace(/\\/g, '');
 
 		content = content.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
+		content = prettier.format(content, { ...prettierConfig });
 		if (originalName && originalName != collectionName) {
 			fs.renameSync(`${import.meta.env.collectionsFolderTS}/${originalName}.ts`, `${import.meta.env.collectionsFolderTS}/${collectionName}.ts`);
 		}
 		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/${collectionName}.ts`, content);
-
+		await compile();
+		await updateCollections(true);
+		await getCollectionModels();
 		return null;
+	},
+
+	saveConfig: async ({ request }) => {
+		let formData = await request.formData();
+		let categories = formData.get('categories') as string;
+		let config = `
+		export function createCategories(collections) {
+			return ${categories}
+	
+		}
+		`;
+		config = config.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
+		config = prettier.format(config, { ...prettierConfig });
+		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/config.ts`, config);
+		await compile();
+		await updateCollections(true);
+		await getCollectionModels();
 	}
 };
 
