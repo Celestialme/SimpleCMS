@@ -1,10 +1,9 @@
 import widgets from '@src/components/widgets';
-import { roles } from './Auth';
+import { roles } from './types';
 import type { Schema } from './types';
 
 const schema: Schema = {
-	// Collection Name required
-	name: 'Menu',
+	// Collection Name comming from filename
 
 	// Optional & Icon , status, slug
 	// See for possible Icons https://icon-sets.iconify.design/
@@ -13,8 +12,20 @@ const schema: Schema = {
 	status: 'published',
 	slug: 'menu',
 
+	/**
+	 * Specifies access rights for user roles.
+	 * `read` and `write` properties define read/write access for each role.
+	 */
+	permissions: {
+		[roles.admin]: {
+			read: true,
+			write: true
+		}
+		// other roles...
+	},
+
 	// Defined Fields that are used in Collection
-	// Inspect Widget fields for possible options
+	// Widget fields can be inspected for individual options
 
 	// Important All MENU Labels need to be called 'Header' for Menu associate children
 	fields: [
@@ -86,7 +97,8 @@ const schema: Schema = {
 						}),
 
 						widgets.ImageUpload({
-							label: 'Image'
+							label: 'Image',
+							path: 'global'
 						}),
 
 						widgets.Text({

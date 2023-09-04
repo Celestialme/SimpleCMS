@@ -1,5 +1,4 @@
 <script lang="ts">
-	import '@src/stores/store';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import SignIn from './components/SignIn.svelte';
 	import SignUp from './components/SignUp.svelte';

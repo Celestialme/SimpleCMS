@@ -1,29 +1,24 @@
-import { writable, type Writable } from 'svelte/store';
-
-export const categories: Writable<{ name: string; icon: string; collections: any[] }[]> = writable(
-	[]
-);
-
-import { imports } from '@src/collections/types';
-
-//TODO wont work wih Graphql it i18n is used for name translation
-imports.subscribe((imports) => {
-	if (!imports) return;
-	categories.set([
+// Configure how Collections are sorted & displayed in Categories section
+// TODO Add translations
+export function createCategories(collection: any) {
+	return [
 		{
 			name: 'Collections',
 			icon: 'bi:collection',
-			collections: [imports.Posts, imports.Names, imports.WidgetTest]
-		},
-		{
-			name: 'Posts',
-			icon: 'bi:images',
-			collections: [imports.Posts2, imports.ImageArray, imports.Relation, imports.Media]
+			collections: [
+				collection.Posts,
+				collection.Names,
+				collection.Posts2,
+				collection.Names2,
+				collection.Relation,
+				collection.Media,
+				collection.WidgetTest
+			]
 		},
 		{
 			name: 'Menu',
 			icon: 'bi:menu-button-wide',
-			collections: [imports.Menu]
+			collections: [collection.Menu]
 		}
-	]);
-});
+	];
+}

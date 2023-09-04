@@ -26,8 +26,19 @@ const widget = ({
 	width
 }: Params) => {
 	if (!display) {
-		// display for table
-		display = async (data: any, field: any, entry: any, contentLanguage: any) => {
+		display = async ({
+			data,
+			collection,
+			field,
+			entry,
+			contentLanguage
+		}: {
+			data: any;
+			collection: any;
+			field: any;
+			entry: any;
+			contentLanguage: string;
+		}) => {
 			// console.log(data);
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return translated
@@ -37,7 +48,7 @@ const widget = ({
 		display.default = true;
 	}
 
-	const widget: { type: any; key: 'Text' } = { type: Text, key: 'Text' };
+	const widget: { type: any; key: 'Text' } = { type: Text, key: 'Text' } as const; 
 
 	const field = {
 		display,

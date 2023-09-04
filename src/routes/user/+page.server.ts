@@ -1,24 +1,29 @@
-import { redirect, type Actions } from '@sveltejs/kit';
+import mongoose from 'mongoose';
+
+//lucia
 import { auth } from '../api/db';
 import { validate } from '@src/utils/utils';
-import { superValidate } from 'sveltekit-superforms/server';
-import { addUserTokenSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { passwordToken } from '@lucia-auth/tokens';
-import { SESSION_COOKIE_NAME, type Key } from 'lucia-auth';
-import mongoose from 'mongoose';
-//import type { User } from '@src/collections/Auth';
+import { SESSION_COOKIE_NAME } from 'lucia-auth';
+
+//superforms
+import { superValidate, message } from 'sveltekit-superforms/server';
+import { addUserTokenSchema, changePasswordSchema } from '@src/utils/formSchemas';
+import { error, fail, redirect, type Actions } from '@sveltejs/kit';
 
 // Load function to check if user is authenticated
 export async function load(event) {
+	// tanstack
 	const allUsers = await getAllUsers();
 	const tokens = await getTokens();
+
 	// Get session data from cookies
 	const session = event.cookies.get(SESSION_COOKIE_NAME) as string;
 
 	// Validate the user's session.
 	const user = await validate(auth, session);
 
-	// Validate addUserForm data
+	// Superforms Validate addUserForm / change Password
 	const addUserForm = await superValidate(event, addUserTokenSchema);
 	const changePasswordForm = await superValidate(event, changePasswordSchema);
 
@@ -42,6 +47,8 @@ export const actions: Actions = {
 	addUser: async (event) => {
 		// Validate addUserForm data
 		const addUserForm = await superValidate(event, addUserTokenSchema);
+		console.log(addUserForm);
+
 		const email = addUserForm.data.email;
 		const role = addUserForm.data.role;
 		const expiresIn = addUserForm.data.expiresIn;
@@ -74,13 +81,13 @@ export const actions: Actions = {
 		}
 
 		// Calculate expiration time in seconds based on expiresIn value
-		let expirationTime: any;
+		let expirationTime: number;
 
 		switch (expiresIn) {
 			case '2 hrs':
 				expirationTime = 2 * 60 * 60;
 				break;
-			case '12 hrs':
+			case '12 hrs': //default expires value
 				expirationTime = 12 * 60 * 60;
 				break;
 			case '2 days':
@@ -103,7 +110,6 @@ export const actions: Actions = {
 		// Issue password token for new user
 		const token = (await tokenHandler.issue(user.id)).toString();
 
-		// TODO: Add svelte email or on Forgotten form?
 		// Send the token to the user via email.
 		console.log('addUser', token);
 

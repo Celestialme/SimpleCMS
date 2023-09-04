@@ -9,7 +9,7 @@
 
 	async function getSchema() {
 		// Make a GET request to the /builder endpoint with the collection parameter
-		const response = await fetch(`/builder/${collection}`);
+		const response = await fetch(`/collection/${collection}`);
 		const data = await response.json();
 
 		// Get the schema object from the response data

@@ -22,10 +22,12 @@ export const POST: RequestHandler = async ({ request }) => {
 		const hash = crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
 
 		// Get the original filename without the extension
-		const originalFileName = await avatar.name.replace(/\.[^.]+$/, '');
+		const originalFileName = avatar.name.replace(/\.[^.]+$/, '');
+
+		const originalExtension = avatar.name.split('.').slice(-1);
 
 		// Sanitize the file name using your function
-		const sanitizedFileName = await sanitize(originalFileName);
+		const sanitizedFileName = sanitize(originalFileName);
 
 		// Get the current avatar URL
 		const user = await auth.getUser(userID);
@@ -48,9 +50,12 @@ export const POST: RequestHandler = async ({ request }) => {
 			fs.mkdirSync(outputPath, { recursive: true });
 		}
 
-		if (avatar.type === 'image/svg+xml' || outputFormat === 'original') {
+		if (avatar.type === 'image/svg+xml') {
 			// For SVG files or if outputFormat is 'original', keep the original filename and format
 			fileName = `${hash}-${userID}-${sanitizedFileName}.svg`;
+			fs.writeFileSync(`${outputPath}/${fileName}`, buffer);
+		} else if (outputFormat === 'original') {
+			fileName = `${hash}-${userID}-${sanitizedFileName}.${originalExtension}`;
 			fs.writeFileSync(`${outputPath}/${fileName}`, buffer);
 		} else {
 			// Optimize the image using sharp

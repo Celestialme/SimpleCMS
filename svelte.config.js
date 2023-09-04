@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-node';
+import adapter from '@sveltejs/adapter-node'; // To generate a standalone Node server
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -10,13 +10,13 @@ const config = {
 	kit: {
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter({
-			out: 'build',
-			precompress: false,
-			envPrefix: '',
-			polyfill: true
+			out: 'build', // default: true | The directory to build the server to
+			precompress: true, // default: false | Enables precompressing using gzip &  brotli for assets & prerendered pages
+			envPrefix: '', // default: '' | If you need to change the name of the environment variables used to configure the deployment
+			polyfill: false // default: true | should be disabled when using Node 18.11 or greatere
 		}),
 		csrf: {
-			checkOrigin: false
+			checkOrigin: false // default: true | Protection against cross-site request forgery (CSRF) attacks.
 		}
 	},
 

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { roles } from '@src/collections/Auth';
+	import { page } from '$app/stores';
+	import { roles } from '@src/collections/types';
 	// define default role
 	let roleSelected = Object.values(roles)[0];
 
@@ -29,8 +30,6 @@
 	};
 
 	let showPassword = false;
-
-	import { page } from '$app/stores';
 
 	let errorStatus = {
 		username: { status: false, msg: '' },

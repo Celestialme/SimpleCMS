@@ -1,38 +1,50 @@
 import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 import { sveltekit } from '@sveltejs/kit/vite';
-// import { config } from 'vite';
-
-import Path from 'path';
 
 // Gets package.json version info on app start
 // https://kit.svelte.dev/faq#read-package-json
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
+import { compile } from './src/routes/api/compile/compile';
 
 //github Version package.json check
-const file = fileURLToPath(new URL('package.json', import.meta.url));
+//const file = fileURLToPath(new URL('package.json', import.meta.url));
 const json = readFileSync('package.json', 'utf8');
 const pkg = JSON.parse(json);
 
-// collection updater
+// Dynamic collection updater
 import type vite from 'vite';
-import { updateImports } from './src/utils/collectionUpdater';
+import Path from 'path';
 
-const myPlugin = {
-	name: 'log-request-middleware',
-	configureServer(server) {
-		server.watcher.addListener('all', (event, path) => {
-			if (event == 'change') return;
-			if (!path.includes('src\\collections') && !path.includes('src/collections')) return;
+const file = fileURLToPath(new URL('package.json', import.meta.url));
 
-			console.log(event, path);
-			updateImports();
-		});
-	}
-} as vite.Plugin;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = Path.dirname(__filename);
+const parsed = Path.parse(__dirname);
+
+const collectionsFolderJS =
+	'/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/') + '/collections/';
+const collectionsFolderTS =
+	'/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/') + '/src/collections/';
+
+compile({ collectionsFolderJS, collectionsFolderTS });
 
 const config = {
-	plugins: [myPlugin, sveltekit(), purgeCss()],
+	plugins: [
+		{
+			name: 'vite:server',
+			config() {
+				return {
+					define: {
+						'import.meta.env.collectionsFolderJS': JSON.stringify(collectionsFolderJS),
+						'import.meta.env.collectionsFolderTS': JSON.stringify(collectionsFolderTS)
+					}
+				};
+			}
+		},
+		sveltekit(),
+		purgeCss()
+	],
 
 	server: { fs: { allow: ['static', '.'] } },
 

@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import widgets from '@src/components/widgets';
-import { roles } from './Auth';
+import { roles } from './types';
 import type { Schema } from './types';
 
 // typesafe-i18n
@@ -8,8 +8,11 @@ import LL from '@src/i18n/i18n-svelte';
 import { get } from 'svelte/store';
 
 const schema: Schema = {
-	// Collection Name required
-	name: 'widget-test',
+	// Collection Name comming from filename
+
+	// Optional & Icon , status, slug
+	// See for possible Icons https://icon-sets.iconify.design/
+	icon: 'bi:card-text',
 
 	// Collection Permissions by user Roles
 	permissions: {
@@ -18,12 +21,8 @@ const schema: Schema = {
 		}
 	},
 
-	// Optional & Icon , status, slug
-	// See for possible Icons https://icon-sets.iconify.design/
-	icon: 'bi:card-text',
-
 	// Defined Fields that are used in Collection
-	// Inspect Widget fields for possible options
+	// Widget fields can be inspected for individual options
 	fields: [
 		widgets.Text({
 			db_fieldName: 'First',
@@ -113,9 +112,8 @@ const schema: Schema = {
 			placeholder: 'Enter Number',
 			required: true,
 			prefix: 'height',
-			suffix: 'mm',
-			// step: 0.01,
-			translated: false
+			suffix: 'mm'
+			// step: 0.01
 		}),
 
 		widgets.Currency({
@@ -127,8 +125,7 @@ const schema: Schema = {
 			required: true,
 			prefix: '€',
 			suffix: 'Cent',
-			step: 0.01,
-			translated: false
+			step: 0.01
 		}),
 
 		widgets.PhoneNumber({
@@ -155,12 +152,12 @@ const schema: Schema = {
 			required: true
 		}),
 
-		// widgets.RichText({
-		// 	label: 'RichText',
-		// 	db_fieldName: 'RichText',
-		// 	icon: 'ri:t-box-line',
-		// 	required: true
-		// }),
+		widgets.RichText({
+			label: 'RichText',
+			db_fieldName: 'RichText',
+			icon: 'ri:t-box-line',
+			required: true
+		}),
 
 		widgets.Seo({
 			label: 'Seo',

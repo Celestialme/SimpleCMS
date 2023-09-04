@@ -108,9 +108,15 @@
 			if (result.type === 'error') {
 				console.log('onResult error:', allErrors); // log the error messages
 
+				// Transform the array of error messages into a single string
+				let errorMessages = '';
+				forgotAllErrors.subscribe((errors) => {
+					errorMessages = errors.map((error) => error.messages.join(', ')).join('; ');
+				});
+
 				// Trigger the toast
 				const t = {
-					message: allErrors,
+					message: errorMessages,
 					// Provide any utility or variant background style:
 					background: 'variant-filled-primary',
 					timeout: 2000,
@@ -374,7 +380,7 @@
 
 					<!-- Loading indicators -->
 					{#if $forgotDelayed}
-						<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />
+						<img src="/Spinner.svg" alt="Loading.." class="ml-4 h-6" />
 					{/if}
 
 					<!-- back button  -->
@@ -458,7 +464,7 @@
 					{$LL.LOGIN_ResetPasswordSave()}
 					<!-- Loading indicators -->
 					{#if $resetDelayed}
-						<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />
+						<img src="/Spinner.svg" alt="Loading.." class="ml-4 h-6" />
 					{/if}
 				</button>
 			</form>

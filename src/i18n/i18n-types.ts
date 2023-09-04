@@ -145,9 +145,17 @@ type RootTranslation = {
 	 */
 	USER_Fail: string
 	/**
-	 * D​e​l​e​t​e​ ​U​s​e​r
+	 * D​e​l​e​t​e
 	 */
 	USER_Delete: string
+	/**
+	 * C​a​n​c​e​l
+	 */
+	USER_Cancel: string
+	/**
+	 * S​a​v​e
+	 */
+	USER_Save: string
 	/**
 	 * U​s​e​r​ ​P​r​o​f​i​l​e
 	 */
@@ -161,7 +169,7 @@ type RootTranslation = {
 	 */
 	USER_Role: string
 	/**
-	 * E​m​a​i​l​ ​U​s​e​r​ ​R​e​g​i​s​t​i​o​n​ ​t​o​k​e​n
+	 * E​m​a​i​l​ ​U​s​e​r​ ​R​e​g​i​s​t​r​a​t​i​o​n​ ​t​o​k​e​n
 	 */
 	USER_Generate: string
 	/**
@@ -173,13 +181,61 @@ type RootTranslation = {
 	 */
 	USER_ListCollapse: string
 	/**
-	 * E​m​a​i​l​ ​U​s​e​r​ ​R​e​g​i​s​t​i​o​n​ ​t​o​k​e​n
+	 * E​m​a​i​l​ ​U​s​e​r​ ​R​e​g​i​s​t​r​a​t​i​o​n​ ​t​o​k​e​n
 	 */
 	USER_EmailToken: string
+	/**
+	 * T​o​k​e​n​ ​L​i​s​t​:
+	 */
+	USER_ListToken: string
+	/**
+	 * U​s​e​r​ ​L​i​s​t​:
+	 */
+	USER_ListUser: string
 	/**
 	 * A​d​m​i​n​ ​A​r​e​a​:
 	 */
 	USER_AdminArea: string
+	/**
+	 * E​d​i​t​ ​U​s​e​r​ ​D​a​t​a​:
+	 */
+	USER_Edit_Title: string
+	/**
+	 * M​o​d​i​f​y​ ​y​o​u​r​ ​d​a​t​a​ ​a​n​d​ ​t​h​e​n​ ​p​r​e​s​s​ ​S​a​v​e​.
+	 */
+	USER_Edit_Body: string
+	/**
+	 * E​d​i​t​ ​y​o​u​r​ ​A​v​a​t​a​r​:
+	 */
+	USER_Avatar_Title: string
+	/**
+	 * U​p​l​o​a​d​ ​n​e​w​ ​A​v​a​t​a​r​ ​I​m​a​g​e​ ​u​n​d​ ​t​h​e​n​ ​p​r​e​s​s​ ​S​a​v​e​.
+	 */
+	USER_Avatar_Body: string
+	/**
+	 * F​i​l​e​ ​s​i​z​e​ ​m​u​s​t​ ​b​e​ ​l​e​s​s​ ​t​h​a​n​ ​5​M​B
+	 */
+	USER_FileSize: string
+	/**
+	 * P​N​G​,​ ​J​P​E​G​,​ ​G​I​F​,​ ​S​V​G​,​ ​W​E​B​P​,​ ​A​V​I​F​ ​a​l​l​o​w​e​d​.
+	 */
+	USER_FilesAllowed: string
+	/**
+	 * S​u​p​p​o​r​t​e​d​ ​f​o​r​m​a​t​s​:​ ​j​p​e​g​,​ ​j​p​g​,​ ​p​n​g​,​ ​w​e​b​p​,​ ​a​v​i​f​,​ ​s​v​g​,​ ​g​i​f
+	 */
+	USER_Avatar_Unsupported: string
+	/**
+	 * P​l​e​a​s​e​ ​C​o​n​f​i​r​m​ ​U​s​e​r​ ​D​e​l​e​t​i​o​n​:
+	 */
+	USER_Confirm_Title: string
+	/**
+	 * T​h​i​s​ ​c​a​n​n​o​t​ ​b​e​ ​u​n​d​o​n​e​.​ ​A​r​e​ ​y​o​u​ ​s​u​r​e​ ​y​o​u​ ​w​i​s​h​ ​t​o​ ​p​r​o​c​e​e​d​?
+	 */
+	USER_Confirm_Body: string
+	/**
+	 * D​e​l​e​t​e​ ​U​s​e​r
+	 */
+	USER_Confirm_Delete: string
 	/**
 	 * L​i​s​t​ ​o​f​ ​U​s​e​r​:
 	 */
@@ -1176,9 +1232,17 @@ export type TranslationFunctions = {
 	 */
 	USER_Fail: () => LocalizedString
 	/**
-	 * Delete User
+	 * Delete
 	 */
 	USER_Delete: () => LocalizedString
+	/**
+	 * Cancel
+	 */
+	USER_Cancel: () => LocalizedString
+	/**
+	 * Save
+	 */
+	USER_Save: () => LocalizedString
 	/**
 	 * User Profile
 	 */
@@ -1192,7 +1256,7 @@ export type TranslationFunctions = {
 	 */
 	USER_Role: () => LocalizedString
 	/**
-	 * Email User Registion token
+	 * Email User Registration token
 	 */
 	USER_Generate: () => LocalizedString
 	/**
@@ -1204,13 +1268,61 @@ export type TranslationFunctions = {
 	 */
 	USER_ListCollapse: () => LocalizedString
 	/**
-	 * Email User Registion token
+	 * Email User Registration token
 	 */
 	USER_EmailToken: () => LocalizedString
+	/**
+	 * Token List:
+	 */
+	USER_ListToken: () => LocalizedString
+	/**
+	 * User List:
+	 */
+	USER_ListUser: () => LocalizedString
 	/**
 	 * Admin Area:
 	 */
 	USER_AdminArea: () => LocalizedString
+	/**
+	 * Edit User Data:
+	 */
+	USER_Edit_Title: () => LocalizedString
+	/**
+	 * Modify your data and then press Save.
+	 */
+	USER_Edit_Body: () => LocalizedString
+	/**
+	 * Edit your Avatar:
+	 */
+	USER_Avatar_Title: () => LocalizedString
+	/**
+	 * Upload new Avatar Image und then press Save.
+	 */
+	USER_Avatar_Body: () => LocalizedString
+	/**
+	 * File size must be less than 5MB
+	 */
+	USER_FileSize: () => LocalizedString
+	/**
+	 * PNG, JPEG, GIF, SVG, WEBP, AVIF allowed.
+	 */
+	USER_FilesAllowed: () => LocalizedString
+	/**
+	 * Supported formats: jpeg, jpg, png, webp, avif, svg, gif
+	 */
+	USER_Avatar_Unsupported: () => LocalizedString
+	/**
+	 * Please Confirm User Deletion:
+	 */
+	USER_Confirm_Title: () => LocalizedString
+	/**
+	 * This cannot be undone. Are you sure you wish to proceed?
+	 */
+	USER_Confirm_Body: () => LocalizedString
+	/**
+	 * Delete User
+	 */
+	USER_Confirm_Delete: () => LocalizedString
 	/**
 	 * List of User:
 	 */

@@ -1,40 +1,31 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import Input from './Input2.svelte';
-	export let items: string[] = [];
-	export let placeholder: string = '';
-	let value = '';
-	let filteredItems: string[] = [];
-	let showDropdown = false;
-	const dispatch = createEventDispatcher();
-	const handleInput = (event: Event) => {
-		value = (event.target as HTMLInputElement).value;
-		filteredItems = items.filter((item) => item.toLowerCase().includes(value.toLowerCase()));
-		showDropdown = true;
-	};
-	const handleSelect = (item: string) => {
-		value = item;
-		showDropdown = false;
-		dispatch('select', { value });
-	};
+	import { dndzone } from 'svelte-dnd-action';
+	import type { DndEvent } from 'svelte-dnd-action';
+
+	export let items;
+	export let flipDurationMs;
+	export let handleDndConsider: (e: CustomEvent<DndEvent>) => void;
+	export let handleDndFinalize: (e: CustomEvent<DndEvent>) => void;
+	export let headers;
 </script>
 
-<div class="relative">
-	<Input
-		type="text"
-		labelClass="hidden"
-		inputClass="border rounded p-2 "
-		{placeholder}
-		on:input={handleInput}
-		bind:value
-	/>
-	{#if showDropdown}
-		<ul class="absolute z-10 rounded border bg-white">
-			{#each filteredItems as item}
-				<li class="cursor-pointer p-2 hover:bg-gray-100" on:click={() => handleSelect(item)}>
-					{item}
-				</li>
-			{/each}
-		</ul>
-	{/if}
+<div>
+	<!-- Header -->
+	<div
+		class="flex w-full items-center gap-4 bg-primary-500 p-1 py-2 pl-3 text-center font-semibold"
+	>
+		{#each headers as header}
+			<div class="text-black">{header}:</div>
+		{/each}
+	</div>
+
+	<section
+		use:dndzone={{ items, flipDurationMs }}
+		on:consider={handleDndConsider}
+		on:finalize={handleDndFinalize}
+		class="my-2 w-full overflow-scroll border border-surface-400 p-2"
+	>
+		<!-- Data -->
+		<slot />
+	</section>
 </div>

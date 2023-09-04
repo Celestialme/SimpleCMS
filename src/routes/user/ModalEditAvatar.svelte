@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import axios from 'axios';
-
+	import { page } from '$app/stores';
 	const user = $page.data.user;
+
+	// typesafe-i18n
+	import LL from '@src/i18n/i18n-svelte';
 
 	// Props
 	/** Exposes parent props to this component. */
@@ -57,15 +59,14 @@
 					if (val.size > 5242880) {
 						ctx.addIssue({
 							code: z.ZodIssueCode.custom,
-							message: 'Avatar must be less than 5MB'
+							message: $LL.USER_FileSize()
 						});
 					}
 
 					if (!imageTypes.includes(val.type)) {
 						ctx.addIssue({
 							code: z.ZodIssueCode.custom,
-							message:
-								'Unsupported file type. Supported formats: jpeg, jpg, png, webp, avi , svg, gif'
+							message: $LL.USER_Avatar_Unsupported()
 						});
 					}
 				}
@@ -179,18 +180,18 @@
 						></svg
 					>
 				</svelte:fragment>
-				<svelte:fragment slot="meta">PNG, JPEG, GIF, SVG, WEBP, AVIF allowed.</svelte:fragment>
+				<svelte:fragment slot="meta">{$LL.USER_FilesAllowed()}</svelte:fragment>
 			</FileDropzone>
 		</div>
 		{#if !files}
-			<small class="block text-center opacity-75">Files should not exceed 5MB</small>
+			<small class="block text-center opacity-75">{$LL.USER_FileSize()}</small>
 		{/if}
 	</form>
 
 	<footer class="modal-footer {parent.regionFooter} justify-between">
 		{#if $avatarSrc !== '/Default_User.svg'}
 			<button type="button" on:click={deleteAvatar} class="variant-filled-error btn">
-				<iconify-icon icon="icomoon-free:bin" width="24" />Delete
+				<iconify-icon icon="icomoon-free:bin" width="24" />{$LL.USER_Delete()}
 			</button>
 		{:else}
 			<div></div>
@@ -198,9 +199,9 @@
 		{/if}
 		<div class="flex justify-between">
 			<button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>
-				{parent.buttonTextCancel}
+				{$LL.USER_Cancel()}
 			</button>
-			<button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Save</button>
+			<button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>{$LL.USER_Save()}</button>
 		</div>
 	</footer>
 </div>

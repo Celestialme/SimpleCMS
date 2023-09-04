@@ -101,11 +101,16 @@
 			id: 'image',
 			cell: (info: any) =>
 				flexRender(Avatar, {
-					src: info.row.original.path,
+					src: info.row.original.thumbnail,
 					width: `${tableSize === 'small' ? 'w-6' : tableSize === 'medium' ? 'w-10' : 'w-14'}`
 				})
 		},
-		{ header: 'Name', accessorKey: 'name', id: 'name' },
+		{
+			header: 'Name',
+			accessorKey: 'name',
+			id: 'name',
+			cell: (info: any) => info.row.original.name // Display the name without the hash
+		},
 		{
 			header: 'Size',
 			accessorKey: 'size',
@@ -117,9 +122,15 @@
 		{
 			header: 'Hash',
 			accessorKey: 'hash',
-			id: 'hash'
+			id: 'hash',
+			cell: (info: any) => info.row.original.hash // Display the hash value
 		},
-		{ header: 'Path', accessorKey: 'path', id: 'path' }
+		{
+			header: 'Path',
+			accessorKey: 'path',
+			id: 'path',
+			cell: (info: any) => `${info.row.original.path}-${info.row.original.name}` // Construct full path
+		}
 	];
 </script>
 
@@ -349,7 +360,7 @@
 								<!-- Word icon -->
 								<!-- ... Add Word icon code here ... -->
 							{:else if image.path.endsWith('.jpg') || image.path.endsWith('.jpeg') || image.path.endsWith('.png') || image.path.endsWith('.svg') || image.path.endsWith('.webp') || image.path.endsWith('.avif')}
-								<!-- Image -->
+								<!-- SVG Image -->
 								<img
 									class={`inline-block object-cover object-center ${
 										gridSize === 'small'
@@ -363,7 +374,10 @@
 								/>
 							{:else}
 								<!-- Default icon for unknown file types -->
-								<!-- ... Add default icon code here ... -->
+								<iconify-icon
+									icon="noto-v1:question-mark"
+									width={gridSize === 'small' ? '58' : gridSize === 'medium' ? '138' : '315'}
+								/>
 							{/if}
 						</section>
 						<footer

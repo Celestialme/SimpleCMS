@@ -1,10 +1,9 @@
 import widgets from '@src/components/widgets';
-import { roles } from './Auth';
+import { roles } from './types';
 import type { Schema } from './types';
 
 const schema: Schema = {
-	// Collection Name required
-	name: 'posts',
+	// Collection Name comming from filename
 
 	// Optional & Icon , status, slug
 	// See for possible Icons https://icon-sets.iconify.design/
@@ -12,13 +11,14 @@ const schema: Schema = {
 	status: 'published',
 	slug: 'posts',
 
+	// Collection Permissions by user Roles
+
 	// Defined Fields that are used in Collection
-	// Inspect Widget fields for possible options
+	// Widget fields can be inspected for individual options
 	fields: [
 		widgets.Email({
 			label: 'email',
-			icon: 'material-symbols:mail',
-			translated: false
+			icon: 'material-symbols:mail'
 			// display: async (data, field, entry, contentLanguage) => {
 			// 	return data[contentLanguage];
 			// },

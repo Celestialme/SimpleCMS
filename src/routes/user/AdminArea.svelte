@@ -13,6 +13,8 @@
 
 	const modalStore = getModalStore();
 	export let data: PageData;
+	//console.log(data);
+
 	// Modal Trigger - Generate User Registration email Token
 	function modalTokenUser(): void {
 		const modalComponent: ModalComponent = {
@@ -159,15 +161,16 @@
 
 <div class="border-td mt-2 flex flex-col border-t-2">
 	<p class="h2 my-2 text-center text-3xl font-bold dark:text-white">{$LL.USER_AdminArea()}</p>
-	<div class=" flex flex-col items-center justify-between gap-2 sm:flex-row">
+	<div class=" flex flex-col flex-wrap items-center justify-between gap-2 sm:flex-row">
 		<!-- Email Token -->
 		<button on:click={modalTokenUser} class="gradient-primary btn w-full text-white sm:max-w-xs">
 			<iconify-icon icon="material-symbols:mail" color="white" width="18" class="mr-1" />
-			{$LL.USER_EmailToken()}
+			<span class="whitespace-normal break-words">{$LL.USER_EmailToken()}</span>
 		</button>
 
-		{#if !tableDataUserToken}
+		{#if tableDataUserToken}
 			<!-- Show User Token -->
+
 			<button
 				on:click={toggleUserToken}
 				class="gradient-tertiary btn w-full text-white sm:max-w-xs"
@@ -187,6 +190,7 @@
 	{#if showUserList}
 		<!-- <UserList /> -->
 		<div class="my-2 flex flex-col items-center justify-between sm:flex-row">
+			<h2 class="font-bold text-primary-500">{$LL.USER_ListUser()}</h2>
 			<div class="hidden sm:flex">
 				<TanstackFilter
 					bind:globalSearchValue
@@ -240,6 +244,7 @@
 	{#if showUsertoken}
 		<!-- User Token invites -->
 		<div class="my-2 flex flex-col items-center justify-between sm:flex-row">
+			<h2 class="font-bold text-primary-500">{$LL.USER_ListToken()}</h2>
 			<div class="hidden sm:flex">
 				<TanstackFilter
 					bind:globalSearchValue

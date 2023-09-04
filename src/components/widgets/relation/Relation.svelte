@@ -2,10 +2,9 @@
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
 	import { extractData, find, findById, getFieldName, saveFormData } from '@src/utils/utils';
-	import { collection } from '@src/collections';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
-	import { contentLanguage } from '@src/stores/store';
+	import { contentLanguage, collection } from '@src/stores/store';
 
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
@@ -115,7 +114,7 @@
 		customData={relation_entry}
 	/>
 
-	<button type="button" on:click={() => (expanded = false)} class="btn variant-filled-primary">
+	<button type="button" on:click={() => (expanded = false)} class="variant-filled-primary btn">
 		<iconify-icon icon="material-symbols:save" width="24" />Save
 	</button>
 {/if}

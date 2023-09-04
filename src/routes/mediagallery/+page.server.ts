@@ -5,12 +5,11 @@ import { redirect } from '@sveltejs/kit';
 import { auth } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
-
-import { roles } from '@src/collections/Auth';
+import { roles } from '@src/collections/types';
 
 function hasFilePermission(user: any, file: string): boolean {
 	const { role, username } = user;
-	if (role === roles.admin.name) {
+	if (role === roles.admin) {
 		return true;
 	} else if (role === 'member' && file.startsWith(username)) {
 		return true;
@@ -34,23 +33,29 @@ export async function load(event: any) {
 		imageExtensions.includes(path.extname(file).toLowerCase())
 	);
 
+	const uniqueImageFiles = Array.from(new Set(imageFiles)); // Remove duplicates
+
 	const mediaData = await Promise.all(
-		imageFiles.map(async (file) => {
+		uniqueImageFiles.map(async (file) => {
 			const filePath = `${PUBLIC_MEDIA_FOLDER}/${file}`;
 			const fileName = path.basename(file);
+			//console.log('Processing file:', fileName);
+
 			const parts = fileName.split('-');
 			const hash = parts[0];
 			const imageName = parts.slice(1).join('-');
+			//console.log('Hash:', hash);
+			//console.log('Image Name:', imageName);
 
 			const hasPermission = hasFilePermission(user, file);
 
 			return {
-				path: filePath,
-				hash: hash,
+				image: { path: imageName },
 				name: imageName,
 				size: await getFileSize(filePath),
-				thumbnail: '',
-				hasPermission: hasPermission
+				thumbnail: filePath,
+				hash: hash,
+				path: `/${hash}`
 			};
 		})
 	);

@@ -1,110 +1,84 @@
 <script lang="ts">
-	import { writable } from 'svelte/store';
-	import { goto } from '$app/navigation';
-	import { categories as importedCategories } from '@src/collections/index';
-	import { dndzone } from 'svelte-dnd-action';
-	import PageTitle from '@src/components/PageTitle.svelte';
-	import { get } from 'svelte/store';
+	import '@src/collections';
+	import Collections from '@src/components/Collections.svelte';
+	import { mode } from '@src/stores/store.js';
+	import { collection, unAssigned } from '@src/stores/store';
+	import axios from 'axios';
+	import { obj2formData } from '@src/utils/utils';
+	import WidgetBuilder from './WidgetBuilder.svelte';
+	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
 
-	const categories = writable(importedCategories);
+	let name = $mode == 'edit' ? $collection.name : '';
+	let fields = [];
+	let addField = false;
 
-	let draggedCategory;
-
-	const handleDndConsider = (event) => {
-		draggedCategory = event.detail.items[event.detail.draggedElIndex];
-	};
-
-	function handleDndFinalize(event) {
-		const newCategories = event.detail.items;
-
-		categories.update((oldCategories) => {
-			const oldCategoriesArray = get(oldCategories);
-
-			// Find the index of the draggedCategory in the oldCategories array
-			const oldIndex = oldCategoriesArray.findIndex((category) => category === draggedCategory);
-			const newIndex = newCategories.findIndex((category) => category === draggedCategory);
-
-			if (oldIndex === -1 || newIndex === -1) {
-				return oldCategoriesArray; // No changes needed
+	// Function to save data by sending a POST request to the /api/builder endpoint
+	function save() {
+		let data =
+			$mode == 'edit'
+				? obj2formData({
+						originalName: $collection.name,
+						collectionName: name,
+						fields: $collection.fields
+				  })
+				: obj2formData({ fields, collectionName: name });
+		axios.post(`?/saveCollection`, data, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
 			}
-
-			// Create a copy of the oldCategories array
-			const newCategoriesArray = [...oldCategoriesArray];
-
-			// Perform the array manipulation using splice
-			const [removed] = newCategoriesArray.splice(oldIndex, 1);
-			newCategoriesArray.splice(newIndex, 0, removed);
-
-			// Return the updated array
-			return newCategoriesArray;
 		});
 	}
-
-	function handleCreateNewCollection() {
-		goto(`/builder/new`);
-	}
-
-	//TODO: Create Pop Module for adding a Category name
-	function handleCreateNewCategory() {
-		goto(`/builder/new`);
-	}
-
-	function handleCollectionClick(collectionName: string) {
-		goto(`/builder/${collectionName}/edit`);
-	}
+	collection.subscribe((_) => {
+		name = $mode == 'edit' ? $collection.name : '';
+	});
 </script>
 
-<!-- Collection builder -->
-<div class="align-centre mb-2 mt-2 flex dark:text-white">
-	<PageTitle name="Collection Builder" icon="" />
-</div>
-<!-- List of .ts files -->
-<div class="flex flex-col items-center justify-center">
-	{#if !categories}
-		<p class="my-2 text-center">Create a first collection to get started</p>
-	{:else}
-		<h2 class="my-2 text-center font-bold">Current Collection Overview</h2>
-		<p class="my-2 text-center">
-			Select to a Collection to Edit or Create a New Collection. <br />Change Order by Dragging.
-		</p>
+<div class="body relative">
+	<!-- Menu Selection -->
+	<section class="left_panel">
+		<Collections modeSet={'edit'} />
+	</section>
+	<p class="text-white">unAssigned Collections</p>
+	<p class="text-white">{$unAssigned.map((x) => x.name)}</p>
+	<div class="flex w-full flex-col items-center">
+		<button
+			on:click={() => {
+				mode.set('create');
+			}}
+			class="variant-filled-tertiary btn"
+		>
+			<iconify-icon icon="typcn:plus" class="text-white" width="30" />
+		</button>
 
-		<!-- Table of collection -->
-		<table class="table table-hover border-2 border-primary-500">
-			<tbody
-				use:dndzone={{ items: $categories, flipDurationMs: 300 }}
-				on:consider|preventDefault={handleDndConsider}
-				on:finalize|preventDefault={handleDndFinalize}
-			>
-				{#each $categories as category}
-					<tr class=" bg-tertiary-500">
-						<th>{category.name}</th>
-					</tr>
-					{#if !category.collections.length}
-						<tr>
-							<td>No collections in this category</td>
-						</tr>
-					{:else}
-						{#each category.collections as collection}
-							<tr
-								on:click={() => handleCollectionClick(collection.name)}
-								class=" cursor-pointer hover:text-primary-500"
-							>
-								<td>{collection.name}</td>
-							</tr>
-						{/each}
-					{/if}
-				{/each}
-			</tbody>
-		</table>
-	{/if}
+		{#if $mode == 'create'}
+			<!-- add collection fields -->
+			<div class="mt-3 bg-surface-500 p-2">
+				<p class="mb-2 text-center">Create Collection</p>
+				<FloatingInput label="name" name="name" bind:value={name} />
+				<WidgetBuilder {fields} bind:addField />
+			</div>
+		{:else if $mode == 'edit'}
+			<!-- list collection fields -->
+			<div class="mt-3 bg-surface-500 p-2">
+				<p class="mb-2 text-center">Edit Collection</p>
+				<FloatingInput label="name" name="name" bind:value={name} />
+				<WidgetBuilder fields={$collection.fields} bind:addField />
+			</div>
+		{/if}
+	</div>
+	<button on:click={save} class="variant-filled-primary btn absolute right-14 top-2"> Save </button>
 </div>
 
-<!-- buttons -->
-<div class="flex items-center justify-between gap-2">
-	<button class="variant-filled-tertiary btn mt-4" on:click={handleCreateNewCategory}
-		>Create New Category</button
-	>
-	<button class="variant-filled-primary btn mt-4" on:click={handleCreateNewCollection}
-		>Create New Collection</button
-	>
-</div>
+<style lang="postcss">
+	.body {
+		display: flex;
+		position: fixed;
+		width: 75vw;
+		height: 90vh;
+	}
+
+	section {
+		width: 240px;
+		padding: 0 4px;
+	}
+</style>

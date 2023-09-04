@@ -1,6 +1,9 @@
 <script lang="ts">
-	import { collection, categories } from '@src/collections/index';
-	import { user, mode, screenWidth, toggleLeftSidebar } from '@src/stores/store';
+	import { mode, screenWidth, toggleLeftSidebar, collection, categories } from '@src/stores/store';
+	import { page } from '$app/stores';
+	import type { User } from '@src/collections/Auth';
+
+	let user: User = $page.data.user;
 
 	export let modeSet: typeof $mode = 'view';
 
@@ -41,23 +44,30 @@
 		status?: 'published' | 'unpublished' | 'draft' | 'schedule' | 'cloned';
 	}
 
+	// Define filteredCategories variable as an array of Category objects
 	let filteredCategories: Category[] = ($categories as Category[]) || [];
 
+	// Define filterCategories function
 	function filterCategories() {
+		// Reduce $categories array to create new array of filtered categories
 		filteredCategories = ($categories as Category[]).reduce((acc: Category[], category) => {
+			// Filter collections in current category by name
 			const filteredCollections = category.collections.filter((collection) =>
 				collection.name.toLowerCase().includes(search.toLowerCase())
 			);
+			// Add new category object to accumulator with filtered collections and open property set to true if search is not empty
 			if (
 				filteredCollections.length > 0 ||
 				(search === '' && category.name.toLowerCase().includes(search.toLowerCase()))
 			) {
+				// Add new category object to accumulator with filtered collections and open property set to true if search is not empty
 				acc.push({
 					...category,
 					collections: filteredCollections,
 					open: filteredCollections.length > 0 && search !== ''
 				});
 			}
+			// Return accumulator
 			return acc;
 		}, []);
 	}
@@ -128,7 +138,7 @@
 				<!-- Collection Children -->
 				<svelte:fragment slot="content">
 					<!-- filtered by User Role Permission -->
-					{#each category.collections.filter((c) => c?.permissions?.[$user?.role]?.read != false) as _collection, index}
+					{#each category.collections.filter((c) => c?.permissions?.[user?.role]?.read != false) as _collection, index}
 						{#if $toggleLeftSidebar === 'full'}
 							<!-- switchSideBar expanded -->
 							<div

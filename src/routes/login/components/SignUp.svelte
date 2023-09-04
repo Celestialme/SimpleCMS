@@ -202,7 +202,7 @@
 			<button type="submit" class="variant-filled btn mt-4 uppercase"
 				>{$LL.LOGIN_SignUp()}
 				<!-- Loading indicators -->
-				{#if $delayed}<img src="/spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
+				{#if $delayed}<img src="/Spinner.svg" alt="Loading.." class="ml-4 h-6" />{/if}
 			</button>
 		</form>
 

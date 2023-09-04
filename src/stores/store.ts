@@ -4,10 +4,21 @@ import { PUBLIC_SYSTEM_LANGUAGE, PUBLIC_CONTENT_LANGUAGES } from '$env/static/pu
 import { setLocale } from '@src/i18n/i18n-svelte';
 import type { Locales } from '@src/i18n/i18n-types';
 import { loadAllLocales } from '@src/i18n/i18n-util.sync';
-import type { User } from '@src/collections/Auth';
+import type { Schema } from '@src/collections/types';
 
-// Create a writable store for user with initial value from local storage
-export const user: Writable<User> = writable();
+export const categories: Writable<
+	Array<{
+		name: string;
+		icon: string;
+		collections: Array<Schema>;
+	}>
+> = writable();
+export const collections: Writable<Array<Schema>> = writable();
+export const unAssigned: Writable<Array<Schema>> = writable();
+export const collection: Writable<Schema> = writable();
+
+// Create a writable store for Avatar
+export const avatarSrc: Writable<string> = writable();
 
 // Create a writable store for systemLanguage with initial value of PUBLIC_SYSTEM_LANGUAGE
 export const systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);

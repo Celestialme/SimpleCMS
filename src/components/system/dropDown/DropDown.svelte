@@ -35,7 +35,7 @@
 	.selected {
 		border-bottom: 1px solid white;
 	}
-	p {
+	button {
 		position: relative;
 		background-color: gray;
 		padding: 5px 40px;

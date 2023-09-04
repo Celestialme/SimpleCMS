@@ -214,7 +214,6 @@ export const actions: Actions = {
 };
 
 // LUCIA setup -------------------------------
-
 // SignIn user with email and password, create session and set cookie
 async function signIn(email: string, password: string, isToken: boolean, cookies: Cookies) {
 	if (!isToken) {

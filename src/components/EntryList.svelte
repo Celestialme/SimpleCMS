@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { categories, collection } from '@src/collections/index';
-
 	import {
+		contentLanguage,
+		categories,
+		collection,
 		mode,
 		entryData,
 		deleteEntry,
@@ -9,7 +10,6 @@
 		toggleLeftSidebar,
 		storeListboxValue
 	} from '@src/stores/store';
-	import { contentLanguage } from '@src/stores/store';
 
 	import axios from 'axios';
 	import { writable } from 'svelte/store';

@@ -23,7 +23,6 @@ export const GuiSchema = {
 	db_fieldName: { widget: Input, required: true },
 	// widget?: any;
 	// schema?: any;
-	translated: { widget: Toggles, required: false },
 	icon: { widget: Input, required: false },
 
 	// Widget Specific parameters

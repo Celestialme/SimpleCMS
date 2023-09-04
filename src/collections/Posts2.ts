@@ -1,10 +1,9 @@
 import widgets from '@src/components/widgets';
-import { roles } from './Auth';
+import { roles } from './types';
 import type { Schema } from './types';
 
 const schema: Schema = {
-	// Collection Name required
-	name: 'posts2',
+	// Collection Name comming from filename
 
 	// Collection Permissions by user Roles
 	permissions: {
@@ -21,16 +20,16 @@ const schema: Schema = {
 	icon: 'bi:card-text',
 
 	// Defined Fields that are used in Collection
-	// Inspect Widget fields for possible options
+	// Widget fields can be inspected for individual options
 	fields: [
 		widgets.Text({
-			label: 'text'
+			label: 'Text'
 		}),
 		widgets.Text({
-			label: 'text2'
+			label: 'Text2'
 		}),
 		widgets.Text({
-			label: 'text3',
+			label: 'Text3',
 			translated: false
 		})
 	]

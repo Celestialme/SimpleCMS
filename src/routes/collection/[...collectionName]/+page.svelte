@@ -1,4 +1,6 @@
 <script lang="ts">
+	import PageTitle from '@src/components/PageTitle.svelte';
+
 	// Collection Creation
 	import { TabGroup, Tab, Modal, getModalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings, ModalComponent } from '@skeletonlabs/skeleton';
@@ -10,7 +12,7 @@
 	import LL from '@src/i18n/i18n-svelte';
 	import { toggleLeftSidebar, systemLanguage } from '@src/stores/store';
 
-	// ts & Json export
+	// TS & Json export
 	function onCompleteHandler(e: Event): void {
 		// Create an object containing the values of the collection builder
 		const data = {
@@ -18,9 +20,7 @@
 			DBName,
 			icon,
 			iconselected,
-			slug,
-			selectedWidget,
-			selectedWidgetoptions
+			slug
 		};
 
 		// Generate TypeScript code from the data object
@@ -145,26 +145,8 @@
 </script>
 
 <div class="align-centre mb-2 mt-2 flex dark:text-white">
-	<div class="flex items-center justify-between">
-		{#if $toggleLeftSidebar === 'closed'}
-			<button
-				type="button"
-				on:keydown
-				on:click={() => toggleLeftSidebar.update((value) => !value)}
-				class="variant-ghost-surface btn-icon mt-1"
-			>
-				<iconify-icon icon="mingcute:menu-fill" width="24" />
-			</button>
-		{/if}
-		<!-- Title  with icon -->
-		<h1 class="{!$toggleLeftSidebar ? 'ml-2' : ''} h1 flex items-center gap-1">
-			<iconify-icon
-				icon="dashicons:welcome-widgets-menus"
-				width="24"
-				class="mr-1 text-error-500 sm:mr-2"
-			/> Collection Builder
-		</h1>
-	</div>
+	<!-- TODO: fix TypeScript, as Icon is already optional? -->
+	<PageTitle name="Collection Builder" icon="dashicons:welcome-widgets-menus" />
 </div>
 <div class="m-2">
 	<p class="mb-2 hidden text-center sm:block">
@@ -286,7 +268,7 @@
 				</div>
 
 				<div class="flex justify-between">
-					<a href="/builder" class="variant-filled-secondary btn mt-2">Cancel</a>
+					<a href="/collection" class="variant-filled-secondary btn mt-2">Cancel</a>
 					<button
 						type="button"
 						on:click={() => (tabSet = 1)}
@@ -349,19 +331,6 @@
 </div>
 
 <style lang="postcss">
-	.options-table {
-		display: grid;
-		grid-template-columns: max-content 1fr;
-		gap: 1rem;
-	}
-	.options-table label {
-		text-transform: capitalize;
-	}
-	.options-table input[type='text'],
-	.options-table input[type='number'] {
-		max-width: 24rem;
-	}
-
 	label {
 		min-width: 100px;
 	}

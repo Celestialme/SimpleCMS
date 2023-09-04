@@ -1,23 +1,21 @@
 <script lang="ts">
 	export let data: PageData;
-	import type { PageData, SubmitFunction } from './$types';
+	import type { PageData } from './$types';
 	import '@src/stores/store';
+
+	//superforms
 	import { superForm } from 'sveltekit-superforms/client';
-	//import { enhance } from '$app/forms';
+	import { addUserTokenSchema } from '@src/utils/formSchemas';
 
 	import FloatingInput from '@src/components/system/inputs/floatingInput.svelte';
-	import { addUserTokenSchema } from '@src/utils/formSchemas';
-	import { roles } from '@src/collections/Auth';
-	//console.log('roles: ', roles);
+	import { roles } from '@src/collections/types';
 
 	// Props
 	/** Exposes parent props to this component. */
 	export let parent: any;
 
 	// Skelton & Stores
-
 	import { getModalStore } from '@skeletonlabs/skeleton';
-
 	const modalStore = getModalStore();
 
 	// typesafe-i18n
@@ -28,55 +26,44 @@
 	const cHeader = 'text-2xl font-bold';
 	const cForm = 'border border-surface-500 p-4 space-y-4 rounded-container-token';
 
-	// let response;
-	// console.log(data);
-	// let { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
-	// 	id: 'addUser',
-	// 	validators: addUserTokenSchema,
-	// 	defaultValidator: 'clear',
-	// 	applyAction: true,
-	// 	taintedMessage: '',
-	// 	dataType: 'json',
+	let response: any;
+	//console.log(data);
+	const { form, constraints, allErrors, errors, enhance } = superForm(data, {
+		// const { form, constraints, allErrors, errors, enhance } = superForm(data.addUserForm, {
+		id: 'addUser',
+		validators: addUserTokenSchema,
+		defaultValidator: 'clear',
+		applyAction: true,
+		taintedMessage: '',
+		dataType: 'json',
 
-	// 	onSubmit: ({ cancel }) => {
-	// 		if ($allErrors.length > 0) cancel();
-	// 	},
-	// 	onResult: ({ result, cancel }) => {
-	// 		cancel();
-	// 		if (result.type == 'success') {
-	// 			response = result.data?.message;
-	// 		}
-	// 	}
-	// });
-	// $form.role = 'User';
+		onSubmit: ({ cancel }) => {
+			if ($allErrors.length > 0) cancel();
+		},
+		onResult: ({ result, cancel }) => {
+			cancel();
+			if (result.type == 'success') {
+				response = result.data?.message;
+			}
+		}
+	});
 
-	let email = '';
+	$form.role = 'User';
+
 	// define default role
 	let roleSelected = Object.values(roles)[1];
 
-	let errorStatus = {
-		email: { status: false, msg: '' },
-		role: { status: false, msg: '' },
-		valid: { status: false, msg: '' }
-	};
+	/// Calculate expiration time in seconds based on expiresIn value
+	let expiresIn = '2 hrs'; // Set the default validity
+	let expirationTime;
 
-	// Token Valid Duration
-	let validSelected = '12 hrs';
-	let valids: Record<string, boolean> = {
-		'2 hrs': false,
-		'12 hrs': true,
-		'2 days': false,
-		'1 week': false
-	};
-
-	function filterValid(valid: string): void {
-		for (const v in valids) {
-			if (v !== valid) {
-				valids[v] = false;
-			}
-		}
-		valids[valid] = !valids[valid];
-	}
+	// Define the validity options and their corresponding seconds
+	const validityOptions = [
+		{ label: '2 hrs', value: '2 hrs', seconds: 2 * 60 * 60 },
+		{ label: '12 hrs', value: '12 hrs', seconds: 12 * 60 * 60 },
+		{ label: '2 days', value: '2 days', seconds: 2 * 24 * 60 * 60 },
+		{ label: '1 week', value: '1 week', seconds: 7 * 24 * 60 * 60 }
+	];
 </script>
 
 <!-- @component This example creates a simple form modal. -->
@@ -91,67 +78,20 @@
 
 	<!-- Enable for debugging: -->
 	<!-- <pre>{JSON.stringify(formData, null, 2)}</pre> -->
-	<form
-		class="modal-form {cForm}"
-		method="post"
-		action="?/addUser"
-		use:enhance={({ data, cancel }) => {
-			data.append('role', roleSelected);
-
-			let expires_in = 120;
-			// converting it in milliseconds
-			switch (validSelected) {
-				case '2 hrs':
-					expires_in = 2 * 60 * 60 * 1000;
-					break;
-				case '12 hrs':
-					expires_in = 12 * 60 * 60 * 1000;
-					break;
-				case '2 Days':
-					expires_in = 48 * 60 * 60 * 1000;
-					break;
-				case '1 Week':
-					expires_in = 7 * 24 * 60 * 60 * 1000;
-					break;
-				case '1 Month':
-					expires_in = 30 * 24 * 60 * 60 * 1000;
-					break;
-				default:
-					errorStatus['valid'].status = true;
-					errorStatus['valid'].msg = 'Invalid value for token validity';
-					cancel();
-			}
-			data.append('expires_in', expires_in.toString());
-
-			return async ({ result }) => {
-				if (result.type === 'success') {
-					modalStore.close();
-				}
-
-				if (result.type === 'failure') {
-					result?.data?.errors &&
-						// @ts-ignore
-						result?.data?.errors.forEach((error) => {
-							errorStatus[error.field].status = true;
-							errorStatus[error.field].msg = error.message;
-						});
-				}
-			};
-		}}
-	>
+	<form class="modal-form {cForm}" method="post" action="?/addUser" use:enhance>
 		<!-- Email field -->
 		<div class="group relative z-0 mb-6 w-full">
 			<FloatingInput
 				label={$LL.LOGIN_EmailAddress()}
 				icon="mdi:email"
 				type="email"
-				bind:value={email}
+				bind:value={$form.email}
 				required
 			/>
 
-			{#if errorStatus.email.status}
+			{#if $errors.email}
 				<div class="absolute left-0 top-11 text-xs text-error-500">
-					{errorStatus.email.msg}
+					{$errors.email}
 				</div>
 			{/if}
 		</div>
@@ -168,14 +108,16 @@
 								: 'variant-ghost-secondary'}"
 							on:click={() => {
 								// filterRole(r);
-								roleSelected = r.name;
+								roleSelected = r;
 							}}
 							on:keypress
 							role="button"
 							tabindex="0"
 						>
-							{#if roleSelected === r}<span><iconify-icon icon="fa:check" /></span>{/if}
-							<span class="capitalize">{r.name}</span>
+							{#if roleSelected === r}
+								<span><iconify-icon icon="fa:check" /></span>
+							{/if}
+							<span class="capitalize">{r}</span>
 						</span>
 					{/each}
 				</div>
@@ -187,25 +129,27 @@
 			<div class="sm:w-1/4">Token validity:</div>
 			<div class="flex-auto">
 				<div class="flex flex-wrap gap-2 space-x-2">
-					{#each Object.keys(valids) as v}
+					{#each validityOptions as option}
 						<span
-							class="chip {valids[v] ? 'variant-filled-tertiary' : 'variant-ghost-secondary'}"
+							class="chip {expiresIn === option.value
+								? 'variant-filled-tertiary'
+								: 'variant-ghost-secondary'}"
 							on:click={() => {
-								filterValid(v);
-								validSelected = v;
+								expiresIn = option.value;
+								expirationTime = option.seconds;
 							}}
 							on:keypress
 							role="button"
 							tabindex="0"
 						>
-							{#if valids[v]}<span><iconify-icon icon="fa:check" /></span>{/if}
-							<span class="capitalize">{v}</span>
+							{#if expiresIn === option.value}<span><iconify-icon icon="fa:check" /></span>{/if}
+							<span class="capitalize">{option.label}</span>
 						</span>
 					{/each}
 				</div>
-				{#if errorStatus.valid.status}
+				{#if $errors.expiresIn}
 					<div class="mt-1 text-xs text-error-500">
-						{errorStatus.valid.msg}
+						{$errors.expiresIn}
 					</div>
 				{/if}
 			</div>

@@ -1,12 +1,10 @@
 import fs from 'fs';
 import axios from 'axios';
 
-import collections, { collection } from '../collections';
 import { Blob } from 'buffer';
 import type { Schema } from '@src/collections/types';
 import { get } from 'svelte/store';
-import { contentLanguage } from '@src/stores/store';
-import { entryData, mode } from '@src/stores/store';
+import { contentLanguage, entryData, mode, collections, collection } from '@src/stores/store';
 
 // lucia
 import type { Auth } from 'lucia-auth';
@@ -106,7 +104,7 @@ export async function saveImages(data: FormData, collectionName: string) {
 	const env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
 	const SIZES = { ...env_sizes, original: 0, thumbnail: 200 } as const;
 
-	const collection = collections.find((collection) => collection.name === collectionName);
+	const collection = get(collections).find((collection) => collection.name === collectionName);
 
 	for (const [fieldname, fieldData] of data.entries()) {
 		if (fieldData instanceof Blob) {
@@ -286,6 +284,7 @@ export function getFieldName(field: any) {
 	return (field?.db_fieldName || field?.label) as string;
 }
 
+//Save Collections data to database
 export async function saveFormData({
 	data,
 	_collection,
@@ -297,6 +296,7 @@ export async function saveFormData({
 	_mode?: 'edit' | 'create';
 	id?: string;
 }) {
+	console.log('saveFormData was called');
 	const $mode = _mode || get(mode);
 	const $collection = _collection || get(collection);
 	const $entryData = get(entryData);
@@ -450,3 +450,9 @@ function removeExtension(fileName) {
 }
 
 export const asAny = (value: any) => value;
+
+export function generateUniqueId() {
+	const timestamp = new Date().getTime().toString(36);
+	const random = Math.random().toString(36).substr(2, 9);
+	return timestamp + random;
+}

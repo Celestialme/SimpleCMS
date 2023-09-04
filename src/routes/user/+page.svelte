@@ -1,12 +1,10 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import '@src/stores/store';
-	import { roles } from '@src/collections/Auth';
 
 	import PageTitle from '@src/components/PageTitle.svelte';
 
 	export let data: PageData;
-	// console.log(data);
 
 	// typesafe-i18n
 	import LL from '@src/i18n/i18n-svelte';
@@ -15,8 +13,6 @@
 	import { page } from '$app/stores';
 	import { invalidateAll } from '$app/navigation';
 	const user = $page.data.user;
-
-	// import UserList from './UserList/UserList.svelte';
 
 	// Skeleton
 	import { Avatar } from '@skeletonlabs/skeleton';
@@ -28,9 +24,11 @@
 	const modalStore = getModalStore();
 	import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
 	import AdminArea from './AdminArea.svelte';
-	import { writable } from 'svelte/store';
+	import { avatarSrc } from '@src/stores/store';
+	import { roles } from '@src/collections/types';
 
-	let avatarSrc = writable(user?.avatar);
+	// let avatarSrc = writable(user?.avatar);
+	avatarSrc.set(user?.avatar);
 
 	let id = user?.id;
 	let username = user?.username;
@@ -53,8 +51,8 @@
 		const d: ModalSettings = {
 			type: 'component',
 			// NOTE: title, body, response, etc are supported!
-			title: 'Edit User Data',
-			body: 'Modify your data and then press Save.',
+			title: $LL.USER_Edit_Title(),
+			body: $LL.USER_Edit_Body(),
 			component: modalComponent,
 			// Pass arbitrary data to the component
 			response: async (r: any) => {
@@ -89,8 +87,8 @@
 		const d: ModalSettings = {
 			type: 'component',
 			// NOTE: title, body, response, etc are supported!
-			title: 'Edit your Avatar',
-			body: 'Upload new Avatar Image und then press Save.',
+			title: $LL.USER_Avatar_Title(),
+			body: $LL.USER_Avatar_Body(),
 			component: modalComponent,
 			// Pass arbitrary data to the component
 			response: (r: { dataURL: string }) => {
@@ -106,15 +104,15 @@
 	function modalConfirm(): void {
 		const d: ModalSettings = {
 			type: 'confirm',
-			title: 'Please Confirm User Deletion',
-			body: 'This cannot be undone. Are you sure you wish to proceed?',
+			title: $LL.USER_Confirm_Title(),
+			body: $LL.USER_Confirm_Body(),
 			// TRUE if confirm pressed, FALSE if cancel pressed
 			response: (r: boolean) => {
 				if (r) console.log('response:', r);
 			},
 			// Optionally override the button text
-			buttonTextCancel: 'Cancel',
-			buttonTextConfirm: 'Delete User'
+			buttonTextCancel: $LL.USER_Cancel(),
+			buttonTextConfirm: $LL.USER_Confirm_Delete()
 		};
 		modalStore.trigger(d);
 	}
@@ -164,7 +162,9 @@
 				>{$LL.USER_Password()}:
 				<input bind:value={password} name="password" type="password" disabled class="input" />
 			</label>
-			<div class="mt-2 flex flex-col justify-between gap-2 sm:flex-row sm:justify-between sm:gap-1">
+			<div
+				class="mt-2 flex flex-col flex-wrap justify-between gap-2 sm:flex-row sm:justify-between sm:gap-1"
+			>
 				<!-- Edit Modal Button -->
 				<button class="gradient-secondary btn text-white md:w-auto" on:click={modalUserForm}>
 					<iconify-icon
@@ -188,7 +188,7 @@
 	</div>
 
 	<!-- admin area -->
-	{#if user?.role == roles.admin.name}
+	{#if user?.role == roles.admin}
 		<AdminArea {data} />
 	{/if}
 </div>

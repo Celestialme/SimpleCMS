@@ -4,7 +4,7 @@
 	import InputSwitch from './InputSwitch.svelte';
 
 	export let fields: Array<any> = [];
-	export let addField: boolean = false;
+	export let addField: Boolean = false;
 
 	let selected_widget: keyof typeof widgets | null = null;
 	let widget_keys = Object.keys(widgets) as unknown as keyof typeof widgets;
@@ -22,7 +22,7 @@
 	</div>
 {:else}
 	<div class="properties">
-		<button class="btn" on:click={() => (selected_widget = null)}>close</button>
+		<button class="btn text-primary-500" on:click={() => (selected_widget = null)}>Close</button>
 
 		{#each Object.entries(guiSchema) as [property, value]}
 			<InputSwitch bind:value={field[property]} widget={value.widget} key={property} />

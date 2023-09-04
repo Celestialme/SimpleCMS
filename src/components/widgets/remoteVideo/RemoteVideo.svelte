@@ -19,20 +19,24 @@
 	$: myData;
 
 	const handleSubmit = async (event: Event) => {
-		//console.log('handleSubmit called');
+		console.log('handleSubmit called');
 
-		const formData = new FormData();
-		formData.append('url', value);
-		const response = fetch('/api/video', {
-			method: 'POST',
-			body: formData
-		});
-		//console.log('Response:', response);
+		try {
+			const formData = new FormData();
+			formData.append('url', encodeURIComponent(value.trim())); // Encode and trim the URL
+			const response = await fetch('/api/video', {
+				method: 'POST',
+				body: formData
+			});
+			console.log('API Response:', response);
 
-		const data = await (await response).json();
-		//console.log('Data:', data);
+			const data = await response.json();
+			console.log('API Data:', data);
 
-		myData = data;
+			myData = data;
+		} catch (error) {
+			console.error('Error:', error);
+		}
 	};
 
 	import * as z from 'zod';
@@ -65,7 +69,7 @@
 
 <input
 	type="url"
-	bind:value={_data[_language]}
+	bind:value
 	on:blur={handleSubmit}
 	name={field?.db_fieldName}
 	id={field?.db_fieldName}
@@ -102,7 +106,7 @@
 				href={myData?.videoUrl}
 				target="_blank"
 				rel="noreferrer"
-				class="btn btn-sm variant-filled-tertiary mt-4"
+				class="variant-filled-tertiary btn btn-sm mt-4"
 			>
 				<span><iconify-icon icon="material-symbols:play-circle-outline" width="18" /></span>
 				<span>Watch Video</span>

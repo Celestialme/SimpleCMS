@@ -1,10 +1,16 @@
 <script lang="ts">
-	import { collection } from '@src/collections/index';
-	import { collectionValue, mode, deleteEntry, handleSidebarToggle } from '@src/stores/store';
-
+	import {
+		collection,
+		collectionValue,
+		mode,
+		deleteEntry,
+		handleSidebarToggle
+	} from '@src/stores/store';
+	import { page } from '$app/stores';
+	import type { User } from '@src/collections/Auth';
 	import { saveFormData, getDates } from '@src/utils/utils';
-	import { user } from '@src/stores/store';
-	//console.log('user', $user.role);
+
+	let user: User = $page.data.user;
 
 	async function saveData() {
 		await saveFormData({ data: $collectionValue });
@@ -18,17 +24,18 @@
 
 	let dates = { created: '', updated: '', revision: '' };
 
-	onMount(async () => {
-		try {
-			dates = await getDates($collection.name);
-		} catch (error) {
-			console.error(error);
-		}
-	});
+	// onMount(async () => {
+	// 	try {
+	// 		dates = await getDates(collection.name);
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// });
 </script>
 
-<!-- TODO: Check User Role to fix page switch media to collection -->
-{#if $collection.permissions?.[$user.role.name]?.write != false}
+<!--  Check User Role collection Permission-->
+
+{#if collection.permissions?.[user.role]?.write != false}
 	<!-- Desktop Right Sidebar -->
 	{#if $mode == 'view'}
 		<button
@@ -78,8 +85,12 @@
 			</footer>
 		</div>
 	{:else if $mode == 'delete'}
+		<!-- no permission -->
 		<button type="button" on:click={$deleteEntry} class="variant-filled-success btn">
 			<iconify-icon icon="icomoon-free:bin" width="24" />Delete
 		</button>
 	{/if}
+{:else}
+	<!-- TODO: find better rule -->
+	<button class="variant-ghost-error btn mt-2">No Permission</button>
 {/if}

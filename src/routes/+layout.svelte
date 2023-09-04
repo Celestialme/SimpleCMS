@@ -8,7 +8,12 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import {
+		avatarSrc,
+		collections,
+		collection,
+		collectionValue,
 		mode,
+		defaultContentLanguage,
 		handleSidebarToggle,
 		screenWidth,
 		userPreferredState,
@@ -19,13 +24,25 @@
 		storeListboxValue
 	} from '@src/stores/store';
 
-	import collections, { collection } from '@src/collections/index';
+	import { getCollections } from '@src/collections';
+
 	// Use handleSidebarToggle as a reactive statement to automatically switch the correct sidebar
 	$: handleSidebarToggle;
 
 	import { contentLanguage } from '@src/stores/store';
 
-	import { fly } from 'svelte/transition';
+	//smooth view transitions via browser (only chrome)
+	import { onNavigate } from '$app/navigation';
+	onNavigate((navigation) => {
+		if (!(document as any).startViewTransition) return;
+
+		return new Promise((resolve) => {
+			(document as any).startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 
 	import axios from 'axios';
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
@@ -37,15 +54,7 @@
 	contentLanguage.set($page.params.language);
 
 	let handleClick: any;
-	let finished = false;
-	// setup().then(async () => {
-	// 	await tick();
-	// 	$collection = $collections.find((x) => x.name === $page.params.collection) as Schema;
-	// 	finished = true;
-	// 	if (!$collection) {
-	// 		$collection = $collections[0];
-	// 	}
-	// });
+
 	// update the handleClick function when the systemLanguage store value changes
 	$: handleClick = () => {
 		if (!$page.url.href.includes('user')) {
@@ -82,13 +91,9 @@
 	};
 
 	// Lucia
-	// TODO: Fix User DATA and have avatar image update
-	import { user } from '@src/stores/store';
-	//console.log('userstore', $user);
-	const user2 = $page.data.user;
-	//console.log('userpage', user2.avatar);
+	const user = $page.data.user;
 
-	$: avatarSrc = user2?.avatar;
+	avatarSrc.set(user?.avatar);
 
 	//signOut
 	async function signOut() {
@@ -104,7 +109,7 @@
 			)
 		).data;
 		if (resp.status == 200) {
-			$user = resp;
+			$page.data.user = resp;
 			goto(`/login`);
 		}
 	}
@@ -174,8 +179,38 @@
 	import { onMount, tick } from 'svelte';
 	import { get } from 'svelte/store';
 	import type { Schema } from '@src/collections/types';
+	import Loading from '@src/components/Loading.svelte';
 
 	let dates = { created: '', updated: '', revision: '' };
+
+	// Declare a ForwardBackward variable to track whether the user is navigating using the browser's forward or backward buttons
+	let ForwardBackward: boolean = false;
+
+	globalThis.onpopstate = async () => {
+		// Set up an event listener for the popstate event
+		ForwardBackward = true; // Set ForwardBackward to true to indicate that the user is navigating using the browser's forward or backward buttons
+
+		// Update the value of the collection store based on the current page's collection parameter
+		collection.set($collections.find((x) => x.name === $page.params.collection) as Schema);
+	};
+
+	// Subscribe to changes in the collection store and do redirects
+	let initial = true;
+	collection.subscribe((_) => {
+		console.log(!$collection, !$page.params.language);
+		if (!$collection) return;
+
+		// Reset the value of the collectionValue store
+		$collectionValue = {};
+
+		if (!ForwardBackward && initial != true) {
+			// If ForwardBackward is false and the current route is a collection route
+			goto(`/${$contentLanguage || defaultContentLanguage}/${$collection.name}`);
+		}
+		initial = false;
+		// Reset ForwardBackward to false
+		ForwardBackward = false;
+	});
 
 	// onMount(async () => {
 	// 	try {
@@ -184,6 +219,10 @@
 	// 		console.error(error);
 	// 	}
 	// });
+
+	// SEO
+	const SeoTitle = `${PUBLIC_SITENAME} - powered with sveltekit`;
+	const SeoDescription = `${PUBLIC_SITENAME} - a modern, powerful, and easy-to-use CMS powered by SvelteKit. Manage your content with ease & take advantage of the latest web technologies.`;
 </script>
 
 <!-- <div>
@@ -231,26 +270,39 @@
 
 <svelte:head>
 	<!--Basic SEO-->
-	<title>{PUBLIC_SITENAME} - powered with sveltekit</title>
-	<meta
-		name="description"
-		content="{PUBLIC_SITENAME} - a modern, powerful, and easy-to-use CMS powered by SvelteKit. Manage your content with ease and take advantage of the latest web technologies."
-	/>
+	<title>{SeoTitle}</title>
+	<meta name="description" content={SeoDescription} />
 
 	<!-- Open Graph -->
-	<meta property="og:title" content="{PUBLIC_SITENAME} - powered with sveltekit" />
-	<meta
-		property="og:description"
-		content="{PUBLIC_SITENAME} - a modern, powerful, and easy-to-use CMS powered by SvelteKit. Manage your content with ease and take advantage of the latest web technologies."
-	/>
-	<meta property="og:image" content="/SimpleCMS_Logo_Round.png" />
+	<meta property="og:title" content={SeoTitle} />
+	<meta property="og:description" content={SeoDescription} />
 	<meta property="og:type" content="website" />
+	<meta property="og:image" content="/SimpleCMS_Logo_Round.png" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:site_name" content={$page.url.origin} />
+
+	<!-- Open Graph : Twitter-->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={SeoTitle} />
+	<meta name="twitter:description" content={SeoDescription} />
+	<meta name="twitter:image" content="/SimpleCMS_Logo_Round.png" />
+	<meta property="twitter:domain" content={$page.url.origin} />
+	<meta property="twitter:url" content={$page.url.href} />
 </svelte:head>
-{#if finished}
+
+<!-- Wait for dynamic Collection import -->
+<!-- TODO: Optimize this as this is not needed for ever page -->
+{#await getCollections()}
+	<div class="flex h-screen items-center justify-center">
+		<Loading />
+	</div>
+{:then}
 	<!-- hack as root +layout cannot be overwritten ? -->
 	{#if $page.url.pathname === '/login'}
 		<slot />
-	{:else}<AppShell
+	{:else}
+		<AppShell
 			slotSidebarLeft="pt-2 !overflow-visible bg-white dark:bg-gradient-to-r dark:from-surface-900 dark:via-surface-700
 dark:to-surface-500 text-center h-full relative border-r !px-2 border-surface-300 flex flex-col z-10
 {$toggleLeftSidebar === 'full' ? 'w-[220px]' : 'w-fit'}
@@ -344,15 +396,15 @@ lg:overflow-y-scroll lg:max-h-screen}"
 									class="relative cursor-pointer flex-col !no-underline"
 								>
 									<Avatar
-										src={avatarSrc ? avatarSrc : '/Default_User.svg'}
+										src={$avatarSrc ? $avatarSrc : '/Default_User.svg'}
 										class="mx-auto hover:bg-surface-500 hover:p-1 {$toggleLeftSidebar === 'full'
 											? 'w-[40px]'
 											: 'w-[35px]'}"
 									/>
 									<div class="-mt-1 text-center text-[9px] uppercase text-black dark:text-white">
 										{#if $toggleLeftSidebar === 'full'}
-											{#if $user?.username}
-												<div class="text-[10px] uppercase">{$user?.username}</div>
+											{#if user?.username}
+												<div class="text-[10px] uppercase">{user?.username}</div>
 											{/if}
 										{/if}
 									</div>
@@ -520,4 +572,8 @@ lg:overflow-y-scroll lg:max-h-screen}"
 			</svelte:fragment>
 		</AppShell>
 	{/if}
-{/if}
+{:catch error}
+	<div class="text-error-500">
+		An error occurred: {error.message}
+	</div>
+{/await}
