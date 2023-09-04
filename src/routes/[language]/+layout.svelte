@@ -14,6 +14,4 @@
 	});
 </script>
 
-{#if finished}
-	<slot />
-{/if}
+<slot />

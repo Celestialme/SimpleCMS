@@ -7,6 +7,7 @@ import { SESSION_COOKIE_NAME } from 'lucia-auth';
 import { auth } from './api/db';
 import { getCollectionsFile } from './getCollectionsFile';
 
+
 export async function load({ cookies }) {
 	if (collections.length == 0) {
         const collectionsFile = await getCollectionsFile()
