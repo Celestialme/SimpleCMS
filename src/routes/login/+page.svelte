@@ -6,6 +6,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+    $: console.log("data", data)
 	//console.log('PageData', data);
 
 	import { locales } from '@src/i18n/i18n-util';

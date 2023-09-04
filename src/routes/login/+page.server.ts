@@ -1,9 +1,9 @@
-import { type Actions, type Cookies, redirect } from '@sveltejs/kit';
+import { type Actions, type Cookies, redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 import mongoose from 'mongoose';
 
-import { superValidate, message } from 'sveltekit-superforms/server';
+import { superValidate, message, setError } from 'sveltekit-superforms/server';
 import {
 	loginFormSchema,
 	forgotFormSchema,
@@ -39,6 +39,7 @@ export const load: PageServerLoad = async (event) => {
 		(await mongoose.models['auth_key'].countDocuments()) === 0 ? (withoutToken as any) : withToken;
 
 	// Always return all Forms in load and form actions.
+    console.log(resetForm)
 	return {
 		// SignIn
 		loginForm,
@@ -129,6 +130,10 @@ export const actions: Actions = {
 			message(pwforgottenForm, 'SignIn Forgotten form submitted');
 		} else {
 			console.log('resp.status is false');
+            console.log(pwforgottenForm)
+            return setError(pwforgottenForm, 'email', 'sdfasdfasdgdsfafgasd.');
+            return fail(400, setError(pwforgottenForm, 'email', "adsfadsf").data);
+            return fail(400, { pwforgottenForm, forgotForm: { message: "afads" } });
 			return { form: pwforgottenForm, message: resp.message || 'Unknown error' };
 		}
 	},

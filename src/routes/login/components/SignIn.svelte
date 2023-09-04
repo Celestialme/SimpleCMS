@@ -154,6 +154,7 @@
 			setTimeout(() => formElement.classList.remove('wiggle'), 300);
 		}
 	});
+    $: console.log($forgotErrors)
 
 	export let FormSchemaReset: PageData['resetForm'];
 	const {
@@ -245,6 +246,7 @@
 	});
 
 	let formElement: HTMLFormElement;
+    $: console.log(PWreset)
 </script>
 
 <Toast />
