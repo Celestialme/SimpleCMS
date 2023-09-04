@@ -51,8 +51,8 @@
 		const d: ModalSettings = {
 			type: 'component',
 			// NOTE: title, body, response, etc are supported!
-			title: 'Edit User Data',
-			body: 'Modify your data and then press Save.',
+			title: $LL.USER_Edit_Title(),
+			body: $LL.USER_Edit_Body(),
 			component: modalComponent,
 			// Pass arbitrary data to the component
 			response: async (r: any) => {
@@ -87,8 +87,8 @@
 		const d: ModalSettings = {
 			type: 'component',
 			// NOTE: title, body, response, etc are supported!
-			title: 'Edit your Avatar',
-			body: 'Upload new Avatar Image und then press Save.',
+			title: $LL.USER_Avatar_Title(),
+			body: $LL.USER_Avatar_Body(),
 			component: modalComponent,
 			// Pass arbitrary data to the component
 			response: (r: { dataURL: string }) => {
@@ -104,15 +104,15 @@
 	function modalConfirm(): void {
 		const d: ModalSettings = {
 			type: 'confirm',
-			title: 'Please Confirm User Deletion',
-			body: 'This cannot be undone. Are you sure you wish to proceed?',
+			title: $LL.USER_Confirm_Title(),
+			body: $LL.USER_Confirm_Body(),
 			// TRUE if confirm pressed, FALSE if cancel pressed
 			response: (r: boolean) => {
 				if (r) console.log('response:', r);
 			},
 			// Optionally override the button text
-			buttonTextCancel: 'Cancel',
-			buttonTextConfirm: 'Delete User'
+			buttonTextCancel: $LL.USER_Cancel(),
+			buttonTextConfirm: $LL.USER_Confirm_Delete()
 		};
 		modalStore.trigger(d);
 	}
@@ -162,7 +162,9 @@
 				>{$LL.USER_Password()}:
 				<input bind:value={password} name="password" type="password" disabled class="input" />
 			</label>
-			<div class="mt-2 flex flex-col justify-between gap-2 sm:flex-row sm:justify-between sm:gap-1">
+			<div
+				class="mt-2 flex flex-col flex-wrap justify-between gap-2 sm:flex-row sm:justify-between sm:gap-1"
+			>
 				<!-- Edit Modal Button -->
 				<button class="gradient-secondary btn text-white md:w-auto" on:click={modalUserForm}>
 					<iconify-icon
