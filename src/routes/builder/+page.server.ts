@@ -46,7 +46,7 @@ export const actions: Actions = {
 		content = content.replace(/\\n|\\t/g, '').replace(/\\/g, '');
 
 		content = content.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
-		content = prettier.format(content, { ...prettierConfig });
+		content = await prettier.format(content, { ...(prettierConfig as any), parser: 'typescript' });
 		if (originalName && originalName != collectionName) {
 			fs.renameSync(`${import.meta.env.collectionsFolderTS}/${originalName}.ts`, `${import.meta.env.collectionsFolderTS}/${collectionName}.ts`);
 		}
@@ -67,7 +67,7 @@ export const actions: Actions = {
 		}
 		`;
 		config = config.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
-		config = prettier.format(config, { ...prettierConfig });
+		config = await prettier.format(config, { ...(prettierConfig as any), parser: 'typescript' });
 		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/config.ts`, config);
 		await compile();
 		await updateCollections(true);
