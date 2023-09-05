@@ -9,7 +9,7 @@
 	import ModalAddCategory from './ModalAddCategory.svelte';
 	import PageTitle from '@src/components/PageTitle.svelte';
 	import { generateUniqueId } from '@src/utils/utils';
-	import { updateConfigFile } from '../api/collections/updateConfig';
+	import { updateConfigFile } from '../../api/collections/updateConfig';
 
 	// Modal Trigger - New Category
 	function modalAddCategory(): void {

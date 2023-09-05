@@ -2,7 +2,7 @@ import { PUBLIC_MEDIA_FOLDER } from '$env/static/public';
 import fs from 'fs/promises';
 import path from 'path';
 import { redirect } from '@sveltejs/kit';
-import { auth } from '../api/db';
+import { auth } from '../../api/db';
 import { validate } from '@src/utils/utils';
 import { SESSION_COOKIE_NAME } from 'lucia-auth';
 import { roles } from '@src/collections/types';

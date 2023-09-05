@@ -1,6 +1,6 @@
 <script lang="ts">
 	// Your selected Skeleton theme:
-	import '../app.postcss';
+	import '../../app.postcss';
 
 	// Icons from https://icon-sets.iconify.design/
 	import 'iconify-icon';
