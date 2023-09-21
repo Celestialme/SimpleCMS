@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 import { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } from '$env/static/private';
 import { collections } from '@src/stores/load';
-import lucia from 'lucia-auth';
-import adapter from '@lucia-auth/adapter-mongoose';
-import { session, key, UserSchema } from '@src/collections/Auth';
-import { sveltekit } from 'lucia-auth/middleware';
+import { lucia } from 'lucia';
+import { mongoose as adapter } from '@lucia-auth/adapter-mongoose';
+import { session, key, UserSchema, TokenSchema } from '@src/collections/Auth';
+import { sveltekit } from 'lucia/middleware';
 import { fieldsToSchema } from '@src/utils/utils';
 import type { Unsubscriber } from 'svelte/store';
 
@@ -20,7 +20,7 @@ mongoose.set('strictQuery', false);
 let collectionsModels: { [Key: string]: mongoose.Model<any> } = {};
 let unsubscribe: Unsubscriber | undefined;
 export async function getCollectionModels() {
-	return new Promise<any>((resolve) => {
+	return new Promise<typeof collectionsModels>((resolve) => {
 		unsubscribe = collections.subscribe((collections) => {
 			if (collections) {
 				for (let collection of collections) {
@@ -49,14 +49,19 @@ export async function getCollectionModels() {
 !mongoose.models['auth_session'] && mongoose.model('auth_session', new mongoose.Schema({ ...session }, { _id: false }));
 !mongoose.models['auth_key'] && mongoose.model('auth_key', new mongoose.Schema({ ...key }, { _id: false }));
 !mongoose.models['auth_user'] && mongoose.model('auth_user', new mongoose.Schema({ ...UserSchema }, { _id: false, timestamps: true }));
+!mongoose.models['auth_tokens'] && mongoose.model('auth_tokens', new mongoose.Schema({ ...TokenSchema }, { _id: false, timestamps: true }));
 const auth = lucia({
-	adapter: adapter(mongoose),
+	adapter: adapter({
+		User: mongoose.models['auth_user'],
+		Key: mongoose.models['auth_key'],
+		Session: mongoose.models['auth_session']
+	}),
 	//for production & cloned dev environment
 	// env: dev ? "DEV" : "PROD",
 	env: 'DEV',
 
 	autoDatabaseCleanup: true,
-	transformDatabaseUser: (userData) => {
+	getUserAttributes: (userData) => {
 		return {
 			...userData
 		};

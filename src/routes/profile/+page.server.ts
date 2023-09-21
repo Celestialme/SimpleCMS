@@ -4,10 +4,10 @@ import { validate } from '@src/utils/utils';
 import { superValidate } from 'sveltekit-superforms/server';
 import { addUserSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { passwordToken } from '@lucia-auth/tokens';
-import { SESSION_COOKIE_NAME } from 'lucia-auth';
+import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
 import type { User } from '@src/collections/Auth';
 export async function load(event) {
-	let session = event.cookies.get(SESSION_COOKIE_NAME) as string;
+	let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
 	let user = await validate(auth, session);
 	let addUserForm = await superValidate(event, addUserSchema);
 	let changePasswordForm = await superValidate(event, changePasswordSchema);
@@ -33,7 +33,7 @@ export const actions: Actions = {
 
 		let user: User = await auth
 			.createUser({
-				primaryKey: {
+				key: {
 					providerId: 'email',
 					providerUserId: email,
 					password: null
@@ -56,7 +56,7 @@ export const actions: Actions = {
 	changePassword: async (event) => {
 		let changePasswordForm = await superValidate(event, changePasswordSchema);
 		let password = changePasswordForm.data.password;
-		let session = event.cookies.get(SESSION_COOKIE_NAME) as string;
+		let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
 		let user = await validate(auth, session);
 		if (user.status != 200) return { form: changePasswordForm, message: 'user does not exist or session expired' };
 		const key = (await auth.getAllUserKeys(user.user.id)).find((key) => key.passwordDefined == true);

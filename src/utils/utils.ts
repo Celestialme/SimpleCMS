@@ -6,7 +6,7 @@ import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import { collections, collection } from '@src/stores/load';
-import type { Auth } from 'lucia-auth';
+import type { Auth } from 'lucia';
 import type { User } from '@src/collections/Auth';
 import { PUBLIC_MEDIA_FOLDER, PUBLIC_IMAGE_SIZES } from '$env/static/public';
 import { browser } from '$app/environment';
@@ -232,7 +232,7 @@ export async function validate(auth: Auth, sessionID: string | null) {
 	if (!sessionID) {
 		return { user: {} as User, status: 404 };
 	}
-	const resp = await auth.validateSessionUser(sessionID).catch(() => null);
+	const resp = await auth.validateSession(sessionID).catch(() => null);
 	if (!resp) return { user: {} as User, status: 404 };
 	return { user: resp.user as User, status: 200 };
 }

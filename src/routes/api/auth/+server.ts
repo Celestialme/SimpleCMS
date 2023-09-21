@@ -1,7 +1,7 @@
 import type { Cookies } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { auth } from '@src/routes/api/db';
-import { SESSION_COOKIE_NAME } from 'lucia-auth';
+import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	let formData = await request.formData();
 
@@ -16,9 +16,9 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
 async function signOut(cookies: Cookies) {
 	try {
-		let sessionID = cookies.get(SESSION_COOKIE_NAME) as string;
+		let sessionID = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
 		await auth.invalidateSession(sessionID);
-		cookies.delete(SESSION_COOKIE_NAME);
+		cookies.delete(DEFAULT_SESSION_COOKIE_NAME);
 		return new Response(JSON.stringify({ status: 200 }));
 	} catch (e) {
 		return new Response(JSON.stringify({ status: 404 }));

@@ -1,5 +1,6 @@
 import type { InferSchemaType } from 'mongoose';
 import { Schema } from 'mongoose';
+import type { roles } from './types';
 
 export let session = {
 	_id: {
@@ -54,6 +55,11 @@ export let UserSchema = {
 	resetToken: String, // The password reset token value
 	expiresAt: Date, // The date and time when the password reset token expires
 	lastActiveAt: Date // The date and time when the user last accessed the application
+};
+export let TokenSchema = {
+	token: String,
+	userID: String,
+	expiresIn: Number
 };
 type Modify<T, R> = Omit<T, keyof R> & R;
 let mongooseUserSchema = new Schema(UserSchema);

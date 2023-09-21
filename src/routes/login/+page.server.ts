@@ -5,8 +5,9 @@ import type { PageServerLoad } from './$types';
 import { loginSchema, signUpSchema, recoverSchema } from '../../utils/formSchemas';
 import { auth } from '@src/routes/api/db';
 import mongoose from 'mongoose';
-import { passwordToken } from '@lucia-auth/tokens';
+
 import type { User } from '@src/collections/Auth';
+import { consumeToken, createToken } from '@src/utils/tokens';
 
 export const actions: Actions = {
 	signIn: async (event) => {
@@ -79,7 +80,7 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 	if (!isToken) {
 		let key = await auth.useKey('email', email, password).catch(() => null);
 		if (!key || !key.passwordDefined) return { status: false, message: 'Invalid Credentials' };
-		const session = await auth.createSession(key.userId);
+		const session = await auth.createSession({ userId: key.userId, attributes: {} });
 		const sessionCookie = auth.createSessionCookie(session);
 		console.log(sessionCookie);
 		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
@@ -91,17 +92,17 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 		let token = password;
 		let key = await auth.getKey('email', email).catch(() => null);
 		if (!key) return { status: false, message: 'user does not exist' };
-		const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
-		try {
-			await tokenHandler.validate(token, key.userId);
-			const session = await auth.createSession(key.userId);
+
+		let result = await consumeToken(token, key.userId);
+		if (result.status) {
+			const session = await auth.createSession({ userId: key.userId, attributes: {} });
 			const sessionCookie = auth.createSessionCookie(session);
 			cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 			let authMethod = 'token';
 			await auth.updateUserAttributes(key.userId, { authMethod });
 			return { status: true };
-		} catch (e) {
-			return { status: false, message: 'invalid token' };
+		} else {
+			return result;
 		}
 	}
 }
@@ -109,7 +110,7 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 async function FirstUsersignUp(username: string, email: string, password: string, cookies: Cookies) {
 	let user: User = await auth
 		.createUser({
-			primaryKey: {
+			key: {
 				providerId: 'email',
 				providerUserId: email,
 				password: password
@@ -122,7 +123,7 @@ async function FirstUsersignUp(username: string, email: string, password: string
 		.catch((e) => null);
 	console.log(user);
 	if (!user) return { status: false, message: 'user does not exist' };
-	const session = await auth.createSession(user.id);
+	const session = await auth.createSession({ userId: user.id, attributes: {} });
 	const sessionCookie = auth.createSessionCookie(session);
 	cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
@@ -131,30 +132,26 @@ async function FirstUsersignUp(username: string, email: string, password: string
 async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies) {
 	let key = await auth.getKey('email', email).catch(() => null);
 	if (!key) return { status: false, message: 'user does not exist' };
-	const tokenHandler = passwordToken(auth as any, 'register', { expiresIn: 0 });
-	try {
-		await tokenHandler.validate(token, key.userId);
+
+	let result = await consumeToken(token, key.userId);
+	if (result.status) {
 		let authMethod = 'password';
 		await auth.updateUserAttributes(key.userId, { username, authMethod });
 
 		await auth.updateKeyPassword('email', email, password);
-		const session = await auth.createSession(key.userId);
+		const session = await auth.createSession({ userId: key.userId, attributes: {} });
 		const sessionCookie = auth.createSessionCookie(session);
 		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
 		return { status: true };
-	} catch (e) {
-		return { status: false, message: 'invalid token' };
+	} else {
+		return result;
 	}
 }
 async function recover(email: string, cookies: Cookies) {
-	const tokenHandler = passwordToken(auth as any, 'register', {
-		expiresIn: 60 * 60, // expiration in 1 hour,
-		length: 16 // default
-	});
 	let key = await auth.getKey('email', email).catch(() => null);
 	if (!key) return { status: false, message: 'user does not exist' };
-	let token = (await tokenHandler.issue(key.userId)).toString();
+	let token = await createToken(key.userId, 60 * 60 * 1000);
 	console.log(token); // send token to user via email
 	return { status: true, message: 'token has been sent to email' };
 }
