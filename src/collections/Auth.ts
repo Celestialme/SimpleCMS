@@ -4,7 +4,8 @@ import type { roles } from './types';
 
 export let session = {
 	_id: {
-		type: String
+		type: String,
+		required: true
 	},
 	user_id: {
 		type: String,
@@ -22,21 +23,14 @@ export let session = {
 
 export let key = {
 	_id: {
-		type: String
+		type: String,
+		required: true
 	},
 	user_id: {
 		type: String,
 		required: true
 	},
-	hashed_password: String,
-	primary_key: {
-		type: Boolean,
-		required: true
-	},
-	expires: {
-		type: Number,
-		default: null
-	}
+	hashed_password: String
 };
 
 export let UserSchema = {

@@ -2,10 +2,10 @@ import { roles } from './types.js';
 let schema = {
     permissions: {
         [roles.user]: {
-            read: false
+            read: true
         },
         [roles.admin]: {
-            write: false
+            write: true
         }
     },
     fields: [

@@ -14,3 +14,11 @@ export let GuiSchema = {
 	db_fieldName: { widget: FloatingInput, required: true },
 	translated: { widget: Toggle, required: false }
 };
+
+export let GraphqlSchema = ({ label }) => {
+	return /* GraphQL */ `
+		type Text {
+			en: String
+		}
+	`;
+};

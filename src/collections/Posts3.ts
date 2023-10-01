@@ -4,10 +4,10 @@ import type { Schema } from './types';
 let schema: Schema = {
 	permissions: {
 		[roles.user]: {
-			read: false
+			read: true
 		},
 		[roles.admin]: {
-			write: false
+			write: true
 		}
 	},
 	fields: [

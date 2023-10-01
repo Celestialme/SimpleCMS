@@ -70,7 +70,7 @@ async function getImports(recompile: boolean = false) {
 }
 let unsubscribe: Unsubscriber | undefined;
 export async function getCollections() {
-	return new Promise<any>((resolve) => {
+	return new Promise<Schema[]>((resolve) => {
 		unsubscribe = collections.subscribe((collections) => {
 			if (collections?.length > 0) {
 				unsubscribe && unsubscribe();
