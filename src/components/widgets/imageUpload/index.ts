@@ -1,4 +1,4 @@
-import { type Params, GuiSchema } from './types';
+import { type Params, GuiSchema, GraphqlSchema } from './types';
 import ImageUpload from './ImageUpload.svelte';
 const widget = ({ label, db_fieldName, display, path = 'unique' }: Params) => {
 	if (!display) {
@@ -19,5 +19,6 @@ const widget = ({ label, db_fieldName, display, path = 'unique' }: Params) => {
 	return { ...field, widget };
 };
 widget.GuiSchema = GuiSchema;
+widget.GraphqlSchema = GraphqlSchema;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

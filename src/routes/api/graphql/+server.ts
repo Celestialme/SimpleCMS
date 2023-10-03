@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import { getCollections } from '@src/collections';
 import widgets from '@src/components/widgets';
 let typeDefs = /* GraphQL */ ``;
-
+let resolvers = { Query: {} };
 let collectionSchemas: string[] = [];
 let collections = await getCollections();
 for (let collection of collections) {
@@ -32,15 +32,15 @@ type Query {
 	${collections.map((collection) => `${collection.name}: [${collection.name}]`).join('\n')}
 }
 `;
-console.log(typeDefs);
+
+for (let collection of collections) {
+	resolvers.Query[collection.name as string] = async () => await mongoose.models[collection.name as string].find({}).lean();
+}
+
 const yogaApp = createYoga<RequestEvent>({
 	schema: createSchema({
 		typeDefs,
-		resolvers: {
-			Query: {
-				Posts3: async () => await mongoose.models['Posts3'].find({}).lean()
-			}
-		}
+		resolvers
 	}),
 	// Needed to be defined explicitly because our endpoint lives at a different path other than `/graphql`
 	graphqlEndpoint: '/api/graphql',

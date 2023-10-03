@@ -64,14 +64,14 @@ export const obj2formData = (obj: any) => {
 	}
 	return formData;
 };
+let env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
+export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
 export async function saveImages(data: FormData, collectionName: string) {
 	if (browser) return;
 	let sharp = (await import('sharp')).default;
 	let files: any = {};
 	let _files: Array<any> = [];
 	console.log(PUBLIC_IMAGE_SIZES);
-	let env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
-	const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
 
 	let collection = get(collections).find((collection) => collection.name === collectionName);
 	for (let [fieldname, fieldData] of data.entries()) {
