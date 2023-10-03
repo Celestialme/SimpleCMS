@@ -21,6 +21,7 @@
 			let fileList = new DataTransfer();
 			fileList.items.add(file);
 			_data = node.files = fileList.files;
+			updated = true;
 		} else if ($mode === 'edit') {
 			axios.get($entryData[fieldName].thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
 				let fileList = new DataTransfer();
