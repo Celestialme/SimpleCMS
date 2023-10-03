@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { getCollections } from '@src/collections';
 import widgets from '@src/components/widgets';
 let typeDefs = /* GraphQL */ ``;
+let types = new Set();
 let resolvers = { Query: {} };
 let collectionSchemas: string[] = [];
 let collections = await getCollections();
@@ -18,14 +19,17 @@ for (let collection of collections) {
 		let label = field.label;
 		let schema = widgets[field.widget.key].GraphqlSchema?.({ field, collection });
 		if (schema) {
-			if (!typeDefs.includes(schema)) {
-				typeDefs += schema;
+			let _types = schema.split(/(?=type.*?{)/);
+			for (let type of _types) {
+				types.add(type);
 			}
+
 			collectionSchema += `${label}: ${field.widget.key}\n`;
 		}
 	}
 	collectionSchemas.push(collectionSchema + '}\n');
 }
+typeDefs += Array.from(types).join('\n');
 typeDefs += collectionSchemas.join('\n');
 typeDefs += `
 type Query {
