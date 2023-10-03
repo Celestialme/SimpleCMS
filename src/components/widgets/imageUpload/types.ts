@@ -27,10 +27,10 @@ let types = Object.keys(SIZES)
 }`
 	)
 	.join('\n');
-export let GraphqlSchema = ({ label }) => {
+export let GraphqlSchema = ({ field, label, collection }) => {
 	return /* GraphQL */ `
 		${types}
-		type ImageUpload {
+		type ${collection.name}_${label} {
 			${Object.keys(SIZES)
 				.map((size) => `${size}: ${size}`)
 				.join('\n')}

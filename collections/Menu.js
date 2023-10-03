@@ -8,6 +8,12 @@ let schema = {
                     globalThis.globalThis.widgets.Text({ label: 'link', translated: true }),
                     globalThis.globalThis.widgets.Text({ label: 'info', translated: true }),
                     globalThis.globalThis.widgets.Text({ label: 'info3', translated: true })
+                ],
+                [
+                    globalThis.globalThis.widgets.Text({ label: 'Header', translated: true }),
+                    globalThis.globalThis.widgets.Text({ label: 'link', translated: true }),
+                    globalThis.globalThis.widgets.Text({ label: 'info', translated: true }),
+                    globalThis.globalThis.widgets.Text({ label: 'info3', translated: true })
                 ]
             ],
             label: 'Menu'

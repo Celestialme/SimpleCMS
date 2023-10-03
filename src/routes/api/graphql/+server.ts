@@ -16,19 +16,19 @@ for (let collection of collections) {
 		updatedAt: Float
 	`;
 	for (let field of collection.fields) {
-		let label = field.label;
-		let schema = widgets[field.widget.key].GraphqlSchema?.({ field, collection });
+		let schema = widgets[field.widget.key].GraphqlSchema?.({ field, label: field.label, collection });
 		if (schema) {
 			let _types = schema.split(/(?=type.*?{)/);
 			for (let type of _types) {
 				types.add(type);
 			}
 
-			collectionSchema += `${label}: ${field.widget.key}\n`;
+			collectionSchema += `${field.label}: ${collection.name}_${field.label}\n`;
 		}
 	}
 	collectionSchemas.push(collectionSchema + '}\n');
 }
+
 typeDefs += Array.from(types).join('\n');
 typeDefs += collectionSchemas.join('\n');
 typeDefs += `
@@ -36,7 +36,7 @@ type Query {
 	${collections.map((collection) => `${collection.name}: [${collection.name}]`).join('\n')}
 }
 `;
-
+console.log(typeDefs);
 for (let collection of collections) {
 	resolvers.Query[collection.name as string] = async () => await mongoose.models[collection.name as string].find({}).lean();
 }
