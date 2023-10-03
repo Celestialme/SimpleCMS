@@ -16,7 +16,7 @@ for (let collection of collections) {
 	`;
 	for (let field of collection.fields) {
 		let label = field.label;
-		let schema = widgets[field.widget.key].GraphqlSchema?.({ label });
+		let schema = widgets[field.widget.key].GraphqlSchema?.({ field, collection });
 		if (schema) {
 			if (!typeDefs.includes(schema)) {
 				typeDefs += schema;

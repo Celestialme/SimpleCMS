@@ -15,7 +15,7 @@ export let GuiSchema = {
 	translated: { widget: Toggle, required: false }
 };
 
-export let GraphqlSchema = ({ label }) => {
+export let GraphqlSchema = ({}) => {
 	return /* GraphQL */ `
 		type Text {
 			en: String

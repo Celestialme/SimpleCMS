@@ -15,3 +15,12 @@ export let GuiSchema = {
 	display: { widget: FloatingInput, required: true },
 	db_fieldName: { widget: FloatingInput, required: true }
 };
+
+export let GraphqlSchema = ({ collection, field }) => {
+	return /* GraphQL */ `
+		type MegaMenu {
+			Header: Text
+			children: [MegaMenu]
+		}
+	`;
+};

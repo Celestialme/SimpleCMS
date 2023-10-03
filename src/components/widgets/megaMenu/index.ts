@@ -1,4 +1,4 @@
-import { type Params, GuiSchema } from './types';
+import { type Params, GuiSchema, GraphqlSchema } from './types';
 import MegaMenu from './MegaMenu.svelte';
 import { writable, type Writable } from 'svelte/store';
 export let currentChild: Writable<any> = writable({});
@@ -21,5 +21,6 @@ const widget = ({
 	return { ...field, widget };
 };
 widget.GuiSchema = GuiSchema;
+widget.GraphqlSchema = GraphqlSchema;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

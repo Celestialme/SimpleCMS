@@ -7,6 +7,7 @@
 	import { entryData, mode } from '@src/stores/store';
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
+	console.log(field);
 	export let value = $entryData[fieldName];
 	export const WidgetData = async () => _data;
 	let showFields = false;
@@ -36,7 +37,7 @@
 {#if !_data || showFields}
 	{#key depth}
 		{(fieldsData = {}) && ''}
-		<Fields fields={field.menu[depth].fields} root={false} bind:fieldsData customData={$currentChild} />
+		<Fields fields={field.menu[depth]} root={false} bind:fieldsData customData={$currentChild} />
 	{/key}
 	<Button on:click={saveLayer}>Save</Button>
 {/if}

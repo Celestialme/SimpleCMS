@@ -15,7 +15,6 @@ export let GuiSchema = {
 	display: { widget: FloatingInput, required: true },
 	db_fieldName: { widget: FloatingInput, required: true }
 };
-console.log(SIZES);
 let types = Object.keys(SIZES)
 	.map(
 		(size) =>
