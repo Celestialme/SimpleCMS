@@ -12,7 +12,6 @@ export type Params = {
 	label?: null;
 	icon?: string;
 	required?: boolean;
-	schema?: any;
 	widget?: any;
 	fields: Widgets2;
 	display?: DISPLAY;

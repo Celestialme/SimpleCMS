@@ -14,7 +14,6 @@ const widget = ({ label, db_fieldName, display }: Params) => {
 	let widget: { type: any; key: 'Email' } = { type: Email, key: 'Email' };
 	let field = {
 		display,
-		schema: { [db_fieldName || label]: { String: String } },
 		label,
 		db_fieldName
 	};

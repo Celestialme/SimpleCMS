@@ -16,7 +16,7 @@ const widget = ({
 		display.default = true;
 	}
 	let widget: { type: any; key: 'MegaMenu' } = { type: MegaMenu, key: 'MegaMenu' };
-	let field: Params = { schema: {}, db_fieldName, menu, display, label };
+	let field: Params = { db_fieldName, menu, display, label };
 
 	return { ...field, widget };
 };

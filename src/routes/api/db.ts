@@ -25,7 +25,7 @@ export async function getCollectionModels() {
 			if (collections) {
 				for (let collection of collections) {
 					const schema_object = new mongoose.Schema(
-						{ ...fieldsToSchema(collection.fields), createdAt: Number, updatedAt: Number },
+						{ createdAt: Number, updatedAt: Number },
 						{
 							typeKey: '$type',
 							strict: false,

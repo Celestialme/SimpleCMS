@@ -1,11 +1,10 @@
 let schema = {
     fields: [
         globalThis.widgets.ImageArray({
-            label: 'images',
             fields: [
                 globalThis.widgets.ImageUpload({
                     label: 'image',
-                    path: 'media/images'
+                    path: 'images'
                 }),
                 globalThis.widgets.Text({
                     label: 'title',

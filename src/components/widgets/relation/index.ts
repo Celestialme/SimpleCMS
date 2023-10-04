@@ -15,7 +15,6 @@ const widget = ({ label, db_fieldName, display, relation }: Params) => {
 
 	let field = {
 		display,
-		schema: { [db_fieldName || label]: String },
 		label,
 		db_fieldName,
 		relation

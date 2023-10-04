@@ -12,7 +12,6 @@ const widget = ({ label, db_fieldName, display, translated = false }: Params) =>
 	let widget: { type: any; key: 'Text' } = { type: Text, key: 'Text' } as const;
 	let field = {
 		display,
-		schema: { [db_fieldName || label]: { type: { en: String } } },
 		label,
 		db_fieldName,
 		translated

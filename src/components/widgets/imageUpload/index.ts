@@ -10,7 +10,6 @@ const widget = ({ label, db_fieldName, display, path = 'unique' }: Params) => {
 	let widget: { type: any; key: 'ImageUpload' } = { type: ImageUpload, key: 'ImageUpload' };
 	let field = {
 		display,
-		schema: { [db_fieldName || label]: { size: Number, name: String, type: String, lastModified: Number } },
 		label,
 		db_fieldName,
 		path

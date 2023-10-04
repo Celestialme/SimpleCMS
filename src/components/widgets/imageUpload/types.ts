@@ -6,7 +6,6 @@ export type Params = {
 	display?: DISPLAY;
 	db_fieldName?: string;
 	widget?: any;
-	schema?: any;
 	path: (string & {}) | 'global' | 'unique';
 };
 export let GuiSchema = {

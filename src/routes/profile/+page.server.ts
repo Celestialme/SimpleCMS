@@ -3,7 +3,7 @@ import { auth } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { superValidate } from 'sveltekit-superforms/server';
 import { addUserSchema, changePasswordSchema } from '@src/utils/formSchemas';
-import { passwordToken } from '@lucia-auth/tokens';
+import { createToken } from '@src/utils/tokens';
 import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
 import type { User } from '@src/collections/Auth';
 export async function load(event) {
@@ -45,11 +45,8 @@ export const actions: Actions = {
 			})
 			.catch((_) => null);
 		if (!user) return { form: addUserForm, message: 'unknown error' };
-		const tokenHandler = passwordToken(auth as any, 'register', {
-			expiresIn: 60 * 60, // expiration in 1 hour,
-			length: 16 // default
-		});
-		let token = (await tokenHandler.issue(user.id)).toString();
+
+		let token = await createToken(user.id, 60 * 60 * 1000);
 		console.log(token); // send token to user via email
 		return { form: addUserForm };
 	},

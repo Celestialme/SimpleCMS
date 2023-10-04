@@ -21,7 +21,6 @@ const widget = ({
 	}
 	let widget: { type: any; key: 'ImageArray' } = { type: ImageArray, key: 'ImageArray' };
 	let field = {
-		schema: {},
 		db_fieldName,
 		label,
 		icon,
