@@ -4,12 +4,12 @@ import { getFieldName } from '@src/utils/utils.js';
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import ImageArray from './ImageArray.svelte';
 const widget = ({
-	db_fieldName,
+	db_fieldName = null,
 
 	icon,
 	fields,
 	required,
-	label,
+	label = null,
 	display
 }: Params) => {
 	let uploader = fields[0] as ImageUpload_Params;
@@ -21,7 +21,7 @@ const widget = ({
 	}
 	let widget: { type: any; key: 'ImageArray' } = { type: ImageArray, key: 'ImageArray' };
 	let field = {
-		schema: { [db_fieldName || label]: { String: String } },
+		schema: {},
 		db_fieldName,
 		label,
 		icon,

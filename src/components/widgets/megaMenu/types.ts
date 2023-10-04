@@ -1,6 +1,7 @@
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import GuiFields from './GuiFields.svelte';
 import widgets from '..';
+import { getFieldName } from '@src/utils/utils';
 
 export type Params = {
 	widget?: any;
@@ -25,17 +26,17 @@ export let GraphqlSchema = ({ field, label, collection }) => {
 	for (let level of menu) {
 		let children: Array<any> = [];
 		for (let _field of level) {
-			types.add(widgets[_field.widget.key].GraphqlSchema({ label: `${_field.label}_Level${levelCount}`, collection }));
+			types.add(widgets[_field.widget.key].GraphqlSchema({ label: `${getFieldName(_field)}_Level${levelCount}`, collection }));
 			if (levelCount > 0) {
-				children.push(`${_field.label}:${collection.name}_${_field.label}_Level${levelCount} `);
+				children.push(`${getFieldName(_field)}:${collection.name}_${getFieldName(_field)}_Level${levelCount} `);
 			}
 		}
 		if (levelCount > 0) {
 			if (menu.length - levelCount > 1) {
-				children.push(`children:[${collection.name}_${field.label}_Level${levelCount + 1}] `);
+				children.push(`children:[${collection.name}_${getFieldName(field)}_Level${levelCount + 1}] `);
 			}
 			types.add(`
-			type ${collection.name}_${field.label}_Level${levelCount} {
+			type ${collection.name}_${getFieldName(field)}_Level${levelCount} {
 				${Array.from(children).join('\n')}
 			}
 			`);
@@ -44,9 +45,9 @@ export let GraphqlSchema = ({ field, label, collection }) => {
 	}
 	return /* GraphQL */ `
 		${Array.from(types).join('\n')}
-		type ${collection.name}_${field.label} {
+		type ${collection.name}_${getFieldName(field)} {
 			Header: ${collection.name}_Header_Level0
-			children: [${collection.name}_${field.label}_Level1]
+			children: [${collection.name}_${getFieldName(field)}_Level1]
 		}
 	`;
 };

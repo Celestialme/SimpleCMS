@@ -3,7 +3,6 @@ import type { Schema } from './types';
 let schema: Schema = {
 	fields: [
 		widgets.ImageArray({
-			label: 'images',
 			fields: [
 				widgets.ImageUpload({
 					label: 'image',
