@@ -4,9 +4,10 @@ import mongoose from 'mongoose';
 import { getCollections } from '@src/collections';
 import widgets from '@src/components/widgets';
 import { getFieldName } from '@src/utils/utils';
+import deepmerge from 'deepmerge';
 let typeDefs = /* GraphQL */ ``;
 let types = new Set();
-let resolvers = {
+let resolvers: { [key: string]: any } = {
 	Query: {}
 };
 let collectionSchemas: string[] = [];
@@ -21,7 +22,7 @@ for (let collection of collections) {
 	for (let field of collection.fields) {
 		let schema = widgets[field.widget.key].GraphqlSchema?.({ field, label: getFieldName(field), collection });
 		if (schema.resolver) {
-			resolvers = { ...resolvers, ...schema.resolver };
+			resolvers = deepmerge(resolvers, schema.resolver);
 		}
 		if (schema) {
 			let _types = schema.graphql.split(/(?=type.*?{)/);
@@ -53,7 +54,7 @@ type Query {
 	${collections.map((collection) => `${collection.name}: [${collection.name}]`).join('\n')}
 }
 `;
-console.log(typeDefs);
+console.log(resolvers);
 for (let collection of collections) {
 	resolvers.Query[collection.name as string] = async () => await mongoose.models[collection.name as string].find({}).lean();
 }

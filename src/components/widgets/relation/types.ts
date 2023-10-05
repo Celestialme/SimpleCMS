@@ -30,8 +30,9 @@ export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
 		resolver: {
 			[collection.name]: {
 				async [getFieldName(field)](parent) {
+					console.log(getFieldName(field));
 					let res = await mongoose.models[field.relation.name as string].findById(parent[getFieldName(field)]).lean();
-					console.log(res);
+
 					return res;
 				}
 			}

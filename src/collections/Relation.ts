@@ -9,6 +9,13 @@ let schema: Schema = {
 			display({ data, contentLanguage }) {
 				return data.text2[contentLanguage];
 			}
+		}),
+		widgets.Relation({
+			label: 'relation2',
+			relation: Posts3,
+			display({ data, contentLanguage }) {
+				return data?.text2[contentLanguage];
+			}
 		})
 	]
 };

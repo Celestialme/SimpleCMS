@@ -20,6 +20,9 @@ dependencies:
   buffer:
     specifier: ^6.0.3
     version: 6.0.3
+  deepmerge:
+    specifier: ^4.3.1
+    version: 4.3.1
   graphql:
     specifier: ^16.8.1
     version: 16.8.1
@@ -976,7 +979,6 @@ packages:
   /deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
     engines: {node: '>=0.10.0'}
-    dev: true
 
   /delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
