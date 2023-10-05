@@ -1,6 +1,6 @@
 import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
 import Email from './Email.svelte';
-import { type Params, GuiSchema } from './types';
+import { type Params, GuiSchema, GraphqlSchema } from './types';
 //email
 const widget = ({ label, db_fieldName, display }: Params) => {
 	if (!display) {
@@ -20,5 +20,6 @@ const widget = ({ label, db_fieldName, display }: Params) => {
 	return { ...field, widget };
 };
 widget.GuiSchema = GuiSchema;
+widget.GraphqlSchema = GraphqlSchema;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

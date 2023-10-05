@@ -1,6 +1,6 @@
 import { findById } from '@src/utils/utils';
 import Relation from './Relation.svelte';
-import { type Params, GuiSchema } from './types';
+import { type Params, GuiSchema, GraphqlSchema } from './types';
 import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
 const widget = ({ label, db_fieldName, display, relation }: Params) => {
 	if (!display) {
@@ -32,5 +32,6 @@ const widget = ({ label, db_fieldName, display, relation }: Params) => {
 	return { ...field, widget };
 };
 widget.GuiSchema = GuiSchema;
+widget.GraphqlSchema = GraphqlSchema;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

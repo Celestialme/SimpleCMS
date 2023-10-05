@@ -1,5 +1,6 @@
 import Toggle from '@src/components/system/buttons/Toggle.svelte';
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
+import { graphql } from 'graphql';
 
 export type Params = {
 	label: string;
@@ -15,10 +16,14 @@ export let GuiSchema = {
 	translated: { widget: Toggle, required: false }
 };
 
-export let GraphqlSchema = ({ label, collection }) => {
-	return /* GraphQL */ `
-		type ${collection.name}_${label} {
+export let GraphqlSchema: GraphqlSchema = ({ label, collection }) => {
+	let typeName = `${collection.name}_${label}`;
+	return {
+		typeName,
+		graphql: /* GraphQL */ `
+		type ${typeName} {
 			en: String
 		}
-	`;
+	`
+	};
 };

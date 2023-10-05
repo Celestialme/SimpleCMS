@@ -3,6 +3,7 @@ import type ImageUpload from '@src/components/widgets/imageUpload';
 import type DefaultWidgets from '@src/components/widgets';
 import { getFieldName } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
+import { graphql } from 'graphql';
 type ommited = Omit<typeof DefaultWidgets, 'ImageUpload'>;
 type Widgets = ReturnType<ommited[keyof ommited]>;
 
@@ -22,12 +23,16 @@ export let GuiSchema = {
 	db_fieldName: { widget: FloatingInput, required: true }
 };
 
-export let GraphqlSchema = ({ field, label, collection }) => {
+export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
 	let fieldTypes = '';
 	for (let _field of field.fields) {
-		fieldTypes += widgets[_field.widget.key].GraphqlSchema({ label: getFieldName(_field), collection }) + '\n';
+		fieldTypes += widgets[_field.widget.key].GraphqlSchema({ label: getFieldName(_field), collection }).graphql + '\n';
 	}
-	return /* GraphQL */ `
-		${fieldTypes}
-	`;
+
+	return {
+		typeName: null, // imageArray does not have its own typeName in DB so its null. it unpacks fieldTypes directly
+		graphql: /* GraphQL */ `
+			${fieldTypes}
+		`
+	};
 };

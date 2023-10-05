@@ -9,5 +9,10 @@ declare global {
 	}
 
 	type DISPLAY = (({ data: any, collection: any, field: any, entry: any, contentLanguage: string }) => Promise<any>) & { default?: boolean };
+	type GraphqlSchema = ({ field, label, collection }) => {
+		typeName: string | null;
+		graphql: string;
+		resolver?: { [key: string]: any };
+	};
 }
 export {};

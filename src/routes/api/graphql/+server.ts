@@ -6,7 +6,9 @@ import widgets from '@src/components/widgets';
 import { getFieldName } from '@src/utils/utils';
 let typeDefs = /* GraphQL */ ``;
 let types = new Set();
-let resolvers = { Query: {} };
+let resolvers = {
+	Query: {}
+};
 let collectionSchemas: string[] = [];
 let collections = await getCollections();
 for (let collection of collections) {
@@ -18,8 +20,11 @@ for (let collection of collections) {
 	`;
 	for (let field of collection.fields) {
 		let schema = widgets[field.widget.key].GraphqlSchema?.({ field, label: getFieldName(field), collection });
+		if (schema.resolver) {
+			resolvers = { ...resolvers, ...schema.resolver };
+		}
 		if (schema) {
-			let _types = schema.split(/(?=type.*?{)/);
+			let _types = schema.graphql.split(/(?=type.*?{)/);
 			for (let type of _types) {
 				types.add(type);
 			}
@@ -27,10 +32,14 @@ for (let collection of collections) {
 				// for helper widgets which extract its fields and does not exist in db itself like imagearray
 				let _fields = field.fields;
 				for (let _field of _fields) {
-					collectionSchema += `${getFieldName(_field)}: ${collection.name}_${getFieldName(_field)}\n`;
+					collectionSchema += `${getFieldName(_field)}: ${widgets[_field.widget.key].GraphqlSchema?.({
+						field: _field,
+						label: getFieldName(_field),
+						collection
+					}).typeName}\n`;
 				}
 			} else {
-				collectionSchema += `${getFieldName(field)}: ${collection.name}_${getFieldName(field)}\n`;
+				collectionSchema += `${getFieldName(field)}: ${schema.typeName}\n`;
 			}
 		}
 	}
@@ -44,6 +53,7 @@ type Query {
 	${collections.map((collection) => `${collection.name}: [${collection.name}]`).join('\n')}
 }
 `;
+console.log(typeDefs);
 for (let collection of collections) {
 	resolvers.Query[collection.name as string] = async () => await mongoose.models[collection.name as string].find({}).lean();
 }

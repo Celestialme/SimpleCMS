@@ -1,5 +1,5 @@
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
-import { SIZES } from '@src/utils/utils';
+import { SIZES, getFieldName } from '@src/utils/utils';
 
 export type Params = {
 	label: string;
@@ -26,13 +26,18 @@ let types = Object.keys(SIZES)
 }`
 	)
 	.join('\n');
-export let GraphqlSchema = ({ field, label, collection }) => {
-	return /* GraphQL */ `
+export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
+	let typeName = `${collection.name}_${label}`;
+	console.log(typeName);
+	return {
+		typeName,
+		graphql: /* GraphQL */ `
 		${types}
-		type ${collection.name}_${label} {
+		type ${typeName} {
 			${Object.keys(SIZES)
 				.map((size) => `${size}: ${size}`)
 				.join('\n')}
 		}
-	`;
+	`
+	};
 };

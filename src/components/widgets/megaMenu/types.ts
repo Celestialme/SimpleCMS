@@ -17,15 +17,15 @@ export let GuiSchema = {
 	db_fieldName: { widget: FloatingInput, required: true }
 };
 
-export let GraphqlSchema = ({ field, label, collection }) => {
+export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
 	let menu = field.menu;
-
+	let typeName = `${collection.name}_${getFieldName(field)}`;
 	let types = new Set();
 	let levelCount = 0;
 	for (let level of menu) {
 		let children: Array<any> = [];
 		for (let _field of level) {
-			types.add(widgets[_field.widget.key].GraphqlSchema({ label: `${getFieldName(_field)}_Level${levelCount}`, collection }));
+			types.add(widgets[_field.widget.key].GraphqlSchema({ label: `${getFieldName(_field)}_Level${levelCount}`, collection }).graphql);
 			if (levelCount > 0) {
 				children.push(`${getFieldName(_field)}:${collection.name}_${getFieldName(_field)}_Level${levelCount} `);
 			}
@@ -42,11 +42,14 @@ export let GraphqlSchema = ({ field, label, collection }) => {
 		}
 		levelCount++;
 	}
-	return /* GraphQL */ `
+	return {
+		typeName,
+		graphql: /* GraphQL */ `
 		${Array.from(types).join('\n')}
-		type ${collection.name}_${getFieldName(field)} {
+		type ${typeName} {
 			Header: ${collection.name}_Header_Level0
 			children: [${collection.name}_${getFieldName(field)}_Level1]
 		}
-	`;
+	`
+	};
 };
