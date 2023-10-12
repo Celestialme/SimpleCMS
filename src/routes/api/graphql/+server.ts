@@ -29,7 +29,7 @@ for (let collection of collections) {
 			for (let type of _types) {
 				types.add(type);
 			}
-			if (!getFieldName(field) && 'fields' in field && field.fields.length > 0) {
+			if ('extract' in field && field.extract && 'fields' in field && field.fields.length > 0) {
 				// for helper widgets which extract its fields and does not exist in db itself like imagearray
 				let _fields = field.fields;
 				for (let _field of _fields) {

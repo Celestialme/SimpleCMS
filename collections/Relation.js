@@ -7,6 +7,13 @@ let schema = {
             display({ data, contentLanguage }) {
                 return data.text2[contentLanguage];
             }
+        }),
+        globalThis.widgets.Relation({
+            label: 'relation2',
+            relation: Posts3,
+            display({ data, contentLanguage }) {
+                return data?.text2[contentLanguage];
+            }
         })
     ]
 };

@@ -3,16 +3,23 @@ import type { Params as ImageUpload_Params } from '../imageUpload/types';
 import { getFieldName } from '@src/utils/utils.js';
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import ImageArray from './ImageArray.svelte';
+import ImageUpload from '../imageUpload';
 const widget = ({
 	db_fieldName = null,
 
 	icon,
 	fields,
 	required,
-	label = null,
-	display
+	label,
+	display,
+	uploader_label,
+	uploader_path,
+	uploader_display,
+	uploader_db_fieldName
 }: Params) => {
+	fields.unshift(ImageUpload({ db_fieldName: uploader_db_fieldName, label: uploader_label, display: uploader_display, path: uploader_path }));
 	let uploader = fields[0] as ImageUpload_Params;
+
 	if (!display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			return `<img class='max-w-[200px] inline-block' src="${entry[getFieldName(uploader)].thumbnail.url}" />`;
@@ -27,7 +34,8 @@ const widget = ({
 		upload: true,
 		fields,
 		required,
-		display
+		display,
+		extract: true
 	};
 
 	return { ...field, widget };

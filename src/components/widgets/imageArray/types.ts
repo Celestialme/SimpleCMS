@@ -1,21 +1,23 @@
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
-import type ImageUpload from '@src/components/widgets/imageUpload';
 import type DefaultWidgets from '@src/components/widgets';
 import { getFieldName } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
-import { graphql } from 'graphql';
-type ommited = Omit<typeof DefaultWidgets, 'ImageUpload'>;
-type Widgets = ReturnType<ommited[keyof ommited]>;
 
-type Widgets2 = [ReturnType<typeof ImageUpload>, ...Widgets[]];
+type Widgets = ReturnType<(typeof DefaultWidgets)[keyof typeof DefaultWidgets]>;
+
+type Widgets2 = [...Widgets[]];
 export type Params = {
 	db_fieldName?: null;
-	label?: null;
+	label: string;
 	icon?: string;
 	required?: boolean;
 	widget?: any;
 	fields: Widgets2;
 	display?: DISPLAY;
+	uploader_label: string;
+	uploader_path: string;
+	uploader_display?: DISPLAY;
+	uploader_db_fieldName?: string;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },
