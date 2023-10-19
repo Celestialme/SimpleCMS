@@ -39,6 +39,16 @@ for (let collection of collections) {
 						label: getFieldName(_field).replaceAll(' ', '_'),
 						collection
 					}).typeName}\n`;
+					console.log('---------------------------');
+					console.log(collectionSchema);
+					resolvers[collection.name as string] = deepmerge(
+						{
+							[getFieldName(_field).replaceAll(' ', '_')]: (parent) => {
+								return parent[getFieldName(_field)];
+							}
+						},
+						resolvers[collection.name as string]
+					);
 				}
 			} else {
 				collectionSchema += `${getFieldName(field).replaceAll(' ', '_')}: ${schema.typeName}\n`;
@@ -64,7 +74,7 @@ type Query {
 	${collections.map((collection) => `${collection.name}: [${collection.name}]`).join('\n')}
 }
 `;
-console.log(resolvers);
+console.log(typeDefs);
 for (let collection of collections) {
 	resolvers.Query[collection.name as string] = async () => await mongoose.models[collection.name as string].find({}).lean();
 }

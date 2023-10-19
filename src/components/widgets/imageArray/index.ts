@@ -22,7 +22,7 @@ const widget = ({
 
 	if (!display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
-			return `<img class='max-w-[200px] inline-block' src="${entry[getFieldName(uploader)].thumbnail.url}" />`;
+			return `<img class='max-w-[200px] inline-block' src="${entry[getFieldName(uploader)]?.thumbnail?.url}" />`;
 		};
 		display.default = true;
 	}

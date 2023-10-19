@@ -4,7 +4,7 @@ let schema: Schema = {
 	fields: [
 		widgets.ImageArray({
 			uploader_path: 'images',
-			uploader_label: 'image',
+			uploader_label: 'image 2',
 			label: 'ImageArray',
 
 			fields: [
