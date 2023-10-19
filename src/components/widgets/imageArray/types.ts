@@ -22,7 +22,9 @@ export type Params = {
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },
 	display: { widget: FloatingInput, required: true },
-	db_fieldName: { widget: FloatingInput, required: true }
+	db_fieldName: { widget: FloatingInput, required: true },
+	uploader_path: { widget: FloatingInput, required: true },
+	uploader_label: { widget: FloatingInput, required: true }
 };
 
 export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {

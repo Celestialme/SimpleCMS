@@ -5,14 +5,14 @@ let schema = {
             label: 'relation',
             relation: Posts3,
             display({ data, contentLanguage }) {
-                return data.text2[contentLanguage];
+                return data?.['text 2'][contentLanguage];
             }
         }),
         globalThis.widgets.Relation({
             label: 'relation2',
             relation: Posts3,
             display({ data, contentLanguage }) {
-                return data ? ["text 2"][contentLanguage] : ;
+                return data?.['text 2'][contentLanguage];
             }
         })
     ]

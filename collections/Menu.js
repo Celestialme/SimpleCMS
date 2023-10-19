@@ -1,16 +1,16 @@
 let schema = {
     fields: [
-        globalThis.globalThis.widgets.MegaMenu({
+        globalThis.widgets.MegaMenu({
             menu: [
                 [
-                    globalThis.globalThis.widgets.Text({ label: 'link', translated: true }),
-                    globalThis.globalThis.widgets.Text({ label: 'info', translated: true }),
-                    globalThis.globalThis.widgets.Text({ label: 'info3', translated: true })
+                    globalThis.widgets.Text({ label: 'link', translated: true }),
+                    globalThis.widgets.Text({ label: 'info', translated: true }),
+                    globalThis.widgets.Text({ label: 'info3', translated: true })
                 ],
                 [
-                    globalThis.globalThis.widgets.Text({ label: 'link', translated: true }),
-                    globalThis.globalThis.widgets.Text({ label: 'info', translated: true }),
-                    globalThis.globalThis.widgets.Text({ label: 'info3', translated: true })
+                    globalThis.widgets.Text({ label: 'link', translated: true }),
+                    globalThis.widgets.Text({ label: 'info', translated: true }),
+                    globalThis.widgets.Text({ label: 'info3', translated: true })
                 ]
             ],
             label: 'Menu'

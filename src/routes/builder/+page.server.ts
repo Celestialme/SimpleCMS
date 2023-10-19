@@ -2,14 +2,14 @@ import { redirect, type Actions } from '@sveltejs/kit';
 import { auth, getCollectionModels } from '../api/db';
 import { validate } from '@src/utils/utils';
 import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
-import widgets from '@src/components/widgets';
+import type { WidgetType } from '@src/components/widgets';
 import fs from 'fs';
 import prettier from 'prettier';
 import prettierConfig from '@root/.prettierrc.json';
 import { updateCollections } from '@src/collections';
 import { compile } from '../api/compile/compile';
-type Widget = typeof widgets;
-type fields = ReturnType<Widget[keyof Widget]>;
+
+type fields = ReturnType<WidgetType[keyof WidgetType]>;
 export async function load(event) {
 	let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
 	let user = await validate(auth, session);
@@ -29,7 +29,7 @@ export const actions: Actions = {
 		let originalName = JSON.parse(formData.get('originalName') as string);
 		let collectionName = JSON.parse(formData.get('collectionName') as string);
 		let fields = JSON.parse(fieldsData) as Array<fields>;
-		let imports = goThrough(fields);
+		let imports = await goThrough(fields);
 
 		let content = `
 	${imports}
@@ -75,11 +75,13 @@ export const actions: Actions = {
 	}
 };
 
-function goThrough(object: any, imports: Set<string> = new Set()) {
+async function goThrough(object: any, imports: Set<string> = new Set()) {
+	let widgets = (await import('../../components/widgets')).default;
 	if (object instanceof Object) {
 		for (let key in object) {
 			let field = object[key];
-			goThrough(field, imports);
+			await goThrough(field, imports);
+
 			if (field.widget) {
 				let widget = widgets[field.widget.key];
 				for (let key in widget.GuiSchema) {
