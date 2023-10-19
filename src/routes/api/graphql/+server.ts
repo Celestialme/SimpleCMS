@@ -13,6 +13,7 @@ let resolvers: { [key: string]: any } = {
 let collectionSchemas: string[] = [];
 let collections = await getCollections();
 for (let collection of collections) {
+	resolvers[collection.name as string] = {};
 	let collectionSchema = `
 	type ${collection.name} {
 		_id: String
@@ -20,7 +21,7 @@ for (let collection of collections) {
 		updatedAt: Float
 	`;
 	for (let field of collection.fields) {
-		let schema = widgets[field.widget.key].GraphqlSchema?.({ field, label: getFieldName(field), collection });
+		let schema = widgets[field.widget.key].GraphqlSchema?.({ field, label: getFieldName(field).replaceAll(' ', '_'), collection });
 		if (schema.resolver) {
 			resolvers = deepmerge(resolvers, schema.resolver);
 		}
@@ -33,14 +34,23 @@ for (let collection of collections) {
 				// for helper widgets which extract its fields and does not exist in db itself like imagearray
 				let _fields = field.fields;
 				for (let _field of _fields) {
-					collectionSchema += `${getFieldName(_field)}: ${widgets[_field.widget.key].GraphqlSchema?.({
+					collectionSchema += `${getFieldName(_field).replaceAll(' ', '_')}: ${widgets[_field.widget.key].GraphqlSchema?.({
 						field: _field,
-						label: getFieldName(_field),
+						label: getFieldName(_field).replaceAll(' ', '_'),
 						collection
 					}).typeName}\n`;
 				}
 			} else {
-				collectionSchema += `${getFieldName(field)}: ${schema.typeName}\n`;
+				collectionSchema += `${getFieldName(field).replaceAll(' ', '_')}: ${schema.typeName}\n`;
+
+				resolvers[collection.name as string] = deepmerge(
+					{
+						[getFieldName(field).replaceAll(' ', '_')]: (parent) => {
+							return parent[getFieldName(field)];
+						}
+					},
+					resolvers[collection.name as string]
+				);
 			}
 		}
 	}

@@ -12,15 +12,15 @@ let schema: Schema = {
 	},
 	fields: [
 		widgets.Text({
-			label: 'text',
+			label: 'text 1',
 			translated: false
 		}),
 		widgets.Text({
-			label: 'text2',
+			label: 'text 2',
 			translated: false
 		}),
 		widgets.Text({
-			label: 'text3',
+			label: 'text 3',
 			translated: false
 		})
 	]
