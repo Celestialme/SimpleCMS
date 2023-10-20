@@ -1,21 +1,29 @@
 import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+import { getGuiFields } from '@src/utils/utils';
 import Email from './Email.svelte';
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 //email
-const widget = ({ label, db_fieldName, display }: Params) => {
-	if (!display) {
+const widget = (params: Params) => {
+	let display;
+	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			console.log(data);
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
 			return data[PUBLIC_CONTENT_LANGUAGE] || 'NO entry';
 		};
 		display.default = true;
+	} else {
+		display = params.display;
 	}
-	let widget: { type: any; key: 'Email' } = { type: Email, key: 'Email' };
+	let widget: { type: typeof Email; key: 'Email'; GuiFields: ReturnType<typeof getGuiFields> } = {
+		type: Email,
+		key: 'Email',
+		GuiFields: getGuiFields(params, GuiSchema)
+	};
 	let field = {
 		display,
-		label,
-		db_fieldName
+		label: params.label,
+		db_fieldName: params.db_fieldName
 	};
 	return { ...field, widget };
 };

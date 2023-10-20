@@ -1,40 +1,45 @@
 // ImageArray - allows multiple image upload with editor
 import type { Params as ImageUpload_Params } from '../imageUpload/types';
-import { getFieldName } from '@src/utils/utils.js';
+import { getFieldName, getGuiFields } from '@src/utils/utils.js';
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import ImageArray from './ImageArray.svelte';
 import ImageUpload from '../imageUpload';
-const widget = ({
-	db_fieldName = null,
-
-	icon,
-	fields,
-	required,
-	label,
-	display,
-	uploader_label,
-	uploader_path,
-	uploader_display,
-	uploader_db_fieldName
-}: Params) => {
-	fields.unshift(ImageUpload({ db_fieldName: uploader_db_fieldName, label: uploader_label, display: uploader_display, path: uploader_path }));
-	let uploader = fields[0] as ImageUpload_Params;
-
-	if (!display) {
+const widget = (params: Params) => {
+	params.fields.unshift(
+		ImageUpload({
+			db_fieldName: params.uploader_db_fieldName,
+			label: params.uploader_label,
+			display: params.uploader_display,
+			path: params.uploader_path
+		})
+	);
+	let uploader = params.fields[0] as ImageUpload_Params;
+	let widget = {
+		type: ImageArray,
+		key: 'ImageArray' as const,
+		GuiFields: getGuiFields(params, GuiSchema)
+	};
+	let display;
+	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			return `<img class='max-w-[200px] inline-block' src="${entry[getFieldName(uploader)]?.thumbnail?.url}" />`;
 		};
 		display.default = true;
+	} else {
+		display = params.display;
 	}
-	let widget: { type: any; key: 'ImageArray' } = { type: ImageArray, key: 'ImageArray' };
 	let field = {
-		db_fieldName,
-		label,
-		icon,
+		db_fieldName: params.db_fieldName,
+		label: params.label,
+		icon: params.icon,
 		upload: true,
-		fields,
-		required,
-		display,
+		fields: params.fields,
+		required: params.required,
+		display: display,
+		uploader_label: params.uploader_label,
+		uploader_path: params.uploader_path,
+		uploader_display: params.uploader_display,
+		uploader_db_fieldName: params.uploader_db_fieldName,
 		extract: true
 	};
 

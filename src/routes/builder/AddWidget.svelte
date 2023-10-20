@@ -3,6 +3,7 @@
 	import widgets from '@src/components/widgets';
 	import InputSwitch from './InputSwitch.svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
+	import { asAny } from '@src/utils/utils';
 	export let fields: Array<any> = [];
 	export let addField: Boolean = false;
 	let selected_widget: keyof typeof widgets | null = null;
@@ -12,7 +13,7 @@
 	$: if (selected_widget) {
 		guiSchema = widgets[selected_widget].GuiSchema;
 	}
-	let field = { widget: { key: selected_widget as unknown as keyof typeof widgets } };
+	let field = { widget: { key: selected_widget as unknown as keyof typeof widgets, GuiFields: {} } };
 </script>
 
 {#if !selected_widget}
@@ -24,12 +25,12 @@
 		<Button on:click={() => (selected_widget = null)}>close</Button>
 
 		{#each Object.entries(guiSchema) as [property, value]}
-			<InputSwitch bind:value={field[property]} widget={value.widget} key={property} />
+			<InputSwitch bind:value={field.widget.GuiFields[property]} widget={asAny(value).widget} key={property} />
 		{/each}
 		<Button
 			on:click={() => {
 				if (!selected_widget) return;
-				field.widget = { key: selected_widget };
+				field.widget = { key: selected_widget, GuiFields: field.widget.GuiFields };
 				fields.push(field);
 				fields = fields;
 				addField = false;

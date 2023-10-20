@@ -43,6 +43,17 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	}
 	return formData;
 };
+export const getGuiFields = (fieldParams: { [key: string]: any }, GuiSchema: { [key: string]: any }) => {
+	let guiFields = {};
+	for (let key in GuiSchema) {
+		if (Array.isArray(fieldParams[key])) {
+			guiFields[key] = deepCopy(fieldParams[key]);
+		} else {
+			guiFields[key] = fieldParams[key];
+		}
+	}
+	return guiFields;
+};
 export const obj2formData = (obj: any) => {
 	const formData = new FormData();
 	for (const key in obj) {
@@ -53,7 +64,7 @@ export const obj2formData = (obj: any) => {
 				else if (key == 'schema') return undefined;
 				else if (key == 'display' && val.default == true) return undefined;
 				else if (key == 'display') return '🗑️' + val + '🗑️';
-				else if (key == 'widget') return { key: val.key };
+				else if (key == 'widget') return { key: val.key, GuiFields: val.GuiFields };
 				else if (key == 'relation') return '🗑️' + val + '🗑️';
 				else if (typeof val === 'function') {
 					return '🗑️' + val + '🗑️';
@@ -245,3 +256,27 @@ function removeExtension(fileName) {
 	return fileName.slice(0, lastDotIndex);
 }
 export let asAny = (value: any) => value;
+
+function deepCopy(obj) {
+	if (typeof obj !== 'object' || obj === null) {
+		return obj;
+	}
+
+	if (obj instanceof Date) {
+		return new Date(obj.getTime());
+	}
+
+	if (obj instanceof Array) {
+		return obj.reduce((arr, item, i) => {
+			arr[i] = deepCopy(item);
+			return arr;
+		}, []);
+	}
+
+	if (obj instanceof Object) {
+		return Object.keys(obj).reduce((newObj, key) => {
+			newObj[key] = deepCopy(obj[key]);
+			return newObj;
+		}, {});
+	}
+}

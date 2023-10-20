@@ -31,7 +31,7 @@
 		</p>
 		<div use:destruct>
 			{#each Object.entries(widgets[field.widget.key].GuiSchema) as [property, value]}
-				<InputSwitch bind:value={field[property]} widget={asAny(value).widget} key={property} />
+				<InputSwitch bind:value={field.widget.GuiFields[property]} widget={asAny(value).widget} key={property} />
 			{/each}
 		</div>
 	{/each}
@@ -41,7 +41,7 @@
 	<div class="properties">
 		<Button on:click={() => (currentField = null)}>close</Button>
 		{#each Object.entries(guiSchema) as [property, value]}
-			<InputSwitch bind:value={currentField[property]} widget={value.widget} key={property} />
+			<InputSwitch bind:value={currentField.widget.GuiFields[property]} widget={asAny(value).widget} key={property} />
 		{/each}
 	</div>
 {/if}

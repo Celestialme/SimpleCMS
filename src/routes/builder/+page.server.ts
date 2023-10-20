@@ -26,11 +26,11 @@ export const actions: Actions = {
 	saveCollection: async ({ request }) => {
 		let formData = await request.formData();
 		let fieldsData = formData.get('fields') as string;
+
 		let originalName = JSON.parse(formData.get('originalName') as string);
 		let collectionName = JSON.parse(formData.get('collectionName') as string);
 		let fields = JSON.parse(fieldsData) as Array<fields>;
 		let imports = await goThrough(fields);
-
 		let content = `
 	${imports}
 	import widgets from '../components/widgets';
@@ -43,6 +43,7 @@ export const actions: Actions = {
 	export default schema;
 	
 	`;
+
 		content = content.replace(/\\n|\\t/g, '').replace(/\\/g, '');
 
 		content = content.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
@@ -93,8 +94,8 @@ async function goThrough(object: any, imports: Set<string> = new Set()) {
 				}
 
 				object[key] = `🗑️widgets.${object[key].widget.key}(
-					${JSON.stringify(object[key], (key, value) => {
-						if (key == 'widget') {
+					${JSON.stringify(object[key].widget.GuiFields, (key, value) => {
+						if (key == 'type' || key == 'key') {
 							return undefined;
 						}
 						if (typeof value == 'string') {

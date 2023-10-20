@@ -1,18 +1,26 @@
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import ImageUpload from './ImageUpload.svelte';
-const widget = ({ label, db_fieldName, display, path = 'unique' }: Params) => {
-	if (!display) {
+import { getGuiFields } from '@src/utils/utils';
+const widget = (params: Params) => {
+	let display;
+	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			return `<img class='max-w-[200px] inline-block' src="${data?.thumbnail.url}" />`;
 		};
 		display.default = true;
+	} else {
+		display = params.display;
 	}
-	let widget: { type: any; key: 'ImageUpload' } = { type: ImageUpload, key: 'ImageUpload' };
+	let widget: { type: typeof ImageUpload; key: 'ImageUpload'; GuiFields: ReturnType<typeof getGuiFields> } = {
+		type: ImageUpload,
+		key: 'ImageUpload',
+		GuiFields: getGuiFields(params, GuiSchema)
+	};
 	let field = {
 		display,
-		label,
-		db_fieldName,
-		path
+		label: params.label,
+		db_fieldName: params.db_fieldName,
+		path: params.path || 'unique'
 	};
 
 	return { ...field, widget };

@@ -2,29 +2,31 @@ import { type Params, GuiSchema, GraphqlSchema } from './types';
 import MegaMenu from './MegaMenu.svelte';
 import Text from '../text';
 import { writable, type Writable } from 'svelte/store';
+import { getGuiFields } from '@src/utils/utils';
 export let currentChild: Writable<any> = writable({});
 
-const widget = ({
-	// Accept parameters from collection
-	db_fieldName,
-	menu,
-	display,
-	label
-}: Params) => {
-	if (!display) {
+const widget = (params: Params) => {
+	let display;
+	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			return data.Header[contentLanguage];
 		};
 		display.default = true;
+	} else {
+		display = params.display;
 	}
+	let widget: { type: typeof MegaMenu; key: 'MegaMenu'; GuiFields: ReturnType<typeof getGuiFields> } = {
+		type: MegaMenu,
+		key: 'MegaMenu',
+		GuiFields: getGuiFields(params, GuiSchema)
+	};
 
-	for (let level of menu) {
+	for (let level of params.menu) {
 		level.unshift(Text({ label: 'Header', translated: true }));
 	}
-	menu.unshift([Text({ label: 'Header', translated: true })]);
+	params.menu.unshift([Text({ label: 'Header', translated: true })]);
 
-	let widget: { type: any; key: 'MegaMenu' } = { type: MegaMenu, key: 'MegaMenu' };
-	let field: Params = { db_fieldName, menu, display, label };
+	let field: Params = { db_fieldName: params.db_fieldName, menu: params.menu, display, label: params.label };
 
 	return { ...field, widget };
 };
