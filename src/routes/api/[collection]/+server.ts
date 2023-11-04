@@ -47,6 +47,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 			body[key] = data.get(key) as string;
 		}
 	}
+	body['status'] = 'PUBLISHED';
 	if (!collection) return new Response('collection not found!!');
 	let files = await saveImages(data, params.collection);
 

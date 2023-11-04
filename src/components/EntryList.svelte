@@ -1,26 +1,27 @@
 <script lang="ts">
-	import { mode, entryData, deleteEntry } from '@src/stores/store';
+	import { mode, entryData, modifyEntry } from '@src/stores/store';
 	import axios from 'axios';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { writable } from 'svelte/store';
 	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel } from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
 	import { contentLanguage, collection } from '@src/stores/load';
-	import DeleteIcon from './system/icons/DeleteIcon.svelte';
+	import SquareIcon from './system/icons/SquareIcon.svelte';
+	import { getFieldName } from '@src/utils/utils';
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
-	let deleteMap: any = {};
+	let modifyMap: any = {};
 	let deleteAll = false;
 	let refresh = async (collection: typeof $collection) => {
 		data = undefined;
 		data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as { entryList: [any]; totalCount: number };
-
+		console.log(data);
 		tableData = await Promise.all(
 			data.entryList.map(async (entry) => {
 				let obj: { [key: string]: any } = {};
 				for (let field of collection.fields) {
 					obj[field.label] = await field.display?.({
-						data: entry[field.label],
+						data: entry[getFieldName(field)],
 						collection: $collection.name,
 						field,
 						entry,
@@ -38,12 +39,12 @@
 				accessorKey: field.label
 			}))
 		}));
-		deleteMap = {};
+		modifyMap = {};
 		deleteAll = false;
 	};
 	$: refresh($collection);
 	$: process_deleteAll(deleteAll);
-	$: Object.values(deleteMap).includes(true) ? mode.set('delete') : mode.set('view');
+	$: Object.values(modifyMap).includes(true) ? mode.set('delete') : mode.set('view');
 	const options = writable<TableOptions<any>>({
 		data: tableData,
 		columns: $collection.fields.map((field) => ({
@@ -60,24 +61,34 @@
 		// triggerConfirm = true;
 		if (deleteAll) {
 			for (let item in tableData) {
-				deleteMap[item] = true;
+				modifyMap[item] = true;
 			}
 		} else {
-			for (let item in deleteMap) {
-				deleteMap[item] = false;
+			for (let item in modifyMap) {
+				modifyMap[item] = false;
 			}
 		}
 	}
-	$deleteEntry = async () => {
-		let deleteList: Array<string> = [];
-		for (let item in deleteMap) {
+	$modifyEntry = async (status: 'DELETE' | 'PUBLISH' | 'UNPUBLISH' | 'TEST') => {
+		let modifyList: Array<string> = [];
+		for (let item in modifyMap) {
 			console.log(tableData[item]);
-			deleteMap[item] && deleteList.push(tableData[item]._id);
+			modifyMap[item] && modifyList.push(tableData[item]._id);
 		}
-		if (deleteList.length == 0) return;
+		if (modifyList.length == 0) return;
 		let formData = new FormData();
-		formData.append('ids', JSON.stringify(deleteList));
-		await axios.delete(`/api/${$collection.name}`, { data: formData });
+		formData.append('ids', JSON.stringify(modifyList));
+		formData.append('status', status == 'TEST' ? status + 'ING' : status + 'ED');
+		switch (status) {
+			case 'DELETE':
+				await axios.delete(`/api/${$collection.name}`, { data: formData });
+				break;
+			case 'PUBLISH':
+			case 'UNPUBLISH':
+			case 'TEST':
+				await axios.patch(`/api/${$collection.name}/setStatus`, formData).then((res) => res.data);
+				break;
+		}
 		refresh($collection);
 		mode.set('view');
 	};
@@ -87,7 +98,7 @@
 	<thead>
 		{#each $table.getHeaderGroups() as headerGroup}
 			<tr>
-				<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={DeleteIcon} /> </th>
+				<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={SquareIcon} /> </th>
 				{#each headerGroup.headers as header}
 					<th>
 						{#if !header.isPlaceholder}
@@ -101,12 +112,13 @@
 	<tbody>
 		{#each $table.getRowModel().rows as row, index}
 			<tr
+				class={data?.entryList[index]?.status == 'UNPUBLISHED' ? '!bg-yellow-700' : data?.entryList[index]?.status == 'TESTING' ? 'bg-red-800' : ''}
 				on:click={() => {
 					entryData.set(data?.entryList[index]);
 					mode.set('edit');
 				}}
 			>
-				<td class="!pl-[25px]"> <CheckBox bind:checked={deleteMap[index]} svg={DeleteIcon} /> </td>
+				<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
 				{#each row.getVisibleCells() as cell}
 					<td>
 						{@html cell.getValue()}
