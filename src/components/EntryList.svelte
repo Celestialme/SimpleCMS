@@ -112,7 +112,7 @@
 	<tbody>
 		{#each $table.getRowModel().rows as row, index}
 			<tr
-				class={data?.entryList[index]?.status == 'UNPUBLISHED' ? '!bg-yellow-700' : data?.entryList[index]?.status == 'TESTING' ? 'bg-red-800' : ''}
+				class={data?.entryList[index]?.status == 'UNPUBLISHED' ? '!bg-yellow-700' : data?.entryList[index]?.status == 'TESTING' ? '!bg-red-800' : ''}
 				on:click={() => {
 					entryData.set(data?.entryList[index]);
 					mode.set('edit');

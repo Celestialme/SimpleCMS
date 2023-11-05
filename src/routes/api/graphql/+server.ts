@@ -76,7 +76,8 @@ type Query {
 `;
 console.log(typeDefs);
 for (let collection of collections) {
-	resolvers.Query[collection.name as string] = async () => await mongoose.models[collection.name as string].find({}).lean();
+	resolvers.Query[collection.name as string] = async () =>
+		await mongoose.models[collection.name as string].find({ status: { $ne: 'UNPUBLISHED' } }).lean();
 }
 const yogaApp = createYoga<RequestEvent>({
 	schema: createSchema({
