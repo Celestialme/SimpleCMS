@@ -3,16 +3,13 @@ import type DefaultWidgets from '@src/components/widgets';
 import { getFieldName } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
 
-type Widgets = ReturnType<(typeof DefaultWidgets)[keyof typeof DefaultWidgets]>;
-
-type Widgets2 = [...Widgets[]];
 export type Params = {
 	db_fieldName?: null;
 	label: string;
 	icon?: string;
 	required?: boolean;
 	widget?: any;
-	fields: Widgets2;
+	fields: any;
 	display?: DISPLAY;
 	uploader_label: string;
 	uploader_path: string;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
-	import { contentLanguage, collection } from '@src/stores/load';
+	import { contentLanguage, collection, collections } from '@src/stores/load';
 	import { extractData, find, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
@@ -18,16 +18,17 @@
 	let showDropDown = false;
 	let entryMode: 'create' | 'edit' | 'choose' = 'choose';
 	let relation_entry;
+	let relationCollection = $collections.find((x) => x.name == field?.relation);
 	export const WidgetData = async () => {
 		let relation_id = '';
 		if (!field) return;
 		if (entryMode == 'create') {
-			relation_id = (await saveFormData({ data: fieldsData, _collection: field.relation, _mode: 'create' }))[0]?._id;
+			relation_id = (await saveFormData({ data: fieldsData, _collection: relationCollection, _mode: 'create' }))[0]?._id;
 			console.log(relation_id);
 		} else if (entryMode == 'choose') {
 			relation_id = selected?._id;
 		} else if (entryMode == 'edit') {
-			relation_id = (await saveFormData({ data: fieldsData, _collection: field.relation, _mode: 'edit', id: relation_entry._id }))[0]?._id;
+			relation_id = (await saveFormData({ data: fieldsData, _collection: relationCollection, _mode: 'edit', id: relation_entry._id }))[0]?._id;
 		}
 		return relation_id;
 	};
@@ -81,6 +82,6 @@
 {:else if !expanded && showDropDown}
 	<DropDown {dropDownData} {field} bind:selected bind:showDropDown />
 {:else}
-	<Fields fields={field?.relation.fields} root={false} bind:fieldsData customData={relation_entry} />
+	<Fields fields={relationCollection?.fields} root={false} bind:fieldsData customData={relation_entry} />
 	<Button on:click={() => (expanded = false)}>Save</Button>
 {/if}

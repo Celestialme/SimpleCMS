@@ -198,14 +198,14 @@ export let fieldsToSchema = (fields: Array<any>) => {
 	return schema;
 };
 
-export async function find(query: object, collection: Schema) {
-	if (!collection) return;
+export async function find(query: object, collectionName: string) {
+	if (!collectionName) return;
 	let _query = JSON.stringify(query);
-	return (await axios.get(`/api/find?collection=${collection.name}&query=${_query}`)).data;
+	return (await axios.get(`/api/find?collection=${collectionName}&query=${_query}`)).data;
 }
-export async function findById(id: string, collection: Schema) {
-	if (!id || !collection) return;
-	return (await axios.get(`/api/find?collection=${collection.name}&id=${id}`)).data;
+export async function findById(id: string, collectionName: string) {
+	if (!id || !collectionName) return;
+	return (await axios.get(`/api/find?collection=${collectionName}&id=${id}`)).data;
 }
 
 export function getFieldName(field: any) {
