@@ -208,7 +208,10 @@ export async function findById(id: string, collectionName: string) {
 	return (await axios.get(`/api/find?collection=${collectionName}&id=${id}`)).data;
 }
 
-export function getFieldName(field: any) {
+export function getFieldName(field: any, sanitize = false) {
+	if (sanitize) {
+		return (field?.db_fieldName || field?.label)?.replaceAll(' ', '_');
+	}
 	return (field?.db_fieldName || field?.label) as string;
 }
 
