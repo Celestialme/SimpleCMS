@@ -26,7 +26,7 @@
 
 <div class="flex">
 	<Drawer />
-	<div class="flex-grow \ max-h-screen pl-[2px] pr-[4px]">
+	<div class="flex-grow overflow-auto max-h-screen pl-[2px] pr-[4px]">
 		{#if $mode == 'view' || $mode == 'modify'}
 			<Header />
 			<EntryList />
