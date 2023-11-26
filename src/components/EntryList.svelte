@@ -114,9 +114,9 @@
 		<tbody>
 			{#each $table.getRowModel().rows as row, index}
 				<tr
-					class={data?.entryList[index]?.status == 'UNPUBLISHED'
+					class={data?.entryList[index]?.status == 'unpublished'
 						? '!bg-yellow-700'
-						: data?.entryList[index]?.status == 'TESTING'
+						: data?.entryList[index]?.status == 'testing'
 						? '!bg-red-800'
 						: ''}
 					on:click={() => {
