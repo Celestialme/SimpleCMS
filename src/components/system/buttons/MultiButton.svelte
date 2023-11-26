@@ -46,24 +46,24 @@
 	export let defaultButton: keyof typeof buttons = 'Create';
 	$: defaultButton = $mode == 'modify' ? 'Delete' : 'Create';
 	let expanded = false;
-	$: showArrow = $mode == 'modify';
+	$: activeArrow = $mode == 'modify';
 </script>
 
-<div class="wrapper" class:w-[200px]={showArrow} class:w-[150px]={!showArrow}>
+<div class="wrapper">
 	<button
 		style="--color:{buttons[defaultButton].color};background-color:{buttons[defaultButton].bg_color}"
 		class="flex-grow default"
 		class:rounded-bl-[10px]={!expanded}
-		class:rounded-r-[10px]={!showArrow}
 		on:click={buttons[defaultButton].fn}>{buttons[defaultButton].icon}{defaultButton}</button
 	>
 	<div
 		on:click={() => (expanded = !expanded)}
-		class="h-full w-[50px] relative cursor-pointer hover:active:scale-95 rounded-r-[10px]"
+		class="h-full w-[50px] relative hover:active:scale-95 rounded-r-[10px]"
+		class:cursor-pointer={activeArrow}
+		class:pointer-events-none={!activeArrow}
 		style="background-color: rgb(37, 36, 36);"
-		hidden={!showArrow}
 	>
-		<div class="arrow" />
+		<div class="arrow" class:!border-red-800={!activeArrow} />
 	</div>
 	<div class="buttons rounded-b-[10px] overflow-hidden" class:expanded>
 		{#each Object.keys(buttons) as button}
@@ -104,6 +104,7 @@
 		display: flex;
 		align-items: center;
 		height: 100%;
+		width: 200px;
 	}
 	.nested,
 	.default {
