@@ -22,6 +22,14 @@ let schema: Schema = {
 		widgets.Text({
 			label: 'text 3',
 			translated: false
+		}),
+		widgets.Text({
+			label: 'text 4',
+			translated: false
+		}),
+		widgets.Text({
+			label: 'text 5',
+			translated: false
 		})
 	]
 };

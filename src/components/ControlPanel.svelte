@@ -14,18 +14,7 @@
 
 <div class="container">
 	{#if $collection.permissions?.[user.role]?.write != false}
-		{#if $mode == 'view'}
-			<Button on:click={() => mode.set('create')}>CREATE</Button>
-		{:else if ['edit', 'create'].includes($mode)}
-			<Button on:click={saveData}>SAVE</Button>
-		{:else if $mode == 'delete'}
-			<div class="flex flex-col gap-1">
-				<Button on:click={() => $modifyEntry('DELETE')}>DELETE</Button>
-				<Button on:click={() => $modifyEntry('PUBLISH')}>PUBLISH</Button>
-				<Button on:click={() => $modifyEntry('UNPUBLISH')}>UNPUBLISH</Button>
-				<Button on:click={() => $modifyEntry('TEST')}>TEST</Button>
-			</div>
-		{/if}
+		<Button on:click={saveData}>SAVE</Button>
 	{/if}
 </div>
 

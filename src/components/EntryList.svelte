@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { mode, entryData, modifyEntry } from '@src/stores/store';
+	import { mode, entryData, modifyEntry, statusMap } from '@src/stores/store';
 	import axios from 'axios';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { writable } from 'svelte/store';
@@ -44,7 +44,7 @@
 	};
 	$: refresh($collection);
 	$: process_deleteAll(deleteAll);
-	$: Object.values(modifyMap).includes(true) ? mode.set('delete') : mode.set('view');
+	$: Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');
 	const options = writable<TableOptions<any>>({
 		data: tableData,
 		columns: $collection.fields.map((field) => ({
@@ -69,7 +69,8 @@
 			}
 		}
 	}
-	$modifyEntry = async (status: 'DELETE' | 'PUBLISH' | 'UNPUBLISH' | 'TEST') => {
+
+	$modifyEntry = async (status: keyof typeof statusMap) => {
 		let modifyList: Array<string> = [];
 		for (let item in modifyMap) {
 			console.log(tableData[item]);
@@ -78,14 +79,14 @@
 		if (modifyList.length == 0) return;
 		let formData = new FormData();
 		formData.append('ids', JSON.stringify(modifyList));
-		formData.append('status', status == 'TEST' ? status + 'ING' : status + 'ED');
+		formData.append('status', statusMap[status]);
 		switch (status) {
-			case 'DELETE':
+			case 'Delete':
 				await axios.delete(`/api/${$collection.name}`, { data: formData });
 				break;
-			case 'PUBLISH':
-			case 'UNPUBLISH':
-			case 'TEST':
+			case 'Publish':
+			case 'Unpublish':
+			case 'Test':
 				await axios.patch(`/api/${$collection.name}/setStatus`, formData).then((res) => res.data);
 				break;
 		}
@@ -94,60 +95,66 @@
 	};
 </script>
 
-<table>
-	<thead>
-		{#each $table.getHeaderGroups() as headerGroup}
-			<tr>
-				<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={SquareIcon} /> </th>
-				{#each headerGroup.headers as header}
-					<th>
-						{#if !header.isPlaceholder}
-							<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
-						{/if}
-					</th>
-				{/each}
-			</tr>
-		{/each}
-	</thead>
-	<tbody>
-		{#each $table.getRowModel().rows as row, index}
-			<tr
-				class={data?.entryList[index]?.status == 'UNPUBLISHED' ? '!bg-yellow-700' : data?.entryList[index]?.status == 'TESTING' ? '!bg-red-800' : ''}
-				on:click={() => {
-					entryData.set(data?.entryList[index]);
-					mode.set('edit');
-				}}
-			>
-				<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
-				{#each row.getVisibleCells() as cell}
-					<td>
-						{@html cell.getValue()}
-					</td>
-				{/each}
-			</tr>
-		{/each}
-	</tbody>
-	<tfoot>
-		{#each $table.getFooterGroups() as footerGroup}
-			<tr>
-				{#each footerGroup.headers as header}
-					<th>
-						{#if !header.isPlaceholder}
-							<svelte:component this={flexRender(header.column.columnDef.footer, header.getContext())} />
-						{/if}
-					</th>
-				{/each}
-			</tr>
-		{/each}
-	</tfoot>
-</table>
+<div class="overflow-auto max-h-full">
+	<table>
+		<thead>
+			{#each $table.getHeaderGroups() as headerGroup}
+				<tr>
+					<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={SquareIcon} /> </th>
+					{#each headerGroup.headers as header}
+						<th>
+							{#if !header.isPlaceholder}
+								<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
+							{/if}
+						</th>
+					{/each}
+				</tr>
+			{/each}
+		</thead>
+		<tbody>
+			{#each $table.getRowModel().rows as row, index}
+				<tr
+					class={data?.entryList[index]?.status == 'UNPUBLISHED'
+						? '!bg-yellow-700'
+						: data?.entryList[index]?.status == 'TESTING'
+						? '!bg-red-800'
+						: ''}
+					on:click={() => {
+						entryData.set(data?.entryList[index]);
+						mode.set('edit');
+					}}
+				>
+					<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
+					{#each row.getVisibleCells() as cell}
+						<td>
+							{@html cell.getValue()}
+						</td>
+					{/each}
+				</tr>
+			{/each}
+		</tbody>
+		<tfoot>
+			{#each $table.getFooterGroups() as footerGroup}
+				<tr>
+					{#each footerGroup.headers as header}
+						<th>
+							{#if !header.isPlaceholder}
+								<svelte:component this={flexRender(header.column.columnDef.footer, header.getContext())} />
+							{/if}
+						</th>
+					{/each}
+				</tr>
+			{/each}
+		</tfoot>
+	</table>
+</div>
 
 <style>
 	th,
 	td {
-		min-width: 120px;
 		text-align: left;
 		cursor: pointer;
+		font-size: min(max(16px, 1.5vw), 22px);
 	}
 	thead th:first-of-type {
 		border-top-left-radius: 12px;
@@ -170,8 +177,8 @@
 		background-color: #2c3844;
 	}
 	table {
-		min-width: calc(100% - 10px);
-		margin: auto;
+		min-width: 100%;
+
 		color: white;
 	}
 	thead {

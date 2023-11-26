@@ -4,6 +4,7 @@
 	import Fields from '@src/components/Fields.svelte';
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
+	import Header from '@src/components/Header.svelte';
 	import { collections, collection } from '@src/stores/load';
 	import { page } from '$app/stores';
 	import type { Schema } from '@src/collections/types';
@@ -25,12 +26,15 @@
 
 <div class="flex">
 	<Drawer />
-	<div class="flex-grow overflow-auto max-h-screen">
-		{#if $mode == 'view' || $mode == 'delete'}
+	<div class="flex-grow \ max-h-screen pl-[2px] pr-[4px]">
+		{#if $mode == 'view' || $mode == 'modify'}
+			<Header />
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}
 			<Fields />
 		{/if}
 	</div>
-	<ControlPanel />
+	{#if ['edit', 'create'].includes($mode)}
+		<ControlPanel />
+	{/if}
 </div>

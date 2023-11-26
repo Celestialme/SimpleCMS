@@ -21,7 +21,7 @@
 	}
 </script>
 
-<div class="flex flex-col h-screen bg-[#242734] text-center">
+<div class="wrapper">
 	<section>
 		<Collections />
 	</section>
@@ -32,8 +32,16 @@
 </div>
 
 <style>
-	section {
+	.wrapper {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		background-color: #242734;
+		text-align: center;
 		width: 240px;
+	}
+	section {
+		width: 100%;
 		padding: 0 4px;
 	}
 </style>
