@@ -23,7 +23,12 @@
 		width: 100%;
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 		overflow: visible;
 		z-index: 1;
+		background-color: #242734;
+		color: white;
+		margin-bottom: 10px;
+		padding: 10px;
 	}
 </style>

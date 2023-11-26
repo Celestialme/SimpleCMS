@@ -46,6 +46,7 @@
 	export let defaultButton: keyof typeof buttons = 'Create';
 	$: defaultButton = $mode == 'modify' ? 'Delete' : 'Create';
 	let expanded = false;
+	$: expanded = $mode == 'modify' ? expanded : false;
 	$: activeArrow = $mode == 'modify';
 </script>
 
@@ -58,7 +59,7 @@
 	>
 	<div
 		on:click={() => (expanded = !expanded)}
-		class="h-full w-[50px] relative hover:active:scale-95 rounded-r-[10px]"
+		class=" w-[50px] relative hover:active:scale-95 rounded-r-[10px]"
 		class:cursor-pointer={activeArrow}
 		class:pointer-events-none={!activeArrow}
 		style="background-color: rgb(37, 36, 36);"
@@ -103,7 +104,7 @@
 		position: relative;
 		display: flex;
 		align-items: center;
-		height: 100%;
+
 		width: 200px;
 	}
 	.nested,
