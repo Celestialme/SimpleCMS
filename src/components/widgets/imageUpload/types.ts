@@ -7,6 +7,7 @@ export type Params = {
 	db_fieldName?: string;
 	widget?: any;
 	path: (string & {}) | 'global' | 'unique';
+	width?: number;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },

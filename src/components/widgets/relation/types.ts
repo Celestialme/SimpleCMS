@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 
 export type Params = {
 	label: string;
+	width?: number;
 	display?: DISPLAY;
 	db_fieldName?: string;
 	widget?: any;

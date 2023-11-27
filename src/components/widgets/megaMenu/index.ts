@@ -26,7 +26,7 @@ const widget = (params: Params) => {
 	}
 	params.menu.unshift([Text({ label: 'Header', translated: true })]);
 
-	let field: Params = { db_fieldName: params.db_fieldName, menu: params.menu, display, label: params.label };
+	let field: Params = { db_fieldName: params.db_fieldName, menu: params.menu, display, label: params.label, width: params.width };
 
 	return { ...field, widget };
 };

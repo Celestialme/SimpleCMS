@@ -23,7 +23,8 @@ const widget = (params: Params) => {
 	let field = {
 		display,
 		label: params.label,
-		db_fieldName: params.db_fieldName
+		db_fieldName: params.db_fieldName,
+		width: params.width
 	};
 	return { ...field, widget };
 };

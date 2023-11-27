@@ -7,6 +7,7 @@ export type Params = {
 	widget?: any;
 	db_fieldName?: string;
 	label: string;
+	width?: number;
 	menu: any[];
 	display?: DISPLAY;
 };

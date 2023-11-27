@@ -4,6 +4,7 @@ import { graphql } from 'graphql';
 
 export type Params = {
 	label: string;
+	width?: number;
 	display?: DISPLAY;
 	db_fieldName?: string;
 	translated?: boolean;

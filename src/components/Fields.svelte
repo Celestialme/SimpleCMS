@@ -15,15 +15,17 @@
 	{#each fields || $collection.fields as field, index}
 		{#if field.widget}
 			{#key $collection}
-				<div class="mx-auto">
-					<p>{field.label}</p>
-					<svelte:component
-						this={asAny(field.widget.type)}
-						field={asAny(field)}
-						bind:WidgetData={fieldsData[getFieldName(field)]}
-						value={customData[getFieldName(field)]}
-						{...$$props}
-					/>
+				<div class="mx-auto text-center" style={field.width ? `width:${Math.floor(100 / field.width)}%` : ''} class:w-full={!field.width}>
+					<div class="px-[5px] text-start inline-block max-w-full">
+						<p>{field.label}</p>
+						<svelte:component
+							this={asAny(field.widget.type)}
+							field={asAny(field)}
+							bind:WidgetData={fieldsData[getFieldName(field)]}
+							value={customData[getFieldName(field)]}
+							{...$$props}
+						/>
+					</div>
 				</div>
 			{/key}
 		{/if}
@@ -37,7 +39,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		flex-direction: column;
+		/* flex-direction: column; */
+		flex-wrap: wrap;
 		width: 100%;
 		height: 100%;
 	}

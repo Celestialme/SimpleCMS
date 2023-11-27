@@ -13,23 +13,28 @@ let schema: Schema = {
 	fields: [
 		widgets.Text({
 			label: 'text 1',
-			translated: false
+			translated: false,
+			width: 2
 		}),
 		widgets.Text({
 			label: 'text 2',
-			translated: false
+			translated: false,
+			width: 2
 		}),
 		widgets.Text({
 			label: 'text 3',
-			translated: false
+			translated: false,
+			width: 2
 		}),
 		widgets.Text({
 			label: 'text 4',
-			translated: false
+			translated: false,
+			width: 2
 		}),
 		widgets.Text({
 			label: 'text 5',
-			translated: false
+			translated: false,
+			width: 1
 		})
 	]
 };

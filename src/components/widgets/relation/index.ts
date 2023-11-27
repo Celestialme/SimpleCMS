@@ -30,7 +30,8 @@ const widget = (params: Params) => {
 		display,
 		label: params.label,
 		db_fieldName: params.db_fieldName,
-		relation: params.relation
+		relation: params.relation,
+		width: params.width
 	};
 
 	return { ...field, widget };

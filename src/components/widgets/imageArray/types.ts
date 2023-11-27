@@ -6,6 +6,7 @@ import widgets from '@src/components/widgets';
 export type Params = {
 	db_fieldName?: null;
 	label: string;
+	width?: number;
 	icon?: string;
 	required?: boolean;
 	widget?: any;
