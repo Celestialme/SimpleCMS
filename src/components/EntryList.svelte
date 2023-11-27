@@ -95,7 +95,7 @@
 	};
 </script>
 
-<div class="overflow-auto max-h-full">
+<div class="overflow-auto max-h-full min-w-[200px]">
 	<table>
 		<thead>
 			{#each $table.getHeaderGroups() as headerGroup}

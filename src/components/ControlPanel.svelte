@@ -20,6 +20,7 @@
 
 <style>
 	.container {
+		flex-shrink: 2;
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;

@@ -26,15 +26,25 @@
 
 <div class="flex">
 	<Drawer />
-	<div class="flex-grow overflow-auto max-h-screen pl-[2px] pr-[4px]">
+	<div class="flex-grow overflow-x-auto max-h-screen pl-[2px] pr-[4px]">
 		{#if $mode == 'view' || $mode == 'modify'}
 			<Header />
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}
-			<Fields />
+			<Header />
+			<div class="overflow-y-auto fields">
+				<Fields />
+			</div>
 		{/if}
 	</div>
 	{#if ['edit', 'create'].includes($mode)}
 		<ControlPanel />
 	{/if}
 </div>
+
+<style>
+	.fields {
+		max-height: calc(100% - 60px);
+		min-width: 200px;
+	}
+</style>

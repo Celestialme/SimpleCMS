@@ -11,11 +11,11 @@
 	console.log(customData);
 </script>
 
-<div class="container">
+<div class="wrapper">
 	{#each fields || $collection.fields as field, index}
 		{#if field.widget}
 			{#key $collection}
-				<div>
+				<div class="mx-auto">
 					<p>{field.label}</p>
 					<svelte:component
 						this={asAny(field.widget.type)}
@@ -31,7 +31,9 @@
 </div>
 
 <style>
-	.container {
+	.wrapper {
+		overflow: auto;
+		max-height: 100%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
