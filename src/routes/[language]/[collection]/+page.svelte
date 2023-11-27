@@ -45,6 +45,5 @@
 <style>
 	.fields {
 		max-height: calc(100% - 60px);
-		min-width: 200px;
 	}
 </style>

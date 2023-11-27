@@ -28,7 +28,6 @@
 		position: relative;
 		height: 50px;
 		width: 100%;
-		min-width: 200px;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;

@@ -19,7 +19,7 @@
 
 <style>
 	div {
-		min-width: 280px;
+		width: 100%;
 		margin: 5px;
 		display: flex;
 		align-items: center;
