@@ -43,6 +43,7 @@
 		id="input"
 		bind:value
 		class:text-white={theme == 'dark'}
+		on:input
 	/>
 	<label for="input" class="text-xs text-gray-400"
 		>{label}
@@ -83,7 +84,7 @@
 	}
 	label {
 		position: absolute;
-		left: 20px;
+		left: min(10%, 20px);
 		top: 50%;
 		transform: translateY(-50%);
 		pointer-events: none;

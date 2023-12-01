@@ -3,15 +3,17 @@
 	import axios from 'axios';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { writable } from 'svelte/store';
-	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel } from '@tanstack/svelte-table';
+	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from '@tanstack/svelte-table';
 	import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
 	import { contentLanguage, collection } from '@src/stores/load';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
-	import { getFieldName } from '@src/utils/utils';
+	import { asAny, debounce, getFieldName } from '@src/utils/utils';
+	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	let data: { entryList: [any]; totalCount: number } | undefined;
 	let tableData: any = [];
 	let modifyMap: any = {};
 	let deleteAll = false;
+	let waitFilter = debounce(300);
 	let refresh = async (collection: typeof $collection) => {
 		data = undefined;
 		data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as { entryList: [any]; totalCount: number };
@@ -50,7 +52,9 @@
 		columns: $collection.fields.map((field) => ({
 			accessorKey: field.label
 		})),
-		getCoreRowModel: getCoreRowModel()
+		getCoreRowModel: getCoreRowModel(),
+		getSortedRowModel: getSortedRowModel(),
+		getFilteredRowModel: getFilteredRowModel()
 	});
 
 	$: table = createSvelteTable(options);
@@ -100,12 +104,44 @@
 		<thead>
 			{#each $table.getHeaderGroups() as headerGroup}
 				<tr>
-					<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={SquareIcon} /> </th>
+					<th class="!pl-[30px]">
+						<iconify-icon icon="il:search" class="mt-[15px]" />
+					</th>
 					{#each headerGroup.headers as header}
 						<th>
-							{#if !header.isPlaceholder}
-								<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
-							{/if}
+							<div class="flex items-center justify-between">
+								{#if !header.isPlaceholder}
+									<FloatingInput
+										type="text"
+										label="filter"
+										theme="dark"
+										name={header.id}
+										on:input={(e) => {
+											waitFilter(() => {
+												header.column.setFilterValue(asAny(e.target).value);
+											});
+										}}
+									/>
+								{/if}
+							</div>
+						</th>
+					{/each}
+				</tr>
+			{/each}
+		</thead>
+		<thead>
+			{#each $table.getHeaderGroups() as headerGroup}
+				<tr>
+					<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={SquareIcon} /> </th>
+					{#each headerGroup.headers as header}
+						<th on:click={header.column.getToggleSortingHandler()}>
+							<div class="flex items-center justify-between">
+								{#if !header.isPlaceholder}
+									<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
+
+									<div class="arrow" class:up={header.column.getIsSorted() === 'asc'} class:invisible={!header.column.getIsSorted()} />
+								{/if}
+							</div>
 						</th>
 					{/each}
 				</tr>
@@ -156,10 +192,10 @@
 		cursor: pointer;
 		font-size: min(max(16px, 1.5vw), 22px);
 	}
-	thead th:first-of-type {
+	thead:first-of-type th:first-of-type {
 		border-top-left-radius: 12px;
 	}
-	thead th:last-of-type {
+	thead:first-of-type th:last-of-type {
 		border-top-right-radius: 12px;
 	}
 	tbody tr:last-of-type td:first-of-type {
@@ -170,7 +206,7 @@
 	}
 	thead th,
 	td {
-		padding: 5px 10px;
+		padding: 10px;
 	}
 	tbody tr:nth-child(2n + 1) {
 		padding: 5px 0;
@@ -193,5 +229,18 @@
 	}
 	tbody tr:hover {
 		background-color: #274b6f;
+	}
+	.arrow {
+		border: solid white;
+		border-width: 0 4px 4px 0;
+
+		padding: 6px;
+		transform: rotate(45deg);
+		transform-origin: center;
+		transition: 0.2s transform ease-in-out;
+	}
+	.up {
+		transform: rotate(-135deg);
+		margin-top: 10px;
 	}
 </style>

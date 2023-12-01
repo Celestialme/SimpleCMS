@@ -283,3 +283,13 @@ function deepCopy(obj) {
 		}, {});
 	}
 }
+
+export function debounce(delay?: number) {
+	let timer;
+	return (fn: () => void) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			fn();
+		}, delay);
+	};
+}
