@@ -12,7 +12,7 @@
 	export let value = $entryData[fieldName] || {};
 
 	let _data = $mode == 'create' ? {} : value;
-	let _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGE;
+	$: _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGE;
 
 	export const WidgetData = async () => _data;
 	getCollections().then((collections) => {

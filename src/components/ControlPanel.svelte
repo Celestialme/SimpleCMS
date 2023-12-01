@@ -6,6 +6,7 @@
 	import { page } from '$app/stores';
 	import type { User } from '@src/collections/Auth';
 	async function saveData() {
+		console.log($collectionValue);
 		await saveFormData({ data: $collectionValue });
 		mode.set('view');
 	}

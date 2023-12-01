@@ -5,7 +5,7 @@
 	let expanded = false;
 </script>
 
-<div class="container">
+<div class="container {$$props.class}">
 	<p on:click={() => (expanded = !expanded)} class:selected={expanded}>{selected || label}</p>
 	{#if expanded}
 		<div class="items">
@@ -35,7 +35,7 @@
 	p {
 		position: relative;
 		background-color: gray;
-		padding: 5px 40px;
+		padding: 5px 0px;
 		color: white;
 		text-align: center;
 		user-select: none;

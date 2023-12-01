@@ -5,7 +5,7 @@
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
 	import Header from '@src/components/Header.svelte';
-	import { collections, collection } from '@src/stores/load';
+	import { collections, collection, contentLanguage } from '@src/stores/load';
 	import { page } from '$app/stores';
 	import type { Schema } from '@src/collections/types';
 	import { goto } from '$app/navigation';
@@ -18,9 +18,14 @@
 	collection.subscribe((_) => {
 		$collectionValue = {};
 		if (!ForwardBackward) {
-			goto(`/${$page.params.language}/${$collection.name}`);
+			goto(`/${$contentLanguage}/${$collection.name}`);
 		}
 		ForwardBackward = false;
+	});
+	contentLanguage.subscribe((_) => {
+		if (!ForwardBackward) {
+			goto(`/${$contentLanguage}/${$collection.name}`);
+		}
 	});
 </script>
 

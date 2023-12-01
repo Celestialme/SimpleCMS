@@ -14,26 +14,30 @@
 	let modifyMap: any = {};
 	let deleteAll = false;
 	let waitFilter = debounce(300);
-	let refresh = async (collection: typeof $collection) => {
-		data = undefined;
-		data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as { entryList: [any]; totalCount: number };
-		console.log(data);
-		tableData = await Promise.all(
-			data.entryList.map(async (entry) => {
-				let obj: { [key: string]: any } = {};
-				for (let field of collection.fields) {
-					obj[field.label] = await field.display?.({
-						data: entry[getFieldName(field)],
-						collection: $collection.name,
-						field,
-						entry,
-						contentLanguage: $contentLanguage
-					});
-				}
-				obj._id = entry._id;
-				return obj;
-			})
-		);
+	let refresh = async (fetch: boolean = true) => {
+		if (fetch) {
+			data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as {
+				entryList: [any];
+				totalCount: number;
+			};
+		}
+		data &&
+			(tableData = await Promise.all(
+				data.entryList.map(async (entry) => {
+					let obj: { [key: string]: any } = {};
+					for (let field of $collection.fields) {
+						obj[field.label] = await field.display?.({
+							data: entry[getFieldName(field)],
+							collection: $collection.name,
+							field,
+							entry,
+							contentLanguage: $contentLanguage
+						});
+					}
+					obj._id = entry._id;
+					return obj;
+				})
+			));
 		options.update((options) => ({
 			...options,
 			data: tableData,
@@ -44,7 +48,14 @@
 		modifyMap = {};
 		deleteAll = false;
 	};
-	$: refresh($collection);
+	$: {
+		refresh();
+		$collection;
+	}
+	$: {
+		refresh(false);
+		$contentLanguage;
+	}
 	$: process_deleteAll(deleteAll);
 	$: Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');
 	const options = writable<TableOptions<any>>({
@@ -94,7 +105,7 @@
 				await axios.patch(`/api/${$collection.name}/setStatus`, formData).then((res) => res.data);
 				break;
 		}
-		refresh($collection);
+		refresh();
 		mode.set('view');
 	};
 </script>

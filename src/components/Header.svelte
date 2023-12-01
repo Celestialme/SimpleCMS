@@ -1,13 +1,17 @@
 <script lang="ts">
-	import { collection } from '@src/stores/load';
+	import { collection, contentLanguage } from '@src/stores/load';
 	import MultiButton from './system/buttons/MultiButton.svelte';
 	import { mode } from '@src/stores/store';
 	import DeleteIcon from './system/icons/DeleteIcon.svelte';
+	import DropDown from './system/dropDown/DropDown.svelte';
 </script>
 
 <div class="wrapper">
 	<div class="collection">
 		{$collection.name}
+	</div>
+	<div class="w-[100px] h-full relative">
+		<DropDown class="absolute" items={['en', 'de']} bind:selected={$contentLanguage} />
 	</div>
 	{#if $mode != 'edit'}
 		<MultiButton />
@@ -20,7 +24,6 @@
 
 <style>
 	.collection {
-		width: 200px;
 		font-size: 22px;
 	}
 
