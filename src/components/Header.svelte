@@ -13,7 +13,7 @@
 	<div class="w-[100px] h-full relative">
 		<DropDown class="absolute" items={['en', 'de']} bind:selected={$contentLanguage} />
 	</div>
-	{#if $mode != 'edit'}
+	{#if !['edit', 'create'].includes($mode)}
 		<MultiButton />
 	{:else}
 		<button on:click={() => mode.set('view')}>
