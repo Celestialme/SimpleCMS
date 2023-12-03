@@ -34,7 +34,7 @@ let schema: Schema = {
 		widgets.Text({
 			label: 'text 5',
 			translated: true,
-			width: 3
+			width: 2
 		})
 	]
 };
