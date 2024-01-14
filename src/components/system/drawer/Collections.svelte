@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { collection, unAssigned } from '@src/stores/load';
-	import { mode } from '@src/stores/store';
+	import { mode, drawerExpanded } from '@src/stores/store';
 	import { categories } from '@src/collections';
 	import { page } from '$app/stores';
+
 	import type { User } from '@src/collections/Auth';
 	import CheckIcon from '@src/components/system/icons/CheckIcon.svelte';
 	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
@@ -38,18 +39,23 @@
 
 {#each $categories as category, index}
 	<div
-		class="arrow tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center bg-[#363b4e] text-white"
+		class=" tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center bg-[#363b4e] text-white"
 		class:arrow_up={expanded[index]}
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
 		}}
 	>
-		<p>{category.name}</p>
+		<div class="flex items-center h-full arrow">
+			<iconify-icon icon={category.icon} class:ml-auto={!$drawerExpanded} class:ml-2={$drawerExpanded} />
+			{#if $drawerExpanded}
+				<p class="ml-auto">{category.name}</p>
+			{/if}
+		</div>
 	</div>
 	<div class:expand={expanded[index]} class="wrapper">
-		<div class={expanded[index] ? 'delayed-overflow' : 'overflow-hidden'}>
+		<div class="{expanded[index] ? 'delayed-overflow' : 'overflow-hidden'} inner">
 			{#each category.collections.filter((c) => modeSet == 'edit' || c?.permissions?.[user.role]?.read != false) as _collection}
-				<p
+				<div
 					class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
 					on:click={(e) => {
 						mode.set(modeSet);
@@ -67,10 +73,13 @@
 							svg={CheckIcon}
 						/>
 					{/if}
-					<span class="mx-auto">
-						{_collection.name}
-					</span>
-				</p>
+					<div class="flex items-center h-full" class:grow={$drawerExpanded}>
+						<iconify-icon icon={_collection.icon} class:ml-auto={!$drawerExpanded} class:ml-2={$drawerExpanded} />
+						{#if $drawerExpanded}
+							<p class="mx-auto">{_collection.name}</p>
+						{/if}
+					</div>
+				</div>
 			{/each}
 			{#if modeSet == 'edit' && $unAssigned.length > 0}
 				<div class="border-b-2" />
@@ -111,6 +120,13 @@
 		transition: grid-template-rows 0.2s ease-out;
 		max-height: 100px;
 	}
+	.inner::-webkit-scrollbar-thumb {
+		border-radius: 50px;
+		background-color: #0eb4c4;
+	}
+	.inner::-webkit-scrollbar {
+		width: 10px;
+	}
 	.expand {
 		grid-template-rows: 1fr;
 	}
@@ -129,7 +145,7 @@
 	}
 	.arrow::after {
 		content: '';
-		position: absolute;
+		/* position: absolute; */
 		right: 0;
 		top: 40%;
 		transform: translateY(-50%);
@@ -140,6 +156,7 @@
 		transform: rotate(45deg);
 		margin-right: 10px;
 		transition: transform 0.1s ease-in;
+		margin-left: auto;
 	}
 
 	.arrow_up::after {

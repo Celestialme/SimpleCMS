@@ -1,6 +1,7 @@
 import widgets from '@src/components/widgets';
 import type { Schema } from './types';
 let schema: Schema = {
+	icon: 'bi:images',
 	fields: [
 		widgets.ImageArray({
 			uploader_path: 'images',

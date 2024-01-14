@@ -3,6 +3,7 @@ import { roles } from './types';
 import type { Schema } from './types';
 
 let schema: Schema = {
+	icon: 'iconoir:post',
 	permissions: {
 		[roles.admin]: {
 			read: false

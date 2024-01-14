@@ -12,17 +12,17 @@ let schema = {
         globalThis.widgets.Text({
             label: 'text 1',
             translated: true,
-            width: 3
+            width: 2
         }),
         globalThis.widgets.Text({
             label: 'text 2',
             translated: true,
-            width: 3
+            width: 2
         }),
         globalThis.widgets.Text({
             label: 'text 3',
             translated: true,
-            width: 3
+            width: 2
         }),
         globalThis.widgets.Text({
             label: 'text 4',
@@ -32,7 +32,7 @@ let schema = {
         globalThis.widgets.Text({
             label: 'text 5',
             translated: true,
-            width: 3
+            width: 2
         })
     ]
 };

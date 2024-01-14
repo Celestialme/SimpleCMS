@@ -3,7 +3,7 @@
 	import Button from '../buttons/Button.svelte';
 	import Collections from './Collections.svelte';
 	import { goto } from '$app/navigation';
-	let drawerExpanded = true;
+	import { drawerExpanded } from '@src/stores/store';
 	async function signOut() {
 		let resp = (
 			await axios.post(
@@ -22,16 +22,28 @@
 	}
 </script>
 
-<div class="wrapper" class:drawerExpanded>
+<div class="wrapper" class:drawerExpanded={$drawerExpanded}>
 	<section class="h-[50px] mb-[10px] !p-[10px]">
-		<button class="text-white" on:click={() => (drawerExpanded = !drawerExpanded)}><iconify-icon icon="mingcute:menu-fill" width="24" /></button>
+		<button class="text-white" on:click={() => ($drawerExpanded = !$drawerExpanded)}><iconify-icon icon="mingcute:menu-fill" width="24" /></button>
 	</section>
 	<section>
 		<Collections />
 	</section>
-	<button class="text-white" on:click={() => goto(`/profile`)}>Profile</button>
+	<button class="text-white" on:click={() => goto(`/profile`)}>
+		{#if $drawerExpanded}
+			Profile
+		{:else}
+			<iconify-icon icon="bi:gear-fill"></iconify-icon>
+		{/if}</button
+	>
 	<section class="mt-auto text-center">
-		<Button class="max-w-full" on:click={signOut}>SignOut</Button>
+		<Button class="max-w-full" on:click={signOut}>
+			{#if $drawerExpanded}
+				SignOut
+			{:else}
+				<iconify-icon icon="charm:sign-out"></iconify-icon>
+			{/if}
+		</Button>
 	</section>
 </div>
 
@@ -41,7 +53,7 @@
 		flex-direction: column;
 		height: 100vh;
 		background-color: #242734;
-		min-width: 80px;
+		min-width: 60px;
 		overflow-x: hidden;
 		transition: min-width 0.2s ease-out;
 	}

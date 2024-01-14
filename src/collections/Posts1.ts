@@ -1,6 +1,7 @@
 import widgets from '../components/widgets';
 import type { Schema } from './types';
 let schema: Schema = {
+	icon: 'iconoir:post',
 	fields: [
 		widgets.Email({
 			display: async ({ data, field, entry, contentLanguage }) => {

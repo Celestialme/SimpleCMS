@@ -16,7 +16,7 @@
 		transition: background-color 0.2s ease-in-out;
 		user-select: none;
 		max-width: 100%;
-		min-width: 60px;
+		min-width: 50px;
 	}
 	button:hover {
 		background-color: #4fdc4f !important;
