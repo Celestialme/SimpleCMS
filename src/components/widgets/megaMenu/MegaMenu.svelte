@@ -5,6 +5,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import ListNode from './ListNode.svelte';
 	import { entryData, mode } from '@src/stores/store';
+	import { saveFunction } from '@src/stores/load';
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
 	console.log(field);
@@ -31,6 +32,7 @@
 		showFields = false;
 		mode.set(saveMode);
 		depth = 0;
+		$saveFunction.reset();
 	}
 </script>
 
@@ -39,7 +41,7 @@
 		{(fieldsData = {}) && ''}
 		<Fields fields={field.menu[depth]} root={false} bind:fieldsData customData={$currentChild} />
 	{/key}
-	<Button on:click={saveLayer}>Save</Button>
+	{(($saveFunction.fn = saveLayer), '')}
 {/if}
 {#if _data && depth == 0}
 	<ListNode self={_data} bind:depth bind:showFields maxDepth={field.menu.length} />

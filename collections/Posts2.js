@@ -1,5 +1,6 @@
 import { roles } from './types.js';
 let schema = {
+    icon: 'iconoir:post',
     permissions: {
         [roles.admin]: {
             read: false

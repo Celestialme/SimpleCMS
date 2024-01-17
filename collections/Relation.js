@@ -1,4 +1,5 @@
 let schema = {
+    icon: 'lets-icons:menu',
     fields: [
         globalThis.widgets.Relation({
             label: 'relation',

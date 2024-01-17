@@ -1,4 +1,5 @@
 let schema = {
+    icon: 'pepicons-pop:menu',
     fields: [
         globalThis.widgets.MegaMenu({
             menu: [

@@ -1,4 +1,5 @@
 let schema = {
+    icon: 'iconoir:post',
     fields: [
         globalThis.widgets.Email({
             display: async ({ data, field, entry, contentLanguage }) => {
