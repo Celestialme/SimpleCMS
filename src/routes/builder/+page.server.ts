@@ -29,6 +29,7 @@ export const actions: Actions = {
 
 		let originalName = JSON.parse(formData.get('originalName') as string);
 		let collectionName = JSON.parse(formData.get('collectionName') as string);
+		let icon = JSON.parse(formData.get('icon') as string);
 		let fields = JSON.parse(fieldsData) as Array<fields>;
 		let imports = await goThrough(fields);
 		let content = `
@@ -36,6 +37,7 @@ export const actions: Actions = {
 	import widgets from '../components/widgets';
 	import type { Schema } from './types';
 	let schema: Schema = {
+		icon:"${icon}",
 		fields: [
 			${fields}
 		]
@@ -68,6 +70,7 @@ export const actions: Actions = {
 		}
 		`;
 		config = config.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
+
 		config = await prettier.format(config, { ...(prettierConfig as any), parser: 'typescript' });
 		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/config.ts`, config);
 		await compile();
@@ -99,7 +102,6 @@ async function goThrough(object: any, imports: Set<string> = new Set()) {
 							return undefined;
 						}
 						if (typeof value == 'string') {
-							console.log(value);
 							return value.replace(/\s*🗑️\s*/g, '🗑️').trim();
 						}
 						return value;

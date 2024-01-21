@@ -9,14 +9,15 @@
 	import WidgetBuilder from './WidgetBuilder.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	let name = $mode == 'edit' ? $collection.name : '';
+	let icon = $mode == 'edit' ? $collection.icon : '';
 	let fields = [];
 	let addField = false;
 
 	function save() {
 		let data =
 			$mode == 'edit'
-				? obj2formData({ originalName: $collection.name, collectionName: name, fields: $collection.fields })
-				: obj2formData({ fields, collectionName: name });
+				? obj2formData({ originalName: $collection.name, collectionName: name, fields: $collection.fields, icon })
+				: obj2formData({ fields, collectionName: name, icon });
 		axios.post(`?/saveCollection`, data, {
 			headers: {
 				'Content-Type': 'multipart/form-data'
@@ -25,6 +26,7 @@
 	}
 	collection.subscribe((_) => {
 		name = $mode == 'edit' ? $collection.name : '';
+		icon = $mode == 'edit' ? $collection.icon : '';
 	});
 </script>
 
@@ -43,14 +45,16 @@
 		>
 			<iconify-icon icon="typcn:plus" class="text-white" width="50" />
 		</div>
+		<div>
+			<FloatingInput theme="dark" label="name" name="name" bind:value={name} />
+			<FloatingInput theme="dark" label="icon" name="icon" bind:value={icon} />
+		</div>
 		{#if $mode == 'create'}
 			<div>
-				<FloatingInput theme="dark" label="name" name="name" bind:value={name} />
 				<WidgetBuilder {fields} bind:addField />
 			</div>
 		{:else if $mode == 'edit'}
 			<div>
-				<FloatingInput theme="dark" label="name" name="name" bind:value={name} />
 				<WidgetBuilder fields={$collection.fields} bind:addField />
 			</div>
 		{/if}
