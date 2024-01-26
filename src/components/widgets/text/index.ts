@@ -3,6 +3,7 @@ import { getGuiFields } from '@src/utils/utils';
 import Text from './Text.svelte';
 import { GuiSchema, GraphqlSchema, type Params } from './types';
 const widget = (params: Params) => {
+	/** This is a description of the foo function. */
 	let display;
 	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {

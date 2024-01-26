@@ -2,23 +2,33 @@
 	import { mode, entryData, modifyEntry, statusMap } from '@src/stores/store';
 	import axios from 'axios';
 	import CheckBox from './system/buttons/CheckBox.svelte';
-	import { writable } from 'svelte/store';
-	import { createSvelteTable, flexRender as flexRenderBugged, getCoreRowModel, getFilteredRowModel, getSortedRowModel } from '@tanstack/svelte-table';
-	import type { ColumnDef, TableOptions } from '@tanstack/table-core/src/types';
 	import { contentLanguage, collection } from '@src/stores/load';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import { asAny, debounce, getFieldName } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
-	let data: { entryList: [any]; totalCount: number } | undefined;
+	let data: { entryList: [any]; pagesCount: number } | undefined;
+	let tableHeaders: string[] = [];
 	let tableData: any = [];
 	let modifyMap: any = {};
 	let deleteAll = false;
+	let filters = {};
+	let currentPage = 1;
 	let waitFilter = debounce(300);
 	let refresh = async (fetch: boolean = true) => {
 		if (fetch) {
-			data = (await axios.get(`/api/${$collection.name}?page=${1}&length=${50}`).then((data) => data.data)) as {
+			data = (await axios
+				.get(
+					`/api/${$collection.name}?page=${currentPage}&length=${3}&filter=${JSON.stringify(filters)}&sort=${JSON.stringify(
+						sorting.isSorted
+							? {
+									[sorting.sortedBy]: sorting.isSorted
+							  }
+							: {}
+					)}`
+				)
+				.then((data) => data.data)) as {
 				entryList: [any];
-				totalCount: number;
+				pagesCount: number;
 			};
 		}
 		data &&
@@ -34,43 +44,29 @@
 							contentLanguage: $contentLanguage
 						});
 					}
-					obj._id = entry._id;
+					// obj._id = entry._id;
 					return obj;
 				})
 			));
-		options.update((options) => ({
-			...options,
-			data: tableData,
-			columns: $collection.fields.map((field) => ({
-				accessorKey: field.label
-			}))
-		}));
+		tableHeaders = $collection.fields.map((field) => field.label);
+
 		modifyMap = {};
 		deleteAll = false;
 	};
 	$: {
 		refresh();
 		$collection;
+		filters;
+		sorting;
+		currentPage;
 	}
 	$: {
 		refresh(false);
 		$contentLanguage;
+		filters = {};
 	}
 	$: process_deleteAll(deleteAll);
 	$: Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');
-	const options = writable<TableOptions<any>>({
-		data: tableData,
-		columns: $collection.fields.map((field) => ({
-			accessorKey: field.label
-		})),
-		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
-		getFilteredRowModel: getFilteredRowModel()
-	});
-
-	$: table = createSvelteTable(options);
-	//workaround for svelte-table bug
-	let flexRender = flexRenderBugged as (...args: Parameters<typeof flexRenderBugged>) => any;
 
 	function process_deleteAll(deleteAll: boolean) {
 		// triggerConfirm = true;
@@ -108,58 +104,78 @@
 		refresh();
 		mode.set('view');
 	};
+	let sorting: { sortedBy: string; isSorted: 0 | 1 | -1 } = {
+		sortedBy: '',
+		isSorted: 0
+	};
 </script>
 
 <div class="overflow-auto max-h-full">
 	<table>
 		<thead>
-			{#each $table.getHeaderGroups() as headerGroup}
-				<tr>
-					<th class="!pl-[30px]">
-						<iconify-icon icon="il:search" class="mt-[15px]" />
+			<tr>
+				<th class="!pl-[30px]">
+					<iconify-icon icon="il:search" class="mt-[15px]" />
+				</th>
+				{#each tableHeaders as header}
+					<th>
+						<div class="flex items-center justify-between">
+							<FloatingInput
+								type="text"
+								label="filter"
+								theme="dark"
+								name={header}
+								on:input={(e) => {
+									let value = asAny(e.target).value;
+									if (value) {
+										waitFilter(() => {
+											filters[`${header}.${$contentLanguage}`] = { $regex: value, $options: 'i' };
+										});
+									} else {
+										delete filters[`${header}.${$contentLanguage}`];
+										filters = filters;
+									}
+								}}
+							/>
+						</div>
 					</th>
-					{#each headerGroup.headers as header}
-						<th>
-							<div class="flex items-center justify-between">
-								{#if !header.isPlaceholder}
-									<FloatingInput
-										type="text"
-										label="filter"
-										theme="dark"
-										name={header.id}
-										on:input={(e) => {
-											waitFilter(() => {
-												header.column.setFilterValue(asAny(e.target).value);
-											});
-										}}
-									/>
-								{/if}
-							</div>
-						</th>
-					{/each}
-				</tr>
-			{/each}
+				{/each}
+			</tr>
 		</thead>
 		<thead>
-			{#each $table.getHeaderGroups() as headerGroup}
-				<tr>
-					<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={SquareIcon} /> </th>
-					{#each headerGroup.headers as header}
-						<th on:click={header.column.getToggleSortingHandler()}>
-							<div class="flex items-center justify-between">
-								{#if !header.isPlaceholder}
-									<svelte:component this={flexRender(header.column.columnDef.header, header.getContext())} />
-
-									<div class="arrow" class:up={header.column.getIsSorted() === 'asc'} class:invisible={!header.column.getIsSorted()} />
-								{/if}
-							</div>
-						</th>
-					{/each}
-				</tr>
-			{/each}
+			<tr>
+				<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={SquareIcon} /> </th>
+				{#each tableHeaders as header}
+					<th
+						on:click={() => {
+							//sort
+							sorting = {
+								sortedBy: header,
+								isSorted: (() => {
+									if (header !== sorting.sortedBy) {
+										return 1;
+									}
+									if (sorting.isSorted === 0) {
+										return 1;
+									} else if (sorting.isSorted === 1) {
+										return -1;
+									} else {
+										return 0;
+									}
+								})()
+							};
+						}}
+					>
+						<div class="flex items-center justify-between">
+							{header}
+							<div class="arrow" class:up={sorting.isSorted === 1} class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header} />
+						</div>
+					</th>
+				{/each}
+			</tr>
 		</thead>
 		<tbody>
-			{#each $table.getRowModel().rows as row, index}
+			{#each tableData as row, index}
 				<tr
 					class={data?.entryList[index]?.status == 'unpublished'
 						? '!bg-yellow-700'
@@ -172,31 +188,55 @@
 					}}
 				>
 					<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
-					{#each row.getVisibleCells() as cell}
+					{#each Object.values(row) as cell}
 						<td>
-							{@html cell.getValue()}
+							{@html cell}
 						</td>
 					{/each}
 				</tr>
 			{/each}
 		</tbody>
-		<tfoot>
-			{#each $table.getFooterGroups() as footerGroup}
-				<tr>
-					{#each footerGroup.headers as header}
-						<th>
-							{#if !header.isPlaceholder}
-								<svelte:component this={flexRender(header.column.columnDef.footer, header.getContext())} />
-							{/if}
-						</th>
-					{/each}
-				</tr>
-			{/each}
-		</tfoot>
 	</table>
+	<div class="pages">
+		{#each Array(data?.pagesCount || 1) as _, page}
+			<div class="page" on:click={() => (currentPage = page + 1)} class:active={currentPage == page + 1}>
+				{page + 1}
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style>
+	.page.active {
+		background-color: aquamarine;
+		color: white;
+	}
+	.pages {
+		display: flex;
+		justify-content: center;
+		margin-top: 20px;
+	}
+	.page:first-of-type {
+		border-top-left-radius: 8px;
+		border-bottom-left-radius: 8px;
+	}
+	.page:last-of-type {
+		border-top-right-radius: 8px;
+		border-bottom-right-radius: 8px;
+	}
+	.page {
+		border: 1px solid transparent;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 5px 15px;
+		cursor: pointer;
+		box-shadow: inset 0px 0px 3px 0px #808588;
+	}
+	.page:hover {
+		background-color: aqua;
+		color: white;
+	}
 	th,
 	td {
 		text-align: left;

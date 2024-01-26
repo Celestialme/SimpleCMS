@@ -4,7 +4,9 @@ import Text from '../text';
 import { writable, type Writable } from 'svelte/store';
 import { getGuiFields } from '@src/utils/utils';
 export let currentChild: Writable<any> = writable({});
-
+/**
+ * Returns the average of two numbers.
+ */
 const widget = (params: Params) => {
 	let display;
 	if (!params.display) {

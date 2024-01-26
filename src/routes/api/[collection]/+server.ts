@@ -6,12 +6,15 @@ export const GET: RequestHandler = async ({ params, url }) => {
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let collection = collections[params.collection];
 	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
+	let filter = JSON.parse(url.searchParams.get('filter') as string) || {};
+	let sort = JSON.parse(url.searchParams.get('sort') as string) || {};
 	let skip = (page - 1) * length;
-
+	let entryList = await collection.find(filter).sort(sort).skip(skip).limit(length);
+	let pagesCount = Math.ceil((await collection.find(filter)).length / length);
 	return new Response(
 		JSON.stringify({
-			entryList: await collection.find().skip(skip).limit(length),
-			totalCount: await collection.countDocuments()
+			entryList,
+			pagesCount
 		})
 	);
 };

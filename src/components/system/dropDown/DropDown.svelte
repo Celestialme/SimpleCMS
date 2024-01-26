@@ -35,7 +35,7 @@
 	p {
 		position: relative;
 		background-color: gray;
-		padding: 5px 0px;
+		padding: 5px 10px;
 		color: white;
 		text-align: center;
 		user-select: none;
