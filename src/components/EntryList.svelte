@@ -44,7 +44,7 @@
 							contentLanguage: $contentLanguage
 						});
 					}
-					// obj._id = entry._id;
+					obj._id = entry._id;
 					return obj;
 				})
 			));
@@ -188,9 +188,9 @@
 					}}
 				>
 					<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
-					{#each Object.values(row) as cell}
+					{#each tableHeaders as header}
 						<td>
-							{@html cell}
+							{@html row[header]}
 						</td>
 					{/each}
 				</tr>
