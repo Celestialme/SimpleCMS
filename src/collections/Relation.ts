@@ -7,14 +7,7 @@ let schema: Schema = {
 			label: 'relation',
 			relation: 'Posts3',
 			display({ data, contentLanguage }) {
-				return data?.['text 2'][contentLanguage];
-			}
-		}),
-		widgets.Relation({
-			label: 'relation2',
-			relation: 'Posts3',
-			display({ data, contentLanguage }) {
-				return data?.['text 2'][contentLanguage];
+				return data?.['text 2']?.[contentLanguage];
 			}
 		})
 	]

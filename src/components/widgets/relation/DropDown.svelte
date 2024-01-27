@@ -11,13 +11,13 @@
 	let options: Array<{ display: any; _id: any }> = [];
 	let filtered = options;
 	console.log(dropDownData);
-	Promise.all(
+	$: Promise.all(
 		dropDownData.map(async (item) => ({
 			display: await field?.display({ data: item, collection: $collection, field, entry: $entryData, contentLanguage: $contentLanguage }),
 			_id: item._id
 		}))
 	).then((res) => (options = res));
-	$: filtered = options.filter((item) => item.display.includes(search));
+	$: filtered = options.filter((item) => item.display?.includes(search));
 </script>
 
 <Input inputClass="w-full" placeholder="search..." bind:value={search} />
