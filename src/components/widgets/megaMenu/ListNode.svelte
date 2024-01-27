@@ -2,7 +2,6 @@
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
 	import { contentLanguage } from '@src/stores/load';
-	import DeleteIcon from '@src/components/system/icons/DeleteIcon.svelte';
 
 	export let self: { [key: string]: any; children: any[] };
 	export let parrent: { [key: string]: any; children: any[] } | null = null;
@@ -23,48 +22,49 @@
 		expanded = !expanded;
 	}}
 	class="header"
-	style="margin-left:{20 * level}px"
+	class:!cursor-pointer={self.children?.length > 0}
+	style="margin-left:{20 * level}px;
+	max-width:{window.screen.width <= 700 ? `calc(100% + ${20 * (maxDepth - level)}px)` : `calc(100% - ${20 * level}px)`}"
 >
 	{#if self.children?.length > 0}
 		<div class="arrow" class:expanded />
 	{/if}
 	{self?.Header[$contentLanguage]}
-	{#if level < maxDepth - 1}
+	<div class="flex items-center ml-auto gap-1">
+		{#if level < maxDepth - 1}
+			<button
+				on:click|stopPropagation={() => {
+					$currentChild = self;
+					depth = level + 1;
+					showFields = true;
+					mode.set('create');
+				}}><iconify-icon icon="uil:focus-add" width="24" height="24" /></button
+			>
+		{/if}
 		<button
 			on:click|stopPropagation={() => {
 				$currentChild = self;
-				depth = level + 1;
+				$mode = 'edit';
+				depth = level;
+				console.log(self);
 				showFields = true;
-				mode.set('create');
-			}}
-			class="btn btn-sm ml-2">+</button
+			}}><iconify-icon icon="raphael:edit" width="24" height="24" /></button
 		>
-	{/if}
-	<button
-		on:click|stopPropagation={() => {
-			$currentChild = self;
-			$mode = 'edit';
-			depth = level;
-			console.log(self);
-			showFields = true;
-		}}
-		class="btn btn-sm">✎</button
-	>
-	{#if level > 0}
-		<button
-			on:click|stopPropagation={() => {
-				parrent?.children?.splice(parrent?.children?.indexOf(self), 1);
-				refresh();
-			}}
-			class="btn btn-sm"><DeleteIcon /></button
-		>
-	{/if}
+		{#if level > 0}
+			<button
+				on:click|stopPropagation={() => {
+					parrent?.children?.splice(parrent?.children?.indexOf(self), 1);
+					refresh();
+				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24" /></button
+			>
+		{/if}
+	</div>
 </div>
 
 {#if self.children?.length > 0 && expanded}
 	<ul>
 		{#each self.children as child}
-			<li class="cursor-pointer">
+			<li>
 				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parrent={self} {maxDepth} />
 			</li>
 		{/each}
@@ -78,10 +78,19 @@
 		align-items: center;
 		justify-content: flex-start;
 		gap: 2px;
+		border: 1px solid #80808045;
+		border-radius: 5px;
+		padding: 10px 0px;
+		padding-left: 50px;
+		padding-right: 10px;
+		margin-bottom: 5px;
+		width: 100vw;
+		min-width: 200px;
+		cursor: default;
 	}
 	.arrow {
 		position: absolute;
-		left: -20px;
+		left: 10px;
 		top: 40%;
 		transform: translateY(-50%);
 		border: solid black;
@@ -94,5 +103,8 @@
 	}
 	.expanded {
 		transform: rotate(45deg);
+	}
+	button:active {
+		transform: scale(0.9);
 	}
 </style>

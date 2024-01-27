@@ -17,20 +17,22 @@
 	let user: User = $page.data.user;
 </script>
 
-<div class="container">
+<div class="wrapper">
 	{#if $collection.permissions?.[user.role]?.write != false}
 		<Button on:click={$saveFunction.fn}>SAVE</Button>
 	{/if}
 </div>
 
 <style>
-	.container {
+	.wrapper {
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
 		flex-direction: column;
-		width: 200px;
+		max-width: 200px;
 		height: 100vh;
 		background-color: #242734;
+		flex-shrink: 2;
+		flex-grow: 1;
 	}
 </style>
