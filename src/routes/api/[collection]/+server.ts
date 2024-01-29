@@ -58,7 +58,6 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
 	let user = await validate(auth, session);
-	console.log((await getCollections()).find((c) => c.name == params.collection)?.permissions);
 	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.write ?? true;
 	if (user.status != 200 || !has_write_access) {
 		return new Response('', { status: 403 });
