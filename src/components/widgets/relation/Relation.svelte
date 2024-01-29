@@ -5,8 +5,7 @@
 	import { extractData, find, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
-	import Button from '@src/components/system/buttons/Button.svelte';
-	import Icon from '@iconify/svelte';
+
 	export let field: FieldType | undefined;
 	let fieldName = getFieldName(field);
 	export let value = $entryData[fieldName];
@@ -46,7 +45,7 @@
 			if (entryMode == 'edit' || entryMode == 'create') {
 				data = await extractData(fieldsData);
 			} else if (entryMode == 'choose') {
-				data = await findById($entryData[getFieldName(field)], field.relation);
+				data = $entryData[getFieldName(field)];
 			}
 			!relation_entry && (relation_entry = data);
 		} else {

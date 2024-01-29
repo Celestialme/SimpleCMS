@@ -1,4 +1,4 @@
-import { findById, getGuiFields } from '@src/utils/utils';
+import { getGuiFields } from '@src/utils/utils';
 import Relation from './Relation.svelte';
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
@@ -6,19 +6,11 @@ const widget = (params: Params) => {
 	let display;
 	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
-			if (typeof data == 'string') {
-				data = await findById(data, params.relation);
-			}
-			return Object.values(data)[1]?.[contentLanguage] || Object.values(data)[1]?.[PUBLIC_CONTENT_LANGUAGE] || Object.values(data)[1];
+			return Object.values(data)?.[contentLanguage] || Object.values(data)?.[PUBLIC_CONTENT_LANGUAGE] || Object.values(data);
 		};
 		display.default = true;
 	} else {
-		display = async ({ data, collection, field, entry, contentLanguage }) => {
-			if (typeof data == 'string') {
-				data = await findById(data, params.relation);
-			}
-			return params.display?.({ data, collection, field, entry, contentLanguage });
-		};
+		display = params.display;
 	}
 	let widget: { type: any; key: 'Relation'; GuiFields: ReturnType<typeof getGuiFields> } = {
 		type: Relation,
@@ -38,5 +30,12 @@ const widget = (params: Params) => {
 };
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
+widget.aggregations = (field: ReturnType<typeof widget>) => [
+	{ $project: { relation: { $toObjectId: '$relation' } } },
+	{ $lookup: { from: field.relation.toLocaleLowerCase(), localField: 'relation', foreignField: '_id', as: 'relative_document' } },
+	{ $unwind: '$relative_document' },
+	{ $project: { relation: '$relative_document' } },
+	{ $project: { relative_document: 0 } }
+];
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

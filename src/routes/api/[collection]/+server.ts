@@ -3,11 +3,23 @@ import type { RequestHandler } from './$types';
 import { auth, getCollectionModels } from '@src/routes/api/db';
 import { parse, saveImages, validate } from '@src/utils/utils';
 import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
+import widgets from '@src/components/widgets';
+import type { Schema } from '@src/collections/types';
 
 export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
 	let user = await validate(auth, session);
 
+	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
+	let aggregations: any = [];
+	for (let field of collection_schema.fields) {
+		let widget = widgets[field.widget.key];
+		console.log(widget);
+		if ('aggregations' in widget) {
+			let _aggregations = (widget.aggregations as (field: any) => Array<any>)(field);
+			aggregations.push(..._aggregations);
+		}
+	}
 	let has_read_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.read ?? true;
 	if (user.status != 200 || !has_read_access) {
 		return new Response('', { status: 403 });
@@ -17,9 +29,13 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let collection = collections[params.collection];
 	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
 	let filter = JSON.parse(url.searchParams.get('filter') as string) || {};
-	let sort = JSON.parse(url.searchParams.get('sort') as string) || {};
+	let sort = JSON.parse(url.searchParams.get('sort') as string) || { _id: 0 };
 	let skip = (page - 1) * length;
-	let entryList = await collection.find(filter).sort(sort).skip(skip).limit(length);
+	let entryList = await collection
+		.aggregate([...aggregations])
+		.sort(sort)
+		.skip(skip)
+		.limit(length);
 	let pagesCount = Math.ceil((await collection.find(filter)).length / length);
 	return new Response(
 		JSON.stringify({

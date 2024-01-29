@@ -37,15 +37,20 @@
 
 <style>
 	.item {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 2px;
+		border: 1px solid #8080807d;
+		border-radius: 5px;
+		padding: 10px 0px;
+		padding-left: 50px;
+		padding-right: 10px;
+		margin-top: 5px;
 		cursor: pointer;
-		user-select: none;
-		margin: 5px;
-		font-size: 20px;
-		color: black;
-		padding: 5px;
-		border: 1px solid #8cccff;
-		border-radius: 12px;
-		background-color: #8cccff;
-		text-align: center;
+	}
+	.item:hover {
+		border-color: aqua;
 	}
 </style>

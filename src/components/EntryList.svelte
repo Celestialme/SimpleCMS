@@ -23,7 +23,7 @@
 							? {
 									[sorting.sortedBy]: sorting.isSorted
 							  }
-							: {}
+							: { _id: 0 }
 					)}`
 				)
 				.then((data) => data.data)) as {
@@ -64,6 +64,10 @@
 		refresh(false);
 		$contentLanguage;
 		filters = {};
+	}
+	$: {
+		currentPage = 1;
+		$collection;
 	}
 	$: process_deleteAll(deleteAll);
 	$: Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');
