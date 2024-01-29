@@ -189,7 +189,7 @@
 				>
 					<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
 					{#each tableHeaders as header}
-						<td>
+						<td class="text-center">
 							{@html row[header]}
 						</td>
 					{/each}

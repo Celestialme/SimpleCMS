@@ -34,5 +34,6 @@
 		background-color: #242734;
 		flex-shrink: 2;
 		flex-grow: 1;
+		width: 30vw;
 	}
 </style>

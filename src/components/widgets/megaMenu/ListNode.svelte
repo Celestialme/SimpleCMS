@@ -26,6 +26,7 @@
 	style="margin-left:{20 * level}px;
 	max-width:{window.screen.width <= 700 ? `calc(100% + ${20 * (maxDepth - level)}px)` : `calc(100% - ${20 * level}px)`}"
 >
+	<div class="ladder" style="width:{20 * level}px" />
 	{#if self.children?.length > 0}
 		<div class="arrow" class:expanded />
 	{/if}
@@ -62,7 +63,7 @@
 </div>
 
 {#if self.children?.length > 0 && expanded}
-	<ul>
+	<ul class="children" style="margin-left:{20 * level + 15}px;">
 		{#each self.children as child}
 			<li>
 				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parrent={self} {maxDepth} />
@@ -88,6 +89,12 @@
 		min-width: 200px;
 		cursor: default;
 	}
+	.ladder {
+		position: absolute;
+		height: 0;
+		right: 100%;
+		border-top: 1px dashed;
+	}
 	.arrow {
 		position: absolute;
 		left: 10px;
@@ -106,5 +113,8 @@
 	}
 	button:active {
 		transform: scale(0.9);
+	}
+	.children {
+		border-left: 1px dashed;
 	}
 </style>

@@ -2,7 +2,6 @@
 	import Fields from '@src/components/Fields.svelte';
 	import { currentChild, type FieldType } from '.';
 	import { extractData, getFieldName } from '@src/utils/utils';
-	import Button from '@src/components/system/buttons/Button.svelte';
 	import ListNode from './ListNode.svelte';
 	import { entryData, mode } from '@src/stores/store';
 	import { saveFunction } from '@src/stores/load';

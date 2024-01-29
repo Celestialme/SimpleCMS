@@ -30,8 +30,8 @@
 	}
 	input {
 		box-sizing: border-box;
-		border: 1px solid #242728;
-		border-radius: 6px;
+		border: 1px solid #c1c1c1;
+		border-radius: 4px;
 		padding: 5px;
 		color: black;
 		padding-right: 18px;

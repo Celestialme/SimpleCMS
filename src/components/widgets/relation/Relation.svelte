@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
-	import { contentLanguage, collection, collections } from '@src/stores/load';
+	import { contentLanguage, collection, collections, saveFunction } from '@src/stores/load';
 	import { extractData, find, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
@@ -54,34 +54,65 @@
 		}
 		display = await field?.display({ data, field, collection: $collection, entry: $entryData, contentLanguage: $contentLanguage });
 	})(expanded);
+
+	function save() {
+		expanded = false;
+		$saveFunction.reset();
+	}
 </script>
 
 {#if !expanded && !showDropDown}
-	<div class="flex">
-		<p on:click={openDropDown}>{selected?.display || display || 'select new'}</p>
-		<button
-			on:click={() => {
-				expanded = !expanded;
-				entryMode = 'edit';
-				fieldsData = {};
-				selected = undefined;
-			}}
-			class="btn"><Icon icon="bi:pencil-fill" width="22" /></button
-		>
-		<button
-			on:click={() => {
-				expanded = !expanded;
-				entryMode = 'create';
-				fieldsData = {};
-				selected = undefined;
-			}}
-			class="btn mr-1"
-			><Icon icon="ic:baseline-plus" width="22" />
-		</button>
+	<div class="flex header">
+		<p class="flex-grow text-center" on:click={openDropDown}>{selected?.display || display || 'select new'}</p>
+		<div class="ml-auto">
+			<button
+				on:click={() => {
+					expanded = !expanded;
+					entryMode = 'create';
+					fieldsData = {};
+					selected = undefined;
+					relation_entry = {};
+				}}
+				class="btn mr-1"
+				><iconify-icon icon="uil:focus-add" width="24" height="24" />
+			</button>
+			<button
+				on:click={() => {
+					expanded = !expanded;
+					entryMode = 'edit';
+					fieldsData = {};
+					selected = undefined;
+				}}
+				class="btn"><iconify-icon icon="raphael:edit" width="24" height="24" /></button
+			>
+		</div>
 	</div>
 {:else if !expanded && showDropDown}
 	<DropDown {dropDownData} {field} bind:selected bind:showDropDown />
 {:else}
 	<Fields fields={relationCollection?.fields} root={false} bind:fieldsData customData={relation_entry} />
-	<Button on:click={() => (expanded = false)}>Save</Button>
+	{(($saveFunction.fn = save), '')}
 {/if}
+
+<style>
+	.header {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 2px;
+		border: 1px solid #80808045;
+		border-radius: 5px;
+		padding: 10px 0px;
+		padding-left: 50px;
+		padding-right: 10px;
+		margin-bottom: 5px;
+		max-width: 100%;
+		width: 100vw;
+		min-width: 200px;
+		cursor: pointer;
+	}
+	button:active {
+		transform: scale(0.9);
+	}
+</style>
