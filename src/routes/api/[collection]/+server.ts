@@ -1,7 +1,17 @@
+import { getCollections } from '@src/collections';
 import type { RequestHandler } from './$types';
-import { getCollectionModels } from '@src/routes/api/db';
-import { parse, saveImages } from '@src/utils/utils';
-export const GET: RequestHandler = async ({ params, url }) => {
+import { auth, getCollectionModels } from '@src/routes/api/db';
+import { parse, saveImages, validate } from '@src/utils/utils';
+import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
+
+export const GET: RequestHandler = async ({ params, url, cookies }) => {
+	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
+	let user = await validate(auth, session);
+
+	let has_read_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.read ?? true;
+	if (user.status != 200 || !has_read_access) {
+		return new Response('', { status: 403 });
+	}
 	let collections = await getCollectionModels();
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let collection = collections[params.collection];
@@ -19,7 +29,14 @@ export const GET: RequestHandler = async ({ params, url }) => {
 	);
 };
 
-export const PATCH: RequestHandler = async ({ params, request }) => {
+export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
+	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
+	let user = await validate(auth, session);
+	console.log((await getCollections()).find((c) => c.name == params.collection)?.permissions);
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.write ?? true;
+	if (user.status != 200 || !has_write_access) {
+		return new Response('', { status: 403 });
+	}
 	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
 	let data = await request.formData();
@@ -38,7 +55,15 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, { ...formData, ...files }, { upsert: true })));
 };
 
-export const POST: RequestHandler = async ({ params, request }) => {
+export const POST: RequestHandler = async ({ params, request, cookies }) => {
+	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
+	let user = await validate(auth, session);
+	console.log((await getCollections()).find((c) => c.name == params.collection)?.permissions);
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.write ?? true;
+	if (user.status != 200 || !has_write_access) {
+		return new Response('', { status: 403 });
+	}
+
 	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
 	let data = await request.formData();
@@ -57,7 +82,14 @@ export const POST: RequestHandler = async ({ params, request }) => {
 	return new Response(JSON.stringify(await collection.insertMany({ ...body, ...files })));
 };
 
-export const DELETE: RequestHandler = async ({ params, request }) => {
+export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
+	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
+	let user = await validate(auth, session);
+	console.log((await getCollections()).find((c) => c.name == params.collection)?.permissions);
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.write ?? true;
+	if (user.status != 200 || !has_write_access) {
+		return new Response('', { status: 403 });
+	}
 	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
 	let data = await request.formData();

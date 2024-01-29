@@ -61,7 +61,7 @@ export type User = Modify<
 	InferSchemaType<typeof mongooseUserSchema>,
 	{
 		id: string;
-		role: (typeof roles)[keyof typeof roles];
+		role: (typeof roles)[number];
 		authMethod: 'password' | 'token';
 	}
 >;

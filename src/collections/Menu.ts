@@ -3,6 +3,7 @@ import widgets from '@src/components/widgets';
 import type { Schema } from './types';
 let schema: Schema = {
 	icon: 'pepicons-pop:menu',
+
 	fields: [
 		widgets.MegaMenu({
 			menu: [

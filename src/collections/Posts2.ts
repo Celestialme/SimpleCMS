@@ -1,14 +1,9 @@
 import widgets from '../components/widgets';
-import { roles } from './types';
 import type { Schema } from './types';
 
 let schema: Schema = {
 	icon: 'iconoir:post',
-	permissions: {
-		[roles.admin]: {
-			read: false
-		}
-	},
+
 	fields: [
 		widgets.Text({
 			label: 'text',
