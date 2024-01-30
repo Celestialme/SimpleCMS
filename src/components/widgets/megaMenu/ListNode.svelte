@@ -2,15 +2,13 @@
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
 	import { contentLanguage } from '@src/stores/load';
-	import { tick } from 'svelte';
 
 	export let self: { [key: string]: any; children: any[] };
-	export let parent: { [key: string]: any; children: any[] } | null = null;
+	export let parrent: { [key: string]: any; children: any[] } | null = null;
 	export let level = 0;
 	export let depth = 0;
 	export let showFields = false;
 	export let maxDepth = 0;
-	export let parentExpanded = true;
 	let expanded = false;
 	let ul: HTMLElement;
 	let border: HTMLElement;
@@ -29,6 +27,15 @@
 					(parent.lastChild?.firstChild as HTMLElement).offsetTop + (parent.lastChild?.firstChild as HTMLElement).offsetHeight / 2 + 'px');
 			border && (border.style.height = lastChild.offsetTop + lastChild.offsetHeight / 2 + 'px');
 		}, 0);
+	}
+	function setBorderHeightonDelete(button: any) {
+		let ul = button.parentElement.parentElement.parentElement.parentElement as HTMLElement;
+
+		setTimeout(() => {
+			let lastChild = ul.lastChild as HTMLElement;
+			let border = ul.querySelector('.border') as HTMLElement;
+			border && (border.style.height = lastChild.offsetTop + lastChild.offsetHeight / 2 + 'px');
+		});
 	}
 </script>
 
@@ -73,12 +80,9 @@
 		{#if level > 0}
 			<button
 				on:click|stopPropagation={(e) => {
-					parentExpanded = false;
-					parent?.children?.splice(parent?.children?.indexOf(self), 1);
+					setBorderHeightonDelete(e.currentTarget);
+					parrent?.children?.splice(parrent?.children?.indexOf(self), 1);
 					refresh();
-					tick().then(() => {
-						parentExpanded = true;
-					});
 				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24" /></button
 			>
 		{/if}
@@ -90,7 +94,7 @@
 		<div bind:this={border} class="border" />
 		{#each self.children as child}
 			<li>
-				<svelte:self {refresh} self={child} level={level + 1} bind:parentExpanded={expanded} bind:depth bind:showFields parent={self} {maxDepth} />
+				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parrent={self} {maxDepth} />
 			</li>
 		{/each}
 	</ul>
