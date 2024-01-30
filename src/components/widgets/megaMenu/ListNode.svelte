@@ -30,11 +30,12 @@
 	}
 	function setBorderHeightonDelete(button: any) {
 		let ul = button.parentElement.parentElement.parentElement.parentElement as HTMLElement;
-
+		console.log(ul);
+		ul.style.height = ul.offsetHeight + 'px';
 		setTimeout(() => {
 			let lastChild = ul.lastChild as HTMLElement;
 			let border = ul.querySelector('.border') as HTMLElement;
-			border && (border.style.height = lastChild.offsetTop + lastChild.offsetHeight / 2 + 'px');
+			border && (border.style.height = lastChild?.offsetTop + (lastChild?.firstChild as HTMLElement)?.offsetHeight / 2 + 'px');
 		});
 	}
 </script>
