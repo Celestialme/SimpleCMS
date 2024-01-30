@@ -2,6 +2,8 @@ import { getFieldName, getGuiFields } from '@src/utils/utils';
 import Relation from './Relation.svelte';
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import { getCollections } from '@src/collections';
+import widgets from '@src/components/widgets';
+import deepmerge from 'deepmerge';
 const widget = (params: Params) => {
 	let display;
 	display = async ({ data, collection, field, entry, contentLanguage }) => {
@@ -39,7 +41,7 @@ const widget = (params: Params) => {
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.aggregations = {
-	transformations: (info) => {
+	transformations: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
 		return [
 			{ $project: { relation: { $toObjectId: '$relation' } } },
@@ -48,6 +50,22 @@ widget.aggregations = {
 			{ $project: { relation: '$relative_document' } },
 			{ $project: { relative_document: 0 } }
 		];
+	},
+	filters: async (info) => {
+		let field = info.field as ReturnType<typeof widget>;
+		let relative_collection = (await getCollections()).find((c) => c.name == field.relation);
+		let relative_field = relative_collection?.fields.find((f) => getFieldName(f) == field.displayPath);
+		let widget = widgets[relative_field.widget.key];
+		let new_field = deepmerge(relative_field, { db_fieldName: 'relation.' + getFieldName(relative_field) }); //use db_fieldName since it overrides label.
+		return widget?.aggregations?.filters({ field: new_field, filter: info.filter, contentLanguage: info.contentLanguage }) ?? [];
+	},
+	sorts: async (info) => {
+		let field = info.field as ReturnType<typeof widget>;
+		let relative_collection = (await getCollections()).find((c) => c.name == field.relation);
+		let relative_field = relative_collection?.fields.find((f) => getFieldName(f) == field.displayPath);
+		let widget = widgets[relative_field.widget.key];
+		let new_field = deepmerge(relative_field, { db_fieldName: 'relation.' + getFieldName(relative_field) }); //use db_fieldName since it overrides label.
+		return widget?.aggregations?.sorts({ field: new_field, sort: info.sort, contentLanguage: info.contentLanguage }) ?? [];
 	}
 } as Aggregations;
 export interface FieldType extends ReturnType<typeof widget> {}

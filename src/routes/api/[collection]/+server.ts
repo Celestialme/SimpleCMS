@@ -22,7 +22,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let collection = collections[params.collection];
 	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
 	let filter: { [key: string]: string } = JSON.parse(url.searchParams.get('filter') as string) || {};
-	let sort = JSON.parse(url.searchParams.get('sort') as string);
+	let sort: { [key: string]: number } = JSON.parse(url.searchParams.get('sort') as string) || {};
 
 	let contentLanguage = JSON.parse(url.searchParams.get('contentLanguage') as string) || PUBLIC_CONTENT_LANGUAGE;
 	let skip = (page - 1) * length;
@@ -30,24 +30,25 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let aggregations: any = [];
 	for (let field of collection_schema.fields) {
 		let widget = widgets[field.widget.key];
+		let fieldName = getFieldName(field);
 		if ('aggregations' in widget) {
-			let _filter = filter[getFieldName(field)];
-
+			let _filter = filter[fieldName];
+			let _sort = sort[fieldName];
 			if (widget.aggregations.transformations) {
-				let _aggregations = widget.aggregations.transformations({ field, contentLanguage: contentLanguage });
+				let _aggregations = await widget.aggregations.transformations({ field, contentLanguage: contentLanguage });
 				aggregations.push(..._aggregations);
 			}
 			if (widget.aggregations.filters && _filter) {
-				let _aggregations = widget.aggregations.filters({ field, contentLanguage: contentLanguage, filter: _filter });
+				let _aggregations = await widget.aggregations.filters({ field, contentLanguage: contentLanguage, filter: _filter });
 				aggregations.push(..._aggregations);
 			}
-			if (widget.aggregations.sorts && sort !== 0) {
-				let _aggregations = widget.aggregations.sorts({ field, contentLanguage: contentLanguage, sort });
+			if (widget.aggregations.sorts && _sort) {
+				let _aggregations = await widget.aggregations.sorts({ field, contentLanguage: contentLanguage, sort: _sort });
 				aggregations.push(..._aggregations);
 			}
 		}
 	}
-
+	console.log(aggregations);
 	let entryListWithCount = await collection.aggregate([
 		{
 			$facet: {

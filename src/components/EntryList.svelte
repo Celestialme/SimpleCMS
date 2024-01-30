@@ -19,9 +19,11 @@
 			data = (await axios
 				.get(
 					`/api/${$collection.name}?page=${currentPage}&length=${3}&filter=${JSON.stringify(filters)}&sort=${JSON.stringify(
-						sorting.isSorted && {
-							[sorting.sortedBy]: sorting.isSorted
-						}
+						sorting.isSorted
+							? {
+									[sorting.sortedBy]: sorting.isSorted
+							  }
+							: {}
 					)}`
 				)
 				.then((data) => data.data)) as {

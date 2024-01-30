@@ -31,14 +31,15 @@ const widget = (params: Params) => {
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.aggregations = {
-	filters: (info) => {
+	filters: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
 
 		return [{ $match: { [`${getFieldName(field)}.${info.contentLanguage}`]: { $regex: info.filter, $options: 'i' } } }];
 	},
-	sorts: (info) => {
-		let key = Object.keys(info.sort)[0];
-		return [{ $sort: { [`${key}.${info.contentLanguage}`]: info.sort[key] } }];
+	sorts: async (info) => {
+		let field = info.field as ReturnType<typeof widget>;
+		let fieldName = getFieldName(field);
+		return [{ $sort: { [`${fieldName}.${info.contentLanguage}`]: info.sort } }];
 	}
 } as Aggregations;
 export interface FieldType extends ReturnType<typeof widget> {}
