@@ -9,16 +9,30 @@
 	export let depth = 0;
 	export let showFields = false;
 	export let maxDepth = 0;
-
 	let expanded = false;
-
+	let ul: HTMLElement;
+	let border: HTMLElement;
 	export let refresh = () => {
 		self.children.length = self.children?.length;
 	};
+	function setBorderHeight(node: HTMLElement) {
+		let lastChild = node.lastChild as HTMLElement;
+		let parent = node.parentElement?.parentElement as HTMLElement;
+		setTimeout(() => {
+			let parent_border = parent.querySelector('.border') as HTMLElement;
+			border !== parent_border &&
+				(parent_border.style.height =
+					(parent.lastChild?.firstChild as HTMLElement).offsetTop + (parent.lastChild?.firstChild as HTMLElement).offsetHeight / 2 + 'px');
+			border && (border.style.height = lastChild.offsetTop + lastChild.offsetHeight / 2 + 'px');
+		}, 0);
+	}
 </script>
 
 <div
 	on:click={(e) => {
+		if (expanded) {
+			setBorderHeight(ul);
+		}
 		expanded = !expanded;
 	}}
 	class="header"
@@ -63,7 +77,8 @@
 </div>
 
 {#if self.children?.length > 0 && expanded}
-	<ul class="children" style="margin-left:{20 * level + 15}px;">
+	<ul bind:this={ul} class="children relative" style="margin-left:{20 * level + 15}px;" use:setBorderHeight>
+		<div bind:this={border} class="border" />
 		{#each self.children as child}
 			<li>
 				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parrent={self} {maxDepth} />
@@ -114,7 +129,15 @@
 	button:active {
 		transform: scale(0.9);
 	}
-	.children {
+	.border {
+		content: '';
+		position: absolute;
+		left: 0;
+		width: 0;
 		border-left: 1px dashed;
+		height: 100%;
+	}
+	ul {
+		overflow: visible;
 	}
 </style>
