@@ -38,6 +38,9 @@
 			border && (border.style.height = lastChild?.offsetTop + (lastChild?.firstChild as HTMLElement)?.offsetHeight / 2 + 'px');
 		});
 	}
+	$: if (self.children.length == 0) {
+		setBorderHeight(ul);
+	}
 </script>
 
 <div
