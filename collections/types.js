@@ -1,5 +1,1 @@
-export let roles = {
-    admin: 'admin',
-    user: 'user',
-    developer: 'developer'
-};
+export let roles = ['admin', 'user', 'developer'];

@@ -1,25 +1,18 @@
 import { getCollections } from '@src/collections';
 import type { RequestHandler } from './$types';
 import { auth, getCollectionModels } from '@src/routes/api/db';
-import { parse, saveImages, validate } from '@src/utils/utils';
+import { getFieldName, parse, saveImages, validate } from '@src/utils/utils';
 import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
 import widgets from '@src/components/widgets';
 import type { Schema } from '@src/collections/types';
+import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
 
 export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
 	let user = await validate(auth, session);
 
 	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
-	let aggregations: any = [];
-	for (let field of collection_schema.fields) {
-		let widget = widgets[field.widget.key];
-		console.log(widget);
-		if ('aggregations' in widget) {
-			let _aggregations = (widget.aggregations as (field: any) => Array<any>)(field);
-			aggregations.push(..._aggregations);
-		}
-	}
+
 	let has_read_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.read ?? true;
 	if (user.status != 200 || !has_read_access) {
 		return new Response('', { status: 403 });
@@ -28,15 +21,45 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let collection = collections[params.collection];
 	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
-	let filter = JSON.parse(url.searchParams.get('filter') as string) || {};
-	let sort = JSON.parse(url.searchParams.get('sort') as string) || { _id: 0 };
+	let filter: { [key: string]: string } = JSON.parse(url.searchParams.get('filter') as string) || {};
+	let sort = JSON.parse(url.searchParams.get('sort') as string);
+
+	let contentLanguage = JSON.parse(url.searchParams.get('contentLanguage') as string) || PUBLIC_CONTENT_LANGUAGE;
 	let skip = (page - 1) * length;
-	let entryList = await collection
-		.aggregate([...aggregations])
-		.sort(sort)
-		.skip(skip)
-		.limit(length);
-	let pagesCount = Math.ceil((await collection.find(filter)).length / length);
+
+	let aggregations: any = [];
+	for (let field of collection_schema.fields) {
+		let widget = widgets[field.widget.key];
+		if ('aggregations' in widget) {
+			let _filter = filter[getFieldName(field)];
+
+			if (widget.aggregations.transformations) {
+				let _aggregations = widget.aggregations.transformations({ field, contentLanguage: contentLanguage });
+				aggregations.push(..._aggregations);
+			}
+			if (widget.aggregations.filters && _filter) {
+				let _aggregations = widget.aggregations.filters({ field, contentLanguage: contentLanguage, filter: _filter });
+				aggregations.push(..._aggregations);
+			}
+			if (widget.aggregations.sorts && sort !== 0) {
+				let _aggregations = widget.aggregations.sorts({ field, contentLanguage: contentLanguage, sort });
+				aggregations.push(..._aggregations);
+			}
+		}
+	}
+
+	let entryListWithCount = await collection.aggregate([
+		{
+			$facet: {
+				entries: [...aggregations, { $skip: skip }, { $limit: length }],
+				totalCount: [...aggregations, { $count: 'total' }]
+			}
+		}
+	]);
+	let entryList = entryListWithCount[0].entries;
+	let totalCount = entryListWithCount[0].totalCount[0] ? entryListWithCount[0].totalCount[0].total : 0;
+
+	let pagesCount = Math.ceil(totalCount / length);
 	return new Response(
 		JSON.stringify({
 			entryList,
@@ -112,7 +135,6 @@ export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
 	let ids = data.get('ids') as string;
 	ids = JSON.parse(ids);
 	console.log(ids);
-	console.log(typeof ids);
 
 	return new Response(
 		JSON.stringify(

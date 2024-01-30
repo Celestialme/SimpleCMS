@@ -62,7 +62,7 @@
 
 {#if !expanded && !showDropDown}
 	<div class="flex header">
-		<p class="flex-grow text-center" on:click={openDropDown}>{selected?.display || display || 'select new'}</p>
+		<p class="flex-grow text-center" on:click={openDropDown}>{@html selected?.display || display || 'select new'}</p>
 		<div class="ml-auto">
 			<button
 				on:click={() => {

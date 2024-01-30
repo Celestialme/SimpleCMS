@@ -1,5 +1,5 @@
 import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
-import { getGuiFields } from '@src/utils/utils';
+import { getFieldName, getGuiFields } from '@src/utils/utils';
 import Text from './Text.svelte';
 import { GuiSchema, GraphqlSchema, type Params } from './types';
 const widget = (params: Params) => {
@@ -30,5 +30,16 @@ const widget = (params: Params) => {
 };
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
+widget.aggregations = {
+	filters: (info) => {
+		let field = info.field as ReturnType<typeof widget>;
+
+		return [{ $match: { [`${getFieldName(field)}.${info.contentLanguage}`]: { $regex: info.filter, $options: 'i' } } }];
+	},
+	sorts: (info) => {
+		let key = Object.keys(info.sort)[0];
+		return [{ $sort: { [`${key}.${info.contentLanguage}`]: info.sort[key] } }];
+	}
+} as Aggregations;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

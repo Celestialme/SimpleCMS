@@ -7,11 +7,11 @@
 	import { asAny, debounce, getFieldName } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	let data: { entryList: [any]; pagesCount: number } | undefined;
-	let tableHeaders: string[] = [];
+	let tableHeaders: Array<{ label: string; name: string }> = [];
 	let tableData: any = [];
 	let modifyMap: any = {};
 	let deleteAll = false;
-	let filters = {};
+	let filters: { [key: string]: string } = {};
 	let currentPage = 1;
 	let waitFilter = debounce(300);
 	let refresh = async (fetch: boolean = true) => {
@@ -19,11 +19,9 @@
 			data = (await axios
 				.get(
 					`/api/${$collection.name}?page=${currentPage}&length=${3}&filter=${JSON.stringify(filters)}&sort=${JSON.stringify(
-						sorting.isSorted
-							? {
-									[sorting.sortedBy]: sorting.isSorted
-							  }
-							: { _id: 0 }
+						sorting.isSorted && {
+							[sorting.sortedBy]: sorting.isSorted
+						}
 					)}`
 				)
 				.then((data) => data.data)) as {
@@ -48,7 +46,7 @@
 					return obj;
 				})
 			));
-		tableHeaders = $collection.fields.map((field) => field.label);
+		tableHeaders = $collection.fields.map((field) => ({ label: field.label, name: getFieldName(field) }));
 
 		modifyMap = {};
 		deleteAll = false;
@@ -128,15 +126,15 @@
 								type="text"
 								label="filter"
 								theme="dark"
-								name={header}
+								name={header.name}
 								on:input={(e) => {
 									let value = asAny(e.target).value;
 									if (value) {
 										waitFilter(() => {
-											filters[`${header}.${$contentLanguage}`] = { $regex: value, $options: 'i' };
+											filters[header.name] = value;
 										});
 									} else {
-										delete filters[`${header}.${$contentLanguage}`];
+										delete filters[header.name];
 										filters = filters;
 									}
 								}}
@@ -154,9 +152,9 @@
 						on:click={() => {
 							//sort
 							sorting = {
-								sortedBy: header,
+								sortedBy: header.name,
 								isSorted: (() => {
-									if (header !== sorting.sortedBy) {
+									if (header.name !== sorting.sortedBy) {
 										return 1;
 									}
 									if (sorting.isSorted === 0) {
@@ -171,8 +169,8 @@
 						}}
 					>
 						<div class="flex items-center justify-between">
-							{header}
-							<div class="arrow" class:up={sorting.isSorted === 1} class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header} />
+							{header.label}
+							<div class="arrow" class:up={sorting.isSorted === 1} class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header.label} />
 						</div>
 					</th>
 				{/each}
@@ -194,7 +192,7 @@
 					<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
 					{#each tableHeaders as header}
 						<td class="text-center">
-							{@html row[header]}
+							{@html row[header.label]}
 						</td>
 					{/each}
 				</tr>
@@ -202,7 +200,7 @@
 		</tbody>
 	</table>
 	<div class="pages">
-		{#each Array(data?.pagesCount || 1) as _, page}
+		{#each Array((data?.pagesCount || 0) > 1 ? data?.pagesCount : 0) as _, page}
 			<div class="page" on:click={() => (currentPage = page + 1)} class:active={currentPage == page + 1}>
 				{page + 1}
 			</div>

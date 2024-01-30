@@ -1,11 +1,10 @@
-import { roles } from './types.js';
 let schema = {
     icon: 'iconoir:post',
     permissions: {
-        [roles.user]: {
+        user: {
             read: true
         },
-        [roles.admin]: {
+        admin: {
             write: true
         }
     },
