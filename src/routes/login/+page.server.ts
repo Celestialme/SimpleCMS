@@ -17,7 +17,7 @@ export const actions: Actions = {
 		const isToken = signInForm.data.isToken;
 		let resp = await signIn(email, password, isToken, event.cookies);
 		if (resp.status) {
-			throw redirect(303, '/');
+			redirect(303, '/');
 		} else {
 			return { form: signInForm, message: resp.message };
 		}
@@ -54,7 +54,7 @@ export const actions: Actions = {
 			resp = { status: false, message: 'this user is not defined by admin' };
 		}
 		if (resp.status) {
-			throw redirect(303, '/');
+			redirect(303, '/');
 		} else {
 			return { form: signUpForm, message: resp.message || 'unknown error' };
 		}

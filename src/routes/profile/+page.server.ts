@@ -18,7 +18,7 @@ export async function load(event) {
 			changePasswordForm
 		};
 	} else {
-		throw redirect(302, `/login`);
+		redirect(302, `/login`);
 	}
 }
 

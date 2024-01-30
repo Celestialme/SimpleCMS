@@ -29,15 +29,40 @@
 	<section>
 		<Collections />
 	</section>
-	<button class="text-white" on:click={() => goto(`/profile`)}>
-		{#if $drawerExpanded}
-			Profile
-		{:else}
-			<iconify-icon icon="bi:gear-fill"></iconify-icon>
-		{/if}</button
-	>
-	<section class="mt-auto text-center">
-		<Button class="max-w-full" on:click={signOut}>
+
+	<section class="mt-auto text-center flex flex-col items-center gap-2">
+		<Button class="text-white w-full" on:click={() => goto(`/profile`)}>
+			{#if $drawerExpanded}
+				Profile
+			{:else}
+				<iconify-icon icon="bi:person-fill"></iconify-icon>
+			{/if}</Button
+		>
+		<Button class="text-white w-full" on:click={() => goto(`/builder`)}>
+			{#if $drawerExpanded}
+				Builder
+			{:else}
+				<iconify-icon icon="bi:gear-fill"></iconify-icon>
+			{/if}</Button
+		>
+
+		<!-- <Button class="text-white w-full" on:click={() => goto(`/api/graphql`)}>
+			{#if $drawerExpanded}
+				Graphql
+			{:else}
+				<iconify-icon icon="bi:gear-fill"></iconify-icon>
+			{/if}</Button
+		> -->
+
+		<Button class="text-white w-full">
+			{#if $drawerExpanded}
+				Toogle
+			{:else}
+				<iconify-icon icon="bi:sun"></iconify-icon>
+			{/if}</Button
+		>
+
+		<Button class="w-full mb-2" on:click={signOut}>
 			{#if $drawerExpanded}
 				SignOut
 			{:else}

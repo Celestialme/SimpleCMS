@@ -4,7 +4,7 @@
 	import { contentLanguage } from '@src/stores/load';
 
 	export let self: { [key: string]: any; children: any[] };
-	export let parrent: { [key: string]: any; children: any[] } | null = null;
+	export let parent: { [key: string]: any; children: any[] } | null = null;
 	export let level = 0;
 	export let depth = 0;
 	export let showFields = false;
@@ -23,10 +23,10 @@
 	}}
 	class="header"
 	class:!cursor-pointer={self.children?.length > 0}
-	style="margin-left:{20 * level}px;
-	max-width:{window.screen.width <= 700 ? `calc(100% + ${20 * (maxDepth - level)}px)` : `calc(100% - ${20 * level}px)`}"
+	style="margin-left:{15 * level}px;
+	max-width:{window.screen.width <= 700 ? `calc(100% + ${15 * (maxDepth - level)}px)` : `calc(100% - ${15 * level}px)`}"
 >
-	<div class="ladder" style="width:{20 * level}px" />
+	<div class="ladder" style="width:{15 * level}px" />
 	{#if self.children?.length > 0}
 		<div class="arrow" class:expanded />
 	{/if}
@@ -54,7 +54,7 @@
 		{#if level > 0}
 			<button
 				on:click|stopPropagation={() => {
-					parrent?.children?.splice(parrent?.children?.indexOf(self), 1);
+					parent?.children?.splice(parent?.children?.indexOf(self), 1);
 					refresh();
 				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24" /></button
 			>
@@ -63,10 +63,10 @@
 </div>
 
 {#if self.children?.length > 0 && expanded}
-	<ul class="children" style="margin-left:{20 * level + 15}px;">
+	<ul class="children" style="margin-left:{10 * level + 5}px;">
 		{#each self.children as child}
 			<li>
-				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parrent={self} {maxDepth} />
+				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parent={self} {maxDepth} />
 			</li>
 		{/each}
 	</ul>

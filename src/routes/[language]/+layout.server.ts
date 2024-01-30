@@ -13,29 +13,29 @@ export async function load({ cookies, route, params }) {
 	let collection = collections.find((c) => c.name == params.collection);
 
 	if (user.user.authMethod == 'token') {
-		throw redirect(302, `/profile`);
+		redirect(302, `/profile`);
 	}
 	if (!locales.includes(params.language as any) || (!collection && params.collection)) {
 		// if collection is set in url but does not exists.
-		throw error(404, {
-			message: 'Not found'
-		});
+		error(404, {
+        			message: 'Not found'
+        		});
 	}
 	if (user.status == 200) {
 		if (route.id != '/[language]/[collection]') {
 			//else if language and collection both set in url
 			let _filtered = collections.filter((c) => c?.permissions?.[user.user.role]?.read != false); // filters collection  based on reading permissions  and redirects to first left one
-			throw redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGE}/${_filtered[0].name}`);
+			redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGE}/${_filtered[0].name}`);
 		}
 		if (collection?.permissions?.[user.user.role]?.read == false) {
-			throw error(404, {
-				message: 'you dont have an access to this collection'
-			});
+			error(404, {
+            				message: 'you dont have an access to this collection'
+            			});
 		}
 		return {
 			user: user.user
 		};
 	} else {
-		throw redirect(302, `/login`);
+		redirect(302, `/login`);
 	}
 }
