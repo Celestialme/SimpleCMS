@@ -2,13 +2,15 @@
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
 	import { contentLanguage } from '@src/stores/load';
+	import { tick } from 'svelte';
 
 	export let self: { [key: string]: any; children: any[] };
-	export let parrent: { [key: string]: any; children: any[] } | null = null;
+	export let parent: { [key: string]: any; children: any[] } | null = null;
 	export let level = 0;
 	export let depth = 0;
 	export let showFields = false;
 	export let maxDepth = 0;
+	export let parentExpanded = true;
 	let expanded = false;
 	let ul: HTMLElement;
 	let border: HTMLElement;
@@ -16,11 +18,13 @@
 		self.children.length = self.children?.length;
 	};
 	function setBorderHeight(node: HTMLElement) {
-		let lastChild = node.lastChild as HTMLElement;
-		let parent = node.parentElement?.parentElement as HTMLElement;
+		let lastChild = node?.lastChild as HTMLElement;
+		let parent = node?.parentElement?.parentElement as HTMLElement;
+		let parent_border = parent?.querySelector('.border') as HTMLElement;
+		// if (!parent_border || !lastChild || !parent) return;
 		setTimeout(() => {
-			let parent_border = parent.querySelector('.border') as HTMLElement;
 			border !== parent_border &&
+				parent_border &&
 				(parent_border.style.height =
 					(parent.lastChild?.firstChild as HTMLElement).offsetTop + (parent.lastChild?.firstChild as HTMLElement).offsetHeight / 2 + 'px');
 			border && (border.style.height = lastChild.offsetTop + lastChild.offsetHeight / 2 + 'px');
@@ -36,6 +40,7 @@
 		expanded = !expanded;
 	}}
 	class="header"
+	use:setBorderHeight
 	class:!cursor-pointer={self.children?.length > 0}
 	style="margin-left:{20 * level}px;
 	max-width:{window.screen.width <= 700 ? `calc(100% + ${20 * (maxDepth - level)}px)` : `calc(100% - ${20 * level}px)`}"
@@ -67,9 +72,13 @@
 		>
 		{#if level > 0}
 			<button
-				on:click|stopPropagation={() => {
-					parrent?.children?.splice(parrent?.children?.indexOf(self), 1);
+				on:click|stopPropagation={(e) => {
+					parentExpanded = false;
+					parent?.children?.splice(parent?.children?.indexOf(self), 1);
 					refresh();
+					tick().then(() => {
+						parentExpanded = true;
+					});
 				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24" /></button
 			>
 		{/if}
@@ -81,7 +90,7 @@
 		<div bind:this={border} class="border" />
 		{#each self.children as child}
 			<li>
-				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parrent={self} {maxDepth} />
+				<svelte:self {refresh} self={child} level={level + 1} bind:parentExpanded={expanded} bind:depth bind:showFields parent={self} {maxDepth} />
 			</li>
 		{/each}
 	</ul>
@@ -135,7 +144,7 @@
 		left: 0;
 		width: 0;
 		border-left: 1px dashed;
-		height: 100%;
+		max-height: 100%;
 	}
 	ul {
 		overflow: visible;
