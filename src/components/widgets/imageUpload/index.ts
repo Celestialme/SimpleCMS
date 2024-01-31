@@ -1,6 +1,6 @@
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import ImageUpload from './ImageUpload.svelte';
-import { getGuiFields } from '@src/utils/utils';
+import { getFieldName, getGuiFields } from '@src/utils/utils';
 const widget = (params: Params) => {
 	let display;
 	if (!params.display) {
@@ -28,5 +28,17 @@ const widget = (params: Params) => {
 };
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
+widget.aggregations = {
+	filters: async (info) => {
+		let field = info.field as ReturnType<typeof widget>;
+
+		return [{ $match: { [`${getFieldName(field)}.original.name`]: { $regex: info.filter, $options: 'i' } } }];
+	},
+	sorts: async (info) => {
+		let field = info.field as ReturnType<typeof widget>;
+		let fieldName = getFieldName(field);
+		return [{ $sort: { [`${fieldName}.original.name`]: info.sort } }];
+	}
+} as Aggregations;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

@@ -9,16 +9,45 @@
 	export let depth = 0;
 	export let showFields = false;
 	export let maxDepth = 0;
-
 	let expanded = false;
-
+	let ul: HTMLElement;
 	export let refresh = () => {
 		self.children.length = self.children?.length;
 	};
+	function setBorderHeight(node: HTMLElement | null | undefined) {
+		if (!node) return;
+		// if (!parent_border || !lastChild || !parent) return;
+		setTimeout(async () => {
+			let lastHeader = node?.lastChild?.firstChild as HTMLElement;
+			if (!lastHeader) return;
+			let border = node?.querySelector('.border') as HTMLElement;
+			border && (border.style.height = lastHeader.offsetTop + lastHeader.offsetHeight / 2 + 'px');
+		}, 0);
+	}
+
+	$: if (self.children.length) {
+		recalculateBorderHeight(ul);
+	}
+
+	function findFirstOuterUl(node: HTMLElement | null) {
+		if (!node) return;
+		if (node.tagName == 'UL') return node;
+		return findFirstOuterUl(node.parentElement);
+	}
+	function recalculateBorderHeight(node) {
+		let child = findFirstOuterUl(node);
+		setBorderHeight(child);
+		if (!child?.classList.contains('MENU_CONTAINER') && child) {
+			recalculateBorderHeight(child?.parentElement);
+		}
+	}
 </script>
 
 <div
 	on:click={(e) => {
+		if (expanded) {
+			recalculateBorderHeight(ul);
+		}
 		expanded = !expanded;
 	}}
 	class="header"
@@ -63,7 +92,9 @@
 </div>
 
 {#if self.children?.length > 0 && expanded}
-	<ul class="children" style="margin-left:{10 * level + 5}px;">
+	<ul bind:this={ul} class="children relative" style="margin-left:{20 * level + 15}px;">
+		<div class="border" />
+
 		{#each self.children as child}
 			<li>
 				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parent={self} {maxDepth} />
@@ -114,7 +145,15 @@
 	button:active {
 		transform: scale(0.9);
 	}
-	.children {
+	.border {
+		content: '';
+		position: absolute;
+		left: 0;
+		width: 0;
 		border-left: 1px dashed;
+		max-height: 100%;
+	}
+	ul {
+		overflow: visible;
 	}
 </style>

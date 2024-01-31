@@ -6,9 +6,7 @@ let schema: Schema = {
 		widgets.Relation({
 			label: 'relation',
 			relation: 'Posts3',
-			display({ data, contentLanguage }) {
-				return data?.['text 2']?.[contentLanguage];
-			}
+			displayPath: 'text 1'
 		})
 	]
 };

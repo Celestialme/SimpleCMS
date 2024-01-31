@@ -26,6 +26,7 @@ let schema: Schema = {
 					widgets.Text({ label: 'link 4', translated: true }),
 					widgets.Text({ label: 'info', translated: true }),
 					widgets.Text({ label: 'info3', translated: true })
+
 				]
 			],
 			label: 'Menu'

@@ -3,7 +3,7 @@ import type { Schema } from './types';
 let schema: Schema = {
 	icon: 'bi:images',
 	fields: [
-		widgets.ImageArray({
+		...widgets.ImageArray({
 			uploader_path: 'images',
 			uploader_label: 'image 2',
 			label: 'ImageArray',
@@ -15,7 +15,7 @@ let schema: Schema = {
 					translated: false
 				})
 			]
-		})
+		}).fields
 	]
 };
 export default schema;

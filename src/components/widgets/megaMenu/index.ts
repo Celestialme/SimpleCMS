@@ -2,7 +2,7 @@ import { type Params, GuiSchema, GraphqlSchema } from './types';
 import MegaMenu from './MegaMenu.svelte';
 import Text from '../text';
 import { writable, type Writable } from 'svelte/store';
-import { getGuiFields } from '@src/utils/utils';
+import { getFieldName, getGuiFields } from '@src/utils/utils';
 export let currentChild: Writable<any> = writable({});
 /**
  * Returns the average of two numbers.
@@ -34,5 +34,17 @@ const widget = (params: Params) => {
 };
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
+widget.aggregations = {
+	filters: async (info) => {
+		let field = info.field as ReturnType<typeof widget>;
+
+		return [{ $match: { [`${getFieldName(field)}.Header.${info.contentLanguage}`]: { $regex: info.filter, $options: 'i' } } }];
+	},
+	sorts: async (info) => {
+		let field = info.field as ReturnType<typeof widget>;
+		let fieldName = getFieldName(field);
+		return [{ $sort: { [`${fieldName}.Header.${info.contentLanguage}`]: info.sort } }];
+	}
+} as Aggregations;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;
