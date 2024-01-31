@@ -31,20 +31,20 @@
 	$form.role = 'User';
 </script>
 
-<form method="post" action="?/addUser" use:enhance class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2">
+<form method="post" action="?/addUser" use:enhance class=" flex w-full flex-col p-4 lg:w-1/2">
 	<FloatingInput
 		bind:value={$form.email}
 		iconClass="text-white"
 		inputClass="text-white"
 		name="email"
 		type="email"
-		label={$LL.LOGIN_EmailAddress()}
+		label={'Email Address'}
 		theme="dark"
 	/>
 	{#if $errors.email}<span class="invalid">{$errors.email}</span>{/if}
 	{#if response}<span class="invalid">{response}</span>{/if}
 	<DropDown items={Object.values(roles)} bind:selected={$form.role} />
-	<Button class="bg-white mt-10">Create</Button>
+	<Button class="mt-10" bgColor="#e64949" hoverColor="#f46363">Create</Button>
 </form>
 
 <style>

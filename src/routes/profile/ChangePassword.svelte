@@ -29,14 +29,14 @@
 	});
 </script>
 
-<form method="post" action="?/changePassword" use:enhance class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2">
+<form method="post" action="?/changePassword" use:enhance class=" flex w-full flex-col p-4 lg:w-1/2">
 	<FloatingInput
 		bind:value={$form.password}
 		iconClass="text-white"
 		inputClass="text-white"
 		name="password"
 		type="password"
-		label={$LL.LOGIN_Password()}
+		label={'New Password'}
 		theme="dark"
 	/>
 	{#if $errors.password}<span class="invalid">{$errors.password}</span>{/if}
@@ -46,11 +46,11 @@
 		inputClass="text-white"
 		name="confirmPassword"
 		type="password"
-		label={$LL.LOGIN_ConfirmPassword()}
+		label={'Confirm Password'}
 		theme="dark"
 	/>
 	{#if $errors.confirmPassword}<span class="invalid">{$errors.confirmPassword}</span>{/if}
-	<Button class="bg-white mt-10">change</Button>
+	<Button class="mt-10" bgColor="#e64949" hoverColor="#f46363">change</Button>
 
 	{#if response}<span class="invalid">{response}</span>{/if}
 </form>

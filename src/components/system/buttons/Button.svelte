@@ -2,9 +2,10 @@
 	export let textColor = 'white';
 	export let bgColor = 'gray';
 	export let border = 'none;';
+	export let hoverColor = '#4fdc4f';
 </script>
 
-<button on:click class={$$props.class} style={`color: ${textColor}; background-color: ${bgColor}; border: ${border};`}>
+<button on:click class={$$props.class} style={`color: ${textColor}; background-color: ${bgColor}; border: ${border}; --hover-color: ${hoverColor}`}>
 	<slot />
 </button>
 
@@ -19,7 +20,7 @@
 		min-width: 50px;
 	}
 	button:hover {
-		background-color: #4fdc4f !important;
+		background-color: var(--hover-color) !important;
 	}
 	button:active {
 		transform: scale(0.9);
