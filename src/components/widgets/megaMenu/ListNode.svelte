@@ -52,7 +52,6 @@
 		expanded = !expanded;
 	}}
 	class="header"
-	use:recalculateBorderHeight
 	class:!cursor-pointer={self.children?.length > 0}
 	style="margin-left:{20 * level}px;
 	max-width:{window.screen.width <= 700 ? `calc(100% + ${20 * (maxDepth - level)}px)` : `calc(100% - ${20 * level}px)`}"
