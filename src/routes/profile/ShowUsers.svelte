@@ -8,7 +8,7 @@
 		createdAt: string;
 		identifier?: string;
 		role: string;
-		user_id: string;
+		ID: string;
 		username: string;
 	}[] = [];
 	let deleteAll = false;
