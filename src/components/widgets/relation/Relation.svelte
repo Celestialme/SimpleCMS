@@ -64,17 +64,19 @@
 	<div class="flex header">
 		<p class="flex-grow text-center" on:click={openDropDown}>{@html selected?.display || display || 'select new'}</p>
 		<div class="ml-auto">
-			<button
-				on:click={() => {
-					expanded = !expanded;
-					entryMode = 'create';
-					fieldsData = {};
-					selected = undefined;
-					relation_entry = {};
-				}}
-				class="btn mr-1"
-				><iconify-icon icon="uil:focus-add" width="24" height="24" />
-			</button>
+			{#if $mode == 'create'}
+				<button
+					on:click={() => {
+						expanded = !expanded;
+						entryMode = 'create';
+						fieldsData = {};
+						selected = undefined;
+						relation_entry = {};
+					}}
+					class="btn mr-1"
+					><iconify-icon icon="uil:focus-add" width="24" height="24" />
+				</button>
+			{/if}
 			<button
 				on:click={() => {
 					expanded = !expanded;

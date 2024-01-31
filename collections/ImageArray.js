@@ -1,7 +1,7 @@
 let schema = {
     icon: 'bi:images',
     fields: [
-        globalThis.widgets.ImageArray({
+        ...globalThis.widgets.ImageArray({
             uploader_path: 'images',
             uploader_label: 'image 2',
             label: 'ImageArray',
@@ -12,7 +12,7 @@ let schema = {
                     translated: false
                 })
             ]
-        })
+        }).fields
     ]
 };
 export default schema;

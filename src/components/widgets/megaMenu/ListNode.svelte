@@ -2,7 +2,6 @@
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
 	import { contentLanguage } from '@src/stores/load';
-	import { tick } from 'svelte';
 
 	export let self: { [key: string]: any; children: any[] };
 	export let parrent: { [key: string]: any; children: any[] } | null = null;
