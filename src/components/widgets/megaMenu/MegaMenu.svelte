@@ -43,7 +43,7 @@
 	{(($saveFunction.fn = saveLayer), '')}
 {/if}
 {#if _data}
-	<div class:hidden={depth != 0}>
+	<ul class:hidden={depth != 0} class="children MENU_CONTAINER">
 		<ListNode self={_data} bind:depth bind:showFields maxDepth={field.menu.length} />
-	</div>
+	</ul>
 {/if}

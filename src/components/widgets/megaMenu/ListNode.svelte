@@ -2,6 +2,7 @@
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
 	import { contentLanguage } from '@src/stores/load';
+	import { tick } from 'svelte';
 
 	export let self: { [key: string]: any; children: any[] };
 	export let parrent: { [key: string]: any; children: any[] } | null = null;
@@ -11,47 +12,47 @@
 	export let maxDepth = 0;
 	let expanded = false;
 	let ul: HTMLElement;
-	let border: HTMLElement;
 	export let refresh = () => {
 		self.children.length = self.children?.length;
 	};
-	function setBorderHeight(node: HTMLElement) {
-		let lastChild = node?.lastChild as HTMLElement;
-		let parent = node?.parentElement?.parentElement as HTMLElement;
-		let parent_border = parent?.querySelector('.border') as HTMLElement;
+	function setBorderHeight(node: HTMLElement | null | undefined) {
+		if (!node) return;
 		// if (!parent_border || !lastChild || !parent) return;
-		setTimeout(() => {
-			border !== parent_border &&
-				parent_border &&
-				(parent_border.style.height =
-					(parent.lastChild?.firstChild as HTMLElement).offsetTop + (parent.lastChild?.firstChild as HTMLElement).offsetHeight / 2 + 'px');
-			border && (border.style.height = lastChild.offsetTop + lastChild.offsetHeight / 2 + 'px');
+		setTimeout(async () => {
+			let lastHeader = node?.lastChild?.firstChild as HTMLElement;
+			if (!lastHeader) return;
+			let border = node?.querySelector('.border') as HTMLElement;
+			border && (border.style.height = lastHeader.offsetTop + lastHeader.offsetHeight / 2 + 'px');
 		}, 0);
 	}
-	function setBorderHeightonDelete(button: any) {
-		let ul = button.parentElement.parentElement.parentElement.parentElement as HTMLElement;
-		console.log(ul);
-		ul.style.height = ul.offsetHeight + 'px';
-		setTimeout(() => {
-			let lastChild = ul.lastChild as HTMLElement;
-			let border = ul.querySelector('.border') as HTMLElement;
-			border && (border.style.height = lastChild?.offsetTop + (lastChild?.firstChild as HTMLElement)?.offsetHeight / 2 + 'px');
-		});
+
+	$: if (self.children.length) {
+		recalculateBorderHeight(ul);
 	}
-	$: if (self.children.length == 0) {
-		setBorderHeight(ul);
+
+	function findFirstOuterUl(node: HTMLElement | null) {
+		if (!node) return;
+		if (node.tagName == 'UL') return node;
+		return findFirstOuterUl(node.parentElement);
+	}
+	function recalculateBorderHeight(node) {
+		let child = findFirstOuterUl(node);
+		setBorderHeight(child);
+		if (!child?.classList.contains('MENU_CONTAINER') && child) {
+			recalculateBorderHeight(child?.parentElement);
+		}
 	}
 </script>
 
 <div
 	on:click={(e) => {
 		if (expanded) {
-			setBorderHeight(ul);
+			recalculateBorderHeight(ul);
 		}
 		expanded = !expanded;
 	}}
 	class="header"
-	use:setBorderHeight
+	use:recalculateBorderHeight
 	class:!cursor-pointer={self.children?.length > 0}
 	style="margin-left:{20 * level}px;
 	max-width:{window.screen.width <= 700 ? `calc(100% + ${20 * (maxDepth - level)}px)` : `calc(100% - ${20 * level}px)`}"
@@ -83,8 +84,7 @@
 		>
 		{#if level > 0}
 			<button
-				on:click|stopPropagation={(e) => {
-					setBorderHeightonDelete(e.currentTarget);
+				on:click|stopPropagation={() => {
 					parrent?.children?.splice(parrent?.children?.indexOf(self), 1);
 					refresh();
 				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24" /></button
@@ -94,8 +94,8 @@
 </div>
 
 {#if self.children?.length > 0 && expanded}
-	<ul bind:this={ul} class="children relative" style="margin-left:{20 * level + 15}px;" use:setBorderHeight>
-		<div bind:this={border} class="border" />
+	<ul bind:this={ul} class="children relative" style="margin-left:{20 * level + 15}px;">
+		<div class="border" />
 		{#each self.children as child}
 			<li>
 				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parrent={self} {maxDepth} />
