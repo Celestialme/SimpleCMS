@@ -6,6 +6,7 @@ import { addUserSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { createToken } from '@src/utils/tokens';
 import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
 import type { User } from '@src/collections/Auth';
+import { fail } from '@sveltejs/kit';
 export async function load(event) {
 	let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
 	let user = await validate(auth, session);
@@ -68,5 +69,17 @@ export const actions: Actions = {
 		await auth.updateUserAttributes(key.userId, { authMethod });
 
 		return { form: changePasswordForm };
+	},
+	deleteUser: async (event) => {
+		let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
+		let _user = await validate(auth, session);
+		if (_user.status != 200 || _user.user.role != 'admin') {
+			return fail(403);
+		}
+		let data = await event.request.formData();
+		let ids = data.getAll('id');
+		for (let id of ids) {
+			auth.deleteUser(id as string);
+		}
 	}
 };

@@ -121,7 +121,7 @@ async function FirstUsersignUp(username: string, email: string, password: string
 			}
 		})
 		.catch((e) => null);
-	console.log(user);
+
 	if (!user) return { status: false, message: 'user does not exist' };
 	const session = await auth.createSession({ userId: user.id, attributes: {} });
 	const sessionCookie = auth.createSessionCookie(session);

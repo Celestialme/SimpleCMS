@@ -4,7 +4,6 @@
 	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
 	import SquareIcon from '@src/components/system/icons/SquareIcon.svelte';
 	import { asAny } from '@src/utils/utils';
-	import { filter } from 'graphql-yoga';
 	let userInfo: {
 		createdAt: string;
 		identifier?: string;
@@ -18,8 +17,9 @@
 	let filteredTableData: any[] = [];
 	let modifyMap: { [key: string]: boolean } = {};
 	let filters: { [key: string]: string } = {};
-	axios.get('/api/getUsers').then((res) => {
-		userInfo = res.data;
+	async function refresh() {
+		userInfo = await axios.get('/api/getUsers').then((data) => data.data);
+
 		userInfo.map((user) => {
 			if (user.identifier) {
 				let _identifier_type = user?.identifier?.split(':');
@@ -35,7 +35,8 @@
 		userInfo[0] && (tableHeaders = Object.keys(userInfo[0]));
 		tableHeaders.splice(1, 0, tableHeaders.pop() as string);
 		tableData = [...userInfo];
-	});
+	}
+	refresh();
 	function process_modifyAll(modifyAll: boolean) {
 		if (modifyAll) {
 			for (let item in tableData) {
@@ -85,6 +86,15 @@
 				}
 			});
 		});
+	}
+	async function deleteUser() {
+		let data = new FormData();
+		for (let item in modifyMap) {
+			modifyMap[item] && data.append('id', filteredTableData[item].ID);
+		}
+
+		await axios.post('?/deleteUser', data);
+		refresh();
 	}
 </script>
 
@@ -151,7 +161,7 @@
 			{#if Object.values(modifyMap).includes(true)}
 				<tr class="sticky h-[50px]">
 					<div class="h-[50px] gap-2 absolute flex justify-center w-full bg-[#3d4a5c] modify_buttons">
-						<button>DELETE</button>
+						<button on:click={deleteUser}>DELETE</button>
 						<button>EDIT MAIL</button>
 						<button>EDIT NAME</button>
 						<button>EDIT ROLE</button>
@@ -248,6 +258,7 @@
 		border-radius: 5px;
 		text-align: center;
 		color: black;
+		flex-basis: max(5%, 130px);
 	}
 	.modify_buttons button:hover {
 		box-shadow: 0px 0px 10px 3px rgb(255 255 255 / 70%);
