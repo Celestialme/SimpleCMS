@@ -91,10 +91,11 @@
 		let data = new FormData();
 		for (let item in modifyMap) {
 			modifyMap[item] && data.append('id', filteredTableData[item].ID);
+			delete modifyMap[item];
 		}
-
 		await axios.post('?/deleteUser', data);
-		refresh();
+		await refresh();
+		modifyMap = modifyMap;
 	}
 </script>
 
