@@ -20,7 +20,10 @@ export let session = {
 		required: true
 	}
 };
-
+export let session2 = {
+	user_id: Schema.ObjectId,
+	expires: Number
+};
 export let key = {
 	_id: {
 		type: String,
@@ -49,6 +52,21 @@ export let UserSchema = {
 	resetToken: String, // The password reset token value
 	expiresAt: Date, // The date and time when the password reset token expires
 	lastActiveAt: Date // The date and time when the user last accessed the application
+};
+export let UserSchema2 = {
+	password: String, // The password of the user
+	lastAuthMethod: String, // last login method was used
+	email: String, // The email address of the user
+	role: String, // The role of the user
+	username: String, // The username of the user
+	firstname: String, // The first name of the user
+	lastname: String, // The last name of the user
+	avatar: String, // The avatar of the user
+	resetRequestedAt: String, // The date and time when a password reset was requested
+	resetToken: String, // The password reset token value
+	expiresAt: Date, // The date and time when the password reset token expires
+	lastActiveAt: Date, // The date and time when the user last accessed the application
+	is_registered: Boolean // is the user registration finished
 };
 export let TokenSchema = {
 	token: String,

@@ -3,7 +3,7 @@ import { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } from '$env/static/private';
 import { collections } from '@src/stores/load';
 import { lucia } from 'lucia';
 import { mongoose as adapter } from '@lucia-auth/adapter-mongoose';
-import { session, key, UserSchema, TokenSchema } from '@src/collections/Auth';
+import { session, key, UserSchema, TokenSchema, UserSchema2, session2 } from '@src/collections/Auth';
 import { sveltekit } from 'lucia/middleware';
 import { fieldsToSchema } from '@src/utils/utils';
 import type { Unsubscriber } from 'svelte/store';
@@ -49,7 +49,10 @@ export async function getCollectionModels() {
 !mongoose.models['auth_session'] && mongoose.model('auth_session', new mongoose.Schema({ ...session }, { _id: false }));
 !mongoose.models['auth_key'] && mongoose.model('auth_key', new mongoose.Schema({ ...key }, { _id: false }));
 !mongoose.models['auth_user'] && mongoose.model('auth_user', new mongoose.Schema({ ...UserSchema }, { _id: false, timestamps: true }));
+
 !mongoose.models['auth_tokens'] && mongoose.model('auth_tokens', new mongoose.Schema({ ...TokenSchema }, { _id: false, timestamps: true }));
+!mongoose.models['auth_users2'] && mongoose.model('auth_users2', new mongoose.Schema({ ...UserSchema2 }, { timestamps: true }));
+!mongoose.models['auth_sessions2'] && mongoose.model('auth_sessions2', new mongoose.Schema({ ...session2 }));
 const auth = lucia({
 	adapter: adapter({
 		User: mongoose.models['auth_user'],
