@@ -6,7 +6,7 @@
 	import { asAny } from '@src/utils/utils';
 	let userInfo: {
 		createdAt: string;
-		identifier?: string;
+		provider?: string;
 		role: string;
 		ID: string;
 		username: string;
@@ -21,10 +21,10 @@
 		userInfo = await axios.get('/api/getUsers').then((data) => data.data);
 
 		userInfo.map((user) => {
-			if (user.identifier) {
-				let _identifier_type = user?.identifier?.split(':');
-				user[_identifier_type[0]] = _identifier_type[1];
-				delete user.identifier;
+			if (user.provider) {
+				let _provider_type = user?.provider?.split(':');
+				user[_provider_type[0]] = _provider_type[1];
+				delete user.provider;
 				user.createdAt = new Date(user.createdAt).toLocaleString();
 			}
 			for (let item in user) {

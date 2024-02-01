@@ -21,7 +21,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 		{ $unwind: '$result' },
 		{
 			$replaceRoot: {
-				newRoot: { ID: '$result.user_id', identifier: '$result._id', username: '$username', role: '$role', createdAt: '$createdAt' }
+				newRoot: { ID: '$result.user_id', provider: '$result._id', username: '$username', role: '$role', createdAt: '$createdAt' }
 			}
 		}
 	]);
