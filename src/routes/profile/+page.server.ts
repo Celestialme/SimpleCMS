@@ -24,7 +24,12 @@ export async function load(event) {
 
 export const actions: Actions = {
 	addUser: async (event) => {
+		let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
+		let _user = await validate(auth, session);
 		let addUserForm = await superValidate(event, addUserSchema);
+		if (_user.status != 200 || _user.user.role != 'admin') {
+			return { form: addUserForm, message: 'you dont have permission to add user' };
+		}
 		let email = addUserForm.data.email;
 		let role = addUserForm.data.role;
 		let key = await auth.getKey('email', email).catch(() => null);

@@ -4,6 +4,7 @@
 	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
 	import SquareIcon from '@src/components/system/icons/SquareIcon.svelte';
 	import { asAny } from '@src/utils/utils';
+	import { filter } from 'graphql-yoga';
 	let userInfo: {
 		createdAt: string;
 		identifier?: string;
@@ -11,10 +12,12 @@
 		ID: string;
 		username: string;
 	}[] = [];
-	let deleteAll = false;
+	let modifyAll = false;
 	let tableHeaders: string[] = [];
-	let tableData: any = [];
-	let modifyMap: any = {};
+	let tableData: any[] = [];
+	let filteredTableData: any[] = [];
+	let modifyMap: { [key: string]: boolean } = {};
+	let filters: { [key: string]: string } = {};
 	axios.get('/api/getUsers').then((res) => {
 		userInfo = res.data;
 		userInfo.map((user) => {
@@ -22,15 +25,19 @@
 				let _identifier_type = user?.identifier?.split(':');
 				user[_identifier_type[0]] = _identifier_type[1];
 				delete user.identifier;
+				user.createdAt = new Date(user.createdAt).toLocaleString();
+			}
+			for (let item in user) {
+				console.log(item);
+				if (!user[item]) user[item] = 'NO DATA';
 			}
 		});
 		userInfo[0] && (tableHeaders = Object.keys(userInfo[0]));
-		tableHeaders.splice(1, 1, tableHeaders.pop() as string);
-		tableData = userInfo;
+		tableHeaders.splice(1, 0, tableHeaders.pop() as string);
+		tableData = [...userInfo];
 	});
-	function process_deleteAll(deleteAll: boolean) {
-		// triggerConfirm = true;
-		if (deleteAll) {
+	function process_modifyAll(modifyAll: boolean) {
+		if (modifyAll) {
 			for (let item in tableData) {
 				modifyMap[item] = true;
 			}
@@ -40,12 +47,50 @@
 			}
 		}
 	}
-	$: process_deleteAll(deleteAll);
+	$: process_modifyAll(modifyAll);
+	let sorting: { sortedBy: string; isSorted: 0 | 1 | -1 } = {
+		sortedBy: '',
+		isSorted: 0
+	};
+	$: {
+		tableData.sort((a, b) => {
+			if (sorting.sortedBy == 'createdAt') {
+				if (new Date(a[sorting.sortedBy]) < new Date(b[sorting.sortedBy])) {
+					return -1 * sorting.isSorted;
+				} else if (new Date(a[sorting.sortedBy]) > new Date(b[sorting.sortedBy])) {
+					return 1 * sorting.isSorted;
+				} else {
+					return 0;
+				}
+			}
+
+			if (a[sorting.sortedBy] < b[sorting.sortedBy]) {
+				return -1 * sorting.isSorted;
+			} else if (a[sorting.sortedBy] > b[sorting.sortedBy]) {
+				return 1 * sorting.isSorted;
+			} else {
+				return 0;
+			}
+		});
+		tableData = tableData;
+	}
+
+	$: {
+		filteredTableData = tableData.filter((item) => {
+			return Object.entries(item).every(([key, value]) => {
+				if (filters[key]) {
+					return (value as string).toString().toLowerCase().includes(filters[key]);
+				} else {
+					return true;
+				}
+			});
+		});
+	}
 </script>
 
-<div class="overflow-auto max-h-full mb-auto" class:hidden={userInfo.length == 0}>
+<div class="overflow-auto max-h-[calc(100vh-20px)] w-full mb-auto" class:hidden={userInfo.length == 0}>
 	<table>
-		<thead>
+		<thead class="top-0">
 			<tr>
 				<th class="!pl-[30px]">
 					<iconify-icon icon="il:search" class="mt-[15px]" />
@@ -60,27 +105,62 @@
 								name={header}
 								on:input={(e) => {
 									let value = asAny(e.target).value;
+									if (value) {
+										filters[header] = value;
+									} else {
+										delete filters[header];
+										filters = filters;
+									}
 								}}
 							/>
 						</div>
 					</th>
 				{/each}
 			</tr>
-		</thead>
-		<thead>
+
 			<tr>
-				<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={SquareIcon} /> </th>
+				<th class="!pl-[25px]"> <CheckBox bind:checked={modifyAll} svg={SquareIcon} /> </th>
 				{#each tableHeaders as header}
-					<th>
+					<th
+						on:click={() => {
+							//sort
+							sorting = {
+								sortedBy: header,
+								isSorted: (() => {
+									if (header !== sorting.sortedBy) {
+										return 1;
+									}
+									if (sorting.isSorted === 0) {
+										return 1;
+									} else if (sorting.isSorted === 1) {
+										return -1;
+									} else {
+										return 0;
+									}
+								})()
+							};
+						}}
+					>
 						<div class="flex items-center justify-between">
 							{header}
+							<div class="arrow" class:up={sorting.isSorted === 1} class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header} />
 						</div>
 					</th>
 				{/each}
 			</tr>
+			{#if Object.values(modifyMap).includes(true)}
+				<tr class="sticky h-[50px]">
+					<div class="h-[50px] gap-2 absolute flex justify-center w-full bg-[#3d4a5c] modify_buttons">
+						<button>DELETE</button>
+						<button>EDIT MAIL</button>
+						<button>EDIT NAME</button>
+						<button>EDIT ROLE</button>
+					</div>
+				</tr>
+			{/if}
 		</thead>
 		<tbody>
-			{#each tableData as row, index}
+			{#each filteredTableData as row, index}
 				<tr>
 					<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
 					{#each tableHeaders as header}
@@ -101,10 +181,10 @@
 		cursor: pointer;
 		font-size: min(max(16px, 1.5vw), 22px);
 	}
-	thead:first-of-type th:first-of-type {
+	thead tr:first-of-type th:first-of-type {
 		border-top-left-radius: 12px;
 	}
-	thead:first-of-type th:last-of-type {
+	thead tr:first-of-type th:last-of-type {
 		border-top-right-radius: 12px;
 	}
 	tbody tr:last-of-type td:first-of-type {
@@ -128,7 +208,7 @@
 	}
 	thead {
 		position: sticky;
-		top: 0;
+
 		background-color: #3d4a5c;
 		font-size: 20px;
 	}
@@ -138,5 +218,41 @@
 	}
 	tbody tr:hover {
 		background-color: #274b6f;
+	}
+	div::-webkit-scrollbar-thumb {
+		border-radius: 50px;
+		background-color: #0eb4c4;
+	}
+	div::-webkit-scrollbar {
+		width: 10px;
+	}
+	.arrow {
+		border: solid white;
+		border-width: 0 4px 4px 0;
+
+		padding: 6px;
+		transform: rotate(45deg);
+		transform-origin: center;
+		transition: 0.2s transform ease-in-out;
+	}
+	.up {
+		transform: rotate(-135deg);
+		margin-top: 10px;
+	}
+	.modify_buttons button {
+		cursor: pointer;
+		border: #d2d2d2 1px solid;
+		padding: 0 10px;
+		margin-bottom: 5px;
+		background: white;
+		border-radius: 5px;
+		text-align: center;
+		color: black;
+	}
+	.modify_buttons button:hover {
+		box-shadow: 0px 0px 10px 3px rgb(255 255 255 / 70%);
+	}
+	button:active {
+		transform: scale(0.9);
 	}
 </style>

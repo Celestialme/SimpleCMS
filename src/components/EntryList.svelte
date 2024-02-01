@@ -8,8 +8,8 @@
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	let data: { entryList: [any]; pagesCount: number } | undefined;
 	let tableHeaders: Array<{ label: string; name: string }> = [];
-	let tableData: any = [];
-	let modifyMap: any = {};
+	let tableData: any[] = [];
+	let modifyMap: { [key: string]: boolean } = {};
 	let deleteAll = false;
 	let filters: { [key: string]: string } = {};
 	let currentPage = 1;
@@ -18,7 +18,7 @@
 		if (fetch) {
 			data = (await axios
 				.get(
-					`/api/${$collection.name}?page=${currentPage}&length=${3}&filter=${JSON.stringify(filters)}&sort=${JSON.stringify(
+					`/api/${$collection.name}?page=${currentPage}&length=${10}&filter=${JSON.stringify(filters)}&sort=${JSON.stringify(
 						sorting.isSorted
 							? {
 									[sorting.sortedBy]: sorting.isSorted
@@ -114,9 +114,9 @@
 	};
 </script>
 
-<div class="overflow-auto max-h-full">
+<div class="overflow-auto max-h-[calc(100vh-55px)]">
 	<table>
-		<thead>
+		<thead class="top-0">
 			<tr>
 				<th class="!pl-[30px]">
 					<iconify-icon icon="il:search" class="mt-[15px]" />
@@ -145,8 +145,7 @@
 					</th>
 				{/each}
 			</tr>
-		</thead>
-		<thead>
+
 			<tr>
 				<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} svg={SquareIcon} /> </th>
 				{#each tableHeaders as header}
@@ -247,10 +246,10 @@
 		cursor: pointer;
 		font-size: min(max(16px, 1.5vw), 22px);
 	}
-	thead:first-of-type th:first-of-type {
+	thead tr:first-of-type th:first-of-type {
 		border-top-left-radius: 12px;
 	}
-	thead:first-of-type th:last-of-type {
+	thead tr:first-of-type th:last-of-type {
 		border-top-right-radius: 12px;
 	}
 	tbody tr:last-of-type td:first-of-type {
@@ -274,7 +273,7 @@
 	}
 	thead {
 		position: sticky;
-		top: 0;
+
 		background-color: #3d4a5c;
 		font-size: 20px;
 	}
@@ -297,5 +296,12 @@
 	.up {
 		transform: rotate(-135deg);
 		margin-top: 10px;
+	}
+	div::-webkit-scrollbar-thumb {
+		border-radius: 50px;
+		background-color: #0eb4c4;
+	}
+	div::-webkit-scrollbar {
+		width: 10px;
 	}
 </style>
