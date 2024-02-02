@@ -15,11 +15,13 @@ export class Auth {
 	}
 	async createUser({ email, password, username, role, lastAuthMethod, is_registered }: Omit<User, UserParams>) {
 		let id = crypto.createHash('sha256').update(email).digest('hex').slice(0, 15);
+		let hashed_password: string | undefined = undefined;
+		if (password) hashed_password = crypto.createHash('sha256').update(password).digest('hex');
 		let user = (
 			await this.User.insertMany({
 				id,
 				email,
-				password,
+				password: hashed_password,
 				username,
 				role,
 				lastAuthMethod,
@@ -30,6 +32,7 @@ export class Auth {
 		return user as User;
 	}
 	async updateUserAttributes(user: User, attributes: Partial<User>) {
+		if (attributes.password) attributes.password = crypto.createHash('sha256').update(attributes.password).digest('hex');
 		await this.User.updateOne({ id: user.id }, { $set: attributes });
 	}
 	async deleteUser(id: string) {
@@ -80,7 +83,8 @@ export class Auth {
 		return cookie;
 	}
 	async login(email: string, password: string): Promise<User | null> {
-		let user = await this.User.findOne({ email, password });
+		let hashed_password = crypto.createHash('sha256').update(password).digest('hex');
+		let user = await this.User.findOne({ email, password: hashed_password });
 
 		user && delete user._id;
 
