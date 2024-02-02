@@ -4,7 +4,7 @@
 	import { categories } from '@src/collections';
 	import { page } from '$app/stores';
 
-	import type { User } from '@src/collections/Auth';
+	import type { User } from '@src/auth/types';
 	import CheckIcon from '@src/components/system/icons/CheckIcon.svelte';
 	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
 	import { asAny, obj2formData } from '@src/utils/utils';

@@ -4,7 +4,7 @@
 	import { collectionValue, mode, modifyEntry } from '@src/stores/store';
 	import { saveFormData } from '@src/utils/utils';
 	import { page } from '$app/stores';
-	import type { User } from '@src/collections/Auth';
+	import type { User } from '@src/auth/types';
 	let _saveFunction;
 	_saveFunction = $saveFunction.fn = async () => {
 		console.log($collectionValue);
