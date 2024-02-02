@@ -7,7 +7,7 @@
 	import Header from '@src/components/Header.svelte';
 	import { collections, collection, contentLanguage } from '@src/stores/load';
 	import { page } from '$app/stores';
-	import type { Schema } from '@src/collections/types';
+	import type { Schema } from '@src/auth/types';
 	import { goto } from '$app/navigation';
 	let ForwardBackward: boolean = false; // if using browser history
 	collection.set($collections.find((x) => x.name === $page.params.collection) as Schema); // current collection

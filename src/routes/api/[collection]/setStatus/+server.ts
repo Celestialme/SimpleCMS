@@ -1,14 +1,16 @@
 import { getCollections } from '@src/collections';
 import type { RequestHandler } from './$types';
 import { auth, getCollectionModels } from '@src/routes/api/db';
-import { validate } from '@src/utils/utils';
-import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
+import { SESSION_COOKIE_NAME } from '@src/auth';
 
 export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
-	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-	let user = await validate(auth, session);
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.write ?? true;
-	if (user.status != 200 || !has_write_access) {
+	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
+	let user = await auth.validateSession(session_id);
+	if (!user) {
+		return new Response('', { status: 403 });
+	}
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write ?? true;
+	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
 

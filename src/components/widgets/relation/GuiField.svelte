@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Schema } from '@src/collections/types';
+	import type { Schema } from '@src/auth/types';
 	import { collections } from '@src/stores/load';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 	export let value: Schema | string = '';

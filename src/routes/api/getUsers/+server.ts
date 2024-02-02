@@ -1,30 +1,20 @@
-import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
 import type { RequestHandler } from './$types';
-import { validate } from '@src/utils/utils';
 import { auth } from '../db';
-import mongoose from 'mongoose';
+import { SESSION_COOKIE_NAME } from '@src/auth';
+import { tableHeaders } from '@src/stores/load';
 export const GET: RequestHandler = async ({ cookies }) => {
-	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-	let user = await validate(auth, session);
-	if (user.status != 200 || user.user.role != 'admin') {
+	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
+	let user = await auth.validateSession(session_id);
+	if (!user || user.role != 'admin') {
 		return new Response('', { status: 403 });
 	}
-	let docs = await mongoose.models['auth_user'].aggregate([
-		{
-			$lookup: {
-				from: 'auth_keys',
-				localField: '_id',
-				foreignField: 'user_id',
-				as: 'result'
-			}
-		},
-		{ $unwind: '$result' },
-		{
-			$replaceRoot: {
-				newRoot: { ID: '$result.user_id', provider: '$result._id', username: '$username', role: '$role', createdAt: '$createdAt' }
-			}
+	let docs = await auth.getAllUsers();
+	let users = docs.map((doc) => {
+		let result = {};
+		for (let header of tableHeaders) {
+			result[header] = doc[header];
 		}
-	]);
-	let res = JSON.stringify(docs);
-	return new Response(res, { status: 200 });
+		return result;
+	});
+	return new Response(JSON.stringify(users), { status: 200 });
 };

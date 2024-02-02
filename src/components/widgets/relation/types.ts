@@ -1,7 +1,7 @@
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import GuiField from './GuiField.svelte';
 
-import type { Schema } from '@src/collections/types';
+import type { Schema } from '@src/auth/types';
 import { getFieldName } from '@src/utils/utils';
 import mongoose from 'mongoose';
 

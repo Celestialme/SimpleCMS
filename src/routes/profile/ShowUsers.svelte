@@ -4,6 +4,7 @@
 	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
 	import SquareIcon from '@src/components/system/icons/SquareIcon.svelte';
 	import { asAny } from '@src/utils/utils';
+	import { tableHeaders } from '@src/stores/load';
 	let userInfo: {
 		createdAt: string;
 		provider?: string;
@@ -12,7 +13,7 @@
 		username: string;
 	}[] = [];
 	let modifyAll = false;
-	let tableHeaders: string[] = [];
+
 	let tableData: any[] = [];
 	let filteredTableData: any[] = [];
 	let modifyMap: { [key: string]: boolean } = {};
@@ -21,19 +22,11 @@
 		userInfo = await axios.get('/api/getUsers').then((data) => data.data);
 
 		userInfo.map((user) => {
-			if (user.provider) {
-				let _provider_type = user?.provider?.split(':');
-				user[_provider_type[0]] = _provider_type[1];
-				delete user.provider;
-				user.createdAt = new Date(user.createdAt).toLocaleString();
-			}
-			for (let item in user) {
-				console.log(item);
-				if (!user[item]) user[item] = 'NO DATA';
+			for (let header of tableHeaders) {
+				console.log(user[header]);
+				if (!user[header]) user[header] = 'NO DATA';
 			}
 		});
-		userInfo[0] && (tableHeaders = Object.keys(userInfo[0]));
-		tableHeaders.splice(1, 0, tableHeaders.pop() as string);
 		tableData = [...userInfo];
 	}
 	refresh();

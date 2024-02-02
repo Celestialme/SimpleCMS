@@ -1,20 +1,21 @@
 import { getCollections } from '@src/collections';
 import type { RequestHandler } from './$types';
 import { auth, getCollectionModels } from '@src/routes/api/db';
-import { getFieldName, parse, saveImages, validate } from '@src/utils/utils';
-import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
+import { getFieldName, parse, saveImages } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
-import type { Schema } from '@src/collections/types';
 import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+import { SESSION_COOKIE_NAME } from '@src/auth';
+import type { Schema } from '@src/collections/types';
 
 export const GET: RequestHandler = async ({ params, url, cookies }) => {
-	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-	let user = await validate(auth, session);
-
+	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
+	let user = await auth.validateSession(session_id);
+	if (!user) {
+		return new Response('', { status: 403 });
+	}
 	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
-
-	let has_read_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.read ?? true;
-	if (user.status != 200 || !has_read_access) {
+	let has_read_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.read ?? true;
+	if (!has_read_access) {
 		return new Response('', { status: 403 });
 	}
 	let collections = await getCollectionModels();
@@ -48,7 +49,6 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 			}
 		}
 	}
-	console.log(aggregations);
 	let entryListWithCount = await collection.aggregate([
 		{
 			$facet: {
@@ -70,11 +70,13 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 };
 
 export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
-	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-	let user = await validate(auth, session);
-	console.log((await getCollections()).find((c) => c.name == params.collection)?.permissions);
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.write ?? true;
-	if (user.status != 200 || !has_write_access) {
+	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
+	let user = await auth.validateSession(session_id);
+	if (!user) {
+		return new Response('', { status: 403 });
+	}
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write ?? true;
+	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
 	let collections = await getCollectionModels();
@@ -96,10 +98,13 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 };
 
 export const POST: RequestHandler = async ({ params, request, cookies }) => {
-	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-	let user = await validate(auth, session);
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.write ?? true;
-	if (user.status != 200 || !has_write_access) {
+	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
+	let user = await auth.validateSession(session_id);
+	if (!user) {
+		return new Response('', { status: 403 });
+	}
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write ?? true;
+	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
 
@@ -122,11 +127,13 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 };
 
 export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
-	let session = cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-	let user = await validate(auth, session);
-	console.log((await getCollections()).find((c) => c.name == params.collection)?.permissions);
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.user.role]?.write ?? true;
-	if (user.status != 200 || !has_write_access) {
+	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
+	let user = await auth.validateSession(session_id);
+	if (!user) {
+		return new Response('', { status: 403 });
+	}
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write ?? true;
+	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
 	let collections = await getCollectionModels();

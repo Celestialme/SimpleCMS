@@ -7,7 +7,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 	import { addUserSchema } from '@src/utils/formSchemas';
-	import { roles } from '@src/collections/types';
+	import { roles } from '@src/auth/types';
 	let response;
 	console.log(data);
 	let { form, allErrors, errors, enhance } = superForm(data.addUserForm, {

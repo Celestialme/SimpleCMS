@@ -1,16 +1,14 @@
 import fs from 'fs';
 import Path from 'path';
 import { Blob } from 'buffer';
-import type { Schema } from '@src/collections/types';
 import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import { collections, collection } from '@src/stores/load';
-import type { Auth } from 'lucia';
-import type { User } from '@src/collections/Auth';
 import { PUBLIC_MEDIA_FOLDER, PUBLIC_IMAGE_SIZES } from '$env/static/public';
 import { browser } from '$app/environment';
 import crypto from 'crypto';
+import type { Schema } from '@src/collections/types';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -81,7 +79,6 @@ export async function saveImages(data: FormData, collectionName: string) {
 	let sharp = (await import('sharp')).default;
 	let files: any = {};
 	let _files: Array<any> = [];
-	console.log(PUBLIC_IMAGE_SIZES);
 
 	let collection = get(collections).find((collection) => collection.name === collectionName);
 	for (let [fieldname, fieldData] of data.entries()) {
@@ -242,14 +239,6 @@ export async function extractData(fieldsData: any) {
 	return temp;
 }
 
-export async function validate(auth: Auth, sessionID: string | null) {
-	if (!sessionID) {
-		return { user: {} as User, status: 404 };
-	}
-	const resp = await auth.validateSession(sessionID).catch(() => null);
-	if (!resp) return { user: {} as User, status: 404 };
-	return { user: resp.user as User, status: 200 };
-}
 function removeExtension(fileName) {
 	const lastDotIndex = fileName.lastIndexOf('.');
 	if (lastDotIndex === -1) {

@@ -3,7 +3,7 @@
 	import AddUser from './AddUser.svelte';
 	import ChangePassword from './ChangePassword.svelte';
 	import ShowUsers from './ShowUsers.svelte';
-	import type { Roles } from '@src/collections/types';
+	import type { Roles } from '@src/auth/types';
 	export let data: PageData;
 	console.log(data);
 

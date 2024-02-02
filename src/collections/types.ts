@@ -1,8 +1,8 @@
+import type { Roles } from '@src/auth/types';
 import type widgets from '@src/components/widgets';
-export let roles = ['admin', 'user', 'developer'] as const;
-export type Roles = (typeof roles)[number];
+
 type permissions = {
-	[K in (typeof roles)[number]]?: { read?: boolean; write?: boolean };
+	[K in Roles]?: { read?: boolean; write?: boolean };
 };
 export interface Schema {
 	name?: string;

@@ -1,20 +1,18 @@
 import { redirect, type Actions } from '@sveltejs/kit';
 import { auth } from '../api/db';
-import { validate } from '@src/utils/utils';
 import { superValidate } from 'sveltekit-superforms/server';
 import { addUserSchema, changePasswordSchema } from '@src/utils/formSchemas';
-import { createToken } from '@src/utils/tokens';
-import { DEFAULT_SESSION_COOKIE_NAME } from 'lucia';
-import type { User } from '@src/collections/Auth';
 import { fail } from '@sveltejs/kit';
+import { SESSION_COOKIE_NAME } from '@src/auth';
+import type { Roles } from '@src/auth/types';
 export async function load(event) {
-	let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-	let user = await validate(auth, session);
+	let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
+	let user = await auth.validateSession(session_id);
 	let addUserForm = await superValidate(event, addUserSchema);
 	let changePasswordForm = await superValidate(event, changePasswordSchema);
-	if (user.status == 200) {
+	if (user) {
 		return {
-			user: user.user,
+			user,
 			addUserForm,
 			changePasswordForm
 		};
@@ -25,55 +23,41 @@ export async function load(event) {
 
 export const actions: Actions = {
 	addUser: async (event) => {
-		let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-		let _user = await validate(auth, session);
+		let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
+		let user = await auth.validateSession(session_id);
 		let addUserForm = await superValidate(event, addUserSchema);
-		if (_user.status != 200 || _user.user.role != 'admin') {
+		if (!user || user.role != 'admin') {
 			return { form: addUserForm, message: 'you dont have permission to add user' };
 		}
 		let email = addUserForm.data.email;
-		let role = addUserForm.data.role;
-		let key = await auth.getKey('email', email).catch(() => null);
+		let role = addUserForm.data.role as Roles;
+		let newUser = await auth.createUser({
+			email,
+			role,
+			lastAuthMethod: 'password',
+			is_registered: false
+		});
 
-		if (key) return { form: addUserForm, message: 'This email is already registered' };
+		if (!newUser) return { form: addUserForm, message: 'unknown error' };
 
-		let user: User = await auth
-			.createUser({
-				key: {
-					providerId: 'email',
-					providerUserId: email,
-					password: null
-				},
-				attributes: {
-					username: null,
-					role
-				}
-			})
-			.catch((_) => null);
-		if (!user) return { form: addUserForm, message: 'unknown error' };
-
-		let token = await createToken(user.id, 60 * 60 * 1000);
+		let token = await auth.createToken(newUser.id, 60 * 60 * 1000);
 		console.log(token); // send token to user via email
 		return { form: addUserForm };
 	},
 	changePassword: async (event) => {
 		let changePasswordForm = await superValidate(event, changePasswordSchema);
 		let password = changePasswordForm.data.password;
-		let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-		let user = await validate(auth, session);
-		if (user.status != 200) return { form: changePasswordForm, message: 'user does not exist or session expired' };
-		const key = (await auth.getAllUserKeys(user.user.id)).find((key) => key.passwordDefined == true);
-		if (!key) return { form: changePasswordForm, message: 'user does not exist or session expired' };
-		await auth.updateKeyPassword('email', key.providerUserId, password);
-		let authMethod = 'password';
-		await auth.updateUserAttributes(key.userId, { authMethod });
+		let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
+		let user = await auth.validateSession(session_id);
+		if (!user) return { form: changePasswordForm, message: 'user does not exist or session expired' };
+		await auth.updateUserAttributes(user, { password: password, lastAuthMethod: 'password' });
 
 		return { form: changePasswordForm };
 	},
 	deleteUser: async (event) => {
-		let session = event.cookies.get(DEFAULT_SESSION_COOKIE_NAME) as string;
-		let _user = await validate(auth, session);
-		if (_user.status != 200 || _user.user.role != 'admin') {
+		let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
+		let user = await auth.validateSession(session_id);
+		if (!user || user.role != 'admin') {
 			return fail(403);
 		}
 		let data = await event.request.formData();

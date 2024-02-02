@@ -8,12 +8,6 @@ dependencies:
   '@iconify/svelte':
     specifier: ^3.1.3
     version: 3.1.4(svelte@3.59.2)
-  '@lucia-auth/adapter-mongoose':
-    specifier: ^3.0.0
-    version: 3.0.0(lucia@2.6.0)(mongoose@7.5.0)
-  '@tanstack/svelte-table':
-    specifier: ^8.8.5
-    version: 8.9.7(svelte@3.59.2)
   axios:
     specifier: ^1.3.5
     version: 1.5.0
@@ -32,9 +26,6 @@ dependencies:
   iconify-icon:
     specifier: ^1.0.7
     version: 1.0.8
-  lucia:
-    specifier: ^2.0.0
-    version: 2.6.0
   mime-types:
     specifier: ^2.1.35
     version: 2.1.35
@@ -447,16 +438,6 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@lucia-auth/adapter-mongoose@3.0.0(lucia@2.6.0)(mongoose@7.5.0):
-    resolution: {integrity: sha512-QMuP8PKXk4PNBlVoXZgHkUXqQ7Wy353zt2K0obLy3JuG5iPvSxyQXu71Ib2S73E0Rpu2LA9CVcLbuQvdVT5wOQ==}
-    peerDependencies:
-      lucia: ^2.0.0
-      mongoose: 6.x - 7.x
-    dependencies:
-      lucia: 2.6.0
-      mongoose: 7.5.0
-    dev: false
-
   /@mongodb-js/saslprep@1.1.0:
     resolution: {integrity: sha512-Xfijy7HvfzzqiOAhAepF4SGN5e9leLkMvg/OPOF97XemjfVCYN/oWa75wnkc6mltMSTwY+XlbhWgUOJmkFspSw==}
     requiresBuild: true
@@ -633,21 +614,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /@tanstack/svelte-table@8.9.7(svelte@3.59.2):
-    resolution: {integrity: sha512-xpsGdDJhPgHgv3DdBGKyvGFoPFB3JLNkNp0tLi4C/Waa4UtyU3L3FBqDtQ9DM3Fz5INn4xm6pmhlrCDCdaSAIQ==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      svelte: ^4.0.0 || ^3.49.0
-    dependencies:
-      '@tanstack/table-core': 8.9.7
-      svelte: 3.59.2
-    dev: false
-
-  /@tanstack/table-core@8.9.7:
-    resolution: {integrity: sha512-lkhVcGDxa9GSoDFPkplPDvzsiUACPZrxT3U1edPs0DCMKFhBDgZ7d1DPd7cqHH0JoybfbQ/qiTQYOQBg8sinJg==}
-    engines: {node: '>=12'}
-    dev: false
 
   /@types/cookie@0.5.2:
     resolution: {integrity: sha512-DBpRoJGKJZn7RY92dPrgoMew8xCWc2P71beqsjyhEI/Ds9mOyVmBwtekyfhpwFIVt1WrxTonFifiOZ62V8CnNA==}
@@ -1421,10 +1387,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
-    dev: false
-
-  /lucia@2.6.0:
-    resolution: {integrity: sha512-9GfRmEkhJ68EMAEOI6EKwnkHmQpEXeqRuP9ew+UhuZEmTCHrsTqwJ9f6pffEg7Im3BRBPlBlWzH5pxtjI+9OXQ==}
     dev: false
 
   /magic-string@0.27.0:
