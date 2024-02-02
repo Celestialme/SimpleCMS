@@ -27,6 +27,7 @@ export async function validateToken(Token: Model, token: string, userID: string)
 export async function consumeToken(Token: Model, token: string, userID: string) {
 	let result = await Token.findOne({ userID, token });
 	if (result) {
+		await Token.deleteOne({ userID, token });
 		if (isWithinExpiration(result.expiresIn)) {
 			return { status: true, message: 'token is Valid' };
 		} else {
