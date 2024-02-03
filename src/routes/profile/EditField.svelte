@@ -4,7 +4,7 @@
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import axios from 'axios';
-	let value;
+	let value: string;
 	export let info: {
 		show: boolean;
 		label: string;
@@ -29,6 +29,7 @@
 		await refresh();
 		info.show = false;
 	}
+	$: info.show == false && (value = '');
 </script>
 
 {#if info.show}
