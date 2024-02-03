@@ -39,7 +39,11 @@
 		{/each}
 	</div>
 	<div class="flex-grow bg-gray-800 flex items-center justify-center">
-		<svelte:component this={options[option].option} {data} />
+		{#if option == 0}
+			<svelte:component this={options[option].option} {data} bind:option />
+		{:else}
+			<svelte:component this={options[option].option} {data} />
+		{/if}
 	</div>
 </div>
 

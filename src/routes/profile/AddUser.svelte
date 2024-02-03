@@ -1,13 +1,13 @@
 <script lang="ts">
 	export let data: PageData;
 	import type { PageData } from './$types';
-	import LL from '@src/i18n/i18n-svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 	import { addUserSchema } from '@src/utils/formSchemas';
 	import { roles } from '@src/auth/types';
+	export let option: number;
 	let response;
 	console.log(data);
 	let { form, allErrors, errors, enhance } = superForm(data.addUserForm, {
@@ -25,6 +25,9 @@
 			cancel();
 			if (result.type == 'success') {
 				response = result.data?.message;
+			}
+			if (!response) {
+				option = 1;
 			}
 		}
 	});
