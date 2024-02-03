@@ -4,7 +4,7 @@ import { superValidate } from 'sveltekit-superforms/server';
 import { addUserSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { fail } from '@sveltejs/kit';
 import { SESSION_COOKIE_NAME } from '@src/auth';
-import type { Roles } from '@src/auth/types';
+import type { Roles, User } from '@src/auth/types';
 export async function load(event) {
 	let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await auth.validateSession(session_id);
@@ -64,6 +64,26 @@ export const actions: Actions = {
 		let ids = data.getAll('id');
 		for (let id of ids) {
 			auth.deleteUser(id as string);
+		}
+	},
+	editUser: async (event) => {
+		let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
+		let user = await auth.validateSession(session_id);
+		if (!user || user.role != 'admin') {
+			return fail(403);
+		}
+		let data = await event.request.formData();
+		let infos = data.getAll('info');
+
+		for (let info_json of infos) {
+			let info = JSON.parse(info_json as string) as { id: string; field: 'email' | 'role' | 'name'; value: string };
+
+			let user = await auth.checkUser({ id: info.id });
+			console.log(user);
+			user &&
+				auth.updateUserAttributes(user, {
+					[info.field]: info.value
+				});
 		}
 	}
 };

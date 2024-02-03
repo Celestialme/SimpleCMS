@@ -28,7 +28,7 @@
 			}
 		}
 	});
-	$form.role = 'User';
+	$form.role = 'user';
 </script>
 
 <form method="post" action="?/addUser" use:enhance class=" flex w-full flex-col p-4 lg:w-1/2">

@@ -17,7 +17,7 @@ export let collections: Writable<Array<Schema>> = writable();
 export let unAssigned: Writable<Array<Schema>> = writable();
 export let collection: Writable<Schema> = writable();
 export let saveFunction: Writable<{ fn: (args: any) => any; reset: () => any }> = writable({ fn: () => {}, reset: () => {} });
-export const tableHeaders: string[] = ['id', 'email', 'username', 'role', 'createdAt'];
+export const tableHeaders = ['id', 'email', 'username', 'role', 'createdAt'] as const;
 
 loadAllLocales();
 systemLanguage.subscribe((val) => {

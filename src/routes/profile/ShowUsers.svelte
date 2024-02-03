@@ -5,25 +5,41 @@
 	import SquareIcon from '@src/components/system/icons/SquareIcon.svelte';
 	import { asAny } from '@src/utils/utils';
 	import { tableHeaders } from '@src/stores/load';
+	import EditField from './EditField.svelte';
+	let editField: {
+		show: boolean;
+		label: string;
+		field: string;
+		user_ids: string[];
+		update: (show: boolean, label: string, field: 'email' | 'role' | 'username') => void;
+	} = {
+		show: false,
+		label: 'Email',
+		field: 'email',
+		user_ids: [],
+		update(show, label, field) {
+			this.show = show;
+			this.label = label;
+			this.field = field;
+			this.user_ids = Object.keys(modifyMap)
+				.map((index) => modifyMap[index] && filteredTableData[index].id)
+				.filter((id) => id !== false);
+			editField = editField;
+		}
+	};
 	let userInfo: {
-		createdAt: string;
-		provider?: string;
-		role: string;
-		ID: string;
-		username: string;
+		[key in (typeof tableHeaders)[number]]: string;
 	}[] = [];
 	let modifyAll = false;
-
-	let tableData: any[] = [];
-	let filteredTableData: any[] = [];
-	let modifyMap: { [key: string]: boolean } = {};
+	let tableData: typeof userInfo = [];
+	let filteredTableData: typeof userInfo = [];
+	let modifyMap: { [key: number]: boolean } = {};
 	let filters: { [key: string]: string } = {};
 	async function refresh() {
 		userInfo = await axios.get('/api/getUsers').then((data) => data.data);
 
 		userInfo.map((user) => {
 			for (let header of tableHeaders) {
-				console.log(user[header]);
 				if (!user[header]) user[header] = 'NO DATA';
 			}
 		});
@@ -82,9 +98,10 @@
 	}
 	async function deleteUser() {
 		let data = new FormData();
-		for (let item in modifyMap) {
-			modifyMap[item] && data.append('id', filteredTableData[item].ID);
-			delete modifyMap[item];
+		for (let index in modifyMap) {
+			modifyMap[index] && data.append('id', filteredTableData[index].id);
+			console.log(filteredTableData, index);
+			delete modifyMap[index];
 		}
 		await axios.post('?/deleteUser', data);
 		await refresh();
@@ -92,7 +109,7 @@
 	}
 </script>
 
-<div class="overflow-auto max-h-[calc(100vh-20px)] w-full mb-auto" class:hidden={userInfo.length == 0}>
+<div class="overflow-auto max-h-[calc(100vh-20px)] w-full mb-auto" class:hidden={userInfo.length == 0 || editField.show == true}>
 	<table>
 		<thead class="top-0">
 			<tr>
@@ -153,19 +170,33 @@
 				{/each}
 			</tr>
 			{#if Object.values(modifyMap).includes(true)}
-				<tr class="sticky h-[50px]">
-					<div class="h-[50px] gap-2 absolute flex justify-center w-full bg-[#3d4a5c] modify_buttons">
+				<tr class="sticky expand overflow-hidden">
+					<div class="expand gap-2 absolute flex justify-center w-full bg-[#3d4a5c] modify_buttons">
 						<button on:click={deleteUser}>DELETE</button>
-						<button>EDIT MAIL</button>
-						<button>EDIT NAME</button>
-						<button>EDIT ROLE</button>
+						{#if Object.values(modifyMap).filter((value) => value == true).length == 1}
+							<button
+								on:click={() => {
+									editField.update(true, 'Email', 'email');
+								}}>EDIT MAIL</button
+							>
+							<button
+								on:click={() => {
+									editField.update(true, 'Name', 'username');
+								}}>EDIT NAME</button
+							>
+						{/if}
+						<button
+							on:click={() => {
+								editField.update(true, 'Role', 'role');
+							}}>EDIT ROLE</button
+						>
 					</div>
 				</tr>
 			{/if}
 		</thead>
 		<tbody>
 			{#each filteredTableData as row, index}
-				<tr>
+				<tr on:click={() => (modifyMap[index] = !modifyMap[index])}>
 					<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
 					{#each tableHeaders as header}
 						<td class="text-center">
@@ -177,6 +208,8 @@
 		</tbody>
 	</table>
 </div>
+
+<EditField bind:info={editField} {refresh} />
 
 <style>
 	th,
@@ -259,5 +292,17 @@
 	}
 	button:active {
 		transform: scale(0.9);
+	}
+	.expand {
+		animation: expand 0.2s forwards;
+		overflow: hidden;
+	}
+	@keyframes expand {
+		0% {
+			height: 0;
+		}
+		100% {
+			height: 50px;
+		}
 	}
 </style>

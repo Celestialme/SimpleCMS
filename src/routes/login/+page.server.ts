@@ -35,7 +35,7 @@ export const actions: Actions = {
 		const password = signUpForm.data.password;
 		const username = signUpForm.data.username;
 		const token = signUpForm.data.token;
-		let user = await auth.checkUser(email);
+		let user = await auth.checkUser({ email });
 		let resp: { status: boolean; message?: string } = { status: false };
 		let isFirst = (await auth.getUserCount()) == 0;
 		if (user && user.is_registered) {
@@ -84,7 +84,7 @@ async function signIn(email: string, password: string, isToken: boolean, cookies
 		return { status: true };
 	} else {
 		let token = password;
-		let user = await auth.checkUser(email);
+		let user = await auth.checkUser({ email });
 		if (!user) return { status: false, message: 'user does not exist' };
 
 		let result = await auth.consumeToken(token, user.id);
@@ -117,7 +117,7 @@ async function FirstUsersignUp(username: string, email: string, password: string
 	return { status: true };
 }
 async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies) {
-	let user = await auth.checkUser(email);
+	let user = await auth.checkUser({ email });
 	if (!user) return { status: false, message: 'user does not exist' };
 
 	let result = await auth.consumeToken(token, user.id);
@@ -134,7 +134,7 @@ async function finishRegistration(username: string, email: string, password: str
 	}
 }
 async function recover(email: string, cookies: Cookies) {
-	let user = await auth.checkUser(email);
+	let user = await auth.checkUser({ email });
 	if (!user) return { status: false, message: 'user does not exist' };
 	let token = await auth.createToken(user.id, 60 * 60 * 1000);
 	console.log(token); // send token to user via email

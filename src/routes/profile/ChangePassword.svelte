@@ -4,7 +4,6 @@
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import { changePasswordSchema } from '@src/utils/formSchemas';
 	import { superForm } from 'sveltekit-superforms/client';
-	import LL from '@src/i18n/i18n-svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import { goto } from '$app/navigation';
 	let response;

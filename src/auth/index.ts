@@ -54,8 +54,10 @@ export class Auth {
 
 		return session as typeof session & { id: string };
 	}
-	async checkUser(email: string): Promise<User | null> {
-		let user = await this.User.findOne({ email });
+	async checkUser(fields: { email?: string; id?: string }): Promise<User | null>;
+	async checkUser(fields: { email: string; id: string }): Promise<User | null> {
+		let user = await this.User.findOne(fields);
+
 		return user;
 	}
 	async getUserCount(): Promise<number> {
