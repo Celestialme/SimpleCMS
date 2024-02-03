@@ -6,6 +6,8 @@
 	import { asAny } from '@src/utils/utils';
 	import { tableHeaders } from '@src/stores/load';
 	import EditField from './EditField.svelte';
+	import { linear } from 'svelte/easing';
+
 	let editField: {
 		show: boolean;
 		label: string;
@@ -107,6 +109,15 @@
 		await refresh();
 		modifyMap = modifyMap;
 	}
+	function grow(node, { delay = 0, duration = 400, easing: easing$1 = linear } = {}) {
+		const o = parseInt(getComputedStyle(node).height.replace('px', ''));
+		return {
+			delay,
+			duration,
+			easing: easing$1,
+			css: (t) => `height: ${t * o}px`
+		};
+	}
 </script>
 
 <div class="overflow-auto max-h-[calc(100vh-20px)] w-full mb-auto" class:hidden={userInfo.length == 0 || editField.show == true}>
@@ -170,8 +181,11 @@
 				{/each}
 			</tr>
 			{#if Object.values(modifyMap).includes(true)}
-				<tr class="sticky expand overflow-hidden">
-					<div class="expand gap-2 absolute flex justify-center w-full bg-[#3d4a5c] modify_buttons">
+				<tr transition:grow|local={{ duration: 150 }} class="h-[50px] sticky overflow-hidden">
+					<div
+						transition:grow|local={{ duration: 150 }}
+						class="h-[50px] overflow-hidden gap-2 absolute flex justify-center w-full bg-[#3d4a5c] modify_buttons"
+					>
 						<button on:click={deleteUser}>DELETE</button>
 						{#if Object.values(modifyMap).filter((value) => value == true).length == 1}
 							<button
@@ -292,17 +306,5 @@
 	}
 	button:active {
 		transform: scale(0.9);
-	}
-	.expand {
-		animation: expand 0.2s forwards;
-		overflow: hidden;
-	}
-	@keyframes expand {
-		0% {
-			height: 0;
-		}
-		100% {
-			height: 50px;
-		}
 	}
 </style>
