@@ -14,7 +14,7 @@
 		<div class="collection mr-auto">
 			{$collection.name}
 		</div>
-		<div class="w-[100px] h-full relative">
+		<div class="w-[50px] h-full relative">
 			<DropDown class="absolute" items={['en', 'de']} bind:selected={$contentLanguage} />
 		</div>
 		{#if !['edit', 'create'].includes($mode)}
