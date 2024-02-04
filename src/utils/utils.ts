@@ -292,12 +292,3 @@ export function validateZod<T>(schema: z.Schema<T>, value?: T): null | { [P in k
 		return res.error.flatten().fieldErrors as any;
 	}
 }
-export function getAllFormFields<T extends z.Schema>(schema: T, data) {
-	let form: z.infer<typeof schema> = {};
-
-	for (let key in schema) {
-		form[key] = schema[key];
-	}
-
-	return form;
-}

@@ -53,7 +53,7 @@
 	class="header"
 	class:!cursor-pointer={self.children?.length > 0}
 	style="margin-left:{20 * level}px;
-	max-width:{window.screen.width <= 700 ? `calc(100% + ${20 * (maxDepth - level)}px)` : `calc(100% - ${20 * level}px)`}"
+	{window.screen.width <= 700 ? `min-width:calc(100% + ${20 * (maxDepth * maxDepth - level)}px)` : `max-width:calc(100% - ${20 * level}px)`}"
 >
 	<div class="ladder" style="width:{20 * level}px" />
 	{#if self.children?.length > 0}

@@ -262,6 +262,9 @@
 	td {
 		padding: 10px;
 	}
+	thead th:not(:first-of-type) {
+		min-width: 100px;
+	}
 	tbody tr:nth-child(2n + 1) {
 		padding: 5px 0;
 		background-color: #2c3844;

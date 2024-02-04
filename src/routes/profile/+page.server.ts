@@ -1,20 +1,15 @@
 import { redirect, type Actions } from '@sveltejs/kit';
 import { auth } from '../api/db';
-import { superValidate } from 'sveltekit-superforms/server';
 import { addUserSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { fail } from '@sveltejs/kit';
 import { SESSION_COOKIE_NAME } from '@src/auth';
-import type { Roles, User } from '@src/auth/types';
+import type { Roles } from '@src/auth/types';
 export async function load(event) {
 	let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await auth.validateSession(session_id);
-	let form = await superValidate(event, addUserSchema);
-	let changePasswordForm = await superValidate(event, changePasswordSchema);
 	if (user) {
 		return {
-			user,
-			form,
-			changePasswordForm
+			user
 		};
 	} else {
 		throw redirect(302, `/login`);

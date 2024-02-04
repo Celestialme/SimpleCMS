@@ -6,7 +6,7 @@
 			fn: () => {
 				mode.set('create');
 			},
-			icon: '',
+			icon: 'gravity-ui:plus',
 			bg_color: '#15d515',
 			color: 'white'
 		},
@@ -14,7 +14,7 @@
 			fn: () => {
 				$modifyEntry('Delete');
 			},
-			icon: '',
+			icon: 'tdesign:delete-1',
 			bg_color: 'red',
 			color: 'white'
 		},
@@ -50,13 +50,17 @@
 	$: activeArrow = $mode == 'modify';
 </script>
 
-<div class="wrapper">
+<div class="wrapper md:w-[200px]">
 	<button
 		style="--color:{buttons[defaultButton].color};background-color:{buttons[defaultButton].bg_color}"
-		class="flex-grow default"
+		class="flex-grow default flex items-center justify-center max-md:!p-[10px]"
 		class:rounded-bl-[10px]={!expanded}
-		on:click={buttons[defaultButton].fn}>{buttons[defaultButton].icon}{defaultButton}</button
-	>
+		on:click={buttons[defaultButton].fn}
+		><iconify-icon class="md:hidden" icon={buttons[defaultButton].icon} />
+		<span class="max-md:hidden">
+			{defaultButton}
+		</span>
+	</button>
 	<div
 		on:click={() => (expanded = !expanded)}
 		class=" w-[50px] relative hover:active:scale-95 rounded-r-[10px]"
@@ -72,7 +76,10 @@
 				<button
 					style="--color:{buttons[button].color};--bg-color:{buttons[button].bg_color || 'rgb(37, 36, 36)'}"
 					class="w-full nested"
-					on:click={buttons[button].fn}>{buttons[button].icon}{button}</button
+					on:click={buttons[button].fn}
+				>
+					<iconify-icon icon={buttons[button].icon} />
+					{button}</button
 				>
 			{/if}
 		{/each}
@@ -96,6 +103,10 @@
 		position: absolute;
 		top: 100%;
 		width: 100%;
+		min-width: 200px;
+		right: 0;
+		top: 100%;
+		margin-top: 2px;
 	}
 	.expanded {
 		display: block;
@@ -104,8 +115,6 @@
 		position: relative;
 		display: flex;
 		align-items: center;
-
-		width: 200px;
 	}
 	.nested,
 	.default {

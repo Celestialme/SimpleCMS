@@ -30,7 +30,7 @@
 	});
 </script>
 
-<div class="flex">
+<div class="flex max-md:flex-wrap h-screen">
 	<Drawer />
 	<div class="flex-grow-[2] overflow-hidden max-h-screen pl-[2px] pr-[4px]">
 		{#if $mode == 'view' || $mode == 'modify'}
