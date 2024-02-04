@@ -9,6 +9,7 @@ import { PUBLIC_MEDIA_FOLDER, PUBLIC_IMAGE_SIZES } from '$env/static/public';
 import { browser } from '$app/environment';
 import crypto from 'crypto';
 import type { Schema } from '@src/collections/types';
+import type { z } from 'zod';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -281,4 +282,22 @@ export function debounce(delay?: number) {
 			fn();
 		}, delay);
 	};
+}
+
+export function validateZod<T>(schema: z.Schema<T>, value?: T): null | { [P in keyof T]?: string[] | undefined } {
+	let res = schema.safeParse(value);
+	if (res.success || !value) {
+		return null;
+	} else {
+		return res.error.flatten().fieldErrors as any;
+	}
+}
+export function getAllFormFields<T extends z.Schema>(schema: T, data) {
+	let form: z.infer<typeof schema> = {};
+
+	for (let key in schema) {
+		form[key] = schema[key];
+	}
+
+	return form;
 }

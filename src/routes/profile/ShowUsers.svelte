@@ -43,6 +43,7 @@
 		userInfo.map((user) => {
 			for (let header of tableHeaders) {
 				if (!user[header]) user[header] = 'NO DATA';
+				if (header == 'createdAt') user[header] = new Date(user[header]).toLocaleString();
 			}
 		});
 		tableData = [...userInfo];

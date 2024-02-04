@@ -4,35 +4,34 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import LL from '@src/i18n/i18n-svelte';
-	import type { PageData, SubmitFunction } from '../$types';
-	import { superForm } from 'sveltekit-superforms/client';
-	import { recoverSchema } from '@src/utils/formSchemas';
-
-	export let formSchema: PageData['recoverForm'];
+	import { recoverSchema, type RecoverSchema } from '@src/utils/formSchemas';
+	import { parse } from 'devalue';
+	import axios from 'axios';
+	import { validateZod } from '@src/utils/utils';
 	export let active: number | undefined;
 	export let loginRecover: boolean;
-
+	let submitted = false;
+	let form: RecoverSchema = {
+		email: ''
+	};
 	let response;
-	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
-		id: 'recover',
-		validators: recoverSchema,
-		defaultValidator: 'keep',
-		applyAction: true,
-		taintedMessage: '',
-		clearOnSubmit: 'none',
-		onSubmit: ({ cancel }) => {
-			if ($allErrors.length > 0) cancel();
-		},
-		onResult: ({ result, cancel }) => {
-			if (result.type == 'success') {
-				response = result.data?.message;
-			}
-			cancel();
+	let errors = validateZod(recoverSchema);
+	async function onSubmit(e) {
+		submitted = true;
+		e.preventDefault();
+		errors = validateZod(recoverSchema, form);
+		if (errors) return;
+		let data = new FormData();
+		for (const [key, value] of Object.entries(form)) {
+			data.append(key, value as string);
 		}
-	});
+		let result = await axios.post(`?/recover`, data).then((res) => res.data);
+		response = parse(result.data).message;
+	}
+	$: if (submitted) errors = validateZod(recoverSchema, form);
 </script>
 
-<form method="post" action="?/recover" use:enhance class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2" class:hide={active != 0}>
+<form on:submit={onSubmit} class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2" class:hide={active != 0}>
 	<div class="mb-6 flex flex-row gap-2">
 		<CMSLogo className="w-12" fill="red" />
 
@@ -41,8 +40,8 @@
 			<div class="lg:-mt-1">{$LL.LOGIN_ForgottenPassword()}</div>
 		</h1>
 	</div>
-	<FloatingInput name="email" type="email" bind:value={$form.email} label={$LL.LOGIN_EmailAddress()} {...$constraints.email} />
-	{#if $errors.email}<span class="invalid">{$errors.email}</span>{/if}
+	<FloatingInput name="email" type="email" bind:value={form.email} label={$LL.LOGIN_EmailAddress()} />
+	{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 	{#if response}<span class="invalid">{response}</span>{/if}
 	<div class=" flex gap-2 mt-10 items-center">
 		<Button>{$LL.LOGIN_SendResetMail()}</Button>

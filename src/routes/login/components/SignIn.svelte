@@ -1,43 +1,48 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms/client';
 	import SigninIcon from './icons/SigninIcon.svelte';
 	export let active: undefined | 0 | 1 = undefined;
 	import LL from '@src/i18n/i18n-svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
-	import type { PageData, SubmitFunction } from '../$types';
-	import { loginSchema } from '@src/utils/formSchemas';
+	import { loginSchema, type LoginSchema } from '@src/utils/formSchemas';
 	import CMSLogo from './icons/Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import LoginRecover from './LoginRecover.svelte';
 	import EnableIcon from '@src/components/system/buttons/EnableIcon.svelte';
-	export let formSchema: PageData['loginForm'];
-	export let recoverFormSchema: PageData['recoverForm'];
+	import { validateZod } from '@src/utils/utils';
+	import axios from 'axios';
+	import { goto } from '$app/navigation';
+	import { parse } from 'devalue';
+	let submitted = false;
 	let loginRecover = false;
 	let response;
-	let { form, constraints, allErrors, errors, enhance } = superForm(formSchema, {
-		id: 'signin',
-		validators: loginSchema,
-		defaultValidator: 'keep',
-		applyAction: true,
-		taintedMessage: '',
-		clearOnSubmit: 'none',
-		dataType: 'json',
-		onSubmit: ({ cancel }) => {
-			if ($allErrors.length > 0) cancel();
-		},
-		onResult: ({ result, cancel }) => {
-			if (result.type == 'redirect') return;
-			else if (result.type == 'success') {
-				response = result.data?.message;
-			}
-			cancel();
-			formElement.classList.add('wiggle');
-			setTimeout(() => formElement.classList.remove('wiggle'), 300);
-		}
-	});
+	let form: LoginSchema = {
+		email: '',
+		password: '',
+		isToken: false
+	};
 
-	let formElement: HTMLFormElement;
+	let errors = validateZod(loginSchema);
+	async function onSubmit(e) {
+		submitted = true;
+		e.preventDefault();
+		errors = validateZod(loginSchema, form);
+		if (errors) return;
+		let data = new FormData();
+		for (const [key, value] of Object.entries(form)) {
+			data.append(key, value as string);
+		}
+		let result = await axios.post(`?/signIn`, data).then((res) => res.data);
+		if (result.type == 'redirect') {
+			goto(result.location);
+		} else if (result.type == 'failure') {
+			response = parse(result.data).message;
+			console.log('deval', response);
+			e.target.classList.add('wiggle');
+			setTimeout(() => e.target.classList.remove('wiggle'), 300);
+		}
+	}
+	$: if (submitted) errors = validateZod(loginSchema, form);
 </script>
 
 <section
@@ -49,14 +54,7 @@
 	class:hover={active == undefined || active == 1}
 >
 	{#if !loginRecover}
-		<form
-			method="post"
-			action="?/signIn"
-			use:enhance
-			bind:this={formElement}
-			class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2"
-			class:hide={active != 0}
-		>
+		<form class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2" class:hide={active != 0} on:submit={onSubmit}>
 			<div class="mb-6 flex flex-row gap-2">
 				<CMSLogo className="w-12" fill="red" />
 
@@ -65,20 +63,14 @@
 					<div class="lg:-mt-1">{$LL.LOGIN_SignIn()}</div>
 				</h1>
 			</div>
-			<FloatingInput name="email" type="email" bind:value={$form.email} label={$LL.LOGIN_EmailAddress()} {...$constraints.email} />
-			{#if $errors.email}<span class="invalid">{$errors.email}</span>{/if}
+			<FloatingInput name="email" type="email" bind:value={form.email} label={$LL.LOGIN_EmailAddress()} />
+			{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 
-			<FloatingInput
-				name="password"
-				type="password"
-				bind:value={$form.password}
-				{...$constraints.password}
-				label={$form.isToken ? 'token' : $LL.LOGIN_Password()}
-			>
-				<EnableIcon bind:checked={$form.isToken} icon={'oi:lock-locked'} class="absolute right-[30px]" />
+			<FloatingInput name="password" type="password" bind:value={form.password} label={form.isToken ? 'token' : $LL.LOGIN_Password()}>
+				<EnableIcon bind:checked={form.isToken} icon={'oi:lock-locked'} class="absolute right-[30px]" />
 			</FloatingInput>
 
-			{#if $errors.password}<span class="invalid">{$errors.password}</span>{/if}
+			{#if errors?.password}<span class="invalid">{errors.password}</span>{/if}
 			{#if response}<span class="invalid">{response}</span>{/if}
 			<div class="mt-5 flex gap-2">
 				<Button>{$LL.LOGIN_SignIn()}</Button>
@@ -94,7 +86,7 @@
 			</div>
 		</form>
 	{:else}
-		<LoginRecover formSchema={recoverFormSchema} {active} bind:loginRecover />
+		<LoginRecover {active} bind:loginRecover />
 	{/if}
 	<SigninIcon show={active == 1 || active == undefined} />
 </section>

@@ -1,79 +1,84 @@
-import { type Actions, type Cookies, redirect } from '@sveltejs/kit';
-
-import { superValidate } from 'sveltekit-superforms/server';
+import { type Actions, type Cookies, redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { loginSchema, signUpSchema, recoverSchema } from '../../utils/formSchemas';
+import { loginSchema, signUpSchema_token, recoverSchema, signUpSchema_noToken, type SignupSchema } from '../../utils/formSchemas';
 import { auth } from '@src/routes/api/db';
 
-import { consumeToken, createToken } from '@src/auth/tokens';
-
 export const actions: Actions = {
-	signIn: async (event) => {
-		let signInForm = await superValidate(event, loginSchema);
-		const email = signInForm.data.email;
-		const password = signInForm.data.password;
-		const isToken = signInForm.data.isToken;
-		let resp = await signIn(email, password, isToken, event.cookies);
+	signIn: async ({ request, cookies }) => {
+		let data = await request.formData();
+		let entries = Object.fromEntries(data);
+		let form = loginSchema.safeParse({ ...entries, isToken: entries.isToken === 'true' ? true : false });
+		if (!form.success) return fail(400, { message: 'invalid form members' });
+		const email = form.data.email;
+		const password = form.data.password;
+		const isToken = form.data.isToken;
+		let resp = await signIn(email, password, isToken, cookies);
 
 		if (resp.status) {
 			throw redirect(303, '/');
 		} else {
-			return { form: signInForm, message: resp.message };
+			return fail(400, { message: resp.message });
 		}
 	},
-	recover: async (event) => {
-		let recoverForm = await superValidate(event, recoverSchema);
-
-		const email = recoverForm.data.email;
-		let resp = await recover(email, event.cookies);
-
-		return { form: recoverForm, message: resp.message };
+	recover: async ({ request }) => {
+		let data = await request.formData();
+		let form = recoverSchema.safeParse(Object.fromEntries(data));
+		if (!form.success) return fail(400, { message: 'invalid email' });
+		let user = await auth.checkUser({ email: form.data.email });
+		if (!user) return fail(404, { message: 'user does not exist' });
+		let token = await auth.createToken(user.id, 60 * 60 * 1000);
+		console.log(token); // send token to user via email
+		return { message: 'token has been sent to email' };
 	},
-	signUp: async (event) => {
-		let signUpForm = await superValidate(event, signUpSchema);
-		const email = signUpForm.data.email;
-		const password = signUpForm.data.password;
-		const username = signUpForm.data.username;
-		const token = signUpForm.data.token;
+	signUp: async ({ request, cookies }) => {
+		let isFirst = (await auth.getUserCount()) == 0;
+		let signUpSchema = isFirst ? signUpSchema_noToken : signUpSchema_token;
+		let data = await request.formData();
+		let res = signUpSchema.safeParse(Object.fromEntries(data));
+		if (!res.success) return fail(400, { message: 'invalid form members' });
+		let form = res.data as SignupSchema;
+		const email = form.email;
+		const password = form.password;
+		const username = form.username;
+		const token = 'token' in form ? form.token : '';
 		let user = await auth.checkUser({ email });
 		let resp: { status: boolean; message?: string } = { status: false };
-		let isFirst = (await auth.getUserCount()) == 0;
+
 		if (user && user.is_registered) {
 			// finished account exists
-			return { form: signUpForm, message: 'This email is already registered' };
+			return fail(400, { message: 'This email is already registered' });
 		} else if (isFirst) {
 			// no account exists sign up for admin
-			resp = await FirstUsersignUp(username, email, password, event.cookies);
+			resp = await FirstUsersignUp(username, email, password, cookies);
 		} else if (user && user.is_registered == false) {
 			// unfinished account exists
-			resp = await finishRegistration(username, email, password, token, event.cookies);
+			resp = await finishRegistration(username, email, password, token, cookies);
 		} else if (!user && !isFirst) {
 			resp = { status: false, message: 'this user is not defined by admin' };
 		}
 		if (resp.status) {
 			throw redirect(303, '/');
 		} else {
-			return { form: signUpForm, message: resp.message || 'unknown error' };
+			return fail(400, { message: resp.message || 'unknown error' });
 		}
 	}
 };
 export const load: PageServerLoad = async (event) => {
 	await event.parent();
-	let loginForm = await superValidate(event, loginSchema);
-	let recoverForm = await superValidate(event, recoverSchema);
-	let withoutToken = await superValidate(event, signUpSchema.innerType().omit({ token: true }));
-	let withToken = await superValidate(event, signUpSchema);
 
-	let signUpForm: typeof withToken = (await auth.getUserCount()) == 0 ? (withoutToken as any) : withToken;
+	let firstUserExists = (await auth.getUserCount()) != 0;
 
 	return {
-		loginForm,
-		signUpForm,
-		recoverForm
+		firstUserExists
 	};
 };
 
-async function signIn(email: string, password: string, isToken: boolean, cookies: Cookies) {
+async function signIn(
+	email: string,
+	password: string,
+	isToken: boolean,
+	cookies: Cookies
+): Promise<{ status: true } | { status: false; message: string }> {
 	if (!isToken) {
 		let user = await auth.login(email, password);
 		if (!user) return { status: false, message: 'Invalid Credentials' };
@@ -132,11 +137,4 @@ async function finishRegistration(username: string, email: string, password: str
 	} else {
 		return result;
 	}
-}
-async function recover(email: string, cookies: Cookies) {
-	let user = await auth.checkUser({ email });
-	if (!user) return { status: false, message: 'user does not exist' };
-	let token = await auth.createToken(user.id, 60 * 60 * 1000);
-	console.log(token); // send token to user via email
-	return { status: true, message: 'token has been sent to email' };
 }

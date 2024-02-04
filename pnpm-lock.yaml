@@ -73,9 +73,6 @@ devDependencies:
   svelte-check:
     specifier: ^3.0.1
     version: 3.5.1(postcss@8.4.29)(svelte@3.59.2)
-  sveltekit-superforms:
-    specifier: ^1.0.0
-    version: 1.6.1(@sveltejs/kit@1.24.1)(svelte@3.59.2)(zod@3.22.2)
   tailwindcss:
     specifier: ^3.3.1
     version: 3.3.3
@@ -2179,18 +2176,6 @@ packages:
   /svelte@3.59.2:
     resolution: {integrity: sha512-vzSyuGr3eEoAtT/A6bmajosJZIUWySzY2CzB3w2pgPvnkUjGqlDnsNnA0PMO+mMAhuyMul6C2uuZzY6ELSkzyA==}
     engines: {node: '>= 8'}
-
-  /sveltekit-superforms@1.6.1(@sveltejs/kit@1.24.1)(svelte@3.59.2)(zod@3.22.2):
-    resolution: {integrity: sha512-85whZdnytMFStDY1PI3ycr5BoTb57XjkEJqZ2Mt8HT06y/CKlQBws5Cx/AxPxA3WHhGfC26yfXqLYqEQz1oGfw==}
-    peerDependencies:
-      '@sveltejs/kit': 1.x
-      svelte: 3.x || 4.x
-      zod: 3.x
-    dependencies:
-      '@sveltejs/kit': 1.24.1(svelte@3.59.2)(vite@4.4.9)
-      svelte: 3.59.2
-      zod: 3.22.2
-    dev: true
 
   /tailwind-merge@1.14.0:
     resolution: {integrity: sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==}

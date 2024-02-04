@@ -8,12 +8,12 @@ import type { Roles, User } from '@src/auth/types';
 export async function load(event) {
 	let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await auth.validateSession(session_id);
-	let addUserForm = await superValidate(event, addUserSchema);
+	let form = await superValidate(event, addUserSchema);
 	let changePasswordForm = await superValidate(event, changePasswordSchema);
 	if (user) {
 		return {
 			user,
-			addUserForm,
+			form,
 			changePasswordForm
 		};
 	} else {
@@ -22,15 +22,20 @@ export async function load(event) {
 }
 
 export const actions: Actions = {
-	addUser: async (event) => {
-		let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
+	addUser: async ({ request, cookies }) => {
+		let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 		let user = await auth.validateSession(session_id);
-		let addUserForm = await superValidate(event, addUserSchema);
+		let data = await request.formData();
+		let form = addUserSchema.safeParse(Object.fromEntries(data));
+		if (!form.success) return fail(400, { message: 'invalid form members' });
 		if (!user || user.role != 'admin') {
-			return { form: addUserForm, message: 'you dont have permission to add user' };
+			return fail(400, { message: 'you dont have permission to add user' });
 		}
-		let email = addUserForm.data.email;
-		let role = addUserForm.data.role as Roles;
+		let email = form.data.email;
+		let role = form.data.role as Roles;
+		if (await auth.checkUser({ email })) {
+			return fail(400, { message: 'user already exists' });
+		}
 		let newUser = await auth.createUser({
 			email,
 			role,
@@ -38,21 +43,24 @@ export const actions: Actions = {
 			is_registered: false
 		});
 
-		if (!newUser) return { form: addUserForm, message: 'unknown error' };
+		if (!newUser) return fail(400, { message: 'unknown error' });
 
 		let token = await auth.createToken(newUser.id, 60 * 60 * 1000);
 		console.log(token); // send token to user via email
-		return { form: addUserForm };
+		return { message: 'user has been added successfully' };
 	},
-	changePassword: async (event) => {
-		let changePasswordForm = await superValidate(event, changePasswordSchema);
-		let password = changePasswordForm.data.password;
-		let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
+	changePassword: async ({ request, cookies }) => {
+		let data = await request.formData();
+		let form = changePasswordSchema.safeParse(Object.fromEntries(data));
+		if (!form.success) return fail(400, { message: 'invalid form members' });
+
+		let password = form.data.password;
+		let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 		let user = await auth.validateSession(session_id);
-		if (!user) return { form: changePasswordForm, message: 'user does not exist or session expired' };
+		if (!user) return { message: 'user does not exist or session expired' };
 		await auth.updateUserAttributes(user, { password: password, lastAuthMethod: 'password' });
 
-		return { form: changePasswordForm };
+		return { message: 'password changed successfully' };
 	},
 	deleteUser: async (event) => {
 		let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;

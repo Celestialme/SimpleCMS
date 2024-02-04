@@ -44,6 +44,7 @@
 		bind:value
 		class:text-white={theme == 'dark'}
 		on:input
+		on:keydown
 	/>
 	<label for="input" class="text-xs text-gray-400"
 		>{label}
