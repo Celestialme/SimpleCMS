@@ -228,7 +228,9 @@
 	bind:this={firstCircle}
 	use:drag
 	class="touch-none circle fixed flex items-center justify-center"
-	style="top:{(start.y / window.innerHeight) * 100}%;left:{(start.x / window.innerWidth) * 100}%;width:50px;height:50px"
+	style="top:{(Math.min(start.y, window.innerHeight - 30) / window.innerHeight) * 100}%;left:{(Math.min(start.x, window.innerWidth - 30) /
+		window.innerWidth) *
+		100}%;width:50px;height:50px"
 >
 	<RoutesIcon />
 </div>

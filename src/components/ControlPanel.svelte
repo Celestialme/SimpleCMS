@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { collection, saveFunction } from '@src/stores/load';
 	import Button from './system/buttons/Button.svelte';
-	import { collectionValue, mode, modifyEntry } from '@src/stores/store';
+	import { collectionValue, mode } from '@src/stores/store';
 	import { saveFormData } from '@src/utils/utils';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
