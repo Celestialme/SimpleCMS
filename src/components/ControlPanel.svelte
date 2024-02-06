@@ -36,6 +36,5 @@
 		flex-grow: 1;
 		width: 30vw;
 		margin-top: auto;
-		height: 200px;
 	}
 </style>
