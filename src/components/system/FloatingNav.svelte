@@ -217,7 +217,11 @@
 	}
 </script>
 
-<div use:drag class="touch-none circle fixed flex items-center justify-center" style="top:{start.y}px;left:{start.x}px;width:50px;height:50px">
+<div
+	use:drag
+	class="touch-none circle fixed flex items-center justify-center"
+	style="top:{(start.y / window.innerHeight) * 100}%;left:{(start.x / window.innerWidth) * 100}%;width:50px;height:50px"
+>
 	<RoutesIcon />
 </div>
 {#if showRoutes}
