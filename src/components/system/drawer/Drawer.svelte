@@ -31,13 +31,7 @@
 	<section>
 		<Collections />
 	</section>
-	<button class="text-white" on:click={() => goto(`/profile`)}>
-		{#if $drawerExpanded}
-			Profile
-		{:else}
-			<iconify-icon icon="bi:gear-fill"></iconify-icon>
-		{/if}</button
-	>
+
 	<section class="mt-auto text-center">
 		<Button class="max-w-full" on:click={signOut}>
 			{#if $drawerExpanded}

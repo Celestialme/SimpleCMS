@@ -2,7 +2,7 @@
 	import 'iconify-icon';
 	import '@src/collections';
 	import Collections from '@src/components/system/drawer/Collections.svelte';
-	import { mode } from '@src/stores/store.js';
+	import { drawerExpanded, mode } from '@src/stores/store.js';
 	import { collection, unAssigned } from '@src/stores/load';
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
@@ -12,7 +12,7 @@
 	let icon = $mode == 'edit' ? $collection.icon : '';
 	let fields = [];
 	let addField = false;
-
+	$drawerExpanded = true;
 	function save() {
 		let data =
 			$mode == 'edit'

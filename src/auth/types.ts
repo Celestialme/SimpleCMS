@@ -54,7 +54,7 @@ export type Cookie = {
 		path: string;
 		httpOnly: true;
 		expires: Date;
-		secure: true;
+		secure: boolean;
 	};
 };
 export type Model = M<any, {}, {}, {}, any, any>;

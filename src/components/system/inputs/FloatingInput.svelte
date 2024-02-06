@@ -1,5 +1,4 @@
 <script lang="ts">
-	import 'iconify-icon';
 	import { twMerge } from 'tailwind-merge';
 	export let iconClass = '';
 	export let inputClass = '';

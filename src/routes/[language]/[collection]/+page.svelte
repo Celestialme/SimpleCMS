@@ -10,18 +10,22 @@
 
 	import { goto } from '$app/navigation';
 	import type { Schema } from '@src/collections/types';
+	import { onDestroy } from 'svelte';
 	let ForwardBackward: boolean = false; // if using browser history
 	collection.set($collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
 	globalThis.onpopstate = async () => {
 		ForwardBackward = true;
 		collection.set($collections.find((x) => x.name === $page.params.collection) as Schema);
 	};
-	collection.subscribe((_) => {
+	let unsubscribe = collection.subscribe((_) => {
 		$collectionValue = {};
 		if (!ForwardBackward) {
 			goto(`/${$contentLanguage}/${$collection.name}`);
 		}
 		ForwardBackward = false;
+	});
+	onDestroy(() => {
+		unsubscribe();
 	});
 	contentLanguage.subscribe((_) => {
 		if (!ForwardBackward) {
