@@ -7,7 +7,13 @@
 	import { tick } from 'svelte';
 	let showRoutes = false;
 	let center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-	window.onresize = () => (center = { x: window.innerWidth / 2, y: window.innerHeight / 2 });
+	window.onresize = async () => {
+		center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+		firstLine && firstLine.setAttribute('x1', firstCircle.offsetLeft.toString());
+		firstLine && firstLine.setAttribute('y1', firstCircle.offsetTop.toString());
+		await tick();
+		firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+	};
 	let navigation_info = JSON.parse(localStorage.getItem('navigation') || '{}');
 
 	function getBasePath(pathname: string) {
@@ -20,6 +26,7 @@
 	}
 	$: start = navigation_info?.[getBasePath($page.url.pathname)] || { x: 50, y: window.innerHeight / 2 };
 	let firstLine: SVGLineElement;
+	let firstCircle: HTMLDivElement;
 	let svg: SVGElement;
 	let endpoints: {
 		x: number;
@@ -218,6 +225,7 @@
 </script>
 
 <div
+	bind:this={firstCircle}
 	use:drag
 	class="touch-none circle fixed flex items-center justify-center"
 	style="top:{(start.y / window.innerHeight) * 100}%;left:{(start.x / window.innerWidth) * 100}%;width:50px;height:50px"
