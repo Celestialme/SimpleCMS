@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { fade } from 'svelte/transition';
-	import RoutesIcon from '../../routes/test/RoutesIcon.svelte';
+	import RoutesIcon from '@src/components/system/icons/RoutesIcon.svelte';
 	import { linear } from 'svelte/easing';
 	import { page } from '$app/stores';
+	import { tick } from 'svelte';
 	let showRoutes = false;
 	let center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 	window.onresize = () => (center = { x: window.innerWidth / 2, y: window.innerHeight / 2 });
@@ -17,7 +18,6 @@
 		}, pathname);
 		return params.length > 0 ? replaced : pathname;
 	}
-	$: console.log(getBasePath($page.url.pathname));
 	$: start = navigation_info?.[getBasePath($page.url.pathname)] || { x: 50, y: window.innerHeight / 2 };
 	let firstLine: SVGLineElement;
 	let svg: SVGElement;
@@ -81,7 +81,7 @@
 				};
 			}, 60);
 		};
-		node.onpointerup = (e) => {
+		node.onpointerup = async (e) => {
 			if (!moved) {
 				showRoutes = !showRoutes;
 			}
@@ -89,6 +89,94 @@
 			moved = false;
 			node.onpointermove = null;
 			node.releasePointerCapture(e.pointerId);
+
+			let distance = [
+				start.x, //left
+				window.innerWidth - start.x, //right
+				start.y, //top
+				window.innerHeight - start.y //bottom
+			];
+
+			let promise: any;
+			switch (distance.indexOf(Math.min(...distance))) {
+				case 0:
+					{
+						let d = start.x / 10;
+						let target = 30;
+						promise = new Promise<void>((resolve) => {
+							let interval = setInterval(async () => {
+								start.x -= d;
+								if (start.x <= target) {
+									start.x = target;
+									clearInterval(interval);
+									resolve();
+								}
+								await tick();
+								firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+							}, 20);
+						});
+					}
+					break;
+				case 1:
+					{
+						let d = (window.innerWidth - start.x) / 10;
+						let target = window.innerWidth - 30;
+						promise = new Promise<void>((resolve) => {
+							let interval = setInterval(async () => {
+								start.x += d;
+								if (start.x >= target) {
+									start.x = target;
+									clearInterval(interval);
+									resolve();
+								}
+								await tick();
+								firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+							}, 20);
+						});
+					}
+					break;
+				case 2:
+					{
+						let d = start.y / 10;
+						let target = 30;
+						promise = new Promise<void>((resolve) => {
+							let interval = setInterval(async () => {
+								start.y -= d;
+								if (start.y <= target) {
+									start.y = target;
+									clearInterval(interval);
+									resolve();
+								}
+								await tick();
+								firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+							}, 20);
+						});
+					}
+					break;
+				case 3:
+					{
+						let d = (window.innerHeight - start.y) / 10;
+						let target = window.innerHeight - 30;
+						promise = new Promise<void>((resolve) => {
+							let interval = setInterval(async () => {
+								start.y += d;
+								if (start.y >= target) {
+									start.y = target;
+									clearInterval(interval);
+									resolve();
+								}
+								await tick();
+								firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+							}, 20);
+						});
+					}
+					break;
+			}
+
+			await tick();
+			firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+
+			await promise;
 			navigation_info = { ...navigation_info, ...{ [getBasePath($page.url.pathname)]: start } };
 			localStorage.setItem('navigation', JSON.stringify(navigation_info));
 		};
