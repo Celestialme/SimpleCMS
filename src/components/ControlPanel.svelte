@@ -17,7 +17,7 @@
 	let user: User = $page.data.user;
 </script>
 
-<div class="wrapper max-md:!h-auto max-md:!w-screen max-md:!max-w-full">
+<div class="wrapper max-md:!h-auto max-md:!w-screen max-md:!max-w-full max-md:absolute max-md:top-[calc(100%-45px)]">
 	{#if $collection.permissions?.[user.role]?.write != false}
 		<Button on:click={$saveFunction.fn}>SAVE</Button>
 	{/if}
@@ -36,5 +36,6 @@
 		flex-grow: 1;
 		width: 30vw;
 		margin-top: auto;
+		height: 200px;
 	}
 </style>

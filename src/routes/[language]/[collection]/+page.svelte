@@ -42,7 +42,7 @@
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}
 			<Header />
-			<div class="overflow-y-auto fields">
+			<div class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]">
 				<Fields />
 			</div>
 		{/if}
@@ -51,9 +51,3 @@
 		<ControlPanel />
 	{/if}
 </div>
-
-<style>
-	.fields {
-		max-height: calc(100% - 60px);
-	}
-</style>
