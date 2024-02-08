@@ -6,6 +6,9 @@
 	import { page } from '$app/stores';
 	import { tick } from 'svelte';
 	import { motion } from '@src/utils/utils';
+	let navigation_info = JSON.parse(localStorage.getItem('navigation') || '{}');
+	let buttonRadius = 25;
+	export let buttonInfo;
 	let showRoutes = false;
 	let center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 	window.onresize = async () => {
@@ -15,7 +18,6 @@
 		await tick();
 		firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 	};
-	let navigation_info = JSON.parse(localStorage.getItem('navigation') || '{}');
 
 	function getBasePath(pathname: string) {
 		let params = Object.values($page.params);
@@ -25,7 +27,11 @@
 		}, pathname);
 		return params.length > 0 ? replaced : pathname;
 	}
-	$: start = navigation_info?.[getBasePath($page.url.pathname)] || { x: 50, y: window.innerHeight / 2 };
+	$: buttonInfo = { ...navigation_info?.[getBasePath($page.url.pathname)], ...{ radius: buttonRadius } } || {
+		x: 50,
+		y: window.innerHeight / 2,
+		radius: buttonRadius
+	};
 	let firstLine: SVGLineElement;
 	let firstCircle: HTMLDivElement;
 	let svg: SVGElement;
@@ -71,23 +77,22 @@
 		let y2 = Math.round(Math.sin(((firstAngle - angle) * Math.PI) / 180) * distance + y1);
 		return { x: x2, y: y2 };
 	}
-	$: endpoints[1] = { ...endpoints[1], ...calculateSecondVector(start.x, start.y, center.x, center.y, 140, 60) };
-	$: endpoints[2] = { ...endpoints[2], ...calculateSecondVector(start.x, start.y, center.x, center.y, 140, 0) };
-	$: endpoints[3] = { ...endpoints[3], ...calculateSecondVector(start.x, start.y, center.x, center.y, 140, -60) };
+	$: endpoints[1] = { ...endpoints[1], ...calculateSecondVector(buttonInfo.x, buttonInfo.y, center.x, center.y, 140, 60) };
+	$: endpoints[2] = { ...endpoints[2], ...calculateSecondVector(buttonInfo.x, buttonInfo.y, center.x, center.y, 140, 0) };
+	$: endpoints[3] = { ...endpoints[3], ...calculateSecondVector(buttonInfo.x, buttonInfo.y, center.x, center.y, 140, -60) };
 
 	function drag(node: HTMLDivElement) {
 		let moved = false;
 		let timeout: ReturnType<typeof setTimeout>;
 		node.onpointerdown = (e) => {
 			timeout = setTimeout(() => {
-				console.log(e);
 				let x = e.offsetX - node.offsetWidth / 2;
 				let y = e.offsetY - node.offsetHeight / 2;
-				start = { x: e.clientX - x, y: e.clientY - y };
+				buttonInfo = { x: e.clientX - x, y: e.clientY - y };
 				node.setPointerCapture(e.pointerId);
 				node.onpointermove = (e) => {
 					moved = true;
-					start = { x: e.clientX - x, y: e.clientY - y };
+					buttonInfo = { x: e.clientX - x, y: e.clientY - y };
 					firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 				};
 			}, 60);
@@ -102,18 +107,18 @@
 			node.releasePointerCapture(e.pointerId);
 
 			let distance = [
-				start.x, //left
-				window.innerWidth - start.x, //right
-				start.y, //top
-				window.innerHeight - start.y //bottom
+				buttonInfo.x, //left
+				window.innerWidth - buttonInfo.x, //right
+				buttonInfo.y, //top
+				window.innerHeight - buttonInfo.y //bottom
 			];
 
 			let promise: any;
 			switch (distance.indexOf(Math.min(...distance))) {
 				case 0:
 					{
-						promise = motion(start.x, 30, 200, async (t) => {
-							start.x = t;
+						promise = motion(buttonInfo.x, buttonRadius, 200, async (t) => {
+							buttonInfo.x = t;
 							await tick();
 							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
@@ -121,8 +126,8 @@
 					break;
 				case 1:
 					{
-						promise = motion(start.x, window.innerWidth - 30, 200, async (t) => {
-							start.x = t;
+						promise = motion(buttonInfo.x, window.innerWidth - buttonRadius, 200, async (t) => {
+							buttonInfo.x = t;
 							await tick();
 							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
@@ -130,8 +135,8 @@
 					break;
 				case 2:
 					{
-						promise = motion(start.y, 30, 200, async (t) => {
-							start.y = t;
+						promise = motion(buttonInfo.y, buttonRadius, 200, async (t) => {
+							buttonInfo.y = t;
 							await tick();
 							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
@@ -139,8 +144,8 @@
 					break;
 				case 3:
 					{
-						promise = motion(start.y, window.innerHeight - 30, 200, async (t) => {
-							start.y = t;
+						promise = motion(buttonInfo.y, window.innerHeight - buttonRadius, 200, async (t) => {
+							buttonInfo.y = t;
 							await tick();
 							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
@@ -152,7 +157,7 @@
 			firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 
 			await promise;
-			navigation_info = { ...navigation_info, ...{ [getBasePath($page.url.pathname)]: start } };
+			navigation_info = { ...navigation_info, ...{ [getBasePath($page.url.pathname)]: buttonInfo } };
 			localStorage.setItem('navigation', JSON.stringify(navigation_info));
 		};
 	}
@@ -196,7 +201,10 @@
 	bind:this={firstCircle}
 	use:drag
 	class="touch-none circle flex items-center justify-center relative"
-	style="top:{(Math.min(start.y, window.innerHeight - 30) / window.innerHeight) * 100}%;left:{(Math.min(start.x, window.innerWidth - 30) /
+	style="top:{(Math.min(buttonInfo.y, window.innerHeight - buttonRadius) / window.innerHeight) * 100}%;left:{(Math.min(
+		buttonInfo.x,
+		window.innerWidth - buttonRadius
+	) /
 		window.innerWidth) *
 		100}%;width:50px;height:50px"
 >
@@ -205,7 +213,7 @@
 {#if showRoutes}
 	<div out:keepAlive|local on:click|self={() => (showRoutes = false)} class=" fixed top-0 left-0 z-[9999999]">
 		<svg bind:this={svg} xmlns="http://www.w3.org/2000/svg" use:setDash>
-			<line bind:this={firstLine} x1={start.x} y1={start.y} x2={center.x} y2={center.y} />
+			<line bind:this={firstLine} x1={buttonInfo.x} y1={buttonInfo.y} x2={center.x} y2={center.y} />
 			{#each endpoints.slice(1, endpoints.length) as endpoint}
 				<line x1={center.x} y1={center.y} x2={endpoint.x} y2={endpoint.y} />
 			{/each}
@@ -278,13 +286,13 @@
 		cursor: pointer;
 		z-index: 99999999;
 	}
-	.circle:not(:first-child):hover {
+	.circle:not(:first-of-type):hover {
 		transform: translate(-50%, -50%) scale(1.5);
 	}
-	.circle:not(:first-child):active {
+	.circle:not(:first-of-type):active {
 		transform: translate(-50%, -50%) scale(1) !important;
 	}
-	.circle:first-child:active {
+	.circle:first-of-type:active {
 		transform: translate(-50%, -50%) scale(0.9) !important;
 	}
 

@@ -1,25 +1,5 @@
 <script lang="ts">
-	import axios from 'axios';
-	import Button from '../buttons/Button.svelte';
-	import Collections from './Collections.svelte';
-	import { goto } from '$app/navigation';
 	import { drawerExpanded } from '@src/stores/store';
-	async function signOut() {
-		let resp = (
-			await axios.post(
-				`/api/auth`,
-				{ authType: 'signOut' },
-				{
-					headers: {
-						'content-type': 'multipart/form-data'
-					}
-				}
-			)
-		).data;
-		if (resp.status == 200) {
-			goto(`/login`);
-		}
-	}
 </script>
 
 <div class="wrapper max-md:fixed max-md:w-0" class:max-md:!min-w-0={$drawerExpanded == false} class:drawerExpanded={$drawerExpanded}>
@@ -28,19 +8,8 @@
 			><iconify-icon class="h-[14px]" icon="mingcute:menu-fill" width="24" /></button
 		>
 	</section>
-	<section>
-		<Collections />
-	</section>
 
-	<section class="mt-auto text-center">
-		<Button class="max-w-full" on:click={signOut}>
-			{#if $drawerExpanded}
-				SignOut
-			{:else}
-				<iconify-icon icon="charm:sign-out"></iconify-icon>
-			{/if}
-		</Button>
-	</section>
+	<slot />
 </div>
 
 <style>

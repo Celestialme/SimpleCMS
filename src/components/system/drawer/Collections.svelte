@@ -7,9 +7,8 @@
 	import type { User } from '@src/auth/types';
 	import CheckIcon from '@src/components/system/icons/CheckIcon.svelte';
 	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
-	import { asAny, obj2formData } from '@src/utils/utils';
-	import Button from '../buttons/Button.svelte';
-	import axios from 'axios';
+	import { asAny } from '@src/utils/utils';
+
 	export let modeSet: typeof $mode = 'view';
 	let expanded: any = {};
 	let user: User = $page.data.user;
@@ -18,22 +17,6 @@
 		for (let collection of category.collections) {
 			checked[collection.name as string] = true;
 		}
-	}
-	function saveConfig() {
-		let _categories: { name: string; icon: string; collections: string[] }[] = [];
-		for (let category of $categories) {
-			_categories.push({
-				name: category.name,
-				icon: category.icon,
-				collections: category.collections.map((x) => `🗑️collections.${x.name}🗑️` as string)
-			});
-		}
-
-		axios.post(`?/saveConfig`, obj2formData({ categories: _categories }), {
-			headers: {
-				'Content-Type': 'multipart/form-data'
-			}
-		});
 	}
 </script>
 
@@ -109,9 +92,6 @@
 		</div>
 	</div>
 {/each}
-{#if modeSet == 'edit'}
-	<Button class="w-full mt-2" on:click={saveConfig}>Save Collections</Button>
-{/if}
 
 <style>
 	.wrapper {

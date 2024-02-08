@@ -11,7 +11,7 @@
 
 <style>
 	button {
-		padding: 10px min(30px, 15%);
+		padding: 10px min(20px, 15%);
 		text-align: center;
 		border-radius: 6px;
 		transition: background-color 0.2s ease-in-out;

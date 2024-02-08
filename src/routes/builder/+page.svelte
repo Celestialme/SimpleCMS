@@ -1,17 +1,21 @@
 <script lang="ts">
 	import 'iconify-icon';
-	import '@src/collections';
 	import Collections from '@src/components/system/drawer/Collections.svelte';
 	import { drawerExpanded, mode } from '@src/stores/store.js';
 	import { collection, unAssigned } from '@src/stores/load';
 	import axios from 'axios';
+	import { categories } from '@src/collections';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
+	import Drawer from '@src/components/system/drawer/Drawer.svelte';
+	import FloatingNav from '@src/components/system/FloatingNav.svelte';
+	import Button from '@src/components/system/buttons/Button.svelte';
 	let name = $mode == 'edit' ? $collection.name : '';
 	let icon = $mode == 'edit' ? $collection.icon : '';
 	let fields = [];
 	let addField = false;
+	let navButton;
 	$drawerExpanded = true;
 	function save() {
 		let data =
@@ -28,12 +32,47 @@
 		name = $mode == 'edit' ? $collection.name : '';
 		icon = $mode == 'edit' ? $collection.icon : '';
 	});
+	function saveConfig() {
+		let _categories: { name: string; icon: string; collections: string[] }[] = [];
+		for (let category of $categories) {
+			_categories.push({
+				name: category.name,
+				icon: category.icon,
+				collections: category.collections.map((x) => `🗑️collections.${x.name}🗑️` as string)
+			});
+		}
+
+		axios.post(`?/saveConfig`, obj2formData({ categories: _categories }), {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+	}
+	$: console.log(navButton);
 </script>
 
 <div class="body">
-	<section class="left_panel">
-		<Collections modeSet={'edit'} />
-	</section>
+	<button class="text-white fixed top-[13px] left-[10px]" on:click={() => ($drawerExpanded = !$drawerExpanded)}
+		><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
+	>
+	<div class="left_panel">
+		<Drawer>
+			<section>
+				<Collections modeSet="edit" />
+			</section>
+			<Button class="w-full  flex items-center justify-center mt-auto" on:click={saveConfig}>
+				{#if $drawerExpanded}
+					Save Collections
+				{:else}
+					<iconify-icon width="30" icon="material-symbols:sync-saved-locally-outline-rounded"></iconify-icon>
+				{/if}
+			</Button>
+
+			<div class:max-md:hidden={!$drawerExpanded && navButton.x == navButton.radius}>
+				<FloatingNav bind:buttonInfo={navButton} />
+			</div>
+		</Drawer>
+	</div>
 	<div class="right_panel">
 		<p class="text-white">unAssigned Collections</p>
 		<p class="text-white">{$unAssigned.map((x) => x.name)}</p>
@@ -88,9 +127,5 @@
 		flex-direction: column;
 		width: 100%;
 		align-items: center;
-	}
-	section {
-		width: 240px;
-		padding: 0 4px;
 	}
 </style>

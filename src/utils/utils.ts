@@ -307,7 +307,6 @@ export function motion(start: number, end: number, duration: number, cb: (curren
 			if (useAnimation) {
 				function animation(current) {
 					current -= d;
-					console.log(current);
 					if ((d < 0 && current >= end) || (d > 0 && current <= end)) {
 						cb(end);
 						resolve();
