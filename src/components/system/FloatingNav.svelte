@@ -5,6 +5,7 @@
 	import { linear } from 'svelte/easing';
 	import { page } from '$app/stores';
 	import { tick } from 'svelte';
+	import { motion } from '@src/utils/utils';
 	let showRoutes = false;
 	let center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 	window.onresize = async () => {
@@ -79,11 +80,14 @@
 		let timeout: ReturnType<typeof setTimeout>;
 		node.onpointerdown = (e) => {
 			timeout = setTimeout(() => {
-				start = { x: e.clientX, y: e.clientY };
+				console.log(e);
+				let x = e.offsetX - node.offsetWidth / 2;
+				let y = e.offsetY - node.offsetHeight / 2;
+				start = { x: e.clientX - x, y: e.clientY - y };
 				node.setPointerCapture(e.pointerId);
 				node.onpointermove = (e) => {
 					moved = true;
-					start = { x: e.clientX, y: e.clientY };
+					start = { x: e.clientX - x, y: e.clientY - y };
 					firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 				};
 			}, 60);
@@ -108,73 +112,37 @@
 			switch (distance.indexOf(Math.min(...distance))) {
 				case 0:
 					{
-						let d = start.x / 10;
-						let target = 30;
-						promise = new Promise<void>((resolve) => {
-							let interval = setInterval(async () => {
-								start.x -= d;
-								if (start.x <= target) {
-									start.x = target;
-									clearInterval(interval);
-									resolve();
-								}
-								await tick();
-								firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
-							}, 20);
+						promise = motion(start.x, 30, 200, async (t) => {
+							start.x = t;
+							await tick();
+							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
 					}
 					break;
 				case 1:
 					{
-						let d = (window.innerWidth - start.x) / 10;
-						let target = window.innerWidth - 30;
-						promise = new Promise<void>((resolve) => {
-							let interval = setInterval(async () => {
-								start.x += d;
-								if (start.x >= target) {
-									start.x = target;
-									clearInterval(interval);
-									resolve();
-								}
-								await tick();
-								firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
-							}, 20);
+						promise = motion(start.x, window.innerWidth - 30, 200, async (t) => {
+							start.x = t;
+							await tick();
+							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
 					}
 					break;
 				case 2:
 					{
-						let d = start.y / 10;
-						let target = 30;
-						promise = new Promise<void>((resolve) => {
-							let interval = setInterval(async () => {
-								start.y -= d;
-								if (start.y <= target) {
-									start.y = target;
-									clearInterval(interval);
-									resolve();
-								}
-								await tick();
-								firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
-							}, 20);
+						promise = motion(start.y, 30, 200, async (t) => {
+							start.y = t;
+							await tick();
+							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
 					}
 					break;
 				case 3:
 					{
-						let d = (window.innerHeight - start.y) / 10;
-						let target = window.innerHeight - 30;
-						promise = new Promise<void>((resolve) => {
-							let interval = setInterval(async () => {
-								start.y += d;
-								if (start.y >= target) {
-									start.y = target;
-									clearInterval(interval);
-									resolve();
-								}
-								await tick();
-								firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
-							}, 20);
+						promise = motion(start.y, window.innerHeight - 30, 200, async (t) => {
+							start.y = t;
+							await tick();
+							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
 					}
 					break;
@@ -227,7 +195,7 @@
 <div
 	bind:this={firstCircle}
 	use:drag
-	class="touch-none circle fixed flex items-center justify-center"
+	class="touch-none circle flex items-center justify-center relative"
 	style="top:{(Math.min(start.y, window.innerHeight - 30) / window.innerHeight) * 100}%;left:{(Math.min(start.x, window.innerWidth - 30) /
 		window.innerWidth) *
 		100}%;width:50px;height:50px"
@@ -235,7 +203,7 @@
 	<RoutesIcon />
 </div>
 {#if showRoutes}
-	<div out:keepAlive on:click|self={() => (showRoutes = false)} class=" fixed top-0 left-0 z-[9999999]">
+	<div out:keepAlive|local on:click|self={() => (showRoutes = false)} class=" fixed top-0 left-0 z-[9999999]">
 		<svg bind:this={svg} xmlns="http://www.w3.org/2000/svg" use:setDash>
 			<line bind:this={firstLine} x1={start.x} y1={start.y} x2={center.x} y2={center.y} />
 			{#each endpoints.slice(1, endpoints.length) as endpoint}
@@ -323,6 +291,7 @@
 	line {
 		stroke: #da1f1f;
 		stroke-width: 4;
+		pointer-events: none;
 	}
 
 	@keyframes -global-showEndPoints {

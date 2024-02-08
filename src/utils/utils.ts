@@ -292,3 +292,45 @@ export function validateZod<T>(schema: z.Schema<T>, value?: T): null | { [P in k
 		return res.error.flatten().fieldErrors as any;
 	}
 }
+
+export function motion(start: number, end: number, duration: number, cb: (current: number) => void, useAnimation = true) {
+	{
+		let frequency = 16;
+		let d = (start - end) / (duration / frequency);
+		if (d === 0) {
+			cb(end);
+			return;
+		}
+		let current = start;
+
+		return new Promise<void>((resolve) => {
+			if (useAnimation) {
+				function animation(current) {
+					current -= d;
+					console.log(current);
+					if ((d < 0 && current >= end) || (d > 0 && current <= end)) {
+						cb(end);
+						resolve();
+					} else {
+						cb(current);
+						requestAnimationFrame(() => animation(current));
+					}
+				}
+
+				requestAnimationFrame(() => animation(current));
+			} else {
+				let interval = setInterval(async () => {
+					current -= d;
+
+					if ((d < 0 && current >= end) || (d > 0 && current <= end)) {
+						cb(end);
+						clearInterval(interval);
+						resolve();
+					} else {
+						cb(current);
+					}
+				}, frequency);
+			}
+		});
+	}
+}
