@@ -206,7 +206,7 @@
 		window.innerWidth - buttonRadius
 	) /
 		window.innerWidth) *
-		100}%;width:50px;height:50px"
+		100}%;width:{buttonRadius * 2}px;height:{buttonRadius * 2}px"
 >
 	<RoutesIcon />
 </div>
