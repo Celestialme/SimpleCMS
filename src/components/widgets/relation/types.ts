@@ -2,6 +2,7 @@ import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import GuiField from './GuiField.svelte';
 import { getFieldName } from '@src/utils/utils';
 import mongoose from 'mongoose';
+import type { CollectionLabels } from '@src/collections/types';
 
 export type Params = {
 	label: string;
@@ -9,7 +10,7 @@ export type Params = {
 	displayPath?: string;
 	db_fieldName?: string;
 	widget?: any;
-	relation: string;
+	relation: CollectionLabels;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },

@@ -6,6 +6,7 @@ import { readFileSync } from 'fs';
 import type vite from 'vite';
 import { fileURLToPath } from 'url';
 import { compile } from './src/routes/api/compile/compile';
+import { generateCollectionTypes } from './src/utils/collectionTypes';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
 let parsed = Path.parse(__dirname);
@@ -15,10 +16,16 @@ const file = fileURLToPath(new URL('package.json', import.meta.url));
 const json = readFileSync(file, 'utf8');
 const pkg = JSON.parse(json);
 compile({ collectionsFolderJS, collectionsFolderTS });
+
 const config = {
 	plugins: [
 		{
 			name: 'vite:server',
+			configureServer(server) {
+				server.watcher.on('add', generateCollectionTypes);
+				server.watcher.on('unlink', generateCollectionTypes);
+			},
+
 			config() {
 				return {
 					define: {
