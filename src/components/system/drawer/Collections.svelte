@@ -67,7 +67,7 @@
 			{#if modeSet == 'edit' && $unAssigned.length > 0}
 				<div class="border-b-2" />
 				{#each $unAssigned as _collection}
-					<p
+					<div
 						class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
 						on:click={(e) => {
 							mode.set(modeSet);
@@ -83,10 +83,13 @@
 							}}
 							svg={CheckIcon}
 						/>
-						<span class="mx-auto">
-							{_collection.name}
-						</span>
-					</p>
+						<div class="flex items-center h-full" class:grow={$drawerExpanded}>
+							<iconify-icon icon={_collection.icon} class:ml-auto={!$drawerExpanded} class:ml-2={$drawerExpanded} />
+							{#if $drawerExpanded}
+								<p class="mx-auto">{_collection.name}</p>
+							{/if}
+						</div>
+					</div>
 				{/each}
 			{/if}
 		</div>

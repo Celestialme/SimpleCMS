@@ -12,7 +12,7 @@
 			><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
 		>
 		<div class="collection mr-auto">
-			{$collection.name}
+			{$collection?.name}
 		</div>
 		<div class="w-[50px] h-full relative">
 			<DropDown class="absolute" items={['en', 'de']} bind:selected={$contentLanguage} />

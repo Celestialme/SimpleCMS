@@ -44,6 +44,7 @@ async function getImports(recompile: boolean = false) {
 			let name = module.replace(/.ts$/, '').replace('./', '');
 			let collection = ((await modules[module]()) as any).default;
 			collection.name = name;
+			!collection.icon && (collection.icon = 'iconoir:info-empty');
 			imports[name] = collection;
 		}
 	} else {
@@ -53,6 +54,7 @@ async function getImports(recompile: boolean = false) {
 				let name = file.replace(/.js$/, '');
 				let collection = (await import('/api/importCollection/' + file + '?' + rnd)).default;
 				collection.name = name;
+				!collection.icon && (collection.icon = 'iconoir:info-empty');
 				imports[name] = collection;
 			}
 		} else {
@@ -61,6 +63,7 @@ async function getImports(recompile: boolean = false) {
 				let name = file.replace(/.js$/, '');
 				let collection = (await import(import.meta.env.collectionsFolderJS + file + '?' + rnd)).default;
 				collection.name = name;
+				!collection.icon && (collection.icon = 'iconoir:info-empty');
 				imports[name] = collection;
 			}
 		}

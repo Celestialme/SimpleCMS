@@ -59,7 +59,7 @@ export const obj2formData = (obj: any) => {
 		formData.append(
 			key,
 			JSON.stringify(obj[key], (key, val) => {
-				if (!val && val !== false) return undefined;
+				if (val == undefined) return undefined;
 				else if (key == 'schema') return undefined;
 				else if (key == 'display' && val.default == true) return undefined;
 				else if (key == 'display') return ('🗑️' + val + '🗑️').replaceAll('display', 'function display');
