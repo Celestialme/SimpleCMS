@@ -22,7 +22,7 @@
 			fileList.items.add(file);
 			_data = node.files = fileList.files;
 			updated = true;
-		} else if ($mode === 'edit') {
+		} else if ($mode === 'edit' && $entryData[fieldName]?.thumbnail) {
 			axios.get($entryData[fieldName].thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
 				let fileList = new DataTransfer();
 				let file = new File([data], $entryData[fieldName].thumbnail.name, {

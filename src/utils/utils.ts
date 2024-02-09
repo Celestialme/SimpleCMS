@@ -56,20 +56,19 @@ export const getGuiFields = (fieldParams: { [key: string]: any }, GuiSchema: { [
 export const obj2formData = (obj: any) => {
 	const formData = new FormData();
 	for (const key in obj) {
-		formData.append(
-			key,
-			JSON.stringify(obj[key], (key, val) => {
-				if (val == undefined) return undefined;
-				else if (key == 'schema') return undefined;
-				else if (key == 'display' && val.default == true) return undefined;
-				else if (key == 'display') return ('🗑️' + val + '🗑️').replaceAll('display', 'function display');
-				else if (key == 'widget') return { key: val.key, GuiFields: val.GuiFields };
-				else if (typeof val === 'function') {
-					return '🗑️' + val + '🗑️';
-				}
-				return val;
-			})
-		);
+		let data = JSON.stringify(obj[key], (key, val) => {
+			if (!val && val !== false) return undefined;
+			else if (key == 'schema') return undefined;
+			else if (key == 'display' && val.default == true) return undefined;
+			else if (key == 'display') return ('🗑️' + val + '🗑️').replaceAll('display', 'function display');
+			else if (key == 'widget') return { key: val.key, GuiFields: val.GuiFields };
+			else if (typeof val === 'function') {
+				return '🗑️' + val + '🗑️';
+			}
+			return val;
+		});
+		if (!data) continue;
+		formData.append(key, data);
 	}
 	return formData;
 };

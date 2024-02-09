@@ -8,7 +8,9 @@
 		<button class="text-white" on:click={() => ($drawerExpanded = !$drawerExpanded)}
 			><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
 		>
-		<button on:click={() => mode.set('create')} class="flex items-center justify-center bg-green-500 rounded-[50%] w-[35px] h-[35px]"
+		<button
+			on:click={() => mode.set('create')}
+			class="flex items-center justify-center bg-green-500 rounded-[50%] w-[35px] h-[35px] md:ml-auto md:mr-[10px]"
 			><iconify-icon icon="gravity-ui:plus"></iconify-icon></button
 		>
 		<button on:click={() => saveFunction()} class="flex items-center justify-center bg-green-500 rounded-[50%] w-[35px] h-[35px]"

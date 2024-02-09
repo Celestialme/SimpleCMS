@@ -4,13 +4,14 @@
 	import { drawerExpanded, mode } from '@src/stores/store.js';
 	import { collection } from '@src/stores/load';
 	import axios from 'axios';
-	import { categories } from '@src/collections';
+	import { categories, updateCollections } from '@src/collections';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import Drawer from '@src/components/system/drawer/Drawer.svelte';
 	import FloatingNav from '@src/components/system/FloatingNav.svelte';
 	import Header from './Header.svelte';
+	import { onDestroy } from 'svelte';
 	let name = $mode == 'edit' ? $collection.name : '';
 	let icon = $mode == 'edit' ? $collection.icon : '';
 	let fields = [];
@@ -26,8 +27,11 @@
 	$: if ($mode == 'create') {
 		name = '';
 		icon = '';
+		fields = [];
 	}
-
+	onDestroy(async () => {
+		await updateCollections();
+	});
 	function save() {
 		let _categories: { name: string; icon: string; collections: string[] }[] = [];
 		for (let category of $categories) {
@@ -43,6 +47,7 @@
 				'Content-Type': 'multipart/form-data'
 			}
 		});
+		if (!name) return;
 		let data =
 			$mode == 'edit'
 				? obj2formData({ originalName: $collection.name, collectionName: name, fields: $collection.fields, icon })
