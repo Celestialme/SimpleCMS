@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
-	import { contentLanguage } from '@src/stores/load';
-
+	import { contentLanguage, headerActionButton } from '@src/stores/load';
+	import DeleteIcon from '@src/components/system/icons/DeleteIcon.svelte';
 	export let self: { [key: string]: any; children: any[] };
 	export let parrent: { [key: string]: any; children: any[] } | null = null;
 	export let level = 0;
@@ -28,7 +28,9 @@
 	$: if (self.children.length) {
 		recalculateBorderHeight(ul);
 	}
-
+	$: if (showFields) {
+		$headerActionButton = DeleteIcon;
+	}
 	function findFirstOuterUl(node: HTMLElement | null) {
 		if (!node) return;
 		if (node.tagName == 'UL') return node;
