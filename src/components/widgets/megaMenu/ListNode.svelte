@@ -4,7 +4,7 @@
 	import { contentLanguage, headerActionButton } from '@src/stores/load';
 	import DeleteIcon from '@src/components/system/icons/DeleteIcon.svelte';
 	export let self: { [key: string]: any; children: any[] };
-	export let parrent: { [key: string]: any; children: any[] } | null = null;
+	export let parent: { [key: string]: any; children: any[] } | null = null;
 	export let level = 0;
 	export let depth = 0;
 	export let showFields = false;
@@ -125,7 +125,7 @@
 		{#if level > 0}
 			<button
 				on:click|stopPropagation={() => {
-					parrent?.children?.splice(parrent?.children?.indexOf(self), 1);
+					parent?.children?.splice(parent?.children?.indexOf(self), 1);
 					refresh();
 				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24" /></button
 			>
