@@ -91,10 +91,12 @@
 	}}
 	class="header"
 	class:!cursor-pointer={self.children?.length > 0}
-	style="margin-left:{20 * level}px;
-	{window.screen.width <= 700 ? `min-width:calc(100% + ${20 * (maxDepth * maxDepth - level)}px)` : `max-width:calc(100% - ${20 * level}px)`}"
+	style="margin-left:{20 * (level > 0 ? 1 : 0)}px;
+	{window.screen.width <= 700
+		? `min-width:calc(100% + ${20 * (maxDepth * maxDepth - (level > 0 ? 1 : 0))}px)`
+		: `max-width:calc(100% - ${20 * (level > 0 ? 1 : 0)}px)`}"
 >
-	<div class="ladder" style="width:{20 * level}px" />
+	<div class="ladder" style="width:{20 * (level > 0 ? 1 : 0)}px" />
 	{#if self.children?.length > 0}
 		<div class="arrow" class:expanded />
 	{/if}
@@ -130,7 +132,7 @@
 </div>
 
 {#if self.children?.length > 0 && expanded}
-	<ul bind:this={ul} class="children relative" style="margin-left:{20 * level + 15}px;">
+	<ul bind:this={ul} class="children relative" style="margin-left:{20 * (level > 0 ? 1 : 0) + 15}px;">
 		<div class="border" />
 		{#each self.children as child}
 			<li on:pointerdown={drag}>

@@ -18,7 +18,7 @@ export let unAssigned: Writable<Array<Schema>> = writable();
 export let collection: Writable<Schema> = writable();
 export let saveFunction: Writable<{ fn: (args: any) => any; reset: () => any }> = writable({ fn: () => {}, reset: () => {} });
 export const tableHeaders = ['id', 'email', 'username', 'role', 'createdAt'] as const;
-
+export let headerActionButton: Writable<ConstructorOfATypedSvelteComponent | string> = writable();
 loadAllLocales();
 systemLanguage.subscribe((val) => {
 	setLocale(val as Locales);

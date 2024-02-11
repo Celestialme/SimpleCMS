@@ -74,11 +74,10 @@
 		</div>
 	</Drawer>
 	<div class="flex-grow-[2] overflow-hidden max-h-screen pl-[2px] pr-[4px]">
+		<Header />
 		{#if $mode == 'view' || $mode == 'modify'}
-			<Header />
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}
-			<Header />
 			<div class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]">
 				<Fields />
 			</div>

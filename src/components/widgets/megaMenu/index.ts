@@ -3,6 +3,8 @@ import MegaMenu from './MegaMenu.svelte';
 import Text from '../text';
 import { writable, type Writable } from 'svelte/store';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
+import { entryData, mode } from '@src/stores/store';
+import { headerActionButton } from '@src/stores/load';
 export let currentChild: Writable<any> = writable({});
 /**
  * Returns the average of two numbers.
@@ -27,8 +29,12 @@ const widget = (params: Params) => {
 		level.unshift(Text({ label: 'Header', translated: true }));
 	}
 	params.menu.unshift([Text({ label: 'Header', translated: true })]);
-
-	let field: Params = { db_fieldName: params.db_fieldName, menu: params.menu, display, label: params.label, width: params.width };
+	let callback = ({ data }) => {
+		entryData.set(data?.entryList[0]);
+		mode.set('edit');
+		headerActionButton.set('fa:refresh');
+	};
+	let field = { db_fieldName: params.db_fieldName, menu: params.menu, display, label: params.label, width: params.width, callback };
 
 	return { ...field, widget };
 };

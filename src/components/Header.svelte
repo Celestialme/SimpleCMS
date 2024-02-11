@@ -1,9 +1,13 @@
 <script lang="ts">
-	import { collection, contentLanguage } from '@src/stores/load';
+	import { collection, contentLanguage, headerActionButton } from '@src/stores/load';
 	import MultiButton from './system/buttons/MultiButton.svelte';
 	import { drawerExpanded, mode } from '@src/stores/store';
 	import DeleteIcon from './system/icons/DeleteIcon.svelte';
 	import DropDown from './system/dropDown/DropDown.svelte';
+	$: {
+		$headerActionButton = DeleteIcon;
+		$collection;
+	}
 </script>
 
 <div class="h-[60px]">
@@ -20,8 +24,12 @@
 		{#if !['edit', 'create'].includes($mode)}
 			<MultiButton />
 		{:else}
-			<button on:click={() => mode.set('view')}>
-				<DeleteIcon />
+			<button class="flex item-center justify-center" on:click={() => mode.set('view')}>
+				{#if typeof $headerActionButton != 'string'}
+					<svelte:component this={$headerActionButton} />
+				{:else}
+					<iconify-icon width="22" class="p-[10px]" icon={$headerActionButton} />
+				{/if}
 			</button>
 		{/if}
 	</div>

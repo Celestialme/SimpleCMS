@@ -5,6 +5,11 @@ let schema: Schema = {
 	icon: 'iconoir:post',
 
 	fields: [
+		widgets.Relation({
+			label: 'relation',
+			relation: 'media',
+			displayPath: 'image'
+		}),
 		widgets.Text({
 			label: 'text',
 			translated: true
