@@ -22,7 +22,7 @@
 						sorting.isSorted
 							? {
 									[sorting.sortedBy]: sorting.isSorted
-							  }
+								}
 							: {}
 					)}`
 				)
@@ -114,7 +114,7 @@
 	};
 </script>
 
-<div class="overflow-auto max-h-[calc(100vh-55px)]">
+<div class="max-h-[calc(100vh-55px)] overflow-auto">
 	<table>
 		<thead class="top-0">
 			<tr>
@@ -183,8 +183,8 @@
 					class={data?.entryList[index]?.status == 'unpublished'
 						? '!bg-yellow-700'
 						: data?.entryList[index]?.status == 'testing'
-						? '!bg-red-800'
-						: ''}
+							? '!bg-red-800'
+							: ''}
 					on:click={() => {
 						entryData.set(data?.entryList[index]);
 						mode.set('edit');

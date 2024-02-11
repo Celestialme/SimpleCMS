@@ -60,7 +60,7 @@
 			x: 0,
 			y: 0,
 			url: { external: false, path: `/profile` },
-			icon: 'bi:gear-fill'
+			icon: 'radix-icons:avatar'
 		},
 		{
 			x: 0,
@@ -200,7 +200,7 @@
 <div
 	bind:this={firstCircle}
 	use:drag
-	class="touch-none circle flex items-center justify-center relative"
+	class="circle relative flex touch-none items-center justify-center"
 	style="top:{(Math.min(buttonInfo.y, window.innerHeight - buttonRadius) / window.innerHeight) * 100}%;left:{(Math.min(
 		buttonInfo.x,
 		window.innerWidth - buttonRadius
@@ -211,7 +211,7 @@
 	<RoutesIcon />
 </div>
 {#if showRoutes}
-	<div out:keepAlive|local on:click|self={() => (showRoutes = false)} class=" fixed top-0 left-0 z-[9999999]">
+	<div out:keepAlive on:click|self={() => (showRoutes = false)} class=" fixed left-0 top-0 z-[9999999]">
 		<svg bind:this={svg} xmlns="http://www.w3.org/2000/svg" use:setDash>
 			<line bind:this={firstLine} x1={buttonInfo.x} y1={buttonInfo.y} x2={center.x} y2={center.y} />
 			{#each endpoints.slice(1, endpoints.length) as endpoint}
@@ -220,7 +220,7 @@
 		</svg>
 		<!-- HOME -->
 		<div
-			transition:fade
+			transition:fade|global
 			class="shell"
 			style="top:{center.y}px;left:{center.x}px;visibility:hidden; animation: showEndPoints 0.2s 0.2s forwards"
 		></div>

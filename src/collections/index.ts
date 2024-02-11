@@ -6,6 +6,7 @@ import { categories, collections, unAssigned } from '@src/stores/load';
 import type { Unsubscriber } from 'svelte/store';
 import { initWidgets } from '@src/components/widgets';
 import type { Schema } from './types';
+
 initWidgets();
 let imports: { [Key: string]: Schema } = {};
 let rnd = Math.random();

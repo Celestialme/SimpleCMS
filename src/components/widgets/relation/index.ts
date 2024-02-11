@@ -16,7 +16,7 @@ const widget = (params: Params) => {
 					field: relative_field,
 					entry,
 					contentLanguage
-			  })
+				})
 			: '';
 	};
 	display.default = true;

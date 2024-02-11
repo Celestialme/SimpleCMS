@@ -53,7 +53,7 @@
 <div class="wrapper md:w-[200px]">
 	<button
 		style="--color:{buttons[defaultButton].color};background-color:{buttons[defaultButton].bg_color}"
-		class="flex-grow default flex items-center justify-center max-md:!p-[10px]"
+		class="default flex flex-grow items-center justify-center max-md:!p-[10px]"
 		class:rounded-bl-[10px]={!expanded}
 		on:click={buttons[defaultButton].fn}
 		><iconify-icon class="md:hidden" icon={buttons[defaultButton].icon} />
@@ -63,19 +63,19 @@
 	</button>
 	<div
 		on:click={() => (expanded = !expanded)}
-		class=" w-[50px] relative hover:active:scale-95 rounded-r-[10px]"
+		class=" relative w-[50px] rounded-r-[10px] hover:active:scale-95"
 		class:cursor-pointer={activeArrow}
 		class:pointer-events-none={!activeArrow}
 		style="background-color: rgb(37, 36, 36);"
 	>
 		<div class="arrow" class:!border-red-800={!activeArrow} />
 	</div>
-	<div class="buttons rounded-b-[10px] overflow-hidden" class:expanded>
+	<div class="buttons overflow-hidden rounded-b-[10px]" class:expanded>
 		{#each Object.keys(buttons) as button}
 			{#if button != defaultButton && button != 'Create' && $mode == 'modify'}
 				<button
 					style="--color:{buttons[button].color};--bg-color:{buttons[button].bg_color || 'rgb(37, 36, 36)'}"
-					class="w-full nested"
+					class="nested w-full"
 					on:click={buttons[button].fn}
 				>
 					<iconify-icon icon={buttons[button].icon} />

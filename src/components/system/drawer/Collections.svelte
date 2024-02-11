@@ -22,13 +22,13 @@
 
 {#each $categories as category, index}
 	<div
-		class=" tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center bg-[#363b4e] text-white"
+		class=" tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-[#363b4e] bg-surface-600 py-2 text-center text-white"
 		class:arrow_up={expanded[index]}
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
 		}}
 	>
-		<div class="flex items-center h-full arrow">
+		<div class="arrow flex h-full items-center">
 			<iconify-icon icon={category.icon} class:ml-auto={!$drawerExpanded} class:ml-2={$drawerExpanded} />
 			{#if $drawerExpanded}
 				<p class="ml-auto">{category.name}</p>
@@ -39,7 +39,7 @@
 		<div class="{expanded[index] ? 'delayed-overflow' : 'overflow-hidden'} inner">
 			{#each category.collections.filter((c) => modeSet == 'edit' || c?.permissions?.[user.role]?.read != false) as _collection}
 				<div
-					class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
+					class="relative flex h-[40px] cursor-pointer items-center justify-center border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white"
 					on:click={(e) => {
 						mode.set(modeSet);
 						collection.set(_collection);
@@ -56,7 +56,7 @@
 							svg={CheckIcon}
 						/>
 					{/if}
-					<div class="flex items-center h-full" class:grow={$drawerExpanded}>
+					<div class="flex h-full items-center" class:grow={$drawerExpanded}>
 						<iconify-icon icon={_collection.icon} class:ml-auto={!$drawerExpanded} class:ml-2={$drawerExpanded} />
 						{#if $drawerExpanded}
 							<p class="mx-auto">{_collection.name}</p>
@@ -68,7 +68,7 @@
 				<div class="border-b-2" />
 				{#each $unAssigned as _collection}
 					<p
-						class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
+						class="relative flex h-[40px] cursor-pointer items-center justify-center border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white"
 						on:click={(e) => {
 							mode.set(modeSet);
 							collection.set(_collection);

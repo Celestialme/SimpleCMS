@@ -34,11 +34,13 @@ for (let collection of collections) {
 				// for helper widgets which extract its fields and does not exist in db itself like imagearray
 				let _fields = field.fields;
 				for (let _field of _fields) {
-					collectionSchema += `${getFieldName(_field, true)}: ${widgets[_field.widget.key].GraphqlSchema?.({
-						field: _field,
-						label: getFieldName(_field, true),
-						collection
-					}).typeName}\n`;
+					collectionSchema += `${getFieldName(_field, true)}: ${
+						widgets[_field.widget.key].GraphqlSchema?.({
+							field: _field,
+							label: getFieldName(_field, true),
+							collection
+						}).typeName
+					}\n`;
 					console.log('---------------------------');
 					console.log(collectionSchema);
 					resolvers[collection.name as string] = deepmerge(

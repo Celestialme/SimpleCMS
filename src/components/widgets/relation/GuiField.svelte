@@ -10,7 +10,7 @@
 			? value
 			: $collections.find((entry) => {
 					return typeof value != 'string' && entry[1].name == value.name;
-			  })?.[0] || 'null';
+				})?.[0] || 'null';
 	$: value = _value;
 </script>
 

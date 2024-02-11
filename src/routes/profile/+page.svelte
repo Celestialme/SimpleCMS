@@ -29,10 +29,10 @@
 	let option: number | string = 2;
 </script>
 
-<div class="body max-md:flex-col gap-[20px] max-md:gap-2 overflow-auto">
+<div class="body gap-[20px] overflow-auto max-md:flex-col max-md:gap-2">
 	<FloatingNav />
-	<div class="options bg-gray-800 md:px-[30px] p-[20px] min-w-[320px]">
-		<p class="text-white text-center mb-2">User: {data.user.username}</p>
+	<div class="options min-w-[320px] bg-gray-800 p-[20px] md:px-[30px]">
+		<p class="mb-2 text-center text-white">User: {data.user.username}</p>
 		<!-- <p class="text-white text-center">Auth method {data.user.authMethod}</p> -->
 		{#each Object.entries(options) as [key, _option]}
 			{#if _option.role == undefined || _option.role == data.user.role}
@@ -40,7 +40,7 @@
 			{/if}
 		{/each}
 	</div>
-	<div class="flex-grow bg-gray-800 flex items-center justify-center">
+	<div class="flex flex-grow items-center justify-center bg-gray-800">
 		{#if option == 0}
 			<svelte:component this={options[option].option} {data} bind:option />
 		{:else}

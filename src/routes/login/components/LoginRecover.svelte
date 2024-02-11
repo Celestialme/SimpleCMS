@@ -43,7 +43,7 @@
 	<FloatingInput name="email" type="email" bind:value={form.email} label={$LL.LOGIN_EmailAddress()} />
 	{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 	{#if response}<span class="invalid">{response}</span>{/if}
-	<div class=" flex gap-2 mt-10 items-center">
+	<div class=" mt-10 flex items-center gap-2">
 		<Button>{$LL.LOGIN_SendResetMail()}</Button>
 		<button
 			on:click={() => {

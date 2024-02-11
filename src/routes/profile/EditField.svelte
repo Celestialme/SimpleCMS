@@ -51,7 +51,7 @@
 
 {#if info.show}
 	<div class=" flex w-full flex-col p-4 lg:w-1/2">
-		<button class="ml-auto mb-[20px]" on:click={() => (info.show = false)}>
+		<button class="mb-[20px] ml-auto" on:click={() => (info.show = false)}>
 			<DeleteIcon />
 		</button>
 		{#if info.field == 'role'}

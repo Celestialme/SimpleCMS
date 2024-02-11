@@ -1,12 +1,14 @@
 <script lang="ts">
 	import axios from 'axios';
-	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
-	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
-	import SquareIcon from '@src/components/system/icons/SquareIcon.svelte';
 	import { asAny } from '@src/utils/utils';
 	import { tableHeaders } from '@src/stores/load';
 	import EditField from './EditField.svelte';
 	import { linear } from 'svelte/easing';
+
+	// Components
+	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
+	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
+	import SquareIcon from '@src/components/system/icons/SquareIcon.svelte';
 
 	let editField: {
 		show: boolean;
@@ -121,7 +123,7 @@
 	}
 </script>
 
-<div class="overflow-auto max-h-[calc(100vh-20px)] w-full mb-auto" class:hidden={userInfo.length == 0 || editField.show == true}>
+<div class="mb-auto max-h-[calc(100vh-20px)] w-full overflow-auto" class:hidden={userInfo.length == 0 || editField.show == true}>
 	<table>
 		<thead class="top-0">
 			<tr>
@@ -182,10 +184,10 @@
 				{/each}
 			</tr>
 			{#if Object.values(modifyMap).includes(true)}
-				<tr transition:grow|local={{ duration: 150 }} class="h-[50px] sticky overflow-hidden">
+				<tr transition:grow={{ duration: 150 }} class="sticky h-[50px] overflow-hidden">
 					<div
-						transition:grow|local={{ duration: 150 }}
-						class="h-[50px] overflow-hidden gap-2 absolute flex justify-center w-full bg-[#3d4a5c] modify_buttons"
+						transition:grow={{ duration: 150 }}
+						class="modify_buttons absolute flex h-[50px] w-full justify-center gap-2 overflow-hidden bg-[#3d4a5c]"
 					>
 						<button on:click={deleteUser}>DELETE</button>
 						{#if Object.values(modifyMap).filter((value) => value == true).length == 1}

@@ -1,4 +1,4 @@
-import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
 import Text from './Text.svelte';
 import { GuiSchema, GraphqlSchema, type Params } from './types';
@@ -8,7 +8,7 @@ const widget = (params: Params) => {
 	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
-			return params.translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGE] || 'NO entry';
+			return params.translated ? data[contentLanguage] || 'NO entry' : data[PUBLIC_CONTENT_LANGUAGES] || 'NO entry';
 		};
 		display.default = true;
 	} else {

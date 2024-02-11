@@ -122,8 +122,8 @@
 			/>
 		{/if}
 		{#if errors && 'token' in errors}<span class="invalid">{errors.token}</span>{/if}
-		{#if response}<p class="text-center !text-base invalid">{response}</p>{/if}
-		<Button class="bg-white mt-10">{$LL.LOGIN_SignUp()}</Button>
+		{#if response}<p class="invalid text-center !text-base">{response}</p>{/if}
+		<Button class="mt-10 bg-white">{$LL.LOGIN_SignUp()}</Button>
 	</form>
 	<SignupIcon show={active == 0 || active == undefined} />
 </section>

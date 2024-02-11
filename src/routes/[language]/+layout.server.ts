@@ -1,10 +1,13 @@
 import { error, redirect } from '@sveltejs/kit';
 import { auth } from '../api/db';
 
-import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
-import { locales } from '@src/i18n/i18n-util';
+import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
+
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import { getCollections } from '@src/collections';
+
+//ParaglideJS
+import { languageTag } from '@src/paraglide/runtime';
 
 export async function load({ cookies, route, params }) {
 	let collections = await getCollections();
@@ -13,11 +16,11 @@ export async function load({ cookies, route, params }) {
 	let collection = collections.find((c) => c.name == params.collection);
 
 	if (user?.lastAuthMethod == 'token') {
-		throw redirect(302, `/profile`);
+		redirect(302, `/profile`);
 	}
-	if (!locales.includes(params.language as any) || (!collection && params.collection)) {
+	if (!languageTag().includes(params.language as any) || (!collection && params.collection)) {
 		// if collection is set in url but does not exists.
-		throw error(404, {
+		error(404, {
 			message: 'Not found'
 		});
 	}
@@ -25,10 +28,10 @@ export async function load({ cookies, route, params }) {
 		if (route.id != '/[language]/[collection]') {
 			//else if language and collection both set in url
 			let _filtered = collections.filter((c) => user && c?.permissions?.[user.role]?.read != false); // filters collection  based on reading permissions  and redirects to first left one
-			throw redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGE}/${_filtered[0].name}`);
+			redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGES}/${_filtered[0].name}`);
 		}
 		if (collection?.permissions?.[user.role]?.read == false) {
-			throw error(404, {
+			error(404, {
 				message: 'you dont have an access to this collection'
 			});
 		}
@@ -36,6 +39,6 @@ export async function load({ cookies, route, params }) {
 			user: user
 		};
 	} else {
-		throw redirect(302, `/login`);
+		redirect(302, `/login`);
 	}
 }

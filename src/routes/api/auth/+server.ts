@@ -18,7 +18,7 @@ async function signOut(cookies: Cookies) {
 	try {
 		let sessionID = cookies.get(SESSION_COOKIE_NAME) as string;
 		await auth.destroySession(sessionID);
-		cookies.delete(SESSION_COOKIE_NAME);
+		/* @migration task: add path argument */ cookies.delete(SESSION_COOKIE_NAME);
 		return new Response(JSON.stringify({ status: 200 }));
 	} catch (e) {
 		return new Response(JSON.stringify({ status: 404 }));

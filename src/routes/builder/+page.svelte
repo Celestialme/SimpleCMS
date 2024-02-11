@@ -52,15 +52,15 @@
 </script>
 
 <div class="body">
-	<button class="text-white fixed top-[13px] left-[10px]" on:click={() => ($drawerExpanded = !$drawerExpanded)}
-		><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
+	<button class="fixed left-[10px] top-[13px] text-white" on:click={() => ($drawerExpanded = !$drawerExpanded)}
+		><iconify-icon class="h-[17px] md:hidden" icon="mingcute:menu-fill" width="24" /></button
 	>
 	<div class="left_panel">
 		<Drawer>
 			<section>
 				<Collections modeSet="edit" />
 			</section>
-			<Button class="w-full  flex items-center justify-center mt-auto" on:click={saveConfig}>
+			<Button class="mt-auto  flex w-full items-center justify-center" on:click={saveConfig}>
 				{#if $drawerExpanded}
 					Save Collections
 				{:else}

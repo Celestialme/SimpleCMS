@@ -11,4 +11,4 @@ export interface Schema {
 	status?: 'published' | 'unpublished' | 'draft';
 	permissions?: permissions;
 }
-export type CollectionLabels = 'imageArray'|'media'|'Menu'|'Posts1'|'Posts2'|'Posts3'|'Relation'|'thumbs';
+export type CollectionLabels = 'imageArray' | 'media' | 'Menu' | 'Posts1' | 'Posts2' | 'Posts3' | 'Relation' | 'thumbs';

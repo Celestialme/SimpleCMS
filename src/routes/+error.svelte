@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
+	import SveltyCMSLogo from '@components/SveltyCMS_Logo.svelte';
 	import { PUBLIC_SITENAME } from '$env/static/public';
 
-	// typesafe-i18n
-	import LL from '@src/i18n/i18n-svelte';
+	//ParaglideJS
+	import * as m from '@src/paraglide/messages';
 
 	let speed = 50;
 	let size = 130;
@@ -14,7 +14,7 @@
 	let separator = ' • ';
 
 	let array: any = [];
-	$: array = [...Array(repeat)].map((_) => [...text].concat([...separator])).flat();
+	$: array = [...Array(repeat)].map(() => [...text].concat([...separator])).flat();
 </script>
 
 {#if $page}
@@ -25,7 +25,7 @@
 					<div class="char" style="--angle: {`${(1 / array.length) * index}turn`}">{char}</div>
 				{/each}
 			</div>
-			<SimpleCmsLogo fill="red" className="absolute top-[50%] -translate-y-[50%] translate-x-[50%] left-0 h-16 mb-2" />
+			<SveltyCMSLogo fill="red" className="absolute top-[50%] -translate-y-[50%] translate-x-[50%] left-0 h-16 mb-2" />
 		</div>
 
 		<div class="relative">
@@ -35,23 +35,25 @@
 			</h1>
 			<!-- error url  -->
 			<div
-				class="absolute left-1/2 top-1/2 mx-auto -translate-x-1/2 -translate-y-1/2 rotate-12 transform rounded-md bg-error-600/80 px-2 text-center text-sm font-bold text-white"
+				class="absolute left-1/2 top-1/2 mx-auto -translate-x-1/2 -translate-y-1/2 rotate-12 transform rounded-md bg-red-600/80 px-2 text-center text-sm font-bold text-white"
 			>
 				<div class="w-min-[200px]">{$page.url}</div>
-				<div class="flex-nowrap whitespace-nowrap">{$LL.ERROR_Pagenotfound()}</div>
+				<div class="flex-nowrap whitespace-nowrap">{m.error_pagenotfound()}</div>
 			</div>
 		</div>
 
 		<h1 class="text-5xl font-extrabold tracking-widest text-surface-400">
-			{#if $page.error} {$page.error.message} {/if}
+			{#if $page.error}
+				{$page.error.message}
+			{/if}
 		</h1>
 
-		<p class="text-lg text-white">{$LL.ERROR_Wrong()}</p>
+		<p class="text-lg text-white">{m.error_wrong()}</p>
 		<a
 			href="/"
 			data-sveltekit-preload-data="tap"
-			class="relative mt-5 block rounded-full bg-gradient-to-br from-error-700 via-error-600 to-error-700 px-8 py-4 font-bold uppercase !text-white shadow-xl"
-			>{$LL.ERROR_GoHome()}</a
+			class="relative mt-5 block rounded-full bg-gradient-to-br from-red-700 via-red-600 to-red-700 px-8 py-4 font-bold uppercase !text-white shadow-xl"
+			>{m.error_gofrontpage()}</a
 		>
 	</main>
 {/if}

@@ -17,7 +17,7 @@
 	let user: User = $page.data.user;
 </script>
 
-<div class="wrapper max-md:!h-auto max-md:!w-screen max-md:!max-w-full max-md:absolute max-md:top-[calc(100%-45px)]">
+<div class="wrapper max-md:absolute max-md:top-[calc(100%-45px)] max-md:!h-auto max-md:!w-screen max-md:!max-w-full">
 	{#if $collection.permissions?.[user.role]?.write != false}
 		<Button on:click={$saveFunction.fn}>SAVE</Button>
 	{/if}

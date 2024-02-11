@@ -17,7 +17,7 @@ export async function load(event) {
 			user
 		};
 	} else {
-		throw redirect(302, `/login`);
+		redirect(302, `/login`);
 	}
 }
 

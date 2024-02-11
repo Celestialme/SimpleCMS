@@ -60,7 +60,7 @@
 		<div class="arrow" class:expanded />
 	{/if}
 	{self?.Header[$contentLanguage]}
-	<div class="flex items-center ml-auto gap-1">
+	<div class="ml-auto flex items-center gap-1">
 		{#if level < maxDepth - 1}
 			<button
 				on:click|stopPropagation={() => {

@@ -61,7 +61,7 @@
 </script>
 
 {#if !expanded && !showDropDown}
-	<div class="flex header">
+	<div class="header flex">
 		<p class="flex-grow text-center" on:click={openDropDown}>{@html selected?.display || display || 'select new'}</p>
 		<div class="ml-auto">
 			{#if $mode == 'create'}

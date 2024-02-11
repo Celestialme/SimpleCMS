@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+	import { PUBLIC_CONTENT_LANGUAGES } from '$env/static/public';
 	import { getCollections } from '@src/collections';
 	import type { FieldType } from '.';
 
@@ -12,7 +12,7 @@
 	export let value = $entryData[fieldName] || {};
 
 	let _data = $mode == 'create' ? {} : value;
-	$: _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGE;
+	$: _language = field?.translated ? $contentLanguage : PUBLIC_CONTENT_LANGUAGES;
 
 	export const WidgetData = async () => _data;
 	getCollections().then((collections) => {

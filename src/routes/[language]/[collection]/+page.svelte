@@ -54,7 +54,7 @@
 	}
 </script>
 
-<div class="flex max-md:flex-wrap h-screen">
+<div class="flex h-screen max-md:flex-wrap">
 	<Drawer>
 		<section>
 			<Collections />
@@ -73,13 +73,13 @@
 			<FloatingNav bind:buttonInfo={navButton} />
 		</div>
 	</Drawer>
-	<div class="flex-grow-[2] overflow-hidden max-h-screen pl-[2px] pr-[4px]">
+	<div class="max-h-screen flex-grow-[2] overflow-hidden pl-[2px] pr-[4px]">
 		{#if $mode == 'view' || $mode == 'modify'}
 			<Header />
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}
 			<Header />
-			<div class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]">
+			<div class="fields max-h-[calc(100vh-60px)] overflow-y-auto max-md:max-h-[calc(100vh-120px)]">
 				<Fields />
 			</div>
 		{/if}

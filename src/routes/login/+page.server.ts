@@ -15,11 +15,12 @@ export const actions: Actions = {
 		let resp = await signIn(email, password, isToken, cookies);
 
 		if (resp.status) {
-			throw redirect(303, '/');
+			redirect(303, '/');
 		} else {
 			return fail(400, { message: resp.message });
 		}
 	},
+
 	recover: async ({ request }) => {
 		let data = await request.formData();
 		let form = recoverSchema.safeParse(Object.fromEntries(data));
@@ -30,6 +31,7 @@ export const actions: Actions = {
 		console.log(token); // send token to user via email
 		return { message: 'token has been sent to email' };
 	},
+
 	signUp: async ({ request, cookies }) => {
 		let isFirst = (await auth.getUserCount()) == 0;
 		let signUpSchema = isFirst ? signUpSchema_noToken : signUpSchema_token;
@@ -57,12 +59,13 @@ export const actions: Actions = {
 			resp = { status: false, message: 'this user is not defined by admin' };
 		}
 		if (resp.status) {
-			throw redirect(303, '/');
+			redirect(303, '/');
 		} else {
 			return fail(400, { message: resp.message || 'unknown error' });
 		}
 	}
 };
+
 export const load: PageServerLoad = async (event) => {
 	await event.parent();
 
@@ -121,6 +124,7 @@ async function FirstUsersignUp(username: string, email: string, password: string
 
 	return { status: true };
 }
+
 async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies) {
 	let user = await auth.checkUser({ email });
 	if (!user) return { status: false, message: 'user does not exist' };
