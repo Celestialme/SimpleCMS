@@ -15,14 +15,8 @@
 </script>
 
 <div class="body" style="background:{background} ">
-	<SignIn
-		{active}
-		formSchema={data.loginForm}
-		recoverFormSchema={data.recoverForm}
-		on:click={() => (active = 0)}
-		on:pointerenter={() => (background = '#242728')}
-	/>
-	<SignUp {active} formSchema={data.signUpForm} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} />
+	<SignIn {active} on:click={() => (active = 0)} on:pointerenter={() => (background = '#242728')} />
+	<SignUp {active} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} />
 	{#if active == undefined}
 		<div class="z-30"><RoundLogo /></div>
 	{/if}
