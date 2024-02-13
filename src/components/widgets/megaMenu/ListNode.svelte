@@ -176,7 +176,7 @@
 	<ul bind:this={ul} class="children relative" style="margin-left:{20 * (level > 0 ? 1 : 0) + 15}px;">
 		<div class="border" />
 		{#each self.children as child, index}
-			<li use:drag data-index={index} class={`level-${level}`}>
+			<li use:drag data-index={index} class={`level-${level} touch-none`}>
 				<svelte:self
 					{refresh}
 					self={child}
