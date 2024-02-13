@@ -33,13 +33,13 @@
 	$: if (showFields) {
 		$headerActionButton = DeleteIcon;
 	}
-	function findFirstOuterUl(node: HTMLElement | null) {
+	function findFirstOuterElement(node: HTMLElement | null, element: string = 'UL') {
 		if (!node) return;
-		if (node.tagName == 'UL') return node;
-		return findFirstOuterUl(node.parentElement);
+		if (node.tagName == element) return node;
+		return findFirstOuterElement(node.parentElement, element);
 	}
 	function recalculateBorderHeight(node) {
-		let child = findFirstOuterUl(node);
+		let child = findFirstOuterElement(node);
 		setBorderHeight(child);
 		if (!child?.classList.contains('MENU_CONTAINER') && child) {
 			recalculateBorderHeight(child?.parentElement);
@@ -48,7 +48,12 @@
 	function drag(node: HTMLElement) {
 		node.addEventListener('custom:drag', (e) => {
 			let event = e as CustomDragEvent;
-			self?.children?.splice(event.detail.closest_index, 0, event.detail.dragged_item);
+			if (event.detail.isParent) {
+				self.children[event.detail.closest_index].children.push(event.detail.dragged_item);
+			} else {
+				self?.children?.splice(event.detail.closest_index, 0, event.detail.dragged_item);
+			}
+
 			refresh();
 		});
 
@@ -58,8 +63,13 @@
 			let pointerID = e.pointerId;
 			let siblings = [...document.getElementsByClassName(`level-${level}`)].map((el) => {
 				let rect = el.getBoundingClientRect();
-				return { el: el as HTMLElement, center: rect.top + rect.height / 2 };
+				return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: false };
 			});
+			let parents = [...document.getElementsByClassName(`level-${level - 1}`)].map((el) => {
+				let rect = el.getBoundingClientRect();
+				return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
+			});
+			let targets = [...siblings, ...parents];
 			node.onpointerup = (e) => {
 				clearTimeout(timeout);
 			};
@@ -76,10 +86,10 @@
 				clone.onpointermove = (e) => {
 					clone.style.top = e.clientY + 'px';
 					clone.style.opacity = '1';
-					siblings.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
-					let closest = siblings[0];
+					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
+					let closest = targets[0];
 					if (closest.el == node) return;
-					siblings.forEach((el) => {
+					targets.forEach((el) => {
 						el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
 					});
 					closest.el.firstChild && ((closest.el.firstChild as HTMLElement).style.borderColor = 'red');
@@ -88,18 +98,20 @@
 				clone.onpointerup = (e) => {
 					clone.releasePointerCapture(pointerID);
 					clone.remove();
-					siblings.forEach((el) => {
+					targets.forEach((el) => {
 						el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
 					});
 
 					node.style.opacity = '1';
-					siblings.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
-					let closest = siblings[0];
+					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
+					let closest = targets[0];
 					if (closest.el == node) return;
 					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 					let clone_index = parseInt(clone.getAttribute('data-index') as string);
 					let dragged_item = self?.children.splice(clone_index, 1)[0];
-					closest.el.dispatchEvent(new CustomEvent('custom:drag', { detail: { closest_index: closest_index, clone_index, dragged_item } }));
+					closest.el.dispatchEvent(
+						new CustomEvent('custom:drag', { detail: { closest_index: closest_index, clone_index, dragged_item, isParent: closest.isParent } })
+					);
 				};
 			}, 200);
 		};
@@ -113,7 +125,7 @@
 		}
 		expanded = !expanded;
 	}}
-	class="header"
+	class="header header-level-{level}"
 	class:!cursor-pointer={self?.children?.length > 0}
 	style="margin-left:{20 * (level > 0 ? 1 : 0)}px;
 	{window.screen.width <= 700
