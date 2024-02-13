@@ -8,7 +8,11 @@
 	import { motion } from '@src/utils/utils';
 	let navigation_info = JSON.parse(localStorage.getItem('navigation') || '{}');
 	let buttonRadius = 25;
-	export let buttonInfo;
+	export let buttonInfo = {
+		x: 50,
+		y: window.innerHeight / 2,
+		radius: buttonRadius
+	};
 	let showRoutes = false;
 	let center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 	window.onresize = async () => {
@@ -88,11 +92,11 @@
 			timeout = setTimeout(() => {
 				let x = e.offsetX - node.offsetWidth / 2;
 				let y = e.offsetY - node.offsetHeight / 2;
-				buttonInfo = { x: e.clientX - x, y: e.clientY - y };
+				buttonInfo = { ...buttonInfo, x: e.clientX - x, y: e.clientY - y };
 				node.setPointerCapture(e.pointerId);
 				node.onpointermove = (e) => {
 					moved = true;
-					buttonInfo = { x: e.clientX - x, y: e.clientY - y };
+					buttonInfo = { ...buttonInfo, x: e.clientX - x, y: e.clientY - y };
 					firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 				};
 			}, 60);

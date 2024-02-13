@@ -54,3 +54,11 @@ export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
 	`
 	};
 };
+
+export interface CustomDragEvent extends Event {
+	detail: {
+		closest_index: number;
+		clone_index: number;
+		dragged_item: any;
+	};
+}
