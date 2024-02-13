@@ -10,8 +10,9 @@
 	export let depth = 0;
 	export let showFields = false;
 	export let maxDepth = 0;
-	export let data;
-	let expanded = false;
+
+	export let expanded = false;
+	let expanded_list: boolean[] = [];
 	let ul: HTMLElement;
 	export let refresh = () => {
 		self?.children && (self.children.length = self.children?.length);
@@ -110,8 +111,12 @@
 					let clone_index = parseInt(clone.getAttribute('data-index') as string);
 					let dragged_item = self?.children.splice(clone_index, 1)[0];
 					closest.el.dispatchEvent(
-						new CustomEvent('custom:drag', { detail: { closest_index: closest_index, clone_index, dragged_item, isParent: closest.isParent } })
+						new CustomEvent('custom:drag', {
+							detail: { closest_index: closest_index, clone_index, dragged_item, isParent: closest.isParent }
+						})
 					);
+					expanded_list[clone_index] = false;
+					expanded_list = expanded_list;
 				};
 			}, 200);
 		};
@@ -172,7 +177,16 @@
 		<div class="border" />
 		{#each self.children as child, index}
 			<li use:drag data-index={index} class={`level-${level}`}>
-				<svelte:self {refresh} self={child} level={level + 1} bind:depth bind:showFields parent={self} {maxDepth} {data} />
+				<svelte:self
+					{refresh}
+					self={child}
+					level={level + 1}
+					bind:depth
+					bind:showFields
+					parent={self}
+					{maxDepth}
+					bind:expanded={expanded_list[index]}
+				/>
 			</li>
 		{/each}
 	</ul>
