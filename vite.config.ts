@@ -1,4 +1,5 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import { paraglide } from '@inlang/paraglide-js-adapter-vite';
 import Path from 'path';
 // Gets package.json version info on app start
 // https://kit.svelte.dev/faq#read-package-json
@@ -35,7 +36,11 @@ const config = {
 				};
 			}
 		},
-		sveltekit()
+		sveltekit(),
+		paraglide({
+			project: './project.inlang', //Path to your inlang project
+			outdir: './src/paraglide' //Where you want the generated files to be placed
+		})
 	],
 
 	server: {

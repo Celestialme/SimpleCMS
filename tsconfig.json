@@ -14,6 +14,7 @@
 		"noImplicitAny": false,
 		"baseUrl": ".",
 		"outDir": "../build",
+		"moduleResolution": "Bundler" ,
 		"paths": {
 
 			"@src": ["src/"],

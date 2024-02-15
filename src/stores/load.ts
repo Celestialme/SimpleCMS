@@ -1,10 +1,10 @@
 import { PUBLIC_SYSTEM_LANGUAGE, PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
 import type { Schema } from '@src/collections/types';
-import { setLocale } from '@src/i18n/i18n-svelte';
-import type { Locales } from '@src/i18n/i18n-types';
-import { loadAllLocales } from '@src/i18n/i18n-util.sync';
+import * as m from '@src/paraglide/messages.js';
+import { setLanguageTag, type AvailableLanguageTag } from '@src/paraglide/runtime';
 import { writable, type Writable } from 'svelte/store';
-export let systemLanguage: Writable<string> = writable(PUBLIC_SYSTEM_LANGUAGE);
+export let systemLanguage: Writable<AvailableLanguageTag> = writable(PUBLIC_SYSTEM_LANGUAGE) as any;
+export let messages: Writable<typeof m> = writable({ ...m });
 export let contentLanguage: Writable<string> = writable(PUBLIC_CONTENT_LANGUAGE);
 export let categories: Writable<
 	Array<{
@@ -19,7 +19,7 @@ export let collection: Writable<Schema> = writable();
 export let saveFunction: Writable<{ fn: (args: any) => any; reset: () => any }> = writable({ fn: () => {}, reset: () => {} });
 export const tableHeaders = ['id', 'email', 'username', 'role', 'createdAt'] as const;
 export let headerActionButton: Writable<ConstructorOfATypedSvelteComponent | string> = writable();
-loadAllLocales();
 systemLanguage.subscribe((val) => {
-	setLocale(val as Locales);
+	setLanguageTag(val);
+	messages.set({ ...m });
 });

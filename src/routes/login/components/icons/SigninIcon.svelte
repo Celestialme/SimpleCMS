@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { messages } from '@src/stores/load';
+
 	// typesafe-i18n
-	import LL from '@src/i18n/i18n-svelte';
 
 	export let show = true;
 </script>
@@ -16,7 +17,7 @@
 			/>
 		</svg>
 	</div>
-	<p class="text-center font-semibold uppercase !text-black">{$LL.LOGIN_SignIn()}</p>
+	<p class="text-center font-semibold uppercase !text-black">{$messages.signIn()}</p>
 </div>
 
 <style>

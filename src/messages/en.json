@@ -1,0 +1,22 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"search": "search",
+	"signIn": "Sign in",
+	"signUp": "Sign up",
+	"signOut": "Sign out",
+	"GoToFrontPage": "Go to Front Page",
+	"GeneralError": "We are sorry, something went wrong.",
+	"PageNotFound": "Page Not Found",
+	"ForgotPassword": "Forgot Password",
+	"ResetPassword": "Reset Password",
+	"ChangePassword": "Change Password",
+	"ChangeEmail": "Change Email",
+	"ChangeUsername": "Change Username",
+	"ChangeName": "Change Name",
+	"ChangeLanguage": "Change Language",
+	"SendPasswordReset": "Send Password Reset via Email",
+	"Email": "Email Address",
+	"Password": "Password",
+	"ConfirmPassword": "Confirm Password",
+	"Username": "Username"
+}

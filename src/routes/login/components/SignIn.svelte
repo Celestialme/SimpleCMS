@@ -1,7 +1,6 @@
 <script lang="ts">
 	import SigninIcon from './icons/SigninIcon.svelte';
 	export let active: undefined | 0 | 1 = undefined;
-	import LL from '@src/i18n/i18n-svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import { loginSchema, type LoginSchema } from '@src/utils/formSchemas';
 	import CMSLogo from './icons/Logo.svelte';
@@ -13,6 +12,7 @@
 	import axios from 'axios';
 	import { goto } from '$app/navigation';
 	import { parse } from 'devalue';
+	import { messages } from '@src/stores/load';
 	let submitted = false;
 	let loginRecover = false;
 	let response;
@@ -60,20 +60,20 @@
 
 				<h1 class="text-3xl font-bold text-black lg:text-4xl">
 					<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
-					<div class="lg:-mt-1">{$LL.LOGIN_SignIn()}</div>
+					<div class="lg:-mt-1">{$messages.signIn()}</div>
 				</h1>
 			</div>
-			<FloatingInput name="email" type="email" bind:value={form.email} label={$LL.LOGIN_EmailAddress()} />
+			<FloatingInput name="email" type="email" bind:value={form.email} label={$messages.Email()} />
 			{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 
-			<FloatingInput name="password" type="password" bind:value={form.password} label={form.isToken ? 'token' : $LL.LOGIN_Password()}>
+			<FloatingInput name="password" type="password" bind:value={form.password} label={form.isToken ? 'token' : $messages.Password()}>
 				<EnableIcon bind:checked={form.isToken} icon={'oi:lock-locked'} class="absolute right-[30px]" />
 			</FloatingInput>
 
 			{#if errors?.password}<span class="invalid">{errors.password}</span>{/if}
 			{#if response}<span class="invalid">{response}</span>{/if}
 			<div class="mt-5 flex gap-2">
-				<Button>{$LL.LOGIN_SignIn()}</Button>
+				<Button>{$messages.signIn()}</Button>
 				<Button
 					on:click={(e) => {
 						e.preventDefault();
@@ -81,7 +81,7 @@
 					}}
 					bgColor="white"
 					border="1px solid gray"
-					textColor="#ff3535">{$LL.LOGIN_ForgottenPassword()}</Button
+					textColor="#ff3535">{$messages.ForgotPassword()}</Button
 				>
 			</div>
 		</form>

@@ -3,11 +3,11 @@
 	import { PUBLIC_SITENAME } from '$env/static/public';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
-	import LL from '@src/i18n/i18n-svelte';
 	import { recoverSchema, type RecoverSchema } from '@src/utils/formSchemas';
 	import { parse } from 'devalue';
 	import axios from 'axios';
 	import { validateZod } from '@src/utils/utils';
+	import { messages } from '@src/stores/load';
 	export let active: number | undefined;
 	export let loginRecover: boolean;
 	let submitted = false;
@@ -37,14 +37,14 @@
 
 		<h1 class="text-3xl font-bold text-black lg:text-4xl">
 			<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
-			<div class="lg:-mt-1">{$LL.LOGIN_ForgottenPassword()}</div>
+			<div class="lg:-mt-1">{$messages.ForgotPassword()}</div>
 		</h1>
 	</div>
-	<FloatingInput name="email" type="email" bind:value={form.email} label={$LL.LOGIN_EmailAddress()} />
+	<FloatingInput name="email" type="email" bind:value={form.email} label={$messages.Email()} />
 	{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 	{#if response}<span class="invalid">{response}</span>{/if}
 	<div class=" flex gap-2 mt-10 items-center">
-		<Button>{$LL.LOGIN_SendResetMail()}</Button>
+		<Button>{$messages.SendPasswordReset()}</Button>
 		<button
 			on:click={() => {
 				loginRecover = false;

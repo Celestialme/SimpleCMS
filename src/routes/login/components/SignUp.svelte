@@ -1,7 +1,6 @@
 <script lang="ts">
 	import SignupIcon from './icons/SignupIcon.svelte';
 	export let active: undefined | 0 | 1 = undefined;
-	import LL from '@src/i18n/i18n-svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import { signUpSchema_noToken, signUpSchema_token, type SignupSchema } from '@src/utils/formSchemas';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
@@ -13,6 +12,7 @@
 	import { parse } from 'devalue';
 	import type { PageData } from '../$types';
 	import { page } from '$app/stores';
+	import { messages } from '@src/stores/load';
 	let pageData = $page.data as PageData;
 	let firstUserExists = pageData.firstUserExists;
 	let response: string | undefined;
@@ -58,7 +58,7 @@
 			<h1 class="text-3xl font-bold text-white lg:text-4xl">
 				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
 				<div class="lg:-mt-1">
-					{$LL.LOGIN_SignUp()}
+					{$messages.signUp()}
 					{#if !firstUserExists}
 						as Admin
 					{:else}
@@ -75,7 +75,7 @@
 			type="text"
 			leading_icon="mdi:user-circle"
 			bind:value={form.username}
-			label={$LL.LOGIN_Username()}
+			label={$messages.Username()}
 			theme="dark"
 		/>
 		{#if errors?.username}<span class="invalid">{errors.username}</span>{/if}
@@ -85,7 +85,7 @@
 			name="email"
 			type="email"
 			bind:value={form.email}
-			label={$LL.LOGIN_EmailAddress()}
+			label={$messages.Email()}
 			theme="dark"
 		/>
 		{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
@@ -96,7 +96,7 @@
 			name="password"
 			type="password"
 			bind:value={form.password}
-			label={$LL.LOGIN_Password()}
+			label={$messages.Password()}
 			theme="dark"
 		/>
 		{#if errors?.password}<span class="invalid">{errors.password}</span>{/if}
@@ -106,7 +106,7 @@
 			name="confirmPassword"
 			type="password"
 			bind:value={form.confirmPassword}
-			label={'confirm password'}
+			label={$messages.ConfirmPassword()}
 			theme="dark"
 		/>
 		{#if errors?.confirmPassword}<span class="invalid">{errors.confirmPassword}</span>{/if}
@@ -123,7 +123,7 @@
 		{/if}
 		{#if errors && 'token' in errors}<span class="invalid">{errors.token}</span>{/if}
 		{#if response}<p class="text-center !text-base invalid">{response}</p>{/if}
-		<Button class="bg-white mt-10">{$LL.LOGIN_SignUp()}</Button>
+		<Button class="bg-white mt-10">{$messages.signUp()}</Button>
 	</form>
 	<SignupIcon show={active == 0 || active == undefined} />
 </section>
