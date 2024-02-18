@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CMSLogo from './icons/Logo.svelte';
-	import { PUBLIC_SITENAME } from '$env/static/public';
+	import { publicConfig } from '@root/config/public';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import { recoverSchema, type RecoverSchema } from '@src/utils/formSchemas';
@@ -36,7 +36,7 @@
 		<CMSLogo className="w-12" fill="red" />
 
 		<h1 class="text-3xl font-bold text-black lg:text-4xl">
-			<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
+			<div class="text-xs text-surface-300">{publicConfig.SITE_NAME}</div>
 			<div class="lg:-mt-1">{$messages.ForgotPassword()}</div>
 		</h1>
 	</div>

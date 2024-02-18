@@ -1,6 +1,6 @@
+import { publicConfig } from '@root/config/public';
 import Toggle from '@src/components/system/buttons/Toggle.svelte';
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
-import { graphql } from 'graphql';
 
 export type Params = {
 	label: string;
@@ -23,7 +23,7 @@ export let GraphqlSchema: GraphqlSchema = ({ label, collection }) => {
 		typeName,
 		graphql: /* GraphQL */ `
 		type ${typeName} {
-			en: String
+			${publicConfig.AVAILABLE_CONTENT_LANGUAGES.map((contentLanguage) => `${contentLanguage}: String`).join('\n')}
 		}
 	`
 	};

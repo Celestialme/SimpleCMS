@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
-	import { PUBLIC_SITENAME } from '$env/static/public';
+	import { publicConfig } from '@root/config/public';
 	import { messages } from '@src/stores/load';
 
 	// typesafe-i18n
@@ -9,7 +9,7 @@
 	let speed = 50;
 	let size = 130;
 	let font = 0.8;
-	let text = PUBLIC_SITENAME;
+	let text = publicConfig.SITE_NAME;
 	let repeat = 3;
 	let separator = ' • ';
 

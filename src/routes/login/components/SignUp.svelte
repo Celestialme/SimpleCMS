@@ -5,7 +5,7 @@
 	import { signUpSchema_noToken, signUpSchema_token, type SignupSchema } from '@src/utils/formSchemas';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import CMSLogo from './icons/Logo.svelte';
-	import { PUBLIC_SITENAME } from '$env/static/public';
+	import { publicConfig } from '@root/config/public';
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
 	import { goto } from '$app/navigation';
@@ -56,7 +56,7 @@
 			<CMSLogo className="w-12" fill="red" />
 
 			<h1 class="text-3xl font-bold text-white lg:text-4xl">
-				<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
+				<div class="text-xs text-surface-300">{publicConfig.SITE_NAME}</div>
 				<div class="lg:-mt-1">
 					{$messages.signUp()}
 					{#if !firstUserExists}

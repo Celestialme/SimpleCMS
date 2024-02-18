@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 import { auth, getCollectionModels } from '@src/routes/api/db';
 import { getFieldName, parse, saveImages } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
-import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+import { publicConfig } from '@root/config/public';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import type { Schema } from '@src/collections/types';
 
@@ -25,7 +25,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let filter: { [key: string]: string } = JSON.parse(url.searchParams.get('filter') as string) || {};
 	let sort: { [key: string]: number } = JSON.parse(url.searchParams.get('sort') as string) || {};
 
-	let contentLanguage = JSON.parse(url.searchParams.get('contentLanguage') as string) || PUBLIC_CONTENT_LANGUAGE;
+	let contentLanguage = JSON.parse(url.searchParams.get('contentLanguage') as string) || publicConfig.DEFAULT_CONTENT_LANGUAGE;
 	let skip = (page - 1) * length;
 
 	let aggregations: any = [];

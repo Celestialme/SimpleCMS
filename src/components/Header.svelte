@@ -4,6 +4,7 @@
 	import { drawerExpanded, mode } from '@src/stores/store';
 	import DeleteIcon from './system/icons/DeleteIcon.svelte';
 	import DropDown from './system/dropDown/DropDown.svelte';
+	import { publicConfig } from '@root/config/public';
 	$: {
 		$headerActionButton = DeleteIcon;
 		$collection;
@@ -19,7 +20,7 @@
 			{$collection?.name}
 		</div>
 		<div class="w-[50px] h-full relative">
-			<DropDown class="absolute" items={['en', 'de']} bind:selected={$contentLanguage} />
+			<DropDown class="absolute" items={publicConfig.AVAILABLE_CONTENT_LANGUAGES} bind:selected={$contentLanguage} />
 		</div>
 		{#if !['edit', 'create'].includes($mode)}
 			<MultiButton />

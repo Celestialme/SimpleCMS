@@ -4,14 +4,13 @@
 	import RoundLogo from './components/icons/RoundLogo.svelte';
 	import type { PageData } from './$types';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
-	import { locales } from '@src/i18n/i18n-util';
+
 	import { systemLanguage } from '@src/stores/load';
+	import { publicConfig } from '@root/config/public';
 	export let data: PageData;
 	console.log(data);
 	let active: undefined | 0 | 1 = undefined;
 	let background: 'white' | '#242728' = 'white';
-
-	console.log(locales);
 </script>
 
 <div class="body" style="background:{background} ">
@@ -21,7 +20,7 @@
 		<div class="z-30"><RoundLogo /></div>
 	{/if}
 	<div class="absolute top-[80%] left-1/2 -translate-x-1/2">
-		<DropDown items={locales} bind:selected={$systemLanguage} />
+		<DropDown items={publicConfig.AVAILABLE_SYSTEM_LANGUAGES} bind:selected={$systemLanguage} />
 	</div>
 </div>
 

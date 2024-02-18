@@ -5,7 +5,7 @@ import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import { collections, collection } from '@src/stores/load';
-import { PUBLIC_MEDIA_FOLDER, PUBLIC_IMAGE_SIZES } from '$env/static/public';
+import { publicConfig } from '@root/config/public';
 import { browser } from '$app/environment';
 import crypto from 'crypto';
 import type { Schema } from '@src/collections/types';
@@ -72,7 +72,7 @@ export const obj2formData = (obj: any) => {
 	}
 	return formData;
 };
-let env_sizes = JSON.parse(PUBLIC_IMAGE_SIZES) as { [key: string]: number };
+let env_sizes = publicConfig.IMAGE_SIZES;
 export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
 export async function saveImages(data: FormData, collectionName: string) {
 	if (browser) return;
@@ -108,11 +108,11 @@ export async function saveImages(data: FormData, collectionName: string) {
 			original: { name: `${hash}-${blob.name}`, url, size: blob.size, type: blob.type, lastModified: blob.lastModified }
 		};
 
-		if (!fs.existsSync(Path.dirname(`${PUBLIC_MEDIA_FOLDER}/${url}`))) {
-			fs.mkdirSync(Path.dirname(`${PUBLIC_MEDIA_FOLDER}/${url}`), { recursive: true });
+		if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
+			fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
 		}
 
-		fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${url}`, buffer);
+		fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, buffer);
 		for (let size in SIZES) {
 			if (size == 'original') continue;
 			let fullName = `${hash}-${name}.avif`;
@@ -130,11 +130,11 @@ export async function saveImages(data: FormData, collectionName: string) {
 			} else {
 				url = `images/${path}/${size}/${fullName}`;
 			}
-			if (!fs.existsSync(Path.dirname(`${PUBLIC_MEDIA_FOLDER}/${url}`))) {
-				fs.mkdirSync(Path.dirname(`${PUBLIC_MEDIA_FOLDER}/${url}`), { recursive: true });
+			if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
+				fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
 			}
 			//sized images
-			fs.writeFileSync(`${PUBLIC_MEDIA_FOLDER}/${url}`, thumbnailBuffer);
+			fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, thumbnailBuffer);
 			files[fieldname as keyof typeof files][size] = {
 				name: fullName,
 				url: '/media/' + url,

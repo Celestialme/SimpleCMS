@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
-import { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } from '$env/static/private';
+import privateEnv from '@root/config/private';
 import { collections } from '@src/stores/load';
 import type { Unsubscriber } from 'svelte/store';
 import { Auth } from '@src/auth';
 import { mongooseSessionSchema, mongooseTokenSchema, mongooseUserSchema } from '@src/auth/types';
 
 mongoose
-	.connect(DB_HOST, {
+	.connect(privateEnv.DB_HOST, {
 		authSource: 'admin',
-		user: DB_USER,
-		pass: DB_PASSWORD,
-		dbName: DB_NAME
+		user: privateEnv.DB_USER,
+		pass: privateEnv.DB_PASSWORD,
+		dbName: privateEnv.DB_NAME
 	})
 	.then(() => console.log('---------------------connected-----------------------'));
 mongoose.set('strictQuery', false);
@@ -43,31 +43,10 @@ export async function getCollectionModels() {
 	});
 }
 
-// !mongoose.models['auth_session'] && mongoose.model('auth_session', new mongoose.Schema({ ...session }, { _id: false }));
-// !mongoose.models['auth_key'] && mongoose.model('auth_key', new mongoose.Schema({ ...key }, { _id: false }));
-// !mongoose.models['auth_user'] && mongoose.model('auth_user', new mongoose.Schema({ ...UserSchema }, { _id: false, timestamps: true }));
-
 !mongoose.models['auth_tokens'] && mongoose.model('auth_tokens', mongooseTokenSchema);
 !mongoose.models['auth_users'] && mongoose.model('auth_users', mongooseUserSchema);
 !mongoose.models['auth_sessions'] && mongoose.model('auth_sessions', mongooseSessionSchema);
-// const auth = lucia({
-// 	adapter: adapter({
-// 		User: mongoose.models['auth_user'],
-// 		Key: mongoose.models['auth_key'],
-// 		Session: mongoose.models['auth_session']
-// 	}),
-// 	//for production & cloned dev environment
-// 	// env: dev ? "DEV" : "PROD",
-// 	env: 'DEV',
 
-// 	autoDatabaseCleanup: true,
-// 	getUserAttributes: (userData) => {
-// 		return {
-// 			...userData
-// 		};
-// 	},
-// 	middleware: sveltekit()
-// });
 let auth = new Auth({
 	User: mongoose.models['auth_users'],
 	Session: mongoose.models['auth_sessions'],

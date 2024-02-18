@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+	import { publicConfig } from '@root/config/public';
 	import type { FieldType } from '.';
 
 	import Input from '@src/components/system/inputs/Input.svelte';
@@ -11,7 +11,7 @@
 	export let value = $entryData[fieldName] || {};
 	console.log(value);
 	let _data = $mode == 'create' ? {} : value;
-	let _language = PUBLIC_CONTENT_LANGUAGE;
+	let _language = publicConfig.DEFAULT_CONTENT_LANGUAGE;
 	console.log(_data, $contentLanguage);
 	console.log($mode);
 

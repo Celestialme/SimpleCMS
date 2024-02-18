@@ -4,7 +4,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import { loginSchema, type LoginSchema } from '@src/utils/formSchemas';
 	import CMSLogo from './icons/Logo.svelte';
-	import { PUBLIC_SITENAME } from '$env/static/public';
+	import { publicConfig } from '@root/config/public';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import LoginRecover from './LoginRecover.svelte';
 	import EnableIcon from '@src/components/system/buttons/EnableIcon.svelte';
@@ -59,7 +59,7 @@
 				<CMSLogo className="w-12" fill="red" />
 
 				<h1 class="text-3xl font-bold text-black lg:text-4xl">
-					<div class="text-xs text-surface-300">{PUBLIC_SITENAME}</div>
+					<div class="text-xs text-surface-300">{publicConfig.SITE_NAME}</div>
 					<div class="lg:-mt-1">{$messages.signIn()}</div>
 				</h1>
 			</div>

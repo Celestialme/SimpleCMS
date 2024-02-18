@@ -1,11 +1,11 @@
-import { PUBLIC_SYSTEM_LANGUAGE, PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+import { publicConfig } from '@root/config/public';
 import type { Schema } from '@src/collections/types';
 import * as m from '@src/paraglide/messages.js';
 import { setLanguageTag, type AvailableLanguageTag } from '@src/paraglide/runtime';
 import { writable, type Writable } from 'svelte/store';
-export let systemLanguage: Writable<AvailableLanguageTag> = writable(PUBLIC_SYSTEM_LANGUAGE) as any;
+export let systemLanguage: Writable<AvailableLanguageTag> = writable(publicConfig.DEFAULT_SYSTEM_LANGUAGE) as any;
 export let messages: Writable<typeof m> = writable({ ...m });
-export let contentLanguage: Writable<string> = writable(PUBLIC_CONTENT_LANGUAGE);
+export let contentLanguage: Writable<string> = writable(publicConfig.DEFAULT_CONTENT_LANGUAGE);
 export let categories: Writable<
 	Array<{
 		name: string;
