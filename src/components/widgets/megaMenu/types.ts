@@ -61,5 +61,6 @@ export interface CustomDragEvent extends Event {
 		clone_index: number;
 		dragged_item: any;
 		isParent: boolean;
+		expanded_list: [boolean];
 	};
 }

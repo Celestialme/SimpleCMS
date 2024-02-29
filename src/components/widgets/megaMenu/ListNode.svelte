@@ -15,7 +15,7 @@
 	let expanded_list: boolean[] = [];
 	let ul: HTMLElement;
 	export let refresh = () => {
-		self?.children && (self.children.length = self.children?.length);
+		self?.children && (self.children = self.children);
 	};
 	function setBorderHeight(node: HTMLElement | null | undefined) {
 		if (!node) return;
@@ -50,11 +50,16 @@
 		node.addEventListener('custom:drag', (e) => {
 			let event = e as CustomDragEvent;
 			if (event.detail.isParent) {
+				console.log(self.children);
 				self.children[event.detail.closest_index].children.push(event.detail.dragged_item);
+				event.detail.expanded_list.splice(event.detail.clone_index, 1)[0];
 			} else {
 				self?.children?.splice(event.detail.closest_index, 0, event.detail.dragged_item);
+				let clone_expanded = event.detail.expanded_list.splice(event.detail.clone_index, 1)[0];
+				expanded_list.splice(event.detail.closest_index, 0, clone_expanded);
+				expanded_list = expanded_list;
+				event.detail.expanded_list = event.detail.expanded_list;
 			}
-
 			refresh();
 		});
 
@@ -67,7 +72,7 @@
 				return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: false };
 			});
 			let parents = [...document.getElementsByClassName(`level-${level - 1}`)].map((el) => {
-				let rect = el.getBoundingClientRect();
+				let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
 				return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
 			});
 			let targets = [...siblings, ...parents];
@@ -85,7 +90,6 @@
 				clone.style.marginLeft = '0';
 				clone.style.position = 'fixed';
 				clone.style.top = e.clientY + 'px';
-
 				clone.setPointerCapture(pointerID);
 				clone.onpointermove = (e) => {
 					clone.style.top = e.clientY + 'px';
@@ -96,7 +100,7 @@
 					targets.forEach((el) => {
 						el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
 					});
-					closest.el.firstChild && ((closest.el.firstChild as HTMLElement).style.borderColor = 'red');
+					closest.el.firstChild && ((closest.el.firstChild as HTMLElement).style.borderColor = closest.isParent ? 'blue' : 'red');
 				};
 
 				clone.onpointerup = (e) => {
@@ -113,13 +117,12 @@
 					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 					let clone_index = parseInt(clone.getAttribute('data-index') as string);
 					let dragged_item = self?.children.splice(clone_index, 1)[0];
+					refresh();
 					closest.el.dispatchEvent(
 						new CustomEvent('custom:drag', {
-							detail: { closest_index: closest_index, clone_index, dragged_item, isParent: closest.isParent }
+							detail: { closest_index: closest_index, clone_index, dragged_item, isParent: closest.isParent, expanded_list }
 						})
 					);
-					expanded_list[clone_index] = false;
-					expanded_list = expanded_list;
 				};
 			}, 200);
 		};
