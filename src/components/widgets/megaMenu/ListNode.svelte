@@ -50,7 +50,6 @@
 		node.addEventListener('custom:drag', (e) => {
 			let event = e as CustomDragEvent;
 			if (event.detail.isParent) {
-				console.log(self.children);
 				self.children[event.detail.closest_index].children.push(event.detail.dragged_item);
 				event.detail.expanded_list.splice(event.detail.clone_index, 1)[0];
 			} else {
@@ -76,12 +75,11 @@
 				return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
 			});
 			let targets = [...siblings, ...parents];
-			node.onpointerup = (e) => {
+
+			node.onpointerleave = node.onpointerup = (e) => {
 				clearTimeout(timeout);
 			};
-			node.onpointerleave = (e) => {
-				clearTimeout(timeout);
-			};
+
 			let timeout = setTimeout(() => {
 				node.style.opacity = '0.5';
 				let clone = node.cloneNode(true) as HTMLElement;
@@ -113,11 +111,12 @@
 					node.style.opacity = '1';
 					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
 					let closest = targets[0];
+
 					if (closest.el == node) return;
 					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 					let clone_index = parseInt(clone.getAttribute('data-index') as string);
 					let dragged_item = self?.children.splice(clone_index, 1)[0];
-					refresh();
+					console.log(closest_index);
 					closest.el.dispatchEvent(
 						new CustomEvent('custom:drag', {
 							detail: { closest_index: closest_index, clone_index, dragged_item, isParent: closest.isParent, expanded_list }
