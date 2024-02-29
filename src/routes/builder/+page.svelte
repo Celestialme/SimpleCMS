@@ -88,7 +88,7 @@
 			</div>
 		{:else if $mode == 'edit'}
 			<div>
-				<WidgetBuilder fields={$collection.fields} bind:addField />
+				<WidgetBuilder bind:fields={$collection.fields} bind:addField />
 			</div>
 		{/if}
 	</div>

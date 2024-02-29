@@ -2,7 +2,7 @@
 	import { mode } from '@src/stores/store';
 	import { currentChild } from '.';
 	import { contentLanguage, headerActionButton } from '@src/stores/load';
-	import DeleteIcon from '@src/components/system/icons/DeleteIcon.svelte';
+	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { CustomDragEvent } from './types';
 	export let self: { [key: string]: any; children: any[] };
 	export let parent: { [key: string]: any; children: any[] } | null = null;
@@ -32,7 +32,7 @@
 		recalculateBorderHeight(ul);
 	}
 	$: if (showFields) {
-		$headerActionButton = DeleteIcon;
+		$headerActionButton = XIcon;
 	}
 	function findFirstOuterElement(node: HTMLElement | null, element: string = 'UL') {
 		if (!node) return;
@@ -72,6 +72,9 @@
 			});
 			let targets = [...siblings, ...parents];
 			node.onpointerup = (e) => {
+				clearTimeout(timeout);
+			};
+			node.onpointerleave = (e) => {
 				clearTimeout(timeout);
 			};
 			let timeout = setTimeout(() => {

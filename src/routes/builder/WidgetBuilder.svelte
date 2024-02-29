@@ -4,6 +4,7 @@
 	import WidgetFields from './WidgetFields.svelte';
 	export let addField = false;
 	export let fields = [];
+	$: console.log(fields);
 </script>
 
 {#if addField}
@@ -11,6 +12,6 @@
 {:else}
 	<div class="text-center">
 		<Button class="text-white" on:click={() => (addField = true)}>Add Field</Button>
-		<WidgetFields {fields} />
+		<WidgetFields bind:fields />
 	</div>
 {/if}

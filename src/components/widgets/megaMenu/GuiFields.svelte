@@ -11,7 +11,7 @@
 	{#each value as level, index}
 		<div class="level">
 			<p>level {index + 1}</p>
-			<WidgetBuilder fields={level} />
+			<WidgetBuilder bind:fields={level} />
 		</div>
 	{/each}
 </div>

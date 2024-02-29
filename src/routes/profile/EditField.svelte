@@ -2,7 +2,7 @@
 	import { roles } from '@src/auth/types';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
-	import DeleteIcon from '@src/components/system/icons/DeleteIcon.svelte';
+	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
@@ -52,7 +52,7 @@
 {#if info.show}
 	<div class=" flex w-full flex-col p-4 lg:w-1/2">
 		<button class="ml-auto mb-[20px]" on:click={() => (info.show = false)}>
-			<DeleteIcon />
+			<XIcon />
 		</button>
 		{#if info.field == 'role'}
 			{((value = 'user'), '')}

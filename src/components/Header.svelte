@@ -2,11 +2,11 @@
 	import { collection, contentLanguage, headerActionButton } from '@src/stores/load';
 	import MultiButton from './system/buttons/MultiButton.svelte';
 	import { drawerExpanded, mode } from '@src/stores/store';
-	import DeleteIcon from './system/icons/DeleteIcon.svelte';
+	import XIcon from './system/icons/XIcon.svelte';
 	import DropDown from './system/dropDown/DropDown.svelte';
 	import { publicConfig } from '@root/config/public';
 	$: {
-		$headerActionButton = DeleteIcon;
+		$headerActionButton = XIcon;
 		$collection;
 	}
 </script>
