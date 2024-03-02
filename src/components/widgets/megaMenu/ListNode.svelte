@@ -75,7 +75,7 @@
 				let dragged_item = event.detail.children.splice(event.detail.clone_index, 1)[0];
 
 				self?.children?.splice(isSameParent ? event.detail.closest_index : event.detail.closest_index + 1, 0, dragged_item);
-				expanded_list.splice(event.detail.closest_index, 0, clone_isExpanded);
+				expanded_list.splice(isSameParent ? event.detail.closest_index : event.detail.closest_index + 1, 0, clone_isExpanded);
 				expanded_list = expanded_list;
 			}
 			event.detail.refresh_expanded_list();
