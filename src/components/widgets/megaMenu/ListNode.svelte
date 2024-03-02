@@ -109,7 +109,7 @@
 							let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
 							return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
 						});
-						targets = [...siblings, ...parents];
+						targets = [...siblings, ...parents].filter((el) => el.el != clone);
 					}
 					clone.style.top = e.clientY + 'px';
 					clone.style.opacity = '1';

@@ -49,10 +49,12 @@
 					} else {
 						container.scrollBy(0, 5);
 					}
-					targets = [...container.getElementsByClassName('field')].map((el) => {
-						let rect = el.getBoundingClientRect();
-						return { el: el as HTMLElement, center: rect.top + rect.height / 2 };
-					});
+					targets = [...container.getElementsByClassName('field')]
+						.map((el) => {
+							let rect = el.getBoundingClientRect();
+							return { el: el as HTMLElement, center: rect.top + rect.height / 2 };
+						})
+						.filter((el) => el.el != clone);
 				}
 				clone.style.top = e.clientY + 'px';
 				targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
