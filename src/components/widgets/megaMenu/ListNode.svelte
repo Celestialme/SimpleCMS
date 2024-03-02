@@ -60,8 +60,7 @@
 			let event = e as CustomDragEvent;
 			let clone_isExpanded = event.detail.expanded_list.splice(event.detail.clone_index, 1)[0];
 			if (event.detail.isParent) {
-				let dragged_item = event.detail.children.splice(event.detail.clone_index, 1)[0];
-				self.children[event.detail.closest_index].children.push(dragged_item);
+				self.children[event.detail.closest_index].children.push(event.detail.dragged_item);
 				await tick();
 
 				node.firstChild?.dispatchEvent(
@@ -72,11 +71,10 @@
 					})
 				);
 			} else {
-				let isSameParent = self.children.indexOf(event.detail.children[event.detail.clone_index]) !== -1;
-				let dragged_item = event.detail.children.splice(event.detail.clone_index, 1)[0];
+				// let isSameParent = self.children.indexOf(event.detail.children[event.detail.clone_index]) !== -1;
 
-				self?.children?.splice(isSameParent ? event.detail.closest_index : event.detail.closest_index + 1, 0, dragged_item);
-				expanded_list.splice(isSameParent ? event.detail.closest_index : event.detail.closest_index + 1, 0, clone_isExpanded);
+				self?.children?.splice(event.detail.closest_index, 0, event.detail.dragged_item);
+				expanded_list.splice(event.detail.closest_index, 0, clone_isExpanded);
 				expanded_list = expanded_list;
 			}
 			event.detail.refresh_expanded_list();
@@ -102,7 +100,7 @@
 				clone.style.position = 'fixed';
 				clone.style.top = e.clientY + 'px';
 				clone.setPointerCapture(pointerID);
-
+				let cloneHeight = clone.offsetHeight + 'px';
 				let targets: any = [];
 				let deb = debounce(10);
 				clone.onpointermove = (e) => {
@@ -139,21 +137,23 @@
 					clone.style.opacity = '1';
 					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
 					let closest = targets[0];
-					if (closest.el == node) return;
-					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
-					let clone_index = parseInt(clone.getAttribute('data-index') as string);
 
 					targets.forEach((el) => {
 						el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
 						el.el.style.padding = '0';
 					});
-					if (clone_index < closest_index && !closest.isParent) {
-						closest.el.style.paddingBottom = '100px';
+					if (closest.el == node) return;
+					if (e.clientY > closest.center && !closest.isParent) {
+						closest.el.style.paddingBottom = cloneHeight;
 					} else if (!closest.isParent) {
-						closest.el.style.paddingTop = '100px';
+						closest.el.style.paddingTop = cloneHeight;
 					}
+
 					closest.el.firstChild && ((closest.el.firstChild as HTMLElement).style.borderColor = closest.isParent ? 'blue' : 'red');
 					recalculateBorderHeight();
+					setTimeout(() => {
+						recalculateBorderHeight();
+					}, 110);
 				};
 
 				clone.onpointerup = async (e) => {
@@ -171,22 +171,22 @@
 					if (closest.el == node) return;
 					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 					let clone_index = parseInt(clone.getAttribute('data-index') as string);
-
+					let dragged_item = self.children.splice(clone_index, 1)[0];
 					closest.el.dispatchEvent(
 						new CustomEvent('custom:drag', {
 							detail: {
-								closest_index: closest_index,
+								closest_index: e.clientY > closest.center && !closest.isParent ? closest_index + 1 : closest_index,
 								clone_index,
 								isParent: closest.isParent,
 								expanded_list,
-								children: self.children,
+								dragged_item,
 								refresh_expanded_list: () => (expanded_list = expanded_list)
 							}
 						})
 					);
 					setTimeout(() => {
 						recalculateBorderHeight();
-					}, 100);
+					}, 110);
 				};
 			}, 200);
 		};
@@ -283,7 +283,6 @@
 	}
 	li {
 		transition: padding 0.1s ease-in-out;
-		overflow: hidden;
 	}
 	.ladder {
 		position: absolute;
