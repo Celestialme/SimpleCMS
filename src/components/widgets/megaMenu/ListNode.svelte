@@ -12,7 +12,7 @@
 	export let showFields = false;
 	export let maxDepth = 0;
 	export let expanded = false;
-
+	export let MENU_CONTAINER: HTMLUListElement;
 	let fields_container: HTMLDivElement;
 	onMount(() => {
 		fields_container = document.getElementById('fields_container') as HTMLDivElement;
@@ -24,7 +24,7 @@
 	};
 	function setBorderHeight(node: HTMLElement | null | undefined) {
 		if (!node) return;
-		// if (!parent_border || !lastChild || !parent) return;
+
 		setTimeout(async () => {
 			let lastHeader = node?.lastChild?.firstChild as HTMLElement;
 			if (!lastHeader) return;
@@ -34,22 +34,18 @@
 	}
 
 	$: if (self?.children?.length) {
-		recalculateBorderHeight(ul);
+		recalculateBorderHeight();
+		ul;
 	}
 	$: if (showFields) {
 		$headerActionButton = XIcon;
 	}
-	function findFirstOuterElement(node: HTMLElement | null, element: string = 'UL') {
-		if (!node) return;
-		if (node.tagName == element) return node;
-		return findFirstOuterElement(node.parentElement, element);
-	}
-	function recalculateBorderHeight(node) {
-		let child = findFirstOuterElement(node);
-		setBorderHeight(child);
-		if (!child?.classList.contains('MENU_CONTAINER') && child) {
-			recalculateBorderHeight(child?.parentElement);
-		}
+
+	function recalculateBorderHeight() {
+		MENU_CONTAINER &&
+			MENU_CONTAINER.querySelectorAll('ul').forEach((el) => {
+				setBorderHeight(el);
+			});
 	}
 	function drag(node: HTMLElement) {
 		node.addEventListener('custom:drag', (e) => {
@@ -152,7 +148,7 @@
 <div
 	on:click={(e) => {
 		if (expanded) {
-			recalculateBorderHeight(ul);
+			recalculateBorderHeight();
 		}
 		expanded = !expanded;
 	}}
@@ -204,6 +200,7 @@
 		{#each self.children as child, index}
 			<li use:drag data-index={index} class={`level-${level} touch-none`}>
 				<svelte:self
+					{MENU_CONTAINER}
 					{refresh}
 					self={child}
 					level={level + 1}

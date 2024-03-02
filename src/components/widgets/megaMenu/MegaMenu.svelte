@@ -10,6 +10,7 @@
 	console.log(field);
 	export let value = $entryData[fieldName];
 	export const WidgetData = async () => _data;
+	let MENU_CONTAINER: HTMLUListElement;
 	let showFields = false;
 	let depth = 0;
 	let _data: { [key: string]: any; children: any[] } = $mode == 'create' ? null : value;
@@ -43,8 +44,8 @@
 	{(($saveFunction.fn = saveLayer), '')}
 {/if}
 {#if _data}
-	<ul class:hidden={depth != 0} class="children MENU_CONTAINER">
+	<ul bind:this={MENU_CONTAINER} class:hidden={depth != 0} class="children MENU_CONTAINER">
 		<div class="w-screen"></div>
-		<ListNode self={_data} bind:depth bind:showFields maxDepth={field.menu.length} />
+		<ListNode {MENU_CONTAINER} self={_data} bind:depth bind:showFields maxDepth={field.menu.length} />
 	</ul>
 {/if}
