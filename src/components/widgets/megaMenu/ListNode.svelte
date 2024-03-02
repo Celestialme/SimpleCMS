@@ -59,7 +59,8 @@
 			let event = e as CustomDragEvent;
 			let clone_isExpanded = event.detail.expanded_list.splice(event.detail.clone_index, 1)[0];
 			if (event.detail.isParent) {
-				self.children[event.detail.closest_index].children.push(event.detail.dragged_item);
+				let dragged_item = event.detail.children.splice(event.detail.clone_index, 1)[0];
+				self.children[event.detail.closest_index].children.push(dragged_item);
 				await tick();
 
 				node.firstChild?.dispatchEvent(
@@ -70,7 +71,10 @@
 					})
 				);
 			} else {
-				self?.children?.splice(event.detail.closest_index, 0, event.detail.dragged_item);
+				let isSameParent = self.children.indexOf(event.detail.children[event.detail.clone_index]) !== -1;
+				let dragged_item = event.detail.children.splice(event.detail.clone_index, 1)[0];
+
+				self?.children?.splice(isSameParent ? event.detail.closest_index : event.detail.closest_index + 1, 0, dragged_item);
 				expanded_list.splice(event.detail.closest_index, 0, clone_isExpanded);
 				expanded_list = expanded_list;
 			}
@@ -147,16 +151,15 @@
 					if (closest.el == node) return;
 					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 					let clone_index = parseInt(clone.getAttribute('data-index') as string);
-					let dragged_item = self?.children.splice(clone_index, 1)[0];
 
 					closest.el.dispatchEvent(
 						new CustomEvent('custom:drag', {
 							detail: {
 								closest_index: closest_index,
 								clone_index,
-								dragged_item,
 								isParent: closest.isParent,
 								expanded_list,
+								children: self.children,
 								refresh_expanded_list: () => (expanded_list = expanded_list)
 							}
 						})

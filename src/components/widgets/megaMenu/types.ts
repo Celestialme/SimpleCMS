@@ -59,7 +59,7 @@ export interface CustomDragEvent extends Event {
 	detail: {
 		closest_index: number;
 		clone_index: number;
-		dragged_item: any;
+		children: any[];
 		isParent: boolean;
 		expanded_list: [boolean];
 		refresh_expanded_list: () => void;
