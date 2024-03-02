@@ -100,60 +100,54 @@
 				clone.style.position = 'fixed';
 				clone.style.top = e.clientY + 'px';
 				clone.setPointerCapture(pointerID);
-				let cloneHeight = clone.offsetHeight + 'px';
+				let cloneHeight = clone.offsetHeight + 50 + 'px';
 				let targets: any = [];
 				let deb = debounce(10);
 				clone.onpointermove = (e) => {
-					deb(() => {
-						let siblings = [...document.getElementsByClassName(`level-${level}`)]
-							.map((el) => {
-								let rect = el.getBoundingClientRect();
-								return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: false };
-							})
-							.filter((el) => el.el != clone);
-						let parents = [...document.getElementsByClassName(`level-${level - 1}`)].map((el) => {
-							let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
-							return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
-						});
-						targets = [...siblings, ...parents];
-					});
 					if (e.clientY < fields_container.offsetTop || e.clientY > fields_container.offsetTop + fields_container.offsetHeight - 60) {
 						if (e.clientY < fields_container.offsetTop) {
 							fields_container.scrollBy(0, -5);
 						} else {
 							fields_container.scrollBy(0, 5);
 						}
-						let siblings = [...document.getElementsByClassName(`level-${level}`)].map((el) => {
-							let rect = el.getBoundingClientRect();
-							return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: false };
-						});
-						let parents = [...document.getElementsByClassName(`level-${level - 1}`)].map((el) => {
-							let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
-							return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
-						});
-						targets = [...siblings, ...parents].filter((el) => el.el != clone);
 					}
 					clone.style.top = e.clientY + 'px';
 					clone.style.opacity = '1';
-					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
-					let closest = targets[0];
+					deb(() => {
+						let siblings = [...document.getElementsByClassName(`level-${level}`)]
+							.map((el) => {
+								let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
+								return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: false };
+							})
+							.filter((el) => el.el != clone);
+						let parents = [...document.getElementsByClassName(`level-${level - 1}`)]
+							.filter((el) => parseInt(el.getAttribute('data-children') as string) == 0)
+							.map((el) => {
+								let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
+								return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
+							});
+						targets = [...siblings, ...parents];
+						targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
+						let closest = targets[0];
+						targets.forEach((el) => {
+							el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
+							el.el.style.padding = '0';
+						});
+						if (closest.el == node) return;
+						let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
+						let clone_index = parseInt(clone.getAttribute('data-index') as string);
 
-					targets.forEach((el) => {
-						el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
-						el.el.style.padding = '0';
-					});
-					if (closest.el == node) return;
-					if (e.clientY > closest.center && !closest.isParent) {
-						closest.el.style.paddingBottom = cloneHeight;
-					} else if (!closest.isParent) {
-						closest.el.style.paddingTop = cloneHeight;
-					}
-
-					closest.el.firstChild && ((closest.el.firstChild as HTMLElement).style.borderColor = closest.isParent ? 'blue' : 'red');
-					recalculateBorderHeight();
-					setTimeout(() => {
+						if (e.clientY > closest.center && clone_index - closest_index != 1 && !closest.isParent) {
+							closest.el.style.paddingBottom = cloneHeight;
+						} else if (e.clientY < closest.center && !closest.isParent && closest_index - clone_index != 1) {
+							closest.el.style.paddingTop = cloneHeight;
+						}
+						closest.el.firstChild && ((closest.el.firstChild as HTMLElement).style.borderColor = closest.isParent ? 'blue' : 'red');
 						recalculateBorderHeight();
-					}, 110);
+						setTimeout(() => {
+							recalculateBorderHeight();
+						}, 110);
+					});
 				};
 
 				clone.onpointerup = async (e) => {
@@ -247,7 +241,7 @@
 	<ul bind:this={ul} class="children relative" style="margin-left:{20 * (level > 0 ? 1 : 0) + 15}px;">
 		<div class="border" />
 		{#each self.children as child, index}
-			<li use:drag data-index={index} class={`level-${level} touch-none`}>
+			<li use:drag data-children={expanded_list[index] ? child.children?.length : 0} data-index={index} class={`level-${level} touch-none`}>
 				<svelte:self
 					{MENU_CONTAINER}
 					{refresh}
