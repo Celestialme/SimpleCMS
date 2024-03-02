@@ -62,5 +62,6 @@ export interface CustomDragEvent extends Event {
 		dragged_item: any;
 		isParent: boolean;
 		expanded_list: [boolean];
+		refresh_expanded_list: () => void;
 	};
 }

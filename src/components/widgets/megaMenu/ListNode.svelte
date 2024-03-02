@@ -4,7 +4,7 @@
 	import { contentLanguage, headerActionButton } from '@src/stores/load';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { CustomDragEvent } from './types';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	export let self: { [key: string]: any; children: any[] };
 	export let parent: { [key: string]: any; children: any[] } | null = null;
 	export let level = 0;
@@ -47,19 +47,34 @@
 				setBorderHeight(el);
 			});
 	}
+	function notifyChildren(node: HTMLElement) {
+		node.addEventListener('custom:notifyChildren', (e) => {
+			let details = (e as any).detail as { clone_isExpanded: boolean };
+			expanded_list.push(details.clone_isExpanded);
+			expanded_list = expanded_list;
+		});
+	}
 	function drag(node: HTMLElement) {
-		node.addEventListener('custom:drag', (e) => {
+		node.addEventListener('custom:drag', async (e) => {
 			let event = e as CustomDragEvent;
+			let clone_isExpanded = event.detail.expanded_list.splice(event.detail.clone_index, 1)[0];
 			if (event.detail.isParent) {
 				self.children[event.detail.closest_index].children.push(event.detail.dragged_item);
-				event.detail.expanded_list.splice(event.detail.clone_index, 1)[0];
+				await tick();
+
+				node.firstChild?.dispatchEvent(
+					new CustomEvent('custom:notifyChildren', {
+						detail: {
+							clone_isExpanded
+						}
+					})
+				);
 			} else {
 				self?.children?.splice(event.detail.closest_index, 0, event.detail.dragged_item);
-				let clone_expanded = event.detail.expanded_list.splice(event.detail.clone_index, 1)[0];
-				expanded_list.splice(event.detail.closest_index, 0, clone_expanded);
+				expanded_list.splice(event.detail.closest_index, 0, clone_isExpanded);
 				expanded_list = expanded_list;
-				event.detail.expanded_list = event.detail.expanded_list;
 			}
+			event.detail.refresh_expanded_list();
 			refresh();
 		});
 
@@ -133,10 +148,17 @@
 					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 					let clone_index = parseInt(clone.getAttribute('data-index') as string);
 					let dragged_item = self?.children.splice(clone_index, 1)[0];
-					console.log(closest_index);
+
 					closest.el.dispatchEvent(
 						new CustomEvent('custom:drag', {
-							detail: { closest_index: closest_index, clone_index, dragged_item, isParent: closest.isParent, expanded_list }
+							detail: {
+								closest_index: closest_index,
+								clone_index,
+								dragged_item,
+								isParent: closest.isParent,
+								expanded_list,
+								refresh_expanded_list: () => (expanded_list = expanded_list)
+							}
 						})
 					);
 				};
@@ -146,6 +168,7 @@
 </script>
 
 <div
+	use:notifyChildren
 	on:click={(e) => {
 		if (expanded) {
 			recalculateBorderHeight();
