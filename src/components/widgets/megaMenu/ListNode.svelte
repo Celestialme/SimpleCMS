@@ -4,14 +4,19 @@
 	import { contentLanguage, headerActionButton } from '@src/stores/load';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { CustomDragEvent } from './types';
+	import { onMount } from 'svelte';
 	export let self: { [key: string]: any; children: any[] };
 	export let parent: { [key: string]: any; children: any[] } | null = null;
 	export let level = 0;
 	export let depth = 0;
 	export let showFields = false;
 	export let maxDepth = 0;
-
 	export let expanded = false;
+
+	let fields_container: HTMLDivElement;
+	onMount(() => {
+		fields_container = document.getElementById('fields_container') as HTMLDivElement;
+	});
 	let expanded_list: boolean[] = [];
 	let ul: HTMLElement;
 	export let refresh = () => {
@@ -90,6 +95,22 @@
 				clone.style.top = e.clientY + 'px';
 				clone.setPointerCapture(pointerID);
 				clone.onpointermove = (e) => {
+					if (e.clientY < fields_container.offsetTop || e.clientY > fields_container.offsetTop + fields_container.offsetHeight - 60) {
+						if (e.clientY < fields_container.offsetTop) {
+							fields_container.scrollBy(0, -5);
+						} else {
+							fields_container.scrollBy(0, 5);
+						}
+						let siblings = [...document.getElementsByClassName(`level-${level}`)].map((el) => {
+							let rect = el.getBoundingClientRect();
+							return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: false };
+						});
+						let parents = [...document.getElementsByClassName(`level-${level - 1}`)].map((el) => {
+							let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
+							return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
+						});
+						targets = [...siblings, ...parents];
+					}
 					clone.style.top = e.clientY + 'px';
 					clone.style.opacity = '1';
 					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));

@@ -78,7 +78,7 @@
 		{#if $mode == 'view' || $mode == 'modify'}
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}
-			<div class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]">
+			<div id="fields_container" class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]">
 				<Fields />
 			</div>
 		{/if}

@@ -83,13 +83,9 @@
 			<FloatingInput theme="dark" label="icon" name="icon" bind:value={icon} />
 		</div>
 		{#if $mode == 'create'}
-			<div>
-				<WidgetBuilder {fields} bind:addField />
-			</div>
+			<WidgetBuilder {fields} bind:addField />
 		{:else if $mode == 'edit'}
-			<div>
-				<WidgetBuilder bind:fields={$collection.fields} bind:addField />
-			</div>
+			<WidgetBuilder bind:fields={$collection.fields} bind:addField />
 		{/if}
 	</div>
 </div>

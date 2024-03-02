@@ -43,6 +43,17 @@
 			clone.style.top = e.clientY + 'px';
 			clone.style.width = node.getBoundingClientRect().width + 'px';
 			clone.onpointermove = (e) => {
+				if (e.clientY < container.offsetTop || e.clientY > container.offsetTop + container.offsetHeight - 60) {
+					if (e.clientY < container.offsetTop) {
+						container.scrollBy(0, -5);
+					} else {
+						container.scrollBy(0, 5);
+					}
+					targets = [...container.getElementsByClassName('field')].map((el) => {
+						let rect = el.getBoundingClientRect();
+						return { el: el as HTMLElement, center: rect.top + rect.height / 2 };
+					});
+				}
 				clone.style.top = e.clientY + 'px';
 				targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
 				let closest = targets[0];
@@ -69,7 +80,7 @@
 	}
 </script>
 
-<div class="container" bind:this={container}>
+<div class="wrapper" bind:this={container}>
 	{#each fields as field, index}
 		<div
 			on:click={() => {
@@ -109,7 +120,9 @@
 {/if}
 
 <style>
-	.container {
+	.wrapper {
+		max-height: 100%;
+		overflow: auto;
 		margin-bottom: 20px;
 		margin-top: 20px;
 		background-color: #333637;
