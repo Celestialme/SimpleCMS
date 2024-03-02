@@ -275,7 +275,13 @@ function deepCopy(obj) {
 
 export function debounce(delay?: number) {
 	let timer;
+	let first = true;
 	return (fn: () => void) => {
+		if (first) {
+			fn();
+			first = false;
+			return;
+		}
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			fn();

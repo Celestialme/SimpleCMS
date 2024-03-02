@@ -5,6 +5,7 @@
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { CustomDragEvent } from './types';
 	import { onMount, tick } from 'svelte';
+	import { debounce } from '@src/utils/utils';
 	export let self: { [key: string]: any; children: any[] };
 	export let parent: { [key: string]: any; children: any[] } | null = null;
 	export let level = 0;
@@ -86,15 +87,6 @@
 			e.stopPropagation();
 			let node = e.currentTarget as HTMLElement;
 			let pointerID = e.pointerId;
-			let siblings = [...document.getElementsByClassName(`level-${level}`)].map((el) => {
-				let rect = el.getBoundingClientRect();
-				return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: false };
-			});
-			let parents = [...document.getElementsByClassName(`level-${level - 1}`)].map((el) => {
-				let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
-				return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
-			});
-			let targets = [...siblings, ...parents];
 
 			node.onpointerleave = node.onpointerup = (e) => {
 				clearTimeout(timeout);
@@ -102,14 +94,31 @@
 
 			let timeout = setTimeout(() => {
 				node.style.opacity = '0.5';
+
 				let clone = node.cloneNode(true) as HTMLElement;
-				ul.appendChild(clone);
+				MENU_CONTAINER.appendChild(clone);
 				clone.style.left = node.getBoundingClientRect().left + 'px';
 				clone.style.marginLeft = '0';
 				clone.style.position = 'fixed';
 				clone.style.top = e.clientY + 'px';
 				clone.setPointerCapture(pointerID);
+
+				let targets: any = [];
+				let deb = debounce(10);
 				clone.onpointermove = (e) => {
+					deb(() => {
+						let siblings = [...document.getElementsByClassName(`level-${level}`)]
+							.map((el) => {
+								let rect = el.getBoundingClientRect();
+								return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: false };
+							})
+							.filter((el) => el.el != clone);
+						let parents = [...document.getElementsByClassName(`level-${level - 1}`)].map((el) => {
+							let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
+							return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
+						});
+						targets = [...siblings, ...parents];
+					});
 					if (e.clientY < fields_container.offsetTop || e.clientY > fields_container.offsetTop + fields_container.offsetHeight - 60) {
 						if (e.clientY < fields_container.offsetTop) {
 							fields_container.scrollBy(0, -5);
@@ -131,17 +140,28 @@
 					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
 					let closest = targets[0];
 					if (closest.el == node) return;
+					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
+					let clone_index = parseInt(clone.getAttribute('data-index') as string);
+
 					targets.forEach((el) => {
 						el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
+						el.el.style.padding = '0';
 					});
+					if (clone_index < closest_index && !closest.isParent) {
+						closest.el.style.paddingBottom = '100px';
+					} else if (!closest.isParent) {
+						closest.el.style.paddingTop = '100px';
+					}
 					closest.el.firstChild && ((closest.el.firstChild as HTMLElement).style.borderColor = closest.isParent ? 'blue' : 'red');
+					recalculateBorderHeight();
 				};
 
-				clone.onpointerup = (e) => {
+				clone.onpointerup = async (e) => {
 					clone.releasePointerCapture(pointerID);
 					clone.remove();
 					targets.forEach((el) => {
 						el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
+						el.el.style.padding = '0';
 					});
 
 					node.style.opacity = '1';
@@ -164,6 +184,9 @@
 							}
 						})
 					);
+					setTimeout(() => {
+						recalculateBorderHeight();
+					}, 100);
 				};
 			}, 200);
 		};
@@ -257,6 +280,10 @@
 		width: 100vw;
 		min-width: 200px;
 		cursor: default;
+	}
+	li {
+		transition: padding 0.1s ease-in-out;
+		overflow: hidden;
 	}
 	.ladder {
 		position: absolute;
