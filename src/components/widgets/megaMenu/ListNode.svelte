@@ -102,7 +102,7 @@
 				clone.setPointerCapture(pointerID);
 				let cloneHeight = clone.offsetHeight + 50 + 'px';
 				let targets: any = [];
-				let deb = debounce(10);
+				let deb = debounce(3);
 				clone.onpointermove = (e) => {
 					if (e.clientY < fields_container.offsetTop || e.clientY > fields_container.offsetTop + fields_container.offsetHeight - 60) {
 						if (e.clientY < fields_container.offsetTop) {
@@ -163,13 +163,17 @@
 					let closest = targets[0];
 
 					if (closest.el == node) return;
+
 					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 					let clone_index = parseInt(clone.getAttribute('data-index') as string);
 					let dragged_item = self.children.splice(clone_index, 1)[0];
+					if (clone_index < closest_index && !closest.isParent) {
+						closest_index--;
+					}
 					closest.el.dispatchEvent(
 						new CustomEvent('custom:drag', {
 							detail: {
-								closest_index: e.clientY > closest.center && !closest.isParent ? closest_index + 1 : closest_index,
+								closest_index: closest.isParent ? closest_index : e.clientY < closest.center ? closest_index : closest_index + 1,
 								clone_index,
 								isParent: closest.isParent,
 								expanded_list,
@@ -178,6 +182,7 @@
 							}
 						})
 					);
+					refresh();
 					setTimeout(() => {
 						recalculateBorderHeight();
 					}, 110);
