@@ -78,7 +78,6 @@
 				expanded_list = expanded_list;
 			}
 			event.detail.refresh_expanded_list();
-			refresh();
 		});
 
 		node.onpointerdown = (e) => {
@@ -100,9 +99,10 @@
 				clone.style.position = 'fixed';
 				clone.style.top = e.clientY + 'px';
 				clone.setPointerCapture(pointerID);
-				let cloneHeight = clone.offsetHeight + 50 + 'px';
+				let cloneHeight = clone.offsetHeight + 10 + 'px';
 				let targets: any = [];
 				let deb = debounce(3);
+				let old_closest: HTMLElement;
 				clone.onpointermove = (e) => {
 					if (e.clientY < fields_container.offsetTop || e.clientY > fields_container.offsetTop + fields_container.offsetHeight - 60) {
 						if (e.clientY < fields_container.offsetTop) {
@@ -129,10 +129,10 @@
 						targets = [...siblings, ...parents];
 						targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
 						let closest = targets[0];
-						targets.forEach((el) => {
-							el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
-							el.el.style.padding = '0';
-						});
+						if (old_closest) {
+							old_closest.firstChild && ((old_closest.firstChild as HTMLElement).style.borderColor = '#80808045');
+							old_closest.style.padding = '0';
+						}
 						if (closest.el == node) return;
 						let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 						let clone_index = parseInt(clone.getAttribute('data-index') as string);
@@ -147,16 +147,19 @@
 						setTimeout(() => {
 							recalculateBorderHeight();
 						}, 110);
+						old_closest = closest.el;
 					});
 				};
 
 				clone.onpointerup = async (e) => {
 					clone.releasePointerCapture(pointerID);
 					clone.remove();
-					targets.forEach((el) => {
-						el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
-						el.el.style.padding = '0';
-					});
+					setTimeout(() => {
+						targets.forEach((el) => {
+							el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
+							el.el.style.padding = '0';
+						});
+					}, 50);
 
 					node.style.opacity = '1';
 					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
@@ -185,7 +188,7 @@
 					refresh();
 					setTimeout(() => {
 						recalculateBorderHeight();
-					}, 110);
+					}, 120);
 				};
 			}, 200);
 		};
