@@ -154,12 +154,10 @@
 				clone.onpointerup = async (e) => {
 					clone.releasePointerCapture(pointerID);
 					clone.remove();
-					setTimeout(() => {
-						targets.forEach((el) => {
-							el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
-							el.el.style.padding = '0';
-						});
-					}, 50);
+					targets.forEach((el) => {
+						el.el.firstChild && ((el.el.firstChild as HTMLElement).style.borderColor = '#80808045');
+						el.el.style.padding = '0';
+					});
 
 					node.style.opacity = '1';
 					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
