@@ -3,6 +3,7 @@
 	import InputSwitch from './InputSwitch.svelte';
 	import { asAny, debounce } from '@src/utils/utils';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
+	import AddWidget from './AddWidget.svelte';
 	export let fields: Array<any> = [];
 	let widget_keys = Object.keys(widgets) as unknown as keyof typeof widgets;
 
@@ -138,12 +139,7 @@
 </div>
 
 {#if currentField}
-	<div class="properties">
-		<button class="ml-auto mr-[40px]" on:click={() => (currentField = null)}><XIcon /></button>
-		{#each Object.entries(guiSchema) as [property, value]}
-			<InputSwitch bind:value={currentField.widget.GuiFields[property]} widget={asAny(value).widget} key={property} />
-		{/each}
-	</div>
+	<AddWidget {fields} bind:field={currentField} bind:addField={currentField} selected_widget={currentFieldKey} editField={true} />
 {/if}
 
 <style>
