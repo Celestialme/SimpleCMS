@@ -3,7 +3,7 @@
 	import widgets from '@src/components/widgets';
 	import InputSwitch from './InputSwitch.svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
-	import { asAny } from '@src/utils/utils';
+	import { asAny, deepCopy } from '@src/utils/utils';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	export let fields: Array<any> = [];
 	export let addField: Boolean = false;
@@ -16,7 +16,7 @@
 		guiSchema = widgets[selected_widget].GuiSchema;
 	}
 	export let field = { label: '', widget: { key: selected_widget as unknown as keyof typeof widgets, GuiFields: {} } };
-	let saveField = structuredClone(field);
+	let saveField = deepCopy(field);
 
 	let tabs = {
 		Core(property: string) {
@@ -54,7 +54,7 @@
 		>
 		<div class="flex justify-center gap-1 w-full">
 			{#each Object.keys(tabs) as tab}
-				<Button on:click={() => (currentTab = asAny(tab))}>{tab}</Button>
+				<Button class="!min-w-[120px]" bgColor={tab == currentTab ? '#42c542' : 'gray'} on:click={() => (currentTab = asAny(tab))}>{tab}</Button>
 			{/each}
 		</div>
 		<div class="min-h-[200px] w-full p-[10px] flex flex-col items-center">

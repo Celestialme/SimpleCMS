@@ -1,8 +1,6 @@
 <script lang="ts">
 	import widgets from '@src/components/widgets';
-	import InputSwitch from './InputSwitch.svelte';
-	import { asAny, debounce } from '@src/utils/utils';
-	import XIcon from '@src/components/system/icons/XIcon.svelte';
+	import { debounce } from '@src/utils/utils';
 	import AddWidget from './AddWidget.svelte';
 	export let fields: Array<any> = [];
 	let widget_keys = Object.keys(widgets) as unknown as keyof typeof widgets;
@@ -14,9 +12,6 @@
 	$: if (currentFieldKey) {
 		guiSchema = widgets[currentFieldKey].GuiSchema;
 	}
-	let destruct = (node: HTMLDivElement) => {
-		node.remove();
-	};
 
 	function drag(e: PointerEvent) {
 		let timeOut;
@@ -130,20 +125,16 @@
 				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24" /></button
 			>
 		</div>
-		<div use:destruct>
-			{#each Object.entries(widgets[field.widget.key].GuiSchema) as [property, value]}
-				<InputSwitch bind:value={field.widget.GuiFields[property]} widget={asAny(value).widget} key={property} />
-			{/each}
-		</div>
 	{/each}
 </div>
 
 {#if currentField}
-	<AddWidget {fields} bind:field={currentField} bind:addField={currentField} selected_widget={currentFieldKey} editField={true} />
+	<AddWidget bind:fields bind:field={currentField} bind:addField={currentField} selected_widget={currentFieldKey} editField={true} />
 {/if}
 
 <style>
 	.wrapper {
+		padding: 2px;
 		max-height: 100%;
 		overflow: auto;
 		margin-bottom: 20px;
@@ -175,19 +166,5 @@
 	}
 	.field div:hover {
 		background-color: #4fdc4f;
-	}
-	.properties {
-		position: fixed;
-		flex-direction: column;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		top: 0;
-		left: 0;
-		width: 100vw;
-		height: 100vh;
-		background-color: #242728;
-		overflow: auto;
-		z-index: 111;
 	}
 </style>

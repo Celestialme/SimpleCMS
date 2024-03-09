@@ -8,7 +8,7 @@
 </script>
 
 {#if addField}
-	<AddWidget {fields} bind:addField />
+	<AddWidget bind:fields bind:addField />
 {:else}
 	<div class="text-center max-h-[calc(100vh-210px)]">
 		<Button class="text-white" on:click={() => (addField = true)}>Add Field</Button>

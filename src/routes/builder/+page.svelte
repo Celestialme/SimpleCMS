@@ -12,8 +12,11 @@
 	import FloatingNav from '@src/components/system/FloatingNav.svelte';
 	import Header from './Header.svelte';
 	import { onDestroy } from 'svelte';
+	import Button from '@src/components/system/buttons/Button.svelte';
 	let name = $mode == 'edit' ? $collection.name : '';
 	let icon = $mode == 'edit' ? $collection.icon : '';
+	let tabs = ['Core', 'Permissions', 'Fields'] as const;
+	let currentTab: (typeof tabs)[number] = 'Core';
 	let fields = [];
 	let addField = false;
 	let navButton;
@@ -77,12 +80,19 @@
 	</div>
 	<div class="right_panel flex-grow">
 		<Header saveFunction={save} />
-
-		<div>
-			<FloatingInput theme="dark" label="name" name="name" bind:value={name} />
-			<FloatingInput theme="dark" label="icon" name="icon" bind:value={icon} />
+		<div class="flex justify-center gap-1 w-full mb-10">
+			{#each tabs as tab}
+				<Button class="!min-w-[120px]" bgColor={tab == currentTab ? '#42c542' : 'gray'} on:click={() => (currentTab = tab)}>{tab}</Button>
+			{/each}
 		</div>
-		{#if $mode == 'create'}
+		{#if currentTab == 'Core'}
+			<div>
+				<FloatingInput theme="dark" label="name" name="name" bind:value={name} />
+				<FloatingInput theme="dark" label="icon" name="icon" bind:value={icon} />
+			</div>
+		{:else if currentTab == 'Permissions'}
+			<div></div>
+		{:else if $mode == 'create'}
 			<WidgetBuilder {fields} bind:addField />
 		{:else if $mode == 'edit'}
 			<WidgetBuilder bind:fields={$collection.fields} bind:addField />

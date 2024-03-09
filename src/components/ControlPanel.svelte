@@ -19,7 +19,7 @@
 
 <div class="wrapper max-md:!h-auto max-md:!w-screen max-md:!max-w-full max-md:absolute max-md:top-[calc(100vh-45px)]">
 	{#if $collection.permissions?.[user.role]?.write != false}
-		<Button on:click={$saveFunction.fn}>SAVE</Button>
+		<Button class="max-md:hidden" on:click={$saveFunction.fn}>SAVE</Button>
 	{/if}
 </div>
 

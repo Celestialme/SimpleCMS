@@ -249,7 +249,7 @@ function removeExtension(fileName) {
 }
 export let asAny = (value: any) => value;
 
-function deepCopy(obj) {
+export function deepCopy(obj) {
 	if (typeof obj !== 'object' || obj === null) {
 		return obj;
 	}
