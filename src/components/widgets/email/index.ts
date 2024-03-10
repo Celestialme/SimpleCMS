@@ -1,4 +1,4 @@
-import { publicConfig } from '@root/config/public';
+import publicConfig from '@root/config/public';
 import { getGuiFields } from '@src/utils/utils';
 import Email from './Email.svelte';
 import { type Params, GuiSchema, GraphqlSchema } from './types';

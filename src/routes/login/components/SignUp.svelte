@@ -5,7 +5,7 @@
 	import { signUpSchema_noToken, signUpSchema_token, type SignupSchema } from '@src/utils/formSchemas';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import CMSLogo from './icons/Logo.svelte';
-	import { publicConfig } from '@root/config/public';
+	import publicConfig from '@root/config/public';
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
 	import { goto } from '$app/navigation';

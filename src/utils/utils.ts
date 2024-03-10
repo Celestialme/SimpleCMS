@@ -5,7 +5,7 @@ import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode } from '@src/stores/store';
 import { collections, collection } from '@src/stores/load';
-import { publicConfig } from '@root/config/public';
+import publicConfig from '@root/config/public';
 import { browser } from '$app/environment';
 import crypto from 'crypto';
 import type { Schema } from '@src/collections/types';

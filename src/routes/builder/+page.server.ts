@@ -28,6 +28,7 @@ export const actions: Actions = {
 
 		let originalName = JSON.parse(formData.get('originalName') as string);
 		let collectionName = JSON.parse(formData.get('collectionName') as string);
+		let permissions = formData.get('permissions') as string;
 		let icon = JSON.parse((formData.get('icon') as string) || '""');
 		let fields = JSON.parse(fieldsData) as Array<fields>;
 		let imports = await goThrough(fields);
@@ -37,6 +38,7 @@ export const actions: Actions = {
 	import type { Schema } from './types';
 	let schema: Schema = {
 		icon:"${icon}",
+		permissions:${permissions},
 		fields: [
 			${fields}
 		]

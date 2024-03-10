@@ -13,22 +13,26 @@
 	import Header from './Header.svelte';
 	import { onDestroy } from 'svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
-	let name = $mode == 'edit' ? $collection.name : '';
+	import PermissionsTable from '@src/components/PermissionsTable.svelte';
+	import { permissions } from '@src/collections/types';
+	let collectionName = $mode == 'edit' ? $collection.name : '';
 	let icon = $mode == 'edit' ? $collection.icon : '';
+	let permissionsValue: Permissions;
 	let tabs = ['Core', 'Permissions', 'Fields'] as const;
 	let currentTab: (typeof tabs)[number] = 'Core';
-	let fields = [];
+	let fields = [] as any;
 	let addField = false;
 	let navButton;
 	$mode = 'create';
 	$drawerExpanded = true;
 
 	collection.subscribe((_) => {
-		name = $mode == 'edit' ? $collection.name : '';
+		collectionName = $mode == 'edit' ? $collection.name : '';
 		icon = $mode == 'edit' ? $collection.icon : '';
+		fields = $mode == 'edit' ? $collection.fields : [];
 	});
 	$: if ($mode == 'create') {
-		name = '';
+		collectionName = '';
 		icon = '';
 		fields = [];
 	}
@@ -36,6 +40,13 @@
 		await updateCollections();
 	});
 	function save() {
+		for (let role in permissionsValue) {
+			for (let permission in permissionsValue[role]) {
+				if (permissions.indexOf(permission as any) == -1) {
+					delete permissionsValue[role][permission];
+				}
+			}
+		}
 		let _categories: { name: string; icon: string; collections: string[] }[] = [];
 		for (let category of $categories) {
 			_categories.push({
@@ -50,11 +61,11 @@
 				'Content-Type': 'multipart/form-data'
 			}
 		});
-		if (!name) return;
+		if (!collectionName) return;
 		let data =
 			$mode == 'edit'
-				? obj2formData({ originalName: $collection.name, collectionName: name, fields: $collection.fields, icon })
-				: obj2formData({ fields, collectionName: name, icon });
+				? obj2formData({ originalName: $collection.name, collectionName, fields: $collection.fields, permissions: $collection.permissions, icon })
+				: obj2formData({ fields, collectionName, icon, permissions: permissionsValue });
 		axios.post(`?/saveCollection`, data, {
 			headers: {
 				'Content-Type': 'multipart/form-data'
@@ -87,11 +98,13 @@
 		</div>
 		{#if currentTab == 'Core'}
 			<div>
-				<FloatingInput theme="dark" label="name" name="name" bind:value={name} />
+				<FloatingInput theme="dark" label="name" name="name" bind:value={collectionName} />
 				<FloatingInput theme="dark" label="icon" name="icon" bind:value={icon} />
 			</div>
 		{:else if currentTab == 'Permissions'}
-			<div></div>
+			<div>
+				<PermissionsTable bind:value={permissionsValue} />
+			</div>
 		{:else if $mode == 'create'}
 			<WidgetBuilder {fields} bind:addField />
 		{:else if $mode == 'edit'}

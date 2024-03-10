@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { publicConfig } from '@root/config/public';
-	import { getCollections } from '@src/collections';
+	import publicConfig from '@root/config/public';
+
 	import type { FieldType } from '.';
 
 	import Input from '@src/components/system/inputs/Input.svelte';
@@ -15,9 +15,6 @@
 	$: _language = field?.translated ? $contentLanguage : publicConfig.DEFAULT_CONTENT_LANGUAGE;
 
 	export const WidgetData = async () => _data;
-	getCollections().then((collections) => {
-		console.log(collections);
-	});
 </script>
 
 <Input type="text" bind:value={_data[_language]} />

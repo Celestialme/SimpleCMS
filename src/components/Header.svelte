@@ -4,7 +4,7 @@
 	import { drawerExpanded, mode } from '@src/stores/store';
 	import XIcon from './system/icons/XIcon.svelte';
 	import DropDown from './system/dropDown/DropDown.svelte';
-	import { publicConfig } from '@root/config/public';
+	import publicConfig from '@root/config/public';
 	import Button from './system/buttons/Button.svelte';
 	import type { User } from '@src/auth/types';
 	import { page } from '$app/stores';

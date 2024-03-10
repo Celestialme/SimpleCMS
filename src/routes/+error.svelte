@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
-	import { publicConfig } from '@root/config/public';
+	import  publicConfig from '@root/config/public';
 	import { messages } from '@src/stores/load';
 
 	// typesafe-i18n

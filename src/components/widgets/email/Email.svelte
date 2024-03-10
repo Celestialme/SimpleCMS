@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { publicConfig } from '@root/config/public';
+	import publicConfig from '@root/config/public';
 	import type { FieldType } from '.';
 
 	import Input from '@src/components/system/inputs/Input.svelte';

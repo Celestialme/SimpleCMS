@@ -5,7 +5,8 @@ import { getCollectionFiles } from '@src/routes/api/getCollections/getCollection
 import { categories, collections, unAssigned } from '@src/stores/load';
 import type { Unsubscriber } from 'svelte/store';
 import { initWidgets } from '@src/components/widgets';
-import type { Schema } from './types';
+import { basePermissions, type Schema } from './types';
+import deepmerge from 'deepmerge';
 initWidgets();
 let imports: { [Key: string]: Schema } = {};
 let rnd = Math.random();
@@ -68,7 +69,10 @@ async function getImports(recompile: boolean = false) {
 			}
 		}
 	}
-
+	for (let key in imports) {
+		let collection = imports[key];
+		collection.permissions = deepmerge(basePermissions, collection.permissions || {});
+	}
 	return imports;
 }
 let unsubscribe: Unsubscriber | undefined;

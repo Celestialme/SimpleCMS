@@ -15,6 +15,7 @@
 		$saveFunction.fn = _saveFunction;
 	};
 	let user: User = $page.data.user;
+	console.log($collection.permissions);
 </script>
 
 <div class="wrapper max-md:!h-auto max-md:!w-screen max-md:!max-w-full max-md:absolute max-md:top-[calc(100vh-45px)]">

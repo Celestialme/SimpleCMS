@@ -6,7 +6,7 @@
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 
 	import { systemLanguage } from '@src/stores/load';
-	import { publicConfig } from '@root/config/public';
+	import publicConfig from '@root/config/public';
 	export let data: PageData;
 	console.log(data);
 	let active: undefined | 0 | 1 = undefined;

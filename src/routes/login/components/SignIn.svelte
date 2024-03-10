@@ -4,7 +4,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import { loginSchema, type LoginSchema } from '@src/utils/formSchemas';
 	import CMSLogo from './icons/Logo.svelte';
-	import { publicConfig } from '@root/config/public';
+	import publicConfig from '@root/config/public';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import LoginRecover from './LoginRecover.svelte';
 	import EnableIcon from '@src/components/system/buttons/EnableIcon.svelte';

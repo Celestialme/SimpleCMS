@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { auth } from '../api/db';
 
-import { PUBLIC_CONTENT_LANGUAGE } from '$env/static/public';
+import publicConfig from '@root/config/public';
 import { locales } from '@src/i18n/i18n-util';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import { getCollections } from '@src/collections';
@@ -25,7 +25,7 @@ export async function load({ cookies, route, params }) {
 		if (route.id != '/[language]/[collection]') {
 			//else if language and collection both set in url
 			let _filtered = collections.filter((c) => user && c?.permissions?.[user.role]?.read != false); // filters collection  based on reading permissions  and redirects to first left one
-			throw redirect(302, `/${params.language || PUBLIC_CONTENT_LANGUAGE}/${_filtered[0].name}`);
+			throw redirect(302, `/${params.language || publicConfig.DEFAULT_CONTENT_LANGUAGE}/${_filtered[0].name}`);
 		}
 		if (collection?.permissions?.[user.role]?.read == false) {
 			throw error(404, {

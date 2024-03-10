@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 import { auth, getCollectionModels } from '@src/routes/api/db';
 import { getFieldName, parse, saveImages } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
-import { publicConfig } from '@root/config/public';
+import publicConfig from '@root/config/public';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import type { Schema } from '@src/collections/types';
 
@@ -14,7 +14,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 		return new Response('', { status: 403 });
 	}
 	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
-	let has_read_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.read ?? true;
+	let has_read_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.read;
 	if (!has_read_access) {
 		return new Response('', { status: 403 });
 	}
@@ -75,7 +75,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write ?? true;
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
@@ -103,7 +103,7 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write ?? true;
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
@@ -132,7 +132,7 @@ export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write ?? true;
+	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}

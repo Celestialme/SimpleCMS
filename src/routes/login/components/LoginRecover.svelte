@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CMSLogo from './icons/Logo.svelte';
-	import { publicConfig } from '@root/config/public';
+	import publicConfig from '@root/config/public';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import { recoverSchema, type RecoverSchema } from '@src/utils/formSchemas';

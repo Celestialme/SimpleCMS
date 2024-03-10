@@ -1,4 +1,4 @@
-import { publicConfig } from '@root/config/public';
+import publicConfig from '@root/config/public';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
 import Text from './Text.svelte';
 import { GuiSchema, GraphqlSchema, type Params } from './types';

@@ -1,6 +1,6 @@
 import { createPublicConfig } from './types';
 
-export let publicConfig = createPublicConfig({
+export default createPublicConfig({
 	SITE_NAME: 'SimpleCMS',
 	AVAILABLE_CONTENT_LANGUAGES: ['en', 'de'],
 	DEFAULT_CONTENT_LANGUAGE: 'en',

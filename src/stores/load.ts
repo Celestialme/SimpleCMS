@@ -1,4 +1,4 @@
-import { publicConfig } from '@root/config/public';
+import publicConfig from '@root/config/public';
 import type { Schema } from '@src/collections/types';
 import * as m from '@src/paraglide/messages.js';
 import { setLanguageTag, type AvailableLanguageTag } from '@src/paraglide/runtime';
