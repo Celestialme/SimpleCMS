@@ -54,7 +54,9 @@
 		>
 		<div class="flex justify-center gap-1 w-full">
 			{#each Object.keys(tabs) as tab}
-				<Button class="!min-w-[120px]" bgColor={tab == currentTab ? '#42c542' : 'gray'} on:click={() => (currentTab = asAny(tab))}>{tab}</Button>
+				{#if Object.keys(guiSchema).some((key) => tabs[tab](key))}
+					<Button class="!min-w-[120px]" bgColor={tab == currentTab ? '#42c542' : 'gray'} on:click={() => (currentTab = asAny(tab))}>{tab}</Button>
+				{/if}
 			{/each}
 		</div>
 		<div class="min-h-[200px] w-full p-[10px] flex flex-col items-center">

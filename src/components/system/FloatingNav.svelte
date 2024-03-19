@@ -31,17 +31,15 @@
 		}, pathname);
 		return params.length > 0 ? replaced : pathname;
 	}
-	$: buttonInfo = { ...navigation_info?.[getBasePath($page.url.pathname)], ...{ radius: buttonRadius } } || {
-		x: 50,
-		y: window.innerHeight / 2,
-		radius: buttonRadius
-	};
+	$: buttonInfo = { ...{ x: 25, y: window.innerHeight / 2 }, ...navigation_info?.[getBasePath($page.url.pathname)], ...{ radius: buttonRadius } };
+	$: console.log(buttonInfo);
 	let firstLine: SVGLineElement;
 	let firstCircle: HTMLDivElement;
 	let svg: SVGElement;
 	let endpoints: {
 		x: number;
 		y: number;
+		angle: number;
 		url: {
 			external: boolean;
 			path: string;
@@ -51,24 +49,28 @@
 		{
 			x: center.x,
 			y: center.y,
+			angle: 0,
 			url: { external: false, path: `/` },
 			icon: 'solar:home-bold'
 		},
 		{
 			x: 0,
 			y: 0,
+			angle: 60,
 			url: { external: false, path: `/builder` },
 			icon: 'icomoon-free:wrench'
 		},
 		{
 			x: 0,
 			y: 0,
+			angle: 0,
 			url: { external: false, path: `/profile` },
 			icon: 'bi:gear-fill'
 		},
 		{
 			x: 0,
 			y: 0,
+			angle: -60,
 			url: { external: true, path: `/api/graphql` },
 			icon: 'teenyicons:graphql-outline'
 		}
@@ -81,9 +83,14 @@
 		let y2 = Math.round(Math.sin(((firstAngle - angle) * Math.PI) / 180) * distance + y1);
 		return { x: x2, y: y2 };
 	}
-	$: endpoints[1] = { ...endpoints[1], ...calculateSecondVector(buttonInfo.x, buttonInfo.y, center.x, center.y, 140, 60) };
-	$: endpoints[2] = { ...endpoints[2], ...calculateSecondVector(buttonInfo.x, buttonInfo.y, center.x, center.y, 140, 0) };
-	$: endpoints[3] = { ...endpoints[3], ...calculateSecondVector(buttonInfo.x, buttonInfo.y, center.x, center.y, 140, -60) };
+	$: {
+		for (let index in endpoints) {
+			endpoints[index] = {
+				...endpoints[index],
+				...calculateSecondVector(buttonInfo.x, buttonInfo.y, center.x, center.y, 140, endpoints[index].angle)
+			};
+		}
+	}
 
 	function drag(node: HTMLDivElement) {
 		let moved = false;
