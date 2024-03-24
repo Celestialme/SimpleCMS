@@ -6,7 +6,7 @@ let schema: Schema = {
 
 	fields: [
 		widgets.MegaMenu({
-			menu: [
+			fields: [
 				[
 					widgets.Text({ label: 'link 1', translated: true }),
 					widgets.Text({ label: 'info', translated: true }),

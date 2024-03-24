@@ -18,12 +18,12 @@
 	let entryMode: 'create' | 'edit' | 'choose' = 'choose';
 	let relation_entry;
 	let relationCollection = $collections.find((x) => x.name == field?.relation);
+
 	export const WidgetData = async () => {
 		let relation_id = '';
 		if (!field) return;
 		if (entryMode == 'create') {
 			relation_id = (await saveFormData({ data: fieldsData, _collection: relationCollection, _mode: 'create' }))[0]?._id;
-			console.log(relation_id);
 		} else if (entryMode == 'choose') {
 			relation_id = selected?._id;
 		} else if (entryMode == 'edit') {

@@ -8,7 +8,6 @@
 	export let fieldsData = {};
 	export let customData = {};
 	$: if (root) $collectionValue = fieldsData;
-	console.log(customData);
 </script>
 
 <div class="wrapper">
@@ -23,6 +22,9 @@
 						<p>{field.label}</p>
 						<svelte:component
 							this={asAny(field.widget.type)}
+							on:change={() => {
+								fieldsData = fieldsData;
+							}}
 							field={asAny(field)}
 							bind:WidgetData={fieldsData[getFieldName(field)]}
 							value={customData[getFieldName(field)]}

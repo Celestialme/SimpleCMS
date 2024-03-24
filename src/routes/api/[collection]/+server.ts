@@ -29,6 +29,9 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let skip = (page - 1) * length;
 
 	let aggregations: any = [];
+	if (sort.status) {
+		aggregations.push({ $sort: { status: sort.status } });
+	}
 	for (let field of collection_schema.fields) {
 		let widget = widgets[field.widget.key];
 		let fieldName = getFieldName(field);

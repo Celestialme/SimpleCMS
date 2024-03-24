@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { collection, contentLanguage, headerActionButton, saveFunction } from '@src/stores/load';
+	import { collection, headerActionButton, saveFunction } from '@src/stores/load';
 	import MultiButton from './system/buttons/MultiButton.svelte';
 	import { drawerExpanded, mode } from '@src/stores/store';
 	import XIcon from './system/icons/XIcon.svelte';
-	import DropDown from './system/dropDown/DropDown.svelte';
-	import publicConfig from '@root/config/public';
+	import LanguageSelector from './system/dropDown/LanguageSelector.svelte';
+
 	import type { User } from '@src/auth/types';
 	import { page } from '$app/stores';
+
 	$: {
 		$headerActionButton = XIcon;
 		$collection;
@@ -30,8 +31,8 @@
 				<iconify-icon width="26" style="color:#05ff05" icon="ic:sharp-save-as"></iconify-icon>
 			</button>
 		{/if}
-		<div class="w-[50px] h-full relative">
-			<DropDown class="absolute" items={publicConfig.AVAILABLE_CONTENT_LANGUAGES} bind:selected={$contentLanguage} />
+		<div class="w-[80px] h-full relative mr-2">
+			<LanguageSelector />
 		</div>
 		{#if !['edit', 'create'].includes($mode)}
 			<MultiButton />

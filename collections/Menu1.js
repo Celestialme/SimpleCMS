@@ -2,7 +2,7 @@ let schema = {
     icon: 'pepicons-pop:menu',
     fields: [
         globalThis.widgets.MegaMenu({
-            menu: [
+            fields: [
                 [
                     globalThis.widgets.Text({ label: 'link 1', translated: true }),
                     globalThis.widgets.Text({ label: 'info', translated: true }),

@@ -25,16 +25,16 @@ const widget = (params: Params) => {
 		GuiFields: getGuiFields(params, GuiSchema)
 	};
 
-	for (let level of params.menu) {
+	for (let level of params.fields) {
 		level.unshift(Text({ label: 'Header', translated: true }));
 	}
-	params.menu.unshift([Text({ label: 'Header', translated: true })]);
+	params.fields.unshift([Text({ label: 'Header', translated: true })]);
 	let callback = ({ data }) => {
 		entryData.set(data?.entryList[0]);
 		mode.set('edit');
 		headerActionButton.set('fa:refresh');
 	};
-	let field = { db_fieldName: params.db_fieldName, menu: params.menu, display, label: params.label, width: params.width, callback };
+	let field = { db_fieldName: params.db_fieldName, fields: params.fields, display, label: params.label, width: params.width, callback };
 
 	return { ...field, widget };
 };

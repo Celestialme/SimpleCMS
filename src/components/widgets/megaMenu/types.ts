@@ -8,12 +8,12 @@ export type Params = {
 	db_fieldName?: string;
 	label: string;
 	width?: number;
-	menu: any[];
+	fields: any[];
 	display?: DISPLAY;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },
-	menu: { widget: GuiFields, required: true },
+	fields: { widget: GuiFields, required: true },
 	display: { widget: FloatingInput, required: true },
 	db_fieldName: { widget: FloatingInput, required: true }
 };
