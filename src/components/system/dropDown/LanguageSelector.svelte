@@ -1,35 +1,17 @@
 <script lang="ts">
 	import publicConfig from '@root/config/public';
-	import { contentLanguage, collection } from '@src/stores/load';
-	import { collectionValue, mode } from '@src/stores/store';
-	import { getFieldName } from '@src/utils/utils';
+	import { contentLanguage } from '@src/stores/load';
+	import { mode, translationProgress } from '@src/stores/store';
 	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
 	$contentLanguage = languages[0];
 	export let label: string = '';
 	let expanded = false;
-	$: console.log(translations);
-	$: {
-		checkTranslations();
-		$collectionValue;
-	}
-	let translations = {};
-	async function checkTranslations() {
-		translations = {};
-		for (let key in $collectionValue) {
-			let data = await $collectionValue[key]();
-			for (let lang of languages) {
-				let field = $collection.fields.find((x) => getFieldName(x) == key);
-				if (!field || ('translated' in field && !field.translated)) continue;
-				if (!translations[lang]) translations[lang] = { total: 0, translated: 0 };
-				if (!data[lang]) {
-					translations[lang].total++;
-				} else {
-					translations[lang].translated++;
-					translations[lang].total++;
-				}
-			}
+	mode.subscribe(() => {
+		if ($mode != 'view') $translationProgress = { show: true };
+		else {
+			$translationProgress = { show: false };
 		}
-	}
+	});
 </script>
 
 <div class="container absolute bg-[#363636]">
@@ -39,36 +21,36 @@
 		<p>{($contentLanguage || label).toUpperCase()}</p>
 	</div>
 	{#if expanded}
-		<div class="items bg-[#363636]" class:itemsView={$mode == 'view'}>
-			{#each languages as item}
-				{#if $mode != 'view'}
+		<div class="items bg-[#363636]" class:itemsView={!$translationProgress.show}>
+			{#each languages as lang}
+				{#if $translationProgress.show}
 					<div
 						class="flex item items-center py-2"
 						on:click={() => {
-							$contentLanguage = item;
+							$contentLanguage = lang;
 							expanded = false;
 						}}
 					>
 						<p>
-							{item.toUpperCase()}
+							{lang.toUpperCase()}
 						</p>
 						<div class="w-[100px] h-[5px] bg-white">
 							<div
-								style="width:{(translations[item]?.translated * 100) / translations[item]?.total}%"
+								style="width:{($translationProgress[lang]?.translated.size * 100) / $translationProgress[lang]?.total.size}%"
 								class="h-[5px] bg-green-500 transition-all"
 							></div>
 						</div>
-						<p>{((translations[item]?.translated ?? 1) * 100) / translations[item]?.total ?? 100}%</p>
+						<p>{(($translationProgress[lang]?.translated.size ?? 1) * 100) / $translationProgress[lang]?.total.size ?? 100}%</p>
 					</div>
 				{:else}
 					<p
 						class="item"
 						on:click={() => {
-							$contentLanguage = item;
+							$contentLanguage = lang;
 							expanded = false;
 						}}
 					>
-						{item.toUpperCase()}
+						{lang.toUpperCase()}
 					</p>
 				{/if}
 			{/each}

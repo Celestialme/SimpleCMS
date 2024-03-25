@@ -3,7 +3,7 @@ import Path from 'path';
 import { Blob } from 'buffer';
 import axios from 'axios';
 import { get } from 'svelte/store';
-import { entryData, mode } from '@src/stores/store';
+import { entryData, mode, translationProgress } from '@src/stores/store';
 import { collections, collection } from '@src/stores/load';
 import publicConfig from '@root/config/public';
 import { browser } from '$app/environment';
@@ -337,4 +337,16 @@ export function motion(start: number, end: number, duration: number, cb: (curren
 			}
 		});
 	}
+}
+
+export function updateTranslationProgress(data, field) {
+	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
+	let $translationProgress = get(translationProgress);
+	for (let lang of languages) {
+		!$translationProgress[lang] && ($translationProgress[lang] = { total: new Set(), translated: new Set() });
+		if (field?.translated) $translationProgress[lang].total.add(field);
+		if (data[lang]) $translationProgress[lang].translated.add(field);
+		else $translationProgress[lang].translated.delete(field);
+	}
+	translationProgress.set($translationProgress);
 }

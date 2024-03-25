@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { mode } from '@src/stores/store';
+	import { mode, translationProgress } from '@src/stores/store';
 	import { currentChild } from '.';
 	import { contentLanguage, headerActionButton } from '@src/stores/load';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
@@ -221,6 +221,7 @@
 					depth = level + 1;
 					showFields = true;
 					mode.set('create');
+					$translationProgress.show = true;
 				}}><iconify-icon icon="uil:focus-add" width="24" height="24" /></button
 			>
 		{/if}
@@ -230,6 +231,7 @@
 				$mode = 'edit';
 				depth = level;
 				showFields = true;
+				$translationProgress.show = true;
 			}}><iconify-icon icon="raphael:edit" width="24" height="24" /></button
 		>
 		{#if level > 0}

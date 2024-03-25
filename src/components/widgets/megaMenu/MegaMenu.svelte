@@ -3,11 +3,11 @@
 	import { currentChild, type FieldType } from '.';
 	import { extractData, getFieldName } from '@src/utils/utils';
 	import ListNode from './ListNode.svelte';
-	import { entryData, mode } from '@src/stores/store';
+	import { entryData, mode, translationProgress } from '@src/stores/store';
 	import { saveFunction } from '@src/stores/load';
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
-	console.log(field);
+	$translationProgress.show = false;
 	export let value = $entryData[fieldName];
 	export const WidgetData = async () => _data;
 	let MENU_CONTAINER: HTMLUListElement;
