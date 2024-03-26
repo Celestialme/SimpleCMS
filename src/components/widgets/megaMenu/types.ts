@@ -19,11 +19,11 @@ export let GuiSchema = {
 };
 
 export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
-	let menu = field.menu;
+	let fields = field.fields;
 	let typeName = `${collection.name}_${getFieldName(field, true)}`;
 	let types = new Set();
 	let levelCount = 0;
-	for (let level of menu) {
+	for (let level of fields) {
 		let children: Array<any> = [];
 		for (let _field of level) {
 			types.add(widgets[_field.widget.key].GraphqlSchema({ label: `${getFieldName(_field, true)}_Level${levelCount}`, collection }).graphql);
@@ -32,7 +32,7 @@ export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
 			}
 		}
 		if (levelCount > 0) {
-			if (menu.length - levelCount > 1) {
+			if (fields.length - levelCount > 1) {
 				children.push(`children:[${collection.name}_${getFieldName(field, true)}_Level${levelCount + 1}] `);
 			}
 			types.add(`

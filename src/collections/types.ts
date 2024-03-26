@@ -25,4 +25,5 @@ export interface Schema {
 	status?: 'published' | 'unpublished' | 'draft';
 	permissions?: Permissions;
 }
-export type CollectionLabels = 'imageArray' | 'media' | 'Menu' | 'Menu1' | 'Menu2' | 'Posts1' | 'Posts2' | 'Posts3' | 'Relation' | 'thumbs';
+
+export type CollectionLabels = 'imageArray'|'media'|'Menu'|'Menu1'|'Menu2'|'Posts1'|'Posts2'|'Posts3'|'Relation'|'thumbs';
