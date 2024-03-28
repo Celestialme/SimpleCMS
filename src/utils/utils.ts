@@ -345,7 +345,7 @@ export function updateTranslationProgress(data, field) {
 	for (let lang of languages) {
 		!$translationProgress[lang] && ($translationProgress[lang] = { total: new Set(), translated: new Set() });
 		if (field?.translated) $translationProgress[lang].total.add(field);
-		if (data[lang]) $translationProgress[lang].translated.add(field);
+		if (field?.translated && data[lang]) $translationProgress[lang].translated.add(field);
 		else $translationProgress[lang].translated.delete(field);
 	}
 	translationProgress.set($translationProgress);
