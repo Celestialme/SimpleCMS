@@ -1,13 +1,5 @@
 let schema = {
     icon: 'iconoir:post',
-    permissions: {
-        user: {
-            read: true
-        },
-        admin: {
-            write: true
-        }
-    },
     fields: [
         globalThis.widgets.Text({
             label: 'text 1',

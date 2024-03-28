@@ -6,6 +6,7 @@ export type Params = {
 	display?: DISPLAY;
 	db_fieldName?: string;
 	widget?: any;
+	permissions?: Permissions;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },

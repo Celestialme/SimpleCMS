@@ -20,6 +20,7 @@ const widget = (params: Params) => {
 		GuiFields: getGuiFields(params, GuiSchema)
 	};
 	let field = {
+		permissions: params.permissions,
 		display,
 		label: params.label,
 		db_fieldName: params.db_fieldName,

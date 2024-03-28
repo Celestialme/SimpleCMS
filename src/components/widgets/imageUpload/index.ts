@@ -21,7 +21,8 @@ const widget = (params: Params) => {
 		label: params.label,
 		db_fieldName: params.db_fieldName,
 		path: params.path || 'unique',
-		width: params.width
+		width: params.width,
+		permissions: params.permissions
 	};
 
 	return { ...field, widget };

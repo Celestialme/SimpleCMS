@@ -34,7 +34,15 @@ const widget = (params: Params) => {
 		mode.set('edit');
 		headerActionButton.set('fa:refresh');
 	};
-	let field = { db_fieldName: params.db_fieldName, fields: params.fields, display, label: params.label, width: params.width, callback };
+	let field = {
+		db_fieldName: params.db_fieldName,
+		fields: params.fields,
+		display,
+		label: params.label,
+		width: params.width,
+		callback,
+		permissions: params.permissions
+	};
 
 	return { ...field, widget };
 };

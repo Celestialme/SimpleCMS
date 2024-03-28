@@ -41,7 +41,8 @@ const widget = (params: Params) => {
 		uploader_display: params.uploader_display,
 		uploader_db_fieldName: params.uploader_db_fieldName,
 		extract: true,
-		width: params.width
+		width: params.width,
+		permissions: params.permissions
 	};
 
 	return { ...field, widget };

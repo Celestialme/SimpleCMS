@@ -1,4 +1,4 @@
-import { redirect, type Actions } from '@sveltejs/kit';
+import { redirect, type Actions, error } from '@sveltejs/kit';
 import { auth, getCollectionModels } from '../api/db';
 import type { WidgetType } from '@src/components/widgets';
 import fs from 'fs';
@@ -7,12 +7,18 @@ import prettierConfig from '@root/.prettierrc.json';
 import { updateCollections } from '@src/collections';
 import { compile } from '../api/compile/compile';
 import { SESSION_COOKIE_NAME } from '@src/auth';
+import { sanitizePermissions } from '@src/collections/types';
 
 type fields = ReturnType<WidgetType[keyof WidgetType]>;
 export async function load(event) {
 	let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await auth.validateSession(session_id);
 	if (user) {
+		if (user.role != 'admin') {
+			throw error(404, {
+				message: 'you dont have an access to this page'
+			});
+		}
 		return {
 			user
 		};
@@ -28,7 +34,8 @@ export const actions: Actions = {
 
 		let originalName = JSON.parse(formData.get('originalName') as string);
 		let collectionName = JSON.parse(formData.get('collectionName') as string);
-		let permissions = formData.get('permissions') as string;
+		let permissions = sanitizePermissions(JSON.parse(formData.get('permissions') as string));
+		console.log(JSON.parse(formData.get('permissions') as string));
 		let icon = JSON.parse((formData.get('icon') as string) || '""');
 		let fields = JSON.parse(fieldsData) as Array<fields>;
 		let imports = await goThrough(fields);
@@ -38,7 +45,7 @@ export const actions: Actions = {
 	import type { Schema } from './types';
 	let schema: Schema = {
 		icon:"${icon}",
-		permissions:${permissions},
+		${permissions ? `permissions:${JSON.stringify(permissions)},` : ''}
 		fields: [
 			${fields}
 		]

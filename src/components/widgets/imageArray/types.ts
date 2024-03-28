@@ -2,6 +2,7 @@ import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import type DefaultWidgets from '@src/components/widgets';
 import { getFieldName } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
+import type { Permissions } from '@src/collections/types';
 
 export type Params = {
 	db_fieldName?: null;
@@ -16,6 +17,7 @@ export type Params = {
 	uploader_path: string;
 	uploader_display?: DISPLAY;
 	uploader_db_fieldName?: string;
+	permissions?: Permissions;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },

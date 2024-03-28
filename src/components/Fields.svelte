@@ -2,16 +2,18 @@
 	import { collectionValue } from '@src/stores/store';
 	import { collection } from '@src/stores/load';
 	import { asAny, getFieldName } from '@src/utils/utils';
+	import { page } from '$app/stores';
 	export let fields: typeof $collection.fields | undefined = undefined;
 
 	export let root = true; // if Fields is not part of any widget.
 	export let fieldsData = {};
 	export let customData = {};
 	$: if (root) $collectionValue = fieldsData;
+	let user = $page.data.user;
 </script>
 
 <div class="wrapper">
-	{#each fields || $collection.fields as field, index}
+	{#each fields || $collection.fields.filter((f) => f?.permissions?.[user.role].read !== false) as field, index}
 		{#if field.widget}
 			{#key $collection}
 				<div
@@ -23,6 +25,7 @@
 						<svelte:component
 							this={asAny(field.widget.type)}
 							field={asAny(field)}
+							disabled={field?.permissions?.[user.role].write == false}
 							bind:WidgetData={fieldsData[getFieldName(field)]}
 							value={customData[getFieldName(field)]}
 							{...$$props}

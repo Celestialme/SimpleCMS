@@ -2,6 +2,7 @@ import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import GuiFields from './GuiFields.svelte';
 import widgets from '..';
 import { getFieldName } from '@src/utils/utils';
+import type { Permissions } from '@src/collections/types';
 
 export type Params = {
 	widget?: any;
@@ -10,6 +11,7 @@ export type Params = {
 	width?: number;
 	fields: any[];
 	display?: DISPLAY;
+	permissions?: Permissions;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },

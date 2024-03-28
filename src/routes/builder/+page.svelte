@@ -14,7 +14,7 @@
 	import { onDestroy } from 'svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import PermissionsTable from '@src/components/PermissionsTable.svelte';
-	import { permissions } from '@src/collections/types';
+	import { basePermissions, permissions, type Permissions } from '@src/collections/types';
 	let collectionName = $mode == 'edit' ? $collection.name : '';
 	let icon = $mode == 'edit' ? $collection.icon : '';
 	let permissionsValue: Permissions;
@@ -30,6 +30,7 @@
 		collectionName = $mode == 'edit' ? $collection.name : '';
 		icon = $mode == 'edit' ? $collection.icon : '';
 		fields = $mode == 'edit' ? $collection.fields : [];
+		permissionsValue = $collection?.permissions || basePermissions;
 	});
 	$: if ($mode == 'create') {
 		collectionName = '';
@@ -64,7 +65,7 @@
 		if (!collectionName) return;
 		let data =
 			$mode == 'edit'
-				? obj2formData({ originalName: $collection.name, collectionName, fields: $collection.fields, permissions: $collection.permissions, icon })
+				? obj2formData({ originalName: $collection.name, collectionName, fields: $collection.fields, permissions: permissionsValue, icon })
 				: obj2formData({ fields, collectionName, icon, permissions: permissionsValue });
 		axios.post(`?/saveCollection`, data, {
 			headers: {

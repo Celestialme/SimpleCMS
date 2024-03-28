@@ -3,9 +3,10 @@
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import { basePermissions, permissions } from '@src/collections/types';
-	import { collection } from '@src/stores/load';
-	export let value = ($collection?.permissions || basePermissions) as any;
-	$: value = ($collection?.permissions || basePermissions) as any;
+	import deepmerge from 'deepmerge';
+
+	export let value = basePermissions as any;
+	$: value = deepmerge(basePermissions, value || {});
 </script>
 
 <table class="table">

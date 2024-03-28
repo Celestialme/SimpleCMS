@@ -24,7 +24,8 @@ const widget = (params: Params) => {
 		display,
 		label: params.label,
 		db_fieldName: params.db_fieldName,
-		width: params.width
+		width: params.width,
+		permissions: params.permissions
 	};
 	return { ...field, widget };
 };
