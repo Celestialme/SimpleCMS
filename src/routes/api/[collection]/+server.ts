@@ -73,7 +73,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 				delete entry[fieldName];
 				return entry;
 			});
-		} else if ('cleanRequest' in widget) {
+		} else if ('modifyRequest' in widget) {
 			// widget can modify own portion of entryList;
 			entryList = entryList.map((entry: any) => {
 				entry[fieldName] = widget.modifyRequest({ field, data: entry[fieldName], user, type: 'GET' });

@@ -7,6 +7,7 @@ import { entryData, mode } from '@src/stores/store';
 import { headerActionButton } from '@src/stores/load';
 import type { Permissions } from '@src/collections/types';
 import type { User } from '@src/auth/types';
+import widgets from '..';
 export let currentChild: Writable<any> = writable({});
 /**
  * Creates Mega Menu Field.
@@ -56,6 +57,16 @@ widget.modifyRequest = ({ field, data, user }: { field: ReturnType<typeof widget
 			for (let _field of field.fields[level]) {
 				if (_field?.permissions?.[user.role].read == false) {
 					delete children[index][getFieldName(_field)];
+				} else {
+					let widget = widgets[_field.widget.key];
+					if ('modifyRequest' in widget) {
+						children[index][getFieldName(_field)] = widget.modifyRequest({
+							field: _field,
+							data: children[index][getFieldName(_field)],
+							user,
+							type: 'GET'
+						});
+					}
 				}
 			}
 
