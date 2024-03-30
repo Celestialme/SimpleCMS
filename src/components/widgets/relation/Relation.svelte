@@ -45,7 +45,11 @@
 			if (entryMode == 'edit' || entryMode == 'create') {
 				data = await extractData(fieldsData);
 			} else if (entryMode == 'choose') {
-				data = value;
+				if (typeof value == 'string') {
+					data = await findById(value, relationCollection?.name as string);
+				} else {
+					data = value;
+				}
 			}
 			!relation_entry && (relation_entry = data);
 		} else {
