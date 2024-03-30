@@ -74,9 +74,9 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 				return entry;
 			});
 		} else if ('cleanRequest' in widget) {
-			// widget can modify own portion entryList;
+			// widget can modify own portion of entryList;
 			entryList = entryList.map((entry: any) => {
-				entry[fieldName] = widget.cleanRequest({ field, data: entry[fieldName], user, type: 'GET' });
+				entry[fieldName] = widget.modifyRequest({ field, data: entry[fieldName], user, type: 'GET' });
 				return entry;
 			});
 		}

@@ -18,7 +18,7 @@ let widgets = {
 type K = ReturnType<(typeof widgets)[keyof typeof widgets]>['widget']['key'];
 export type WidgetType = {
 	[key in K]: (typeof widgets)[key] & {
-		cleanRequest: ({
+		modifyRequest: ({
 			field,
 			data,
 			user,

@@ -50,7 +50,7 @@ const widget = (params: Params) => {
 };
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
-widget.cleanRequest = ({ field, data, user }: { field: ReturnType<typeof widget>; data: { [key: string]: any }; user: User }) => {
+widget.modifyRequest = ({ field, data, user }: { field: ReturnType<typeof widget>; data: { [key: string]: any }; user: User }) => {
 	let cleanChildren = (children, level = 1) => {
 		for (let index in children) {
 			for (let _field of field.fields[level]) {
