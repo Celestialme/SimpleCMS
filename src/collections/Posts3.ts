@@ -5,6 +5,11 @@ let schema: Schema = {
 
 	fields: [
 		widgets.Text({
+			permissions: {
+				user: {
+					read: true
+				}
+			},
 			label: 'text 1',
 			translated: true,
 			width: 2

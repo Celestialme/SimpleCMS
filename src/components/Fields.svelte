@@ -13,7 +13,7 @@
 </script>
 
 <div class="wrapper">
-	{#each fields || $collection.fields.filter((f) => f?.permissions?.[user.role].read !== false) as field, index}
+	{#each (fields || $collection.fields).filter((f) => f?.permissions?.[user.role].read !== false) as field, index}
 		{#if field.widget}
 			{#key $collection}
 				<div

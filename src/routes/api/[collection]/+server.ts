@@ -6,10 +6,11 @@ import widgets from '@src/components/widgets';
 import publicConfig from '@root/config/public';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import type { Schema } from '@src/collections/types';
+import type { User } from '@src/auth/types';
 
 export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = await auth.validateSession(session_id);
+	let user = (await auth.validateSession(session_id)) as User;
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
@@ -61,6 +62,26 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 		}
 	]);
 	let entryList = entryListWithCount[0].entries;
+
+	for (let field of collection_schema.fields) {
+		let widget = widgets[field.widget.key];
+		let fieldName = getFieldName(field);
+
+		if (field?.permissions?.[user.role]?.read == false) {
+			// if we cant read there is nothing to clean.
+			entryList = entryList.map((entry: any) => {
+				delete entry[fieldName];
+				return entry;
+			});
+		} else if ('cleanRequest' in widget) {
+			// widget can modify own portion entryList;
+			entryList = entryList.map((entry: any) => {
+				entry[fieldName] = widget.cleanRequest({ field, data: entry[fieldName], user, type: 'GET' });
+				return entry;
+			});
+		}
+	}
+
 	let totalCount = entryListWithCount[0].totalCount[0] ? entryListWithCount[0].totalCount[0].total : 0;
 
 	let pagesCount = Math.ceil(totalCount / length);
