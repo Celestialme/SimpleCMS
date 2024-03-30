@@ -6,23 +6,7 @@ let schema: Schema = {
 
 	fields: [
 		widgets.MegaMenu({
-			fields: [
-				[
-					widgets.Text({ label: 'link 1', translated: true }),
-					widgets.Text({ label: 'info', translated: true }),
-					widgets.Text({ label: 'info3', translated: true })
-				],
-				[
-					widgets.Text({ label: 'link 2', translated: true }),
-					widgets.Text({ label: 'info', translated: true }),
-					widgets.Text({ label: 'info3', translated: true })
-				],
-				[
-					widgets.Text({ label: 'link 3', translated: true }),
-					widgets.Text({ label: 'info', translated: true }),
-					widgets.Text({ label: 'info3', translated: true })
-				]
-			],
+			fields: [[widgets.Text({ label: 'link 1', translated: true }), widgets.Relation({ label: 'Image', relation: 'thumbs', displayPath: 'Image' })]],
 			label: 'Menu'
 		})
 	]

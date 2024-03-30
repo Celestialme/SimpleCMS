@@ -45,12 +45,13 @@
 			if (entryMode == 'edit' || entryMode == 'create') {
 				data = await extractData(fieldsData);
 			} else if (entryMode == 'choose') {
-				data = $entryData[getFieldName(field)];
+				data = value;
 			}
 			!relation_entry && (relation_entry = data);
 		} else {
 			data = await extractData(fieldsData);
 		}
+
 		display = await field?.display({ data, field, collection: $collection, entry: $entryData, contentLanguage: $contentLanguage });
 	})(expanded);
 

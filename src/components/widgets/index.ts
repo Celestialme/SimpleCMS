@@ -28,7 +28,7 @@ export type WidgetType = {
 			data: { [key: string]: any };
 			user: User;
 			type: 'GET' | 'POST' | 'DELETE' | 'PATCH';
-		}) => {};
+		}) => Promise<{}>;
 	};
 };
 export let initWidgets = () => (globalThis.widgets = widgets);

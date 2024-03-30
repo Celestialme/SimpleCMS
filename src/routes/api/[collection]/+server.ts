@@ -39,10 +39,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 		if ('aggregations' in widget) {
 			let _filter = filter[fieldName];
 			let _sort = sort[fieldName];
-			if (widget.aggregations.transformations) {
-				let _aggregations = await widget.aggregations.transformations({ field, contentLanguage: contentLanguage });
-				aggregations.push(..._aggregations);
-			}
+
 			if (widget.aggregations.filters && _filter) {
 				let _aggregations = await widget.aggregations.filters({ field, contentLanguage: contentLanguage, filter: _filter });
 				aggregations.push(..._aggregations);
@@ -75,10 +72,12 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 			});
 		} else if ('modifyRequest' in widget) {
 			// widget can modify own portion of entryList;
-			entryList = entryList.map((entry: any) => {
-				entry[fieldName] = widget.modifyRequest({ field, data: entry[fieldName], user, type: 'GET' });
-				return entry;
-			});
+			entryList = await Promise.all(
+				entryList.map(async (entry: any) => {
+					entry[fieldName] = await widget.modifyRequest({ field, data: entry[fieldName], user, type: 'GET' });
+					return entry;
+				})
+			);
 		}
 	}
 

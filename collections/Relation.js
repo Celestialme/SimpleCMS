@@ -1,10 +1,14 @@
 let schema = {
     icon: 'lets-icons:menu',
     fields: [
+        globalThis.widgets.Text({
+            label: 'info',
+            translated: true
+        }),
         globalThis.widgets.Relation({
-            label: 'relation',
-            relation: 'Posts3',
-            displayPath: 'text 1'
+            label: 'relation2',
+            relation: 'thumbs',
+            displayPath: 'Image'
         })
     ]
 };

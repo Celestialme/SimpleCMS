@@ -16,7 +16,6 @@ declare global {
 		resolver?: { [key: string]: any };
 	};
 	type Aggregations = {
-		transformations?: ({ field, contentLanguage }: { field: any; contentLanguage: string }) => Promise<PipelineStage[]>;
 		filters?: ({ field, contentLanguage, filter }: { field: any; contentLanguage: string; filter: string }) => Promise<PipelineStage[]>;
 		sorts?: ({ field, contentLanguage, sort }: { field: any; contentLanguage: string; sort: number }) => Promise<PipelineStage[]>;
 	};

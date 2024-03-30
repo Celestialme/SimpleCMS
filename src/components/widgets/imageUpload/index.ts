@@ -5,7 +5,13 @@ const widget = (params: Params) => {
 	let display;
 	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
-			return `<img class='max-w-[200px] inline-block' src="${data?.thumbnail.url}" />`;
+			let url = data?.thumbnail?.url;
+
+			if (data instanceof FileList) {
+				url = URL.createObjectURL(data[0]);
+			}
+
+			return `<img class='max-w-[200px] inline-block' src="${url}" />`;
 		};
 		display.default = true;
 	} else {

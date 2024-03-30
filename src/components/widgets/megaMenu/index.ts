@@ -51,8 +51,8 @@ const widget = (params: Params) => {
 };
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
-widget.modifyRequest = ({ field, data, user }: { field: ReturnType<typeof widget>; data: { [key: string]: any }; user: User }) => {
-	let cleanChildren = (children, level = 1) => {
+widget.modifyRequest = async ({ field, data, user }: { field: ReturnType<typeof widget>; data: { [key: string]: any }; user: User }) => {
+	let cleanChildren = async (children, level = 1) => {
 		for (let index in children) {
 			for (let _field of field.fields[level]) {
 				if (_field?.permissions?.[user.role].read == false) {
@@ -60,7 +60,7 @@ widget.modifyRequest = ({ field, data, user }: { field: ReturnType<typeof widget
 				} else {
 					let widget = widgets[_field.widget.key];
 					if ('modifyRequest' in widget) {
-						children[index][getFieldName(_field)] = widget.modifyRequest({
+						children[index][getFieldName(_field)] = await widget.modifyRequest({
 							field: _field,
 							data: children[index][getFieldName(_field)],
 							user,
@@ -70,11 +70,11 @@ widget.modifyRequest = ({ field, data, user }: { field: ReturnType<typeof widget
 				}
 			}
 
-			children[index].children.length > 0 && field.fields[level + 1]?.length > 0 && cleanChildren(children[index].children, level + 1);
+			children[index].children.length > 0 && field.fields[level + 1]?.length > 0 && (await cleanChildren(children[index].children, level + 1));
 		}
 	};
 
-	cleanChildren(data.children);
+	await cleanChildren(data.children);
 
 	return data;
 };
