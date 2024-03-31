@@ -20,6 +20,7 @@ declare global {
 		sorts?: ({ field, contentLanguage, sort }: { field: any; contentLanguage: string; sort: number }) => Promise<PipelineStage[]>;
 	};
 	interface File {
+		path?: string;
 		buffer?: Uint8Array;
 	}
 }

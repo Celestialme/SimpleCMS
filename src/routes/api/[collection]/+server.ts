@@ -7,7 +7,6 @@ import publicConfig from '@root/config/public';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import type { Schema } from '@src/collections/types';
 import type { User } from '@src/auth/types';
-import { Blob } from 'buffer';
 
 export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
@@ -112,7 +111,10 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 			formData[key] = JSON.parse(data.get(key) as string, (key, value) => {
 				if (value?.instanceOf == 'File') {
 					//@ts-ignore
-					return new Blob([value.buffer], { type: value.type, name: value.name, lastModified: value.lastModified });
+
+					let file = new File([new Uint8Array(Object.values(value.buffer))], value.name, { type: value.type, lastModified: value.lastModified });
+					file.path = value.path;
+					return file;
 				}
 				return value;
 			});
@@ -122,9 +124,9 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	}
 	let _id = data.get('_id');
 
-	let files = await saveImages(data, params.collection);
+	await saveImages(formData, params.collection);
 
-	return new Response(JSON.stringify(await collection.updateOne({ _id }, { ...formData, ...files }, { upsert: true })));
+	return new Response(JSON.stringify(await collection.updateOne({ _id }, formData, { upsert: true })));
 };
 
 export const POST: RequestHandler = async ({ params, request, cookies }) => {
@@ -144,16 +146,24 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	let body: any = {};
 	for (let key of data.keys()) {
 		try {
-			body[key] = JSON.parse(data.get(key) as string);
+			body[key] = JSON.parse(data.get(key) as string, (key, value) => {
+				if (value?.instanceOf == 'File') {
+					//@ts-ignore
+					let file = new File([new Uint8Array(Object.values(value.buffer))], value.name, { type: value.type, lastModified: value.lastModified });
+					file.path = value.path;
+					return file;
+				}
+				return value;
+			});
 		} catch (e) {
 			body[key] = data.get(key) as string;
 		}
 	}
 	body['status'] = 'PUBLISHED';
 	if (!collection) return new Response('collection not found!!');
-	let files = await saveImages(data, params.collection);
+	await saveImages(body, params.collection);
 
-	return new Response(JSON.stringify(await collection.insertMany({ ...body, ...files })));
+	return new Response(JSON.stringify(await collection.insertMany(body)));
 };
 
 export const DELETE: RequestHandler = async ({ params, request, cookies }) => {

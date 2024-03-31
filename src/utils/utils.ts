@@ -1,6 +1,5 @@
 import fs from 'fs';
 import Path from 'path';
-import { Blob } from 'buffer';
 import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode, translationProgress } from '@src/stores/store';
@@ -16,20 +15,6 @@ export const config = {
 	}
 };
 
-async function readAllFilesInObject(obj: any) {
-	if (obj instanceof File) {
-		let arrayBuffer = await obj.arrayBuffer();
-		obj.buffer = new Uint8Array(arrayBuffer);
-	} else if (Array.isArray(obj)) {
-		for (let index in obj) {
-			await readAllFilesInObject(obj[index]);
-		}
-	} else if (typeof obj === 'object') {
-		for (let key in obj) {
-			await readAllFilesInObject(obj[key]);
-		}
-	}
-}
 export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	// used to save data
 	const formData = new FormData();
@@ -40,16 +25,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 		data[key] = value;
 	}
 	for (const key in data) {
-		if (data[key] instanceof FileList) {
-			for (let _key in data[key]) {
-				// for multiple files
-				console.log(data[key]);
-				formData.append(key, data[key][_key]);
-			}
-		} else if (data[key] instanceof File) {
-			formData.append(key, data[key]);
-		} else if (typeof data[key] === 'object') {
-			await readAllFilesInObject(data[key]);
+		if (typeof data[key] === 'object') {
 			formData.append(key, JSON.stringify(data[key]));
 		} else {
 			formData.append(key, data[key]);
@@ -93,83 +69,83 @@ export const obj2formData = (obj: any) => {
 };
 let env_sizes = publicConfig.IMAGE_SIZES;
 export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
-export async function saveImages(data: FormData, collectionName: string) {
+export async function saveImages(data: { [key: string]: any }, collectionName: string) {
 	if (browser) return;
 	let sharp = (await import('sharp')).default;
-	let files: any = {};
-	let _files: Array<any> = [];
 
-	let collection = get(collections).find((collection) => collection.name === collectionName);
-	for (let [fieldname, fieldData] of data.entries()) {
-		if (fieldData instanceof Blob) {
-			_files.push({ blob: fieldData, fieldname });
-		}
-	}
-
-	for (let file of _files) {
-		let { blob, fieldname } = file;
-		let arrayBuffer = await blob.arrayBuffer();
-		let buffer = Buffer.from(arrayBuffer);
-		let hash = crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
-		let path = _findFieldByTitle(collection, fieldname).path;
-		let name = removeExtension(blob.name);
-		//original image
-
-		let url;
-		if (path == 'global') {
-			url = `images/original/${hash}-${blob.name}`;
-		} else if (path == 'unique') {
-			url = `images/${collectionName}/original/${hash}-${blob.name}`;
-		} else {
-			url = `images/${path}/original/${hash}-${blob.name}`;
-		}
-		files[fieldname as keyof typeof files] = {
-			original: { name: `${hash}-${blob.name}`, url, size: blob.size, type: blob.type, lastModified: blob.lastModified }
-		};
-
-		if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
-			fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
-		}
-
-		fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, buffer);
-		for (let size in SIZES) {
-			if (size == 'original') continue;
-			let fullName = `${hash}-${name}.avif`;
-			const thumbnailBuffer = await sharp(buffer)
-				.rotate() // Rotate image according to EXIF data
-				.resize({ width: SIZES[size] })
-				.toFormat('avif', { quality: 80 })
-				.toBuffer();
-			let url;
-
-			if (path == 'global') {
-				url = `images/${size}/${fullName}`;
-			} else if (path == 'unique') {
-				url = `images/${collectionName}/${size}/${fullName}`;
-			} else {
-				url = `images/${path}/${size}/${fullName}`;
+	let parseFiles = async (data: any) => {
+		for (let fieldname in data) {
+			if (!(data[fieldname] instanceof File) && typeof data[fieldname] == 'object') {
+				await parseFiles(data[fieldname]);
+				continue;
+			} else if (!(data[fieldname] instanceof File)) {
+				continue;
 			}
+
+			let blob = data[fieldname] as any;
+			let arrayBuffer = await blob.arrayBuffer();
+			let buffer = Buffer.from(arrayBuffer);
+			let hash = crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
+			let path = blob.path;
+			let name = removeExtension(blob.name);
+			//original image
+
+			let url;
+			if (path == 'global') {
+				url = `images/original/${hash}-${blob.name}`;
+			} else if (path == 'unique') {
+				url = `images/${collectionName}/original/${hash}-${blob.name}`;
+			} else {
+				url = `images/${path}/original/${hash}-${blob.name}`;
+			}
+			data[fieldname] = {
+				original: { name: `${hash}-${blob.name}`, url, size: blob.size, type: blob.type, lastModified: blob.lastModified }
+			};
+
 			if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
 				fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
 			}
-			//sized images
-			fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, thumbnailBuffer);
-			files[fieldname as keyof typeof files][size] = {
-				name: fullName,
-				url: '/media/' + url,
-				size: blob.size,
-				type: 'image/avif',
-				lastModified: blob.lastModified
-			};
+
+			fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, buffer);
+			for (let size in SIZES) {
+				if (size == 'original') continue;
+				let fullName = `${hash}-${name}.avif`;
+				const thumbnailBuffer = await sharp(buffer)
+					.rotate() // Rotate image according to EXIF data
+					.resize({ width: SIZES[size] })
+					.toFormat('avif', { quality: 80 })
+					.toBuffer();
+				let url;
+
+				if (path == 'global') {
+					url = `images/${size}/${fullName}`;
+				} else if (path == 'unique') {
+					url = `images/${collectionName}/${size}/${fullName}`;
+				} else {
+					url = `images/${path}/${size}/${fullName}`;
+				}
+				if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
+					fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
+				}
+				//sized images
+				fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, thumbnailBuffer);
+				data[fieldname][size] = {
+					name: fullName,
+					url: '/media/' + url,
+					size: blob.size,
+					type: 'image/avif',
+					lastModified: blob.lastModified
+				};
+			}
 		}
-	}
-	return files;
+	};
+
+	await parseFiles(data);
 }
 
 // finds field title that matches the fieldname and returns that field
 function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
 	for (let field of schema.fields) {
-		console.log('field is ', field.db_fieldName, field.label);
 		if (field.db_fieldName == fieldname || field.label == fieldname) {
 			found.val = true;
 
@@ -377,6 +353,7 @@ export type FileJSON = {
 	size: number;
 	type: string;
 	buffer: Uint8Array;
+	path: string;
 };
 globalThis.File &&
 	//@ts-ignore
@@ -387,6 +364,7 @@ globalThis.File &&
 			name: this.name,
 			size: this.size,
 			type: this.type,
-			buffer: this.buffer as Uint8Array
+			buffer: this.buffer as Uint8Array,
+			path: this.path
 		};
 	});

@@ -6,9 +6,15 @@
 	export let field: FieldType;
 	let _data: File;
 	let updated = false;
-	export const WidgetData = async () => (updated ? _data : null);
-	export let file: File | undefined = undefined; // pass file directly from imageArray
-	console.log(file);
+	export const WidgetData = async () => {
+		_data.path = field.path;
+		let arrayBuffer = await _data.arrayBuffer();
+		_data.buffer = new Uint8Array(arrayBuffer);
+
+		return updated ? _data : null;
+	};
+	export let value: File | { [key: string]: any } = $entryData[getFieldName(field)]; // pass file directly from imageArray
+	console.log(value);
 	let fieldName = getFieldName(field);
 	function setFile(node: HTMLInputElement) {
 		node.onchange = (e) => {
@@ -17,17 +23,18 @@
 			_data = (e.target as HTMLInputElement).files?.[0] as File;
 		};
 
-		if (file instanceof File) {
+		if (value instanceof File) {
 			let fileList = new DataTransfer();
-			fileList.items.add(file);
+			fileList.items.add(value);
 			node.files = fileList.files;
 			_data = node.files[0];
 			updated = true;
-		} else if ($mode === 'edit' && $entryData[fieldName]?.thumbnail) {
-			axios.get($entryData[fieldName].thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
+		} else if ($mode === 'edit' && value?.thumbnail) {
+			axios.get(value.thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
+				if (value instanceof File) return;
 				let fileList = new DataTransfer();
-				let file = new File([data], $entryData[fieldName].thumbnail.name, {
-					type: $entryData[fieldName].mimetype
+				let file = new File([data], value.thumbnail.name, {
+					type: value.mimetype
 				});
 				fileList.items.add(file);
 				node.files = fileList.files;

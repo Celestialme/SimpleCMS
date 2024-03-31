@@ -11,8 +11,6 @@
 		console.log(files.length);
 		for (let i = 0; i < files.length; i++) {
 			let fieldsData = _fieldsValue[i];
-			console.log(fieldsData);
-			debugger;
 			await saveFormData({ data: fieldsData });
 		}
 		if (!files.length) {
@@ -26,7 +24,7 @@
 {#if files.length > 0}
 	{#each files as file, index}
 		<div class="relative my-4 rounded-lg border-2 border-[#8cccff] p-[20px]">
-			<Fields root={false} fields={field.fields} bind:fieldsData={_fieldsValue[index]} {file} />
+			<Fields root={false} fields={field.fields} bind:fieldsData={_fieldsValue[index]} value={file} />
 		</div>
 	{/each}
 {:else if $mode == 'edit'}
@@ -40,6 +38,3 @@
 		type="file"
 	/>
 {/if}
-
-<style>
-</style>
