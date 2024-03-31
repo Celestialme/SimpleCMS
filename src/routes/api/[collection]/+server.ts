@@ -7,6 +7,7 @@ import publicConfig from '@root/config/public';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import type { Schema } from '@src/collections/types';
 import type { User } from '@src/auth/types';
+import { Blob } from 'buffer';
 
 export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
@@ -108,13 +109,19 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	let formData: any = {};
 	for (let key of data.keys()) {
 		try {
-			formData[key] = JSON.parse(data.get(key) as string);
+			formData[key] = JSON.parse(data.get(key) as string, (key, value) => {
+				if (value?.instanceOf == 'File') {
+					//@ts-ignore
+					return new Blob([value.buffer], { type: value.type, name: value.name, lastModified: value.lastModified });
+				}
+				return value;
+			});
 		} catch (e) {
 			formData[key] = data.get(key) as string;
 		}
 	}
 	let _id = data.get('_id');
-	formData = parse(formData);
+
 	let files = await saveImages(data, params.collection);
 
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, { ...formData, ...files }, { upsert: true })));

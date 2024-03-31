@@ -4,7 +4,7 @@
 	import { entryData, mode } from '@src/stores/store';
 	import { getFieldName } from '@src/utils/utils';
 	export let field: FieldType;
-	let _data: FileList;
+	let _data: File;
 	let updated = false;
 	export const WidgetData = async () => (updated ? _data : null);
 	export let file: File | undefined = undefined; // pass file directly from imageArray
@@ -14,13 +14,14 @@
 		node.onchange = (e) => {
 			if ((e.target as HTMLInputElement).files?.length == 0) return;
 			updated = true;
-			_data = (e.target as HTMLInputElement).files as FileList;
+			_data = (e.target as HTMLInputElement).files?.[0] as File;
 		};
 
 		if (file instanceof File) {
 			let fileList = new DataTransfer();
 			fileList.items.add(file);
-			_data = node.files = fileList.files;
+			node.files = fileList.files;
+			_data = node.files[0];
 			updated = true;
 		} else if ($mode === 'edit' && $entryData[fieldName]?.thumbnail) {
 			axios.get($entryData[fieldName].thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
@@ -29,7 +30,8 @@
 					type: $entryData[fieldName].mimetype
 				});
 				fileList.items.add(file);
-				_data = node.files = fileList.files;
+				node.files = fileList.files;
+				_data = node.files[0];
 			});
 		}
 	}
@@ -45,7 +47,7 @@
 <!-- <FileDropzone /> -->
 
 {#if _data}
-	<img src={URL.createObjectURL(_data[0])} alt="" />
+	<img src={URL.createObjectURL(_data)} alt="" />
 {/if}
 
 <style>

@@ -6,7 +6,7 @@ let schema: Schema = {
 
 	fields: [
 		widgets.MegaMenu({
-			fields: [[widgets.Text({ label: 'link 1', translated: true }), widgets.Relation({ label: 'Image', relation: 'thumbs', displayPath: 'Image' })]],
+			fields: [[widgets.Text({ label: 'link 1', translated: true }), widgets.ImageUpload({ label: 'image', path: 'global' })]],
 			label: 'Menu'
 		})
 	]

@@ -19,5 +19,8 @@ declare global {
 		filters?: ({ field, contentLanguage, filter }: { field: any; contentLanguage: string; filter: string }) => Promise<PipelineStage[]>;
 		sorts?: ({ field, contentLanguage, sort }: { field: any; contentLanguage: string; sort: number }) => Promise<PipelineStage[]>;
 	};
+	interface File {
+		buffer?: Uint8Array;
+	}
 }
 export {};

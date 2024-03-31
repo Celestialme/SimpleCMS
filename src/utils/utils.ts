@@ -16,7 +16,22 @@ export const config = {
 	}
 };
 
+async function readAllFilesInObject(obj: any) {
+	if (obj instanceof File) {
+		let arrayBuffer = await obj.arrayBuffer();
+		obj.buffer = new Uint8Array(arrayBuffer);
+	} else if (Array.isArray(obj)) {
+		for (let index in obj) {
+			await readAllFilesInObject(obj[index]);
+		}
+	} else if (typeof obj === 'object') {
+		for (let key in obj) {
+			await readAllFilesInObject(obj[key]);
+		}
+	}
+}
 export const col2formData = async (getData: { [Key: string]: () => any }) => {
+	// used to save data
 	const formData = new FormData();
 	let data = {};
 	for (let key in getData) {
@@ -31,7 +46,10 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 				console.log(data[key]);
 				formData.append(key, data[key][_key]);
 			}
+		} else if (data[key] instanceof File) {
+			formData.append(key, data[key]);
 		} else if (typeof data[key] === 'object') {
+			await readAllFilesInObject(data[key]);
 			formData.append(key, JSON.stringify(data[key]));
 		} else {
 			formData.append(key, data[key]);
@@ -54,6 +72,7 @@ export const getGuiFields = (fieldParams: { [key: string]: any }, GuiSchema: { [
 	return guiFields;
 };
 export const obj2formData = (obj: any) => {
+	// used for builder.
 	const formData = new FormData();
 	for (const key in obj) {
 		let data = JSON.stringify(obj[key], (key, val) => {
@@ -350,3 +369,24 @@ export function updateTranslationProgress(data, field) {
 	}
 	translationProgress.set($translationProgress);
 }
+
+export type FileJSON = {
+	instanceOf: 'File';
+	lastModified: number;
+	name: string;
+	size: number;
+	type: string;
+	buffer: Uint8Array;
+};
+globalThis.File &&
+	//@ts-ignore
+	(File.prototype.toJSON = function () {
+		return {
+			instanceOf: 'File',
+			lastModified: this.lastModified,
+			name: this.name,
+			size: this.size,
+			type: this.type,
+			buffer: this.buffer as Uint8Array
+		};
+	});
