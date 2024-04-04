@@ -4,7 +4,7 @@ import Text from './text';
 import Email from './email';
 import MegaMenu from './megaMenu';
 import Relation from './relation';
-import type { User } from '@src/auth/types';
+import type { Model, User } from '@src/auth/types';
 
 let widgets = {
 	ImageArray,
@@ -16,19 +16,16 @@ let widgets = {
 };
 
 type K = ReturnType<(typeof widgets)[keyof typeof widgets]>['widget']['key'];
+export type ModifyRequestParams<T extends (...args: any) => any> = {
+	collection: Model;
+	field: ReturnType<T>;
+	data: { [key: string]: any };
+	user: User;
+	type: 'GET' | 'POST' | 'DELETE' | 'PATCH';
+};
 export type WidgetType = {
 	[key in K]: (typeof widgets)[key] & {
-		modifyRequest: ({
-			field,
-			data,
-			user,
-			type
-		}: {
-			field: any;
-			data: { [key: string]: any };
-			user: User;
-			type: 'GET' | 'POST' | 'DELETE' | 'PATCH';
-		}) => Promise<{}>;
+		modifyRequest: (args: ModifyRequestParams<(typeof widgets)[keyof typeof widgets]>) => Promise<{}>;
 	};
 };
 export let initWidgets = () => (globalThis.widgets = widgets);

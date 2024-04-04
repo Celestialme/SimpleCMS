@@ -15,7 +15,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 		return new Response('', { status: 403 });
 	}
 	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
-	let has_read_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.read;
+	let has_read_access = collection_schema?.permissions?.[user.role]?.read != false;
 	if (!has_read_access) {
 		return new Response('', { status: 403 });
 	}
@@ -74,7 +74,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 			// widget can modify own portion of entryList;
 			entryList = await Promise.all(
 				entryList.map(async (entry: any) => {
-					entry[fieldName] = await widget.modifyRequest({ field, data: entry[fieldName], user, type: 'GET' });
+					entry[fieldName] = await widget.modifyRequest({ collection, field, data: entry[fieldName], user, type: 'GET' });
 					return entry;
 				})
 			);
@@ -98,17 +98,18 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write;
+	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
+	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
 	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
 	let data = await request.formData();
-	let formData: any = {};
+	let body: any = {};
 	for (let key of data.keys()) {
 		try {
-			formData[key] = JSON.parse(data.get(key) as string, (key, value) => {
+			body[key] = JSON.parse(data.get(key) as string, (key, value) => {
 				if (value?.instanceOf == 'File') {
 					//@ts-ignore
 
@@ -119,23 +120,36 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 				return value;
 			});
 		} catch (e) {
-			formData[key] = data.get(key) as string;
+			body[key] = data.get(key) as string;
 		}
 	}
 	let _id = data.get('_id');
 
-	await saveImages(formData, params.collection);
+	for (let field of collection_schema.fields) {
+		let widget = widgets[field.widget.key];
+		let fieldName = getFieldName(field);
 
-	return new Response(JSON.stringify(await collection.updateOne({ _id }, formData, { upsert: true })));
+		if (field?.permissions?.[user.role]?.write == false) {
+			// if we cant write there is nothing to modify.
+			delete body[fieldName];
+		} else if ('modifyRequest' in widget) {
+			// widget can modify own portion of body;
+			body[fieldName]['_id'] = _id;
+			body[fieldName] = await widget.modifyRequest({ collection, field, data: body[fieldName], user, type: 'PATCH' });
+		}
+	}
+	await saveImages(body, params.collection);
+	return new Response(JSON.stringify(await collection.updateOne({ _id }, body, { upsert: true })));
 };
 
 export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = await auth.validateSession(session_id);
+	let user = (await auth.validateSession(session_id)) as User;
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write;
+	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
+	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
@@ -143,7 +157,7 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
 	let data = await request.formData();
-	let body: any = {};
+	let body: { [key: string]: any } = {};
 	for (let key of data.keys()) {
 		try {
 			body[key] = JSON.parse(data.get(key) as string, (key, value) => {
@@ -161,8 +175,21 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	}
 	body['status'] = 'PUBLISHED';
 	if (!collection) return new Response('collection not found!!');
-	await saveImages(body, params.collection);
 
+	for (let field of collection_schema.fields) {
+		let widget = widgets[field.widget.key];
+		let fieldName = getFieldName(field);
+
+		if (field?.permissions?.[user.role]?.write == false) {
+			// if we cant read there is nothing to modify.
+			delete body[fieldName];
+		} else if ('modifyRequest' in widget) {
+			// widget can modify own portion of body;
+
+			body[fieldName] = await widget.modifyRequest({ collection, field, data: body[fieldName], user, type: 'POST' });
+		}
+	}
+	await saveImages(body, params.collection);
 	return new Response(JSON.stringify(await collection.insertMany(body)));
 };
 

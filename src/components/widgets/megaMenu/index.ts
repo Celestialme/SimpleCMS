@@ -5,9 +5,9 @@ import { writable, type Writable } from 'svelte/store';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { entryData, mode } from '@src/stores/store';
 import { headerActionButton } from '@src/stores/load';
-import type { Permissions } from '@src/collections/types';
+
 import type { User } from '@src/auth/types';
-import widgets from '..';
+import widgets, { type ModifyRequestParams } from '..';
 export let currentChild: Writable<any> = writable({});
 /**
  * Creates Mega Menu Field.
@@ -51,7 +51,10 @@ const widget = (params: Params) => {
 };
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
-widget.modifyRequest = async ({ field, data, user }: { field: ReturnType<typeof widget>; data: { [key: string]: any }; user: User }) => {
+widget.modifyRequest = async ({ collection, field, data, user, type }: ModifyRequestParams<typeof widget>) => {
+	if (type !== 'GET') {
+		return data;
+	}
 	let cleanChildren = async (children, level = 1) => {
 		for (let index in children) {
 			for (let _field of field.fields[level]) {
@@ -61,7 +64,8 @@ widget.modifyRequest = async ({ field, data, user }: { field: ReturnType<typeof 
 					let widget = widgets[_field.widget.key];
 					if ('modifyRequest' in widget) {
 						children[index][getFieldName(_field)] = await widget.modifyRequest({
-							field: _field,
+							collection,
+							field: _field as ReturnType<typeof widget>,
 							data: children[index][getFieldName(_field)],
 							user,
 							type: 'GET'

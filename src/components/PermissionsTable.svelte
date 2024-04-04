@@ -2,11 +2,11 @@
 	import { roles } from '@src/auth/types';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
-	import { basePermissions, permissions } from '@src/collections/types';
+	import { defaultPermissions, permissions } from '@src/collections/types';
 	import deepmerge from 'deepmerge';
 
-	export let value = basePermissions as any;
-	$: value = deepmerge(basePermissions, value || {});
+	export let value = defaultPermissions as any;
+	$: value = deepmerge(defaultPermissions, value || {});
 </script>
 
 <table class="table">

@@ -6,7 +6,7 @@ let schema: Schema = {
 
 	fields: [
 		widgets.Relation({ label: 'relation', relation: 'media' }),
-		widgets.Text({ label: 'text', translated: true, permissions: { user: { write: false }, developer: { write: false } } }),
+		widgets.Text({ label: 'text', translated: true, permissions: { user: { write: false }, admin: { write: false } } }),
 		widgets.Text({ label: 'text2' })
 	]
 };

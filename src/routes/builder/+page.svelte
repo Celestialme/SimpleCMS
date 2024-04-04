@@ -14,7 +14,7 @@
 	import { onDestroy } from 'svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import PermissionsTable from '@src/components/PermissionsTable.svelte';
-	import { basePermissions, permissions, type Permissions } from '@src/collections/types';
+	import { defaultPermissions, permissions, type Permissions } from '@src/collections/types';
 	let collectionName = $mode == 'edit' ? $collection.name : '';
 	let icon = $mode == 'edit' ? $collection.icon : '';
 	let permissionsValue: Permissions;
@@ -30,7 +30,7 @@
 		collectionName = $mode == 'edit' ? $collection.name : '';
 		icon = $mode == 'edit' ? $collection.icon : '';
 		fields = $mode == 'edit' ? $collection.fields : [];
-		permissionsValue = $collection?.permissions || basePermissions;
+		permissionsValue = $collection?.permissions || defaultPermissions;
 	});
 	$: if ($mode == 'create') {
 		collectionName = '';

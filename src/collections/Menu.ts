@@ -20,7 +20,7 @@ let schema: Schema = {
 						label: 'link 2',
 						translated: true,
 						permissions: {
-							user: { read: false }
+							admin: { write: false }
 						}
 					}),
 					widgets.Text({ label: 'info', translated: true }),
