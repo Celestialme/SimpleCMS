@@ -25,7 +25,7 @@
 						<svelte:component
 							this={asAny(field.widget.type)}
 							field={asAny(field)}
-							disabled={field?.permissions?.[user.role]?.write == false && false}
+							disabled={field?.permissions?.[user.role]?.write == false}
 							bind:WidgetData={fieldsData[getFieldName(field)]}
 							value={customData[getFieldName(field)]}
 							{...$$props}
