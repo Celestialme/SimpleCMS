@@ -1,10 +1,17 @@
 import { roles } from '@src/auth/types';
 export let permissions = ['read', 'write'];
-export let basePermissions = roles.reduce((acc, role) => {
+export let defaultPermissions = roles.reduce((acc, role) => {
     return {
         ...acc,
         [role]: permissions.reduce((acc, permission) => {
-            return { ...acc, [permission]: true };
+            switch (role) {
+                case 'admin' || 'developer':
+                    return { ...acc, [permission]: true };
+                case 'user':
+                    return { ...acc, [permission]: true, write: false };
+                default:
+                    return { ...acc, [permission]: false };
+            }
         }, {})
     };
 }, {});

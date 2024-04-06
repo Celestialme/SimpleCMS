@@ -16,7 +16,7 @@ let schema = {
                         label: 'link 2',
                         translated: true,
                         permissions: {
-                            user: { read: false }
+                            admin: { write: false }
                         }
                     }),
                     globalThis.widgets.Text({ label: 'info', translated: true }),

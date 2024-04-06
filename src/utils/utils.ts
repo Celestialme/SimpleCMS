@@ -225,7 +225,7 @@ export async function saveFormData({ data, _collection, _mode, id }: { data: any
 	}
 }
 
-export async function extractData(fieldsData: any) {
+export async function extractData(fieldsData: any): Promise<{ [key: string]: any }> {
 	// exracts data from fieldsData because FieldsData is async
 	let temp = {};
 	for (let key in fieldsData) {

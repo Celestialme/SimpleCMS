@@ -18,6 +18,7 @@ let widgets = {
 type K = ReturnType<(typeof widgets)[keyof typeof widgets]>['widget']['key'];
 export type ModifyRequestParams<T extends (...args: any) => any> = {
 	collection: Model;
+	id?: string;
 	field: ReturnType<T>;
 	data: { [key: string]: any };
 	user: User;
