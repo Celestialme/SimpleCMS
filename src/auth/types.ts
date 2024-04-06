@@ -2,10 +2,6 @@ import { Schema, type InferSchemaType, Model as M } from 'mongoose';
 export let roles = ['admin', 'user', 'developer'] as const;
 export type Roles = (typeof roles)[number];
 export let UserSchema = {
-	id: {
-		type: String,
-		required: true
-	},
 	email: {
 		type: String,
 		required: true
@@ -23,16 +19,12 @@ export let tokenSchema = {
 	expiresIn: Number
 };
 export let sessionSchema = {
-	id: {
-		type: String,
-		required: true
-	},
 	user_id: String,
 	expires: Number
 };
 
-export let mongooseUserSchema = new Schema(UserSchema, { timestamps: true });
-export let mongooseSessionSchema = new Schema(sessionSchema);
+export let mongooseUserSchema = new Schema(UserSchema, { timestamps: true, id: true });
+export let mongooseSessionSchema = new Schema(sessionSchema, { id: true });
 export let mongooseTokenSchema = new Schema(tokenSchema, { timestamps: true });
 type Modify<T, R> = Omit<T, keyof R> & R;
 export type User = Modify<
@@ -44,7 +36,7 @@ export type User = Modify<
 	}
 >;
 export type UserParams = ['id', 'createdAt', 'updatedAt'][number];
-export type Session = InferSchemaType<typeof mongooseSessionSchema>;
+export type Session = InferSchemaType<typeof mongooseSessionSchema> & { id: string };
 export type Token = InferSchemaType<typeof mongooseTokenSchema>;
 export type Cookie = {
 	name: string;
