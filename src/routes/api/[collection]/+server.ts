@@ -10,7 +10,8 @@ import type { User } from '@src/auth/types';
 
 export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = (await auth.validateSession(session_id)) as User;
+	let user_id = url.searchParams.get('user_id');
+	let user = user_id ? ((await auth.get_user_by_id(user_id)) as User) : ((await auth.validateSession(session_id)) as User);
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
@@ -93,8 +94,10 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 };
 
 export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
+	let data = await request.formData();
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = await auth.validateSession(session_id);
+	let user_id = data.get('user_id') as string;
+	let user = user_id ? ((await auth.get_user_by_id(user_id)) as User) : ((await auth.validateSession(session_id)) as User);
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
@@ -105,7 +108,6 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	}
 	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
-	let data = await request.formData();
 	let body: any = {};
 	for (let key of data.keys()) {
 		try {
@@ -143,8 +145,10 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 };
 
 export const POST: RequestHandler = async ({ params, request, cookies }) => {
+	let data = await request.formData();
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = (await auth.validateSession(session_id)) as User;
+	let user_id = data.get('user_id') as string;
+	let user = user_id ? ((await auth.get_user_by_id(user_id)) as User) : ((await auth.validateSession(session_id)) as User);
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
@@ -156,7 +160,6 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 
 	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
-	let data = await request.formData();
 	let body: { [key: string]: any } = {};
 	for (let key of data.keys()) {
 		try {
@@ -194,8 +197,10 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 };
 
 export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
+	let data = await request.formData();
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = await auth.validateSession(session_id);
+	let user_id = data.get('user_id') as string;
+	let user = user_id ? ((await auth.get_user_by_id(user_id)) as User) : ((await auth.validateSession(session_id)) as User);
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
@@ -205,7 +210,6 @@ export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
 	}
 	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
-	let data = await request.formData();
 
 	let ids = data.get('ids') as string;
 	ids = JSON.parse(ids);

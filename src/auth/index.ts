@@ -115,6 +115,9 @@ export class Auth {
 		resp.user._id && delete resp.user._id;
 		return resp.user;
 	}
+	async get_user_by_id(user_id: string): Promise<User | null> {
+		return this.User.findOne({ _id: user_id });
+	}
 	async createToken(user_id: string, expires = 60 * 60 * 1000) {
 		return await createToken(this.Token, user_id, expires);
 	}

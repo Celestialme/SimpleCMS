@@ -1,5 +1,5 @@
 import { Schema, type InferSchemaType, Model as M } from 'mongoose';
-export let roles = ['admin', 'user', 'developer'] as const;
+export let roles = ['admin', 'user', 'editor'] as const;
 export type Roles = (typeof roles)[number];
 export let UserSchema = {
 	email: {

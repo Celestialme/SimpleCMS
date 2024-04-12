@@ -8,7 +8,8 @@ export let defaultPermissions = roles.reduce((acc, role) => {
 		...acc,
 		[role]: permissions.reduce((acc, permission) => {
 			switch (role) {
-				case 'admin' || 'developer':
+				case 'admin':
+				case 'editor':
 					return { ...acc, [permission]: true };
 				case 'user':
 					return { ...acc, [permission]: true, write: false };
@@ -33,8 +34,8 @@ export interface Schema {
 export let sanitizePermissions = (permissions) => {
 	let res = Object.keys(permissions).reduce((acc, r) => {
 		acc[r] = Object.keys(permissions[r]).reduce((acc, p) => {
-			if (permissions[r][p] == false) {
-				acc[p] = false;
+			if (permissions[r][p] != defaultPermissions[r][p]) {
+				acc[p] = permissions[r][p];
 			}
 			return acc;
 		}, {});

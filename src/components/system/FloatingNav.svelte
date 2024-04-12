@@ -6,6 +6,7 @@
 	import { page } from '$app/stores';
 	import { tick } from 'svelte';
 	import { motion } from '@src/utils/utils';
+	import type { User } from '@src/auth/types';
 	let navigation_info = JSON.parse(localStorage.getItem('navigation') || '{}');
 	let buttonRadius = 25;
 	export let buttonInfo = {
@@ -36,6 +37,7 @@
 	let firstLine: SVGLineElement;
 	let firstCircle: HTMLDivElement;
 	let svg: SVGElement;
+	let user: User = $page.data.user;
 	let endpoints: {
 		x: number;
 		y: number;
@@ -57,7 +59,7 @@
 			x: 0,
 			y: 0,
 			angle: 60,
-			url: { external: false, path: `/builder` },
+			url: { external: false, path: '/builder' },
 			icon: 'icomoon-free:wrench'
 		},
 		{
@@ -74,7 +76,12 @@
 			url: { external: true, path: `/api/graphql` },
 			icon: 'teenyicons:graphql-outline'
 		}
-	];
+	].filter((endpoint) => {
+		if (user?.role === 'admin') return true;
+		else if (endpoint.url.path === '/builder') return false;
+		else return true;
+	});
+
 	let circles: HTMLDivElement[] = [];
 	// Function to calculate the coordinates of the endpoint of a vector
 	function calculateSecondVector(startX, startY, x1, y1, distance, angle) {
@@ -244,7 +251,7 @@
 			class="circle flex items-center justify-center"
 			style="top:{center.y}px;left:{center.x}px;visibility:hidden; animation: showEndPoints 0.2s 0.2s forwards"
 		>
-			<iconify-icon width="30" style="color:white" icon="solar:home-bold" />
+			<iconify-icon width="30" style="color:white" icon={endpoints[0].icon} />
 		</div>
 		{#each endpoints.slice(1, endpoints.length) as endpoint, index}
 			<div
