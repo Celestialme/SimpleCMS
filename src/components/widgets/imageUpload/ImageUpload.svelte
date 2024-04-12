@@ -47,20 +47,23 @@
 	}
 </script>
 
-<input
-	use:setFile
-	bind:this={input}
-	name={fieldName}
-	class="w-full cursor-pointer rounded-lg border border-surface-300 bg-surface-50 text-sm text-surface-900 focus:outline-none dark:border-surface-600 dark:bg-surface-700 dark:text-surface-400 dark:placeholder-surface-400"
-	type="file"
-	hidden
-/>
+<input use:setFile bind:this={input} name={fieldName} type="file" hidden />
 
 <!-- TODO: Add DropZone for better User experiance-->
 <!-- <FileDropzone /> -->
 
 {#if _data}
-	<img src={URL.createObjectURL(_data)} alt="" />
+	<div class="flex flex-col border-dashed border-2 w-[500px] max-w-full border-gray-300 pb-4">
+		<div class="w-full h-[50px] bg-[#242734] flex items-center">
+			<iconify-icon
+				on:click={() => (_data = undefined)}
+				class="ml-auto px-2 cursor-pointer text-white"
+				icon="streamline:arrow-reload-horizontal-1-solid"
+				width="24"
+			/>
+		</div>
+		<img src={URL.createObjectURL(_data)} alt="" />
+	</div>
 {:else}
 	<div
 		on:drop|preventDefault={(e) => {
