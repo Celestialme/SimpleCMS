@@ -46,7 +46,10 @@ const widget = (params: Params) => {
 
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
-widget.modifyRequest = async ({ field, data, user }: ModifyRequestParams<typeof widget>) => {
+widget.modifyRequest = async ({ field, data, user, type }: ModifyRequestParams<typeof widget>) => {
+	if (type !== 'GET') {
+		return data;
+	}
 	let { getCollectionModels } = await import('@src/routes/api/db');
 	let relative_collection = (await getCollectionModels())[field.relation];
 
