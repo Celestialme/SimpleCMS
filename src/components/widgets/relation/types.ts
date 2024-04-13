@@ -7,7 +7,7 @@ import type { CollectionLabels, Permissions } from '@src/collections/types';
 export type Params = {
 	label: string;
 	width?: number;
-	displayPath?: string;
+	displayPath: string;
 	db_fieldName?: string;
 	widget?: any;
 	relation: CollectionLabels;

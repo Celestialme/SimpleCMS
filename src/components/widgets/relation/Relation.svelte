@@ -6,7 +6,7 @@
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
 
-	export let field: FieldType | undefined;
+	export let field: FieldType;
 	let fieldName = getFieldName(field);
 	export let value = $entryData[fieldName];
 	export let expanded = false;
@@ -56,6 +56,7 @@
 			data = await extractData(fieldsData);
 		}
 
+		data = data[field.displayPath] ? data : value;
 		display = await field?.display({ data, field, collection: $collection, entry: $entryData, contentLanguage: $contentLanguage });
 	})(expanded);
 

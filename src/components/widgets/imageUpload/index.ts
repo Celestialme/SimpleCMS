@@ -6,9 +6,10 @@ const widget = (params: Params) => {
 	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			let url = data?.thumbnail?.url;
-
 			if (data instanceof FileList) {
 				url = URL.createObjectURL(data[0]);
+			} else if (data instanceof File) {
+				url = URL.createObjectURL(data);
 			}
 
 			return `<img class='max-w-[200px] inline-block' src="${url}" />`;
