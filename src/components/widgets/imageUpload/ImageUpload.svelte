@@ -6,6 +6,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { Layer } from 'konva/lib/Layer';
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
+	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	export let field: FieldType;
 	let _data: File | undefined;
 	let updated = false;
@@ -118,15 +119,18 @@
 		<div class="w-full h-[50px] bg-[#242734] flex items-center">
 			{#if editing}
 				<iconify-icon on:click={saveEdit} width="26" class="px-2 cursor-pointer" style="color:#05ff05" icon="ic:sharp-save-as"></iconify-icon>
+				<button on:click={() => (editing = false)} class="ml-auto cursor-pointer mr-2">
+					<XIcon />
+				</button>
 			{:else}
 				<iconify-icon on:click={edit} class=" px-2 cursor-pointer text-white" icon="flat-color-icons:edit-image" width="24" />
+				<iconify-icon
+					on:click={() => (_data = undefined)}
+					class="ml-auto px-2 cursor-pointer text-white"
+					icon="streamline:arrow-reload-horizontal-1-solid"
+					width="24"
+				/>
 			{/if}
-			<iconify-icon
-				on:click={() => (_data = undefined)}
-				class="ml-auto px-2 cursor-pointer text-white"
-				icon="streamline:arrow-reload-horizontal-1-solid"
-				width="24"
-			/>
 		</div>
 		{#if editing}
 			<div id="canvas" class="flex items-center justify-center border-2 border-dashed border-black"></div>
@@ -166,9 +170,9 @@
 		z-index: 999999999;
 		top: 0;
 		left: 0;
-		width: 100vw;
+		width: calc(100vw - 2px);
 		height: 100vh;
-		background-color: gray;
+		background-color: #242734;
 	}
 	:global(.editor canvas) {
 		background: white !important;
