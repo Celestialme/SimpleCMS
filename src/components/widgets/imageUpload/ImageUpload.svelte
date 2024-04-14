@@ -4,20 +4,44 @@
 	import { entryData, mode } from '@src/stores/store';
 	import { asAny, getFieldName } from '@src/utils/utils';
 	import Button from '@src/components/system/buttons/Button.svelte';
-
+	import type { Layer } from 'konva/lib/Layer';
+	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	export let field: FieldType;
 	let _data: File | undefined;
 	let updated = false;
 	let input: HTMLInputElement;
 	let container: HTMLDivElement;
+	let transformers: Transformer[] = [];
+	let layer: Layer;
 	export const WidgetData = async () => {
 		if (_data) {
 			_data.path = field.path;
 		}
-		console.log(_data);
+
 		return updated ? _data : null;
+		// return null;
 	};
 	export let value: File | { [key: string]: any } = $entryData[getFieldName(field)]; // pass file directly from imageArray
+
+	async function saveEdit() {
+		transformers.forEach((t) => {
+			t.destroy();
+		});
+		_data = await new Promise((resolve) => {
+			layer.toBlob({
+				callback: async (blob) => {
+					if (blob && _data) {
+						let file = new File([await blob.arrayBuffer()], (value as any).original.name || _data.name, {
+							type: (value as any).original.type || _data.type
+						});
+						file.path = field.path;
+						resolve(file);
+					}
+				}
+			});
+		});
+		editing = false;
+	}
 
 	let fieldName = getFieldName(field);
 	function setFile(node: HTMLInputElement) {
@@ -60,10 +84,11 @@
 		let Konva = (await import('konva')).default;
 		var stage = new Konva.Stage({
 			container: 'canvas',
+
 			width: image.naturalWidth + 50,
 			height: image.naturalHeight + 50
 		});
-		const layer = new Konva.Layer();
+		layer = new Konva.Layer();
 		stage.add(layer);
 		const rect = new Konva.Image({
 			image: image,
@@ -78,19 +103,8 @@
 			node: rect,
 			rotateAnchorOffset: 20
 		});
+		transformers.push(tr);
 		layer.add(tr);
-		layer.on('mouseout', () => {
-			layer.toBlob({
-				callback: async (blob) => {
-					if (blob && _data) {
-						let file = new File([await blob.arrayBuffer()], _data.name || (value as any).original.name, {
-							type: _data.type || (value as any).original.type
-						});
-						_data = file;
-					}
-				}
-			});
-		});
 	}
 </script>
 
@@ -100,10 +114,13 @@
 <!-- <FileDropzone /> -->
 
 {#if _data}
-	<div bind:this={container} class="flex flex-col border-dashed border-2 w-[500px] max-w-full border-gray-300">
+	<div bind:this={container} class:editor={editing} class="flex flex-col border-dashed border-2 w-[500px] max-w-full border-gray-300">
 		<div class="w-full h-[50px] bg-[#242734] flex items-center">
-			<iconify-icon on:click={edit} class=" px-2 cursor-pointer text-white" icon="flat-color-icons:edit-image" width="24" />
-
+			{#if editing}
+				<iconify-icon on:click={saveEdit} width="26" class="px-2 cursor-pointer" style="color:#05ff05" icon="ic:sharp-save-as"></iconify-icon>
+			{:else}
+				<iconify-icon on:click={edit} class=" px-2 cursor-pointer text-white" icon="flat-color-icons:edit-image" width="24" />
+			{/if}
 			<iconify-icon
 				on:click={() => (_data = undefined)}
 				class="ml-auto px-2 cursor-pointer text-white"
@@ -143,5 +160,17 @@
 		max-height: 200px;
 		margin: auto;
 		margin-top: 10px;
+	}
+	.editor {
+		position: fixed;
+		z-index: 999999999;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: gray;
+	}
+	:global(.editor canvas) {
+		background: white !important;
 	}
 </style>
