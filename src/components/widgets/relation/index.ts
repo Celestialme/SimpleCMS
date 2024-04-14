@@ -4,7 +4,6 @@ import { type Params, GuiSchema, GraphqlSchema } from './types';
 import { getCollections } from '@src/collections';
 import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
-import type { User } from '@src/auth/types';
 
 const widget = (params: Params) => {
 	let display;

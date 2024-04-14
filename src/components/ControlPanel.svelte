@@ -7,7 +7,6 @@
 	import type { User } from '@src/auth/types';
 	let _saveFunction;
 	_saveFunction = $saveFunction.fn = async () => {
-		console.log($collectionValue);
 		await saveFormData({ data: $collectionValue });
 		mode.set('view');
 	};

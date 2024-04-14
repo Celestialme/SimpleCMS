@@ -6,7 +6,7 @@ import { entryData, mode, translationProgress } from '@src/stores/store';
 import { collections, collection } from '@src/stores/load';
 import publicConfig from '@root/config/public';
 import { browser } from '$app/environment';
-import crypto from 'crypto';
+import _crypto from 'crypto';
 import type { Schema } from '@src/collections/types';
 import type { z } from 'zod';
 export const config = {
@@ -19,11 +19,28 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	// used to save data
 	const formData = new FormData();
 	let data = {};
+	let parseFiles = (object: any) => {
+		for (let key in object) {
+			if (!(object[key] instanceof File) && typeof object[key] == 'object') {
+				parseFiles(object[key]);
+				continue;
+			} else if (!(object[key] instanceof File)) {
+				continue;
+			}
+			// object[key] is file here
+			let uuid = crypto.randomUUID();
+			formData.append(uuid, object[key]);
+			object[key] = { instanceof: 'File', id: uuid, path: object[key].path };
+		}
+	};
+
 	for (let key in getData) {
 		let value = await getData[key]();
 		if (!value) continue;
 		data[key] = value;
 	}
+
+	parseFiles(data);
 	for (const key in data) {
 		if (typeof data[key] === 'object') {
 			formData.append(key, JSON.stringify(data[key]));
@@ -85,7 +102,7 @@ export async function saveImages(data: { [key: string]: any }, collectionName: s
 			let blob = data[fieldname] as any;
 			let arrayBuffer = await blob.arrayBuffer();
 			let buffer = Buffer.from(arrayBuffer);
-			let hash = crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
+			let hash = _crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
 			let path = blob.path;
 			let name = removeExtension(blob.name);
 			//original image
@@ -345,26 +362,3 @@ export function updateTranslationProgress(data, field) {
 	}
 	translationProgress.set($translationProgress);
 }
-
-export type FileJSON = {
-	instanceOf: 'File';
-	lastModified: number;
-	name: string;
-	size: number;
-	type: string;
-	buffer: Uint8Array;
-	path: string;
-};
-globalThis.File &&
-	//@ts-ignore
-	(File.prototype.toJSON = function () {
-		return {
-			instanceOf: 'File',
-			lastModified: this.lastModified,
-			name: this.name,
-			size: this.size,
-			type: this.type,
-			buffer: this.buffer as Uint8Array,
-			path: this.path
-		};
-	});
