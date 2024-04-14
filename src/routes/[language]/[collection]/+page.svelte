@@ -14,6 +14,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import axios from 'axios';
 	import FloatingNav from '@src/components/system/FloatingNav.svelte';
+	import Media from '@src/components/Media.svelte';
 	let ForwardBackward: boolean = false; // if using browser history
 	collection.set($collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
 	globalThis.onpopstate = async () => {
@@ -59,7 +60,9 @@
 		<section>
 			<Collections />
 		</section>
-
+		<section class="text-center">
+			<button on:click={() => mode.set('media')} class="p-2 bg-[#353b63] text-white w-full"> Media </button>
+		</section>
 		<section class="mt-auto text-center">
 			<Button class="max-w-full" on:click={signOut}>
 				{#if $drawerExpanded}
@@ -69,6 +72,7 @@
 				{/if}
 			</Button>
 		</section>
+
 		<div class:max-md:hidden={!$drawerExpanded && navButton.x == navButton.radius}>
 			<FloatingNav bind:buttonInfo={navButton} />
 		</div>
@@ -81,6 +85,8 @@
 			<div id="fields_container" class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]">
 				<Fields />
 			</div>
+		{:else if $mode == 'media'}
+			<Media />
 		{/if}
 	</div>
 	{#if ['edit', 'create'].includes($mode)}

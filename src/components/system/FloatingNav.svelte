@@ -33,7 +33,6 @@
 		return params.length > 0 ? replaced : pathname;
 	}
 	$: buttonInfo = { ...{ x: 25, y: window.innerHeight / 2 }, ...navigation_info?.[getBasePath($page.url.pathname)], ...{ radius: buttonRadius } };
-	$: console.log(buttonInfo);
 	let firstLine: SVGLineElement;
 	let firstCircle: HTMLDivElement;
 	let svg: SVGElement;

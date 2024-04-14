@@ -7,6 +7,7 @@
 	import type { Layer } from 'konva/lib/Layer';
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
+	import type { Group } from 'konva/lib/Group';
 	export let field: FieldType;
 	let _data: File | undefined;
 	let updated = false;
@@ -53,6 +54,7 @@
 	let editing = false;
 	let edit = {
 		layer: {} as Layer,
+		group: {} as Group,
 		transformers: [] as Transformer[],
 		async startEdit() {
 			updated = true;
@@ -73,7 +75,7 @@
 			});
 			this.layer = new Konva.Layer();
 			stage.add(this.layer);
-			const rect = new Konva.Image({
+			let imageObj = new Konva.Image({
 				image: image,
 				x: 25,
 				y: 30,
@@ -81,9 +83,11 @@
 				height: image.naturalHeight,
 				draggable: true
 			});
-			this.layer.add(rect);
+			this.group = new Konva.Group();
+			this.group.add(imageObj);
+			this.layer.add(this.group);
 			let tr = new Konva.Transformer({
-				node: rect,
+				node: imageObj,
 				rotateAnchorOffset: 20
 			});
 			this.transformers.push(tr);
@@ -93,21 +97,27 @@
 			this.transformers.forEach((t) => {
 				t.destroy();
 			});
+
 			_data = await new Promise((resolve) => {
-				this.layer.toBlob({
+				this.group.toBlob({
 					callback: async (blob) => {
 						if (blob && _data) {
 							let name = ((value as any).original.name as string) || _data.name;
+							let type = ((value as any).original.type as string) || _data.type;
+							type = type.includes('svg') ? 'image/png' : type;
 							name = name.endsWith('svg') ? name.replace('svg', 'png') : name;
 							let file = new File([await blob.arrayBuffer()], name, {
-								type: (value as any).original.type || _data.type
+								type
 							});
 							file.path = field.path;
 							resolve(file);
+						} else {
+							resolve(undefined);
 						}
 					}
 				});
 			});
+			console.log(_data);
 			editing = false;
 		}
 	};

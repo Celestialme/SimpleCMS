@@ -9,6 +9,7 @@ import { browser } from '$app/environment';
 import _crypto from 'crypto';
 import type { Schema } from '@src/collections/types';
 import type { z } from 'zod';
+import mongoose from 'mongoose';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -89,7 +90,7 @@ export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
 export async function saveImages(data: { [key: string]: any }, collectionName: string) {
 	if (browser) return;
 	let sharp = (await import('sharp')).default;
-
+	let files: any[] = [];
 	let parseFiles = async (data: any) => {
 		for (let fieldname in data) {
 			if (!(data[fieldname] instanceof File) && typeof data[fieldname] == 'object') {
@@ -115,8 +116,17 @@ export async function saveImages(data: { [key: string]: any }, collectionName: s
 			} else {
 				url = `images/${path}/original/${hash}-${blob.name}`;
 			}
+			let info = await sharp(buffer).metadata();
 			data[fieldname] = {
-				original: { name: `${hash}-${blob.name}`, url, size: blob.size, type: blob.type, lastModified: blob.lastModified }
+				original: {
+					name: `${hash}-${blob.name}`,
+					url,
+					size: blob.size,
+					type: blob.type,
+					lastModified: blob.lastModified,
+					width: info.width,
+					height: info.height
+				}
 			};
 
 			if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
@@ -127,11 +137,11 @@ export async function saveImages(data: { [key: string]: any }, collectionName: s
 			for (let size in SIZES) {
 				if (size == 'original') continue;
 				let fullName = `${hash}-${name}.avif`;
-				const thumbnailBuffer = await sharp(buffer)
+				const resizedImage = await sharp(buffer)
 					.rotate() // Rotate image according to EXIF data
 					.resize({ width: SIZES[size] })
 					.toFormat('avif', { quality: 80 })
-					.toBuffer();
+					.toBuffer({ resolveWithObject: true });
 				let url;
 
 				if (path == 'global') {
@@ -145,19 +155,23 @@ export async function saveImages(data: { [key: string]: any }, collectionName: s
 					fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
 				}
 				//sized images
-				fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, thumbnailBuffer);
+				fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, resizedImage.data);
 				data[fieldname][size] = {
 					name: fullName,
 					url: '/media/' + url,
-					size: blob.size,
+					size: resizedImage.info.size,
 					type: 'image/avif',
-					lastModified: blob.lastModified
+					lastModified: blob.lastModified,
+					width: resizedImage.info.width,
+					height: resizedImage.info.height
 				};
 			}
+			files.push(data[fieldname]);
 		}
 	};
 
 	await parseFiles(data);
+	mongoose.models['image_files'].insertMany(files);
 }
 
 // finds field title that matches the fieldname and returns that field

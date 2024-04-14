@@ -6,6 +6,6 @@ export default createPublicConfig({
 	DEFAULT_CONTENT_LANGUAGE: 'en',
 	AVAILABLE_SYSTEM_LANGUAGES: ['de', 'en'],
 	DEFAULT_SYSTEM_LANGUAGE: 'en',
-	IMAGE_SIZES: { sm: 600, md: 900, lg: 1200 },
+	IMAGE_SIZES: { sm: 600, md: 900, lg: 1200 } as const,
 	MEDIA_FOLDER: 'mediaFiles'
 });

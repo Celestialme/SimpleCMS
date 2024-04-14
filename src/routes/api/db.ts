@@ -42,6 +42,18 @@ export async function getCollectionModels() {
 		});
 	});
 }
+!mongoose.models['image_files'] &&
+	mongoose.model(
+		'image_files',
+		new mongoose.Schema(
+			{},
+			{
+				typeKey: '$type',
+				strict: false,
+				timestamps: true
+			}
+		)
+	);
 
 !mongoose.models['auth_tokens'] && mongoose.model('auth_tokens', mongooseTokenSchema);
 !mongoose.models['auth_users'] && mongoose.model('auth_users', mongooseUserSchema);
