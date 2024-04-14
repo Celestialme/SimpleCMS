@@ -12,8 +12,7 @@
 	let updated = false;
 	let input: HTMLInputElement;
 	let container: HTMLDivElement;
-	let transformers: Transformer[] = [];
-	let layer: Layer;
+
 	export const WidgetData = async () => {
 		if (_data) {
 			_data.path = field.path;
@@ -23,26 +22,6 @@
 		// return null;
 	};
 	export let value: File | { [key: string]: any } = $entryData[getFieldName(field)]; // pass file directly from imageArray
-
-	async function saveEdit() {
-		transformers.forEach((t) => {
-			t.destroy();
-		});
-		_data = await new Promise((resolve) => {
-			layer.toBlob({
-				callback: async (blob) => {
-					if (blob && _data) {
-						let file = new File([await blob.arrayBuffer()], (value as any).original.name || _data.name, {
-							type: (value as any).original.type || _data.type
-						});
-						file.path = field.path;
-						resolve(file);
-					}
-				}
-			});
-		});
-		editing = false;
-	}
 
 	let fieldName = getFieldName(field);
 	function setFile(node: HTMLInputElement) {
@@ -72,41 +51,66 @@
 		}
 	}
 	let editing = false;
-	async function edit() {
-		updated = true;
-		editing = true;
-		let image = new Image();
-		image.src = '/media/' + (value as any).original.url || URL.createObjectURL(_data as File);
-		if (image.naturalHeight == 0) {
-			await new Promise((resolve) => {
-				image.onload = resolve;
-			});
-		}
-		let Konva = (await import('konva')).default;
-		var stage = new Konva.Stage({
-			container: 'canvas',
+	let edit = {
+		layer: {} as Layer,
+		transformers: [] as Transformer[],
+		async startEdit() {
+			updated = true;
+			editing = true;
+			let image = new Image();
+			image.src = '/media/' + (value as any).original.url || URL.createObjectURL(_data as File);
+			if (image.naturalHeight == 0) {
+				await new Promise((resolve) => {
+					image.onload = resolve;
+				});
+			}
+			let Konva = (await import('konva')).default;
+			var stage = new Konva.Stage({
+				container: 'canvas',
 
-			width: image.naturalWidth + 50,
-			height: image.naturalHeight + 50
-		});
-		layer = new Konva.Layer();
-		stage.add(layer);
-		const rect = new Konva.Image({
-			image: image,
-			x: 25,
-			y: 30,
-			width: image.naturalWidth,
-			height: image.naturalHeight,
-			draggable: true
-		});
-		layer.add(rect);
-		let tr = new Konva.Transformer({
-			node: rect,
-			rotateAnchorOffset: 20
-		});
-		transformers.push(tr);
-		layer.add(tr);
-	}
+				width: image.naturalWidth + 50,
+				height: image.naturalHeight + 50
+			});
+			this.layer = new Konva.Layer();
+			stage.add(this.layer);
+			const rect = new Konva.Image({
+				image: image,
+				x: 25,
+				y: 30,
+				width: image.naturalWidth,
+				height: image.naturalHeight,
+				draggable: true
+			});
+			this.layer.add(rect);
+			let tr = new Konva.Transformer({
+				node: rect,
+				rotateAnchorOffset: 20
+			});
+			this.transformers.push(tr);
+			this.layer.add(tr);
+		},
+		async saveEdit() {
+			this.transformers.forEach((t) => {
+				t.destroy();
+			});
+			_data = await new Promise((resolve) => {
+				this.layer.toBlob({
+					callback: async (blob) => {
+						if (blob && _data) {
+							let name = ((value as any).original.name as string) || _data.name;
+							name = name.endsWith('svg') ? name.replace('svg', 'png') : name;
+							let file = new File([await blob.arrayBuffer()], name, {
+								type: (value as any).original.type || _data.type
+							});
+							file.path = field.path;
+							resolve(file);
+						}
+					}
+				});
+			});
+			editing = false;
+		}
+	};
 </script>
 
 <input use:setFile bind:this={input} name={fieldName} type="file" hidden />
@@ -118,12 +122,13 @@
 	<div bind:this={container} class:editor={editing} class="flex flex-col border-dashed border-2 w-[500px] max-w-full border-gray-300">
 		<div class="w-full h-[50px] bg-[#242734] flex items-center">
 			{#if editing}
-				<iconify-icon on:click={saveEdit} width="26" class="px-2 cursor-pointer" style="color:#05ff05" icon="ic:sharp-save-as"></iconify-icon>
+				<iconify-icon on:click={() => edit.saveEdit()} width="26" class="px-2 cursor-pointer" style="color:#05ff05" icon="ic:sharp-save-as"
+				></iconify-icon>
 				<button on:click={() => (editing = false)} class="ml-auto cursor-pointer mr-2">
 					<XIcon />
 				</button>
 			{:else}
-				<iconify-icon on:click={edit} class=" px-2 cursor-pointer text-white" icon="flat-color-icons:edit-image" width="24" />
+				<iconify-icon on:click={() => edit.startEdit()} class=" px-2 cursor-pointer text-white" icon="flat-color-icons:edit-image" width="24" />
 				<iconify-icon
 					on:click={() => (_data = undefined)}
 					class="ml-auto px-2 cursor-pointer text-white"
@@ -166,6 +171,7 @@
 		margin-top: 10px;
 	}
 	.editor {
+		overflow: auto;
 		position: fixed;
 		z-index: 999999999;
 		top: 0;
@@ -173,8 +179,17 @@
 		width: calc(100vw - 2px);
 		height: 100vh;
 		background-color: #242734;
+		animation: fadeIn 0.2s forwards;
+	}
+	@keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
 	}
 	:global(.editor canvas) {
-		background: white !important;
+		background-color: white !important;
 	}
 </style>
