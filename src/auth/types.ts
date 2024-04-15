@@ -1,4 +1,4 @@
-import { Schema, type InferSchemaType, Model as M } from 'mongoose';
+import mongoose, { Schema, type InferSchemaType, Model as M } from 'mongoose';
 export let roles = ['admin', 'user', 'editor'] as const;
 export type Roles = (typeof roles)[number];
 export let UserSchema = {
@@ -15,22 +15,22 @@ export let UserSchema = {
 };
 export let tokenSchema = {
 	token: String,
-	userID: String,
+	user_id: mongoose.Schema.ObjectId,
 	expiresIn: Number
 };
 export let sessionSchema = {
-	user_id: String,
+	user_id: mongoose.Schema.ObjectId,
 	expires: Number
 };
 
 export let mongooseUserSchema = new Schema(UserSchema, { timestamps: true, id: true });
 export let mongooseSessionSchema = new Schema(sessionSchema, { id: true });
-export let mongooseTokenSchema = new Schema(tokenSchema, { timestamps: true });
+export let mongooseTokenSchema = new Schema(tokenSchema, { timestamps: true, id: true });
 type Modify<T, R> = Omit<T, keyof R> & R;
 export type User = Modify<
 	InferSchemaType<typeof mongooseUserSchema>,
 	{
-		id: 'string';
+		id: string;
 		role: Roles;
 		lastAuthMethod: 'password' | 'token';
 	}

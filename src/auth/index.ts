@@ -41,12 +41,12 @@ export class Auth {
 	async createSession({ user_id, expires = 60 * 60 * 1000 }: { user_id: string; expires?: number }) {
 		let session = (
 			await this.Session.insertMany({
-				user_id,
+				user_id: new mongoose.Types.ObjectId(user_id),
 				expires: Date.now() + expires
 			})
 		)?.[0];
 
-		return session as Session;
+		return session;
 	}
 	async checkUser(fields: { email?: string; id?: string }): Promise<User | null>;
 	async checkUser(fields: { email: string; id: string }): Promise<User | null> {
@@ -97,11 +97,10 @@ export class Auth {
 						_id: new mongoose.Types.ObjectId(session_id)
 					}
 				},
-				{ $addFields: { userID: { $toObjectId: '$user_id' } } },
 				{
 					$lookup: {
 						from: this.User.collection.name,
-						localField: 'userID',
+						localField: 'user_id',
 						foreignField: '_id',
 						as: 'user'
 					}

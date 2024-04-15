@@ -8,21 +8,24 @@
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { Group } from 'konva/lib/Group';
+	import Media from '@src/components/Media.svelte';
+	import type { ImageFiles } from '@src/utils/types';
+	import type { Stage } from 'konva/lib/Stage';
 	export let field: FieldType;
-	let _data: File | undefined;
+	let _data: File | ImageFiles | undefined;
 	let updated = false;
 	let input: HTMLInputElement;
-	let container: HTMLDivElement;
+	let showMedia = false;
 
 	export const WidgetData = async () => {
-		if (_data) {
+		if (_data && _data instanceof File) {
 			_data.path = field.path;
 		}
 
 		return updated ? _data : null;
 		// return null;
 	};
-	export let value: File | { [key: string]: any } = $entryData[getFieldName(field)]; // pass file directly from imageArray
+	export let value: File | ImageFiles = $entryData[getFieldName(field)]; // pass file directly from imageArray
 
 	let fieldName = getFieldName(field);
 	function setFile(node: HTMLInputElement) {
@@ -43,7 +46,7 @@
 				if (value instanceof File) return;
 				let fileList = new DataTransfer();
 				let file = new File([data], value.thumbnail.name, {
-					type: value.mimetype
+					type: value.thumbnail.type
 				});
 				fileList.items.add(file);
 				node.files = fileList.files;
@@ -53,7 +56,7 @@
 	}
 	let editing = false;
 	let edit = {
-		layer: {} as Layer,
+		stage: {} as Stage,
 		group: {} as Group,
 		transformers: [] as Transformer[],
 		async startEdit() {
@@ -67,41 +70,45 @@
 				});
 			}
 			let Konva = (await import('konva')).default;
-			var stage = new Konva.Stage({
+			let scale = {
+				x: (window.innerWidth - 50) / 1.5 / image.naturalWidth,
+				y: (window.innerHeight - 80) / 1.5 / image.naturalHeight
+			};
+			this.stage = new Konva.Stage({
 				container: 'canvas',
-
-				width: image.naturalWidth + 50,
-				height: image.naturalHeight + 50
+				width: window.innerWidth - 50,
+				height: window.innerHeight - 80,
+				scale
 			});
-			this.layer = new Konva.Layer();
-			stage.add(this.layer);
+
+			let layer = new Konva.Layer();
+			this.stage.add(layer);
 			let imageObj = new Konva.Image({
 				image: image,
-				x: 25,
-				y: 30,
-				width: image.naturalWidth,
-				height: image.naturalHeight,
+				x: (this.stage.width() / 2) * (1 / scale.x) - image.naturalWidth / 2,
+				y: (this.stage.height() / 2) * (1 / scale.y) - image.naturalHeight / 2,
 				draggable: true
 			});
 			this.group = new Konva.Group();
 			this.group.add(imageObj);
-			this.layer.add(this.group);
+			layer.add(this.group);
 			let tr = new Konva.Transformer({
 				node: imageObj,
 				rotateAnchorOffset: 20
 			});
 			this.transformers.push(tr);
-			this.layer.add(tr);
+			layer.add(tr);
 		},
 		async saveEdit() {
 			this.transformers.forEach((t) => {
 				t.destroy();
 			});
 
+			this.stage.scale({ x: 1, y: 1 });
 			_data = await new Promise((resolve) => {
 				this.group.toBlob({
 					callback: async (blob) => {
-						if (blob && _data) {
+						if (blob && _data && _data instanceof File) {
 							let name = ((value as any).original.name as string) || _data.name;
 							let type = ((value as any).original.type as string) || _data.type;
 							type = type.includes('svg') ? 'image/png' : type;
@@ -121,6 +128,12 @@
 			editing = false;
 		}
 	};
+
+	let mediaOnSelect = (data: ImageFiles) => {
+		updated = true;
+		showMedia = false;
+		_data = data;
+	};
 </script>
 
 <input use:setFile bind:this={input} name={fieldName} type="file" hidden />
@@ -129,7 +142,7 @@
 <!-- <FileDropzone /> -->
 
 {#if _data}
-	<div bind:this={container} class:editor={editing} class="flex flex-col border-dashed border-2 w-[500px] max-w-full border-gray-300">
+	<div class:editor={editing} class="flex flex-col border-dashed border-2 w-[500px] max-w-full border-gray-300">
 		<div class="w-full h-[50px] bg-[#242734] flex items-center">
 			{#if editing}
 				<iconify-icon on:click={() => edit.saveEdit()} width="26" class="px-2 cursor-pointer" style="color:#05ff05" icon="ic:sharp-save-as"
@@ -150,7 +163,7 @@
 		{#if editing}
 			<div id="canvas" class="flex items-center justify-center border-2 border-dashed border-black"></div>
 		{:else}
-			<img src={URL.createObjectURL(_data)} alt="" />
+			<img src={_data instanceof File ? URL.createObjectURL(_data) : _data.thumbnail.url} alt="" />
 		{/if}
 	</div>
 {:else}
@@ -169,7 +182,15 @@
 	>
 		<p>Drag & Drop</p>
 		<p>or</p>
-		<Button on:click={() => input.click()}>Browse</Button>
+		<div class="flex w-full gap-2 justify-center">
+			<Button style="flex: 1 1 0px;" on:click={() => input.click()}>Browse locally</Button>
+			<Button style="flex: 1 1 0px;" on:click={() => (showMedia = true)}>Select Existing</Button>
+		</div>
+	</div>
+{/if}
+{#if showMedia}
+	<div class="rounded-md p-2 fixed left-[50%] top-[50%] w-[90%] h-[80%] translate-y-[-50%] translate-x-[-50%] z-[999999999] bg-white">
+		<Media bind:onselect={mediaOnSelect} />
 	</div>
 {/if}
 

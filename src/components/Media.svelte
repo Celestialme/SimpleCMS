@@ -2,6 +2,7 @@
 	import type { ImageFiles } from '@src/utils/types';
 	import { SIZES } from '@src/utils/utils';
 	import axios from 'axios';
+	export let onselect: any = () => {};
 	let files: ImageFiles[] = [];
 	axios.get('/media/getAll').then((res) => (files = res.data));
 	function formatBytes(bytes) {
@@ -19,7 +20,7 @@
 
 <div class="flex flex-wrap items-center overflow-auto max-h-[calc(100%-55px)] justify-center">
 	{#each files as file}
-		<div class="card flex flex-col md:w-[30%] w-[100%]">
+		<div on:click={() => onselect(file)} class="card flex flex-col md:w-[30%] w-[100%]">
 			<img src={file.thumbnail.url} class="max-h-[250px] mx-auto mb-2" />
 
 			<table class="mt-auto">
