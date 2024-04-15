@@ -28,12 +28,12 @@ export class Auth {
 			})
 		)?.[0];
 		user._id && delete user._id;
-
 		return user as User;
 	}
 	async updateUserAttributes(user: User, attributes: Partial<User>) {
 		if (attributes.password) attributes.password = crypto.createHash('sha256').update(attributes.password).digest('hex');
-		await this.User.updateOne({ _id: user.id }, { $set: attributes });
+
+		return await this.User.updateOne({ _id: user.id }, { $set: attributes });
 	}
 	async deleteUser(id: string) {
 		await this.User.deleteOne({ _id: id });
@@ -48,8 +48,8 @@ export class Auth {
 
 		return session;
 	}
-	async checkUser(fields: { email?: string; id?: string }): Promise<User | null>;
-	async checkUser(fields: { email: string; id: string }): Promise<User | null> {
+	async checkUser(fields: { email?: string; _id?: string }): Promise<User | null>;
+	async checkUser(fields: { email: string; _id: string }): Promise<User | null> {
 		let user = await this.User.findOne(fields);
 
 		return user;
@@ -111,12 +111,11 @@ export class Auth {
 			])
 		)?.[0];
 		if (!resp) return null;
+		resp.user.id = resp.user._id.toString();
 		resp.user._id && delete resp.user._id;
 		return resp.user;
 	}
-	async get_user_by_id(user_id: string): Promise<User | null> {
-		return this.User.findOne({ _id: user_id });
-	}
+
 	async createToken(user_id: string, expires = 60 * 60 * 1000) {
 		return await createToken(this.Token, user_id, expires);
 	}

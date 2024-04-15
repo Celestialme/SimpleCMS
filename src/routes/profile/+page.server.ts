@@ -53,7 +53,7 @@ export const actions: Actions = {
 		let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 		let user = await auth.validateSession(session_id);
 		if (!user) return { message: 'user does not exist or session expired' };
-		await auth.updateUserAttributes(user, { password: password, lastAuthMethod: 'password' });
+		let res = await auth.updateUserAttributes(user, { password: password, lastAuthMethod: 'password' });
 
 		return { message: 'password changed successfully' };
 	},
@@ -81,7 +81,7 @@ export const actions: Actions = {
 		for (let info_json of infos) {
 			let info = JSON.parse(info_json as string) as { id: string; field: 'email' | 'role' | 'name'; value: string };
 
-			let user = await auth.checkUser({ id: info.id });
+			let user = await auth.checkUser({ _id: info.id });
 			console.log(user);
 			user &&
 				auth.updateUserAttributes(user, {
