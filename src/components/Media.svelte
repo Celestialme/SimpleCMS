@@ -26,7 +26,7 @@
 				<button class="mt-[2px] ml-[2px] w-[30px] block" on:click={() => (showInfo[index] = !showInfo[index])}>
 					<iconify-icon icon="raphael:info" width="25" class="text-[#00d3d0]"></iconify-icon>
 				</button>
-				<p class="mx-auto text-white">{file.thumbnail.name}</p>
+				<p class="mx-auto text-white pr-[30px]">{file.thumbnail.name}</p>
 			</div>
 			{#if !showInfo[index]}
 				<img src={file.thumbnail.url} class="mt-auto max-h-[calc(100%-35px)] mx-auto rounded-md" />
