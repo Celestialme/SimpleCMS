@@ -16,37 +16,46 @@
 			return bytes + ' bytes';
 		}
 	}
+	let showInfo = Array.from({ length: files.length }, () => false);
 </script>
 
 <div class="flex flex-wrap items-center overflow-auto max-h-[calc(100%-55px)] justify-center">
-	{#each files as file}
-		<div on:click={() => onselect(file)} class="card flex flex-col md:w-[30%] w-[100%]">
-			<img src={file.thumbnail.url} class="max-h-[250px] mx-auto mb-2" />
-
-			<table class="mt-auto">
-				<tbody>
-					{#each Object.keys(SIZES) as size}
-						<tr>
-							<td class="!pl-[10px]">
-								{size}
-							</td>
-							<td>
-								{file[size].width}x{file[size].height}
-							</td>
-							<td>
-								{formatBytes(file[size].size)}
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
+	{#each files as file, index}
+		<div on:click={() => onselect(file)} class="card relative flex flex-col md:w-[30%] w-[100%]">
+			<div class="absolute flex w-full bg-[#2c3844] items-center">
+				<button class="mt-[2px] ml-[2px] w-[30px] block" on:click={() => (showInfo[index] = !showInfo[index])}>
+					<iconify-icon icon="raphael:info" width="25" class="text-[#00d3d0]"></iconify-icon>
+				</button>
+				<p class="mx-auto text-white">{file.thumbnail.name}</p>
+			</div>
+			{#if !showInfo[index]}
+				<img src={file.thumbnail.url} class="mt-auto max-h-[calc(100%-35px)] mx-auto rounded-md" />
+			{:else}
+				<table class="w-full mt-[30px] min-h-[calc(100%-30px)]">
+					<tbody>
+						{#each Object.keys(SIZES) as size}
+							<tr>
+								<td class="!pl-[10px]">
+									{size}
+								</td>
+								<td>
+									{file[size].width}x{file[size].height}
+								</td>
+								<td>
+									{formatBytes(file[size].size)}
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			{/if}
 		</div>
 	{/each}
 </div>
 
 <style>
 	.card {
-		height: 450px;
+		height: 250px;
 		margin: 10px;
 		border-radius: 10px;
 		overflow: hidden;
