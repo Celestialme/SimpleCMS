@@ -40,6 +40,9 @@ widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({ field, data, user, type }: ModifyRequestParams<typeof widget>) => {
 	if (type !== 'GET') {
+		if (data._id) {
+			data = new mongoose.Types.ObjectId(data._id);
+		}
 		return data;
 	}
 	let media_collection = mongoose.models['image_files'];
