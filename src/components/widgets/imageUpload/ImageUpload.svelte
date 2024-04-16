@@ -60,10 +60,19 @@
 		group: {} as Group,
 		transformers: [] as Transformer[],
 		async startEdit() {
+			debugger;
 			updated = true;
 			editing = true;
 			let image = new Image();
-			image.src = '/media/' + (value as any).original.url || URL.createObjectURL(_data as File);
+			if (_data) {
+				if (_data instanceof File) {
+					image.src = URL.createObjectURL(_data as File);
+				} else {
+					image.src = '/media/' + _data.original.url;
+				}
+			} else {
+				image.src = '/media/' + (value as ImageFiles).original.url;
+			}
 			if (image.naturalHeight == 0) {
 				await new Promise((resolve) => {
 					image.onload = resolve;
@@ -103,7 +112,7 @@
 			this.transformers.forEach((t) => {
 				t.destroy();
 			});
-
+			debugger;
 			this.stage.scale({ x: 1, y: 1 });
 			_data = await new Promise((resolve) => {
 				this.group.toBlob({

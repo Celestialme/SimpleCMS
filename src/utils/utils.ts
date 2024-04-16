@@ -104,22 +104,28 @@ export async function saveImages(data: { [key: string]: any }, collectionName: s
 			let arrayBuffer = await blob.arrayBuffer();
 			let buffer = Buffer.from(arrayBuffer);
 			let hash = _crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
+			let existing_file = await mongoose.models['image_files'].findOne({ hash: hash });
+			if (existing_file) {
+				data[fieldname] = existing_file;
+				continue;
+			}
 			let path = blob.path;
-			let name = removeExtension(blob.name);
+			let { name, ext } = removeExtension(blob.name);
 			//original image
 
 			let url;
 			if (path == 'global') {
-				url = `images/original/${hash}-${blob.name}`;
+				url = `images/original/${hash}.${ext}`;
 			} else if (path == 'unique') {
-				url = `images/${collectionName}/original/${hash}-${blob.name}`;
+				url = `images/${collectionName}/original/${hash}.${ext}`;
 			} else {
-				url = `images/${path}/original/${hash}-${blob.name}`;
+				url = `images/${path}/original/${hash}.${ext}`;
 			}
 			let info = await sharp(buffer).metadata();
 			data[fieldname] = {
+				hash,
 				original: {
-					name: `${hash}-${blob.name}`,
+					name: blob.name,
 					url,
 					size: blob.size,
 					type: blob.type,
@@ -136,7 +142,7 @@ export async function saveImages(data: { [key: string]: any }, collectionName: s
 			fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, buffer);
 			for (let size in SIZES) {
 				if (size == 'original') continue;
-				let fullName = `${hash}-${name}.avif`;
+
 				const resizedImage = await sharp(buffer)
 					.rotate() // Rotate image according to EXIF data
 					.resize({ width: SIZES[size] })
@@ -145,11 +151,11 @@ export async function saveImages(data: { [key: string]: any }, collectionName: s
 				let url;
 
 				if (path == 'global') {
-					url = `images/${size}/${fullName}`;
+					url = `images/${size}/${hash}.avif`;
 				} else if (path == 'unique') {
-					url = `images/${collectionName}/${size}/${fullName}`;
+					url = `images/${collectionName}/${size}/${hash}.avif`;
 				} else {
-					url = `images/${path}/${size}/${fullName}`;
+					url = `images/${path}/${size}/${hash}.avif`;
 				}
 				if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
 					fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
@@ -157,7 +163,7 @@ export async function saveImages(data: { [key: string]: any }, collectionName: s
 				//sized images
 				fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, resizedImage.data);
 				data[fieldname][size] = {
-					name: fullName,
+					name: `${name}.avif`,
 					url: '/media/' + url,
 					size: resizedImage.info.size,
 					type: 'image/avif',
@@ -242,9 +248,9 @@ function removeExtension(fileName) {
 	const lastDotIndex = fileName.lastIndexOf('.');
 	if (lastDotIndex === -1) {
 		// If the file has no extension, return the original fileName
-		return fileName;
+		return { name: fileName, ext: '' };
 	}
-	return fileName.slice(0, lastDotIndex);
+	return { name: fileName.slice(0, lastDotIndex), ext: fileName.slice(lastDotIndex + 1) };
 }
 export let asAny = (value: any) => value;
 
