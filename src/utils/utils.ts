@@ -90,7 +90,7 @@ export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
 export async function saveImages(data: { [key: string]: any }, collectionName: string) {
 	if (browser) return;
 	let sharp = (await import('sharp')).default;
-	let files: any[] = [];
+	let fields: { file: any; replace: (id: string) => void }[] = [];
 	let parseFiles = async (data: any) => {
 		for (let fieldname in data) {
 			if (!(data[fieldname] instanceof File) && typeof data[fieldname] == 'object') {
@@ -166,48 +166,21 @@ export async function saveImages(data: { [key: string]: any }, collectionName: s
 					height: resizedImage.info.height
 				};
 			}
-			files.push(data[fieldname]);
+			fields.push({
+				file: data[fieldname],
+				replace: (id) => {
+					data[fieldname] = id;
+				}
+			});
 		}
 	};
 
 	await parseFiles(data);
-	mongoose.models['image_files'].insertMany(files);
-}
-
-// finds field title that matches the fieldname and returns that field
-function _findFieldByTitle(schema: any, fieldname: string, found = { val: false }): any {
-	for (let field of schema.fields) {
-		if (field.db_fieldName == fieldname || field.label == fieldname) {
-			found.val = true;
-
-			return field;
-		} else if (field.fields && field.fields.length > 0) {
-			return _findFieldByTitle(field, fieldname, found);
-		}
+	let res = await mongoose.models['image_files'].insertMany(fields.map((v) => v.file));
+	for (let index in res) {
+		let id = res[index]._id;
+		fields[index].replace(id);
 	}
-	if (!found) {
-		throw new Error('FIELD NOT FOUND');
-	}
-}
-
-// takes an object and recursively parses any values that can be converted to JSON
-export function parse(obj: any) {
-	for (let key in obj) {
-		try {
-			if (Array.isArray(obj[key])) {
-				for (let index of obj[key]) {
-					obj[key][index] = JSON.parse(obj[key][index]);
-				}
-			} else {
-				obj[key] = JSON.parse(obj[key]);
-			}
-		} catch (e) {}
-
-		if (typeof obj[key] != 'string') {
-			parse(obj[key]);
-		}
-	}
-	return obj;
 }
 
 export let fieldsToSchema = (fields: Array<any>) => {

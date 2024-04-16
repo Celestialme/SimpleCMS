@@ -1,7 +1,7 @@
 import { getCollections } from '@src/collections';
 import type { RequestHandler } from './$types';
 import { auth, getCollectionModels } from '@src/routes/api/db';
-import { getFieldName, parse, saveImages } from '@src/utils/utils';
+import { getFieldName, saveImages } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
 import publicConfig from '@root/config/public';
 import { SESSION_COOKIE_NAME } from '@src/auth';
