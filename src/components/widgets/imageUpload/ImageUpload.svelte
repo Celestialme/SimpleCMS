@@ -60,7 +60,6 @@
 		group: {} as Group,
 		transformers: [] as Transformer[],
 		async startEdit() {
-			debugger;
 			updated = true;
 			editing = true;
 			let image = new Image();
@@ -112,7 +111,6 @@
 			this.transformers.forEach((t) => {
 				t.destroy();
 			});
-			debugger;
 			this.stage.scale({ x: 1, y: 1 });
 			_data = await new Promise((resolve) => {
 				this.group.toBlob({
@@ -198,7 +196,10 @@
 	</div>
 {/if}
 {#if showMedia}
-	<div class="rounded-md p-2 fixed left-[50%] top-[50%] w-[90%] h-[80%] translate-y-[-50%] translate-x-[-50%] z-[999999999] bg-white">
+	<div class="flex flex-col rounded-md p-2 fixed left-[50%] top-[50%] w-[90%] h-[80%] translate-y-[-50%] translate-x-[-50%] z-[999999999] bg-white">
+		<button on:click={() => (showMedia = false)} class="ml-auto cursor-pointer">
+			<XIcon />
+		</button>
 		<Media bind:onselect={mediaOnSelect} />
 	</div>
 {/if}
