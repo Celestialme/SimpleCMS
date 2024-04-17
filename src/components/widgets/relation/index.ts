@@ -4,6 +4,7 @@ import { type Params, GuiSchema, GraphqlSchema } from './types';
 import { getCollections } from '@src/collections';
 import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
+import type { Schema } from '@src/collections/types';
 
 const widget = (params: Params) => {
 	let display;
@@ -51,8 +52,23 @@ widget.modifyRequest = async ({ field, data, user, type }: ModifyRequestParams<t
 	}
 	let { getCollectionModels } = await import('@src/routes/api/db');
 	let relative_collection = (await getCollectionModels())[field.relation];
+	let relative_collection_schema = (await getCollections()).find((c) => c.name == field.relation) as Schema;
+	let response = (await relative_collection.findById(data)) as any;
+	let result = {};
+	for (let key in relative_collection_schema.fields) {
+		let _field = relative_collection_schema.fields[key];
+		let widget = widgets[_field.widget.key];
 
-	return await relative_collection.findById(data);
+		result[getFieldName(_field)] = await widget.modifyRequest({
+			collection: relative_collection,
+			field: _field as ReturnType<typeof widget>,
+			data: response[getFieldName(_field)],
+			user,
+			type
+		});
+	}
+
+	return result;
 };
 widget.aggregations = {
 	filters: async (info) => {
