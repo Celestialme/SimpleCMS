@@ -14,7 +14,7 @@
 	});
 </script>
 
-<div class="container absolute bg-[#363636]">
+<div class="container absolute bg-[#363636]" class:expanded>
 	<div on:click={() => (expanded = !expanded)} class="flex cursor-pointer items-center justify-evenly" class:selected={expanded}>
 		<iconify-icon icon="clarity:language-solid" width="24" />
 
@@ -61,6 +61,10 @@
 <style>
 	.container {
 		border-radius: 5px;
+		overflow: hidden;
+	}
+	.expanded {
+		box-shadow: 0px 0px 3px 1px #72efed;
 	}
 	.selected {
 		border-bottom: 1px solid white;
