@@ -1,6 +1,6 @@
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import ImageUpload from './ImageUpload.svelte';
-import { getFieldName, getGuiFields } from '@src/utils/utils';
+import { getFieldName, getGuiFields, get_elements_by_id } from '@src/utils/utils';
 import type { ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
 const widget = (params: Params) => {
@@ -39,15 +39,16 @@ const widget = (params: Params) => {
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({ field, data, user, type }: ModifyRequestParams<typeof widget>) => {
+	let _data = data.get();
 	if (type !== 'GET') {
-		if (data._id) {
-			data = new mongoose.Types.ObjectId(data._id);
+		if (_data._id) {
+			console.log(_data);
+			data.update(new mongoose.Types.ObjectId(_data._id));
 		}
-		return data;
+		return;
 	}
-	let media_collection = mongoose.models['image_files'];
-
-	return await media_collection.findById(data);
+	// here _data is just id of the image
+	get_elements_by_id.add('image_files', _data, (newData) => data.update(newData));
 };
 widget.aggregations = {
 	filters: async (info) => {

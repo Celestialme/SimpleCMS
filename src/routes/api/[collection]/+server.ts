@@ -1,7 +1,7 @@
 import { getCollections } from '@src/collections';
 import type { RequestHandler } from './$types';
 import { auth, getCollectionModels } from '@src/routes/api/db';
-import { getFieldName, saveImages } from '@src/utils/utils';
+import { getFieldName, get_elements_by_id, saveImages } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
 import publicConfig from '@root/config/public';
 import { SESSION_COOKIE_NAME } from '@src/auth';
@@ -75,13 +75,21 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 			// widget can modify own portion of entryList;
 			entryList = await Promise.all(
 				entryList.map(async (entry: any) => {
-					entry[fieldName] = await widget.modifyRequest({ collection, field, data: entry[fieldName], user, type: 'GET' });
+					let data = {
+						get() {
+							return entry[fieldName];
+						},
+						update(newData) {
+							entry[fieldName] = newData;
+						}
+					};
+					await widget.modifyRequest({ collection, field, data, user, type: 'GET' });
 					return entry;
 				})
 			);
 		}
 	}
-
+	await get_elements_by_id.getAll(); //get all collected ids together and modify request.
 	let totalCount = entryListWithCount[0].totalCount[0] ? entryListWithCount[0].totalCount[0].total : 0;
 
 	let pagesCount = Math.ceil(totalCount / length);
@@ -135,8 +143,16 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 			delete body[fieldName];
 		} else if ('modifyRequest' in widget) {
 			// widget can modify own portion of body;
-
-			body[fieldName] = await widget.modifyRequest({ collection, field, data: body[fieldName], user, type: 'PATCH', id: _id });
+			let data = {
+				get() {
+					return body[fieldName];
+				},
+				update(newData) {
+					body[fieldName] = newData;
+				}
+			};
+			await widget.modifyRequest({ collection, field, data, user, type: 'PATCH', id: _id });
+			console.log(body);
 		}
 	}
 	await saveImages(body, params.collection);
@@ -187,8 +203,15 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 			delete body[fieldName];
 		} else if ('modifyRequest' in widget) {
 			// widget can modify own portion of body;
-
-			body[fieldName] = await widget.modifyRequest({ collection, field, data: body[fieldName], user, type: 'POST' });
+			let data = {
+				get() {
+					return body[fieldName];
+				},
+				update(newData) {
+					body[fieldName] = newData;
+				}
+			};
+			await widget.modifyRequest({ collection, field, data, user, type: 'POST' });
 		}
 	}
 	await saveImages(body, params.collection);

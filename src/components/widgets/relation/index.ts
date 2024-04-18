@@ -47,28 +47,35 @@ const widget = (params: Params) => {
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({ field, data, user, type }: ModifyRequestParams<typeof widget>) => {
-	if (type !== 'GET') {
-		return data;
+	let _data = data.get();
+	if (type !== 'GET' || !_data) {
+		return;
 	}
 	let { getCollectionModels } = await import('@src/routes/api/db');
 	let relative_collection = (await getCollectionModels())[field.relation];
 	let relative_collection_schema = (await getCollections()).find((c) => c.name == field.relation) as Schema;
-	let response = (await relative_collection.findById(data)) as any;
+	let response = (await relative_collection.findById(_data)) as any;
 	let result = {};
 	for (let key in relative_collection_schema.fields) {
 		let _field = relative_collection_schema.fields[key];
 		let widget = widgets[_field.widget.key];
-
-		result[getFieldName(_field)] = await widget.modifyRequest({
+		let data = {
+			get() {
+				return response[getFieldName(_field)];
+			},
+			update(newData) {
+				result[getFieldName(_field)] = newData;
+			}
+		};
+		await widget.modifyRequest({
 			collection: relative_collection,
 			field: _field as ReturnType<typeof widget>,
-			data: response[getFieldName(_field)],
+			data,
 			user,
 			type
 		});
 	}
-
-	return result;
+	data.update(result);
 };
 widget.aggregations = {
 	filters: async (info) => {

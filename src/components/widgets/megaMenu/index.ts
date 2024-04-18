@@ -52,6 +52,7 @@ const widget = (params: Params) => {
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({ collection, field, data, user, type, id }: ModifyRequestParams<typeof widget>) => {
+	let _data = data.get();
 	let old_data: Array<any>;
 	let process_OldData = (children, level = 1, result = []) => {
 		for (let index in children) {
@@ -85,10 +86,18 @@ widget.modifyRequest = async ({ collection, field, data, user, type, id }: Modif
 					// if menu as other nested widgets inside which has its own modifyRequest method...
 					let widget = widgets[_field.widget.key];
 					if ('modifyRequest' in widget) {
-						children[index][getFieldName(_field)] = await widget.modifyRequest({
+						let data = {
+							get() {
+								return children[index][getFieldName(_field)];
+							},
+							update(newData) {
+								children[index][getFieldName(_field)] = newData;
+							}
+						};
+						await widget.modifyRequest({
 							collection,
 							field: _field as ReturnType<typeof widget>,
-							data: children[index][getFieldName(_field)],
+							data,
 							user,
 							type,
 							id
@@ -101,9 +110,9 @@ widget.modifyRequest = async ({ collection, field, data, user, type, id }: Modif
 		}
 	};
 
-	await cleanChildren(data.children);
+	await cleanChildren(_data.children);
 
-	return data;
+	return _data;
 };
 widget.aggregations = {
 	filters: async (info) => {
