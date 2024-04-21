@@ -149,9 +149,7 @@
 			range.max = '50';
 			range.value = '25';
 			range.style.position = 'absolute';
-			range.onpointerdown = (e) => {
-				e.stopPropagation();
-			};
+
 			range.onchange = () => {
 				blurRect.pixelSize(Number(range.value));
 			};
@@ -172,8 +170,8 @@
 					width: blurRect.width(),
 					height: blurRect.height()
 				});
-				range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 'px';
-				range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 20 + 'px';
+				range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 25 + 'px';
+				range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 70 + 'px';
 				blurRect.cache();
 			});
 			blurRect.on('transform', () => {
@@ -190,11 +188,13 @@
 					height: blurRect.height()
 				});
 				blurRect.cache();
+				range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 25 + 'px';
+				range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 70 + 'px';
 			});
 
-			this.stage.content.appendChild(range);
-			range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 'px';
-			range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 20 + 'px';
+			document.getElementsByTagName('canvas')?.[0]?.parentElement?.parentElement?.appendChild(range);
+			range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 25 + 'px';
+			range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 70 + 'px';
 			let tr = new Konva.Transformer({
 				rotateAnchorOffset: 20,
 				nodes: [blurRect],
