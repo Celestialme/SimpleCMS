@@ -4,13 +4,14 @@
 	import { entryData, mode } from '@src/stores/store';
 	import { asAny, getFieldName } from '@src/utils/utils';
 	import Button from '@src/components/system/buttons/Button.svelte';
-	import type { Layer } from 'konva/lib/Layer';
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { Group } from 'konva/lib/Group';
 	import Media from '@src/components/Media.svelte';
 	import type { ImageFiles } from '@src/utils/types';
 	import type { Stage } from 'konva/lib/Stage';
+	import type { Image as KonvaImage } from 'konva/lib/shapes/Image';
+	import type { Layer } from 'konva/lib/Layer';
 	export let field: FieldType;
 	let _data: File | ImageFiles | undefined;
 	let updated = false;
@@ -59,25 +60,28 @@
 		stage: {} as Stage,
 		group: {} as Group,
 		transformers: [] as Transformer[],
+		layer: {} as Layer,
+		imageObj: {} as KonvaImage,
+		image: {} as HTMLImageElement,
 		async startEdit() {
 			editing = true;
-			let image = new Image();
+			this.image = new Image();
 			if (_data && updated) {
 				if (_data instanceof File) {
-					image.src = URL.createObjectURL(_data as File);
+					this.image.src = URL.createObjectURL(_data as File);
 				} else {
-					image.src = '/media/' + _data.original.url;
+					this.image.src = '/media/' + _data.original.url;
 				}
 			} else {
-				image.src = '/media/' + (value as ImageFiles).original.url;
+				this.image.src = '/media/' + (value as ImageFiles).original.url;
 			}
-			if (image.naturalHeight == 0) {
+			if (this.image.naturalHeight == 0) {
 				await new Promise((resolve) => {
-					image.onload = resolve;
+					this.image.onload = resolve;
 				});
 			}
 			let Konva = (await import('konva')).default;
-			let scale = Math.min((window.innerWidth - 50) / 1.5 / image.naturalWidth, (window.innerHeight - 80) / 1.5 / image.naturalHeight);
+			let scale = Math.min((window.innerWidth - 50) / 1.5 / this.image.naturalWidth, (window.innerHeight - 80) / 1.5 / this.image.naturalHeight);
 
 			this.stage = new Konva.Stage({
 				container: 'canvas',
@@ -89,55 +93,26 @@
 				}
 			});
 
-			let layer = new Konva.Layer();
-			this.stage.add(layer);
+			this.layer = new Konva.Layer();
+			this.stage.add(this.layer);
 
-			let imageObj = new Konva.Image({
-				image: image,
-				x: (this.stage.width() / 2) * (1 / scale) - image.naturalWidth / 2,
-				y: (this.stage.height() / 2) * (1 / scale) - image.naturalHeight / 2,
+			this.imageObj = new Konva.Image({
+				image: this.image,
+				x: (this.stage.width() / 2) * (1 / scale) - this.image.naturalWidth / 2,
+				y: (this.stage.height() / 2) * (1 / scale) - this.image.naturalHeight / 2,
 				draggable: true
 			});
 			this.group = new Konva.Group();
-			this.group.add(imageObj);
-			let blurRect = new Konva.Image({
-				image,
-				width: 300,
-				height: 100,
-				pixelSize: 50,
-				draggable: true
-			});
+			this.group.add(this.imageObj);
 
-			blurRect.filters([Konva.Filters.Pixelate]);
-			blurRect.on('dragmove', (e) => {
-				blurRect.scale({ x: 1, y: 1 });
-				blurRect.crop({ x: -(imageObj.x() - blurRect.x()), y: -(imageObj.y() - blurRect.y()), width: blurRect.width(), height: blurRect.height() });
-				blurRect.cache();
-			});
-			blurRect.on('transform', () => {
-				blurRect.setAttrs({
-					width: blurRect.width() * blurRect.scaleX(),
-					height: blurRect.height() * blurRect.scaleY(),
-					scaleX: 1,
-					scaleY: 1
-				});
-				blurRect.crop({ x: -(imageObj.x() - blurRect.x()), y: -(imageObj.y() - blurRect.y()), width: blurRect.width(), height: blurRect.height() });
-				blurRect.cache();
-			});
 			this.transformers = [
 				new Konva.Transformer({
-					nodes: [imageObj],
+					nodes: [this.imageObj],
 					rotateAnchorOffset: 20
-				}),
-				new Konva.Transformer({
-					nodes: [blurRect],
-					rotateAnchorOffset: 20,
-
-					rotateEnabled: false
 				})
 			];
-			this.group.add(blurRect);
-			layer.add(this.group, ...this.transformers);
+
+			this.layer.add(this.group, ...this.transformers);
 		},
 		async saveEdit() {
 			this.transformers.forEach((t) => {
@@ -165,6 +140,69 @@
 			});
 			editing = false;
 			updated = true;
+		},
+		async addBlur() {
+			let Konva = (await import('konva')).default;
+			let range = document.createElement('input');
+			range.type = 'range';
+			range.min = '0';
+			range.max = '50';
+			range.value = '25';
+			range.style.position = 'absolute';
+			range.onpointerdown = (e) => {
+				e.stopPropagation();
+			};
+			range.onchange = () => {
+				blurRect.pixelSize(Number(range.value));
+			};
+			let blurRect = new Konva.Image({
+				image: this.image,
+				width: 300,
+				height: 100,
+				pixelSize: range.value,
+				draggable: true
+			});
+
+			blurRect.filters([Konva.Filters.Pixelate]);
+			blurRect.on('dragmove', (e) => {
+				blurRect.scale({ x: 1, y: 1 });
+				blurRect.crop({
+					x: -(this.imageObj.x() - blurRect.x()),
+					y: -(this.imageObj.y() - blurRect.y()),
+					width: blurRect.width(),
+					height: blurRect.height()
+				});
+				range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 'px';
+				range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 20 + 'px';
+				blurRect.cache();
+			});
+			blurRect.on('transform', () => {
+				blurRect.setAttrs({
+					width: blurRect.width() * blurRect.scaleX(),
+					height: blurRect.height() * blurRect.scaleY(),
+					scaleX: 1,
+					scaleY: 1
+				});
+				blurRect.crop({
+					x: -(this.imageObj.x() - blurRect.x()),
+					y: -(this.imageObj.y() - blurRect.y()),
+					width: blurRect.width(),
+					height: blurRect.height()
+				});
+				blurRect.cache();
+			});
+
+			this.stage.content.appendChild(range);
+			range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 'px';
+			range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 20 + 'px';
+			let tr = new Konva.Transformer({
+				rotateAnchorOffset: 20,
+				nodes: [blurRect],
+				rotateEnabled: false
+			});
+			this.transformers.push(tr);
+			this.layer.add(tr);
+			this.group.add(blurRect);
 		}
 	};
 
@@ -186,6 +224,7 @@
 			{#if editing}
 				<iconify-icon on:click={() => edit.saveEdit()} width="26" class="px-2 cursor-pointer" style="color:#05ff05" icon="ic:sharp-save-as"
 				></iconify-icon>
+				<Button on:click={() => edit.addBlur()}>blur</Button>
 				<button on:click={() => (editing = false)} class="ml-auto cursor-pointer mr-2">
 					<XIcon />
 				</button>
