@@ -36,7 +36,7 @@
 				<iconify-icon icon="ci:heading-h2" width="20"></iconify-icon>
 			</button>
 			<button on:click={() => editor.chain().focus().setParagraph().run()} class:active={editor.isActive('paragraph')}>
-				<iconify-icon icon="vaadin:paragraph" width="20" />
+				<iconify-icon icon="icomoon-free:section" width="20" />
 			</button>
 			<button on:click={() => editor.chain().focus().toggleBold().run()} class:active={editor.isActive('bold')}>
 				<iconify-icon icon="bi:type-bold" width="20" />
