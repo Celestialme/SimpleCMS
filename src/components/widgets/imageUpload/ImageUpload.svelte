@@ -144,14 +144,20 @@
 		async addBlur() {
 			let Konva = (await import('konva')).default;
 			let range = document.createElement('input');
+			let canvas = document.getElementsByTagName('canvas')[0] as HTMLCanvasElement;
 			range.type = 'range';
 			range.min = '0';
-			range.max = '50';
-			range.value = '25';
+			range.max = '30';
+			range.value = '15';
 			range.style.position = 'absolute';
 
 			range.onchange = () => {
 				blurRect.pixelSize(Number(range.value));
+			};
+			let updateRangePos = () => {
+				let rect = canvas.getBoundingClientRect();
+				range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + rect.left + 'px';
+				range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 20 + rect.top + 'px';
 			};
 			let blurRect = new Konva.Image({
 				image: this.image,
@@ -170,8 +176,7 @@
 					width: blurRect.width(),
 					height: blurRect.height()
 				});
-				range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 25 + 'px';
-				range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 70 + 'px';
+				updateRangePos();
 				blurRect.cache();
 			});
 			blurRect.on('transform', () => {
@@ -188,13 +193,11 @@
 					height: blurRect.height()
 				});
 				blurRect.cache();
-				range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 25 + 'px';
-				range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 70 + 'px';
+				updateRangePos();
 			});
 
-			document.getElementsByTagName('canvas')?.[0]?.parentElement?.parentElement?.appendChild(range);
-			range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + 25 + 'px';
-			range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 70 + 'px';
+			canvas.parentElement?.parentElement?.appendChild(range);
+			updateRangePos();
 			let tr = new Konva.Transformer({
 				rotateAnchorOffset: 20,
 				nodes: [blurRect],
