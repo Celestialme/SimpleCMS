@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { Editor } from '@tiptap/core';
+	import { Editor, Extension } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import Link from '@tiptap/extension-link';
 	let element;
@@ -9,7 +9,20 @@
 	onMount(() => {
 		editor = new Editor({
 			element: element,
-			extensions: [StarterKit, Link],
+			extensions: [
+				StarterKit,
+				Link,
+				Extension.create({
+					name: 'Tab',
+					addKeyboardShortcuts() {
+						return {
+							Tab: () => {
+								return this.editor.commands.insertContent('\t');
+							}
+						};
+					}
+				})
+			],
 
 			content: '<p>Hello World! 🌍️ </p>',
 			onTransaction: () => {
