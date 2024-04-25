@@ -14,7 +14,7 @@
 	</div>
 
 	<div class="pallette" class:!hidden={!expanded}>
-		<ColorPicker bind:hex={color} components={ChromeVariant} sliderDirection="horizontal" isDialog={false} />>
+		<ColorPicker bind:hex={color} components={ChromeVariant} sliderDirection="horizontal" isDialog={false} />
 	</div>
 </div>
 
@@ -42,9 +42,9 @@
 		top: 100%;
 		min-width: 100%;
 		padding: 10px;
-		border: 1px solid #d6d6d6;
+		margin-top: 10px;
 		cursor: pointer;
-		background-color: white;
+
 		display: flex;
 		flex-direction: column;
 		align-items: start;
