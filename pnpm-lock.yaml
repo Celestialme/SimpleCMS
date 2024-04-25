@@ -14,9 +14,18 @@ dependencies:
   '@tiptap/core':
     specifier: ^2.3.0
     version: 2.3.0(@tiptap/pm@2.3.0)
+  '@tiptap/extension-color':
+    specifier: ^2.3.0
+    version: 2.3.0(@tiptap/core@2.3.0)(@tiptap/extension-text-style@2.3.0)
+  '@tiptap/extension-font-family':
+    specifier: ^2.3.0
+    version: 2.3.0(@tiptap/core@2.3.0)(@tiptap/extension-text-style@2.3.0)
   '@tiptap/extension-link':
     specifier: ^2.3.0
     version: 2.3.0(@tiptap/core@2.3.0)(@tiptap/pm@2.3.0)
+  '@tiptap/extension-text-style':
+    specifier: ^2.3.0
+    version: 2.3.0(@tiptap/core@2.3.0)
   '@tiptap/pm':
     specifier: ^2.3.0
     version: 2.3.0
@@ -91,6 +100,9 @@ devDependencies:
   svelte:
     specifier: ^3.54.0
     version: 3.59.2
+  svelte-awesome-color-picker:
+    specifier: ^3.0.6
+    version: 3.0.6(svelte@3.59.2)
   svelte-check:
     specifier: ^3.0.1
     version: 3.5.1(postcss@8.4.29)(svelte@3.59.2)
@@ -1084,6 +1096,16 @@ packages:
       '@tiptap/core': 2.3.0(@tiptap/pm@2.3.0)
     dev: false
 
+  /@tiptap/extension-color@2.3.0(@tiptap/core@2.3.0)(@tiptap/extension-text-style@2.3.0):
+    resolution: {integrity: sha512-rqtdTaGawPZSRszwC/BlkJTF1diosIBBRSO5/YCRHT7CfGJNJyomL3eFREynXLKnXZ69SMceDh6yU6B54uTHXQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/extension-text-style': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.3.0(@tiptap/pm@2.3.0)
+      '@tiptap/extension-text-style': 2.3.0(@tiptap/core@2.3.0)
+    dev: false
+
   /@tiptap/extension-document@2.3.0(@tiptap/core@2.3.0):
     resolution: {integrity: sha512-WC55SMrtlsNOnHXpzbXDzJOp7eKmZV0rXooKmvCDqoiLO/DKpyQXyF+0UHfcRPmUAi2GWFPaer7+p1H9xzcjXg==}
     peerDependencies:
@@ -1100,6 +1122,16 @@ packages:
     dependencies:
       '@tiptap/core': 2.3.0(@tiptap/pm@2.3.0)
       '@tiptap/pm': 2.3.0
+    dev: false
+
+  /@tiptap/extension-font-family@2.3.0(@tiptap/core@2.3.0)(@tiptap/extension-text-style@2.3.0):
+    resolution: {integrity: sha512-ATSlb0vpCkR/oVuP2zzhUWrv5R/Hbe6zC5irBGPIWxKw0emd1L5LBD5e8knpYbhlqH6T6jgfKkpmlZ2pWoXZrw==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+      '@tiptap/extension-text-style': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.3.0(@tiptap/pm@2.3.0)
+      '@tiptap/extension-text-style': 2.3.0(@tiptap/core@2.3.0)
     dev: false
 
   /@tiptap/extension-gapcursor@2.3.0(@tiptap/core@2.3.0)(@tiptap/pm@2.3.0):
@@ -1193,6 +1225,14 @@ packages:
 
   /@tiptap/extension-strike@2.3.0(@tiptap/core@2.3.0):
     resolution: {integrity: sha512-gOW4ALeH8gkJiUGGXVy/AOd5lAPTX0bzoOW1+sCLcTA7t8dluBW7M2ngNYxTEtlKqyv7aLfrgsYSiqucmmfSLw==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.3.0(@tiptap/pm@2.3.0)
+    dev: false
+
+  /@tiptap/extension-text-style@2.3.0(@tiptap/core@2.3.0):
+    resolution: {integrity: sha512-S+sQZqd+QtJjbZ0LOp0Krf0dlrdMx7BQL0sUNKPq8XXRMcfW0pEEFGIU/0VDFQCldLIuyd7lZ8zo5cjaAgskIA==}
     peerDependencies:
       '@tiptap/core': ^2.0.0
     dependencies:
@@ -1580,6 +1620,10 @@ packages:
       color-convert: 2.0.1
       color-string: 1.9.1
     dev: false
+
+  /colord@2.9.3:
+    resolution: {integrity: sha512-jeC1axXpnb0/2nn/Y1LPuLdgXBLH7aDcHu4KEKfqw3CUhX7ZpfBSlPKyqXE6btIgEzfWtrX3/tyBCaCvXvMkOw==}
+    dev: true
 
   /combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
@@ -3181,6 +3225,24 @@ packages:
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+    dev: true
+
+  /svelte-awesome-color-picker@3.0.6(svelte@3.59.2):
+    resolution: {integrity: sha512-lkyT9+78mpvzUm6yZLh2RKGHJn9U/XOZsc+WrCZVPaNTRnleled3dwR+EX0SgiAeFV7V/ieK3bu4wpgU0HRFlQ==}
+    peerDependencies:
+      svelte: ^3.55.1 || ^4.0.0
+    dependencies:
+      colord: 2.9.3
+      svelte: 3.59.2
+      svelte-awesome-slider: 1.1.0(svelte@3.59.2)
+    dev: true
+
+  /svelte-awesome-slider@1.1.0(svelte@3.59.2):
+    resolution: {integrity: sha512-MgY6ZdBON42HVZqNWNjq2HOgyDlC35q0TNbV/YO1l1/bcb5yhM8EE97h1AJ/7F6t6sLzXhQ3qPf5nGyCdDSnCg==}
+    peerDependencies:
+      svelte: ^3.54.0 || ^4.0.0
+    dependencies:
+      svelte: 3.59.2
     dev: true
 
   /svelte-check@3.5.1(postcss@8.4.29)(svelte@3.59.2):

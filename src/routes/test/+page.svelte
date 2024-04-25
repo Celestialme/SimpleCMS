@@ -1,8 +1,14 @@
 <script lang="ts">
+	import DropDown from './DropDown.svelte';
+	import ColorSelector from './ColorSelector.svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import { Editor, Extension } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import Link from '@tiptap/extension-link';
+	import TextStyle from './TextStyle';
+	import FontFamily from '@tiptap/extension-font-family';
+	import Color from '@tiptap/extension-color';
+	import type { ComponentProps } from 'svelte';
 	let element;
 	let editor: Editor;
 
@@ -12,6 +18,9 @@
 			extensions: [
 				StarterKit,
 				Link,
+				TextStyle,
+				FontFamily,
+				Color,
 				Extension.create({
 					name: 'Tab',
 					addKeyboardShortcuts() {
@@ -27,9 +36,11 @@
 			content: '<p>Hello World! 🌍️ </p>',
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
+
 				editor = editor;
 			}
 		});
+		fontSize = parseInt(getComputedStyle(editor.view.dom).fontSize.replace('px', ''));
 	});
 
 	onDestroy(() => {
@@ -37,20 +48,95 @@
 			editor.destroy();
 		}
 	});
+	let textTypes: ComponentProps<DropDown>['items'];
+	let fonts: ComponentProps<DropDown>['items'];
+	$: textTypes = [
+		{
+			name: 'paragraph',
+			icon: 'icomoon-free:section',
+			active: () => editor.isActive('paragraph'),
+			onClick: () => editor.chain().focus().setParagraph().run()
+		},
+		{
+			name: 'Heading',
+			icon: 'ci:heading-h1',
+			active: () => editor.isActive('heading', { level: 1 }),
+			onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run()
+		},
+		{
+			name: 'Heading',
+			icon: 'ci:heading-h2',
+			active: () => editor.isActive('heading', { level: 2 }),
+			onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run()
+		}
+	];
+
+	$: fonts = [
+		{
+			name: 'Arial',
+			active: () => editor.isActive('textStyle', { fontFamily: 'Arial' }),
+			onClick: () => editor.chain().focus().setFontFamily('Arial').run()
+		},
+		{
+			name: 'Verdana',
+			active: () => editor.isActive('textStyle', { fontFamily: 'Verdana' }),
+			onClick: () => editor.chain().focus().setFontFamily('Verdana').run()
+		},
+		{
+			name: 'Tahoma',
+			active: () => editor.isActive('textStyle', { fontFamily: 'Tahoma' }),
+			onClick: () => editor.chain().focus().setFontFamily('Tahoma').run()
+		},
+
+		{
+			name: 'Times New Roman',
+			active: () => editor.isActive('textStyle', { fontFamily: 'Times New Roman' }),
+			onClick: () => editor.chain().focus().setFontFamily('Times New Roman').run()
+		},
+		{
+			name: 'Georgia',
+			active: () => editor.isActive('textStyle', { fontFamily: 'Georgia' }),
+			onClick: () => editor.chain().focus().setFontFamily('Georgia').run()
+		},
+		{
+			name: 'Garamond',
+			active: () => editor.isActive('textStyle', { fontFamily: 'Garamond' }),
+			onClick: () => editor.chain().focus().setFontFamily('Garamond').run()
+		}
+	];
+	let fontSize = 12;
+
+	$: editor && (fontSize = editor.getAttributes('textStyle').fontSize || fontSize);
+
+	// $: editor && editor.chain().focus().setFontSize(fontSize).run();
 </script>
 
 <div class="editor">
 	{#if editor}
 		<div class="buttons">
-			<button on:click={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} class:active={editor.isActive('heading', { level: 1 })}>
-				<iconify-icon icon="ci:heading-h1" width="20"></iconify-icon>
-			</button>
-			<button on:click={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} class:active={editor.isActive('heading', { level: 2 })}>
-				<iconify-icon icon="ci:heading-h2" width="20"></iconify-icon>
-			</button>
-			<button on:click={() => editor.chain().focus().setParagraph().run()} class:active={editor.isActive('paragraph')}>
-				<iconify-icon icon="icomoon-free:section" width="20" />
-			</button>
+			<DropDown items={textTypes} />
+			<DropDown items={fonts} icon="file-icons:font" />
+			<ColorSelector color={editor.getAttributes('textStyle').color || '#000000'} on:change={(e) => editor.chain().focus().setColor(e.detail).run()}
+			></ColorSelector>
+			<div class="flex items-center">
+				<button
+					on:click={() => {
+						fontSize--;
+						editor.chain().focus().setFontSize(fontSize).run();
+					}}
+				>
+					<iconify-icon icon="ic:twotone-minus" width="20" />
+				</button>
+				<input type="text" class="w-[30px] outline-none text-center" bind:value={fontSize} />
+				<button
+					on:click={() => {
+						fontSize++;
+						editor.chain().focus().setFontSize(fontSize).run();
+					}}
+				>
+					<iconify-icon icon="ph:plus-bold" width="20" />
+				</button>
+			</div>
 			<button on:click={() => editor.chain().focus().toggleBold().run()} class:active={editor.isActive('bold')}>
 				<iconify-icon icon="bi:type-bold" width="20" />
 			</button>

@@ -22,7 +22,7 @@
 
 {#each $categories as category, index}
 	<div
-		class=" tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center bg-[#363b4e] text-white"
+		class=" tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-surface-600 py-2 text-center text-white"
 		class:arrow_up={expanded[index]}
 		on:click={(e) => {
 			expanded[index] = !expanded[index];
