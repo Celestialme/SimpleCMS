@@ -31,7 +31,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 			// object[key] is file here
 			let uuid = crypto.randomUUID();
 			formData.append(uuid, object[key]);
-			object[key] = { instanceof: 'File', id: uuid, path: object[key].path };
+			object[key] = { instanceof: 'File', id: uuid, ...object[key] };
 		}
 	};
 
@@ -87,107 +87,87 @@ export const obj2formData = (obj: any) => {
 };
 let env_sizes = publicConfig.IMAGE_SIZES;
 export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
-export async function saveImages(data: { [key: string]: any }, collectionName: string) {
+export async function saveImage(file: File, collectionName: string) {
 	if (browser) return;
 	let sharp = (await import('sharp')).default;
-	let fields: { file: any; replace: (id: string) => void }[] = [];
-	let parseFiles = async (data: any) => {
-		for (let fieldname in data) {
-			if (!(data[fieldname] instanceof File) && typeof data[fieldname] == 'object') {
-				await parseFiles(data[fieldname]);
-				continue;
-			} else if (!(data[fieldname] instanceof File)) {
-				continue;
-			}
 
-			let blob = data[fieldname] as any;
-			let arrayBuffer = await blob.arrayBuffer();
-			let buffer = Buffer.from(arrayBuffer);
-			let hash = _crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
-			let existing_file = await mongoose.models['image_files'].findOne({ hash: hash });
-			if (existing_file) {
-				data[fieldname] = existing_file._id;
-				continue;
-			}
-			let path = blob.path;
-			let { name, ext } = removeExtension(blob.name);
-			//original image
+	let fileInfo = {};
 
-			let url;
-			if (path == 'global') {
-				url = `images/original/${hash}.${ext}`;
-			} else if (path == 'unique') {
-				url = `images/${collectionName}/original/${hash}.${ext}`;
-			} else {
-				url = `images/${path}/original/${hash}.${ext}`;
-			}
-			let info = await sharp(buffer).metadata();
-			data[fieldname] = {
-				hash,
-				original: {
-					name: blob.name,
-					url,
-					size: blob.size,
-					type: blob.type,
-					lastModified: blob.lastModified,
-					width: info.width,
-					height: info.height
-				}
-			};
+	let arrayBuffer = await file.arrayBuffer();
+	let buffer = Buffer.from(arrayBuffer);
+	let hash = _crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
+	let existing_file = await mongoose.models['image_files'].findOne({ hash: hash });
+	let path = file.path;
+	if (existing_file) {
+		return new mongoose.Types.ObjectId(existing_file._id);
+	}
+	let { name, ext } = removeExtension(file.name);
+	//original image
 
-			if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
-				fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
-			}
-
-			fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, buffer);
-			for (let size in SIZES) {
-				if (size == 'original') continue;
-
-				const resizedImage = await sharp(buffer)
-					.rotate() // Rotate image according to EXIF data
-					.resize({ width: SIZES[size] })
-					.toFormat('avif', { quality: 80 })
-					.toBuffer({ resolveWithObject: true });
-				let url;
-
-				if (path == 'global') {
-					url = `images/${size}/${hash}.avif`;
-				} else if (path == 'unique') {
-					url = `images/${collectionName}/${size}/${hash}.avif`;
-				} else {
-					url = `images/${path}/${size}/${hash}.avif`;
-				}
-				if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
-					fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
-				}
-				//sized images
-				fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, resizedImage.data);
-				data[fieldname][size] = {
-					name: `${name}.avif`,
-					url: '/media/' + url,
-					size: resizedImage.info.size,
-					type: 'image/avif',
-					lastModified: blob.lastModified,
-					width: resizedImage.info.width,
-					height: resizedImage.info.height
-				};
-			}
-			fields.push({
-				file: data[fieldname],
-				replace: (id) => {
-					data[fieldname] = id;
-				}
-			});
+	let url;
+	if (path == 'global') {
+		url = `images/original/${hash}.${ext}`;
+	} else if (path == 'unique') {
+		url = `images/${collectionName}/original/${hash}.${ext}`;
+	} else {
+		url = `images/${path}/original/${hash}.${ext}`;
+	}
+	let info = await sharp(buffer).metadata();
+	fileInfo = {
+		hash,
+		used_by: [],
+		original: {
+			name: file.name,
+			url,
+			size: file.size,
+			type: file.type,
+			lastModified: file.lastModified,
+			width: info.width,
+			height: info.height
 		}
 	};
 
-	await parseFiles(data);
-	let res = await mongoose.models['image_files'].insertMany(fields.map((v) => v.file));
-	console.log(fields);
-	for (let index in res) {
-		let id = res[index]._id;
-		fields[index].replace(id);
+	if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
+		fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
 	}
+
+	fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, buffer);
+	for (let size in SIZES) {
+		if (size == 'original') continue;
+
+		const resizedImage = await sharp(buffer)
+			.rotate() // Rotate image according to EXIF data
+			.resize({ width: SIZES[size] })
+			.toFormat('avif', { quality: 80 })
+			.toBuffer({ resolveWithObject: true });
+		let url;
+
+		if (path == 'global') {
+			url = `images/${size}/${hash}.avif`;
+		} else if (path == 'unique') {
+			url = `images/${collectionName}/${size}/${hash}.avif`;
+		} else {
+			url = `images/${path}/${size}/${hash}.avif`;
+		}
+		if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
+			fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
+		}
+		//sized images
+		fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, resizedImage.data);
+		fileInfo[size] = {
+			name: `${name}.avif`,
+			url: '/media/' + url,
+			size: resizedImage.info.size,
+			type: 'image/avif',
+			lastModified: file.lastModified,
+			width: resizedImage.info.width,
+			height: resizedImage.info.height
+		};
+	}
+
+	let res = await mongoose.models['image_files'].insertMany(fileInfo);
+
+	return new mongoose.Types.ObjectId(res[0]._id);
 }
 
 export let fieldsToSchema = (fields: Array<any>) => {

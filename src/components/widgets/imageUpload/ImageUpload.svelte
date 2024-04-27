@@ -13,20 +13,23 @@
 	import type { Image as KonvaImage } from 'konva/lib/shapes/Image';
 	import type { Layer } from 'konva/lib/Layer';
 	export let field: FieldType;
+	export let value: File | ImageFiles = $entryData[getFieldName(field)]; // pass file directly from imageArray
 	let _data: File | ImageFiles | undefined;
 	let updated = false;
 	let input: HTMLInputElement;
 	let showMedia = false;
 
 	export const WidgetData = async () => {
-		if (_data && _data instanceof File) {
-			_data.path = field.path;
+		if (_data) {
+			if (_data instanceof File) {
+				_data.path = field.path;
+			}
+			$mode == 'edit' && (_data.oldID = (value as ImageFiles)._id);
 		}
 
 		return updated ? _data : null;
 		// return null;
 	};
-	export let value: File | ImageFiles = $entryData[getFieldName(field)]; // pass file directly from imageArray
 
 	let fieldName = getFieldName(field);
 	function setFile(node: HTMLInputElement) {

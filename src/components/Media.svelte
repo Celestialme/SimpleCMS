@@ -31,7 +31,10 @@
 			{#if !showInfo[index]}
 				<img src={file.thumbnail.url} class="mt-auto max-h-[calc(100%-35px)] mx-auto rounded-md" />
 			{:else}
-				<table class="w-full mt-[30px] min-h-[calc(100%-30px)]">
+				<p class=" mt-[30px] text-white text-center bg-[#2c3844]">
+					{file.used_by.length == 0 ? 'Not Used' : file.used_by.length == 1 ? 'Used By 1 Collection' : `Used By ${file.used_by.length} Collections`}
+				</p>
+				<table class="w-full min-h-[calc(100%-30px)]">
 					<tbody>
 						{#each Object.keys(SIZES) as size}
 							<tr>

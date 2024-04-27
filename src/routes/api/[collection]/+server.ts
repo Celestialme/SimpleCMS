@@ -1,12 +1,13 @@
 import { getCollections } from '@src/collections';
 import type { RequestHandler } from './$types';
 import { auth, getCollectionModels } from '@src/routes/api/db';
-import { getFieldName, get_elements_by_id, saveImages } from '@src/utils/utils';
+import { getFieldName, get_elements_by_id } from '@src/utils/utils';
 import widgets from '@src/components/widgets';
 import publicConfig from '@root/config/public';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import type { Schema } from '@src/collections/types';
 import type { User } from '@src/auth/types';
+import mongoose from 'mongoose';
 
 export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
@@ -77,7 +78,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 							entry[fieldName] = newData;
 						}
 					};
-					await widget.modifyRequest({ collection, field, data, user, type: 'GET' });
+					await widget.modifyRequest({ collection, field, data, user, type: 'GET', id: entry._id });
 					return entry;
 				})
 			);
@@ -117,6 +118,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 				if (value?.instanceof == 'File') {
 					let file = data.get(value.id) as File;
 					file.path = value.path;
+					file.oldID = value.oldID;
 					data.delete(value.id);
 					return file;
 				}
@@ -142,11 +144,10 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 					body[fieldName] = newData;
 				}
 			};
-			await widget.modifyRequest({ collection, field, data, user, type: 'PATCH', id: _id });
-			console.log(body);
+			await widget.modifyRequest({ collection, field, data, user, type: 'PATCH', id: new mongoose.Types.ObjectId(_id) });
 		}
 	}
-	await saveImages(body, params.collection);
+	// await saveImages(body, params.collection);
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, body, { upsert: true })));
 };
 
@@ -184,7 +185,7 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	}
 	body['status'] = 'PUBLISHED';
 	if (!collection) return new Response('collection not found!!');
-
+	body._id = new mongoose.Types.ObjectId();
 	for (let field of collection_schema.fields) {
 		let widget = widgets[field.widget.key];
 		let fieldName = getFieldName(field);
@@ -199,10 +200,10 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 					body[fieldName] = newData;
 				}
 			};
-			await widget.modifyRequest({ collection, field, data, user, type: 'POST' });
+			await widget.modifyRequest({ collection, field, data, user, type: 'POST', id: body._id });
 		}
 	}
-	await saveImages(body, params.collection);
+
 	return new Response(JSON.stringify(await collection.insertMany(body)));
 };
 
@@ -214,17 +215,32 @@ export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write;
+	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
+	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
+
 	let collections = await getCollectionModels();
 	let collection = collections[params.collection];
 
 	let ids = data.get('ids') as string;
 	ids = JSON.parse(ids);
-	console.log(ids);
 
+	for (let id of ids) {
+		for (let field of collection_schema.fields) {
+			let widget = widgets[field.widget.key];
+
+			if ('modifyRequest' in widget) {
+				// widget can modify own portion of body;
+				let data = {
+					get() {},
+					update() {}
+				};
+				await widget.modifyRequest({ collection, field, data, user, type: 'DELETE', id: new mongoose.Types.ObjectId(id) });
+			}
+		}
+	}
 	return new Response(
 		JSON.stringify(
 			await collection.deleteMany({

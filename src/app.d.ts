@@ -21,7 +21,7 @@ declare global {
 	};
 	interface File {
 		path?: string;
-		buffer?: Uint8Array;
+		oldID?: string;
 	}
 }
 export {};

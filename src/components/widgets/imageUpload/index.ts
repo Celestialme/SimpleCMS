@@ -1,6 +1,6 @@
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import ImageUpload from './ImageUpload.svelte';
-import { getFieldName, getGuiFields, get_elements_by_id } from '@src/utils/utils';
+import { getFieldName, getGuiFields, get_elements_by_id, saveImage } from '@src/utils/utils';
 import type { ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
 const widget = (params: Params) => {
@@ -37,17 +37,34 @@ const widget = (params: Params) => {
 };
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
-widget.modifyRequest = async ({ field, data, user, type }: ModifyRequestParams<typeof widget>) => {
+widget.modifyRequest = async ({ field, data, user, type, collection, id }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get();
-	if (type !== 'GET') {
-		if (_data._id) {
-			console.log(_data);
-			data.update(new mongoose.Types.ObjectId(_data._id));
-		}
-		return;
+	//_data._id existance means it's a image from image_files and not new File Object
+	switch (type) {
+		case 'GET':
+			// here _data is just id of the image
+			get_elements_by_id.add('image_files', _data, (newData) => data.update(newData));
+			break;
+		case 'POST':
+		case 'PATCH':
+			if (_data instanceof File) {
+				let _id = await saveImage(_data, collection.name);
+
+				type === 'PATCH' && (await mongoose.models['image_files'].updateMany({ _id: _data.oldID }, { $pull: { used_by: id } }));
+				await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } }, { upsert: true });
+				data.update(id);
+			} else {
+				//chosen image from image_files
+				let _id = new mongoose.Types.ObjectId(_data._id);
+				type === 'PATCH' && (await mongoose.models['image_files'].updateMany({ _id: _data.oldID }, { $pull: { used_by: id } }));
+				await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } }, { upsert: true });
+				data.update(_id);
+			}
+			break;
+		case 'DELETE':
+			await mongoose.models['image_files'].updateMany({ used_by: id }, { $pull: { used_by: id } });
+			break;
 	}
-	// here _data is just id of the image
-	get_elements_by_id.add('image_files', _data, (newData) => data.update(newData));
 };
 widget.aggregations = {
 	filters: async (info) => {
