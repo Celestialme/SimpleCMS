@@ -9,3 +9,7 @@
 	text-decoration: underline;
 	cursor: pointer;
 }
+.RichText img {
+	cursor: pointer;
+	display: inline-block;
+}

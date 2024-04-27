@@ -14,10 +14,7 @@ let schema = {
                 [
                     globalThis.widgets.Text({
                         label: 'link 2',
-                        translated: true,
-                        permissions: {
-                            admin: { write: false }
-                        }
+                        translated: true
                     }),
                     globalThis.widgets.Text({ label: 'info', translated: true }),
                     globalThis.widgets.Text({ label: 'info3', translated: true })

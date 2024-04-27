@@ -10,5 +10,5 @@ node_modules
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 /mediaFiles
-collections
+/collections
 /config/private.ts

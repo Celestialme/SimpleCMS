@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
-	let expanded = false;
 	export let color = '';
+	export let show = false;
+	let expanded = false;
 	let dispatch = createEventDispatcher();
 	$: dispatch('change', color);
 </script>
 
-<div class="wrapper">
+<div class="wrapper" class:hidden={!show}>
 	<div class="selected arrow" class:arrow_up={expanded} on:click={() => (expanded = !expanded)}>
 		<iconify-icon icon="fluent-mdl2:color-solid" width="20"></iconify-icon>
 	</div>

@@ -9,11 +9,11 @@
 	import FontFamily from '@tiptap/extension-font-family';
 	import Color from '@tiptap/extension-color';
 	import TextAlign from '@tiptap/extension-text-align';
-
 	import type { ComponentProps } from 'svelte';
+	import ImageResize from './ImageResize';
 	let element;
 	let editor: Editor;
-
+	$: globalThis.editor = editor;
 	onMount(() => {
 		editor = new Editor({
 			element: element,
@@ -23,8 +23,9 @@
 				TextStyle,
 				FontFamily,
 				Color,
+				ImageResize,
 				TextAlign.configure({
-					types: ['heading', 'paragraph']
+					types: ['heading', 'paragraph', 'image']
 				}),
 
 				Extension.create({
@@ -39,7 +40,8 @@
 				})
 			],
 
-			content: '<p>Hello World! 🌍️ </p>',
+			content:
+				'<p></p><div style="float: unset;width: 428px;height: 412px; margin-left: 24.92063492063492%"><img src="/media/images/images/thumbnail/b5d7c58714cc3a7c709f.avif" style="float: left; width: 428px; height: 412px; margin-left: 34.4841%;"></div><p><span style="font-size: 21px">Hello World! 🌍️</span></p>',
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
 
@@ -57,6 +59,8 @@
 	let textTypes: ComponentProps<DropDown>['items'];
 	let fonts: ComponentProps<DropDown>['items'];
 	let alignText: ComponentProps<DropDown>['items'];
+	let inserts: ComponentProps<DropDown>['items'];
+
 	$: textTypes = [
 		{
 			name: 'paragraph',
@@ -137,25 +141,67 @@
 			onClick: () => editor.chain().focus().setTextAlign('justify').run()
 		}
 	];
+	$: inserts = [
+		{
+			name: 'image',
+			icon: 'fa6-solid:image',
+			onClick: () => editor.chain().focus().setImage({ src: '/media/images/images/thumbnail/b5d7c58714cc3a7c709f.avif' }).run(),
+			active: () => editor.isActive('image')
+		}
+	];
+	$: floats = [
+		{
+			name: 'wrap left',
+			icon: 'teenyicons:align-left-solid',
+			onClick: () => editor.chain().focus().float('left').run(),
+			active: () => false
+		},
+		{
+			name: 'wrap right',
+			icon: 'teenyicons:align-right-solid',
+			onClick: () => editor.chain().focus().float('right').run(),
+			active: () => false
+		},
+		{
+			name: 'unwrap',
+			icon: 'mdi:filter-remove',
+			onClick: () => editor.chain().focus().float('unset').run(),
+			active: () => false
+		}
+	];
 	let fontSize = {
 		value: 0,
 		default: 0
 	};
-
 	$: editor && (fontSize.value = editor.getAttributes('textStyle').fontSize || fontSize.default);
+
+	let show = (button: 'textType' | 'font' | 'align' | 'insert' | 'float' | 'color' | 'bold' | 'italic' | 'strike' | 'link' | 'fontSize') => {
+		if (['textType', 'font', 'insert', 'color', 'bold', 'italic', 'strike', 'link', 'fontSize'].includes(button)) {
+			return !editor?.isActive('image');
+		}
+		if (['float'].includes(button)) {
+			return editor?.isActive('image');
+		}
+		return true;
+	};
+	$: {
+		show = show;
+		editor;
+	}
 </script>
 
 <div class="editor">
 	{#if editor}
 		<div class="buttons">
-			<DropDown items={textTypes} />
-			<DropDown items={fonts} icon="file-icons:font" label="Font" />
+			<DropDown show={show('textType')} items={textTypes} label="Text" />
+			<DropDown show={show('font')} items={fonts} icon="file-icons:font" label="Font" />
 			<ColorSelector
+				show={show('color')}
 				color={editor.getAttributes('textStyle').color || '#000000'}
 				on:change={(e) => editor.chain().focus().setColor(e.detail).run()}
 			/>
 
-			<div class="flex items-center">
+			<div class="flex items-center" class:hidden={!show('fontSize')}>
 				<button
 					on:click={() => {
 						fontSize.value--;
@@ -174,19 +220,25 @@
 					<iconify-icon icon="ph:plus-bold" width="20" />
 				</button>
 			</div>
-			<button on:click={() => editor.chain().focus().toggleBold().run()} class:active={editor.isActive('bold')}>
+			<button class:hidden={!show('bold')} on:click={() => editor.chain().focus().toggleBold().run()} class:active={editor.isActive('bold')}>
 				<iconify-icon icon="bi:type-bold" width="20" />
 			</button>
-			<button on:click={() => editor.chain().focus().toggleItalic().run()} class:active={editor.isActive('italic')}>
+			<button class:hidden={!show('italic')} on:click={() => editor.chain().focus().toggleItalic().run()} class:active={editor.isActive('italic')}>
 				<iconify-icon icon="lucide:italic" width="20" />
 			</button>
-			<button on:click={() => editor.chain().focus().toggleStrike().run()} class:active={editor.isActive('strike')}>
+			<button class:hidden={!show('strike')} on:click={() => editor.chain().focus().toggleStrike().run()} class:active={editor.isActive('strike')}>
 				<iconify-icon icon="majesticons:strike-through-line" width="20" />
 			</button>
-			<button on:click={() => editor.chain().focus().toggleLink({ href: 'https://google.com' }).run()} class:active={editor.isActive('link')}>
+			<button
+				class:hidden={!show('link')}
+				on:click={() => editor.chain().focus().toggleLink({ href: 'https://google.com' }).run()}
+				class:active={editor.isActive('link')}
+			>
 				<iconify-icon icon="pajamas:link" width="20" />
 			</button>
-			<DropDown items={alignText} label="Align" />
+			<DropDown show={show('align')} items={alignText} label="Align" />
+			<DropDown show={show('insert')} items={inserts} icon="typcn:plus" label="Insert" />
+			<DropDown show={show('float')} items={floats} icon="grommet-icons:text-wrap" label="Text Wrap" />
 		</div>
 	{/if}
 	<div on:pointerdown|self={() => editor.commands.focus('end')} class="text_Area RichText" bind:this={element} />

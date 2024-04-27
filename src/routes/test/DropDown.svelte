@@ -1,6 +1,7 @@
 <script lang="ts">
 	export let icon = '';
 	export let label = '';
+	export let show = false;
 	export let items: {
 		name: string;
 		icon?: string;
@@ -12,7 +13,7 @@
 	let expanded = false;
 </script>
 
-<div class="wrapper" on:click={() => (expanded = !expanded)}>
+<div class="wrapper" class:hidden={!show} on:click={() => (expanded = !expanded)}>
 	<div class="selected arrow" class:arrow_up={expanded}>
 		<iconify-icon icon={icon || selected?.icon} width="20"></iconify-icon>
 
@@ -20,7 +21,7 @@
 	</div>
 
 	<div class="items" class:!hidden={!expanded}>
-		{#each items.filter((item) => item != selected) as item}
+		{#each items as item}
 			<button
 				class="flex items-center gap-[5px]"
 				on:click|stopPropagation={() => {
