@@ -40,6 +40,9 @@ widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({ field, data, user, type, collection, id }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get();
 	//_data._id existance means it's a image from image_files and not new File Object
+	// _id == new image id;
+	// _data.oldId == old image id;
+	// id == current document id;
 	switch (type) {
 		case 'GET':
 			// here _data is just id of the image

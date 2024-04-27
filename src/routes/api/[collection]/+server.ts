@@ -147,7 +147,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 			await widget.modifyRequest({ collection, field, data, user, type: 'PATCH', id: new mongoose.Types.ObjectId(_id) });
 		}
 	}
-	// await saveImages(body, params.collection);
+
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, body, { upsert: true })));
 };
 
