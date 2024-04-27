@@ -22,11 +22,9 @@
 		Core(property: string) {
 			return ['label', 'display', 'db_fieldName'].includes(property);
 		},
-		Permissions(property: string) {
-			return ['permissions'].includes(property);
-		},
+
 		Specific(property: string) {
-			return !this.Core(property) && !this.Permissions(property);
+			return !this.Core(property);
 		}
 	};
 	let currentTab: keyof typeof tabs = 'Core';

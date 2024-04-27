@@ -65,13 +65,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 		let widget = widgets[field.widget.key];
 		let fieldName = getFieldName(field);
 
-		if (field?.permissions?.[user.role]?.read == false) {
-			// if we cant read there is nothing to clean.
-			entryList = entryList.map((entry: any) => {
-				delete entry[fieldName];
-				return entry;
-			});
-		} else if ('modifyRequest' in widget) {
+		if ('modifyRequest' in widget) {
 			// widget can modify own portion of entryList;
 			entryList = await Promise.all(
 				entryList.map(async (entry: any) => {
@@ -138,10 +132,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 		let widget = widgets[field.widget.key];
 		let fieldName = getFieldName(field);
 
-		if (field?.permissions?.[user.role]?.write == false) {
-			// if we cant write there is nothing to modify.
-			delete body[fieldName];
-		} else if ('modifyRequest' in widget) {
+		if ('modifyRequest' in widget) {
 			// widget can modify own portion of body;
 			let data = {
 				get() {
@@ -198,10 +189,7 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 		let widget = widgets[field.widget.key];
 		let fieldName = getFieldName(field);
 
-		if (field?.permissions?.[user.role]?.write == false) {
-			// if we cant read there is nothing to modify.
-			delete body[fieldName];
-		} else if ('modifyRequest' in widget) {
+		if ('modifyRequest' in widget) {
 			// widget can modify own portion of body;
 			let data = {
 				get() {

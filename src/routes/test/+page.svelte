@@ -8,6 +8,8 @@
 	import TextStyle from './TextStyle';
 	import FontFamily from '@tiptap/extension-font-family';
 	import Color from '@tiptap/extension-color';
+	import TextAlign from '@tiptap/extension-text-align';
+
 	import type { ComponentProps } from 'svelte';
 	let element;
 	let editor: Editor;
@@ -21,6 +23,10 @@
 				TextStyle,
 				FontFamily,
 				Color,
+				TextAlign.configure({
+					types: ['heading', 'paragraph']
+				}),
+
 				Extension.create({
 					name: 'Tab',
 					addKeyboardShortcuts() {
@@ -40,7 +46,7 @@
 				editor = editor;
 			}
 		});
-		fontSize = parseInt(getComputedStyle(editor.view.dom).fontSize.replace('px', ''));
+		fontSize.default = parseInt(getComputedStyle(editor.view.dom).fontSize.replace('px', ''));
 	});
 
 	onDestroy(() => {
@@ -50,6 +56,7 @@
 	});
 	let textTypes: ComponentProps<DropDown>['items'];
 	let fonts: ComponentProps<DropDown>['items'];
+	let alignText: ComponentProps<DropDown>['items'];
 	$: textTypes = [
 		{
 			name: 'paragraph',
@@ -104,34 +111,64 @@
 			onClick: () => editor.chain().focus().setFontFamily('Garamond').run()
 		}
 	];
-	let fontSize = 12;
+	$: alignText = [
+		{
+			name: 'left',
+			icon: 'fa6-solid:align-left',
+			active: () => editor.isActive({ textAlign: 'left' }),
+			onClick: () => editor.chain().focus().setTextAlign('left').run()
+		},
+		{
+			name: 'right',
+			icon: 'fa6-solid:align-right',
+			active: () => editor.isActive({ textAlign: 'right' }),
+			onClick: () => editor.commands.setTextAlign('right')
+		},
+		{
+			name: 'center',
+			icon: 'fa6-solid:align-center',
+			active: () => editor.isActive({ textAlign: 'center' }),
+			onClick: () => editor.chain().focus().setTextAlign('center').run()
+		},
+		{
+			name: 'justify',
+			icon: 'fa6-solid:align-justify',
+			active: () => editor.isActive({ textAlign: 'justify' }),
+			onClick: () => editor.chain().focus().setTextAlign('justify').run()
+		}
+	];
+	let fontSize = {
+		value: 0,
+		default: 0
+	};
 
-	$: editor && (fontSize = editor.getAttributes('textStyle').fontSize || fontSize);
-
-	// $: editor && editor.chain().focus().setFontSize(fontSize).run();
+	$: editor && (fontSize.value = editor.getAttributes('textStyle').fontSize || fontSize.default);
 </script>
 
 <div class="editor">
 	{#if editor}
 		<div class="buttons">
 			<DropDown items={textTypes} />
-			<DropDown items={fonts} icon="file-icons:font" />
-			<ColorSelector color={editor.getAttributes('textStyle').color || '#000000'} on:change={(e) => editor.chain().focus().setColor(e.detail).run()}
-			></ColorSelector>
+			<DropDown items={fonts} icon="file-icons:font" label="Font" />
+			<ColorSelector
+				color={editor.getAttributes('textStyle').color || '#000000'}
+				on:change={(e) => editor.chain().focus().setColor(e.detail).run()}
+			/>
+
 			<div class="flex items-center">
 				<button
 					on:click={() => {
-						fontSize--;
-						editor.chain().focus().setFontSize(fontSize).run();
+						fontSize.value--;
+						editor.chain().focus().setFontSize(fontSize.value).run();
 					}}
 				>
 					<iconify-icon icon="ic:twotone-minus" width="20" />
 				</button>
-				<input type="text" class="w-[30px] outline-none text-center" bind:value={fontSize} />
+				<input type="text" class="w-[30px] outline-none text-center" bind:value={fontSize.value} />
 				<button
 					on:click={() => {
-						fontSize++;
-						editor.chain().focus().setFontSize(fontSize).run();
+						fontSize.value++;
+						editor.chain().focus().setFontSize(fontSize.value).run();
 					}}
 				>
 					<iconify-icon icon="ph:plus-bold" width="20" />
@@ -149,6 +186,7 @@
 			<button on:click={() => editor.chain().focus().toggleLink({ href: 'https://google.com' }).run()} class:active={editor.isActive('link')}>
 				<iconify-icon icon="pajamas:link" width="20" />
 			</button>
+			<DropDown items={alignText} label="Align" />
 		</div>
 	{/if}
 	<div on:pointerdown|self={() => editor.commands.focus('end')} class="text_Area RichText" bind:this={element} />
@@ -164,6 +202,9 @@
 		justify-content: center;
 		align-items: center;
 		padding: 10px;
+		position: sticky;
+		top: 0;
+		z-index: 10;
 	}
 	button {
 		height: 20px;
@@ -176,7 +217,7 @@
 	}
 	.editor {
 		display: flex;
-		max-width: 600px;
+
 		margin: auto;
 		flex-direction: column;
 		gap: 10px;
@@ -190,5 +231,7 @@
 		flex-grow: 1;
 		padding: 10px;
 		cursor: text;
+		overflow: auto;
+		max-height: calc(100vh - 80px);
 	}
 </style>

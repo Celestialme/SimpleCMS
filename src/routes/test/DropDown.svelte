@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let icon = '';
+	export let label = '';
 	export let items: {
 		name: string;
 		icon?: string;
@@ -11,18 +12,18 @@
 	let expanded = false;
 </script>
 
-<div class="wrapper">
-	<div class="selected arrow" class:arrow_up={expanded} on:click={() => (expanded = !expanded)}>
-		<iconify-icon icon={icon || selected.icon} width="20"></iconify-icon>
+<div class="wrapper" on:click={() => (expanded = !expanded)}>
+	<div class="selected arrow" class:arrow_up={expanded}>
+		<iconify-icon icon={icon || selected?.icon} width="20"></iconify-icon>
 
-		<p class="whitespace-nowrap max-w-[80px] overflow-hidden">{selected ? selected.name : 'Font'}</p>
+		<p class="whitespace-nowrap max-w-[80px] overflow-hidden">{selected ? selected.name : label}</p>
 	</div>
 
 	<div class="items" class:!hidden={!expanded}>
 		{#each items.filter((item) => item != selected) as item}
 			<button
 				class="flex items-center gap-[5px]"
-				on:click={() => {
+				on:click|stopPropagation={() => {
 					item.onClick();
 					expanded = false;
 				}}
@@ -83,5 +84,13 @@
 
 	.arrow_up::after {
 		transform: rotate(225deg);
+	}
+	button {
+		width: 100%;
+		padding: 2px 10px;
+	}
+	button:hover {
+		background-color: #e7e2e2;
+		border-radius: 6px;
 	}
 </style>

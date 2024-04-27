@@ -43,8 +43,7 @@ const widget = (params: Params) => {
 		display,
 		label: params.label,
 		width: params.width,
-		callback,
-		permissions: params.permissions
+		callback
 	};
 
 	return { ...field, widget };
@@ -53,56 +52,29 @@ widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({ collection, field, data, user, type, id }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get();
-	let old_data: Array<any>;
-	let process_OldData = (children, level = 1, result = []) => {
-		for (let index in children) {
-			for (let _field of field.fields[level]) {
-				if (_field?.permissions?.[user.role].write == false) {
-					(result as Array<any>).push(children[index]);
-				}
-			}
-			children[index].children.length > 0 && field.fields[level + 1]?.length > 0 && process_OldData(children[index].children, level + 1, result);
-		}
-		return result;
-	};
+
 	let cleanChildren = async (children, level = 1) => {
 		for (let index in children) {
 			for (let _field of field.fields[level]) {
-				if (_field?.permissions?.[user.role].write == false && type == 'PATCH') {
-					// if req type is patch get old data and rewrite "write false" field
-					if (!old_data) {
-						let res = await collection.findOne({ _id: id });
-						old_data = process_OldData(res[getFieldName(field)].children);
-					}
-					let i = old_data.findIndex((item) => item._id == children[index]._id);
-					children[index][getFieldName(_field)] = old_data.splice(i, 1)[0][getFieldName(_field)];
-				} else if (
-					// if read or write is false remove field from body
-					(type == 'GET' && _field?.permissions?.[user.role].read == false) ||
-					(['POST', 'PATCH'].includes(type) && _field?.permissions?.[user.role].write == false)
-				) {
-					delete children[index][getFieldName(_field)];
-				} else {
-					// if menu as other nested widgets inside which has its own modifyRequest method...
-					let widget = widgets[_field.widget.key];
-					if ('modifyRequest' in widget) {
-						let data = {
-							get() {
-								return children[index][getFieldName(_field)];
-							},
-							update(newData) {
-								children[index][getFieldName(_field)] = newData;
-							}
-						};
-						await widget.modifyRequest({
-							collection,
-							field: _field as ReturnType<typeof widget>,
-							data,
-							user,
-							type,
-							id
-						});
-					}
+				// if menu as other nested widgets inside which has its own modifyRequest method... neccessary for nested image to work
+				let widget = widgets[_field.widget.key];
+				if ('modifyRequest' in widget) {
+					let data = {
+						get() {
+							return children[index][getFieldName(_field)];
+						},
+						update(newData) {
+							children[index][getFieldName(_field)] = newData;
+						}
+					};
+					await widget.modifyRequest({
+						collection,
+						field: _field as ReturnType<typeof widget>,
+						data,
+						user,
+						type,
+						id
+					});
 				}
 			}
 

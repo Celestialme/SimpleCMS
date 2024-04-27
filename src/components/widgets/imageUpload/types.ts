@@ -1,4 +1,3 @@
-import type { Permissions } from '@src/collections/types';
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import { SIZES, getFieldName } from '@src/utils/utils';
 
@@ -9,7 +8,6 @@ export type Params = {
 	widget?: any;
 	path: (string & {}) | 'global' | 'unique';
 	width?: number;
-	permissions?: Permissions;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },

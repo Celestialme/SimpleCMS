@@ -18,10 +18,7 @@ let schema: Schema = {
 				[
 					widgets.Text({
 						label: 'link 2',
-						translated: true,
-						permissions: {
-							admin: { write: false }
-						}
+						translated: true
 					}),
 					widgets.Text({ label: 'info', translated: true }),
 					widgets.Text({ label: 'info3', translated: true })

@@ -5,7 +5,6 @@
 	export let color = '';
 	let dispatch = createEventDispatcher();
 	$: dispatch('change', color);
-	$: console.log(color);
 </script>
 
 <div class="wrapper">

@@ -5,8 +5,8 @@ let schema: Schema = {
 	icon: 'iconoir:post',
 
 	fields: [
-		widgets.Relation({ label: 'relation', relation: 'media', displayPath: 'image' }),
-		widgets.Text({ label: 'text', translated: true, permissions: { user: { write: false }, admin: { write: false } } }),
+		widgets.Relation({ label: 'relation', relation: 'Posts3', displayPath: 'text 1' }),
+		widgets.Text({ label: 'text', translated: true }),
 		widgets.Text({ label: 'text2' })
 	]
 };

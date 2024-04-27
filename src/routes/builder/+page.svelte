@@ -23,7 +23,7 @@
 	let fields = [] as any;
 	let addField = false;
 	let navButton;
-	$mode = 'create';
+	// $mode = 'create';
 	$drawerExpanded = true;
 
 	collection.subscribe((_) => {

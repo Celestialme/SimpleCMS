@@ -1,36 +1,11 @@
 let schema = {
     icon: 'iconoir:post',
     fields: [
-        globalThis.widgets.Text({
-            permissions: {
-                user: {
-                    read: true
-                }
-            },
-            label: 'text 1',
-            translated: true,
-            width: 2
-        }),
-        globalThis.widgets.Text({
-            label: 'text 2',
-            translated: true,
-            width: 2
-        }),
-        globalThis.widgets.Text({
-            label: 'text 3',
-            translated: true,
-            width: 2
-        }),
-        globalThis.widgets.Text({
-            label: 'text 4',
-            translated: true,
-            width: 2
-        }),
-        globalThis.widgets.Text({
-            label: 'text 5',
-            translated: true,
-            width: 2
-        })
+        globalThis.widgets.Text({ label: 'text 1', translated: true }),
+        globalThis.widgets.Text({ label: 'text 2', translated: true }),
+        globalThis.widgets.Text({ label: 'text 3', translated: true }),
+        globalThis.widgets.Text({ label: 'text 4', translated: true }),
+        globalThis.widgets.Text({ label: 'text 5', translated: true })
     ]
 };
 export default schema;

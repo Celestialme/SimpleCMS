@@ -61,7 +61,6 @@
 <style>
 	.container {
 		border-radius: 5px;
-		overflow: hidden;
 	}
 	.expanded {
 		box-shadow: 0px 0px 3px 1px #72efed;
@@ -83,6 +82,7 @@
 		width: 200px;
 		right: 0;
 		top: 100%;
+		z-index: 10;
 	}
 	.itemsView {
 		width: 100%;

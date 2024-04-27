@@ -13,7 +13,7 @@
 </script>
 
 <div class="wrapper">
-	{#each (fields || $collection.fields).filter((f) => f?.permissions?.[user.role]?.read !== false) as field, index}
+	{#each fields || $collection.fields as field, index}
 		{#if field.widget}
 			{#key $collection}
 				<div
@@ -25,7 +25,6 @@
 						<svelte:component
 							this={asAny(field.widget.type)}
 							field={asAny(field)}
-							disabled={field?.permissions?.[user.role]?.write == false}
 							bind:WidgetData={fieldsData[getFieldName(field)]}
 							value={customData[getFieldName(field)]}
 							{...$$props}
