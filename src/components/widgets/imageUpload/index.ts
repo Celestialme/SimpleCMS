@@ -3,6 +3,7 @@ import ImageUpload from './ImageUpload.svelte';
 import { getFieldName, getGuiFields, get_elements_by_id, saveImage } from '@src/utils/utils';
 import type { ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
+import type { ImageFiles } from '@src/utils/types';
 const widget = (params: Params) => {
 	let display;
 	if (!params.display) {
@@ -38,8 +39,7 @@ const widget = (params: Params) => {
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({ field, data, user, type, collection, id }: ModifyRequestParams<typeof widget>) => {
-	let _data = data.get();
-	//_data._id existance means it's a image from image_files and not new File Object
+	let _data = data.get() as File | ImageFiles;
 	// _id == new image id;
 	// _data.oldId == old image id;
 	// id == current document id;
