@@ -43,7 +43,7 @@
 			],
 
 			content:
-				'<p></p><div style="float: left;width: 428px;height: 412px; margin-left: 24.9206%"><img src="/media/images/images/thumbnail/b5d7c58714cc3a7c709f.avif" style="width: 100%; height: 100%; cursor:pointer"></div><p><span style="font-size: 21px">Hello World! 🌍️</span></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><div style="float: right;width: 320px;height: 320px; margin-left: undefined"><img src="/media/images/images/thumbnail/9bb29405081821541a46.avif" style="width: 100%; height: 100%; cursor:pointer"></div>',
+				'<p></p><div style="text-align: ;float: left;width: 320px;height: 320px; margin-left: unset"><img src="/media/images/images/thumbnail/b5d7c58714cc3a7c709f.avif" style="width: 100%; height: 100%; cursor:pointer"></div><p><span style="font-size: 21px">Hello World! 🌍️</span></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><div style="text-align: center;float: unset;width: 320px;height: 320px; margin-left: -2.17216%"><img src="/media/images/images/thumbnail/9bb29405081821541a46.avif" style="width: 100%; height: 100%; cursor:pointer"></div>',
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
 
@@ -157,19 +157,19 @@
 		{
 			name: 'wrap left',
 			icon: 'teenyicons:align-left-solid',
-			onClick: () => editor.chain().focus().float('left').run(),
+			onClick: () => editor.chain().focus().updateAttributes('image', { float: 'left' }).run(),
 			active: () => false
 		},
 		{
 			name: 'wrap right',
 			icon: 'teenyicons:align-right-solid',
-			onClick: () => editor.chain().focus().float('right').run(),
+			onClick: () => editor.chain().focus().updateAttributes('image', { float: 'right' }).run(),
 			active: () => false
 		},
 		{
 			name: 'unwrap',
 			icon: 'mdi:filter-remove',
-			onClick: () => editor.chain().focus().float('unset').run(),
+			onClick: () => editor.chain().focus().updateAttributes('image', { float: 'unset' }).run(),
 			active: () => false
 		}
 	];
