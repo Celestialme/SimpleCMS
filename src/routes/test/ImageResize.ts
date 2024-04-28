@@ -1,6 +1,22 @@
 import ImageExtension from '@tiptap/extension-image';
+declare module '@tiptap/core' {
+	interface Commands<ReturnType> {
+		imageResize: {
+			setImageFloat: (size: 'left' | 'right' | 'unset') => ReturnType;
+		};
+	}
+}
 
 const ImageResize = ImageExtension.extend({
+	addCommands() {
+		return {
+			...this.parent?.(),
+			setImageFloat:
+				(side: 'left' | 'right' | 'unset') =>
+				({ commands }) =>
+					commands.updateAttributes('image', { float: side })
+		};
+	},
 	addAttributes() {
 		return {
 			src: {

@@ -157,19 +157,19 @@
 		{
 			name: 'wrap left',
 			icon: 'teenyicons:align-left-solid',
-			onClick: () => editor.chain().focus().updateAttributes('image', { float: 'left' }).run(),
+			onClick: () => editor.chain().focus().setImageFloat('left').run(),
 			active: () => false
 		},
 		{
 			name: 'wrap right',
 			icon: 'teenyicons:align-right-solid',
-			onClick: () => editor.chain().focus().updateAttributes('image', { float: 'right' }).run(),
+			onClick: () => editor.chain().focus().setImageFloat('right').run(),
 			active: () => false
 		},
 		{
 			name: 'unwrap',
 			icon: 'mdi:filter-remove',
-			onClick: () => editor.chain().focus().updateAttributes('image', { float: 'unset' }).run(),
+			onClick: () => editor.chain().focus().setImageFloat('unset').run(),
 			active: () => false
 		}
 	];
