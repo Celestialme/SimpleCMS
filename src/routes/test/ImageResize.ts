@@ -22,37 +22,51 @@ const ImageResize = ImageExtension.extend({
 				default: null,
 				parseHTML: (element) => (element.firstChild as HTMLElement).getAttribute('alt')
 			},
+			float: {
+				default: 'unset'
+			},
+			w: {
+				default: 'unset'
+			},
+			h: {
+				default: 'unset'
+			},
+			marginLeft: {
+				default: 'unset'
+			},
+			default: {
+				default: false
+			},
 			style: {
-				default: null,
+				default: 'float:unset;',
 				parseHTML: (element) => {
 					return element.style.cssText;
 				}
 			}
 		};
 	},
-	addStorage() {
-		return {
-			default: true,
-			style: { w: 0, h: 0, float: 'unset', marginLeft: 0 }
-		};
-	},
+
 	addCommands() {
 		return {
 			...this.parent?.(),
 			float:
 				(side) =>
 				({}) => {
-					return this.storage.float(side);
+					return this.editor.commands.updateAttributes('image', { float: side });
 				}
 		};
 	},
+
 	renderHTML({ HTMLAttributes }) {
+		console.log(HTMLAttributes);
 		return [
 			'div',
 			{
-				style: `float: ${this.storage.style.float};width: ${this.storage.style.w};height: ${this.storage.style.h}; margin-left: ${this.storage.style.marginLeft}`
+				style: `text-align: ${textToCssObject(HTMLAttributes.style).textAlign},float: ${HTMLAttributes.float};width: ${HTMLAttributes.w};height: ${
+					HTMLAttributes.h
+				}; margin-left: ${HTMLAttributes.marginLeft}`
 			},
-			['img', HTMLAttributes]
+			['img', { src: HTMLAttributes.src, style: 'width: 100%; height: 100%; cursor:pointer' }]
 		];
 	},
 	parseHTML() {
@@ -68,29 +82,32 @@ const ImageResize = ImageExtension.extend({
 		];
 	},
 	addNodeView() {
-		return ({ editor, HTMLAttributes, extension }) => {
+		return ({ editor, HTMLAttributes, node }) => {
 			let { src, alt, style } = HTMLAttributes;
+			let nodeAttrs = node.attrs as any;
+
 			const container = document.createElement('div');
 			const resizer = document.createElement('div');
 			const img = document.createElement('img');
-			HTMLAttributes = {};
 			resizer.style.overflow = 'hidden';
 			resizer.style.resize = 'both';
 			resizer.style.display = 'inline-block';
 			resizer.style.position = 'relative';
 
-			if (this.storage?.default == false) {
-				resizer.style.width = this.storage.style.w;
-				resizer.style.height = this.storage.style.h;
+			if (nodeAttrs?.default == false) {
+				resizer.style.width = nodeAttrs.w;
+				resizer.style.height = nodeAttrs.h;
 
-				resizer.style.marginLeft = this.storage.style.marginLeft;
-				resizer.style.float = this.storage.style.float;
+				resizer.style.marginLeft = nodeAttrs.marginLeft;
+				resizer.style.float = nodeAttrs.float;
+				container.style.textAlign = textToCssObject(HTMLAttributes.style).textAlign;
 			} else {
 				let styles = textToCssObject(style);
-				this.storage.style.float = resizer.style.float = styles.float;
-				this.storage.style.width = resizer.style.width = styles.width;
-				this.storage.style.height = resizer.style.height = styles.height;
-				this.storage.style.marginLeft = resizer.style.marginLeft = styles.marginLeft;
+				nodeAttrs.float = resizer.style.float = styles.float;
+				nodeAttrs.width = resizer.style.width = styles.width;
+				nodeAttrs.height = resizer.style.height = styles.height;
+				nodeAttrs.marginLeft = resizer.style.marginLeft = styles.marginLeft;
+				container.style.textAlign = styles.textAlign;
 			}
 			resizer.appendChild(img);
 
@@ -101,28 +118,23 @@ const ImageResize = ImageExtension.extend({
 			img.style.cursor = 'pointer';
 
 			const resizeObserver = new ResizeObserver((entries) => {
-				this.storage.style.w = resizer.offsetWidth + 'px';
-				this.storage.style.h = resizer.offsetHeight + 'px';
+				nodeAttrs.w = resizer.offsetWidth + 'px';
+				nodeAttrs.h = resizer.offsetHeight + 'px';
 			});
 			resizeObserver.observe(resizer);
 
 			container.appendChild(resizer);
-			this.storage.float = (side) => {
-				this.storage.style.float = resizer.style.float = side;
-			};
 
 			resizer.ondrag = (e) => {
 				resizer.style.opacity = '0';
-				this.storage.style.marginLeft = resizer.style.marginLeft =
+				nodeAttrs.marginLeft = resizer.style.marginLeft =
 					((e.clientX - editor.$doc.element.offsetLeft - resizer.offsetWidth / 2) / editor.$doc.element.offsetWidth) * 100 + '%';
 			};
 			resizer.ondragend = (e) => {
 				resizer.style.opacity = '1';
 			};
-			resizer.onclick = (e) => {
-				console.log(extension);
-			};
-			this.storage.default = false;
+
+			nodeAttrs.default = false;
 			return {
 				dom: container
 			};

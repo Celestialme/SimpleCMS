@@ -43,7 +43,7 @@
 			],
 
 			content:
-				'<p></p><div style="float: unset;width: 428px;height: 412px; margin-left: 24.92063492063492%"><img src="/media/images/images/thumbnail/b5d7c58714cc3a7c709f.avif" style="float: left; width: 428px; height: 412px; margin-left: 34.4841%;"></div><p><span style="font-size: 21px">Hello World! 🌍️</span></p>',
+				'<p></p><div style="float: left;width: 428px;height: 412px; margin-left: 24.9206%"><img src="/media/images/images/thumbnail/b5d7c58714cc3a7c709f.avif" style="width: 100%; height: 100%; cursor:pointer"></div><p><span style="font-size: 21px">Hello World! 🌍️</span></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><p></p><div style="float: right;width: 320px;height: 320px; margin-left: undefined"><img src="/media/images/images/thumbnail/9bb29405081821541a46.avif" style="width: 100%; height: 100%; cursor:pointer"></div>',
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
 
