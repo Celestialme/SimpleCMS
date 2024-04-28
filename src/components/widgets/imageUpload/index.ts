@@ -51,11 +51,12 @@ widget.modifyRequest = async ({ field, data, user, type, collection, id }: Modif
 		case 'POST':
 		case 'PATCH':
 			if (_data instanceof File) {
+				console.log(_data);
 				let _id = await saveImage(_data, collection.name);
 
 				type === 'PATCH' && (await mongoose.models['image_files'].updateMany({ _id: _data.oldID }, { $pull: { used_by: id } }));
 				await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } }, { upsert: true });
-				data.update(id);
+				data.update(_id);
 			} else {
 				//chosen image from image_files
 				let _id = new mongoose.Types.ObjectId(_data._id);

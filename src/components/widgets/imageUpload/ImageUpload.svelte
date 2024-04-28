@@ -7,18 +7,15 @@
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { Group } from 'konva/lib/Group';
-	import Media from '@src/components/Media.svelte';
 	import type { ImageFiles } from '@src/utils/types';
 	import type { Stage } from 'konva/lib/Stage';
 	import type { Image as KonvaImage } from 'konva/lib/shapes/Image';
 	import type { Layer } from 'konva/lib/Layer';
+	import FileInput from '@src/components/system/inputs/FileInput.svelte';
 	export let field: FieldType;
 	export let value: File | ImageFiles = $entryData[getFieldName(field)]; // pass file directly from imageArray
-	let _data: File | ImageFiles | undefined;
-	let updated = false;
-	let input: HTMLInputElement;
-	let showMedia = false;
-
+	let _data: File | ImageFiles | undefined = value;
+	$: updated = _data !== value;
 	export const WidgetData = async () => {
 		if (_data) {
 			if (_data instanceof File) {
@@ -28,35 +25,17 @@
 		}
 
 		return updated ? _data : null;
-		// return null;
 	};
 
-	let fieldName = getFieldName(field);
-	function setFile(node: HTMLInputElement) {
-		node.onchange = (e) => {
-			if ((e.target as HTMLInputElement).files?.length == 0) return;
-			updated = true;
-			_data = (e.target as HTMLInputElement).files?.[0] as File;
-		};
-
-		if (value instanceof File) {
-			let fileList = new DataTransfer();
-			fileList.items.add(value);
-			node.files = fileList.files;
-			_data = node.files[0];
-			updated = true;
-		} else if ($mode === 'edit' && value?.thumbnail) {
-			axios.get(value.thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
-				if (value instanceof File) return;
-				let fileList = new DataTransfer();
-				let file = new File([data], value.thumbnail.name, {
-					type: value.thumbnail.type
-				});
-				fileList.items.add(file);
-				node.files = fileList.files;
-				_data = node.files[0];
+	if ($mode == 'edit') {
+		axios.get((value as ImageFiles).thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
+			if (value instanceof File) return;
+			let file = new File([data], value.thumbnail.name, {
+				type: value.thumbnail.type
 			});
-		}
+
+			_data = file;
+		});
 	}
 	let editing = false;
 	let edit = {
@@ -142,7 +121,6 @@
 				});
 			});
 			editing = false;
-			updated = true;
 		},
 		async addBlur() {
 			let Konva = (await import('konva')).default;
@@ -211,18 +189,7 @@
 			this.group.add(blurRect);
 		}
 	};
-
-	let mediaOnSelect = (data: ImageFiles) => {
-		updated = true;
-		showMedia = false;
-		_data = data;
-	};
 </script>
-
-<input use:setFile bind:this={input} name={fieldName} type="file" hidden />
-
-<!-- TODO: Add DropZone for better User experiance-->
-<!-- <FileDropzone /> -->
 
 {#if _data}
 	<div class:editor={editing} class="flex flex-col border-dashed border-2 w-[500px] max-w-full border-gray-300">
@@ -251,34 +218,7 @@
 		{/if}
 	</div>
 {:else}
-	<div
-		on:drop|preventDefault={(e) => {
-			updated = true;
-			_data = e?.dataTransfer?.files[0];
-		}}
-		on:dragover|preventDefault={(e) => {
-			asAny(e.target).style.borderColor = '#6bdfff';
-		}}
-		on:dragleave|preventDefault={(e) => {
-			asAny(e.target).style.removeProperty('border-color');
-		}}
-		class="w-[500px] max-w-full h-[200px] mt-2 border-2 border-dashed border-[#c1c1c1] flex flex-col items-center justify-center gap-4 select-none"
-	>
-		<p>Drag & Drop</p>
-		<p>or</p>
-		<div class="flex w-full gap-2 justify-center">
-			<Button style="flex: 1 1 0px;" on:click={() => input.click()}>Browse locally</Button>
-			<Button style="flex: 1 1 0px;" on:click={() => (showMedia = true)}>Select Existing</Button>
-		</div>
-	</div>
-{/if}
-{#if showMedia}
-	<div class="flex flex-col rounded-md p-2 fixed left-[50%] top-[50%] w-[90%] h-[80%] translate-y-[-50%] translate-x-[-50%] z-[999999999] bg-white">
-		<button on:click={() => (showMedia = false)} class="ml-auto cursor-pointer">
-			<XIcon />
-		</button>
-		<Media bind:onselect={mediaOnSelect} />
-	</div>
+	<FileInput bind:value={_data} />
 {/if}
 
 <style>

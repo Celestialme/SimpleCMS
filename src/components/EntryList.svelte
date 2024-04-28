@@ -74,7 +74,11 @@
 	}
 	$: process_deleteAll(deleteAll);
 	$: Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');
-
+	mode.subscribe(() => {
+		if ($mode == 'view') {
+			entryData.set({});
+		}
+	});
 	function process_deleteAll(deleteAll: boolean) {
 		// triggerConfirm = true;
 		if (deleteAll) {

@@ -11,8 +11,10 @@
 	import TextAlign from '@tiptap/extension-text-align';
 	import type { ComponentProps } from 'svelte';
 	import ImageResize from './ImageResize';
+	import FileInput from '@src/components/system/inputs/FileInput.svelte';
 	let element;
 	let editor: Editor;
+	let showImageDialog = false;
 	$: globalThis.editor = editor;
 	onMount(() => {
 		editor = new Editor({
@@ -145,7 +147,9 @@
 		{
 			name: 'image',
 			icon: 'fa6-solid:image',
-			onClick: () => editor.chain().focus().setImage({ src: '/media/images/images/thumbnail/b5d7c58714cc3a7c709f.avif' }).run(),
+			onClick: () => {
+				showImageDialog = true;
+			},
 			active: () => editor.isActive('image')
 		}
 	];
@@ -239,6 +243,20 @@
 			<DropDown show={show('align')} items={alignText} label="Align" />
 			<DropDown show={show('insert')} items={inserts} icon="typcn:plus" label="Insert" />
 			<DropDown show={show('float')} items={floats} icon="grommet-icons:text-wrap" label="Text Wrap" />
+			<FileInput
+				bind:show={showImageDialog}
+				class="absolute bg-white top-0 z-10"
+				on:change={(e) => {
+					let data = e.detail;
+					let url;
+					if (data instanceof File) {
+						url = URL.createObjectURL(data);
+					} else {
+						url = data.thumbnail.url;
+					}
+					editor.chain().focus().setImage({ src: url }).run();
+				}}
+			/>
 		</div>
 	{/if}
 	<div on:pointerdown|self={() => editor.commands.focus('end')} class="text_Area RichText" bind:this={element} />
@@ -285,5 +303,8 @@
 		cursor: text;
 		overflow: auto;
 		max-height: calc(100vh - 80px);
+	}
+	:global(.ProseMirror-selectednode img) {
+		box-shadow: 0px 0px 4px 0px #00ffff99 inset;
 	}
 </style>

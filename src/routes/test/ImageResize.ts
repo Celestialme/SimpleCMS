@@ -68,11 +68,12 @@ const ImageResize = ImageExtension.extend({
 		];
 	},
 	addNodeView() {
-		return ({ editor, HTMLAttributes }) => {
+		return ({ editor, HTMLAttributes, extension }) => {
 			let { src, alt, style } = HTMLAttributes;
 			const container = document.createElement('div');
 			const resizer = document.createElement('div');
 			const img = document.createElement('img');
+			HTMLAttributes = {};
 			resizer.style.overflow = 'hidden';
 			resizer.style.resize = 'both';
 			resizer.style.display = 'inline-block';
@@ -117,6 +118,9 @@ const ImageResize = ImageExtension.extend({
 			};
 			resizer.ondragend = (e) => {
 				resizer.style.opacity = '1';
+			};
+			resizer.onclick = (e) => {
+				console.log(extension);
 			};
 			this.storage.default = false;
 			return {
