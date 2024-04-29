@@ -3,7 +3,7 @@ import Path from 'path';
 import axios from 'axios';
 import { get } from 'svelte/store';
 import { entryData, mode, translationProgress } from '@src/stores/store';
-import { collections, collection } from '@src/stores/load';
+import { collection } from '@src/stores/load';
 import publicConfig from '@root/config/public';
 import { browser } from '$app/environment';
 import _crypto from 'crypto';
@@ -30,7 +30,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 				continue;
 			}
 			// object[key] is file here
-			let uuid = new mongoose.Types.ObjectId().toString();
+			let uuid = createRandomID().toString();
 			formData.append(uuid, object[key]);
 			object[key] = { instanceof: 'File', id: uuid, ...object[key] };
 		}
@@ -371,4 +371,8 @@ export let get_elements_by_id = {
 			}
 		}
 	}
+};
+
+export let createRandomID = (id?: string) => {
+	return id ? new mongoose.Types.ObjectId(id) : new mongoose.Types.ObjectId();
 };

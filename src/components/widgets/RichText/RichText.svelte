@@ -15,7 +15,7 @@
 	import ImageResize from './ImageResize';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
 	import { entryData, mode } from '@src/stores/store';
-	import { debounce, getFieldName, updateTranslationProgress } from '@src/utils/utils';
+	import { createRandomID, debounce, getFieldName, updateTranslationProgress } from '@src/utils/utils';
 	import type { FieldType } from '.';
 	import { contentLanguage } from '@src/stores/load';
 	export let field: FieldType;
@@ -275,7 +275,7 @@
 					let url;
 					if (data instanceof File) {
 						url = URL.createObjectURL(data);
-						let image_id = crypto.randomUUID();
+						let image_id = createRandomID().toString();
 						images[image_id] = data;
 						editor.chain().focus().setImage({ src: url, id: image_id }).run();
 					} else {
