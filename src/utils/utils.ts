@@ -10,6 +10,7 @@ import _crypto from 'crypto';
 import type { Schema } from '@src/collections/types';
 import type { z } from 'zod';
 import mongoose from 'mongoose';
+import type { ImageFiles } from './types';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -87,8 +88,8 @@ export const obj2formData = (obj: any) => {
 };
 let env_sizes = publicConfig.IMAGE_SIZES;
 export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
-export async function saveImage(file: File, collectionName: string) {
-	if (browser) return;
+export async function saveImage(file: File, collectionName: string): Promise<{ id: mongoose.Types.ObjectId; fileInfo: ImageFiles }> {
+	if (browser) return {} as any;
 	let sharp = (await import('sharp')).default;
 
 	let fileInfo = {};
@@ -97,9 +98,9 @@ export async function saveImage(file: File, collectionName: string) {
 	let buffer = Buffer.from(arrayBuffer);
 	let hash = _crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
 	let existing_file = await mongoose.models['image_files'].findOne({ hash: hash });
-	let path = file.path;
+	let path = file.path || 'global';
 	if (existing_file) {
-		return new mongoose.Types.ObjectId(existing_file._id);
+		return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
 	}
 	let { name, ext } = removeExtension(file.name);
 	//original image
@@ -118,7 +119,7 @@ export async function saveImage(file: File, collectionName: string) {
 		used_by: [],
 		original: {
 			name: file.name,
-			url,
+			url: '/media/' + url,
 			size: file.size,
 			type: file.type,
 			lastModified: file.lastModified,
@@ -167,7 +168,7 @@ export async function saveImage(file: File, collectionName: string) {
 
 	let res = await mongoose.models['image_files'].insertMany(fileInfo);
 
-	return new mongoose.Types.ObjectId(res[0]._id);
+	return { id: new mongoose.Types.ObjectId(res[0]._id), fileInfo: fileInfo as ImageFiles };
 }
 
 export let fieldsToSchema = (fields: Array<any>) => {
@@ -266,11 +267,16 @@ export function debounce(delay?: number) {
 		if (first) {
 			fn();
 			first = false;
+			clearTimeout(timer);
+			timer = setTimeout(() => {
+				first = true;
+			}, delay);
 			return;
 		}
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			fn();
+			first = true;
 		}, delay);
 	};
 }

@@ -48,7 +48,6 @@
 {/if}
 {#if _data}
 	<ul bind:this={MENU_CONTAINER} class:hidden={depth != 0} class="children MENU_CONTAINER">
-		<div class="w-screen"></div>
 		<ListNode {MENU_CONTAINER} self={_data} bind:depth bind:showFields maxDepth={field.fields.length} />
 	</ul>
 {/if}

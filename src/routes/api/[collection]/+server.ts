@@ -28,13 +28,11 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let filter: { [key: string]: string } = JSON.parse(url.searchParams.get('filter') as string) || {};
 	let sort: { [key: string]: number } = JSON.parse(url.searchParams.get('sort') as string) || {};
 
-	let contentLanguage = JSON.parse(url.searchParams.get('contentLanguage') as string) || publicConfig.DEFAULT_CONTENT_LANGUAGE;
+	let contentLanguage = (url.searchParams.get('contentLanguage') as string) || publicConfig.DEFAULT_CONTENT_LANGUAGE;
 	let skip = (page - 1) * length;
 
 	let aggregations: any = [];
-	if (sort.status) {
-		aggregations.push({ $sort: { status: sort.status } });
-	}
+
 	for (let field of collection_schema.fields) {
 		let widget = widgets[field.widget.key];
 		let fieldName = getFieldName(field);
@@ -118,7 +116,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 				if (value?.instanceof == 'File') {
 					let file = data.get(value.id) as File;
 					file.path = value.path;
-					file.oldID = value.oldID;
+
 					data.delete(value.id);
 					return file;
 				}

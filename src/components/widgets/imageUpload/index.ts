@@ -41,7 +41,6 @@ widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({ field, data, user, type, collection, id }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get() as File | ImageFiles;
 	// _id == new image id;
-	// _data.oldId == old image id;
 	// id == current document id;
 	switch (type) {
 		case 'GET':
@@ -50,23 +49,20 @@ widget.modifyRequest = async ({ field, data, user, type, collection, id }: Modif
 			break;
 		case 'POST':
 		case 'PATCH':
+			let _id;
 			if (_data instanceof File) {
-				console.log(_data);
-				let _id = await saveImage(_data, collection.name);
-
-				type === 'PATCH' && (await mongoose.models['image_files'].updateMany({ _id: _data.oldID }, { $pull: { used_by: id } }));
-				await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } }, { upsert: true });
+				_id = (await saveImage(_data, collection.name)).id;
 				data.update(_id);
 			} else {
 				//chosen image from image_files
-				let _id = new mongoose.Types.ObjectId(_data._id);
-				type === 'PATCH' && (await mongoose.models['image_files'].updateMany({ _id: _data.oldID }, { $pull: { used_by: id } }));
-				await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } }, { upsert: true });
+				_id = new mongoose.Types.ObjectId(_data._id);
 				data.update(_id);
 			}
+			type === 'PATCH' && (await mongoose.models['image_files'].updateMany({}, { $pull: { used_by: id } }));
+			await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } });
 			break;
 		case 'DELETE':
-			await mongoose.models['image_files'].updateMany({ used_by: id }, { $pull: { used_by: id } });
+			await mongoose.models['image_files'].updateMany({}, { $pull: { used_by: id } });
 			break;
 	}
 };

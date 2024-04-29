@@ -7,7 +7,7 @@
 	import { twMerge } from 'tailwind-merge';
 	import { createEventDispatcher } from 'svelte';
 	export let value: File | ImageFiles | undefined = undefined;
-	export let show = false;
+	export let show = true;
 	let ev = createEventDispatcher();
 	let input: HTMLInputElement;
 	let showMedia = false;

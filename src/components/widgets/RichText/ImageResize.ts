@@ -3,11 +3,18 @@ declare module '@tiptap/core' {
 	interface Commands<ReturnType> {
 		imageResize: {
 			setImageFloat: (size: 'left' | 'right' | 'unset') => ReturnType;
+			setImage: (options: { src: string; alt?: string; title?: string; id: string }) => ReturnType;
 		};
 	}
 }
 
 const ImageResize = ImageExtension.extend({
+	addOptions() {
+		return {
+			...this.parent?.(),
+			id: null
+		};
+	},
 	addCommands() {
 		return {
 			...this.parent?.(),
@@ -19,6 +26,9 @@ const ImageResize = ImageExtension.extend({
 	},
 	addAttributes() {
 		return {
+			id: {
+				default: null
+			},
 			src: {
 				default: null,
 				parseHTML: (element) => (element.firstChild as HTMLElement).getAttribute('src')
@@ -32,11 +42,11 @@ const ImageResize = ImageExtension.extend({
 				parseHTML: (element) => (element as HTMLElement).style.float
 			},
 			w: {
-				default: 'unset',
+				default: '600',
 				parseHTML: (element) => (element as HTMLElement).style.width
 			},
 			h: {
-				default: 'unset',
+				default: '600',
 				parseHTML: (element) => (element as HTMLElement).style.height
 			},
 			marginLeft: {
@@ -65,7 +75,7 @@ const ImageResize = ImageExtension.extend({
 			{
 				style: `text-align: ${HTMLAttributes.textAlign};float: ${HTMLAttributes.float};width: ${HTMLAttributes.w};height: ${HTMLAttributes.h}; margin-left: ${HTMLAttributes.marginLeft}`
 			},
-			['img', { src: HTMLAttributes.src, style: 'width: 100%; height: 100%; cursor:pointer' }]
+			['img', { src: HTMLAttributes.id || HTMLAttributes.src, style: 'width: 100%; height: 100%; cursor:pointer' }]
 		];
 	},
 	parseHTML() {
@@ -119,7 +129,10 @@ const ImageResize = ImageExtension.extend({
 			resizer.ondrag = (e) => {
 				resizer.style.opacity = '0';
 				nodeAttrs.marginLeft = resizer.style.marginLeft =
-					((e.clientX - editor.$doc.element.offsetLeft - resizer.offsetWidth / 2) / editor.$doc.element.offsetWidth) * 100 + '%';
+					Math.max(
+						((e.clientX - editor.$doc.element.getBoundingClientRect().left - resizer.offsetWidth / 2) / editor.$doc.element.offsetWidth) * 100,
+						0
+					) + '%';
 			};
 			resizer.ondragend = (e) => {
 				resizer.style.opacity = '1';

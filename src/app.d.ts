@@ -21,7 +21,6 @@ declare global {
 	};
 	interface File {
 		path?: string;
-		oldID?: string;
 	}
 }
 export {};

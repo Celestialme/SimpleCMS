@@ -12,7 +12,7 @@
 	let user = $page.data.user;
 </script>
 
-<div class="wrapper">
+<div class="wrapper z-0 relative">
 	{#each fields || $collection.fields as field, index}
 		{#if field.widget}
 			{#key $collection}

@@ -4,6 +4,8 @@ import Text from './text';
 import Email from './email';
 import MegaMenu from './megaMenu';
 import Relation from './relation';
+import RichText from './RichText';
+
 import type { Model, User } from '@src/auth/types';
 import type mongoose from 'mongoose';
 
@@ -13,7 +15,8 @@ let widgets = {
 	Email,
 	ImageUpload,
 	MegaMenu,
-	Relation: Relation
+	Relation,
+	RichText
 };
 
 type K = ReturnType<(typeof widgets)[keyof typeof widgets]>['widget']['key'];

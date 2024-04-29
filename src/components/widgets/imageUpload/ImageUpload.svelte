@@ -2,7 +2,7 @@
 	import axios from 'axios';
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
-	import { asAny, getFieldName } from '@src/utils/utils';
+	import { getFieldName } from '@src/utils/utils';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
@@ -21,7 +21,6 @@
 			if (_data instanceof File) {
 				_data.path = field.path;
 			}
-			$mode == 'edit' && (_data.oldID = (value as ImageFiles)._id);
 		}
 
 		return updated ? _data : null;
