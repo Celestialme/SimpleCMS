@@ -30,7 +30,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 				continue;
 			}
 			// object[key] is file here
-			let uuid = crypto.randomUUID();
+			let uuid = new mongoose.Types.ObjectId().toString();
 			formData.append(uuid, object[key]);
 			object[key] = { instanceof: 'File', id: uuid, ...object[key] };
 		}

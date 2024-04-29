@@ -18,9 +18,7 @@
 	let saveMode = $mode;
 	async function saveLayer() {
 		let _fieldsData = await extractData(fieldsData);
-		if (!_fieldsData._id) {
-			_fieldsData._id = crypto.randomUUID();
-		}
+
 		if (!_data) {
 			_data = { ..._fieldsData, children: [] };
 		} else if ($mode == 'edit') {
