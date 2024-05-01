@@ -14,6 +14,11 @@ const config = {
 		adapter: adapter(),
 		csrf: {
 			checkOrigin: false
+		},
+		alias: {
+			'@src': 'src',
+			'@static': 'static',
+			'@root': './'
 		}
 	},
 	// plugin options

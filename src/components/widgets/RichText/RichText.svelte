@@ -73,7 +73,6 @@
 				});
 			}
 		});
-		fontSize.default = parseInt(getComputedStyle(editor.view.dom).fontSize.replace('px', ''));
 	});
 
 	onDestroy(() => {
@@ -196,12 +195,11 @@
 			active: () => false
 		}
 	];
-	let fontSize = {
-		value: 0,
-		default: 0
-	};
-	$: editor && (fontSize.value = editor.getAttributes('textStyle').fontSize || fontSize.default);
-
+	let fontSize = 16;
+	$: editor &&
+		(fontSize =
+			editor.getAttributes('textStyle').fontSize ||
+			window.getComputedStyle(window.getSelection()?.focusNode?.parentElement as HTMLElement).fontSize.replace('px', ''));
 	let show = (button: 'textType' | 'font' | 'align' | 'insert' | 'float' | 'color' | 'bold' | 'italic' | 'strike' | 'link' | 'fontSize') => {
 		if (['textType', 'font', 'insert', 'color', 'bold', 'italic', 'strike', 'link', 'fontSize'].includes(button)) {
 			return !editor?.isActive('image');
@@ -232,17 +230,17 @@
 			<div class="flex items-center" class:hidden={!show('fontSize')}>
 				<button
 					on:click={() => {
-						fontSize.value--;
-						editor.chain().focus().setFontSize(fontSize.value).run();
+						fontSize--;
+						editor.chain().focus().setFontSize(fontSize).run();
 					}}
 				>
 					<iconify-icon icon="ic:twotone-minus" width="20" />
 				</button>
-				<input type="text" class="w-[30px] outline-none text-center" bind:value={fontSize.value} />
+				<input type="text" class="w-[30px] outline-none text-center" bind:value={fontSize} />
 				<button
 					on:click={() => {
-						fontSize.value++;
-						editor.chain().focus().setFontSize(fontSize.value).run();
+						fontSize++;
+						editor.chain().focus().setFontSize(fontSize).run();
 					}}
 				>
 					<iconify-icon icon="ph:plus-bold" width="20" />
