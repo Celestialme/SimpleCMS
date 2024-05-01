@@ -50,14 +50,10 @@ export async function generateCollectionFieldTypes() {
 			let fieldName = field.db_fieldName || field.label;
 			collection.push(fieldName);
 		}
-		collections[file.replace('.ts', '')] = collection.join('|');
+		collections[file.replace('.ts', '')] = collection;
 	}
 	let types = fs.readFileSync('src/collections/types.ts', 'utf-8');
 	types = types.replace(/\n*export\s+type\s+CollectionContent\s?=\s?.*?};/gms, '');
-	types +=
-		'\n' +
-		'export type CollectionContent = ' +
-		JSON.stringify(collections).replaceAll('|', `"|"`) +
-		';';
+	types += '\n' + 'export type CollectionContent = ' + JSON.stringify(collections) + ';';
 	fs.writeFileSync('src/collections/types.ts', types);
 }

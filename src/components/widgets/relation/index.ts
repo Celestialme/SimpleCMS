@@ -7,7 +7,7 @@ import deepmerge from 'deepmerge';
 import type { CollectionContent, CollectionNames, Schema } from '@src/collections/types';
 
 const widget = <
-	K extends CollectionContent[T],
+	K extends CollectionContent[T][number],
 	T extends CollectionNames & keyof CollectionContent
 >(
 	params: Params<K, T>
