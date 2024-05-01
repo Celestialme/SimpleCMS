@@ -16,7 +16,7 @@ export let signUpSchema_token = z
 		password: z.string().min(4),
 		confirmPassword: z.string().min(4),
 		username: z.string().min(3),
-		token: z.string().min(16)
+		token: z.string().min(16).optional()
 	})
 
 	.refine((data) => data.password === data.confirmPassword, {
@@ -30,7 +30,8 @@ export let signUpSchema_noToken = signUpSchema_token
 		message: 'Passwords do not match',
 		path: ['confirmPassword']
 	});
-export type SignupSchema = z.infer<typeof signUpSchema_noToken | typeof signUpSchema_token>;
+export type SignupSchema = z.infer<typeof signUpSchema_token>;
+
 export let addUserSchema = z.object({
 	email: z.string().email(),
 	role: z.string()

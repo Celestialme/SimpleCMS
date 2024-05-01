@@ -2,7 +2,11 @@
 	import SignupIcon from './icons/SignupIcon.svelte';
 	export let active: undefined | 0 | 1 = undefined;
 	import Button from '@src/components/system/buttons/Button.svelte';
-	import { signUpSchema_noToken, signUpSchema_token, type SignupSchema } from '@src/utils/formSchemas';
+	import {
+		signUpSchema_noToken,
+		signUpSchema_token,
+		type SignupSchema
+	} from '@src/utils/formSchemas';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import CMSLogo from './icons/Logo.svelte';
 	import publicConfig from '@root/config/public';
@@ -23,6 +27,9 @@
 		...(firstUserExists ? { token: '' } : {})
 	};
 
+	if ('Token' in form) {
+		form.Token;
+	}
 	let errors = validateZod(signUpSchema);
 	async function onSubmit(e) {
 		submitted = true;
@@ -51,7 +58,11 @@
 	class:inactive={active !== undefined && active !== 1}
 	class:hover={active == undefined || active == 0}
 >
-	<form on:submit={onSubmit} class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2" class:hide={active != 1}>
+	<form
+		on:submit={onSubmit}
+		class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2"
+		class:hide={active != 1}
+	>
 		<div class="mb-6 flex flex-row gap-2">
 			<CMSLogo className="w-12" fill="red" />
 

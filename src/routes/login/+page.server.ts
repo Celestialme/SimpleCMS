@@ -1,13 +1,22 @@
 import { type Actions, type Cookies, redirect, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { loginSchema, signUpSchema_token, recoverSchema, signUpSchema_noToken, type SignupSchema } from '../../utils/formSchemas';
+import {
+	loginSchema,
+	signUpSchema_token,
+	recoverSchema,
+	signUpSchema_noToken,
+	type SignupSchema
+} from '../../utils/formSchemas';
 import { auth } from '@src/routes/api/db';
 
 export const actions: Actions = {
 	signIn: async ({ request, cookies }) => {
 		let data = await request.formData();
 		let entries = Object.fromEntries(data);
-		let form = loginSchema.safeParse({ ...entries, isToken: entries.isToken === 'true' ? true : false });
+		let form = loginSchema.safeParse({
+			...entries,
+			isToken: entries.isToken === 'true' ? true : false
+		});
 		if (!form.success) return fail(400, { message: 'invalid form members' });
 		const email = form.data.email;
 		const password = form.data.password;
@@ -50,7 +59,7 @@ export const actions: Actions = {
 		} else if (isFirst) {
 			// no account exists sign up for admin
 			resp = await FirstUsersignUp(username, email, password, cookies);
-		} else if (user && user.is_registered == false) {
+		} else if (user && user.is_registered == false && token) {
 			// unfinished account exists
 			resp = await finishRegistration(username, email, password, token, cookies);
 		} else if (!user && !isFirst) {
@@ -105,7 +114,12 @@ async function signIn(
 	}
 }
 
-async function FirstUsersignUp(username: string, email: string, password: string, cookies: Cookies) {
+async function FirstUsersignUp(
+	username: string,
+	email: string,
+	password: string,
+	cookies: Cookies
+) {
 	let user = await auth.createUser({
 		password,
 		email,
@@ -121,14 +135,25 @@ async function FirstUsersignUp(username: string, email: string, password: string
 
 	return { status: true };
 }
-async function finishRegistration(username: string, email: string, password: string, token: string, cookies: Cookies) {
+async function finishRegistration(
+	username: string,
+	email: string,
+	password: string,
+	token: string,
+	cookies: Cookies
+) {
 	let user = await auth.checkUser({ email });
 	if (!user) return { status: false, message: 'user does not exist' };
 
 	let result = await auth.consumeToken(token, user.id);
 
 	if (result.status) {
-		await auth.updateUserAttributes(user, { username, password, lastAuthMethod: 'password', is_registered: true });
+		await auth.updateUserAttributes(user, {
+			username,
+			password,
+			lastAuthMethod: 'password',
+			is_registered: true
+		});
 		const session = await auth.createSession({ user_id: user.id });
 		const sessionCookie = auth.createSessionCookie(session);
 		cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
