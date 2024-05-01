@@ -2,10 +2,7 @@ import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import GuiField from './GuiField.svelte';
 import { getFieldName } from '@src/utils/utils';
 import mongoose from 'mongoose';
-import type { CollectionLabels } from '@src/collections/types';
-import type widgets from '@src/components/widgets';
-type k = Exclude<keyof typeof widgets, 'Relation'>;
-type w = ReturnType<(typeof widgets)[k]>['label'];
+
 export type Params<K, T> = {
 	label: string;
 	width?: number;
@@ -33,7 +30,9 @@ export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
 			[collection.name]: {
 				async [getFieldName(field)](parent) {
 					console.log(getFieldName(field));
-					let res = await mongoose.models[field.relation].findById(parent[getFieldName(field)]).lean();
+					let res = await mongoose.models[field.relation]
+						.findById(parent[getFieldName(field)])
+						.lean();
 
 					return res;
 				}

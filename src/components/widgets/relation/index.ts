@@ -4,14 +4,21 @@ import { type Params, GuiSchema, GraphqlSchema } from './types';
 import { getCollections } from '@src/collections';
 import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
-import type { CollectionLabels, Schema } from '@src/collections/types';
+import type { CollectionContent, CollectionNames, Schema } from '@src/collections/types';
 
-const widget = <K extends T, T extends CollectionLabels>(params: Params<K, T>) => {
+const widget = <
+	K extends CollectionContent[T],
+	T extends CollectionNames & keyof CollectionContent
+>(
+	params: Params<K, T>
+) => {
 	let display;
 	display = async ({ data, collection, field, entry, contentLanguage }) => {
 		let relative_collection = (await getCollections()).find((c) => c.name == field.relation);
 
-		let relative_field = relative_collection?.fields.find((f) => getFieldName(f) == field.displayPath);
+		let relative_field = relative_collection?.fields.find(
+			(f) => getFieldName(f) == field.displayPath
+		);
 
 		return data?.[getFieldName(relative_field)]
 			? await relative_field?.display({
@@ -20,7 +27,7 @@ const widget = <K extends T, T extends CollectionLabels>(params: Params<K, T>) =
 					field: relative_field,
 					entry,
 					contentLanguage
-			  })
+				})
 			: '';
 	};
 	display.default = true;
@@ -45,14 +52,22 @@ const widget = <K extends T, T extends CollectionLabels>(params: Params<K, T>) =
 
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
-widget.modifyRequest = async ({ field, data, user, type, id }: ModifyRequestParams<typeof widget>) => {
+widget.modifyRequest = async ({
+	field,
+	data,
+	user,
+	type,
+	id
+}: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get();
 	if (type !== 'GET' || !_data) {
 		return;
 	}
 	let { getCollectionModels } = await import('@src/routes/api/db');
 	let relative_collection = (await getCollectionModels())[field.relation];
-	let relative_collection_schema = (await getCollections()).find((c) => c.name == field.relation) as Schema;
+	let relative_collection_schema = (await getCollections()).find(
+		(c) => c.name == field.relation
+	) as Schema;
 	let response = (await relative_collection.findById(_data)) as any;
 	let result = {};
 	for (let key in relative_collection_schema.fields) {
@@ -81,18 +96,38 @@ widget.aggregations = {
 	filters: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
 		let relative_collection = (await getCollections()).find((c) => c.name == field.relation);
-		let relative_field = relative_collection?.fields.find((f) => getFieldName(f) == field.displayPath);
+		let relative_field = relative_collection?.fields.find(
+			(f) => getFieldName(f) == field.displayPath
+		);
 		let widget = widgets[relative_field.widget.key];
-		let new_field = deepmerge(relative_field, { db_fieldName: 'relation.' + getFieldName(relative_field) }); //use db_fieldName since it overrides label.
-		return widget?.aggregations?.filters({ field: new_field, filter: info.filter, contentLanguage: info.contentLanguage }) ?? [];
+		let new_field = deepmerge(relative_field, {
+			db_fieldName: 'relation.' + getFieldName(relative_field)
+		}); //use db_fieldName since it overrides label.
+		return (
+			widget?.aggregations?.filters({
+				field: new_field,
+				filter: info.filter,
+				contentLanguage: info.contentLanguage
+			}) ?? []
+		);
 	},
 	sorts: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
 		let relative_collection = (await getCollections()).find((c) => c.name == field.relation);
-		let relative_field = relative_collection?.fields.find((f) => getFieldName(f) == field.displayPath);
+		let relative_field = relative_collection?.fields.find(
+			(f) => getFieldName(f) == field.displayPath
+		);
 		let widget = widgets[relative_field.widget.key];
-		let new_field = deepmerge(relative_field, { db_fieldName: 'relation.' + getFieldName(relative_field) }); //use db_fieldName since it overrides label.
-		return widget?.aggregations?.sorts({ field: new_field, sort: info.sort, contentLanguage: info.contentLanguage }) ?? [];
+		let new_field = deepmerge(relative_field, {
+			db_fieldName: 'relation.' + getFieldName(relative_field)
+		}); //use db_fieldName since it overrides label.
+		return (
+			widget?.aggregations?.sorts({
+				field: new_field,
+				sort: info.sort,
+				contentLanguage: info.contentLanguage
+			}) ?? []
+		);
 	}
 } as Aggregations;
 export interface FieldType extends ReturnType<typeof widget> {}
