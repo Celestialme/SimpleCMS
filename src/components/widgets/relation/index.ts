@@ -4,9 +4,9 @@ import { type Params, GuiSchema, GraphqlSchema } from './types';
 import { getCollections } from '@src/collections';
 import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
-import type { Schema } from '@src/collections/types';
+import type { CollectionLabels, Schema } from '@src/collections/types';
 
-const widget = (params: Params) => {
+const widget = <K extends T, T extends CollectionLabels>(params: Params<K, T>) => {
 	let display;
 	display = async ({ data, collection, field, entry, contentLanguage }) => {
 		let relative_collection = (await getCollections()).find((c) => c.name == field.relation);
@@ -45,7 +45,7 @@ const widget = (params: Params) => {
 
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
-widget.modifyRequest = async ({ field, data, user, type }: ModifyRequestParams<typeof widget>) => {
+widget.modifyRequest = async ({ field, data, user, type, id }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get();
 	if (type !== 'GET' || !_data) {
 		return;
@@ -71,7 +71,8 @@ widget.modifyRequest = async ({ field, data, user, type }: ModifyRequestParams<t
 			field: _field as ReturnType<typeof widget>,
 			data,
 			user,
-			type
+			type,
+			id
 		});
 	}
 	data.update(result);

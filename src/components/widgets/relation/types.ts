@@ -3,14 +3,16 @@ import GuiField from './GuiField.svelte';
 import { getFieldName } from '@src/utils/utils';
 import mongoose from 'mongoose';
 import type { CollectionLabels } from '@src/collections/types';
-
-export type Params = {
+import type widgets from '@src/components/widgets';
+type k = Exclude<keyof typeof widgets, 'Relation'>;
+type w = ReturnType<(typeof widgets)[k]>['label'];
+export type Params<K, T> = {
 	label: string;
 	width?: number;
-	displayPath: string;
+	displayPath: K;
 	db_fieldName?: string;
 	widget?: any;
-	relation: CollectionLabels;
+	relation: T;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },

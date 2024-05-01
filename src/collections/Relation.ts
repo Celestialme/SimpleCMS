@@ -10,7 +10,7 @@ let schema: Schema = {
 		widgets.Relation({
 			label: 'relation2',
 			relation: 'thumbs',
-			displayPath: 'Image'
+			displayPath: ''
 		})
 	]
 };

@@ -21,7 +21,11 @@ const widget = (params: Params) => {
 	} else {
 		display = params.display;
 	}
-	let widget: { type: typeof ImageUpload; key: 'ImageUpload'; GuiFields: ReturnType<typeof getGuiFields> } = {
+	let widget: {
+		type: typeof ImageUpload;
+		key: 'ImageUpload';
+		GuiFields: ReturnType<typeof getGuiFields>;
+	} = {
 		type: ImageUpload,
 		key: 'ImageUpload',
 		GuiFields: getGuiFields(params, GuiSchema)
@@ -38,13 +42,21 @@ const widget = (params: Params) => {
 };
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
-widget.modifyRequest = async ({ field, data, user, type, collection, id }: ModifyRequestParams<typeof widget>) => {
+widget.modifyRequest = async ({
+	field,
+	data,
+	user,
+	type,
+	collection,
+	id
+}: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get() as File | ImageFiles;
 	// _id == new image id;
 	// id == current document id;
 	switch (type) {
 		case 'GET':
 			// here _data is just id of the image
+			data.update(null);
 			get_elements_by_id.add('image_files', _data, (newData) => data.update(newData));
 			break;
 		case 'POST':
@@ -58,7 +70,8 @@ widget.modifyRequest = async ({ field, data, user, type, collection, id }: Modif
 				_id = new mongoose.Types.ObjectId(_data._id);
 				data.update(_id);
 			}
-			type === 'PATCH' && (await mongoose.models['image_files'].updateMany({}, { $pull: { used_by: id } }));
+			type === 'PATCH' &&
+				(await mongoose.models['image_files'].updateMany({}, { $pull: { used_by: id } }));
 			await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } });
 			break;
 		case 'DELETE':
@@ -70,7 +83,11 @@ widget.aggregations = {
 	filters: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
 
-		return [{ $match: { [`${getFieldName(field)}.original.name`]: { $regex: info.filter, $options: 'i' } } }];
+		return [
+			{
+				$match: { [`${getFieldName(field)}.original.name`]: { $regex: info.filter, $options: 'i' } }
+			}
+		];
 	},
 	sorts: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;

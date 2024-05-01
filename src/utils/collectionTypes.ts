@@ -1,6 +1,6 @@
 import fs from 'fs';
-export function generateCollectionTypes(path: string) {
-	console.log(path);
+
+export async function generateCollectionTypes(path: string) {
 	if (!/src[/\\]collections/.test(path)) {
 		return;
 	}
@@ -15,6 +15,8 @@ export function generateCollectionTypes(path: string) {
 			.join('|')
 			.replaceAll(/\n/g, '') +
 		';';
+
+	// console.log(collectionSchemas);
 	let types = fs.readFileSync('src/collections/types.ts', 'utf-8');
 	types = types.replace(/export\s+type\s+CollectionLabels\s?=\s?.*?;/, '');
 

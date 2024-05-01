@@ -49,6 +49,7 @@
 				}
 			)
 		).data;
+		console.log(resp);
 		if (resp.status == 200) {
 			goto(`/login`);
 		}
@@ -61,7 +62,9 @@
 			<Collections />
 		</section>
 		<section class="text-center">
-			<button on:click={() => mode.set('media')} class="p-2 bg-[#353b63] text-white w-full"> Media </button>
+			<button on:click={() => mode.set('media')} class="p-2 bg-[#353b63] text-white w-full">
+				Media
+			</button>
 		</section>
 		<section class="mt-auto text-center">
 			<Button class="max-w-full" on:click={signOut}>
@@ -82,7 +85,10 @@
 		{#if $mode == 'view' || $mode == 'modify'}
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}
-			<div id="fields_container" class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]">
+			<div
+				id="fields_container"
+				class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]"
+			>
 				<Fields />
 			</div>
 		{:else if $mode == 'media'}

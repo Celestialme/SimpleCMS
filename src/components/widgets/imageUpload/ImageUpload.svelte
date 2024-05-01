@@ -27,14 +27,15 @@
 	};
 
 	if ($mode == 'edit') {
-		axios.get((value as ImageFiles).thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
-			if (value instanceof File) return;
-			let file = new File([data], value.thumbnail.name, {
-				type: value.thumbnail.type
-			});
+		(value as ImageFiles)?.thumbnail?.url &&
+			axios.get((value as ImageFiles).thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
+				if (value instanceof File) return;
+				let file = new File([data], value.thumbnail.name, {
+					type: value.thumbnail.type
+				});
 
-			_data = file;
-		});
+				_data = file;
+			});
 	}
 	let editing = false;
 	let edit = {
@@ -62,7 +63,10 @@
 				});
 			}
 			let Konva = (await import('konva')).default;
-			let scale = Math.min((window.innerWidth - 50) / 1.5 / this.image.naturalWidth, (window.innerHeight - 80) / 1.5 / this.image.naturalHeight);
+			let scale = Math.min(
+				(window.innerWidth - 50) / 1.5 / this.image.naturalWidth,
+				(window.innerHeight - 80) / 1.5 / this.image.naturalHeight
+			);
 
 			this.stage = new Konva.Stage({
 				container: 'canvas',
@@ -136,8 +140,13 @@
 			};
 			let updateRangePos = () => {
 				let rect = canvas.getBoundingClientRect();
-				range.style.left = (blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() - range.offsetWidth / 2 + rect.left + 'px';
-				range.style.top = (blurRect.y() + blurRect.height()) * this.stage.scaleY() + 20 + rect.top + 'px';
+				range.style.left =
+					(blurRect.x() + blurRect.width() / 2) * this.stage.scaleX() -
+					range.offsetWidth / 2 +
+					rect.left +
+					'px';
+				range.style.top =
+					(blurRect.y() + blurRect.height()) * this.stage.scaleY() + 20 + rect.top + 'px';
 			};
 			let blurRect = new Konva.Image({
 				image: this.image,
@@ -191,17 +200,30 @@
 </script>
 
 {#if _data}
-	<div class:editor={editing} class="flex flex-col border-dashed border-2 w-[500px] max-w-full border-gray-300">
+	<div
+		class:editor={editing}
+		class="flex flex-col border-dashed border-2 w-[500px] max-w-full border-gray-300"
+	>
 		<div class="w-full h-[50px] bg-[#242734] flex items-center">
 			{#if editing}
-				<iconify-icon on:click={() => edit.saveEdit()} width="26" class="px-2 cursor-pointer" style="color:#05ff05" icon="ic:sharp-save-as"
+				<iconify-icon
+					on:click={() => edit.saveEdit()}
+					width="26"
+					class="px-2 cursor-pointer"
+					style="color:#05ff05"
+					icon="ic:sharp-save-as"
 				></iconify-icon>
 				<Button on:click={() => edit.addBlur()}>blur</Button>
 				<button on:click={() => (editing = false)} class="ml-auto cursor-pointer mr-2">
 					<XIcon />
 				</button>
 			{:else}
-				<iconify-icon on:click={() => edit.startEdit()} class=" px-2 cursor-pointer text-white" icon="flat-color-icons:edit-image" width="24" />
+				<iconify-icon
+					on:click={() => edit.startEdit()}
+					class=" px-2 cursor-pointer text-white"
+					icon="flat-color-icons:edit-image"
+					width="24"
+				/>
 				<iconify-icon
 					on:click={() => (_data = undefined)}
 					class="ml-auto px-2 cursor-pointer text-white"
@@ -211,7 +233,10 @@
 			{/if}
 		</div>
 		{#if editing}
-			<div id="canvas" class="flex items-center justify-center border-2 border-dashed border-black"></div>
+			<div
+				id="canvas"
+				class="flex items-center justify-center border-2 border-dashed border-black"
+			></div>
 		{:else}
 			<img src={_data instanceof File ? URL.createObjectURL(_data) : _data.thumbnail.url} alt="" />
 		{/if}

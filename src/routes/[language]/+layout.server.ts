@@ -2,9 +2,9 @@ import { error, redirect } from '@sveltejs/kit';
 import { auth } from '../api/db';
 
 import publicConfig from '@root/config/public';
-import { locales } from '@src/i18n/i18n-util';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import { getCollections } from '@src/collections';
+let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
 
 export async function load({ cookies, route, params }) {
 	let collections = await getCollections();
@@ -15,7 +15,7 @@ export async function load({ cookies, route, params }) {
 	if (user?.lastAuthMethod == 'token') {
 		throw redirect(302, `/profile`);
 	}
-	if (!locales.includes(params.language as any) || (!collection && params.collection)) {
+	if (!languages.includes(params.language as any) || (!collection && params.collection)) {
 		// if collection is set in url but does not exists.
 		throw error(404, {
 			message: 'Not found'
@@ -25,7 +25,10 @@ export async function load({ cookies, route, params }) {
 		if (route.id != '/[language]/[collection]') {
 			//else if language and collection both set in url
 			let _filtered = collections.filter((c) => user && c?.permissions?.[user.role]?.read != false); // filters collection  based on reading permissions  and redirects to first left one
-			throw redirect(302, `/${params.language || publicConfig.DEFAULT_CONTENT_LANGUAGE}/${_filtered[0].name}`);
+			throw redirect(
+				302,
+				`/${params.language || publicConfig.DEFAULT_CONTENT_LANGUAGE}/${_filtered[0].name}`
+			);
 		}
 		if (collection?.permissions?.[user.role]?.read == false) {
 			throw error(404, {

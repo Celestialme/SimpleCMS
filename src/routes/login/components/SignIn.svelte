@@ -54,7 +54,11 @@
 	class:hover={active == undefined || active == 1}
 >
 	{#if !loginRecover}
-		<form class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2" class:hide={active != 0} on:submit={onSubmit}>
+		<form
+			class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2"
+			class:hide={active != 0}
+			on:submit={onSubmit}
+		>
 			<div class="mb-6 flex flex-row gap-2">
 				<CMSLogo className="w-12" fill="red" />
 
@@ -66,8 +70,17 @@
 			<FloatingInput name="email" type="email" bind:value={form.email} label={$messages.Email()} />
 			{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 
-			<FloatingInput name="password" type="password" bind:value={form.password} label={form.isToken ? 'token' : $messages.Password()}>
-				<EnableIcon bind:checked={form.isToken} icon={'oi:lock-locked'} class="absolute right-[30px]" />
+			<FloatingInput
+				name="password"
+				type="password"
+				bind:value={form.password}
+				label={form.isToken ? 'token' : $messages.Password()}
+			>
+				<EnableIcon
+					bind:checked={form.isToken}
+					icon={'oi:lock-locked'}
+					class="absolute right-[30px]"
+				/>
 			</FloatingInput>
 
 			{#if errors?.password}<span class="invalid">{errors.password}</span>{/if}
