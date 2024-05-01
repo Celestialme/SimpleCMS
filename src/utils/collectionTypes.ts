@@ -16,7 +16,7 @@ export async function generateCollectionTypes() {
 
 	// console.log(collectionSchemas);
 	let types = fs.readFileSync('src/collections/types.ts', 'utf-8');
-	types = types.replace(/export\s+type\s+CollectionNames\s?=\s?.*?;/gms, '');
+	types = types.replace(/\n*export\s+type\s+CollectionNames\s?=\s?.*?;/gms, '');
 
 	types += collections;
 
@@ -53,7 +53,7 @@ export async function generateCollectionFieldTypes() {
 		collections[file.replace('.ts', '')] = collection.join('|');
 	}
 	let types = fs.readFileSync('src/collections/types.ts', 'utf-8');
-	types = types.replace(/export\s+type\s+CollectionContent\s?=\s?.*?};/gms, '');
+	types = types.replace(/\n*export\s+type\s+CollectionContent\s?=\s?.*?};/gms, '');
 	types +=
 		'\n' +
 		'export type CollectionContent = ' +

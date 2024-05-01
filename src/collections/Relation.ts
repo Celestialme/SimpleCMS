@@ -9,8 +9,8 @@ let schema: Schema = {
 		}),
 		widgets.Relation({
 			label: 'relation2',
-			relation: 'Posts3',
-			displayPath: 'text 4'
+			relation: 'Posts2',
+			displayPath: 'RichText'
 		})
 	]
 };
