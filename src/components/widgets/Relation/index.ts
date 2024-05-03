@@ -5,7 +5,7 @@ import { getCollections } from '@src/collections';
 import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
 import type { CollectionContent, CollectionNames, Schema } from '@src/collections/types';
-
+const WIDGET_NAME = 'Relation' as const;
 const widget = <
 	K extends CollectionContent[T][number],
 	T extends CollectionNames & keyof CollectionContent
@@ -32,9 +32,8 @@ const widget = <
 	};
 	display.default = true;
 
-	let widget: { type: any; key: 'Relation'; GuiFields: ReturnType<typeof getGuiFields> } = {
-		type: Relation,
-		key: 'Relation',
+	let widget = {
+		Name: WIDGET_NAME,
 		GuiFields: getGuiFields(params, GuiSchema)
 	};
 
@@ -49,7 +48,7 @@ const widget = <
 
 	return { ...field, widget };
 };
-
+widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({
@@ -72,7 +71,7 @@ widget.modifyRequest = async ({
 	let result = {};
 	for (let key in relative_collection_schema.fields) {
 		let _field = relative_collection_schema.fields[key];
-		let widget = widgets[_field.widget.key];
+		let widget = widgets[_field.widget.Name];
 		let data = {
 			get() {
 				return response[getFieldName(_field)];
@@ -99,7 +98,7 @@ widget.aggregations = {
 		let relative_field = relative_collection?.fields.find(
 			(f) => getFieldName(f) == field.displayPath
 		);
-		let widget = widgets[relative_field.widget.key];
+		let widget = widgets[relative_field.widget.Name];
 		let new_field = deepmerge(relative_field, {
 			db_fieldName: 'relation.' + getFieldName(relative_field)
 		}); //use db_fieldName since it overrides label.
@@ -117,7 +116,7 @@ widget.aggregations = {
 		let relative_field = relative_collection?.fields.find(
 			(f) => getFieldName(f) == field.displayPath
 		);
-		let widget = widgets[relative_field.widget.key];
+		let widget = widgets[relative_field.widget.Name];
 		let new_field = deepmerge(relative_field, {
 			db_fieldName: 'relation.' + getFieldName(relative_field)
 		}); //use db_fieldName since it overrides label.

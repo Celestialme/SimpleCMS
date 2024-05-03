@@ -26,14 +26,23 @@ export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
 	for (let level of fields) {
 		let children: Array<any> = [];
 		for (let _field of level) {
-			types.add(widgets[_field.widget.key].GraphqlSchema({ label: `${getFieldName(_field, true)}_Level${levelCount}`, collection }).graphql);
+			types.add(
+				widgets[_field.widget.Name].GraphqlSchema({
+					label: `${getFieldName(_field, true)}_Level${levelCount}`,
+					collection
+				}).graphql
+			);
 			if (levelCount > 0) {
-				children.push(`${getFieldName(_field, true)}:${collection.name}_${getFieldName(_field, true)}_Level${levelCount} `);
+				children.push(
+					`${getFieldName(_field, true)}:${collection.name}_${getFieldName(_field, true)}_Level${levelCount} `
+				);
 			}
 		}
 		if (levelCount > 0) {
 			if (fields.length - levelCount > 1) {
-				children.push(`children:[${collection.name}_${getFieldName(field, true)}_Level${levelCount + 1}] `);
+				children.push(
+					`children:[${collection.name}_${getFieldName(field, true)}_Level${levelCount + 1}] `
+				);
 			}
 			types.add(`
 			type ${collection.name}_${getFieldName(field, true)}_Level${levelCount} {

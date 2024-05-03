@@ -21,7 +21,11 @@ for (let collection of collections) {
 		updatedAt: Float
 	`;
 	for (let field of collection.fields) {
-		let schema = widgets[field.widget.key].GraphqlSchema?.({ field, label: getFieldName(field, true), collection });
+		let schema = widgets[field.widget.Name].GraphqlSchema?.({
+			field,
+			label: getFieldName(field, true),
+			collection
+		});
 		if (schema.resolver) {
 			resolvers = deepmerge(resolvers, schema.resolver);
 		}
@@ -34,11 +38,13 @@ for (let collection of collections) {
 				// for helper widgets which extract its fields and does not exist in db itself like imagearray
 				let _fields = field.fields;
 				for (let _field of _fields) {
-					collectionSchema += `${getFieldName(_field, true)}: ${widgets[_field.widget.key].GraphqlSchema?.({
-						field: _field,
-						label: getFieldName(_field, true),
-						collection
-					}).typeName}\n`;
+					collectionSchema += `${getFieldName(_field, true)}: ${
+						widgets[_field.widget.Name].GraphqlSchema?.({
+							field: _field,
+							label: getFieldName(_field, true),
+							collection
+						}).typeName
+					}\n`;
 					console.log('---------------------------');
 					console.log(collectionSchema);
 					resolvers[collection.name as string] = deepmerge(
@@ -77,7 +83,9 @@ type Query {
 console.log(typeDefs);
 for (let collection of collections) {
 	resolvers.Query[collection.name as string] = async () =>
-		await mongoose.models[collection.name as string].find({ status: { $ne: 'UNPUBLISHED' } }).lean();
+		await mongoose.models[collection.name as string]
+			.find({ status: { $ne: 'UNPUBLISHED' } })
+			.lean();
 }
 const yogaApp = createYoga<RequestEvent>({
 	schema: createSchema({

@@ -1,9 +1,9 @@
-import ImageArray from './imageArray';
-import ImageUpload from './imageUpload';
-import Text from './text';
-import Email from './email';
-import MegaMenu from './megaMenu';
-import Relation from './relation';
+import ImageArray from './ImageArray';
+import ImageUpload from './ImageUpload';
+import Text from './Text';
+import Email from './Email';
+import MegaMenu from './MegaMenu';
+import Relation from './Relation';
 import RichText from './RichText';
 
 import type { Model, User } from '@src/auth/types';
@@ -19,7 +19,7 @@ let widgets = {
 	RichText
 };
 
-type K = ReturnType<(typeof widgets)[keyof typeof widgets]>['widget']['key'];
+type K = (typeof widgets)[keyof typeof widgets]['Name'];
 export type ModifyRequestParams<T extends (...args: any) => any> = {
 	collection: Model;
 	id: mongoose.Types.ObjectId;
@@ -30,8 +30,18 @@ export type ModifyRequestParams<T extends (...args: any) => any> = {
 };
 export type WidgetType = {
 	[key in K]: (typeof widgets)[key] & {
-		modifyRequest: (args: ModifyRequestParams<(typeof widgets)[keyof typeof widgets]>) => Promise<{}>;
+		modifyRequest: (
+			args: ModifyRequestParams<(typeof widgets)[keyof typeof widgets]>
+		) => Promise<{}>;
 	};
 };
 export let initWidgets = () => (globalThis.widgets = widgets);
 export default widgets as WidgetType;
+export let widgetContext = Object.keys(widgets).map((key) => {
+	let name = widgets[key].Name as K;
+	return {
+		[name]: {
+			run() {}
+		}
+	};
+});

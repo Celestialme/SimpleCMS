@@ -1,6 +1,6 @@
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import MegaMenu from './MegaMenu.svelte';
-import Text from '../text';
+import Text from '../Text';
 import { writable, type Writable } from 'svelte/store';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { entryData, mode } from '@src/stores/store';
@@ -9,6 +9,7 @@ import { headerActionButton } from '@src/stores/load';
 import type { User } from '@src/auth/types';
 import widgets, { type ModifyRequestParams } from '..';
 export let currentChild: Writable<any> = writable({});
+const WIDGET_NAME = 'MegaMenu' as const;
 /**
  * Creates Mega Menu Field.
  */
@@ -22,9 +23,8 @@ const widget = (params: Params) => {
 	} else {
 		display = params.display;
 	}
-	let widget: { type: typeof MegaMenu; key: 'MegaMenu'; GuiFields: ReturnType<typeof getGuiFields> } = {
-		type: MegaMenu,
-		key: 'MegaMenu',
+	let widget = {
+		Name: WIDGET_NAME,
 		GuiFields: getGuiFields(params, GuiSchema)
 	};
 
@@ -48,16 +48,24 @@ const widget = (params: Params) => {
 
 	return { ...field, widget };
 };
+widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
-widget.modifyRequest = async ({ collection, field, data, user, type, id }: ModifyRequestParams<typeof widget>) => {
+widget.modifyRequest = async ({
+	collection,
+	field,
+	data,
+	user,
+	type,
+	id
+}: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get();
 
 	let cleanChildren = async (children, level = 1) => {
 		for (let index in children) {
 			for (let _field of field.fields[level]) {
 				// if menu as other nested widgets inside which has its own modifyRequest method... neccessary for nested image to work
-				let widget = widgets[_field.widget.key];
+				let widget = widgets[_field.widget.Name];
 				if ('modifyRequest' in widget) {
 					let data = {
 						get() {
@@ -78,7 +86,9 @@ widget.modifyRequest = async ({ collection, field, data, user, type, id }: Modif
 				}
 			}
 
-			children[index].children.length > 0 && field.fields[level + 1]?.length > 0 && (await cleanChildren(children[index].children, level + 1));
+			children[index].children.length > 0 &&
+				field.fields[level + 1]?.length > 0 &&
+				(await cleanChildren(children[index].children, level + 1));
 		}
 	};
 
@@ -90,7 +100,16 @@ widget.aggregations = {
 	filters: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
 
-		return [{ $match: { [`${getFieldName(field)}.Header.${info.contentLanguage}`]: { $regex: info.filter, $options: 'i' } } }];
+		return [
+			{
+				$match: {
+					[`${getFieldName(field)}.Header.${info.contentLanguage}`]: {
+						$regex: info.filter,
+						$options: 'i'
+					}
+				}
+			}
+		];
 	},
 	sorts: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;

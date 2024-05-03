@@ -2,6 +2,8 @@ import publicConfig from '@root/config/public';
 import { getGuiFields } from '@src/utils/utils';
 import Email from './Email.svelte';
 import { type Params, GuiSchema, GraphqlSchema } from './types';
+const WIDGET_NAME = 'Email' as const;
+
 //email
 const widget = (params: Params) => {
 	let display;
@@ -15,9 +17,8 @@ const widget = (params: Params) => {
 	} else {
 		display = params.display;
 	}
-	let widget: { type: typeof Email; key: 'Email'; GuiFields: ReturnType<typeof getGuiFields> } = {
-		type: Email,
-		key: 'Email',
+	let widget = {
+		Name: WIDGET_NAME,
 		GuiFields: getGuiFields(params, GuiSchema)
 	};
 	let field = {
@@ -28,6 +29,7 @@ const widget = (params: Params) => {
 	};
 	return { ...field, widget };
 };
+widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 export interface FieldType extends ReturnType<typeof widget> {}

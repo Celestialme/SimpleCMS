@@ -4,21 +4,23 @@ import RichText from './RichText.svelte';
 import { GuiSchema, GraphqlSchema, type Params } from './types';
 import type { ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
+const WIDGET_NAME = 'RichText' as const;
 const widget = (params: Params) => {
 	/** This is a description of the foo function. */
 	let display;
 	if (!params.display) {
 		display = async ({ data, collection, field, entry, contentLanguage }) => {
 			data = data ? data : {}; // data can only be undefined if entry exists in db but this field was not set.
-			return params.translated ? data.header[contentLanguage] || 'NO entry' : data.header[publicConfig.DEFAULT_CONTENT_LANGUAGE] || 'NO entry';
+			return params.translated
+				? data.header[contentLanguage] || 'NO entry'
+				: data.header[publicConfig.DEFAULT_CONTENT_LANGUAGE] || 'NO entry';
 		};
 		display.default = true;
 	} else {
 		display = params.display;
 	}
-	let widget: { type: typeof RichText; key: 'RichText'; GuiFields: ReturnType<typeof getGuiFields> } = {
-		type: RichText,
-		key: 'RichText',
+	let widget = {
+		Name: WIDGET_NAME,
 		GuiFields: getGuiFields(params, GuiSchema)
 	};
 	let field = {
@@ -30,7 +32,14 @@ const widget = (params: Params) => {
 	};
 	return { ...field, widget };
 };
-widget.modifyRequest = async ({ field, data, user, type, collection, id }: ModifyRequestParams<typeof widget>) => {
+widget.modifyRequest = async ({
+	field,
+	data,
+	user,
+	type,
+	collection,
+	id
+}: ModifyRequestParams<typeof widget>) => {
 	switch (type) {
 		case 'POST':
 		case 'PATCH':
@@ -42,7 +51,8 @@ widget.modifyRequest = async ({ field, data, user, type, collection, id }: Modif
 				for (let lang in _data.content) {
 					_data.content[lang] = _data.content[lang].replace(img_id, fileInfo.original.url);
 				}
-				type === 'PATCH' && (await mongoose.models['image_files'].updateMany({}, { $pull: { used_by: img_id } }));
+				type === 'PATCH' &&
+					(await mongoose.models['image_files'].updateMany({}, { $pull: { used_by: img_id } }));
 				await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } });
 			}
 			data.update(_data);
@@ -53,12 +63,22 @@ widget.modifyRequest = async ({ field, data, user, type, collection, id }: Modif
 			break;
 	}
 };
+widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.aggregations = {
 	filters: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
-		return [{ $match: { [`${getFieldName(field)}.header.${info.contentLanguage}`]: { $regex: info.filter, $options: 'i' } } }];
+		return [
+			{
+				$match: {
+					[`${getFieldName(field)}.header.${info.contentLanguage}`]: {
+						$regex: info.filter,
+						$options: 'i'
+					}
+				}
+			}
+		];
 	},
 	sorts: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;

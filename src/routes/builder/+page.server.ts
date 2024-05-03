@@ -59,7 +59,10 @@ export const actions: Actions = {
 		content = content.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
 		content = await prettier.format(content, { ...(prettierConfig as any), parser: 'typescript' });
 		if (originalName && originalName != collectionName) {
-			fs.renameSync(`${import.meta.env.collectionsFolderTS}/${originalName}.ts`, `${import.meta.env.collectionsFolderTS}/${collectionName}.ts`);
+			fs.renameSync(
+				`${import.meta.env.collectionsFolderTS}/${originalName}.ts`,
+				`${import.meta.env.collectionsFolderTS}/${collectionName}.ts`
+			);
 		}
 		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/${collectionName}.ts`, content);
 		await compile();
@@ -95,7 +98,7 @@ async function goThrough(object: any, imports: Set<string> = new Set()) {
 			await goThrough(field, imports);
 
 			if (field.widget) {
-				let widget = widgets[field.widget.key];
+				let widget = widgets[field.widget.Name];
 				for (let key in widget.GuiSchema) {
 					if (!widget.GuiSchema[key].imports) continue;
 					for (let _import of widget.GuiSchema[key].imports) {
@@ -105,7 +108,7 @@ async function goThrough(object: any, imports: Set<string> = new Set()) {
 					}
 				}
 
-				object[key] = `🗑️widgets.${object[key].widget.key}(
+				object[key] = `🗑️widgets.${object[key].widget.Name}(
 					${JSON.stringify(object[key].widget.GuiFields, (key, value) => {
 						if (key == 'type' || key == 'key') {
 							return undefined;

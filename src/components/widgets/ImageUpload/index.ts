@@ -1,9 +1,9 @@
 import { type Params, GuiSchema, GraphqlSchema } from './types';
-import ImageUpload from './ImageUpload.svelte';
 import { getFieldName, getGuiFields, get_elements_by_id, saveImage } from '@src/utils/utils';
-import type { ModifyRequestParams } from '..';
+import { widgetContext, type ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
 import type { ImageFiles } from '@src/utils/types';
+const WIDGET_NAME = 'ImageUpload' as const;
 const widget = (params: Params) => {
 	let display;
 	if (!params.display) {
@@ -21,13 +21,8 @@ const widget = (params: Params) => {
 	} else {
 		display = params.display;
 	}
-	let widget: {
-		type: typeof ImageUpload;
-		key: 'ImageUpload';
-		GuiFields: ReturnType<typeof getGuiFields>;
-	} = {
-		type: ImageUpload,
-		key: 'ImageUpload',
+	let widget = {
+		Name: WIDGET_NAME,
 		GuiFields: getGuiFields(params, GuiSchema)
 	};
 	let field = {
@@ -40,6 +35,7 @@ const widget = (params: Params) => {
 
 	return { ...field, widget };
 };
+widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
 widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({

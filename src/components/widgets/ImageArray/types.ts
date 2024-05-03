@@ -28,7 +28,9 @@ export let GuiSchema = {
 export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
 	let fieldTypes = '';
 	for (let _field of field.fields) {
-		fieldTypes += widgets[_field.widget.key].GraphqlSchema({ label: getFieldName(_field, true), collection }).graphql + '\n';
+		fieldTypes +=
+			widgets[_field.widget.Name].GraphqlSchema({ label: getFieldName(_field, true), collection })
+				.graphql + '\n';
 	}
 
 	return {

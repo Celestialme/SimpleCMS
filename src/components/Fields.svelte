@@ -18,17 +18,21 @@
 			{#key $collection}
 				<div
 					class=" mx-auto text-center {!field.width ? 'w-full' : 'max-md:!w-full'}"
-					style={'min-width:min(300px,100%);' + field.width ? `width:${Math.floor(100 / (field?.width || 1))}%` : ''}
+					style={'min-width:min(300px,100%);' + field.width
+						? `width:${Math.floor(100 / (field?.width || 1))}%`
+						: ''}
 				>
 					<div class="px-[5px] text-start inline-block max-w-full">
 						<p>{field.label}</p>
-						<svelte:component
-							this={asAny(field.widget.type)}
-							field={asAny(field)}
-							bind:WidgetData={fieldsData[getFieldName(field)]}
-							value={customData[getFieldName(field)]}
-							{...$$props}
-						/>
+						{#await import(`@src/components/widgets/${field.widget.Name}/${field.widget.Name}.svelte`) then widget}
+							<svelte:component
+								this={widget.default}
+								field={asAny(field)}
+								bind:WidgetData={fieldsData[getFieldName(field)]}
+								value={customData[getFieldName(field)]}
+								{...$$props}
+							/>
+						{/await}
 					</div>
 				</div>
 			{/key}

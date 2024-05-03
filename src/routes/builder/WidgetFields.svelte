@@ -42,7 +42,10 @@
 			let deb = debounce(50);
 			let old_closest: HTMLElement;
 			clone.onpointermove = (e) => {
-				if (e.clientY < container.offsetTop || e.clientY > container.offsetTop + container.offsetHeight - 60) {
+				if (
+					e.clientY < container.offsetTop ||
+					e.clientY > container.offsetTop + container.offsetHeight - 60
+				) {
 					if (e.clientY < container.offsetTop) {
 						container.scrollBy(0, -5);
 					} else {
@@ -57,7 +60,9 @@
 							return { el: el as HTMLElement, center: rect.top + rect.height / 2 };
 						})
 						.filter((el) => el.el != clone);
-					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
+					targets.sort((a, b) =>
+						Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1
+					);
 					let closest = targets[0];
 					if (closest.el == node) return;
 					let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
@@ -79,7 +84,9 @@
 			clone.onpointerup = (e) => {
 				node.style.opacity = '1';
 				clone.releasePointerCapture(pointerID);
-				targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
+				targets.sort((a, b) =>
+					Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1
+				);
 				let closest = targets[0];
 				let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 				let clone_index = parseInt(clone.getAttribute('data-index') as string);
@@ -107,7 +114,7 @@
 	{#each fields as field, index}
 		<div
 			on:click={() => {
-				currentFieldKey = field.widget.key;
+				currentFieldKey = field.widget.Name;
 				currentField = field;
 			}}
 			on:pointerdown|stopPropagation={drag}
@@ -115,7 +122,7 @@
 			data-index={index}
 		>
 			<div class="w-full h-full p-[10px]">
-				<p>widget: {field.widget.key}</p>
+				<p>widget: {field.widget.Name}</p>
 				<p>label: {field.label}</p>
 			</div>
 			<button
@@ -129,7 +136,13 @@
 </div>
 
 {#if currentField}
-	<AddWidget bind:fields bind:field={currentField} bind:addField={currentField} selected_widget={currentFieldKey} editField={true} />
+	<AddWidget
+		bind:fields
+		bind:field={currentField}
+		bind:addField={currentField}
+		selected_widget={currentFieldKey}
+		editField={true}
+	/>
 {/if}
 
 <style>

@@ -12,11 +12,15 @@ import mongoose from 'mongoose';
 export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user_id = url.searchParams.get('user_id');
-	let user = user_id ? ((await auth.checkUser({ _id: user_id })) as User) : ((await auth.validateSession(session_id)) as User);
+	let user = user_id
+		? ((await auth.checkUser({ _id: user_id })) as User)
+		: ((await auth.validateSession(session_id)) as User);
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
+	let collection_schema = (await getCollections()).find(
+		(c) => c.name == params.collection
+	) as Schema;
 	let has_read_access = collection_schema?.permissions?.[user.role]?.read != false;
 	if (!has_read_access) {
 		return new Response('', { status: 403 });
@@ -25,27 +29,37 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let collection = collections[params.collection];
 	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
-	let filter: { [key: string]: string } = JSON.parse(url.searchParams.get('filter') as string) || {};
+	let filter: { [key: string]: string } =
+		JSON.parse(url.searchParams.get('filter') as string) || {};
 	let sort: { [key: string]: number } = JSON.parse(url.searchParams.get('sort') as string) || {};
 
-	let contentLanguage = (url.searchParams.get('contentLanguage') as string) || publicConfig.DEFAULT_CONTENT_LANGUAGE;
+	let contentLanguage =
+		(url.searchParams.get('contentLanguage') as string) || publicConfig.DEFAULT_CONTENT_LANGUAGE;
 	let skip = (page - 1) * length;
 
 	let aggregations: any = [];
 
 	for (let field of collection_schema.fields) {
-		let widget = widgets[field.widget.key];
+		let widget = widgets[field.widget.Name];
 		let fieldName = getFieldName(field);
 		if ('aggregations' in widget) {
 			let _filter = filter[fieldName];
 			let _sort = sort[fieldName];
 
 			if (widget.aggregations.filters && _filter) {
-				let _aggregations = await widget.aggregations.filters({ field, contentLanguage: contentLanguage, filter: _filter });
+				let _aggregations = await widget.aggregations.filters({
+					field,
+					contentLanguage: contentLanguage,
+					filter: _filter
+				});
 				aggregations.push(..._aggregations);
 			}
 			if (widget.aggregations.sorts && _sort) {
-				let _aggregations = await widget.aggregations.sorts({ field, contentLanguage: contentLanguage, sort: _sort });
+				let _aggregations = await widget.aggregations.sorts({
+					field,
+					contentLanguage: contentLanguage,
+					sort: _sort
+				});
 				aggregations.push(..._aggregations);
 			}
 		}
@@ -61,7 +75,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let entryList = entryListWithCount[0].entries;
 
 	for (let field of collection_schema.fields) {
-		let widget = widgets[field.widget.key];
+		let widget = widgets[field.widget.Name];
 		let fieldName = getFieldName(field);
 
 		if ('modifyRequest' in widget) {
@@ -83,7 +97,9 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 		}
 	}
 	await get_elements_by_id.getAll(); //get all collected ids together and modify request.
-	let totalCount = entryListWithCount[0].totalCount[0] ? entryListWithCount[0].totalCount[0].total : 0;
+	let totalCount = entryListWithCount[0].totalCount[0]
+		? entryListWithCount[0].totalCount[0].total
+		: 0;
 
 	let pagesCount = Math.ceil(totalCount / length);
 	return new Response(
@@ -98,11 +114,15 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	let data = await request.formData();
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user_id = data.get('user_id') as string;
-	let user = user_id ? ((await auth.checkUser({ _id: user_id })) as User) : ((await auth.validateSession(session_id)) as User);
+	let user = user_id
+		? ((await auth.checkUser({ _id: user_id })) as User)
+		: ((await auth.validateSession(session_id)) as User);
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
+	let collection_schema = (await getCollections()).find(
+		(c) => c.name == params.collection
+	) as Schema;
 	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
@@ -129,7 +149,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	let _id = data.get('_id') as string;
 
 	for (let field of collection_schema.fields) {
-		let widget = widgets[field.widget.key];
+		let widget = widgets[field.widget.Name];
 		let fieldName = getFieldName(field);
 
 		if ('modifyRequest' in widget) {
@@ -142,7 +162,14 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 					body[fieldName] = newData;
 				}
 			};
-			await widget.modifyRequest({ collection, field, data, user, type: 'PATCH', id: new mongoose.Types.ObjectId(_id) });
+			await widget.modifyRequest({
+				collection,
+				field,
+				data,
+				user,
+				type: 'PATCH',
+				id: new mongoose.Types.ObjectId(_id)
+			});
 		}
 	}
 
@@ -153,11 +180,15 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	let data = await request.formData();
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user_id = data.get('user_id') as string;
-	let user = user_id ? ((await auth.checkUser({ _id: user_id })) as User) : ((await auth.validateSession(session_id)) as User);
+	let user = user_id
+		? ((await auth.checkUser({ _id: user_id })) as User)
+		: ((await auth.validateSession(session_id)) as User);
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
+	let collection_schema = (await getCollections()).find(
+		(c) => c.name == params.collection
+	) as Schema;
 	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
@@ -185,7 +216,7 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	if (!collection) return new Response('collection not found!!');
 	body._id = new mongoose.Types.ObjectId();
 	for (let field of collection_schema.fields) {
-		let widget = widgets[field.widget.key];
+		let widget = widgets[field.widget.Name];
 		let fieldName = getFieldName(field);
 
 		if ('modifyRequest' in widget) {
@@ -209,11 +240,15 @@ export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
 	let data = await request.formData();
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user_id = data.get('user_id') as string;
-	let user = user_id ? ((await auth.checkUser({ _id: user_id })) as User) : ((await auth.validateSession(session_id)) as User);
+	let user = user_id
+		? ((await auth.checkUser({ _id: user_id })) as User)
+		: ((await auth.validateSession(session_id)) as User);
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections()).find((c) => c.name == params.collection) as Schema;
+	let collection_schema = (await getCollections()).find(
+		(c) => c.name == params.collection
+	) as Schema;
 	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
@@ -227,7 +262,7 @@ export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
 
 	for (let id of ids) {
 		for (let field of collection_schema.fields) {
-			let widget = widgets[field.widget.key];
+			let widget = widgets[field.widget.Name];
 
 			if ('modifyRequest' in widget) {
 				// widget can modify own portion of body;
@@ -235,7 +270,14 @@ export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
 					get() {},
 					update() {}
 				};
-				await widget.modifyRequest({ collection, field, data, user, type: 'DELETE', id: new mongoose.Types.ObjectId(id) });
+				await widget.modifyRequest({
+					collection,
+					field,
+					data,
+					user,
+					type: 'DELETE',
+					id: new mongoose.Types.ObjectId(id)
+				});
 			}
 		}
 	}
