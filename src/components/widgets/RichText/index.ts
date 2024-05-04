@@ -52,14 +52,17 @@ widget.modifyRequest = async ({
 					_data.content[lang] = _data.content[lang].replace(img_id, fileInfo.original.url);
 				}
 				type === 'PATCH' &&
-					(await mongoose.models['image_files'].updateMany({}, { $pull: { used_by: img_id } }));
-				await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } });
+					(await mongoose.models['_media_images'].updateMany({}, { $pull: { used_by: img_id } }));
+				await mongoose.models['_media_images'].updateOne({ _id }, { $addToSet: { used_by: id } });
 			}
 			data.update(_data);
 			break;
 		case 'DELETE':
 			console.log(id);
-			await mongoose.models['image_files'].updateMany({ used_by: id }, { $pull: { used_by: id } });
+			await mongoose.models['_media_images'].updateMany(
+				{ used_by: id },
+				{ $pull: { used_by: id } }
+			);
 			break;
 	}
 };

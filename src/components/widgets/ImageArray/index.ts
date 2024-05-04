@@ -4,6 +4,8 @@ import { getFieldName, getGuiFields } from '@src/utils/utils.js';
 import { type Params, GuiSchema, GraphqlSchema } from './types';
 import ImageArray from './ImageArray.svelte';
 import ImageUpload from '../ImageUpload';
+import type { ModifyRequestParams } from '..';
+import widgets from '..';
 const WIDGET_NAME = 'ImageArray' as const;
 const widget = (params: Params) => {
 	params.fields.unshift(
@@ -45,6 +47,32 @@ const widget = (params: Params) => {
 	};
 
 	return { ...field, widget };
+};
+
+widget.modifyRequest = async ({
+	field,
+	data,
+	user,
+	type,
+	id,
+	collection
+}: ModifyRequestParams<typeof widget>) => {
+	let _data = data.get();
+	console.log('data:', _data);
+	return;
+	for (let _field of field.fields) {
+		let widget = widgets[_field.widget.Name];
+		if ('modifyRequest' in widget) {
+			await widget.modifyRequest({
+				collection,
+				field: _field as ReturnType<typeof widget>,
+				data: _data[getFieldName(_field)],
+				user,
+				type,
+				id
+			});
+		}
+	}
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;

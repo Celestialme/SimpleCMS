@@ -23,7 +23,10 @@
 	{#each files as file, index}
 		<div on:click={() => onselect(file)} class="card relative flex flex-col md:w-[30%] w-[100%]">
 			<div class="absolute flex w-full bg-[#2c3844] items-center">
-				<button class="mt-[2px] ml-[2px] w-[30px] block" on:click={() => (showInfo[index] = !showInfo[index])}>
+				<button
+					class="mt-[2px] ml-[2px] w-[30px] block"
+					on:click={() => (showInfo[index] = !showInfo[index])}
+				>
 					<iconify-icon icon="raphael:info" width="25" class="text-[#00d3d0]"></iconify-icon>
 				</button>
 				<p class="mx-auto text-white pr-[30px]">{file.thumbnail.name}</p>
@@ -32,7 +35,11 @@
 				<img src={file.thumbnail.url} class="mt-auto max-h-[calc(100%-35px)] mx-auto rounded-md" />
 			{:else}
 				<p class=" mt-[30px] text-white text-center bg-[#2c3844]">
-					{file.used_by.length == 0 ? 'Not Used' : file.used_by.length == 1 ? 'Used By 1 Collection' : `Used By ${file.used_by.length} Collections`}
+					{file.used_by.length == 0
+						? 'Not Used'
+						: file.used_by.length == 1
+							? 'Used By 1 entry'
+							: `Used By ${file.used_by.length} entries`}
 				</p>
 				<table class="w-full min-h-[calc(100%-30px)]">
 					<tbody>

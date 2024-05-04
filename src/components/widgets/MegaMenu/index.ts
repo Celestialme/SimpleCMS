@@ -75,14 +75,16 @@ widget.modifyRequest = async ({
 							children[index][getFieldName(_field)] = newData;
 						}
 					};
-					await widget.modifyRequest({
-						collection,
-						field: _field as ReturnType<typeof widget>,
-						data,
-						user,
-						type,
-						id
-					});
+					if ('modifyRequest' in widget) {
+						await widget.modifyRequest({
+							collection,
+							field: _field as ReturnType<typeof widget>,
+							data,
+							user,
+							type,
+							id
+						});
+					}
 				}
 			}
 

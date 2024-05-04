@@ -90,7 +90,15 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 							entry[fieldName] = newData;
 						}
 					};
-					await widget.modifyRequest({ collection, field, data, user, type: 'GET', id: entry._id });
+					await widget.modifyRequest({
+						collection,
+						field,
+						data,
+						user,
+						type: 'GET',
+						id: entry._id,
+						meta_data: entry.meta_data
+					});
 					return entry;
 				})
 			);
@@ -168,11 +176,18 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 				data,
 				user,
 				type: 'PATCH',
-				id: new mongoose.Types.ObjectId(_id)
+				id: new mongoose.Types.ObjectId(_id),
+				meta_data: body._meta_data
 			});
 		}
 	}
-
+	if (body?._meta_data?.media_images?.removed) {
+		await mongoose.models['_media_images'].updateMany(
+			{ _id: { $in: [body?._meta_data?.media_images?.removed] } },
+			{ $pull: { used_by: new mongoose.Types.ObjectId(_id) } }
+		);
+	}
+	console.log(body?._meta_data?.media_images?.removed);
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, body, { upsert: true })));
 };
 
@@ -229,7 +244,15 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 					body[fieldName] = newData;
 				}
 			};
-			await widget.modifyRequest({ collection, field, data, user, type: 'POST', id: body._id });
+			await widget.modifyRequest({
+				collection,
+				field,
+				data,
+				user,
+				type: 'POST',
+				id: body._id,
+				meta_data: body._meta_data
+			});
 		}
 	}
 

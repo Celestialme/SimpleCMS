@@ -2,7 +2,7 @@ import fs from 'fs';
 import Path from 'path';
 import axios from 'axios';
 import { get } from 'svelte/store';
-import { entryData, mode, translationProgress } from '@src/stores/store';
+import { collectionValue, entryData, mode, translationProgress } from '@src/stores/store';
 import { collection } from '@src/stores/load';
 import publicConfig from '@root/config/public';
 import { browser } from '$app/environment';
@@ -55,7 +55,10 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 	}
 	return formData;
 };
-export const getGuiFields = (fieldParams: { [key: string]: any }, GuiSchema: { [key: string]: any }) => {
+export const getGuiFields = (
+	fieldParams: { [key: string]: any },
+	GuiSchema: { [key: string]: any }
+) => {
 	let guiFields = {};
 	for (let key in GuiSchema) {
 		if (Array.isArray(fieldParams[key])) {
@@ -74,7 +77,8 @@ export const obj2formData = (obj: any) => {
 			if (!val && val !== false) return undefined;
 			else if (key == 'schema') return undefined;
 			else if (key == 'display' && val.default == true) return undefined;
-			else if (key == 'display') return ('🗑️' + val + '🗑️').replaceAll('display', 'function display');
+			else if (key == 'display')
+				return ('🗑️' + val + '🗑️').replaceAll('display', 'function display');
 			else if (key == 'widget') return { key: val.key, GuiFields: val.GuiFields };
 			else if (typeof val === 'function') {
 				return '🗑️' + val + '🗑️';
@@ -88,7 +92,10 @@ export const obj2formData = (obj: any) => {
 };
 let env_sizes = publicConfig.IMAGE_SIZES;
 export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
-export async function saveImage(file: File, collectionName: string): Promise<{ id: mongoose.Types.ObjectId; fileInfo: ImageFiles }> {
+export async function saveImage(
+	file: File,
+	collectionName: string
+): Promise<{ id: mongoose.Types.ObjectId; fileInfo: ImageFiles }> {
 	if (browser) return {} as any;
 	let sharp = (await import('sharp')).default;
 
@@ -97,7 +104,7 @@ export async function saveImage(file: File, collectionName: string): Promise<{ i
 	let arrayBuffer = await file.arrayBuffer();
 	let buffer = Buffer.from(arrayBuffer);
 	let hash = _crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
-	let existing_file = await mongoose.models['image_files'].findOne({ hash: hash });
+	let existing_file = await mongoose.models['_media_images'].findOne({ hash: hash });
 	let path = file.path || 'global';
 	if (existing_file) {
 		return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
@@ -166,7 +173,7 @@ export async function saveImage(file: File, collectionName: string): Promise<{ i
 		};
 	}
 
-	let res = await mongoose.models['image_files'].insertMany(fileInfo);
+	let res = await mongoose.models['_media_images'].insertMany(fileInfo);
 
 	return { id: new mongoose.Types.ObjectId(res[0]._id), fileInfo: fileInfo as ImageFiles };
 }
@@ -198,7 +205,17 @@ export function getFieldName(field: any, sanitize = false) {
 	return (field?.db_fieldName || field?.label) as string;
 }
 
-export async function saveFormData({ data, _collection, _mode, id }: { data: any; _collection?: Schema; _mode?: 'edit' | 'create'; id?: string }) {
+export async function saveFormData({
+	data,
+	_collection,
+	_mode,
+	id
+}: {
+	data: any;
+	_collection?: Schema;
+	_mode?: 'edit' | 'create';
+	id?: string;
+}) {
 	let $mode = _mode || get(mode);
 	let $collection = _collection || get(collection);
 	let $entryData = get(entryData);
@@ -207,13 +224,15 @@ export async function saveFormData({ data, _collection, _mode, id }: { data: any
 		throw new Error('ID is required for edit mode.');
 	}
 	if (!formData) return;
-
+	if (data._meta_data) formData.append('_meta_data', JSON.stringify(data._meta_data));
 	switch ($mode) {
 		case 'create':
 			return await axios.post(`/api/${$collection.name}`, formData, config).then((res) => res.data);
 		case 'edit':
 			formData.append('_id', id || $entryData._id);
-			return await axios.patch(`/api/${$collection.name}`, formData, config).then((res) => res.data);
+			return await axios
+				.patch(`/api/${$collection.name}`, formData, config)
+				.then((res) => res.data);
 	}
 }
 
@@ -281,7 +300,10 @@ export function debounce(delay?: number) {
 	};
 }
 
-export function validateZod<T>(schema: z.Schema<T>, value?: T): null | { [P in keyof T]?: string[] | undefined } {
+export function validateZod<T>(
+	schema: z.Schema<T>,
+	value?: T
+): null | { [P in keyof T]?: string[] | undefined } {
 	let res = schema.safeParse(value);
 	if (res.success || !value) {
 		return null;
@@ -290,7 +312,13 @@ export function validateZod<T>(schema: z.Schema<T>, value?: T): null | { [P in k
 	}
 }
 
-export function motion(start: number, end: number, duration: number, cb: (current: number) => void, useAnimation = true) {
+export function motion(
+	start: number,
+	end: number,
+	duration: number,
+	cb: (current: number) => void,
+	useAnimation = true
+) {
 	{
 		let frequency = 16;
 		let d = (start - end) / (duration / frequency);
@@ -335,7 +363,8 @@ export function updateTranslationProgress(data, field) {
 	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
 	let $translationProgress = get(translationProgress);
 	for (let lang of languages) {
-		!$translationProgress[lang] && ($translationProgress[lang] = { total: new Set(), translated: new Set() });
+		!$translationProgress[lang] &&
+			($translationProgress[lang] = { total: new Set(), translated: new Set() });
 		if (field?.translated) $translationProgress[lang].total.add(field);
 		if (field?.translated && data[lang]) $translationProgress[lang].translated.add(field);
 		else $translationProgress[lang].translated.delete(field);
@@ -376,3 +405,19 @@ export let get_elements_by_id = {
 export let createRandomID = (id?: string) => {
 	return id ? new mongoose.Types.ObjectId(id) : new mongoose.Types.ObjectId();
 };
+
+export function add_meta_data(key: 'media_images_remove', data) {
+	collectionValue.update((value) => {
+		if (!value._meta_data) value._meta_data = {};
+		switch (key) {
+			case 'media_images_remove':
+				if (!value?._meta_data?.media_images) value._meta_data.media_images = { removed: [] };
+				value._meta_data.media_images.removed.push(data);
+				break;
+		}
+		return {
+			...value,
+			...data
+		};
+	});
+}

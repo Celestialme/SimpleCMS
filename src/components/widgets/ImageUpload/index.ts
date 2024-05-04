@@ -44,7 +44,8 @@ widget.modifyRequest = async ({
 	user,
 	type,
 	collection,
-	id
+	id,
+	meta_data
 }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get() as File | ImageFiles;
 	// _id == new image id;
@@ -53,7 +54,7 @@ widget.modifyRequest = async ({
 		case 'GET':
 			// here _data is just id of the image
 			data.update(null);
-			get_elements_by_id.add('image_files', _data, (newData) => data.update(newData));
+			get_elements_by_id.add('_media_images', _data, (newData) => data.update(newData));
 			break;
 		case 'POST':
 		case 'PATCH':
@@ -61,17 +62,22 @@ widget.modifyRequest = async ({
 			if (_data instanceof File) {
 				_id = (await saveImage(_data, collection.name)).id;
 				data.update(_id);
-			} else {
-				//chosen image from image_files
+			} else if (_data?._id) {
+				//chosen image from _media_images
 				_id = new mongoose.Types.ObjectId(_data._id);
 				data.update(_id);
 			}
-			type === 'PATCH' &&
-				(await mongoose.models['image_files'].updateMany({}, { $pull: { used_by: id } }));
-			await mongoose.models['image_files'].updateOne({ _id }, { $addToSet: { used_by: id } });
+			if (meta_data?.media_images?.removed && _id) {
+				let removed = meta_data?.media_images?.removed as string[];
+				let index = removed.indexOf(_id.toString());
+				if (index > -1) {
+					removed.splice(index, 1);
+				}
+			}
+			await mongoose.models['_media_images'].updateOne({ _id }, { $addToSet: { used_by: id } });
 			break;
 		case 'DELETE':
-			await mongoose.models['image_files'].updateMany({}, { $pull: { used_by: id } });
+			await mongoose.models['_media_images'].updateMany({}, { $pull: { used_by: id } });
 			break;
 	}
 };

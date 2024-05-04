@@ -1,8 +1,7 @@
 <script lang="ts">
-	import axios from 'axios';
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
-	import { getFieldName } from '@src/utils/utils';
+	import { add_meta_data, getFieldName } from '@src/utils/utils';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
@@ -16,6 +15,7 @@
 	export let value: File | ImageFiles = $entryData[getFieldName(field)]; // pass file directly from imageArray
 	let _data: File | ImageFiles | undefined = value;
 	$: updated = _data !== value;
+
 	export const WidgetData = async () => {
 		if (_data) {
 			if (_data instanceof File) {
@@ -23,20 +23,20 @@
 			}
 		}
 
-		return updated ? _data : null;
+		if (
+			!(value instanceof File) &&
+			!(_data instanceof File) &&
+			_data?._id !== value?._id &&
+			value?._id &&
+			$mode == 'edit'
+		) {
+			//send replaced image's id so we can remove it from _media_images usage
+			add_meta_data('media_images_remove', value._id);
+		}
+		//if not updated value is not changed and is ImageFiles type so send back only id
+		return updated || $mode == 'create' ? _data : { _id: (value as ImageFiles)?._id };
 	};
 
-	if ($mode == 'edit') {
-		(value as ImageFiles)?.thumbnail?.url &&
-			axios.get((value as ImageFiles).thumbnail.url, { responseType: 'blob' }).then(({ data }) => {
-				if (value instanceof File) return;
-				let file = new File([data], value.thumbnail.name, {
-					type: value.thumbnail.type
-				});
-
-				_data = file;
-			});
-	}
 	let editing = false;
 	let edit = {
 		stage: {} as Stage,
@@ -242,7 +242,7 @@
 		{/if}
 	</div>
 {:else}
-	<FileInput bind:value={_data} />
+	<FileInput on:change={(e) => (_data = e.detail)} />
 {/if}
 
 <style>

@@ -4,7 +4,9 @@ export let mode: Writable<'view' | 'edit' | 'create' | 'modify' | 'media'> = wri
 export let entryData: Writable<any> = writable({});
 export let modifyEntry: Writable<(status: keyof typeof statusMap) => any> = writable(() => {});
 export let drawerExpanded: Writable<Boolean> = writable(true);
-export let translationProgress: Writable<{ [key: string]: { total: Set<any>; translated: Set<any> } } | { show: boolean }> = writable({
+export let translationProgress: Writable<
+	{ [key: string]: { total: Set<any>; translated: Set<any> } } | { show: boolean }
+> = writable({
 	show: false
 });
 
