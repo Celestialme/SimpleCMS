@@ -358,8 +358,7 @@
 						editor.chain().focus().setImage({ src: url, id: image_id }).run();
 					} else {
 						url = data.original.url;
-						let image_id = createRandomID().toString();
-						images[image_id] = data._id;
+
 						editor.chain().focus().setImage({ src: url, media_image: data._id }).run();
 					}
 				}}

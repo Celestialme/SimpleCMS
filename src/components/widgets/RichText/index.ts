@@ -47,6 +47,11 @@ widget.modifyRequest = async ({
 			let images = data.get().images;
 			let _data = data.get().data;
 			let _id;
+
+			for (let id of (_data.content['en'] as string).matchAll(/media_image="(.+?)"/gms)) {
+				images[id[1]] = new mongoose.Types.ObjectId(id[1]);
+			}
+
 			for (let img_id in images) {
 				if (images[img_id] instanceof File) {
 					let res = await saveImage(images[img_id], collection.name);
@@ -64,6 +69,7 @@ widget.modifyRequest = async ({
 				if (meta_data?.media_images?.removed && _id) {
 					let removed = meta_data?.media_images?.removed as string[];
 					let index = removed.indexOf(_id.toString());
+
 					while (index != -1) {
 						removed.splice(index, 1);
 						index = removed.indexOf(_id.toString());
