@@ -49,11 +49,13 @@ widget.modifyRequest = async ({
 			let _id;
 
 			for (let id of (_data.content['en'] as string).matchAll(/media_image="(.+?)"/gms)) {
+				// images from richtext content itself
 				images[id[1]] = new mongoose.Types.ObjectId(id[1]);
 			}
 
 			for (let img_id in images) {
 				if (images[img_id] instanceof File) {
+					//locally selected new images
 					let res = await saveImage(images[img_id], collection.name);
 					let fileInfo = res.fileInfo;
 					_id = res.id;
@@ -64,6 +66,7 @@ widget.modifyRequest = async ({
 						);
 					}
 				} else {
+					// selected from Media images
 					_id = new mongoose.Types.ObjectId(images[img_id]);
 				}
 				if (meta_data?.media_images?.removed && _id) {
