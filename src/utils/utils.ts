@@ -224,7 +224,7 @@ export async function saveFormData({
 		throw new Error('ID is required for edit mode.');
 	}
 	if (!formData) return;
-	if (data._meta_data) formData.append('_meta_data', JSON.stringify(data._meta_data));
+	if (!meta_data.is_empty()) formData.append('_meta_data', JSON.stringify(meta_data.get()));
 	switch ($mode) {
 		case 'create':
 			return await axios.post(`/api/${$collection.name}`, formData, config).then((res) => res.data);
@@ -406,18 +406,29 @@ export let createRandomID = (id?: string) => {
 	return id ? new mongoose.Types.ObjectId(id) : new mongoose.Types.ObjectId();
 };
 
-export function add_meta_data(key: 'media_images_remove', data) {
-	collectionValue.update((value) => {
-		if (!value._meta_data) value._meta_data = {};
+export let meta_data: {
+	meta_data: { [key: string]: any };
+	add: (key: 'media_images_remove', data: string[]) => void;
+	clear: () => void;
+	get: () => { [key: string]: any };
+	is_empty: () => boolean;
+} = {
+	meta_data: {},
+	add(key, data) {
 		switch (key) {
 			case 'media_images_remove':
-				if (!value?._meta_data?.media_images) value._meta_data.media_images = { removed: [] };
-				value._meta_data.media_images.removed.push(data);
+				if (!this.meta_data?.media_images) this.meta_data.media_images = { removed: [] };
+				this.meta_data.media_images.removed.push(...data);
 				break;
 		}
-		return {
-			...value,
-			...data
-		};
-	});
-}
+	},
+	get() {
+		return this.meta_data;
+	},
+	clear() {
+		this.meta_data = {};
+	},
+	is_empty() {
+		return Object.keys(this.meta_data).length === 0;
+	}
+};

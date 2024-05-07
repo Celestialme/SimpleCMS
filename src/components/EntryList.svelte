@@ -4,7 +4,7 @@
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { contentLanguage, collection } from '@src/stores/load';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
-	import { asAny, debounce, getFieldName } from '@src/utils/utils';
+	import { asAny, debounce, getFieldName, meta_data } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	let data: { entryList: [any]; pagesCount: number } | undefined;
 	let tableHeaders: Array<{ label: string; name: string }> = [];
@@ -24,7 +24,7 @@
 						sorting.isSorted
 							? {
 									[sorting.sortedBy]: sorting.isSorted
-							  }
+								}
 							: {}
 					)}`
 				)
@@ -53,7 +53,10 @@
 					return obj;
 				})
 			));
-		tableHeaders = $collection.fields.map((field) => ({ label: field.label, name: getFieldName(field) }));
+		tableHeaders = $collection.fields.map((field) => ({
+			label: field.label,
+			name: getFieldName(field)
+		}));
 
 		modifyMap = {};
 		deleteAll = false;
@@ -77,6 +80,7 @@
 	$: process_deleteAll(deleteAll);
 	$: Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');
 	mode.subscribe(() => {
+		meta_data.clear();
 		if ($mode == 'view') {
 			entryData.set({});
 		}
@@ -180,7 +184,11 @@
 					>
 						<div class="flex items-center justify-between">
 							{header.label}
-							<div class="arrow" class:up={sorting.isSorted === 1} class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header.label} />
+							<div
+								class="arrow"
+								class:up={sorting.isSorted === 1}
+								class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header.label}
+							/>
 						</div>
 					</th>
 				{/each}
@@ -192,14 +200,16 @@
 					class={data?.entryList[index]?.status == 'unpublished'
 						? '!bg-yellow-700'
 						: data?.entryList[index]?.status == 'testing'
-						? '!bg-red-800'
-						: ''}
+							? '!bg-red-800'
+							: ''}
 					on:click={() => {
 						entryData.set(data?.entryList[index]);
 						mode.set('edit');
 					}}
 				>
-					<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
+					<td class="!pl-[25px]">
+						<CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} />
+					</td>
 					{#each tableHeaders as header}
 						<td class="text-center">
 							{@html row[header.label]}
@@ -211,7 +221,11 @@
 	</table>
 	<div class="pages">
 		{#each Array((data?.pagesCount || 0) > 1 ? data?.pagesCount : 0) as _, page}
-			<div class="page" on:click={() => (currentPage = page + 1)} class:active={currentPage == page + 1}>
+			<div
+				class="page"
+				on:click={() => (currentPage = page + 1)}
+				class:active={currentPage == page + 1}
+			>
 				{page + 1}
 			</div>
 		{/each}

@@ -15,7 +15,13 @@
 	import ImageResize from './ImageResize';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
 	import { entryData, mode } from '@src/stores/store';
-	import { createRandomID, debounce, getFieldName, updateTranslationProgress } from '@src/utils/utils';
+	import {
+		meta_data,
+		createRandomID,
+		debounce,
+		getFieldName,
+		updateTranslationProgress
+	} from '@src/utils/utils';
 	import type { FieldType } from '.';
 	import { contentLanguage } from '@src/stores/load';
 	export let field: FieldType;
@@ -60,11 +66,14 @@
 				})
 			],
 
-			content: Object.keys(_data.content).length > 0 ? _data.content[_language] : value.content[_language] || '',
+			content:
+				Object.keys(_data.content).length > 0
+					? _data.content[_language]
+					: value.content[_language] || '',
 
-			onTransaction: ({}) => {
+			onTransaction: ({ transaction }) => {
 				// force re-render so `editor.isActive` works as expected
-
+				handleImageDeletes(transaction);
 				editor = editor;
 				deb(() => {
 					let content = editor.getHTML();
@@ -74,7 +83,27 @@
 			}
 		});
 	});
+	function handleImageDeletes(transaction) {
+		const getImageIds = (fragment) => {
+			let srcs = new Set();
+			fragment.forEach((node) => {
+				if (node.type.name === 'image') {
+					srcs.add(node.attrs.media_image);
+				}
+			});
+			return srcs;
+		};
 
+		let currentIds = getImageIds(transaction.doc.content);
+		let previousIds = getImageIds(transaction.before.content);
+
+		// Determine which images were deleted
+		let deletedImageIds = [...previousIds].filter((id) => !currentIds.has(id)) as string[];
+
+		if (deletedImageIds.length > 0) {
+			meta_data.add('media_images_remove', deletedImageIds);
+		}
+	}
 	onDestroy(() => {
 		if (editor) {
 			editor.destroy();
@@ -199,9 +228,38 @@
 	$: editor &&
 		(fontSize =
 			editor.getAttributes('textStyle').fontSize ||
-			window.getComputedStyle(window.getSelection()?.focusNode?.parentElement as HTMLElement).fontSize.replace('px', ''));
-	let show = (button: 'textType' | 'font' | 'align' | 'insert' | 'float' | 'color' | 'bold' | 'italic' | 'strike' | 'link' | 'fontSize') => {
-		if (['textType', 'font', 'insert', 'color', 'bold', 'italic', 'strike', 'link', 'fontSize'].includes(button)) {
+			window
+				.getComputedStyle(
+					window.getSelection()?.focusNode?.parentElement || (element as HTMLElement)
+				)
+				.fontSize.replace('px', ''));
+	let show = (
+		button:
+			| 'textType'
+			| 'font'
+			| 'align'
+			| 'insert'
+			| 'float'
+			| 'color'
+			| 'bold'
+			| 'italic'
+			| 'strike'
+			| 'link'
+			| 'fontSize'
+	) => {
+		if (
+			[
+				'textType',
+				'font',
+				'insert',
+				'color',
+				'bold',
+				'italic',
+				'strike',
+				'link',
+				'fontSize'
+			].includes(button)
+		) {
 			return !editor?.isActive('image');
 		}
 		if (['float'].includes(button)) {
@@ -215,7 +273,12 @@
 	}
 </script>
 
-<Input type="text" bind:value={_data.header[_language]} placeholder="Title" inputClass="!w-full mt-2" />
+<Input
+	type="text"
+	bind:value={_data.header[_language]}
+	placeholder="Title"
+	inputClass="!w-full mt-2"
+/>
 <div class="editor">
 	{#if editor}
 		<div class="buttons">
@@ -246,13 +309,25 @@
 					<iconify-icon icon="ph:plus-bold" width="20" />
 				</button>
 			</div>
-			<button class:hidden={!show('bold')} on:click={() => editor.chain().focus().toggleBold().run()} class:active={editor.isActive('bold')}>
+			<button
+				class:hidden={!show('bold')}
+				on:click={() => editor.chain().focus().toggleBold().run()}
+				class:active={editor.isActive('bold')}
+			>
 				<iconify-icon icon="bi:type-bold" width="20" />
 			</button>
-			<button class:hidden={!show('italic')} on:click={() => editor.chain().focus().toggleItalic().run()} class:active={editor.isActive('italic')}>
+			<button
+				class:hidden={!show('italic')}
+				on:click={() => editor.chain().focus().toggleItalic().run()}
+				class:active={editor.isActive('italic')}
+			>
 				<iconify-icon icon="lucide:italic" width="20" />
 			</button>
-			<button class:hidden={!show('strike')} on:click={() => editor.chain().focus().toggleStrike().run()} class:active={editor.isActive('strike')}>
+			<button
+				class:hidden={!show('strike')}
+				on:click={() => editor.chain().focus().toggleStrike().run()}
+				class:active={editor.isActive('strike')}
+			>
 				<iconify-icon icon="majesticons:strike-through-line" width="20" />
 			</button>
 			<button
@@ -264,7 +339,12 @@
 			</button>
 			<DropDown show={show('align')} items={alignText} label="Align" />
 			<DropDown show={show('insert')} items={inserts} icon="typcn:plus" label="Insert" />
-			<DropDown show={show('float')} items={floats} icon="grommet-icons:text-wrap" label="Text Wrap" />
+			<DropDown
+				show={show('float')}
+				items={floats}
+				icon="grommet-icons:text-wrap"
+				label="Text Wrap"
+			/>
 			<FileInput
 				bind:show={showImageDialog}
 				class="absolute bg-white top-0 z-10"
@@ -277,14 +357,20 @@
 						images[image_id] = data;
 						editor.chain().focus().setImage({ src: url, id: image_id }).run();
 					} else {
-						url = data.thumbnail.url;
-						editor.chain().focus().setImage({ src: url }).run();
+						url = data.original.url;
+						let image_id = createRandomID().toString();
+						images[image_id] = data._id;
+						editor.chain().focus().setImage({ src: url, media_image: data._id }).run();
 					}
 				}}
 			/>
 		</div>
 	{/if}
-	<div on:pointerdown|self={() => editor.commands.focus('end')} class="text_Area RichText" bind:this={element} />
+	<div
+		on:pointerdown|self={() => editor.commands.focus('end')}
+		class="text_Area RichText"
+		bind:this={element}
+	/>
 </div>
 
 <style>

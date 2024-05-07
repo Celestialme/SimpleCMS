@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store';
-	import { add_meta_data, getFieldName } from '@src/utils/utils';
+	import { meta_data, getFieldName } from '@src/utils/utils';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
@@ -31,7 +31,7 @@
 			$mode == 'edit'
 		) {
 			//send replaced image's id so we can remove it from _media_images usage
-			add_meta_data('media_images_remove', value._id);
+			meta_data.add('media_images_remove', [value._id]);
 		}
 		//if not updated value is not changed and is ImageFiles type so send back only id
 		return updated || $mode == 'create' ? _data : { _id: (value as ImageFiles)?._id };

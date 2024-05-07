@@ -70,8 +70,9 @@ widget.modifyRequest = async ({
 			if (meta_data?.media_images?.removed && _id) {
 				let removed = meta_data?.media_images?.removed as string[];
 				let index = removed.indexOf(_id.toString());
-				if (index > -1) {
+				while (index != -1) {
 					removed.splice(index, 1);
+					index = removed.indexOf(_id.toString());
 				}
 			}
 			await mongoose.models['_media_images'].updateOne({ _id }, { $addToSet: { used_by: id } });

@@ -183,7 +183,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	}
 	if (body?._meta_data?.media_images?.removed) {
 		await mongoose.models['_media_images'].updateMany(
-			{ _id: { $in: [body?._meta_data?.media_images?.removed] } },
+			{ _id: { $in: body?._meta_data?.media_images?.removed } },
 			{ $pull: { used_by: new mongoose.Types.ObjectId(_id) } }
 		);
 	}

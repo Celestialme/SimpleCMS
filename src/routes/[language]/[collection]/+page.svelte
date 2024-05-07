@@ -22,6 +22,7 @@
 		collection.set($collections.find((x) => x.name === $page.params.collection) as Schema);
 	};
 	let navButton;
+
 	let unsubscribe = collection.subscribe((_) => {
 		$collectionValue = {};
 		if (!ForwardBackward) {
