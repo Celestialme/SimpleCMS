@@ -58,4 +58,4 @@ export type CollectionNames =
 	| 'Relation'
 	| 'thumbs';
 
-export type CollectionContent = {"imageArray":["ImageArray"],"media":["image"],"Menu":["Menu"],"Menu1":["Menu"],"Menu2":["Menu"],"Posts1":["email","text","image"],"Posts2":["RichText","image"],"Posts3":["text 1","text 2","text 3","text 4","text 5"],"Relation":["info","relation2"],"thumbs":["Image","Image2"]};
+export type CollectionContent = {"imageArray":["ImageArray"],"media":["image"],"Menu":["Menu"],"Menu1":["Menu"],"Menu2":["Menu"],"Posts1":["email","text","image"],"Posts2":["RichText","image"],"Posts3":["text 1","text 2","text 3","text 4","text 5"],"Relation":["info","relation2"],"thumbs":["Image"]};

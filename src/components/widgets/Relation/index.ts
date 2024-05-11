@@ -59,6 +59,7 @@ widget.modifyRequest = async ({
 	id
 }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get();
+
 	if (type !== 'GET' || !_data) {
 		return;
 	}
@@ -72,9 +73,10 @@ widget.modifyRequest = async ({
 	for (let key in relative_collection_schema.fields) {
 		let _field = relative_collection_schema.fields[key];
 		let widget = widgets[_field.widget.Name];
+		result[getFieldName(_field)] = response?.[getFieldName(_field)];
 		let data = {
 			get() {
-				return response[getFieldName(_field)];
+				return response?.[getFieldName(_field)];
 			},
 			update(newData) {
 				result[getFieldName(_field)] = newData;
