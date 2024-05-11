@@ -414,7 +414,7 @@
 		padding: 10px;
 		cursor: text;
 		overflow: auto;
-		max-height: calc(100vh - 80px);
+		max-height: calc(100vh - 200px);
 	}
 	:global(.ProseMirror-selectednode img) {
 		box-shadow: 0px 0px 4px 0px #00ffff99 inset;

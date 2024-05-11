@@ -34,7 +34,11 @@
 			meta_data.add('media_images_remove', [value._id]);
 		}
 		//if not updated value is not changed and is ImageFiles type so send back only id
-		return updated || $mode == 'create' ? _data : { _id: (value as ImageFiles)?._id };
+		return updated || $mode == 'create'
+			? _data
+			: value
+				? { _id: (value as ImageFiles)?._id }
+				: null;
 	};
 
 	let editing = false;
