@@ -280,7 +280,7 @@ export function deepCopy(obj) {
 }
 
 export function debounce(delay?: number) {
-	let timer;
+	let timer: NodeJS.Timeout | undefined;
 	let first = true;
 	return (fn: () => void) => {
 		if (first) {
@@ -312,53 +312,45 @@ export function validateZod<T>(
 	}
 }
 
-export function motion(
-	start: number,
-	end: number,
+export async function motion(
+	start: number[],
+	end: number[],
 	duration: number,
-	cb: (current: number) => void,
-	useAnimation = true
+	cb: (current: number[]) => void
 ) {
 	{
-		let frequency = 16;
-		let d = (start - end) / (duration / frequency);
-		if (d === 0) {
-			cb(end);
-			return;
-		}
-		let current = start;
-
+		let current = [...start];
+		let elapsed = 0;
+		let time = Date.now();
+		let has_passed = false;
+		setTimeout(() => {
+			has_passed = true;
+		}, duration);
 		return new Promise<void>((resolve) => {
-			if (useAnimation) {
-				function animation(current) {
-					current -= d;
-					if ((d < 0 && current >= end) || (d > 0 && current <= end)) {
-						cb(end);
-						resolve();
-					} else {
-						cb(current);
-						requestAnimationFrame(() => animation(current));
-					}
+			function animation(current: number[]) {
+				elapsed = Date.now() - time;
+				// console.log(elapsed);
+				let ds = start.map((s, i) => (s - end[i]) / (duration / elapsed));
+
+				time = Date.now();
+				for (let index in ds) {
+					current[index] -= ds[index];
 				}
 
-				requestAnimationFrame(() => animation(current));
-			} else {
-				let interval = setInterval(async () => {
-					current -= d;
-
-					if ((d < 0 && current >= end) || (d > 0 && current <= end)) {
-						cb(end);
-						clearInterval(interval);
-						resolve();
-					} else {
-						cb(current);
-					}
-				}, frequency);
+				if (has_passed) {
+					cb(end);
+					resolve();
+					return;
+				} else {
+					cb(current);
+					requestAnimationFrame(() => animation(current));
+				}
 			}
+
+			requestAnimationFrame(() => animation(current));
 		});
 	}
 }
-
 export function updateTranslationProgress(data, field) {
 	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
 	let $translationProgress = get(translationProgress);
@@ -431,4 +423,7 @@ export let meta_data: {
 	is_empty() {
 		return Object.keys(this.meta_data).length === 0;
 	}
+};
+RegExp.escape = (string) => {
+	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };

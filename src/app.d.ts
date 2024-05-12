@@ -9,18 +9,43 @@ declare global {
 		// interface Platform {}
 	}
 
-	type DISPLAY = (({ data: any, collection: any, field: any, entry: any, contentLanguage: string }) => Promise<any>) & { default?: boolean };
+	type DISPLAY = (({
+		data: any,
+		collection: any,
+		field: any,
+		entry: any,
+		contentLanguage: string
+	}) => Promise<any>) & { default?: boolean };
 	type GraphqlSchema = ({ field, label, collection }) => {
 		typeName: string | null;
 		graphql: string;
 		resolver?: { [key: string]: any };
 	};
 	type Aggregations = {
-		filters?: ({ field, contentLanguage, filter }: { field: any; contentLanguage: string; filter: string }) => Promise<PipelineStage[]>;
-		sorts?: ({ field, contentLanguage, sort }: { field: any; contentLanguage: string; sort: number }) => Promise<PipelineStage[]>;
+		filters?: ({
+			field,
+			contentLanguage,
+			filter
+		}: {
+			field: any;
+			contentLanguage: string;
+			filter: string;
+		}) => Promise<PipelineStage[]>;
+		sorts?: ({
+			field,
+			contentLanguage,
+			sort
+		}: {
+			field: any;
+			contentLanguage: string;
+			sort: number;
+		}) => Promise<PipelineStage[]>;
 	};
 	interface File {
 		path?: string;
+	}
+	interface RegExpConstructor {
+		escape(str: string): string;
 	}
 }
 export {};

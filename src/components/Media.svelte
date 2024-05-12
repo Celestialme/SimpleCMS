@@ -1,13 +1,19 @@
 <script lang="ts">
 	import type { ImageFiles } from '@src/utils/types';
-	import { SIZES } from '@src/utils/utils';
+	import { SIZES, debounce } from '@src/utils/utils';
 	import axios from 'axios';
 	export let onselect: any = () => {};
 	let files: ImageFiles[] = [];
+	let search = '';
 	async function refresh() {
-		await axios.get('/media/getAll').then((res) => (files = res.data));
+		await axios.get(`/media/getAll?search=${search}`).then((res) => (files = res.data));
 	}
 	refresh();
+	let searchDeb = debounce(500);
+	$: {
+		searchDeb(() => refresh());
+		search;
+	}
 	function formatBytes(bytes) {
 		if (bytes >= 1073741824) {
 			return (bytes / 1073741824).toFixed(2) + ' GB';
@@ -22,6 +28,10 @@
 	let showInfo = Array.from({ length: files.length }, () => false);
 </script>
 
+<div class="header">
+	<p class="text-white text-lg">Media</p>
+	<input type="text" bind:value={search} placeholder="Search" />
+</div>
 <div
 	class="flex flex-wrap items-center overflow-auto max-h-[calc(100%-55px)] justify-center w-screen max-w-full"
 >
@@ -112,5 +122,20 @@
 	tbody tr:nth-child(2n + 1) {
 		padding: 5px 0;
 		background-color: #2c3844;
+	}
+	.header {
+		width: 100%;
+		height: 50px;
+		background: #242734;
+		display: flex;
+		align-items: center;
+		padding: 0 10px;
+	}
+	.header input {
+		margin: auto;
+		font-size: 18px;
+		padding: 4px;
+		outline: none;
+		border-radius: 6px;
 	}
 </style>

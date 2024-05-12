@@ -82,7 +82,9 @@
 		</div>
 	</Drawer>
 	<div class="flex-grow-[2] overflow-hidden max-h-screen pl-[2px] pr-[4px]">
-		<Header />
+		{#if $mode !== 'media'}
+			<Header />
+		{/if}
 		{#if $mode == 'view' || $mode == 'modify'}
 			<EntryList />
 		{:else if ['edit', 'create'].includes($mode)}

@@ -32,7 +32,11 @@
 		}, pathname);
 		return params.length > 0 ? replaced : pathname;
 	}
-	$: buttonInfo = { ...{ x: 25, y: window.innerHeight / 2 }, ...navigation_info?.[getBasePath($page.url.pathname)], ...{ radius: buttonRadius } };
+	$: buttonInfo = {
+		...{ x: 25, y: window.innerHeight / 2 },
+		...navigation_info?.[getBasePath($page.url.pathname)],
+		...{ radius: buttonRadius }
+	};
 	let firstLine: SVGLineElement;
 	let firstCircle: HTMLDivElement;
 	let svg: SVGElement;
@@ -93,7 +97,14 @@
 		for (let index in endpoints) {
 			endpoints[index] = {
 				...endpoints[index],
-				...calculateSecondVector(buttonInfo.x, buttonInfo.y, center.x, center.y, 140, endpoints[index].angle)
+				...calculateSecondVector(
+					buttonInfo.x,
+					buttonInfo.y,
+					center.x,
+					center.y,
+					140,
+					endpoints[index].angle
+				)
 			};
 		}
 	}
@@ -134,38 +145,52 @@
 			switch (distance.indexOf(Math.min(...distance))) {
 				case 0:
 					{
-						promise = motion(buttonInfo.x, buttonRadius, 200, async (t) => {
+						promise = motion([buttonInfo.x], [buttonRadius], 200, async ([t]) => {
 							buttonInfo.x = t;
 							await tick();
-							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+							firstLine &&
+								(firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
 					}
 					break;
 				case 1:
 					{
-						promise = motion(buttonInfo.x, window.innerWidth - buttonRadius, 200, async (t) => {
-							buttonInfo.x = t;
-							await tick();
-							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
-						});
+						promise = motion(
+							[buttonInfo.x],
+							[window.innerWidth - buttonRadius],
+							200,
+							async ([t]) => {
+								buttonInfo.x = t;
+								await tick();
+								firstLine &&
+									(firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+							}
+						);
 					}
 					break;
 				case 2:
 					{
-						promise = motion(buttonInfo.y, buttonRadius, 200, async (t) => {
+						promise = motion([buttonInfo.y], [buttonRadius], 200, async ([t]) => {
 							buttonInfo.y = t;
 							await tick();
-							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+							firstLine &&
+								(firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 						});
 					}
 					break;
 				case 3:
 					{
-						promise = motion(buttonInfo.y, window.innerHeight - buttonRadius, 200, async (t) => {
-							buttonInfo.y = t;
-							await tick();
-							firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
-						});
+						promise = motion(
+							[buttonInfo.y],
+							[window.innerHeight - buttonRadius],
+							200,
+							async ([t]) => {
+								buttonInfo.y = t;
+								await tick();
+								firstLine &&
+									(firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
+							}
+						);
 					}
 					break;
 			}
@@ -174,7 +199,10 @@
 			firstLine && (firstLine.style.strokeDasharray = firstLine.getTotalLength().toString());
 
 			await promise;
-			navigation_info = { ...navigation_info, ...{ [getBasePath($page.url.pathname)]: buttonInfo } };
+			navigation_info = {
+				...navigation_info,
+				...{ [getBasePath($page.url.pathname)]: buttonInfo }
+			};
 			localStorage.setItem('navigation', JSON.stringify(navigation_info));
 		};
 	}
@@ -218,17 +246,18 @@
 	bind:this={firstCircle}
 	use:drag
 	class="touch-none circle flex items-center justify-center relative"
-	style="top:{(Math.min(buttonInfo.y, window.innerHeight - buttonRadius) / window.innerHeight) * 100}%;left:{(Math.min(
-		buttonInfo.x,
-		window.innerWidth - buttonRadius
-	) /
-		window.innerWidth) *
+	style="top:{(Math.min(buttonInfo.y, window.innerHeight - buttonRadius) / window.innerHeight) *
+		100}%;left:{(Math.min(buttonInfo.x, window.innerWidth - buttonRadius) / window.innerWidth) *
 		100}%;width:{buttonRadius * 2}px;height:{buttonRadius * 2}px"
 >
 	<RoutesIcon />
 </div>
 {#if showRoutes}
-	<div out:keepAlive|local on:click|self={() => (showRoutes = false)} class=" fixed top-0 left-0 z-[9999999]">
+	<div
+		out:keepAlive|local
+		on:click|self={() => (showRoutes = false)}
+		class=" fixed top-0 left-0 z-[9999999]"
+	>
 		<svg bind:this={svg} xmlns="http://www.w3.org/2000/svg" use:setDash>
 			<line bind:this={firstLine} x1={buttonInfo.x} y1={buttonInfo.y} x2={center.x} y2={center.y} />
 			{#each endpoints.slice(1, endpoints.length) as endpoint}
@@ -244,7 +273,9 @@
 		<div
 			bind:this={circles[0]}
 			on:click={() => {
-				endpoints[0]?.url?.external ? (location.href = endpoints[0]?.url?.path || '/') : goto(endpoints[0]?.url?.path || '/');
+				endpoints[0]?.url?.external
+					? (location.href = endpoints[0]?.url?.path || '/')
+					: goto(endpoints[0]?.url?.path || '/');
 				showRoutes = false;
 			}}
 			class="circle flex items-center justify-center"
@@ -256,7 +287,9 @@
 			<div
 				bind:this={circles[index + 1]}
 				on:click={() => {
-					endpoint?.url?.external ? (location.href = endpoint?.url?.path || '/') : goto(endpoint?.url?.path || '/');
+					endpoint?.url?.external
+						? (location.href = endpoint?.url?.path || '/')
+						: goto(endpoint?.url?.path || '/');
 					showRoutes = false;
 				}}
 				class="circle flex items-center justify-center opacity-0"
