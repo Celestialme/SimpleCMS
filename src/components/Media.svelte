@@ -5,14 +5,19 @@
 	export let onselect: any = () => {};
 	let files: ImageFiles[] = [];
 	let search = '';
+	let currentPage = 1;
+	let pagesCount = 1;
 	async function refresh() {
-		await axios.get(`/media/getAll?search=${search}`).then((res) => (files = res.data));
+		let resp = await axios.get(`/media/getAll?page=${currentPage}&search=${search}`);
+		files = resp.data.images;
+		pagesCount = resp.data.pagesCount;
 	}
 	refresh();
 	let searchDeb = debounce(500);
 	$: {
 		searchDeb(() => refresh());
 		search;
+		currentPage;
 	}
 	function formatBytes(bytes) {
 		if (bytes >= 1073741824) {
@@ -94,6 +99,13 @@
 		</div>
 	{/each}
 </div>
+<div class="pages">
+	{#each Array((pagesCount || 0) > 1 ? pagesCount : 0) as _, page}
+		<div class="page" on:click={() => (currentPage = page + 1)} class:active={page == page + 1}>
+			{page + 1}
+		</div>
+	{/each}
+</div>
 
 <style>
 	.card {
@@ -137,5 +149,35 @@
 		padding: 4px;
 		outline: none;
 		border-radius: 6px;
+	}
+	.page.active {
+		background-color: aquamarine;
+		color: white;
+	}
+	.pages {
+		display: flex;
+		justify-content: center;
+		margin-top: 20px;
+	}
+	.page:first-of-type {
+		border-top-left-radius: 8px;
+		border-bottom-left-radius: 8px;
+	}
+	.page:last-of-type {
+		border-top-right-radius: 8px;
+		border-bottom-right-radius: 8px;
+	}
+	.page {
+		border: 1px solid transparent;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 5px 15px;
+		cursor: pointer;
+		box-shadow: inset 0px 0px 3px 0px #808588;
+	}
+	.page:hover {
+		background-color: aqua;
+		color: white;
 	}
 </style>
