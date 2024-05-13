@@ -41,9 +41,7 @@ declare global {
 			sort: number;
 		}) => Promise<PipelineStage[]>;
 	};
-	interface File {
-		path?: string;
-	}
+
 	interface RegExpConstructor {
 		escape(str: string): string;
 	}

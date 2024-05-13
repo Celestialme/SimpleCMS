@@ -14,7 +14,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		}
 	};
 
-	let files = await mongoose.models['_media_images'].aggregate([
+	let files = await mongoose.models['_storage_images'].aggregate([
 		{
 			$facet: {
 				images: [search_aggregation, { $skip: (page - 1) * limit }, { $limit: limit }],

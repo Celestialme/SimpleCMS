@@ -1,13 +1,13 @@
 import publicConfig from '@root/config/public';
 import Toggle from '@src/components/system/buttons/Toggle.svelte';
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
-
 export type Params = {
 	label: string;
 	width?: number;
 	display?: DISPLAY;
 	db_fieldName?: string;
 	translated?: boolean;
+	image_folder: (typeof publicConfig.FOLDERS)[number];
 };
 
 export let GuiSchema = {

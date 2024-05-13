@@ -88,7 +88,7 @@
 			let srcs = new Set();
 			fragment.forEach((node) => {
 				if (node.type.name === 'image') {
-					srcs.add(node.attrs.media_image);
+					srcs.add(node.attrs.storage_image);
 				}
 			});
 			return srcs;
@@ -101,7 +101,7 @@
 		let deletedImageIds = [...previousIds].filter((id) => !currentIds.has(id)) as string[];
 
 		if (deletedImageIds.length > 0) {
-			meta_data.add('media_images_remove', deletedImageIds);
+			meta_data.add('storage_images_remove', deletedImageIds);
 		}
 	}
 	onDestroy(() => {
@@ -359,7 +359,7 @@
 					} else {
 						url = data.original.url;
 
-						editor.chain().focus().setImage({ src: url, media_image: data._id }).run();
+						editor.chain().focus().setImage({ src: url, storage_image: data._id }).run();
 					}
 				}}
 			/>

@@ -28,7 +28,8 @@ const widget = (params: Params) => {
 		label: params.label,
 		db_fieldName: params.db_fieldName,
 		translated: params.translated,
-		width: params.width
+		width: params.width,
+		image_folder: params.image_folder
 	};
 	return { ...field, widget };
 };
@@ -48,7 +49,7 @@ widget.modifyRequest = async ({
 			let _data = data.get().data;
 			let _id;
 
-			for (let id of (_data.content['en'] as string).matchAll(/media_image="(.+?)"/gms)) {
+			for (let id of (_data.content['en'] as string).matchAll(/storage_image="(.+?)"/gms)) {
 				// images from richtext content itself
 				images[id[1]] = new mongoose.Types.ObjectId(id[1]);
 			}
@@ -62,15 +63,15 @@ widget.modifyRequest = async ({
 					for (let lang in _data.content) {
 						_data.content[lang] = _data.content[lang].replace(
 							`src="${img_id}"`,
-							`src="${fileInfo.original.url}" media_image="${_id}"`
+							`src="${fileInfo.original.url}" storage_image="${_id}"`
 						);
 					}
 				} else {
 					// selected from Media images
 					_id = new mongoose.Types.ObjectId(images[img_id]);
 				}
-				if (meta_data?.media_images?.removed && _id) {
-					let removed = meta_data?.media_images?.removed as string[];
+				if (meta_data?.storage_images?.removed && _id) {
+					let removed = meta_data?.storage_images?.removed as string[];
 					let index = removed.indexOf(_id.toString());
 
 					while (index != -1) {
@@ -79,13 +80,13 @@ widget.modifyRequest = async ({
 					}
 				}
 
-				await mongoose.models['_media_images'].updateOne({ _id }, { $addToSet: { used_by: id } });
+				await mongoose.models['_storage_images'].updateOne({ _id }, { $addToSet: { used_by: id } });
 			}
 			data.update(_data);
 			break;
 		case 'DELETE':
 			console.log(id);
-			await mongoose.models['_media_images'].updateMany(
+			await mongoose.models['_storage_images'].updateMany(
 				{ used_by: id },
 				{ $pull: { used_by: id } }
 			);

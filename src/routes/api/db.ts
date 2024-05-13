@@ -42,9 +42,9 @@ export async function getCollectionModels() {
 		});
 	});
 }
-!mongoose.models['_media_images'] &&
+!mongoose.models['_storage_images'] &&
 	mongoose.model(
-		'_media_images',
+		'_storage_images',
 		new mongoose.Schema(
 			{},
 			{

@@ -8,7 +8,7 @@ declare module '@tiptap/core' {
 				alt?: string;
 				title?: string;
 				id?: string;
-				media_image?: string;
+				storage_image?: string;
 			}) => ReturnType;
 		};
 	}
@@ -19,7 +19,7 @@ const ImageResize = ImageExtension.extend({
 		return {
 			...this.parent?.(),
 			id: null,
-			media_image: null
+			storage_image: null
 		};
 	},
 	addCommands() {
@@ -36,9 +36,9 @@ const ImageResize = ImageExtension.extend({
 			id: {
 				default: null
 			},
-			media_image: {
+			storage_image: {
 				default: null,
-				parseHTML: (element) => (element.firstChild as HTMLElement).getAttribute('media_image')
+				parseHTML: (element) => (element.firstChild as HTMLElement).getAttribute('storage_image')
 			},
 			src: {
 				default: null,
@@ -89,7 +89,7 @@ const ImageResize = ImageExtension.extend({
 			[
 				'img',
 				{
-					media_image: HTMLAttributes.media_image,
+					storage_image: HTMLAttributes.storage_image,
 					src: HTMLAttributes.id || HTMLAttributes.src,
 					style: 'width: 100%; height: 100%; cursor:pointer'
 				}

@@ -4,8 +4,8 @@ let schema: Schema = {
 	icon: 'iconoir:post',
 
 	fields: [
-		widgets.RichText({ label: 'RichText', translated: true }),
-		widgets.ImageUpload({ label: 'image', path: 'media/images' })
+		widgets.RichText({ label: 'RichText', translated: true, image_folder: 'images' }),
+		widgets.ImageUpload({ label: 'image', folder: 'images' })
 	]
 };
 export default schema;

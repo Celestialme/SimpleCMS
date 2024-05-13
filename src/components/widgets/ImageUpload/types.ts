@@ -1,17 +1,17 @@
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import { SIZES, getFieldName } from '@src/utils/utils';
-
+import publicConfig from '@root/config/public';
 export type Params = {
 	label: string;
 	display?: DISPLAY;
 	db_fieldName?: string;
 	widget?: any;
-	path: (string & {}) | 'global' | 'unique';
+	folder: (typeof publicConfig.FOLDERS)[number];
 	width?: number;
 };
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },
-	path: { widget: FloatingInput, required: true },
+	folder: { widget: FloatingInput, required: true },
 	display: { widget: FloatingInput, required: true },
 	db_fieldName: { widget: FloatingInput, required: true }
 };

@@ -94,7 +94,7 @@ let env_sizes = publicConfig.IMAGE_SIZES;
 export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
 export async function saveImage(
 	file: File,
-	collectionName: string
+	folder: string
 ): Promise<{ id: mongoose.Types.ObjectId; fileInfo: ImageFiles }> {
 	if (browser) return {} as any;
 	let sharp = (await import('sharp')).default;
@@ -104,29 +104,23 @@ export async function saveImage(
 	let arrayBuffer = await file.arrayBuffer();
 	let buffer = Buffer.from(arrayBuffer);
 	let hash = _crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
-	let existing_file = await mongoose.models['_media_images'].findOne({ hash: hash });
-	let path = file.path || 'global';
+	let existing_file = await mongoose.models['_storage_images'].findOne({ hash: hash });
 	if (existing_file) {
 		return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
 	}
 	let { name, ext } = removeExtension(file.name);
 	//original image
 
-	let url;
-	if (path == 'global') {
-		url = `images/original/${hash}.${ext}`;
-	} else if (path == 'unique') {
-		url = `images/${collectionName}/original/${hash}.${ext}`;
-	} else {
-		url = `images/${path}/original/${hash}.${ext}`;
-	}
+	let url = `images/original/${hash}.${ext}`;
+
 	let info = await sharp(buffer).metadata();
 	fileInfo = {
 		hash,
 		used_by: [],
+		folder: folder,
 		original: {
 			name: file.name,
-			url: '/media/' + url,
+			url: '/storage/' + url,
 			size: file.size,
 			type: file.type,
 			lastModified: file.lastModified,
@@ -135,11 +129,11 @@ export async function saveImage(
 		}
 	};
 
-	if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
-		fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
+	if (!fs.existsSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`))) {
+		fs.mkdirSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`), { recursive: true });
 	}
 
-	fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, buffer);
+	fs.writeFileSync(`${publicConfig.STORAGE_FOLDER}/${url}`, buffer);
 	for (let size in SIZES) {
 		if (size == 'original') continue;
 
@@ -148,23 +142,16 @@ export async function saveImage(
 			.resize({ width: SIZES[size] })
 			.toFormat('avif', { quality: 80 })
 			.toBuffer({ resolveWithObject: true });
-		let url;
+		let url = `images/${size}/${hash}.avif`;
 
-		if (path == 'global') {
-			url = `images/${size}/${hash}.avif`;
-		} else if (path == 'unique') {
-			url = `images/${collectionName}/${size}/${hash}.avif`;
-		} else {
-			url = `images/${path}/${size}/${hash}.avif`;
-		}
-		if (!fs.existsSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`))) {
-			fs.mkdirSync(Path.dirname(`${publicConfig.MEDIA_FOLDER}/${url}`), { recursive: true });
+		if (!fs.existsSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`))) {
+			fs.mkdirSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`), { recursive: true });
 		}
 		//sized images
-		fs.writeFileSync(`${publicConfig.MEDIA_FOLDER}/${url}`, resizedImage.data);
+		fs.writeFileSync(`${publicConfig.STORAGE_FOLDER}/${url}`, resizedImage.data);
 		fileInfo[size] = {
 			name: `${name}.avif`,
-			url: '/media/' + url,
+			url: '/storage/' + url,
 			size: resizedImage.info.size,
 			type: 'image/avif',
 			lastModified: file.lastModified,
@@ -173,7 +160,7 @@ export async function saveImage(
 		};
 	}
 
-	let res = await mongoose.models['_media_images'].insertMany(fileInfo);
+	let res = await mongoose.models['_storage_images'].insertMany(fileInfo);
 
 	return { id: new mongoose.Types.ObjectId(res[0]._id), fileInfo: fileInfo as ImageFiles };
 }
@@ -400,7 +387,7 @@ export let createRandomID = (id?: string) => {
 
 export let meta_data: {
 	meta_data: { [key: string]: any };
-	add: (key: 'media_images_remove', data: string[]) => void;
+	add: (key: 'storage_images_remove', data: string[]) => void;
 	clear: () => void;
 	get: () => { [key: string]: any };
 	is_empty: () => boolean;
@@ -408,9 +395,9 @@ export let meta_data: {
 	meta_data: {},
 	add(key, data) {
 		switch (key) {
-			case 'media_images_remove':
-				if (!this.meta_data?.media_images) this.meta_data.media_images = { removed: [] };
-				this.meta_data.media_images.removed.push(...data);
+			case 'storage_images_remove':
+				if (!this.meta_data?.storage_images) this.meta_data.storage_images = { removed: [] };
+				this.meta_data.storage_images.removed.push(...data);
 				break;
 		}
 	},

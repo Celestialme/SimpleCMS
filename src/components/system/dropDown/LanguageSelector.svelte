@@ -15,7 +15,11 @@
 </script>
 
 <div class="container absolute bg-[#363636]" class:expanded>
-	<div on:click={() => (expanded = !expanded)} class="flex cursor-pointer items-center justify-evenly" class:selected={expanded}>
+	<div
+		on:click={() => (expanded = !expanded)}
+		class="flex cursor-pointer items-center justify-evenly"
+		class:selected={expanded}
+	>
 		<iconify-icon icon="clarity:language-solid" width="24" />
 
 		<p>{($contentLanguage || label).toUpperCase()}</p>
@@ -36,11 +40,15 @@
 						</p>
 						<div class="w-[100px] h-[5px] bg-white">
 							<div
-								style="width:{($translationProgress[lang]?.translated.size * 100) / $translationProgress[lang]?.total.size}%"
+								style="width:{($translationProgress[lang]?.translated.size * 100) /
+									$translationProgress[lang]?.total.size}%"
 								class="h-[5px] bg-green-500 transition-all"
 							></div>
 						</div>
-						<p>{(($translationProgress[lang]?.translated.size ?? 1) * 100) / $translationProgress[lang]?.total.size ?? 100}%</p>
+						<p>
+							{(($translationProgress[lang]?.translated.size ?? 1) * 100) /
+								$translationProgress[lang]?.total.size ?? 100}%
+						</p>
 					</div>
 				{:else}
 					<p

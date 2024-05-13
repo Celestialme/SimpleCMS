@@ -181,13 +181,13 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 			});
 		}
 	}
-	if (body?._meta_data?.media_images?.removed) {
-		await mongoose.models['_media_images'].updateMany(
-			{ _id: { $in: body?._meta_data?.media_images?.removed } },
+	if (body?._meta_data?.storage_images?.removed) {
+		await mongoose.models['_storage_images'].updateMany(
+			{ _id: { $in: body?._meta_data?.storage_images?.removed } },
 			{ $pull: { used_by: new mongoose.Types.ObjectId(_id) } }
 		);
 	}
-	console.log(body?._meta_data?.media_images?.removed);
+	console.log(body?._meta_data?.storage_images?.removed);
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, body, { upsert: true })));
 };
 

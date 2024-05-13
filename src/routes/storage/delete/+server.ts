@@ -13,6 +13,6 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	let formData = await request.formData();
 	let id = formData.get('id') as string;
 
-	await mongoose.models['_media_images'].deleteOne({ _id: new mongoose.Types.ObjectId(id) });
+	await mongoose.models['_storage_images'].deleteOne({ _id: new mongoose.Types.ObjectId(id) });
 	return new Response('has been successfully deleted', { status: 200 });
 };

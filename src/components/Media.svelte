@@ -8,7 +8,7 @@
 	let currentPage = 1;
 	let pagesCount = 1;
 	async function refresh() {
-		let resp = await axios.get(`/media/getAll?page=${currentPage}&search=${search}`);
+		let resp = await axios.get(`/storage/getAll?page=${currentPage}&search=${search}`);
 		files = resp.data.images;
 		pagesCount = resp.data.pagesCount;
 	}
@@ -34,7 +34,7 @@
 </script>
 
 <div class="header">
-	<p class="text-white text-lg">Media</p>
+	<p class="text-white text-lg">Storage</p>
 	<input type="text" bind:value={search} placeholder="Search" />
 </div>
 <div
@@ -56,7 +56,7 @@
 						on:click|stopPropagation={async () => {
 							let data = new FormData();
 							data.append('id', file._id);
-							await axios.post('/media/delete', data);
+							await axios.post('/storage/delete', data);
 							await refresh();
 						}}
 					>

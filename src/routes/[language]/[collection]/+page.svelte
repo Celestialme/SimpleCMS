@@ -63,8 +63,8 @@
 			<Collections />
 		</section>
 		<section class="text-center">
-			<button on:click={() => mode.set('media')} class="p-2 bg-[#353b63] text-white w-full">
-				Media
+			<button on:click={() => mode.set('storage')} class="p-2 bg-[#353b63] text-white w-full">
+				Storage
 			</button>
 		</section>
 		<section class="mt-auto text-center">
@@ -82,7 +82,7 @@
 		</div>
 	</Drawer>
 	<div class="flex-grow-[2] overflow-hidden max-h-screen pl-[2px] pr-[4px]">
-		{#if $mode !== 'media'}
+		{#if $mode !== 'storage'}
 			<Header />
 		{/if}
 		{#if $mode == 'view' || $mode == 'modify'}
@@ -94,7 +94,7 @@
 			>
 				<Fields />
 			</div>
-		{:else if $mode == 'media'}
+		{:else if $mode == 'storage'}
 			<Media />
 		{/if}
 	</div>

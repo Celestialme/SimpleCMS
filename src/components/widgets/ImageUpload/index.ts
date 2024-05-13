@@ -29,7 +29,7 @@ const widget = (params: Params) => {
 		display,
 		label: params.label,
 		db_fieldName: params.db_fieldName,
-		path: params.path || 'unique',
+		folder: params.folder,
 		width: params.width
 	};
 
@@ -54,31 +54,31 @@ widget.modifyRequest = async ({
 		case 'GET':
 			// here _data is just id of the image
 			data.update(null);
-			get_elements_by_id.add('_media_images', _data, (newData) => data.update(newData));
+			get_elements_by_id.add('_storage_images', _data, (newData) => data.update(newData));
 			break;
 		case 'POST':
 		case 'PATCH':
 			let _id;
 			if (_data instanceof File) {
-				_id = (await saveImage(_data, collection.name)).id;
+				_id = (await saveImage(_data, field.folder)).id;
 				data.update(_id);
 			} else if (_data?._id) {
-				//chosen image from _media_images
+				//chosen image from _storage_images
 				_id = new mongoose.Types.ObjectId(_data._id);
 				data.update(_id);
 			}
-			if (meta_data?.media_images?.removed && _id) {
-				let removed = meta_data?.media_images?.removed as string[];
+			if (meta_data?.storage_images?.removed && _id) {
+				let removed = meta_data?.storage_images?.removed as string[];
 				let index = removed.indexOf(_id.toString());
 				while (index != -1) {
 					removed.splice(index, 1);
 					index = removed.indexOf(_id.toString());
 				}
 			}
-			await mongoose.models['_media_images'].updateOne({ _id }, { $addToSet: { used_by: id } });
+			await mongoose.models['_storage_images'].updateOne({ _id }, { $addToSet: { used_by: id } });
 			break;
 		case 'DELETE':
-			await mongoose.models['_media_images'].updateMany({}, { $pull: { used_by: id } });
+			await mongoose.models['_storage_images'].updateMany({}, { $pull: { used_by: id } });
 			break;
 	}
 };

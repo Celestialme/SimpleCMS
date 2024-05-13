@@ -17,12 +17,6 @@
 	$: updated = _data !== value;
 
 	export const WidgetData = async () => {
-		if (_data) {
-			if (_data instanceof File) {
-				_data.path = field.path;
-			}
-		}
-
 		if (
 			!(value instanceof File) &&
 			!(_data instanceof File) &&
@@ -30,8 +24,8 @@
 			value?._id &&
 			$mode == 'edit'
 		) {
-			//send replaced image's id so we can remove it from _media_images usage
-			meta_data.add('media_images_remove', [value._id]);
+			//send replaced image's id so we can remove it from _storage_images usage
+			meta_data.add('storage_images_remove', [value._id]);
 		}
 		//if not updated value is not changed and is ImageFiles type so send back only id
 		return updated || $mode == 'create'
@@ -56,10 +50,10 @@
 				if (_data instanceof File) {
 					this.image.src = URL.createObjectURL(_data as File);
 				} else {
-					this.image.src = '/media/' + _data.original.url;
+					this.image.src = '/storage/' + _data.original.url;
 				}
 			} else {
-				this.image.src = '/media/' + (value as ImageFiles).original.url;
+				this.image.src = '/storage/' + (value as ImageFiles).original.url;
 			}
 			if (this.image.naturalHeight == 0) {
 				await new Promise((resolve) => {
@@ -119,7 +113,6 @@
 							let file = new File([await blob.arrayBuffer()], name, {
 								type
 							});
-							file.path = field.path;
 							resolve(file);
 						} else {
 							resolve(undefined);
