@@ -5,12 +5,14 @@ import mongoose from 'mongoose';
 export const GET: RequestHandler = async ({ url }) => {
 	let limit = 10;
 	let search = url.searchParams.get('search') as string;
+	let folder = url.searchParams.get('folder') as string;
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let re = new RegExp(RegExp.escape(search), 'i');
-
+	console.log(folder);
 	let search_aggregation = {
 		$match: {
-			'original.name': { $regex: re }
+			'original.name': { $regex: re },
+			folder: folder
 		}
 	};
 

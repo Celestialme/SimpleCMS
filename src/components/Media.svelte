@@ -1,140 +1,86 @@
 <script lang="ts">
+	import MediaCards from './MediaCards.svelte';
 	import type { ImageFiles } from '@src/utils/types';
-	import { SIZES, debounce } from '@src/utils/utils';
+	import { debounce } from '@src/utils/utils';
 	import axios from 'axios';
+	import { tick } from 'svelte';
 	export let onselect: any = () => {};
 	let files: ImageFiles[] = [];
+	let pagesCount = 1;
 	let search = '';
 	let currentPage = 1;
-	let pagesCount = 1;
+	let showFolders = true;
+	let folders = [];
+	let currentFolder = '';
+	axios.get(`/storage/getFolderContentCount`).then((res) => (folders = res.data));
 	async function refresh() {
-		let resp = await axios.get(`/storage/getAll?page=${currentPage}&search=${search}`);
+		let resp = await axios.get(
+			`/storage/getAll?page=${currentPage}&folder=${currentFolder}&search=${search}`
+		);
 		files = resp.data.images;
 		pagesCount = resp.data.pagesCount;
 	}
-	refresh();
 	let searchDeb = debounce(500);
 	$: {
-		searchDeb(() => refresh());
-		search;
-		currentPage;
-	}
-	function formatBytes(bytes) {
-		if (bytes >= 1073741824) {
-			return (bytes / 1073741824).toFixed(2) + ' GB';
-		} else if (bytes >= 1048576) {
-			return (bytes / 1048576).toFixed(2) + ' MB';
-		} else if (bytes >= 1024) {
-			return (bytes / 1024).toFixed(2) + ' KB';
-		} else {
-			return bytes + ' bytes';
+		if (!showFolders) {
+			searchDeb(() => refresh());
+			search;
+			currentPage;
 		}
 	}
-	let showInfo = Array.from({ length: files.length }, () => false);
 </script>
 
 <div class="header">
+	<iconify-icon
+		icon={showFolders ? 'fluent:folder-32-filled' : 'fluent-mdl2:navigate-back'}
+		class="text-white mr-2"
+		class:cursor-pointer={!showFolders}
+		width="30"
+		on:click={() => {
+			files = [];
+			showFolders = true;
+		}}
+	></iconify-icon>
 	<p class="text-white text-lg">Storage</p>
 	<input type="text" bind:value={search} placeholder="Search" />
 </div>
 <div
 	class="flex flex-wrap items-center overflow-auto max-h-[calc(100%-55px)] justify-center w-screen max-w-full"
 >
-	{#each files as file, index}
-		<div on:click={() => onselect(file)} class="card relative flex flex-col md:w-[30%] w-[100%]">
-			<div class="absolute flex w-full bg-[#2c3844] items-center">
-				<button
-					class="mt-[2px] ml-[2px] w-[30px] block"
-					on:click|stopPropagation={() => (showInfo[index] = !showInfo[index])}
-				>
-					<iconify-icon icon="raphael:info" width="25" class="text-[#00d3d0]"></iconify-icon>
-				</button>
-				<p class="mx-auto text-white pr-[30px]">{file.thumbnail.name}</p>
-				{#if file.used_by.length == 0}
-					<button
-						class="mt-[2px] mr-[2px] w-[30px] block"
-						on:click|stopPropagation={async () => {
-							let data = new FormData();
-							data.append('id', file._id);
-							await axios.post('/storage/delete', data);
-							await refresh();
-						}}
-					>
-						<iconify-icon icon="pajamas:remove-all" width="22" class="text-[red]"></iconify-icon>
-					</button>
-				{/if}
+	{#if showFolders}
+		{#each Object.keys(folders) as folder}
+			<div
+				class="folder"
+				on:click={async () => {
+					currentFolder = folder;
+					showFolders = false;
+				}}
+			>
+				<iconify-icon icon="fluent:folder-32-filled" class="text-orange-600" width="40"
+				></iconify-icon>
+				<div class="flex flex-col items-center mx-auto">
+					<p>{folder}</p>
+					<p>Count: {folders[folder]}</p>
+				</div>
 			</div>
-			<img
-				class:hidden={showInfo[index]}
-				src={file.thumbnail.url}
-				class="mt-auto max-h-[calc(100%-35px)] mx-auto rounded-md"
-			/>
-
-			<div class:hidden={!showInfo[index]}>
-				<p class=" mt-[30px] text-white text-center bg-[#2c3844]">
-					{file.used_by.length == 0
-						? 'Not Used'
-						: file.used_by.length == 1
-							? 'Used By 1 entry'
-							: `Used By ${file.used_by.length} entries`}
-				</p>
-				<table class="w-full min-h-[calc(100%-30px)]">
-					<tbody>
-						{#each Object.keys(SIZES) as size}
-							<tr>
-								<td class="!pl-[10px]">
-									{size}
-								</td>
-								<td>
-									{file[size].width}x{file[size].height}
-								</td>
-								<td>
-									{formatBytes(file[size].size)}
-								</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			</div>
-		</div>
-	{/each}
+		{/each}
+	{:else}
+		<MediaCards bind:files {onselect} />
+	{/if}
 </div>
 <div class="pages">
 	{#each Array((pagesCount || 0) > 1 ? pagesCount : 0) as _, page}
-		<div class="page" on:click={() => (currentPage = page + 1)} class:active={page == page + 1}>
+		<div
+			class="page"
+			on:click={() => (currentPage = page + 1)}
+			class:active={currentPage == page + 1}
+		>
 			{page + 1}
 		</div>
 	{/each}
 </div>
 
 <style>
-	.card {
-		height: 250px;
-		margin: 10px;
-		border-radius: 10px;
-		overflow: hidden;
-		box-shadow: 5px 4px 15px rgb(0 0 0 / 62%);
-		cursor: pointer;
-		overflow: auto;
-	}
-	.card::-webkit-scrollbar-thumb {
-		border-radius: 50px;
-		background-color: #0eb4c4;
-	}
-	.card::-webkit-scrollbar {
-		width: 10px;
-	}
-	td {
-		padding: 10px;
-	}
-	tbody {
-		background-color: #202832;
-		color: white;
-	}
-	tbody tr:nth-child(2n + 1) {
-		padding: 5px 0;
-		background-color: #2c3844;
-	}
 	.header {
 		width: 100%;
 		height: 50px;
@@ -179,5 +125,17 @@
 	.page:hover {
 		background-color: aqua;
 		color: white;
+	}
+	.folder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 5px;
+		width: 200px;
+		padding: 10px 2px;
+		border-radius: 5px;
+		margin: 10px;
+		box-shadow: 1px 4px 3px 0px #00000070;
+		cursor: pointer;
 	}
 </style>

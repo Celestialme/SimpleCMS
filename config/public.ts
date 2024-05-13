@@ -8,5 +8,5 @@ export default createPublicConfig({
 	DEFAULT_SYSTEM_LANGUAGE: 'en',
 	IMAGE_SIZES: { sm: 600, md: 900, lg: 1200 } as const,
 	STORAGE_FOLDER: 'storage',
-	FOLDERS: ['images']
+	FOLDERS: ['images', 'images2']
 });
