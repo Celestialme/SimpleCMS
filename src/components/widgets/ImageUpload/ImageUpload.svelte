@@ -50,10 +50,10 @@
 				if (_data instanceof File) {
 					this.image.src = URL.createObjectURL(_data as File);
 				} else {
-					this.image.src = '/storage/' + _data.original.url;
+					this.image.src = _data.original.url;
 				}
 			} else {
-				this.image.src = '/storage/' + (value as ImageFiles).original.url;
+				this.image.src = (value as ImageFiles).original.url;
 			}
 			if (this.image.naturalHeight == 0) {
 				await new Promise((resolve) => {
@@ -105,9 +105,9 @@
 			_data = await new Promise((resolve) => {
 				this.group.toBlob({
 					callback: async (blob) => {
-						if (blob && _data && _data instanceof File) {
-							let name = ((value as any).original.name as string) || _data.name;
-							let type = ((value as any).original.type as string) || _data.type;
+						if (blob && _data) {
+							let name = ((value as any).original.name as string) || (_data as File).name;
+							let type = ((value as any).original.type as string) || (_data as File).type;
 							type = type.includes('svg') ? 'image/png' : type;
 							name = name.endsWith('svg') ? name.replace('svg', 'png') : name;
 							let file = new File([await blob.arrayBuffer()], name, {

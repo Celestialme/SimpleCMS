@@ -11,7 +11,7 @@
 	$: if (root) $collectionValue = fieldsData;
 </script>
 
-<div class="wrapper z-0 relative">
+<div class="wrapper relative">
 	{#each fields || $collection.fields as field, index}
 		{#if field.widget}
 			{#key $collection}
