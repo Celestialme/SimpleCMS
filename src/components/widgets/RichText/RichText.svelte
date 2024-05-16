@@ -32,6 +32,7 @@
 	let showImageDialog = false;
 	let images = {};
 	export let value = $entryData[fieldName] || { content: {}, header: {} };
+	console.log($entryData);
 	let _data = $mode == 'create' ? { content: {}, header: {} } : value;
 	$: _language = field?.translated ? $contentLanguage : publicConfig.DEFAULT_CONTENT_LANGUAGE;
 	contentLanguage.subscribe(async (val) => {

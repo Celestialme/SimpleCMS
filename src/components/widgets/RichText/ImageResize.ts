@@ -60,9 +60,9 @@ const ImageResize = ImageExtension.extend({
 				default: null,
 				parseHTML: (element) => (element as HTMLElement).style.height
 			},
-			marginLeft: {
+			margin: {
 				default: 'unset',
-				parseHTML: (element) => (element as HTMLElement).style.marginLeft
+				parseHTML: (element) => (element as HTMLElement).style.margin
 			},
 			textAlign: {
 				default: 'unset',
@@ -84,7 +84,7 @@ const ImageResize = ImageExtension.extend({
 		return [
 			'div',
 			{
-				style: `text-align: ${HTMLAttributes.textAlign};float: ${HTMLAttributes.float};width: ${HTMLAttributes.w};height: ${HTMLAttributes.h}; margin-left: ${HTMLAttributes.marginLeft}`
+				style: `text-align: ${HTMLAttributes.textAlign};float: ${HTMLAttributes.float};width: ${HTMLAttributes.w};height: ${HTMLAttributes.h}; margin: ${HTMLAttributes.margin}`
 			},
 			[
 				'img',
@@ -126,7 +126,7 @@ const ImageResize = ImageExtension.extend({
 				position: 'relative',
 				width: nodeAttrs.w,
 				height: nodeAttrs.h,
-				marginLeft: nodeAttrs.marginLeft,
+				margin: nodeAttrs.margin,
 				float: nodeAttrs.float
 			});
 
@@ -146,9 +146,20 @@ const ImageResize = ImageExtension.extend({
 
 			container.appendChild(resizer);
 
+			if (nodeAttrs.textAlign != 'justify') {
+				nodeAttrs.margin = resizer.style.margin = 'unset';
+			}
+			if (nodeAttrs.float == 'left') {
+				resizer.style.marginRight = '0';
+			} else if (nodeAttrs.float == 'right') {
+				resizer.style.marginLeft = '0';
+			}
 			resizer.ondrag = (e) => {
+				if (nodeAttrs.textAlign != 'justify') {
+					return;
+				}
 				resizer.style.opacity = '0';
-				nodeAttrs.marginLeft = resizer.style.marginLeft =
+				let marginLeft =
 					Math.max(
 						((e.clientX -
 							editor.$doc.element.getBoundingClientRect().left -
@@ -157,6 +168,20 @@ const ImageResize = ImageExtension.extend({
 							100,
 						0
 					) + '%';
+				let marginRight =
+					Math.max(
+						((editor.$doc.element.getBoundingClientRect().right -
+							e.clientX -
+							+resizer.offsetWidth / 2) /
+							editor.$doc.element.offsetWidth) *
+							100,
+						0
+					) + '%';
+				if (nodeAttrs.float == 'left' || nodeAttrs.float == 'unset') {
+					nodeAttrs.margin = resizer.style.margin = `0 0 0 ${marginLeft}`;
+				} else if (nodeAttrs.float == 'right') {
+					nodeAttrs.margin = resizer.style.margin = `0 ${marginRight} 0 0`;
+				}
 			};
 			resizer.ondragend = (e) => {
 				resizer.style.opacity = '1';

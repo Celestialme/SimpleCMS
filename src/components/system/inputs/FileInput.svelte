@@ -50,7 +50,12 @@
 			<input bind:this={input} type="file" hidden on:change={onChange} />
 		</div>
 	{:else}
-		<div class="flex flex-col rounded-md p-2 min-w-full bg-white">
+		<div
+			class={twMerge(
+				'flex flex-col rounded-md p-2 min-w-full max-w-full bg-white dashed',
+				$$props.class
+			)}
+		>
 			<button on:click={() => (showMedia = false)} class="ml-auto cursor-pointer">
 				<XIcon />
 			</button>
@@ -58,3 +63,9 @@
 		</div>
 	{/if}
 {/if}
+
+<style>
+	.dashed {
+		border: 1px dashed #00000047;
+	}
+</style>

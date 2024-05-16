@@ -9,7 +9,6 @@
 	export let fieldsData = {};
 	export let customData = {};
 	$: if (root) $collectionValue = fieldsData;
-	let user = $page.data.user;
 </script>
 
 <div class="wrapper z-0 relative">

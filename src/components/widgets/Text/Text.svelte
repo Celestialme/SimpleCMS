@@ -20,4 +20,4 @@
 	export const WidgetData = async () => _data;
 </script>
 
-<Input type="text" bind:value={_data[_language]} {disabled} />
+<Input type="text" bind:value={_data[_language]} />

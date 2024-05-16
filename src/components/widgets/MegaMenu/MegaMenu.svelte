@@ -16,6 +16,7 @@
 	let _data: { [key: string]: any; children: any[] } = $mode == 'create' ? null : value;
 	let fieldsData = {};
 	let saveMode = $mode;
+
 	async function saveLayer() {
 		let _fieldsData = await extractData(fieldsData);
 
@@ -31,6 +32,7 @@
 
 		_data = _data;
 		showFields = false;
+		fieldsData = {};
 		mode.set(saveMode);
 		depth = 0;
 		$saveFunction.reset();
@@ -39,13 +41,18 @@
 
 {#if !_data || showFields}
 	{#key depth}
-		{(fieldsData = {}) && ''}
 		<Fields fields={field.fields[depth]} root={false} bind:fieldsData customData={$currentChild} />
 	{/key}
 	{(($saveFunction.fn = saveLayer), '')}
 {/if}
 {#if _data}
 	<ul bind:this={MENU_CONTAINER} class:hidden={depth != 0} class="children MENU_CONTAINER">
-		<ListNode {MENU_CONTAINER} self={_data} bind:depth bind:showFields maxDepth={field.fields.length} />
+		<ListNode
+			{MENU_CONTAINER}
+			self={_data}
+			bind:depth
+			bind:showFields
+			maxDepth={field.fields.length}
+		/>
 	</ul>
 {/if}

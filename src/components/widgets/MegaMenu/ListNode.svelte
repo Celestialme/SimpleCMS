@@ -104,7 +104,10 @@
 				let deb = debounce(3);
 				let old_closest: HTMLElement;
 				clone.onpointermove = (e) => {
-					if (e.clientY < fields_container.offsetTop || e.clientY > fields_container.offsetTop + fields_container.offsetHeight - 60) {
+					if (
+						e.clientY < fields_container.offsetTop ||
+						e.clientY > fields_container.offsetTop + fields_container.offsetHeight - 60
+					) {
 						if (e.clientY < fields_container.offsetTop) {
 							fields_container.scrollBy(0, -5);
 						} else {
@@ -117,32 +120,54 @@
 						let siblings = [...document.getElementsByClassName(`level-${level}`)]
 							.map((el) => {
 								let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
-								return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: false };
+								return {
+									el: el as HTMLElement,
+									center: rect.top + rect.height / 2,
+									isParent: false
+								};
 							})
 							.filter((el) => el.el != clone);
 						let parents = [...document.getElementsByClassName(`level-${level - 1}`)]
 							.filter((el) => parseInt(el.getAttribute('data-children') as string) == 0)
 							.map((el) => {
 								let rect = el.getElementsByClassName('header')[0].getBoundingClientRect();
-								return { el: el as HTMLElement, center: rect.top + rect.height / 2, isParent: true };
+								return {
+									el: el as HTMLElement,
+									center: rect.top + rect.height / 2,
+									isParent: true
+								};
 							});
 						targets = [...siblings, ...parents];
-						targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
+						targets.sort((a, b) =>
+							Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1
+						);
 						let closest = targets[0];
 						if (old_closest) {
-							old_closest.firstChild && ((old_closest.firstChild as HTMLElement).style.borderColor = '#80808045');
+							old_closest.firstChild &&
+								((old_closest.firstChild as HTMLElement).style.borderColor = '#80808045');
 							old_closest.style.padding = '0';
 						}
 						if (closest.el == node) return;
 						let closest_index = parseInt(closest.el.getAttribute('data-index') as string);
 						let clone_index = parseInt(clone.getAttribute('data-index') as string);
 
-						if (e.clientY > closest.center && clone_index - closest_index != 1 && !closest.isParent) {
+						if (
+							e.clientY > closest.center &&
+							clone_index - closest_index != 1 &&
+							!closest.isParent
+						) {
 							closest.el.style.paddingBottom = cloneHeight;
-						} else if (e.clientY < closest.center && !closest.isParent && closest_index - clone_index != 1) {
+						} else if (
+							e.clientY < closest.center &&
+							!closest.isParent &&
+							closest_index - clone_index != 1
+						) {
 							closest.el.style.paddingTop = cloneHeight;
 						}
-						closest.el.firstChild && ((closest.el.firstChild as HTMLElement).style.borderColor = closest.isParent ? 'blue' : 'red');
+						closest.el.firstChild &&
+							((closest.el.firstChild as HTMLElement).style.borderColor = closest.isParent
+								? 'blue'
+								: 'red');
 						recalculateBorderHeight();
 						setTimeout(() => {
 							recalculateBorderHeight();
@@ -160,7 +185,9 @@
 					});
 
 					node.style.opacity = '1';
-					targets.sort((a, b) => (Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1));
+					targets.sort((a, b) =>
+						Math.abs(b.center - e.clientY) < Math.abs(a.center - e.clientY) ? 1 : -1
+					);
 					let closest = targets[0];
 
 					if (closest.el == node) return;
@@ -174,7 +201,11 @@
 					closest.el.dispatchEvent(
 						new CustomEvent('custom:drag', {
 							detail: {
-								closest_index: closest.isParent ? closest_index : e.clientY < closest.center ? closest_index : closest_index + 1,
+								closest_index: closest.isParent
+									? closest_index
+									: e.clientY < closest.center
+										? closest_index
+										: closest_index + 1,
 								clone_index,
 								isParent: closest.isParent,
 								expanded_list,
@@ -212,7 +243,7 @@
 	{#if self?.children?.length > 0}
 		<div class="arrow" class:expanded />
 	{/if}
-	{self?.Header[$contentLanguage]}
+	{self?.Header?.[$contentLanguage] || 'No title'}
 	<div class="flex items-center ml-auto gap-1">
 		{#if level < maxDepth - 1}
 			<button
@@ -246,10 +277,19 @@
 </div>
 
 {#if self?.children?.length > 0 && expanded}
-	<ul bind:this={ul} class="children relative" style="margin-left:{20 * (level > 0 ? 1 : 0) + 15}px;">
+	<ul
+		bind:this={ul}
+		class="children relative"
+		style="margin-left:{20 * (level > 0 ? 1 : 0) + 15}px;"
+	>
 		<div class="border" />
 		{#each self.children as child, index}
-			<li use:drag data-children={expanded_list[index] ? child.children?.length : 0} data-index={index} class={`level-${level} touch-none`}>
+			<li
+				use:drag
+				data-children={expanded_list[index] ? child.children?.length : 0}
+				data-index={index}
+				class={`level-${level} touch-none`}
+			>
 				<svelte:self
 					{MENU_CONTAINER}
 					{refresh}
