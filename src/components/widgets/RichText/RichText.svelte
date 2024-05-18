@@ -1,8 +1,8 @@
 <script lang="ts">
 	import publicConfig from '@root/config/public';
 	import Input from '@src/components/system/inputs/Input.svelte';
-	import DropDown from './DropDown.svelte';
-	import ColorSelector from './ColorSelector.svelte';
+	import DropDown from './components/DropDown.svelte';
+	import ColorSelector from './components/ColorSelector.svelte';
 	import { onMount, onDestroy, tick } from 'svelte';
 	import { Editor, Extension } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
@@ -24,6 +24,7 @@
 	} from '@src/utils/utils';
 	import type { FieldType } from '.';
 	import { contentLanguage } from '@src/stores/load';
+	import ImageDescription from './components/ImageDescription.svelte';
 	export let field: FieldType;
 	export const WidgetData = async () => ({ images, data: _data });
 	let fieldName = getFieldName(field);
@@ -82,6 +83,9 @@
 					_data.content[_language] = content;
 				});
 			}
+		});
+		tick().then(() => {
+			editor.commands.focus('start');
 		});
 	});
 	function handleImageDeletes(transaction) {
@@ -247,24 +251,13 @@
 			| 'strike'
 			| 'link'
 			| 'fontSize'
+			| 'description'
 	) => {
-		if (
-			[
-				'textType',
-				'font',
-				'insert',
-				'color',
-				'bold',
-				'italic',
-				'strike',
-				'link',
-				'fontSize'
-			].includes(button)
-		) {
-			return !editor?.isActive('image');
+		if (editor?.isActive('image')) {
+			return ['float', 'align', 'description'].includes(button);
 		}
-		if (['float'].includes(button)) {
-			return editor?.isActive('image');
+		if (['description', 'float'].includes(button)) {
+			return false;
 		}
 		return true;
 	};
@@ -346,6 +339,13 @@
 				icon="grommet-icons:text-wrap"
 				label="Text Wrap"
 			/>
+			<ImageDescription
+				show={show('description')}
+				value={editor.getAttributes('image').description}
+				on:submit={(e) => {
+					editor.chain().focus().setImageDescription(e.detail).run();
+				}}
+			/>
 			<FileInput
 				bind:show={showImageDialog}
 				class="absolute bg-white top-0 z-10"
@@ -418,6 +418,6 @@
 		max-height: calc(100vh - 200px);
 	}
 	:global(.ProseMirror-selectednode img) {
-		box-shadow: 0px 0px 4px 0px #00ffff99 inset;
+		box-shadow: 0px 0px 3px 2px #00ffff99;
 	}
 </style>
