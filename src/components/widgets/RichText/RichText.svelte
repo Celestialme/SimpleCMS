@@ -275,95 +275,97 @@
 />
 <div class="editor">
 	{#if editor}
-		<div class="buttons">
-			<DropDown show={show('textType')} items={textTypes} label="Text" />
-			<DropDown show={show('font')} items={fonts} icon="file-icons:font" label="Font" />
-			<ColorSelector
-				show={show('color')}
-				color={editor.getAttributes('textStyle').color || '#000000'}
-				on:change={(e) => editor.chain().focus().setColor(e.detail).run()}
-			/>
+		<div class="translate-x-0 z-10 w-full">
+			<div class="buttons">
+				<DropDown show={show('textType')} items={textTypes} label="Text" />
+				<DropDown show={show('font')} items={fonts} icon="file-icons:font" label="Font" />
+				<ColorSelector
+					show={show('color')}
+					color={editor.getAttributes('textStyle').color || '#000000'}
+					on:change={(e) => editor.chain().focus().setColor(e.detail).run()}
+				/>
 
-			<div class="flex items-center" class:hidden={!show('fontSize')}>
+				<div class="flex items-center" class:hidden={!show('fontSize')}>
+					<button
+						on:click={() => {
+							fontSize--;
+							editor.chain().focus().setFontSize(fontSize).run();
+						}}
+					>
+						<iconify-icon icon="ic:twotone-minus" width="20" />
+					</button>
+					<input type="text" class="w-[30px] outline-none text-center" bind:value={fontSize} />
+					<button
+						on:click={() => {
+							fontSize++;
+							editor.chain().focus().setFontSize(fontSize).run();
+						}}
+					>
+						<iconify-icon icon="ph:plus-bold" width="20" />
+					</button>
+				</div>
 				<button
-					on:click={() => {
-						fontSize--;
-						editor.chain().focus().setFontSize(fontSize).run();
-					}}
+					class:hidden={!show('bold')}
+					on:click={() => editor.chain().focus().toggleBold().run()}
+					class:active={editor.isActive('bold')}
 				>
-					<iconify-icon icon="ic:twotone-minus" width="20" />
+					<iconify-icon icon="bi:type-bold" width="20" />
 				</button>
-				<input type="text" class="w-[30px] outline-none text-center" bind:value={fontSize} />
 				<button
-					on:click={() => {
-						fontSize++;
-						editor.chain().focus().setFontSize(fontSize).run();
-					}}
+					class:hidden={!show('italic')}
+					on:click={() => editor.chain().focus().toggleItalic().run()}
+					class:active={editor.isActive('italic')}
 				>
-					<iconify-icon icon="ph:plus-bold" width="20" />
+					<iconify-icon icon="lucide:italic" width="20" />
 				</button>
+				<button
+					class:hidden={!show('strike')}
+					on:click={() => editor.chain().focus().toggleStrike().run()}
+					class:active={editor.isActive('strike')}
+				>
+					<iconify-icon icon="majesticons:strike-through-line" width="20" />
+				</button>
+				<button
+					class:hidden={!show('link')}
+					on:click={() => editor.chain().focus().toggleLink({ href: 'https://google.com' }).run()}
+					class:active={editor.isActive('link')}
+				>
+					<iconify-icon icon="pajamas:link" width="20" />
+				</button>
+				<DropDown show={show('align')} items={alignText} label="Align" />
+				<DropDown show={show('insert')} items={inserts} icon="typcn:plus" label="Insert" />
+				<DropDown
+					show={show('float')}
+					items={floats}
+					icon="grommet-icons:text-wrap"
+					label="Text Wrap"
+				/>
+				<ImageDescription
+					show={show('description')}
+					value={editor.getAttributes('image').description}
+					on:submit={(e) => {
+						editor.chain().focus().setImageDescription(e.detail).run();
+					}}
+				/>
+				<FileInput
+					bind:show={showImageDialog}
+					class="absolute bg-white top-0 z-10"
+					on:change={(e) => {
+						let data = e.detail;
+						let url;
+						if (data instanceof File) {
+							url = URL.createObjectURL(data);
+							let image_id = createRandomID().toString();
+							images[image_id] = data;
+							editor.chain().focus().setImage({ src: url, id: image_id }).run();
+						} else {
+							url = data.original.url;
+
+							editor.chain().focus().setImage({ src: url, storage_image: data._id }).run();
+						}
+					}}
+				/>
 			</div>
-			<button
-				class:hidden={!show('bold')}
-				on:click={() => editor.chain().focus().toggleBold().run()}
-				class:active={editor.isActive('bold')}
-			>
-				<iconify-icon icon="bi:type-bold" width="20" />
-			</button>
-			<button
-				class:hidden={!show('italic')}
-				on:click={() => editor.chain().focus().toggleItalic().run()}
-				class:active={editor.isActive('italic')}
-			>
-				<iconify-icon icon="lucide:italic" width="20" />
-			</button>
-			<button
-				class:hidden={!show('strike')}
-				on:click={() => editor.chain().focus().toggleStrike().run()}
-				class:active={editor.isActive('strike')}
-			>
-				<iconify-icon icon="majesticons:strike-through-line" width="20" />
-			</button>
-			<button
-				class:hidden={!show('link')}
-				on:click={() => editor.chain().focus().toggleLink({ href: 'https://google.com' }).run()}
-				class:active={editor.isActive('link')}
-			>
-				<iconify-icon icon="pajamas:link" width="20" />
-			</button>
-			<DropDown show={show('align')} items={alignText} label="Align" />
-			<DropDown show={show('insert')} items={inserts} icon="typcn:plus" label="Insert" />
-			<DropDown
-				show={show('float')}
-				items={floats}
-				icon="grommet-icons:text-wrap"
-				label="Text Wrap"
-			/>
-			<ImageDescription
-				show={show('description')}
-				value={editor.getAttributes('image').description}
-				on:submit={(e) => {
-					editor.chain().focus().setImageDescription(e.detail).run();
-				}}
-			/>
-			<FileInput
-				bind:show={showImageDialog}
-				class="absolute bg-white top-0 z-10"
-				on:change={(e) => {
-					let data = e.detail;
-					let url;
-					if (data instanceof File) {
-						url = URL.createObjectURL(data);
-						let image_id = createRandomID().toString();
-						images[image_id] = data;
-						editor.chain().focus().setImage({ src: url, id: image_id }).run();
-					} else {
-						url = data.original.url;
-
-						editor.chain().focus().setImage({ src: url, storage_image: data._id }).run();
-					}
-				}}
-			/>
 		</div>
 	{/if}
 	<div
@@ -376,16 +378,19 @@
 <style>
 	@import 'RichText.css';
 	.buttons {
+		overflow-x: auto;
+
 		display: flex;
 		gap: 10px;
 		box-shadow: 0px 3px 5px 0px #b0b0b0b3;
 		width: 100%;
-		justify-content: center;
+		justify-content: space-evenly;
 		align-items: center;
 		padding: 10px;
 		position: sticky;
 		top: 0;
 		z-index: 10;
+		max-width: 100%;
 	}
 	button {
 		height: 20px;

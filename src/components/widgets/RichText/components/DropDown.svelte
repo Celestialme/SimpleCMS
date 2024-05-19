@@ -11,30 +11,47 @@
 
 	$: selected = items.filter((item) => item.active())[0];
 	let expanded = false;
+	let header: HTMLDivElement;
+	function setPosition(node: HTMLDivElement) {
+		let parent = header.parentElement as HTMLElement;
+		node.style.minWidth = header.offsetWidth + 'px';
+		let left_pos = header.getBoundingClientRect().left - parent.getBoundingClientRect().left;
+		if (left_pos + node.offsetWidth > parent.offsetWidth) {
+			node.style.right = '0';
+		} else {
+			node.style.left = left_pos < 0 ? '0' : left_pos + 'px';
+		}
+	}
 </script>
 
-<div class="wrapper" class:hidden={!show} on:click={() => (expanded = !expanded)}>
+<div
+	class="wrapper"
+	bind:this={header}
+	class:hidden={!show}
+	on:click={() => (expanded = !expanded)}
+>
 	<div class="selected arrow" class:arrow_up={expanded}>
 		<iconify-icon icon={icon || selected?.icon} width="20"></iconify-icon>
 
 		<p class="whitespace-nowrap max-w-[80px] overflow-hidden">{selected ? selected.name : label}</p>
 	</div>
-
-	<div class="items" class:!hidden={!expanded}>
-		{#each items as item}
-			<button
-				class="flex items-center gap-[5px]"
-				on:click|stopPropagation={() => {
-					item.onClick();
-					expanded = false;
-				}}
-				class:active={item.active}
-			>
-				<iconify-icon icon={item.icon} width="20"></iconify-icon>
-				{item.name}
-			</button>
-		{/each}
-	</div>
+	{#if expanded}
+		<div class="items" use:setPosition>
+			{#each items as item}
+				<button
+					class="flex items-center gap-[5px]"
+					on:click|stopPropagation={() => {
+						item.onClick();
+						expanded = false;
+					}}
+					class:active={item.active}
+				>
+					<iconify-icon icon={item.icon} width="20"></iconify-icon>
+					{item.name}
+				</button>
+			{/each}
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -56,10 +73,9 @@
 		border-radius: 4px;
 	}
 	.items {
-		position: absolute;
-		left: 0;
+		position: fixed;
+		/* left: 0; */
 		top: 100%;
-		min-width: 100%;
 		padding: 10px;
 		border: 1px solid #d6d6d6;
 		cursor: pointer;
