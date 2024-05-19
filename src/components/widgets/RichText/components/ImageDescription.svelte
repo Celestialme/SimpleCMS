@@ -3,7 +3,10 @@
 
 	export let show = false;
 	export let value = '';
+	export let key = '';
+	export let active = '';
 	$: _value = value;
+	$: key != active && (show_input = false);
 	let show_input = false;
 	$: {
 		show_input = false;
@@ -13,7 +16,13 @@
 </script>
 
 <div class:hidden={!show}>
-	<button on:click={() => (show_input = !show_input)} class="flex items-center">
+	<button
+		on:click={() => {
+			show_input = !show_input;
+			active = key;
+		}}
+		class="flex items-center"
+	>
 		<iconify-icon icon="material-symbols:description" width="20" />
 		description
 	</button>
@@ -35,7 +44,7 @@
 
 <style>
 	.description {
-		position: absolute;
+		position: fixed;
 		top: 100%;
 		margin-top: 20px;
 		left: 50%;

@@ -3,7 +3,10 @@
 	import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
 	export let color = '';
 	export let show = false;
+	export let key = '';
+	export let active = '';
 	let expanded = false;
+	$: key != active && (expanded = false);
 	let dispatch = createEventDispatcher();
 	$: dispatch('change', color);
 	let header: HTMLDivElement;
@@ -19,7 +22,14 @@
 </script>
 
 <div class="wrapper" class:hidden={!show} bind:this={header}>
-	<div class="selected arrow" class:arrow_up={expanded} on:click={() => (expanded = !expanded)}>
+	<div
+		class="selected arrow"
+		class:arrow_up={expanded}
+		on:click={() => {
+			expanded = !expanded;
+			active = key;
+		}}
+	>
 		<iconify-icon icon="fluent-mdl2:color-solid" width="20"></iconify-icon>
 	</div>
 	{#if expanded}

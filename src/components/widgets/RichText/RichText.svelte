@@ -32,6 +32,7 @@
 	let editor: Editor;
 	let showImageDialog = false;
 	let images = {};
+	let active_dropDown = '';
 	export let value = $entryData[fieldName] || { content: {}, header: {} };
 	console.log($entryData);
 	let _data = $mode == 'create' ? { content: {}, header: {} } : value;
@@ -75,6 +76,7 @@
 
 			onTransaction: ({ transaction }) => {
 				// force re-render so `editor.isActive` works as expected
+				active_dropDown = '';
 				handleImageDeletes(transaction);
 				editor = editor;
 				deb(() => {
@@ -277,9 +279,24 @@
 	{#if editor}
 		<div class="translate-x-0 z-10 w-full">
 			<div class="buttons">
-				<DropDown show={show('textType')} items={textTypes} label="Text" />
-				<DropDown show={show('font')} items={fonts} icon="file-icons:font" label="Font" />
+				<DropDown
+					show={show('textType')}
+					items={textTypes}
+					label="Text"
+					bind:active={active_dropDown}
+					key="textType"
+				/>
+				<DropDown
+					key="font"
+					show={show('font')}
+					items={fonts}
+					icon="file-icons:font"
+					label="Font"
+					bind:active={active_dropDown}
+				/>
 				<ColorSelector
+					key="color"
+					bind:active={active_dropDown}
 					show={show('color')}
 					color={editor.getAttributes('textStyle').color || '#000000'}
 					on:change={(e) => editor.chain().focus().setColor(e.detail).run()}
@@ -332,15 +349,32 @@
 				>
 					<iconify-icon icon="pajamas:link" width="20" />
 				</button>
-				<DropDown show={show('align')} items={alignText} label="Align" />
-				<DropDown show={show('insert')} items={inserts} icon="typcn:plus" label="Insert" />
 				<DropDown
+					key="align"
+					show={show('align')}
+					items={alignText}
+					label="Align"
+					bind:active={active_dropDown}
+				/>
+				<DropDown
+					key="insert"
+					show={show('insert')}
+					items={inserts}
+					icon="typcn:plus"
+					label="Insert"
+					bind:active={active_dropDown}
+				/>
+				<DropDown
+					key="float"
 					show={show('float')}
 					items={floats}
 					icon="grommet-icons:text-wrap"
 					label="Text Wrap"
+					bind:active={active_dropDown}
 				/>
 				<ImageDescription
+					bind:active={active_dropDown}
+					key="description"
 					show={show('description')}
 					value={editor.getAttributes('image').description}
 					on:submit={(e) => {
@@ -384,13 +418,18 @@
 		gap: 10px;
 		box-shadow: 0px 3px 5px 0px #b0b0b0b3;
 		width: 100%;
-		justify-content: space-evenly;
+
 		align-items: center;
 		padding: 10px;
 		position: sticky;
 		top: 0;
 		z-index: 10;
 		max-width: 100%;
+	}
+	.buttons::before,
+	.buttons::after {
+		content: '';
+		margin: auto;
 	}
 	button {
 		height: 20px;

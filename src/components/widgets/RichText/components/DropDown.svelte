@@ -2,13 +2,15 @@
 	export let icon = '';
 	export let label = '';
 	export let show = false;
+	export let active = '';
+	export let key: string;
 	export let items: {
 		name: string;
 		icon?: string;
 		onClick: () => void;
 		active: () => boolean;
 	}[] = [];
-
+	$: key != active && (expanded = false);
 	$: selected = items.filter((item) => item.active())[0];
 	let expanded = false;
 	let header: HTMLDivElement;
@@ -28,7 +30,10 @@
 	class="wrapper"
 	bind:this={header}
 	class:hidden={!show}
-	on:click={() => (expanded = !expanded)}
+	on:click={() => {
+		expanded = !expanded;
+		active = key;
+	}}
 >
 	<div class="selected arrow" class:arrow_up={expanded}>
 		<iconify-icon icon={icon || selected?.icon} width="20"></iconify-icon>
