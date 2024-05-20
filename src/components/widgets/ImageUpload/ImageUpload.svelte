@@ -108,8 +108,9 @@
 						if (blob && _data) {
 							let name = ((value as any).original.name as string) || (_data as File).name;
 							let type = ((value as any).original.type as string) || (_data as File).type;
-							type = type.includes('svg') ? 'image/png' : type;
-							name = name.endsWith('svg') ? name.replace('svg', 'png') : name;
+							type = type.includes('svg') ? 'image/avif' : type;
+							name = name.endsWith('svg') ? name.replace(/\.svg$/, '.avif') : name;
+							console.log(name);
 							let file = new File([await blob.arrayBuffer()], name, {
 								type
 							});

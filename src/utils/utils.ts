@@ -11,6 +11,7 @@ import type { Schema } from '@src/collections/types';
 import type { z } from 'zod';
 import mongoose from 'mongoose';
 import type { ImageFiles } from './types';
+import type sharp from 'sharp';
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -109,48 +110,49 @@ export async function saveImage(
 		return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
 	}
 	let { name, ext } = removeExtension(file.name);
-	//original image
 
-	let url = `images/original/${hash}.avif`;
-
-	let original = await sharp(buffer)
-		.rotate() // Rotate image according to EXIF data
-		.toFormat('avif', { quality: 80 })
-		.toBuffer({ resolveWithObject: true });
 	fileInfo = {
 		hash,
 		used_by: [],
-		folder: folder,
-		original: {
-			name: file.name,
-			url: '/storage/' + url,
-			size: original.info.size,
-			type: file.type,
-			lastModified: file.lastModified,
-			width: original.info.width,
-			height: original.info.height
-		}
+		folder: folder
 	};
-
-	if (!fs.existsSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`))) {
-		fs.mkdirSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`), { recursive: true });
-	}
-
-	fs.writeFileSync(`${publicConfig.STORAGE_FOLDER}/${url}`, original.data);
-	for (let size in SIZES) {
-		if (size == 'original') continue;
-
-		if (SIZES[size] > original.info.width) {
+	let keys = Object.keys(SIZES).filter((key) => key != 'original');
+	keys.unshift('original');
+	for (let size of keys) {
+		if (fileInfo.original && SIZES[size] > fileInfo.original.width) {
+			// if size is larger than original use original
 			fileInfo[size] = fileInfo.original;
 			continue;
 		}
+		let resizedImage: {
+			info: sharp.OutputInfo;
+			data: Buffer;
+		};
+		let url: string;
+		if (ext == 'svg') {
+			if (fileInfo.original) {
+				fileInfo[size] = fileInfo.original; // use original
+				continue; // dont write on disk if not original
+			}
+			resizedImage = {
+				info: (await sharp(buffer).metadata()) as any,
+				data: buffer
+			};
 
-		const resizedImage = await sharp(buffer)
-			.rotate() // Rotate image according to EXIF data
-			.resize({ width: SIZES[size] })
-			.toFormat('avif', { quality: 80 })
-			.toBuffer({ resolveWithObject: true });
-		let url = `images/${size}/${hash}.avif`;
+			url = `images/${size}/${hash}.svg`;
+		} else if (ext == 'gif') {
+			resizedImage = await sharp(buffer, { animated: true })
+				.resize({ width: SIZES[size] || undefined })
+				.toFormat('webp', { quality: 80 })
+				.toBuffer({ resolveWithObject: true });
+			url = `images/${size}/${hash}.webp`;
+		} else {
+			resizedImage = await sharp(buffer)
+				.resize({ width: SIZES[size] || undefined })
+				.toFormat('avif', { quality: 80 })
+				.toBuffer({ resolveWithObject: true });
+			url = `images/${size}/${hash}.avif`;
+		}
 
 		if (!fs.existsSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`))) {
 			fs.mkdirSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`), { recursive: true });
@@ -158,7 +160,7 @@ export async function saveImage(
 		//sized images
 		fs.writeFileSync(`${publicConfig.STORAGE_FOLDER}/${url}`, resizedImage.data);
 		fileInfo[size] = {
-			name: `${name}.avif`,
+			name: `${name}.${removeExtension(url).ext}`,
 			url: '/storage/' + url,
 			size: resizedImage.info.size,
 			type: 'image/avif',
