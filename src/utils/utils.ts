@@ -99,7 +99,7 @@ export async function saveImage(
 	if (browser) return {} as any;
 	let sharp = (await import('sharp')).default;
 
-	let fileInfo = {};
+	let fileInfo: { [key: string]: any } = {};
 
 	let arrayBuffer = await file.arrayBuffer();
 	let buffer = Buffer.from(arrayBuffer);
@@ -111,9 +111,12 @@ export async function saveImage(
 	let { name, ext } = removeExtension(file.name);
 	//original image
 
-	let url = `images/original/${hash}.${ext}`;
+	let url = `images/original/${hash}.avif`;
 
-	let info = await sharp(buffer).metadata();
+	let original = await sharp(buffer)
+		.rotate() // Rotate image according to EXIF data
+		.toFormat('avif', { quality: 80 })
+		.toBuffer({ resolveWithObject: true });
 	fileInfo = {
 		hash,
 		used_by: [],
@@ -121,11 +124,11 @@ export async function saveImage(
 		original: {
 			name: file.name,
 			url: '/storage/' + url,
-			size: file.size,
+			size: original.info.size,
 			type: file.type,
 			lastModified: file.lastModified,
-			width: info.width,
-			height: info.height
+			width: original.info.width,
+			height: original.info.height
 		}
 	};
 
@@ -133,9 +136,14 @@ export async function saveImage(
 		fs.mkdirSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`), { recursive: true });
 	}
 
-	fs.writeFileSync(`${publicConfig.STORAGE_FOLDER}/${url}`, buffer);
+	fs.writeFileSync(`${publicConfig.STORAGE_FOLDER}/${url}`, original.data);
 	for (let size in SIZES) {
 		if (size == 'original') continue;
+
+		if (SIZES[size] > original.info.width) {
+			fileInfo[size] = fileInfo.original;
+			continue;
+		}
 
 		const resizedImage = await sharp(buffer)
 			.rotate() // Rotate image according to EXIF data

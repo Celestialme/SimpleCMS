@@ -57,7 +57,7 @@ widget.modifyRequest = async ({
 			for (let img_id in images) {
 				if (images[img_id] instanceof File) {
 					//locally selected new images
-					let res = await saveImage(images[img_id], collection.name);
+					let res = await saveImage(images[img_id], field.image_folder);
 					let fileInfo = res.fileInfo;
 					_id = res.id;
 					for (let lang in _data.content) {
