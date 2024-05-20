@@ -121,6 +121,7 @@
 					}
 				});
 			});
+			if ('_id' in value) meta_data.add('storage_images_remove', [value._id]);
 			editing = false;
 		},
 		async addBlur() {
