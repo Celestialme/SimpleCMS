@@ -8,11 +8,13 @@
 	import { createEventDispatcher } from 'svelte';
 	export let value: File | ImageFiles | undefined = undefined;
 	export let show = true;
+	export let closeButton = false;
 	let ev = createEventDispatcher();
 	let input: HTMLInputElement;
 	let showMedia = false;
 	let mediaOnSelect = (data: ImageFiles) => {
 		show = false;
+		showMedia = false;
 		value = data;
 		ev('change', value);
 	};
@@ -37,10 +39,13 @@
 				asAny(e.target).style.removeProperty('border-color');
 			}}
 			class={twMerge(
-				'w-[500px] max-w-full h-[200px] mt-2 border-2 border-dashed border-[#c1c1c1] flex flex-col items-center justify-center gap-4 select-none',
+				'w-[500px] max-w-full h-[200px] mt-2 border-2 border-dashed border-[#c1c1c1] flex flex-col items-center justify-center gap-4 select-none relative',
 				$$props.class
 			)}
 		>
+			{#if closeButton}
+				<XIcon class="absolute right-2 top-2 cursor-pointer" on:click={() => (show = false)} />
+			{/if}
 			<p>Drag & Drop</p>
 			<p>or</p>
 			<div class="flex w-full gap-2 justify-center">
