@@ -65,7 +65,13 @@
 		if (!collectionName) return;
 		let data =
 			$mode == 'edit'
-				? obj2formData({ originalName: $collection.name, collectionName, fields: $collection.fields, permissions: permissionsValue, icon })
+				? obj2formData({
+						originalName: $collection.name,
+						collectionName,
+						fields: $collection.fields,
+						permissions: permissionsValue,
+						icon
+					})
 				: obj2formData({ fields, collectionName, icon, permissions: permissionsValue });
 		axios.post(`?/saveCollection`, data, {
 			headers: {
@@ -76,7 +82,9 @@
 </script>
 
 <div class="body">
-	<button class="text-white fixed top-[13px] left-[10px]" on:click={() => ($drawerExpanded = !$drawerExpanded)}
+	<button
+		class="text-white fixed top-[13px] left-[10px]"
+		on:click={() => ($drawerExpanded = !$drawerExpanded)}
 		><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
 	>
 	<div class="left_panel">
@@ -88,13 +96,25 @@
 			<div class:max-md:hidden={!$drawerExpanded && navButton.x == navButton.radius}>
 				<FloatingNav bind:buttonInfo={navButton} />
 			</div>
+			<section class="text-center">
+				<button
+					on:click={() => axios.get('/api/exportData')}
+					class="p-2 bg-[#353b63] text-white w-full"
+				>
+					Export Data
+				</button>
+			</section>
 		</Drawer>
 	</div>
 	<div class="right_panel flex-grow">
 		<Header saveFunction={save} />
 		<div class="flex justify-center gap-1 w-full mb-10">
 			{#each tabs as tab}
-				<Button class="!min-w-[120px]" bgColor={tab == currentTab ? '#42c542' : 'gray'} on:click={() => (currentTab = tab)}>{tab}</Button>
+				<Button
+					class="!min-w-[120px]"
+					bgColor={tab == currentTab ? '#42c542' : 'gray'}
+					on:click={() => (currentTab = tab)}>{tab}</Button
+				>
 			{/each}
 		</div>
 		{#if currentTab == 'Core'}

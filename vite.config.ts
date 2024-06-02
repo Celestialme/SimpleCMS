@@ -51,7 +51,10 @@ export default defineConfig({
 				return {
 					define: {
 						'import.meta.env.collectionsFolderJS': JSON.stringify(collectionsFolderJS),
-						'import.meta.env.collectionsFolderTS': JSON.stringify(collectionsFolderTS)
+						'import.meta.env.collectionsFolderTS': JSON.stringify(collectionsFolderTS),
+						'import.meta.env.root': JSON.stringify(
+							'/' + __dirname.replace(parsed.root, '').replaceAll('\\', '/')
+						)
 					}
 				};
 			},

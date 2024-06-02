@@ -11,3 +11,4 @@ vite.config.ts.timestamp-*
 /storage
 /collections
 /config/private.ts
+/data.json

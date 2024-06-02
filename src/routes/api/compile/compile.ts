@@ -8,7 +8,9 @@ export async function compile({
 		fs.mkdirSync(collectionsFolderJS);
 	}
 	let ts = (await import('typescript')).default;
-	let files = fs.readdirSync(collectionsFolderTS).filter((file) => !['Auth.ts', 'index.ts'].includes(file));
+	let files = fs
+		.readdirSync(collectionsFolderTS)
+		.filter((file) => !['Auth.ts', 'index.ts'].includes(file));
 
 	for (let file of files) {
 		let content = fs.readFileSync(`${collectionsFolderTS}/${file}`, { encoding: 'utf-8' });
