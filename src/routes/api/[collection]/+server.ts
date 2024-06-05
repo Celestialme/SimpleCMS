@@ -27,8 +27,9 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	}
 	let collections = await getCollectionModels();
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
+
 	let collection = collections[params.collection];
-	let length = parseInt(url.searchParams.get('length') as string) || Infinity;
+	let length = parseInt(url.searchParams.get('length') as string) || 0;
 	let filter: { [key: string]: string } =
 		JSON.parse(url.searchParams.get('filter') as string) || {};
 	let sort: { [key: string]: number } = JSON.parse(url.searchParams.get('sort') as string) || {};
@@ -67,7 +68,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	let entryListWithCount = await collection.aggregate([
 		{
 			$facet: {
-				entries: [...aggregations, { $skip: skip }, { $limit: length }],
+				entries: [...aggregations, { $skip: skip }, ...(length ? [{ $limit: length }] : [])],
 				totalCount: [...aggregations, { $count: 'total' }]
 			}
 		}
@@ -143,7 +144,6 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 			body[key] = JSON.parse(data.get(key) as string, (key, value) => {
 				if (value?.instanceof == 'File') {
 					let file = data.get(value.id) as File;
-					file.path = value.path;
 
 					data.delete(value.id);
 					return file;
@@ -217,7 +217,6 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 			body[key] = JSON.parse(data.get(key) as string, (key, value) => {
 				if (value?.instanceof == 'File') {
 					let file = data.get(value.id) as File;
-					file.path = value.path;
 					data.delete(value.id);
 					return file;
 				}

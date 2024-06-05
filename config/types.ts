@@ -11,6 +11,7 @@ export let createPrivateConfig = (arg: {
 	SMTP_PASSWORD?: string;
 	SERVER_PORT?: number;
 	BODY_SIZE_LIMIT: number;
+	EXTRACT_DATA_PATH?: string;
 }) => arg;
 export let createPublicConfig = <
 	const C,

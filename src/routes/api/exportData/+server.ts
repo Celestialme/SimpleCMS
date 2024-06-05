@@ -4,6 +4,8 @@ import { auth, getCollectionModels } from '../db';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import { collections, tableHeaders } from '@src/stores/load';
 import { get } from 'svelte/store';
+import { GET as getData } from '@src/routes/api/[collection]/+server';
+import privateConfig from '@root/config/private';
 export const GET: RequestHandler = async ({ cookies }) => {
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await auth.validateSession(session_id);
@@ -15,9 +17,23 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	let data: { [key: string]: any } = {};
 	for (let collection of $collections) {
 		let name = collection.name as string;
-		data[name as string] = await collectionsModels[name as string].find({});
+		data[name as string] = (
+			await (
+				await (getData as any)({
+					params: { collection: name },
+					url: new URL(`http://localhost/api/${name}`),
+					cookies
+				})
+			).json()
+		).entryList;
 	}
-	console.log(data);
-	fs.writeFileSync(`${import.meta.env.root}/data.json`, JSON.stringify(data));
-	return new Response('', { status: 200 });
+	if (privateConfig.EXTRACT_DATA_PATH) {
+		fs.writeFileSync(
+			privateConfig.EXTRACT_DATA_PATH,
+			JSON.stringify(data).replaceAll('/storage', 'storage')
+		);
+		return new Response('', { status: 200 });
+	} else {
+		return new Response('EXTRACT_DATA_PATH not configured', { status: 500 });
+	}
 };
