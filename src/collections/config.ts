@@ -1,9 +1,11 @@
-export function createCategories(collections) {
+import type { CollectionNames, Schema } from './types';
+
+export function createCategories(collections: { [key in CollectionNames]: Schema }) {
 	return [
 		{
 			name: 'Collections',
 			icon: 'bi:collection',
-			collections: [collections.Posts2, collections.Posts3, collections.thumbs]
+			collections: [collections.About, collections.Posts2, collections.Posts3, collections.thumbs]
 		},
 		{
 			name: 'posts',

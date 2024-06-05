@@ -94,7 +94,7 @@ widget.modifyRequest = async ({
 		}
 	};
 
-	await cleanChildren(_data.children);
+	await cleanChildren(_data?.children);
 
 	return _data;
 };

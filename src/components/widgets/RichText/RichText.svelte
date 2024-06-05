@@ -7,12 +7,12 @@
 	import { Editor, Extension } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import Link from '@tiptap/extension-link';
-	import TextStyle from './TextStyle';
+	import TextStyle from './extensions/TextStyle';
 	import FontFamily from '@tiptap/extension-font-family';
 	import Color from '@tiptap/extension-color';
 	import TextAlign from '@tiptap/extension-text-align';
 	import type { ComponentProps } from 'svelte';
-	import ImageResize from './ImageResize';
+	import ImageResize from './extensions/ImageResize';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
 	import { entryData, mode } from '@src/stores/store';
 	import {
@@ -25,6 +25,7 @@
 	import type { FieldType } from '.';
 	import { contentLanguage } from '@src/stores/load';
 	import ImageDescription from './components/ImageDescription.svelte';
+	import Heading from './extensions/Heading';
 	export let field: FieldType;
 	export const WidgetData = async () => ({ images, data: _data });
 	let fieldName = getFieldName(field);
@@ -45,10 +46,16 @@
 	let deb = debounce(500);
 	onMount(() => {
 		editor = new Editor({
+			parseOptions: { preserveWhitespace: 'full' },
 			element: element,
 			extensions: [
 				StarterKit,
-				Link,
+				Heading,
+				Link.configure({
+					HTMLAttributes: {
+						class: 'text-[#00d3d0] cursor-pointer underline'
+					}
+				}),
 				TextStyle,
 				FontFamily,
 				Color,
@@ -82,6 +89,7 @@
 				deb(() => {
 					let content = editor.getHTML();
 					content == '<p></p>' && (content = '');
+					console.log(content);
 					_data.content[_language] = content;
 				});
 			}

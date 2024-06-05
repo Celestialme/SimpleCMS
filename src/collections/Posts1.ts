@@ -10,7 +10,7 @@ let schema: Schema = {
 			label: 'email'
 		}),
 		widgets.Text({ label: 'text', translated: false }),
-		widgets.ImageUpload({ label: 'image', path: 'storage/images' })
+		widgets.ImageUpload({ label: 'image', folder: 'images' })
 	]
 };
 export default schema;

@@ -97,14 +97,14 @@ const ImageResize = ImageExtension.extend({
 		return [
 			'div',
 			{
-				style: `text-align: ${HTMLAttributes.textAlign};float: ${HTMLAttributes.float};width: ${HTMLAttributes.w};height: ${HTMLAttributes.h}; margin: ${HTMLAttributes.margin}`
+				style: `text-align: ${HTMLAttributes.textAlign};float: ${HTMLAttributes.float};width: ${HTMLAttributes.w};height: ${HTMLAttributes.h}; margin: ${HTMLAttributes.margin};${HTMLAttributes.float == 'right' ? 'padding-left: 10px;' : 'padding-right: 10px;'}`
 			},
 			[
 				'img',
 				{
 					storage_image: HTMLAttributes.storage_image,
 					src: HTMLAttributes.id || HTMLAttributes.src,
-					style: 'width: 100%; height: 100%; cursor:pointer'
+					style: 'width: 100%; height: 100%'
 				}
 			],
 			HTMLAttributes.description
@@ -141,6 +141,7 @@ const ImageResize = ImageExtension.extend({
 			const resizer = document.createElement('div');
 			const img = document.createElement('img');
 			container.style.textAlign = nodeAttrs.textAlign;
+
 			if (nodeAttrs.description) {
 				let description = document.createElement('div');
 				description.style.cssText = DESCRIPTION_STYLE;
@@ -151,9 +152,9 @@ const ImageResize = ImageExtension.extend({
 			let knob2 = document.createElement('div');
 			let knob3 = document.createElement('div');
 			knob1.style.cssText =
-				'cursor: ew-resize;width: 15px; height: 100%;  position: absolute; top:0;left:0;transform:translateX(-50%)';
+				'cursor: ew-resize;width: 15px; height: 100%;  position: absolute; top:0;left:10px;transform:translateX(-50%)';
 			knob2.style.cssText =
-				'cursor: ew-resize;width: 15px; height: 100%;  position: absolute; top:0;right:0;transform:translateX(50%)';
+				'cursor: ew-resize;width: 15px; height: 100%;  position: absolute; top:0;right:10px;transform:translateX(50%)';
 			knob3.style.cssText =
 				'cursor: ns-resize;width: 100%; height: 15px;  position: absolute; bottom:0;left:0;transform:translateY(50%)';
 
@@ -177,7 +178,8 @@ const ImageResize = ImageExtension.extend({
 				width: nodeAttrs.w,
 				height: nodeAttrs.h,
 				margin: nodeAttrs.margin,
-				float: nodeAttrs.float
+				float: nodeAttrs.float,
+				padding: nodeAttrs.float == 'right' ? '0 0 0 10px' : ' 0 10px 0 0'
 			});
 
 			resizer.appendChild(img);
@@ -193,11 +195,7 @@ const ImageResize = ImageExtension.extend({
 			if (nodeAttrs.textAlign != 'justify') {
 				nodeAttrs.margin = resizer.style.margin = 'unset';
 			}
-			if (nodeAttrs.float == 'left') {
-				resizer.style.marginRight = '10px';
-			} else if (nodeAttrs.float == 'right') {
-				resizer.style.marginLeft = '10px';
-			}
+
 			resizer.ondrag = (e) => {
 				if (nodeAttrs.textAlign != 'justify') {
 					return;
