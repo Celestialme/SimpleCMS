@@ -10,7 +10,7 @@ export async function load({ cookies, route, params }) {
 	let collections = await getCollections();
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await auth.validateSession(session_id);
-	let collection = collections.find((c) => c.name == params.collection);
+	let collection = collections[params.collection as string];
 
 	if (user?.lastAuthMethod == 'token') {
 		throw redirect(302, `/profile`);
@@ -24,7 +24,9 @@ export async function load({ cookies, route, params }) {
 	if (user) {
 		if (route.id != '/[language]/[collection]') {
 			//else if language and collection both set in url
-			let _filtered = collections.filter((c) => user && c?.permissions?.[user.role]?.read != false); // filters collection  based on reading permissions  and redirects to first left one
+			let _filtered = Object.values(collections).filter(
+				(c) => user && c?.permissions?.[user.role]?.read != false
+			); // filters collection  based on reading permissions  and redirects to first left one
 			throw redirect(
 				302,
 				`/${params.language || publicConfig.DEFAULT_CONTENT_LANGUAGE}/${_filtered[0].name}`

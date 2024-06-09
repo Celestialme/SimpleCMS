@@ -1,5 +1,5 @@
 import type mongoose from 'mongoose';
-import type { SIZES } from './utils';
+import type { SIZES } from './files';
 
 export type ImageFiles = {
 	folder: string;

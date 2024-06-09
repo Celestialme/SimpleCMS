@@ -1,5 +1,5 @@
 import publicConfig from '@root/config/public';
-import type { Schema } from '@src/collections/types';
+import type { CollectionNames, Schema } from '@src/collections/types';
 import * as m from '@src/paraglide/messages.js';
 import { setLanguageTag, type AvailableLanguageTag } from '@src/paraglide/runtime';
 import { writable, type Writable } from 'svelte/store';
@@ -15,7 +15,7 @@ export let categories: Writable<
 		collections: Array<Schema>;
 	}>
 > = writable();
-export let collections: Writable<Array<Schema>> = writable();
+export let collections = writable({}) as Writable<{ [key in CollectionNames]: Schema }>;
 export let unAssigned: Writable<Array<Schema>> = writable();
 export let collection: Writable<Schema> = writable();
 export let saveFunction: Writable<{ fn: (args: any) => any; reset: () => any }> = writable({

@@ -9,7 +9,7 @@ let schema: Schema = {
 			fields: [
 				[
 					widgets.Text({ label: 'link 1', translated: true }),
-					widgets.ImageUpload({ label: 'image', path: 'images' })
+					widgets.ImageUpload({ label: 'image', folder: 'images' })
 				]
 			],
 			label: 'Menu'

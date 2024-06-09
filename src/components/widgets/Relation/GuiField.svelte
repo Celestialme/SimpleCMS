@@ -8,10 +8,14 @@
 	let _value =
 		typeof value == 'string'
 			? value
-			: $collections.find((entry) => {
+			: Object.values($collections).find((entry) => {
 					return typeof value != 'string' && entry[1].name == value.name;
-			  })?.[0] || 'null';
+				})?.[0] || 'null';
 	$: value = _value;
 </script>
 
-<DropDown items={$collections.map((collection) => collection.name)} bind:selected={_value} label="Select Collection" />
+<DropDown
+	items={Object.values($collections).map((collection) => collection.name)}
+	bind:selected={_value}
+	label="Select Collection"
+/>

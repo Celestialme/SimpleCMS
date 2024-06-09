@@ -12,7 +12,7 @@ let resolvers: { [key: string]: any } = {
 };
 let collectionSchemas: string[] = [];
 let collections = await getCollections();
-for (let collection of collections) {
+for (let collection of Object.values(collections)) {
 	resolvers[collection.name as string] = {};
 	let collectionSchema = `
 	type ${collection.name} {
@@ -77,11 +77,13 @@ typeDefs += Array.from(types).join('\n');
 typeDefs += collectionSchemas.join('\n');
 typeDefs += `
 type Query {
-	${collections.map((collection) => `${collection.name}: [${collection.name}]`).join('\n')}
+	${Object.values(collections)
+		.map((collection) => `${collection.name}: [${collection.name}]`)
+		.join('\n')}
 }
 `;
 console.log(typeDefs);
-for (let collection of collections) {
+for (let collection of Object.values(collections)) {
 	resolvers.Query[collection.name as string] = async () =>
 		await mongoose.models[collection.name as string]
 			.find({ status: { $ne: 'UNPUBLISHED' } })

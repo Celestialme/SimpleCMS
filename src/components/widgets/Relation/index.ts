@@ -14,7 +14,7 @@ const widget = <
 ) => {
 	let display;
 	display = async ({ data, collection, field, entry, contentLanguage }) => {
-		let relative_collection = (await getCollections()).find((c) => c.name == field.relation);
+		let relative_collection = (await getCollections())[field.relation];
 
 		let relative_field = relative_collection?.fields.find(
 			(f) => getFieldName(f) == field.displayPath
@@ -65,9 +65,7 @@ widget.modifyRequest = async ({
 	}
 	let { getCollectionModels } = await import('@src/routes/api/db');
 	let relative_collection = (await getCollectionModels())[field.relation];
-	let relative_collection_schema = (await getCollections()).find(
-		(c) => c.name == field.relation
-	) as Schema;
+	let relative_collection_schema = (await getCollections())[field.relation] as Schema;
 	let response = (await relative_collection.findById(_data)) as any;
 	let result = {};
 	for (let key in relative_collection_schema.fields) {
@@ -96,7 +94,7 @@ widget.modifyRequest = async ({
 widget.aggregations = {
 	filters: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
-		let relative_collection = (await getCollections()).find((c) => c.name == field.relation);
+		let relative_collection = (await getCollections())[field.relation];
 		let relative_field = relative_collection?.fields.find(
 			(f) => getFieldName(f) == field.displayPath
 		);
@@ -114,7 +112,7 @@ widget.aggregations = {
 	},
 	sorts: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
-		let relative_collection = (await getCollections()).find((c) => c.name == field.relation);
+		let relative_collection = (await getCollections())[field.relation];
 		let relative_field = relative_collection?.fields.find(
 			(f) => getFieldName(f) == field.displayPath
 		);

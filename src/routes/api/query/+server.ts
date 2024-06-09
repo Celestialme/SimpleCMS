@@ -21,7 +21,7 @@ export const POST = async ({ request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections()).find((c) => c.name == collectionName) as Schema;
+	let collection_schema = (await getCollections())[collectionName] as Schema;
 	let has_read_access = collection_schema?.permissions?.[user.role]?.read != false;
 	if (!has_read_access) {
 		return new Response('', { status: 403 });

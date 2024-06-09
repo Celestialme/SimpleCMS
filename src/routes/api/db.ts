@@ -20,7 +20,7 @@ export async function getCollectionModels() {
 	return new Promise<typeof collectionsModels>((resolve) => {
 		unsubscribe = collections.subscribe((collections) => {
 			if (collections) {
-				for (let collection of collections) {
+				for (let collection of Object.values(collections)) {
 					const schema_object = new mongoose.Schema(
 						{ createdAt: Number, updatedAt: Number },
 						{

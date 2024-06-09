@@ -26,10 +26,19 @@ export let updateCollections = async (recompile: boolean = false) => {
 		for (let _category of _categories) {
 			_category.collections = _category.collections.filter((x) => !!x == true);
 		}
-		let _collections = _categories.map((x) => x.collections).reduce((x, acc) => x.concat(acc));
+		let _collections = _categories
+			.map((x) => x.collections)
+			.reduce((acc, x) => acc.concat(x))
+			.reduce(
+				(acc, x) => {
+					acc[x.name as string] = x;
+					return acc;
+				},
+				{} as { [key in CollectionNames]: Schema }
+			);
 		categories.set(_categories);
 		collections.set(_collections); // returns all collections
-		unAssigned.set(Object.values(imports).filter((x) => !_collections.includes(x)));
+		unAssigned.set(Object.values(imports).filter((x) => !Object.values(_collections).includes(x)));
 	});
 };
 updateCollections();
@@ -84,9 +93,9 @@ async function getImports(recompile: boolean = false) {
 }
 let unsubscribe: Unsubscriber | undefined;
 export async function getCollections() {
-	return new Promise<Schema[]>((resolve) => {
+	return new Promise<{ [key in CollectionNames]: Schema }>((resolve) => {
 		unsubscribe = collections.subscribe((collections) => {
-			if (collections?.length > 0) {
+			if (Object.keys(collections)?.length > 0) {
 				unsubscribe && unsubscribe();
 				unsubscribe = undefined;
 				resolve(collections);

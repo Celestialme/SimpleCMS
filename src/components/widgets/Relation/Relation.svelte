@@ -18,23 +18,33 @@
 	let showDropDown = false;
 	let entryMode: 'create' | 'edit' | 'choose' = 'choose';
 	let relation_entry;
-	let relationCollection = $collections.find((x) => x.name == field?.relation);
+	let relationCollection = $collections[field?.relation];
 
 	export const WidgetData = async () => {
 		let relation_id = '';
 		if (!field) return;
 		if (entryMode == 'create') {
-			relation_id = (await saveFormData({ data: fieldsData, _collection: relationCollection, _mode: 'create' }))[0]?._id;
+			relation_id = (
+				await saveFormData({ data: fieldsData, _collection: relationCollection, _mode: 'create' })
+			)[0]?._id;
 		} else if (entryMode == 'choose') {
 			relation_id = selected?._id;
 		} else if (entryMode == 'edit') {
-			relation_id = (await saveFormData({ data: fieldsData, _collection: relationCollection, _mode: 'edit', id: relation_entry._id }))[0]?._id;
+			relation_id = (
+				await saveFormData({
+					data: fieldsData,
+					_collection: relationCollection,
+					_mode: 'edit',
+					id: relation_entry._id
+				})
+			)[0]?._id;
 		}
 		return relation_id;
 	};
 	async function openDropDown() {
 		if (!field) return;
-		dropDownData = (await axios.get(`/api/${field.relation}?page=1&length=10&filter={}&sort={}`)).data.entryList;
+		dropDownData = (await axios.get(`/api/${field.relation}?page=1&length=10&filter={}&sort={}`))
+			.data.entryList;
 		showDropDown = true;
 		entryMode = 'choose';
 	}
@@ -59,7 +69,13 @@
 
 		data = data[field.displayPath] ? data : value;
 		data = $mode == 'create' ? {} : data;
-		display = await field?.display({ data, field, collection: $collection, entry: $entryData, contentLanguage: $contentLanguage });
+		display = await field?.display({
+			data,
+			field,
+			collection: $collection,
+			entry: $entryData,
+			contentLanguage: $contentLanguage
+		});
 	})(expanded);
 
 	function save() {
@@ -70,7 +86,9 @@
 
 {#if !expanded && !showDropDown}
 	<div class="flex header">
-		<p class="flex-grow text-center" on:click={openDropDown}>{@html selected?.display || display || 'select new'}</p>
+		<p class="flex-grow text-center" on:click={openDropDown}>
+			{@html selected?.display || display || 'select new'}
+		</p>
 		<div class="ml-auto">
 			{#if $mode == 'create'}
 				<button
@@ -99,7 +117,12 @@
 {:else if !expanded && showDropDown}
 	<DropDown {dropDownData} {field} bind:selected bind:showDropDown />
 {:else}
-	<Fields fields={relationCollection?.fields} root={false} bind:fieldsData customData={relation_entry} />
+	<Fields
+		fields={relationCollection?.fields}
+		root={false}
+		bind:fieldsData
+		customData={relation_entry}
+	/>
 	{(($saveFunction.fn = save), '')}
 {/if}
 

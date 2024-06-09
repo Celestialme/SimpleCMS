@@ -16,10 +16,10 @@
 	import FloatingNav from '@src/components/system/FloatingNav.svelte';
 	import Media from '@src/components/Media.svelte';
 	let ForwardBackward: boolean = false; // if using browser history
-	collection.set($collections.find((x) => x.name === $page.params.collection) as Schema); // current collection
+	collection.set($collections[$page.params.collection as string] as Schema); // current collection
 	globalThis.onpopstate = async () => {
 		ForwardBackward = true;
-		collection.set($collections.find((x) => x.name === $page.params.collection) as Schema);
+		collection.set($collections[$page.params.collection as string] as Schema);
 	};
 	let navButton;
 

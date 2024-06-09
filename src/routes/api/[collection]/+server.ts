@@ -18,9 +18,7 @@ export const GET: RequestHandler = async ({ params, url, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections()).find(
-		(c) => c.name == params.collection
-	) as Schema;
+	let collection_schema = (await getCollections())[params.collection] as Schema;
 	let has_read_access = collection_schema?.permissions?.[user.role]?.read != false;
 	if (!has_read_access) {
 		return new Response('', { status: 403 });
@@ -129,9 +127,7 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections()).find(
-		(c) => c.name == params.collection
-	) as Schema;
+	let collection_schema = (await getCollections())[params.collection] as Schema;
 	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
@@ -201,9 +197,7 @@ export const POST: RequestHandler = async ({ params, request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections()).find(
-		(c) => c.name == params.collection
-	) as Schema;
+	let collection_schema = (await getCollections())[params.collection] as Schema;
 	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
@@ -268,9 +262,7 @@ export const DELETE: RequestHandler = async ({ params, request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections()).find(
-		(c) => c.name == params.collection
-	) as Schema;
+	let collection_schema = (await getCollections())[params.collection] as Schema;
 	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });

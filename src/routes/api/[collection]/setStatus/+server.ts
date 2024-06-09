@@ -9,7 +9,8 @@ export const PATCH: RequestHandler = async ({ params, request, cookies }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let has_write_access = (await getCollections()).find((c) => c.name == params.collection)?.permissions?.[user.role]?.write;
+	let has_write_access = (await getCollections())[params.collection]?.permissions?.[user.role]
+		?.write;
 	if (!has_write_access) {
 		return new Response('', { status: 403 });
 	}
