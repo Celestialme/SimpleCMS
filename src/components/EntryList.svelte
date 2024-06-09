@@ -18,7 +18,7 @@
 	let refresh = async (fetch: boolean = true) => {
 		if (fetch) {
 			data = await getData({
-				collectionName: $collection.name as string,
+				collectionName: $collection.name as any,
 				page: currentPage,
 				limit: 10,
 				contentLanguage: $contentLanguage,

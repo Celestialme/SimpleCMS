@@ -24,7 +24,7 @@ export type Permissions = {
 	[K in Roles]?: { [permissions in (typeof permissions)[number]]?: boolean };
 };
 export interface Schema {
-	name?: string;
+	name?: CollectionNames;
 	icon?: string;
 	fields: ReturnType<(typeof widgets)[keyof typeof widgets]>[];
 	status?: 'published' | 'unpublished' | 'draft';
@@ -45,6 +45,29 @@ export let sanitizePermissions = (permissions) => {
 	if (Object.keys(res).length == 0) return undefined;
 	return res;
 };
-
-export type CollectionNames = 'About'|'imageArray'|'Menu'|'Menu1'|'Menu2'|'News'|'Posts1'|'Posts2'|'Posts3'|'Relation'|'thumbs';
-export type CollectionContent = {"About":["RichText"],"imageArray":["ImageArray"],"Menu":["Menu"],"Menu1":["Menu"],"Menu2":["Menu"],"News":["thumbnail","Content"],"Posts1":["email","text","image"],"Posts2":["RichText","image"],"Posts3":["text 1","text 2","text 3","text 4","text 5"],"Relation":["info","relation2"],"thumbs":["Image","Image2"]};
+
+export type CollectionNames =
+	| 'About'
+	| 'imageArray'
+	| 'Menu'
+	| 'Menu1'
+	| 'Menu2'
+	| 'News'
+	| 'Posts1'
+	| 'Posts2'
+	| 'Posts3'
+	| 'Relation'
+	| 'thumbs';
+export type CollectionContent = {
+	About: ['RichText'];
+	imageArray: ['ImageArray'];
+	Menu: ['Menu'];
+	Menu1: ['Menu'];
+	Menu2: ['Menu'];
+	News: ['thumbnail', 'Content'];
+	Posts1: ['email', 'text', 'image'];
+	Posts2: ['RichText', 'image'];
+	Posts3: ['text 1', 'text 2', 'text 3', 'text 4', 'text 5'];
+	Relation: ['info', 'relation2'];
+	thumbs: ['Image', 'Image2'];
+};

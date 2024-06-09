@@ -138,7 +138,7 @@ export async function saveFormData({
 	if (!meta_data.is_empty()) formData.append('_meta_data', JSON.stringify(meta_data.get()));
 	switch ($mode) {
 		case 'create':
-			return await addData({ data: formData, collectionName: $collection.name as string });
+			return await addData({ data: formData, collectionName: $collection.name as any });
 		case 'edit':
 			formData.append('_id', id || $entryData._id);
 			return await axios

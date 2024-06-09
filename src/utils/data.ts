@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { config, toFormData } from './utils';
+import type { CollectionNames } from '@src/collections/types';
 
 export async function getData(query: {
-	collectionName: string;
+	collectionName: CollectionNames;
 	page: number;
 	limit: number;
 	contentLanguage: string;
@@ -21,7 +22,7 @@ export async function addData({
 	collectionName
 }: {
 	data: FormData;
-	collectionName: string;
+	collectionName: CollectionNames;
 }) {
 	data.append('collectionName', collectionName);
 	data.append('method', 'POST');
