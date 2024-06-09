@@ -6,6 +6,7 @@ import { collections, tableHeaders } from '@src/stores/load';
 import { get } from 'svelte/store';
 import { GET as getData } from '@src/routes/api/[collection]/+server';
 import privateConfig from '@root/config/private';
+import { _GET } from '../query/Get';
 export const GET: RequestHandler = async ({ cookies }) => {
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user = await auth.validateSession(session_id);
@@ -19,10 +20,9 @@ export const GET: RequestHandler = async ({ cookies }) => {
 		let name = collection.name as string;
 		data[name as string] = (
 			await (
-				await (getData as any)({
-					params: { collection: name },
-					url: new URL(`http://localhost/api/${name}`),
-					cookies
+				await _GET({
+					schema: collectionsModels[name],
+					user
 				})
 			).json()
 		).entryList;

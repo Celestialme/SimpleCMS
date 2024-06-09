@@ -1,0 +1,55 @@
+import { SESSION_COOKIE_NAME } from '@src/auth';
+import type { User } from '@src/auth/types';
+import { getCollections } from '@src/collections';
+import publicConfig from '@root/config/public';
+import { auth } from '../db';
+import type { Schema } from '@src/collections/types';
+import { _GET } from './GET';
+import { _POST } from './POST';
+
+export const POST = async ({ request, cookies }) => {
+	let data = await request.formData();
+	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
+	let user_id = data.get('user_id') as string;
+	let collectionName = data.get('collectionName') as string;
+	let method = data.get('method') as string;
+	['user_id', 'collectionName', 'method'].forEach((key) => data.delete(key));
+
+	let user = user_id
+		? ((await auth.checkUser({ _id: user_id })) as User)
+		: ((await auth.validateSession(session_id)) as User);
+	if (!user) {
+		return new Response('', { status: 403 });
+	}
+	let collection_schema = (await getCollections()).find((c) => c.name == collectionName) as Schema;
+	let has_read_access = collection_schema?.permissions?.[user.role]?.read != false;
+	if (!has_read_access) {
+		return new Response('', { status: 403 });
+	}
+
+	let page = parseInt(data.get('page') as string) || 1;
+	let limit = parseInt(data.get('limit') as string) || 0;
+	let filter: { [key: string]: string } = JSON.parse(data.get('filter') as string) || {};
+	let sort: { [key: string]: number } = JSON.parse(data.get('sort') as string) || {};
+	let contentLanguage =
+		(data.get('contentLanguage') as string) || publicConfig.DEFAULT_CONTENT_LANGUAGE;
+
+	switch (method) {
+		case 'GET':
+			return _GET({
+				contentLanguage,
+				filter,
+				schema: collection_schema,
+				sort,
+				user,
+				limit,
+				page
+			});
+		case 'POST':
+			return _POST({
+				data,
+				schema: collection_schema,
+				user
+			});
+	}
+};

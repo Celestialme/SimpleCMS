@@ -1,6 +1,7 @@
 import { type Params, GuiSchema, GraphqlSchema } from './types';
-import { getFieldName, getGuiFields, get_elements_by_id, saveImage } from '@src/utils/utils';
-import { widgetContext, type ModifyRequestParams } from '..';
+import { getFieldName, getGuiFields, get_elements_by_id } from '@src/utils/utils';
+import { saveImage } from '@src/utils/files';
+import { type ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
 import type { ImageFiles } from '@src/utils/types';
 const WIDGET_NAME = 'ImageUpload' as const;

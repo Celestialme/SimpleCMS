@@ -1,17 +1,14 @@
-import fs from 'fs';
-import Path from 'path';
 import axios from 'axios';
 import { get } from 'svelte/store';
-import { collectionValue, entryData, mode, translationProgress } from '@src/stores/store';
+import { entryData, mode, translationProgress } from '@src/stores/store';
 import { collection } from '@src/stores/load';
 import publicConfig from '@root/config/public';
-import { browser } from '$app/environment';
 import _crypto from 'crypto';
 import type { Schema } from '@src/collections/types';
 import type { z } from 'zod';
 import mongoose from 'mongoose';
-import type { ImageFiles } from './types';
-import type sharp from 'sharp';
+import { addData } from './data';
+
 export const config = {
 	headers: {
 		'Content-Type': 'multipart/form-data'
@@ -91,89 +88,6 @@ export const obj2formData = (obj: any) => {
 	}
 	return formData;
 };
-let env_sizes = publicConfig.IMAGE_SIZES;
-export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
-export async function saveImage(
-	file: File,
-	folder: string
-): Promise<{ id: mongoose.Types.ObjectId; fileInfo: ImageFiles }> {
-	if (browser) return {} as any;
-	let sharp = (await import('sharp')).default;
-
-	let fileInfo: { [key: string]: any } = {};
-
-	let arrayBuffer = await file.arrayBuffer();
-	let buffer = Buffer.from(arrayBuffer);
-	let hash = _crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
-	let existing_file = await mongoose.models['_storage_images'].findOne({ hash: hash });
-	if (existing_file) {
-		return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
-	}
-	let { name, ext } = removeExtension(file.name);
-
-	fileInfo = {
-		hash,
-		used_by: [],
-		folder: folder
-	};
-	let keys = Object.keys(SIZES).filter((key) => key != 'original');
-	keys.unshift('original');
-	for (let size of keys) {
-		if (fileInfo.original && SIZES[size] > fileInfo.original.width) {
-			// if size is larger than original use original
-			fileInfo[size] = fileInfo.original;
-			continue;
-		}
-		let resizedImage: {
-			info: sharp.OutputInfo;
-			data: Buffer;
-		};
-		let url: string;
-		if (ext == 'svg') {
-			if (fileInfo.original) {
-				fileInfo[size] = fileInfo.original; // use original
-				continue; // dont write on disk if not original
-			}
-			resizedImage = {
-				info: (await sharp(buffer).metadata()) as any,
-				data: buffer
-			};
-
-			url = `images/${size}/${hash}.svg`;
-		} else if (ext == 'gif') {
-			resizedImage = await sharp(buffer, { animated: true })
-				.resize({ width: SIZES[size] || undefined })
-				.toFormat('webp', { quality: 80 })
-				.toBuffer({ resolveWithObject: true });
-			url = `images/${size}/${hash}.webp`;
-		} else {
-			resizedImage = await sharp(buffer)
-				.resize({ width: SIZES[size] || undefined })
-				.toFormat('avif', { quality: 80 })
-				.toBuffer({ resolveWithObject: true });
-			url = `images/${size}/${hash}.avif`;
-		}
-
-		if (!fs.existsSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`))) {
-			fs.mkdirSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`), { recursive: true });
-		}
-		//sized images
-		fs.writeFileSync(`${publicConfig.STORAGE_FOLDER}/${url}`, resizedImage.data);
-		fileInfo[size] = {
-			name: `${name}.${removeExtension(url).ext}`,
-			url: '/storage/' + url,
-			size: resizedImage.info.size,
-			type: 'image/avif',
-			lastModified: file.lastModified,
-			width: resizedImage.info.width,
-			height: resizedImage.info.height
-		};
-	}
-
-	let res = await mongoose.models['_storage_images'].insertMany(fileInfo);
-
-	return { id: new mongoose.Types.ObjectId(res[0]._id), fileInfo: fileInfo as ImageFiles };
-}
 
 export let fieldsToSchema = (fields: Array<any>) => {
 	// removes widget, so it does not set up in db
@@ -224,7 +138,7 @@ export async function saveFormData({
 	if (!meta_data.is_empty()) formData.append('_meta_data', JSON.stringify(meta_data.get()));
 	switch ($mode) {
 		case 'create':
-			return await axios.post(`/api/${$collection.name}`, formData, config).then((res) => res.data);
+			return await addData({ data: formData, collectionName: $collection.name as string });
 		case 'edit':
 			formData.append('_id', id || $entryData._id);
 			return await axios
@@ -242,14 +156,6 @@ export async function extractData(fieldsData: any): Promise<{ [key: string]: any
 	return temp;
 }
 
-function removeExtension(fileName) {
-	const lastDotIndex = fileName.lastIndexOf('.');
-	if (lastDotIndex === -1) {
-		// If the file has no extension, return the original fileName
-		return { name: fileName, ext: '' };
-	}
-	return { name: fileName.slice(0, lastDotIndex), ext: fileName.slice(lastDotIndex + 1) };
-}
 export let asAny = (value: any) => value;
 
 export function deepCopy(obj) {
@@ -423,4 +329,16 @@ export let meta_data: {
 };
 RegExp.escape = (string) => {
 	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+export let toFormData = function (obj: { [key: string]: string | number }) {
+	let formData = new FormData();
+	for (let key in obj) {
+		if (typeof obj[key] == 'string') {
+			formData.append(key, obj[key] as string);
+		} else {
+			formData.append(key, JSON.stringify(obj[key]));
+		}
+	}
+	return formData;
 };

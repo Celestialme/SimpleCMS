@@ -1,5 +1,5 @@
 <script>
-	import { SIZES } from '@src/utils/utils';
+	import { SIZES } from '@src/utils/files';
 	import axios from 'axios';
 
 	function formatBytes(bytes) {
@@ -98,7 +98,7 @@
 		overflow: hidden;
 		box-shadow: 5px 4px 15px rgb(0 0 0 / 62%);
 		cursor: pointer;
-		overflow: auto;
+		overflow-y: auto;
 	}
 	.card::-webkit-scrollbar-thumb {
 		border-radius: 50px;

@@ -5,10 +5,10 @@ import { getCollectionFiles } from '@src/routes/api/getCollections/getCollection
 import { categories, collections, unAssigned } from '@src/stores/load';
 import type { Unsubscriber } from 'svelte/store';
 import { initWidgets } from '@src/components/widgets';
-import { defaultPermissions, type Schema } from './types';
+import { defaultPermissions, type CollectionNames, type Schema } from './types';
 import deepmerge from 'deepmerge';
 initWidgets();
-let imports: { [Key: string]: Schema } = {};
+let imports = {} as { [key in CollectionNames]: Schema };
 let rnd = Math.random();
 export let updateCollections = async (recompile: boolean = false) => {
 	if (recompile) rnd = Math.random();
@@ -38,9 +38,15 @@ export { categories };
 
 async function getImports(recompile: boolean = false) {
 	if (Object.keys(imports).length && !recompile) return imports;
-	imports = {};
+	imports = {} as { [key in CollectionNames]: Schema };
 	if (dev || building) {
-		let modules = import.meta.glob(['./*.ts', '!./index.ts', '!./types.ts', '!./Auth.ts', '!./config.ts']);
+		let modules = import.meta.glob([
+			'./*.ts',
+			'!./index.ts',
+			'!./types.ts',
+			'!./Auth.ts',
+			'!./config.ts'
+		]);
 		for (let module in modules) {
 			let name = module.replace(/.ts$/, '').replace('./', '');
 			let collection = ((await modules[module]()) as any).default;
@@ -62,7 +68,8 @@ async function getImports(recompile: boolean = false) {
 			let files = getCollectionFiles();
 			for (let file of files) {
 				let name = file.replace(/.js$/, '');
-				let collection = (await import(import.meta.env.collectionsFolderJS + file + '?' + rnd)).default;
+				let collection = (await import(import.meta.env.collectionsFolderJS + file + '?' + rnd))
+					.default;
 				collection.name = name;
 				!collection.icon && (collection.icon = 'iconoir:info-empty');
 				imports[name] = collection;

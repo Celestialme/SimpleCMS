@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { mode, entryData, modifyEntry, statusMap } from '@src/stores/store';
-	import axios from 'axios';
+	import axios, { toFormData } from 'axios';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { contentLanguage, collection } from '@src/stores/load';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import { asAny, debounce, getFieldName, meta_data } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
+	import { getData } from '@src/utils/data';
 	let data: { entryList: [any]; pagesCount: number } | undefined;
 	let tableHeaders: Array<{ label: string; name: string }> = [];
 	let tableData: any[] = [];
@@ -16,22 +17,20 @@
 	let waitFilter = debounce(300);
 	let refresh = async (fetch: boolean = true) => {
 		if (fetch) {
-			data = (await axios
-				.get(
-					`/api/${$collection.name}?page=${currentPage}&length=${10}&contentLanguage=${$contentLanguage}&filter=${JSON.stringify(
-						filters
-					)}&sort=${JSON.stringify(
-						sorting.isSorted
-							? {
-									[sorting.sortedBy]: sorting.isSorted
-								}
-							: {}
-					)}`
+			data = await getData({
+				collectionName: $collection.name as string,
+				page: currentPage,
+				limit: 10,
+				contentLanguage: $contentLanguage,
+				filter: JSON.stringify(filters),
+				sort: JSON.stringify(
+					sorting.isSorted
+						? {
+								[sorting.sortedBy]: sorting.isSorted
+							}
+						: {}
 				)
-				.then((data) => data.data)) as {
-				entryList: [any];
-				pagesCount: number;
-			};
+			});
 		}
 		data &&
 			(tableData = await Promise.all(

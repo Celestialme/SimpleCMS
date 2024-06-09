@@ -1,6 +1,6 @@
 import publicConfig from '@root/config/public';
-import { getFieldName, getGuiFields, saveImage } from '@src/utils/utils';
-import RichText from './RichText.svelte';
+import { getFieldName, getGuiFields } from '@src/utils/utils';
+import { saveImage } from '@src/utils/files';
 import { GuiSchema, GraphqlSchema, type Params } from './types';
 import type { ModifyRequestParams } from '..';
 import mongoose from 'mongoose';

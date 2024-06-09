@@ -4,7 +4,6 @@
 	import WidgetFields from './WidgetFields.svelte';
 	export let addField = false;
 	export let fields = [];
-	$: console.log(fields);
 </script>
 
 {#if addField}

@@ -25,7 +25,6 @@
 	import type { FieldType } from '.';
 	import { contentLanguage } from '@src/stores/load';
 	import ImageDescription from './components/ImageDescription.svelte';
-	import Heading from './extensions/Heading';
 	export let field: FieldType;
 	export const WidgetData = async () => ({ images, data: _data });
 	let fieldName = getFieldName(field);
@@ -50,12 +49,7 @@
 			element: element,
 			extensions: [
 				StarterKit,
-				Heading,
-				Link.configure({
-					HTMLAttributes: {
-						class: 'text-[#00d3d0] cursor-pointer underline'
-					}
-				}),
+				Link,
 				TextStyle,
 				FontFamily,
 				Color,
@@ -89,7 +83,6 @@
 				deb(() => {
 					let content = editor.getHTML();
 					content == '<p></p>' && (content = '');
-					console.log(content);
 					_data.content[_language] = content;
 				});
 			}

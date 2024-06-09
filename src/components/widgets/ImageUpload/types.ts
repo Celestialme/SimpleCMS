@@ -1,5 +1,5 @@
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
-import { SIZES, getFieldName } from '@src/utils/utils';
+import { SIZES } from '@src/utils/files';
 import publicConfig from '@root/config/public';
 export type Params = {
 	label: string;
