@@ -6,6 +6,9 @@ import { auth } from '../db';
 import type { Schema } from '@src/collections/types';
 import { _GET } from './GET';
 import { _POST } from './POST';
+import { _PATCH } from './PATCH';
+import { _DELETE } from './DELETE';
+import { _SETSTATUS } from './SETSTATUS';
 
 export const POST = async ({ request, cookies }) => {
 	let data = await request.formData();
@@ -13,6 +16,7 @@ export const POST = async ({ request, cookies }) => {
 	let user_id = data.get('user_id') as string;
 	let collectionName = data.get('collectionName') as string;
 	let method = data.get('method') as string;
+
 	['user_id', 'collectionName', 'method'].forEach((key) => data.delete(key));
 
 	let user = user_id
@@ -23,6 +27,7 @@ export const POST = async ({ request, cookies }) => {
 	}
 	let collection_schema = (await getCollections())[collectionName] as Schema;
 	let has_read_access = collection_schema?.permissions?.[user.role]?.read != false;
+	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_read_access) {
 		return new Response('', { status: 403 });
 	}
@@ -46,10 +51,39 @@ export const POST = async ({ request, cookies }) => {
 				page
 			});
 		case 'POST':
+			if (!has_write_access) {
+				return new Response('', { status: 403 });
+			}
 			return _POST({
 				data,
 				schema: collection_schema,
 				user
+			});
+		case 'PATCH':
+			if (!has_write_access) {
+				return new Response('', { status: 403 });
+			}
+			return _PATCH({
+				data,
+				schema: collection_schema,
+				user
+			});
+		case 'DELETE':
+			if (!has_write_access) {
+				return new Response('', { status: 403 });
+			}
+			return _DELETE({
+				data,
+				schema: collection_schema,
+				user
+			});
+		case 'SETSTATUS':
+			if (!has_write_access) {
+				return new Response('', { status: 403 });
+			}
+			return _SETSTATUS({
+				data,
+				schema: collection_schema
 			});
 	}
 };

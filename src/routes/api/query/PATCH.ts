@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
 import { modifyRequest } from './modifyRequest';
-export let _POST = async ({
+export let _PATCH = async ({
 	data,
 	schema,
 	user
@@ -16,7 +16,7 @@ export let _POST = async ({
 	let body: { [key: string]: any } = {};
 	let collections = await getCollectionModels();
 	let collection = collections[schema.name as string];
-
+	let _id = data.get('_id') as string;
 	for (let key of data.keys()) {
 		try {
 			body[key] = JSON.parse(data.get(key) as string, (key, value) => {
@@ -31,11 +31,14 @@ export let _POST = async ({
 			body[key] = data.get(key) as string;
 		}
 	}
-	body['status'] = 'PUBLISHED';
 	if (!collection) return new Response('collection not found!!');
-	body._id = new mongoose.Types.ObjectId();
+	if (body?._meta_data?.storage_images?.removed) {
+		await mongoose.models['_storage_images'].updateMany(
+			{ _id: { $in: body?._meta_data?.storage_images?.removed } },
+			{ $pull: { used_by: new mongoose.Types.ObjectId(_id) } }
+		);
+	}
+	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'PATCH' });
 
-	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'POST' });
-
-	return new Response(JSON.stringify(await collection.insertMany(body)));
+	return new Response(JSON.stringify(await collection.updateOne({ _id }, body, { upsert: true })));
 };

@@ -61,7 +61,7 @@ export async function _GET({
 	]);
 	let entryList = entryListWithCount[0].entries;
 
-	modifyRequest({
+	await modifyRequest({
 		data: entryList,
 		collection,
 		fields: schema.fields,

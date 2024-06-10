@@ -6,6 +6,7 @@
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
 	import axios from 'axios';
+	import { getData } from '@src/utils/data';
 
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
@@ -43,8 +44,13 @@
 	};
 	async function openDropDown() {
 		if (!field) return;
-		dropDownData = (await axios.get(`/api/${field.relation}?page=1&length=10&filter={}&sort={}`))
-			.data.entryList;
+		dropDownData = (
+			await getData({
+				collectionName: field.relation as any,
+				limit: 10
+			})
+		).entryList;
+
 		showDropDown = true;
 		entryMode = 'choose';
 	}

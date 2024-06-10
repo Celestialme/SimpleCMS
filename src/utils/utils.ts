@@ -7,7 +7,7 @@ import _crypto from 'crypto';
 import type { Schema } from '@src/collections/types';
 import type { z } from 'zod';
 import mongoose from 'mongoose';
-import { addData } from './data';
+import { addData, updateData } from './data';
 
 export const config = {
 	headers: {
@@ -141,9 +141,7 @@ export async function saveFormData({
 			return await addData({ data: formData, collectionName: $collection.name as any });
 		case 'edit':
 			formData.append('_id', id || $entryData._id);
-			return await axios
-				.patch(`/api/${$collection.name}`, formData, config)
-				.then((res) => res.data);
+			return await updateData({ data: formData, collectionName: $collection.name as any });
 	}
 }
 

@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { mode, entryData, modifyEntry, statusMap } from '@src/stores/store';
-	import axios, { toFormData } from 'axios';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { contentLanguage, collection } from '@src/stores/load';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import { asAny, debounce, getFieldName, meta_data } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
-	import { getData } from '@src/utils/data';
+	import { deleteData, getData, setStatus } from '@src/utils/data';
 	let data: { entryList: [any]; pagesCount: number } | undefined;
 	let tableHeaders: Array<{ label: string; name: string }> = [];
 	let tableData: any[] = [];
@@ -109,12 +108,12 @@
 		formData.append('status', statusMap[status]);
 		switch (status) {
 			case 'Delete':
-				await axios.delete(`/api/${$collection.name}`, { data: formData });
+				await deleteData({ data: formData, collectionName: $collection.name as any });
 				break;
 			case 'Publish':
 			case 'Unpublish':
 			case 'Test':
-				await axios.patch(`/api/${$collection.name}/setStatus`, formData).then((res) => res.data);
+				await setStatus({ data: formData, collectionName: $collection.name as any });
 				break;
 		}
 		refresh();
