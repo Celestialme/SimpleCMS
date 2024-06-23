@@ -1,11 +1,10 @@
 import { type Params, GuiSchema } from './types';
-import Text from '../Input';
+import Input from '../Input';
 import { writable, type Writable } from 'svelte/store';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { entryData, mode } from '@src/stores/store';
 import { headerActionButton } from '@src/stores/load';
 
-import type { User } from '@src/auth/types';
 import widgets, { type ModifyRequestParams } from '..';
 export let currentChild: Writable<any> = writable({});
 const WIDGET_NAME = 'MegaMenu' as const;
@@ -28,9 +27,9 @@ const widget = (params: Params) => {
 	};
 
 	for (let level of params.fields) {
-		level.unshift(Text({ label: 'Header', translated: true }));
+		level.unshift(Input({ label: 'Header', translated: true, type: 'text' }));
 	}
-	params.fields.unshift([Text({ label: 'Header', translated: true })]);
+	params.fields.unshift([Input({ label: 'Header', translated: true, type: 'text' })]);
 	let callback = ({ data }) => {
 		entryData.set(data?.entryList[0]);
 		mode.set('edit');

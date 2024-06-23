@@ -1,7 +1,6 @@
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import GuiFields from './GuiFields.svelte';
-import widgets, { type WidgetType } from '..';
-import { getFieldName } from '@src/utils/utils';
+import { type WidgetType } from '..';
 type Fields = ReturnType<WidgetType[keyof WidgetType]>[][];
 export type Params = {
 	widget?: any;
