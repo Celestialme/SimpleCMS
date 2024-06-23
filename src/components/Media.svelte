@@ -3,7 +3,6 @@
 	import type { ImageFiles } from '@src/utils/types';
 	import { debounce } from '@src/utils/utils';
 	import axios from 'axios';
-	import { tick } from 'svelte';
 	export let onselect: any = () => {};
 	let files: ImageFiles[] = [];
 	let pagesCount = 1;
@@ -39,13 +38,14 @@
 		on:click={() => {
 			files = [];
 			showFolders = true;
+			pagesCount = 0;
 		}}
 	></iconify-icon>
 	<p class="text-white text-lg">Storage</p>
 	<input type="text" bind:value={search} placeholder="Search" />
 </div>
 <div
-	class="flex flex-wrap items-center overflow-auto max-h-[calc(100%-55px)] justify-center w-screen max-w-full"
+	class="flex flex-wrap items-center overflow-auto max-h-[calc(100%-100px)] justify-center w-screen max-w-full"
 >
 	{#if showFolders}
 		{#each Object.keys(folders) as folder}
@@ -103,7 +103,7 @@
 	.pages {
 		display: flex;
 		justify-content: center;
-		margin-top: 20px;
+		margin-top: 5px;
 	}
 	.page:first-of-type {
 		border-top-left-radius: 8px;

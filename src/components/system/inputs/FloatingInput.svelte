@@ -11,7 +11,10 @@
 	export let theme: 'dark' | 'light' = 'light';
 	let showPassword = false;
 	let inputElement: HTMLInputElement;
-	$: if (type === 'password') showPassword ? inputElement && (inputElement.type = 'text') : inputElement && (inputElement.type = 'password');
+	$: if (type === 'password')
+		showPassword
+			? inputElement && (inputElement.type = 'text')
+			: inputElement && (inputElement.type = 'password');
 
 	function getIcon() {
 		switch (type) {
@@ -96,7 +99,7 @@
 		left: 0;
 		margin-top: -10px;
 		transform: translateY(0);
-		color: blue;
+		color: black;
 		font-size: 10px;
 	}
 	.dark input:focus + label {

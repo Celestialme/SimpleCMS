@@ -10,6 +10,7 @@
 	import TextStyle from './extensions/TextStyle';
 	import FontFamily from '@tiptap/extension-font-family';
 	import Color from '@tiptap/extension-color';
+	import Youtube from '@tiptap/extension-youtube';
 	import TextAlign from '@tiptap/extension-text-align';
 	import type { ComponentProps } from 'svelte';
 	import ImageResize from './extensions/ImageResize';
@@ -25,12 +26,14 @@
 	import type { FieldType } from '.';
 	import { contentLanguage } from '@src/stores/load';
 	import ImageDescription from './components/ImageDescription.svelte';
+	import VideoDialog from './components/VideoDialog.svelte';
 	export let field: FieldType;
 	export const WidgetData = async () => ({ images, data: _data });
 	let fieldName = getFieldName(field);
 	let element;
 	let editor: Editor;
 	let showImageDialog = false;
+	let showVideoDialog = false;
 	let images = {};
 	let active_dropDown = '';
 	export let value = $entryData[fieldName] || { content: {}, header: {} };
@@ -52,6 +55,7 @@
 				TextStyle,
 				FontFamily,
 				Color,
+				Youtube,
 				ImageResize,
 				TextAlign.configure({
 					types: ['heading', 'paragraph', 'image']
@@ -209,6 +213,17 @@
 				showImageDialog = true;
 			},
 			active: () => editor.isActive('image')
+		},
+		{
+			name: 'video',
+			icon: 'fa6-solid:video',
+			onClick: () => {
+				// editor.commands.setYoutubeVideo({
+				// 	src: 'https://www.youtube.com/watch?v=Q2x2KdHtZ_w'
+				// });
+				showVideoDialog = true;
+			},
+			active: () => editor.isActive('video')
 		}
 	];
 	$: floats = [
@@ -400,6 +415,7 @@
 						}
 					}}
 				/>
+				<VideoDialog bind:show={showVideoDialog} {editor} />
 			</div>
 		</div>
 	{/if}

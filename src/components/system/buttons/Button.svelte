@@ -3,9 +3,14 @@
 	export let bgColor = 'gray';
 	export let border = 'none;';
 	export let hoverColor = '#4fdc4f';
+	export let style = '';
 </script>
 
-<button on:click class={$$props.class} style={`color: ${textColor}; background-color: ${bgColor}; border: ${border}; --hover-color: ${hoverColor}`}>
+<button
+	on:click
+	class={$$props.class}
+	style={`color: ${textColor}; background-color: ${bgColor}; border: ${border}; --hover-color: ${hoverColor}; ${style};`}
+>
 	<slot />
 </button>
 

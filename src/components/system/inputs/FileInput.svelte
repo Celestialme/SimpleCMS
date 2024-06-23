@@ -49,8 +49,12 @@
 			<p>Drag & Drop</p>
 			<p>or</p>
 			<div class="flex w-full gap-2 justify-center">
-				<Button style="flex: 1 1 0px;" on:click={() => input.click()}>Browse locally</Button>
-				<Button style="flex: 1 1 0px;" on:click={() => (showMedia = true)}>Select Existing</Button>
+				<Button style="flex: 1 1 0px; max-width:150px" on:click={() => input.click()}
+					>Browse locally</Button
+				>
+				<Button style="flex: 1 1 0px; max-width:150px" on:click={() => (showMedia = true)}
+					>Select Existing</Button
+				>
 			</div>
 			<input bind:this={input} type="file" hidden on:change={onChange} />
 		</div>
