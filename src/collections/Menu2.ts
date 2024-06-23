@@ -8,19 +8,19 @@ let schema: Schema = {
 		widgets.MegaMenu({
 			fields: [
 				[
-					widgets.Text({ label: 'link 1', translated: true }),
-					widgets.Text({ label: 'info', translated: true }),
-					widgets.Text({ label: 'info3', translated: true })
+					widgets.Input({ label: 'link 1', translated: true, type: 'text' }),
+					widgets.Input({ label: 'info', translated: true, type: 'text' }),
+					widgets.Input({ label: 'info3', translated: true, type: 'text' })
 				],
 				[
-					widgets.Text({ label: 'link 2', translated: true }),
-					widgets.Text({ label: 'info', translated: true }),
-					widgets.Text({ label: 'info3', translated: true })
+					widgets.Input({ label: 'link 2', translated: true, type: 'text' }),
+					widgets.Input({ label: 'info', translated: true, type: 'text' }),
+					widgets.Input({ label: 'info3', translated: true, type: 'text' })
 				],
 				[
-					widgets.Text({ label: 'link 3', translated: true }),
-					widgets.Text({ label: 'info', translated: true }),
-					widgets.Text({ label: 'info3', translated: true })
+					widgets.Input({ label: 'link 3', translated: true, type: 'text' }),
+					widgets.Input({ label: 'info', translated: true, type: 'text' }),
+					widgets.Input({ label: 'info3', translated: true, type: 'text' })
 				]
 			],
 			label: 'Menu'

@@ -8,7 +8,7 @@ let schema: Schema = {
 		widgets.MegaMenu({
 			fields: [
 				[
-					widgets.Text({ label: 'link 1', translated: true }),
+					widgets.Input({ label: 'link 1', translated: true, type: 'text' }),
 					widgets.ImageUpload({ label: 'image', folder: 'images' })
 				]
 			],

@@ -1,7 +1,6 @@
 import ImageArray from './ImageArray';
 import ImageUpload from './ImageUpload';
-import Text from './Text';
-import Email from './Email';
+import Input from './Input';
 import MegaMenu from './MegaMenu';
 import Relation from './Relation';
 import RichText from './RichText';
@@ -11,8 +10,7 @@ import type mongoose from 'mongoose';
 
 let widgets = {
 	ImageArray,
-	Text,
-	Email,
+	Input,
 	ImageUpload,
 	MegaMenu,
 	Relation,

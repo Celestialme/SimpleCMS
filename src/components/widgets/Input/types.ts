@@ -3,6 +3,7 @@ import Toggle from '@src/components/system/buttons/Toggle.svelte';
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 
 export type Params = {
+	type: 'text' | 'email' | 'date';
 	label: string;
 	width?: number;
 	display?: DISPLAY;

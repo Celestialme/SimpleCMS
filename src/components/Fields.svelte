@@ -18,7 +18,7 @@
 				<div
 					class=" mx-auto text-center {!field.width ? 'w-full' : 'max-md:!w-full'}"
 					style={'min-width:min(300px,100%);' + field.width
-						? `width:${Math.floor(100 / (field?.width || 1))}%`
+						? `width:${Math.floor(100 * (field?.width || 1))}%`
 						: ''}
 				>
 					<div class="px-[5px] text-start inline-block max-w-full">

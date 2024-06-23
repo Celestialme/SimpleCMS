@@ -3,13 +3,14 @@ import type { Schema } from './types';
 let schema: Schema = {
 	icon: 'iconoir:post',
 	fields: [
-		widgets.Email({
+		widgets.Input({
+			type: 'email',
 			display: async ({ data, field, entry, contentLanguage }) => {
 				return data[contentLanguage];
 			},
 			label: 'email'
 		}),
-		widgets.Text({ label: 'text', translated: false }),
+		widgets.Input({ label: 'text', translated: false, type: 'text' }),
 		widgets.ImageUpload({ label: 'image', folder: 'images' })
 	]
 };

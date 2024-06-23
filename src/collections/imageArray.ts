@@ -9,10 +9,11 @@ let schema: Schema = {
 			label: 'ImageArray',
 
 			fields: [
-				widgets.Text({
+				widgets.Input({
 					label: 'title',
 					db_fieldName: 'title',
-					translated: false
+					translated: false,
+					type: 'text'
 				})
 			]
 		})

@@ -340,3 +340,13 @@ export let toFormData = function (obj: { [key: string]: string | number }) {
 	}
 	return formData;
 };
+export function get_date() {
+	let d = new Date();
+	return (
+		d.getFullYear() +
+		'-' +
+		String(d.getMonth() + 1).padStart(2, '0') +
+		'-' +
+		String(d.getDate()).padStart(2, '0')
+	);
+}

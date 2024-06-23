@@ -1,5 +1,5 @@
 import { type Params, GuiSchema } from './types';
-import Text from '../Text';
+import Text from '../Input';
 import { writable, type Writable } from 'svelte/store';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { entryData, mode } from '@src/stores/store';

@@ -1,7 +1,7 @@
 import publicConfig from '@root/config/public';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { GuiSchema, type Params } from './types';
-const WIDGET_NAME = 'Text' as const;
+const WIDGET_NAME = 'Input' as const;
 const widget = (params: Params) => {
 	/** This is a description of the foo function. */
 	let display;
@@ -23,6 +23,7 @@ const widget = (params: Params) => {
 	let field = {
 		display,
 		label: params.label,
+		type: params.type,
 		db_fieldName: params.db_fieldName,
 		translated: params.translated,
 		width: params.width

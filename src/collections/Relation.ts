@@ -3,9 +3,10 @@ import type { Schema } from './types';
 let schema: Schema = {
 	icon: 'lets-icons:menu',
 	fields: [
-		widgets.Text({
+		widgets.Input({
 			label: 'info',
-			translated: true
+			translated: true,
+			type: 'text'
 		}),
 		widgets.Relation({
 			label: 'relation2',
