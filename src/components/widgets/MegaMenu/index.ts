@@ -1,5 +1,4 @@
-import { type Params, GuiSchema, GraphqlSchema } from './types';
-import MegaMenu from './MegaMenu.svelte';
+import { type Params, GuiSchema } from './types';
 import Text from '../Text';
 import { writable, type Writable } from 'svelte/store';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
@@ -50,7 +49,7 @@ const widget = (params: Params) => {
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
-widget.GraphqlSchema = GraphqlSchema;
+
 widget.modifyRequest = async ({
 	collection,
 	field,

@@ -1,7 +1,7 @@
 // ImageArray - allows multiple image upload with editor
 import type { Params as ImageUpload_Params } from '../ImageUpload/types';
 import { getFieldName, getGuiFields } from '@src/utils/utils.js';
-import { type Params, GuiSchema, GraphqlSchema } from './types';
+import { type Params, GuiSchema } from './types';
 import ImageArray from './ImageArray.svelte';
 import ImageUpload from '../ImageUpload';
 import type { ModifyRequestParams } from '..';
@@ -13,7 +13,7 @@ const widget = (params: Params) => {
 			db_fieldName: params.uploader_db_fieldName,
 			label: params.uploader_label,
 			display: params.uploader_display,
-			folder: params.uploader_path
+			folder: params.uploader_path as any
 		})
 	);
 	let uploader = params.fields[0] as ImageUpload_Params;
@@ -76,6 +76,6 @@ widget.modifyRequest = async ({
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
-widget.GraphqlSchema = GraphqlSchema;
+
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

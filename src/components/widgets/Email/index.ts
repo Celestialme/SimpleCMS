@@ -1,7 +1,7 @@
 import publicConfig from '@root/config/public';
 import { getGuiFields } from '@src/utils/utils';
 import Email from './Email.svelte';
-import { type Params, GuiSchema, GraphqlSchema } from './types';
+import { type Params, GuiSchema } from './types';
 const WIDGET_NAME = 'Email' as const;
 
 //email
@@ -31,6 +31,5 @@ const widget = (params: Params) => {
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
-widget.GraphqlSchema = GraphqlSchema;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

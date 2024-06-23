@@ -27,18 +27,3 @@ let types = Object.keys(SIZES)
 }`
 	)
 	.join('\n');
-export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
-	let typeName = `${collection.name}_${label}`;
-	console.log(typeName);
-	return {
-		typeName,
-		graphql: /* GraphQL */ `
-		${types}
-		type ${typeName} {
-			${Object.keys(SIZES)
-				.map((size) => `${size}: ${size}`)
-				.join('\n')}
-		}
-	`
-	};
-};

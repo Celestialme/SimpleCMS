@@ -1,4 +1,4 @@
-import { type Params, GuiSchema, GraphqlSchema } from './types';
+import { type Params, GuiSchema } from './types';
 import { getFieldName, getGuiFields, get_elements_by_id } from '@src/utils/utils';
 import { saveImage } from '@src/utils/files';
 import { type ModifyRequestParams } from '..';
@@ -38,7 +38,7 @@ const widget = (params: Params) => {
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
-widget.GraphqlSchema = GraphqlSchema;
+
 widget.modifyRequest = async ({
 	field,
 	data,

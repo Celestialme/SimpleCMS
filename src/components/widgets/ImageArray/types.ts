@@ -24,19 +24,3 @@ export let GuiSchema = {
 	uploader_path: { widget: FloatingInput, required: true },
 	uploader_label: { widget: FloatingInput, required: true }
 };
-
-export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
-	let fieldTypes = '';
-	for (let _field of field.fields) {
-		fieldTypes +=
-			widgets[_field.widget.Name].GraphqlSchema({ label: getFieldName(_field, true), collection })
-				.graphql + '\n';
-	}
-
-	return {
-		typeName: null, // imageArray does not have its own typeName in DB so its null. it unpacks fieldTypes directly
-		graphql: /* GraphQL */ `
-			${fieldTypes}
-		`
-	};
-};

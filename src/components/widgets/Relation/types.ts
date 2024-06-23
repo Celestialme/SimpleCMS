@@ -21,22 +21,3 @@ export let GuiSchema = {
 		imports: ['import {relation} from "./{relation}"']
 	}
 };
-
-export let GraphqlSchema: GraphqlSchema = ({ field, label, collection }) => {
-	return {
-		typeName: field.relation,
-		graphql: '', // relation does not need its own graphql because it copies related collection type
-		resolver: {
-			[collection.name]: {
-				async [getFieldName(field)](parent) {
-					console.log(getFieldName(field));
-					let res = await mongoose.models[field.relation]
-						.findById(parent[getFieldName(field)])
-						.lean();
-
-					return res;
-				}
-			}
-		}
-	};
-};

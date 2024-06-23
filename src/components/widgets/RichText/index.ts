@@ -1,7 +1,7 @@
 import publicConfig from '@root/config/public';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { saveImage } from '@src/utils/files';
-import { GuiSchema, GraphqlSchema, type Params } from './types';
+import { GuiSchema, type Params } from './types';
 import type { ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
 const WIDGET_NAME = 'RichText' as const;
@@ -95,7 +95,6 @@ widget.modifyRequest = async ({
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
-widget.GraphqlSchema = GraphqlSchema;
 widget.aggregations = {
 	filters: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;

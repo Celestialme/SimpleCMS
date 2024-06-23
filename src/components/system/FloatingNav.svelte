@@ -72,13 +72,7 @@
 			url: { external: false, path: `/profile` },
 			icon: 'bi:gear-fill'
 		},
-		{
-			x: 0,
-			y: 0,
-			angle: -60,
-			url: { external: true, path: `/api/graphql` },
-			icon: 'teenyicons:graphql-outline'
-		}
+		
 	].filter((endpoint) => {
 		if (user?.role === 'admin') return true;
 		else if (endpoint.url.path === '/builder') return false;

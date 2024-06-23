@@ -1,6 +1,5 @@
 import { getFieldName, getGuiFields } from '@src/utils/utils';
-import Relation from './Relation.svelte';
-import { type Params, GuiSchema, GraphqlSchema } from './types';
+import { type Params, GuiSchema } from './types';
 import { getCollections } from '@src/collections';
 import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
@@ -50,7 +49,6 @@ const widget = <
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
-widget.GraphqlSchema = GraphqlSchema;
 widget.modifyRequest = async ({
 	field,
 	data,

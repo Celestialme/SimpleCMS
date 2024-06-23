@@ -16,11 +16,7 @@ declare global {
 		entry: any,
 		contentLanguage: string
 	}) => Promise<any>) & { default?: boolean };
-	type GraphqlSchema = ({ field, label, collection }) => {
-		typeName: string | null;
-		graphql: string;
-		resolver?: { [key: string]: any };
-	};
+
 	type Aggregations = {
 		filters?: ({
 			field,
