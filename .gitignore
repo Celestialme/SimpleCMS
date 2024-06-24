@@ -12,3 +12,5 @@ vite.config.ts.timestamp-*
 /collections
 /config/private.ts
 /data.json
+/indexes
+/*.bin

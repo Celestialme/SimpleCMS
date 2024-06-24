@@ -36,11 +36,3 @@ export type WidgetType = {
 };
 export let initWidgets = () => (globalThis.widgets = widgets);
 export default widgets as WidgetType;
-export let widgetContext = Object.keys(widgets).map((key) => {
-	let name = widgets[key].Name as K;
-	return {
-		[name]: {
-			run() {}
-		}
-	};
-});

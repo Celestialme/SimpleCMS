@@ -29,6 +29,7 @@ export async function _GET({
 	for (let field of schema.fields) {
 		let widget = widgets[field.widget.Name];
 		let fieldName = getFieldName(field);
+
 		if ('aggregations' in widget) {
 			let _filter = filter[fieldName];
 			let _sort = sort[fieldName];

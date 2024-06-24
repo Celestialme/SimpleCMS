@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import publicConfig from '@root/config/public';
 import type { CollectionNames, Schema } from '@src/collections/types';
 import * as m from '@src/paraglide/messages.js';
@@ -24,7 +25,7 @@ export let saveFunction: Writable<{ fn: (args: any) => any; reset: () => any }> 
 });
 export const tableHeaders = ['id', 'email', 'username', 'role', 'createdAt'] as const;
 export let headerActionButton: Writable<ConstructorOfATypedSvelteComponent | string> = writable();
-
+export let indexer = undefined;
 systemLanguage.subscribe((val) => {
 	setLanguageTag(val);
 	messages.set({ ...m });

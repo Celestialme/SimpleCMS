@@ -350,3 +350,18 @@ export function get_date() {
 		String(d.getDate()).padStart(2, '0')
 	);
 }
+export function toStringHelper({
+	field,
+	data,
+	path
+}: {
+	field: any;
+	data: any[];
+	path: (lang: string) => string;
+}) {
+	if (!data) return '';
+	if (field.translated) return path(publicConfig.DEFAULT_CONTENT_LANGUAGE);
+	return publicConfig.AVAILABLE_CONTENT_LANGUAGES.reduce((acc, lang) => {
+		return (acc += path(lang) + '\n');
+	}, '\n');
+}

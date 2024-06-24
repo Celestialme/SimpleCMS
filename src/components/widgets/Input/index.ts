@@ -1,6 +1,6 @@
 import publicConfig from '@root/config/public';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
-import { GuiSchema, type Params } from './types';
+import { GuiSchema, toString, type Params } from './types';
 const WIDGET_NAME = 'Input' as const;
 const widget = (params: Params) => {
 	/** This is a description of the foo function. */
@@ -32,6 +32,7 @@ const widget = (params: Params) => {
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
+widget.toString = toString;
 widget.aggregations = {
 	filters: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;

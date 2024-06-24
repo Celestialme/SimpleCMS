@@ -48,7 +48,7 @@ const widget = (params: Params) => {
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
-
+widget.toString = () => '';
 widget.modifyRequest = async ({
 	collection,
 	field,
