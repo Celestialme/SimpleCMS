@@ -1,12 +1,12 @@
 import { auth } from '@src/routes/api/db';
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import type { User } from '@src/auth/types';
-import { spawn, type ChildProcessWithoutNullStreams } from 'child_process';
-import axios from 'axios';
+import { spawn } from 'child_process';
 import { indexer } from '@src/stores/load.js';
 export const POST = async ({ cookies, request }) => {
-	if (!indexer || (indexer as ChildProcessWithoutNullStreams).exitCode) {
-		spawn('main.exe');
+	let process = indexer;
+	if (!process || process.exitCode) {
+		process = spawn('main.exe');
 	}
 	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 	let data = await request.formData();
@@ -19,6 +19,14 @@ export const POST = async ({ cookies, request }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let res = (await axios.post('http://localhost:8000', { search_text })).data;
-	return new Response(JSON.stringify(res), { status: 200 });
+	console.time('search');
+	process.stdin.write(search_text + '\n');
+	let res = await new Promise<string>((resolve, reject) => {
+		let listener = process.stdout.once('data', (data) => {
+			resolve(data.toString());
+			listener.removeAllListeners();
+			console.timeEnd('search');
+		});
+	});
+	return new Response(res, { status: 200 });
 };
