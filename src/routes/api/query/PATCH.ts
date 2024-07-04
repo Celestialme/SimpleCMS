@@ -16,13 +16,14 @@ export let _PATCH = async ({
 	let body: { [key: string]: any } = {};
 	let collections = await getCollectionModels();
 	let collection = collections[schema.name as string];
-	let _id = data.get('_id') as string;
+	let _id = new mongoose.Types.ObjectId(data.get('_id') as string);
+	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
 		try {
 			body[key] = JSON.parse(data.get(key) as string, (key, value) => {
 				if (value?.instanceof == 'File') {
 					let file = data.get(value.id) as File;
-					data.delete(value.id);
+					fileIDS.push(value.id);
 					return file;
 				}
 				return value;
@@ -31,6 +32,9 @@ export let _PATCH = async ({
 			body[key] = data.get(key) as string;
 		}
 	}
+	for (let id of fileIDS) {
+		delete body[id];
+	}
 	if (!collection) return new Response('collection not found!!');
 	if (body?._meta_data?.storage_images?.removed) {
 		await mongoose.models['_storage_images'].updateMany(
@@ -38,6 +42,7 @@ export let _PATCH = async ({
 			{ $pull: { used_by: new mongoose.Types.ObjectId(_id) } }
 		);
 	}
+	body._id = _id;
 	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'PATCH' });
 
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, body, { upsert: true })));

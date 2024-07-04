@@ -19,7 +19,7 @@
 			data = await getData({
 				collectionName: $collection.name as any,
 				page: currentPage,
-				limit: 10,
+				limit: 2,
 				contentLanguage: $contentLanguage,
 				filter: JSON.stringify(filters),
 				sort: JSON.stringify(

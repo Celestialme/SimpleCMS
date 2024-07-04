@@ -85,11 +85,8 @@ widget.modifyRequest = async ({
 			data.update(_data);
 			break;
 		case 'DELETE':
-			console.log(id);
-			await mongoose.models['_storage_images'].updateMany(
-				{ used_by: id },
-				{ $pull: { used_by: id } }
-			);
+			await mongoose.models['_storage_images'].updateMany({}, { $pull: { used_by: id } });
+
 			break;
 	}
 };

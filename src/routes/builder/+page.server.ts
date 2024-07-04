@@ -102,7 +102,6 @@ async function goThrough(object: any, imports: Set<string> = new Set()) {
 				for (let key in widget.GuiSchema) {
 					if (!widget.GuiSchema[key].imports) continue;
 					for (let _import of widget.GuiSchema[key].imports) {
-						console.log(field);
 						let replacement = field.widget.GuiFields[key].replaceAll('🗑️', '').trim();
 						imports.add(_import.replaceAll(`{${key}}`, replacement));
 					}

@@ -8,7 +8,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	let folder = url.searchParams.get('folder') as string;
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let re = new RegExp(RegExp.escape(search), 'i');
-	console.log(folder);
+
 	let search_aggregation = {
 		$match: {
 			'original.name': { $regex: re },
