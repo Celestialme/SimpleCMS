@@ -55,6 +55,7 @@ export let _PATCH = async ({
 
 	for (let _collection in body._links) {
 		let collection = collections[_collection as string];
+		if (!collection) continue;
 		if (!body._links[_collection] && links?.[_collection]) {
 			delete body._links[_collection];
 			await collection.deleteMany({
