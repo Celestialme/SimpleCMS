@@ -62,6 +62,21 @@ export async function _GET({
 	]);
 	let entryList = entryListWithCount[0].entries;
 
+	for (let index in entryList) {
+		let entry = entryList[index];
+		if (entry._link_id && entry._linked_collection) {
+			let collection = collections[entry._linked_collection as string];
+			let resp = await collection.findOne({ _id: entry._link_id }).lean();
+			if (!resp) {
+				entryList.splice(index, 1);
+				continue;
+			}
+			entryList[index] = resp;
+			entryList[index]._is_link = true;
+			entryList[index]._linked_collection = entry._linked_collection;
+		}
+	}
+
 	await modifyRequest({
 		data: entryList,
 		collection,

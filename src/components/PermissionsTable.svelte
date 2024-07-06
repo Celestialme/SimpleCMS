@@ -34,7 +34,7 @@
 				<td class="!pl-[30px]"> {role} </td>
 				{#each permissions as permission}
 					<td class="!pl-[30px]">
-						<CheckBox svg={SquareIcon} bind:checked={value[role][permission]} />
+						<CheckBox icon={SquareIcon} bind:checked={value[role][permission]} />
 					</td>
 				{/each}
 			</tr>

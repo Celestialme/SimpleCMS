@@ -10,7 +10,12 @@ export function createCategories(collections: { [key in CollectionNames]: Schema
 		{
 			name: 'posts',
 			icon: 'bi:images',
-			collections: [collections.Relation, collections.Posts2, collections.Posts3]
+			collections: [
+				collections.Relation,
+				collections.Posts2,
+				collections.Posts3,
+				collections.Posts32
+			]
 		},
 		{
 			name: 'Menus',

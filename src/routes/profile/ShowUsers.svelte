@@ -121,7 +121,10 @@
 	}
 </script>
 
-<div class="overflow-auto max-h-[calc(100vh-20px)] w-full mb-auto" class:hidden={userInfo.length == 0 || editField.show == true}>
+<div
+	class="overflow-auto max-h-[calc(100vh-20px)] w-full mb-auto"
+	class:hidden={userInfo.length == 0 || editField.show == true}
+>
 	<table>
 		<thead class="top-0">
 			<tr>
@@ -152,7 +155,7 @@
 			</tr>
 
 			<tr>
-				<th class="!pl-[25px]"> <CheckBox bind:checked={modifyAll} svg={SquareIcon} /> </th>
+				<th class="!pl-[25px]"> <CheckBox bind:checked={modifyAll} icon={SquareIcon} /> </th>
 				{#each tableHeaders as header}
 					<th
 						on:click={() => {
@@ -176,7 +179,11 @@
 					>
 						<div class="flex items-center justify-between">
 							{header}
-							<div class="arrow" class:up={sorting.isSorted === 1} class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header} />
+							<div
+								class="arrow"
+								class:up={sorting.isSorted === 1}
+								class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header}
+							/>
 						</div>
 					</th>
 				{/each}
@@ -212,7 +219,9 @@
 		<tbody>
 			{#each filteredTableData as row, index}
 				<tr on:click={() => (modifyMap[index] = !modifyMap[index])}>
-					<td class="!pl-[25px]"> <CheckBox bind:checked={modifyMap[index]} svg={SquareIcon} /> </td>
+					<td class="!pl-[25px]">
+						<CheckBox bind:checked={modifyMap[index]} icon={SquareIcon} />
+					</td>
 					{#each tableHeaders as header}
 						<td class="text-center">
 							{@html row[header]}

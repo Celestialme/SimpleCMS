@@ -38,6 +38,16 @@ export let _POST = async ({
 	if (!collection) return new Response('collection not found!!');
 	body._id = new mongoose.Types.ObjectId();
 	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'POST' });
+	for (let _collection in body._links) {
+		let collection = collections[_collection as string];
 
+		let _id = new mongoose.Types.ObjectId();
+		await collection.insertMany({
+			_id,
+			_link_id: body._id,
+			_linked_collection: schema.name
+		});
+		body._links[_collection] = _id;
+	}
 	return new Response(JSON.stringify(await collection.insertMany(body)));
 };

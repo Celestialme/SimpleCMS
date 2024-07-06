@@ -15,8 +15,10 @@ export let _DELETE = async ({
 }) => {
 	let collections = await getCollectionModels();
 	let collection = collections[schema.name as string];
+
 	let ids = data.get('ids') as string;
 	ids = JSON.parse(ids);
+
 	for (let id of ids) {
 		await modifyRequest({
 			collection,
@@ -29,6 +31,13 @@ export let _DELETE = async ({
 			fields: schema.fields,
 			type: 'DELETE'
 		});
+		for (let link of schema.links || []) {
+			let collection = collections[link];
+			await collection.deleteMany({
+				_link_id: new mongoose.Types.ObjectId(id),
+				_linked_collection: schema.name
+			});
+		}
 	}
 	return new Response(
 		JSON.stringify(

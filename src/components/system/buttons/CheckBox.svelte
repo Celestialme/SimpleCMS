@@ -1,6 +1,6 @@
 <script>
 	export let checked = false;
-	export let svg;
+	export let icon;
 	export let callback = () => {};
 </script>
 
@@ -12,6 +12,6 @@
 	}}
 >
 	{#if checked}
-		<svelte:component this={svg} />
+		<svelte:component this={icon} />
 	{/if}
 </div>

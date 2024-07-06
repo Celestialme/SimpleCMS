@@ -32,6 +32,9 @@ export let _PATCH = async ({
 			body[key] = data.get(key) as string;
 		}
 	}
+	if (body._is_link) {
+		collection = collections[body._linked_collection as string];
+	}
 	for (let id of fileIDS) {
 		delete body[id];
 	}
@@ -45,5 +48,34 @@ export let _PATCH = async ({
 	body._id = _id;
 	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'PATCH' });
 
+	let links =
+		schema?.links?.length || 0 > 0 || body?._is_link
+			? (await collection.findById(body._id))._links
+			: {};
+
+	for (let _collection in body._links) {
+		let collection = collections[_collection as string];
+		if (!body._links[_collection] && links?.[_collection]) {
+			delete body._links[_collection];
+			await collection.deleteMany({
+				_link_id: body._id,
+				_linked_collection: body?._is_link ? body._linked_collection : schema.name
+			});
+			continue;
+		}
+
+		if (links?.[_collection]) continue;
+		let _id = new mongoose.Types.ObjectId();
+
+		await collection.insertMany({
+			_id,
+			_link_id: body._id,
+			_linked_collection: schema.name
+		});
+		body._links[_collection] = _id;
+	}
+
+	delete body._is_link;
+	delete body._linked_collection;
 	return new Response(JSON.stringify(await collection.updateOne({ _id }, body, { upsert: true })));
 };
