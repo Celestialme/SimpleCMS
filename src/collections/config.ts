@@ -14,7 +14,8 @@ export function createCategories(collections: { [key in CollectionNames]: Schema
 				collections.Relation,
 				collections.Posts2,
 				collections.Posts3,
-				collections.Posts32
+				collections.Posts32,
+				collections.Posts31
 			]
 		},
 		{

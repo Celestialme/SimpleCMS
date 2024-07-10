@@ -63,7 +63,7 @@ export let _PATCH = async ({
 				_linked_collection: body?._is_link ? body._linked_collection : schema.name
 			});
 			continue;
-		}
+		} else if (!body._links[_collection]) continue;
 
 		if (links?.[_collection]) continue;
 		let _id = new mongoose.Types.ObjectId();
@@ -71,7 +71,7 @@ export let _PATCH = async ({
 		await collection.insertMany({
 			_id,
 			_link_id: body._id,
-			_linked_collection: schema.name
+			_linked_collection: body._is_link ? body._linked_collection : schema.name
 		});
 		body._links[_collection] = _id;
 	}
