@@ -17,11 +17,9 @@ let schema: Schema = {
 		'საერთაშორისო პროექტების მოზიდვისა და ხელშეწყობის განყოფილება'
 	],
 	fields: [
-		widgets.Input({ label: 'text 1', translated: true, type: 'text' }),
-		widgets.Input({ label: 'text 2', translated: true, type: 'text' }),
-		widgets.Input({ label: 'text 3', translated: true, type: 'text' }),
-		widgets.Input({ label: 'text 4', translated: true, type: 'text' }),
-		widgets.Input({ label: 'text 5', translated: true, type: 'text' })
+		widgets.Input({ label: 'Date', translated: true, type: 'date', width: 1 / 5 }),
+		widgets.ImageUpload({ label: 'thumbnail', folder: 'images', width: 4 / 5 }),
+		widgets.RichText({ label: 'Content', translated: true, image_folder: 'images' })
 	]
 };
 export default schema;
