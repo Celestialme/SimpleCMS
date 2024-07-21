@@ -8,14 +8,25 @@ export function createCategories(collections: { [key in CollectionNames]: Schema
 			collections: [collections.About, collections.News, collections.thumbs]
 		},
 		{
-			name: 'posts',
+			name: 'News',
 			icon: 'bi:images',
 			collections: [
-				collections.Relation,
-				collections.Posts2,
-				collections.Posts3,
-				collections.Posts32,
-				collections.Posts31
+				collections.სიახლეები,
+				collections.მედიცინა,
+				collections.სტომატოლოგია,
+				collections.ფარმაცია,
+				collections['საზოგადოებრივი ჯანდაცვა'],
+				collections['ფიზიკური მედიცინა და რეაბილიტაცია'],
+				collections[
+					'დიპლომისშემდგომი სამედიცინო განათლების და უწყვეტი პროფესიული განვითარების ინსტიტუტი'
+				],
+				collections['საექთნო საქმის და სამეანო საქმის საბაკალავრო პროგრამები'],
+				collections['მედიცინისა და სტომატოლოგიის საერთაშორისო ფაკულტეტი'],
+				collections.კვლევა,
+				collections['კლინიკური საქმიანობა'],
+				collections['დიპლომისშემდგომი'],
+				collections['კლინიკური ბაზები'],
+				collections['საერთაშორისო პროექტების მოზიდვისა და ხელშეწყობის განყოფილება']
 			]
 		},
 		{

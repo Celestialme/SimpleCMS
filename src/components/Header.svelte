@@ -21,7 +21,7 @@
 			><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
 		>
 		<div class="collection mr-auto">
-			{$collection?.name}
+			{$collection?.label || $collection?.name}
 		</div>
 		{#if ['edit', 'create'].includes($mode) && $collection.permissions?.[user.role]?.write != false}
 			<button

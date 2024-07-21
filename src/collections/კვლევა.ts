@@ -2,6 +2,7 @@ import widgets from '../components/widgets';
 import type { Schema } from './types';
 let schema: Schema = {
 	icon: 'iconoir:post',
+	hidden: true,
 	fields: [
 		widgets.Input({ label: 'text 1', translated: true, type: 'text' }),
 		widgets.Input({ label: 'text 2', translated: true, type: 'text' }),

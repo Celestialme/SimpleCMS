@@ -29,7 +29,11 @@
 		}}
 	>
 		<div class="flex items-center h-full arrow">
-			<iconify-icon icon={category.icon} class:ml-auto={!$drawerExpanded} class:ml-2={$drawerExpanded} />
+			<iconify-icon
+				icon={category.icon}
+				class:ml-auto={!$drawerExpanded}
+				class:ml-2={$drawerExpanded}
+			/>
 			{#if $drawerExpanded}
 				<p class="ml-auto">{category.name}</p>
 			{/if}
@@ -37,7 +41,7 @@
 	</div>
 	<div class:expand={expanded[index]} class="wrapper">
 		<div class="{expanded[index] ? 'delayed-overflow' : 'overflow-hidden'} inner">
-			{#each category.collections.filter((c) => modeSet == 'edit' || c?.permissions?.[user.role]?.read != false) as _collection}
+			{#each category.collections.filter((c) => modeSet == 'edit' || (c?.permissions?.[user.role]?.read != false && c?.hidden != true)) as _collection}
 				<div
 					class="relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center"
 					on:click={(e) => {
@@ -50,16 +54,22 @@
 							bind:checked={checked[asAny(_collection.name)]}
 							callback={() => {
 								checked = checked;
-								category.collections = category.collections.filter((x) => x.name != _collection.name);
+								category.collections = category.collections.filter(
+									(x) => x.name != _collection.name
+								);
 								$unAssigned = [...$unAssigned, _collection];
 							}}
-							svg={CheckIcon}
+							icon={CheckIcon}
 						/>
 					{/if}
 					<div class="flex items-center h-full" class:grow={$drawerExpanded}>
-						<iconify-icon icon={_collection.icon} class:ml-auto={!$drawerExpanded} class:ml-2={$drawerExpanded} />
+						<iconify-icon
+							icon={_collection.icon}
+							class:ml-auto={!$drawerExpanded}
+							class:ml-2={$drawerExpanded}
+						/>
 						{#if $drawerExpanded}
-							<p class="mx-auto">{_collection.name}</p>
+							<p class="mx-auto">{_collection.label || _collection.name}</p>
 						{/if}
 					</div>
 				</div>
@@ -81,12 +91,16 @@
 								category.collections.push(_collection);
 								$unAssigned = $unAssigned.filter((x) => x.name != _collection.name);
 							}}
-							svg={CheckIcon}
+							icon={CheckIcon}
 						/>
 						<div class="flex items-center h-full" class:grow={$drawerExpanded}>
-							<iconify-icon icon={_collection.icon} class:ml-auto={!$drawerExpanded} class:ml-2={$drawerExpanded} />
+							<iconify-icon
+								icon={_collection.icon}
+								class:ml-auto={!$drawerExpanded}
+								class:ml-2={$drawerExpanded}
+							/>
 							{#if $drawerExpanded}
-								<p class="mx-auto">{_collection.name}</p>
+								<p class="mx-auto">{_collection.label || _collection.name}</p>
 							{/if}
 						</div>
 					</div>

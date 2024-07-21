@@ -38,7 +38,8 @@ export let _POST = async ({
 	if (!collection) return new Response('collection not found!!');
 	body._id = new mongoose.Types.ObjectId();
 	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'POST' });
-	for (let _collection in body._links) {
+	for (let _collection in body._links.filter) {
+		if (body[_collection] == false) continue;
 		let collection = collections[_collection as string];
 
 		let _id = new mongoose.Types.ObjectId();

@@ -36,7 +36,7 @@ export const col2formData = async (getData: { [Key: string]: () => any }) => {
 
 	for (let key in getData) {
 		let value = await getData[key]();
-		if (!value) continue;
+		if (!value && value !== false) continue;
 		data[key] = value;
 	}
 
@@ -348,6 +348,20 @@ export function get_date() {
 		String(d.getMonth() + 1).padStart(2, '0') +
 		'-' +
 		String(d.getDate()).padStart(2, '0')
+	);
+}
+export function toISOString(date: any) {
+	let d = new Date(date);
+	return (
+		d.getFullYear() +
+		'-' +
+		String(d.getMonth() + 1).padStart(2, '0') +
+		'-' +
+		String(d.getDate()).padStart(2, '0') +
+		'T' +
+		String(d.getHours()).padStart(2, '0') +
+		':' +
+		String(d.getMinutes()).padStart(2, '0')
 	);
 }
 export function toStringHelper({

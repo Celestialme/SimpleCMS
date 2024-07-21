@@ -25,6 +25,8 @@ export type Permissions = {
 };
 export interface Schema {
 	name?: CollectionNames;
+	hidden?: boolean;
+	label?: string;
 	links?: CollectionNames[];
 	icon?: string;
 	fields: ReturnType<(typeof widgets)[keyof typeof widgets]>[];
@@ -46,6 +48,5 @@ export let sanitizePermissions = (permissions) => {
 	if (Object.keys(res).length == 0) return undefined;
 	return res;
 };
-
-export type CollectionNames = 'About'|'imageArray'|'Menu'|'Menu1'|'Menu2'|'News'|'Posts1'|'Posts2'|'Posts3'|'Posts31'|'Posts32'|'Relation'|'thumbs';
-export type CollectionContent = {"About":["RichText"],"imageArray":["ImageArray"],"Menu":["Menu"],"Menu1":["Menu"],"Menu2":["Menu"],"News":["Date","thumbnail","Content"],"Posts1":["email","text","image"],"Posts2":["RichText","image"],"Posts3":["text 1","text 2","text 3","text 4","text 5"],"Posts31":["text 1","text 2","text 3","text 4","text 5"],"Posts32":["text 1","text 2","text 3","text 4","text 5"],"Relation":["info","relation2"],"thumbs":["Image","Image2"]};
+export type CollectionNames = 'About'|'imageArray'|'Menu'|'Menu1'|'Menu2'|'News'|'Posts1'|'Posts2'|'Relation'|'thumbs'|'დიპლომისშემდგომი'|'კვლევა'|'კლინიკური ბაზები'|'კლინიკური საქმიანობა'|'მედიცინა'|'მედიცინისა და სტომატოლოგიის საერთაშორისო ფაკულტეტი'|'საერთაშორისო პროექტების მოზიდვისა და ხელშეწყობის განყოფილება'|'საექთნო საქმის და სამეანო საქმის საბაკალავრო პროგრამები'|'საზოგადოებრივი ჯანდაცვა'|'სიახლეები'|'სტომატოლოგია'|'ფარმაცია'|'ფიზიკური მედიცინა და რეაბილიტაცია';
+export type CollectionContent = {"About":["RichText"],"imageArray":["ImageArray"],"Menu":["Menu"],"Menu1":["Menu"],"Menu2":["Menu"],"News":["Date","thumbnail","Content"],"Posts1":["email","text","image"],"Posts2":["RichText","image"],"Relation":["info","relation2"],"thumbs":["Image","Image2"],"დიპლომისშემდგომი":["text 1","text 2","text 3","text 4","text 5"],"კვლევა":["text 1","text 2","text 3","text 4","text 5"],"კლინიკური ბაზები":["text 1","text 2","text 3","text 4","text 5"],"კლინიკური საქმიანობა":["text 1","text 2","text 3","text 4","text 5"],"მედიცინა":["text 1","text 2","text 3","text 4","text 5"],"მედიცინისა და სტომატოლოგიის საერთაშორისო ფაკულტეტი":["text 1","text 2","text 3","text 4","text 5"],"საერთაშორისო პროექტების მოზიდვისა და ხელშეწყობის განყოფილება":["text 1","text 2","text 3","text 4","text 5"],"საექთნო საქმის და სამეანო საქმის საბაკალავრო პროგრამები":["text 1","text 2","text 3","text 4","text 5"],"საზოგადოებრივი ჯანდაცვა":["text 1","text 2","text 3","text 4","text 5"],"სიახლეები":["text 1","text 2","text 3","text 4","text 5"],"სტომატოლოგია":["text 1","text 2","text 3","text 4","text 5"],"ფარმაცია":["text 1","text 2","text 3","text 4","text 5"],"ფიზიკური მედიცინა და რეაბილიტაცია":["text 1","text 2","text 3","text 4","text 5"]};

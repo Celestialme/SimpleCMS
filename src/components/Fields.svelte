@@ -13,6 +13,7 @@
 
 	$: if (root)
 		$collectionValue = {
+			...$collectionValue,
 			...fieldsData,
 			_links: () => links,
 			_is_link: () => $entryData['_is_link'] || false,
@@ -30,7 +31,7 @@
 				class="min-w-[150px] border border-solid border-gray-300 flex items-center p-2 gap-2 rounded-md"
 			>
 				<CheckBox icon={SquareIcon} bind:checked={links[link]} />
-				{link}
+				{$collections[link].label || link}
 			</div>
 		{/each}
 	</div>

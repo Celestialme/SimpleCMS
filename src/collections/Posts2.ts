@@ -2,7 +2,7 @@ import widgets from '../components/widgets';
 import type { Schema } from './types';
 let schema: Schema = {
 	icon: 'iconoir:post',
-
+	hidden: true,
 	fields: [
 		widgets.RichText({ label: 'RichText', translated: true, image_folder: 'images' }),
 		widgets.ImageUpload({ label: 'image', folder: 'images' })
