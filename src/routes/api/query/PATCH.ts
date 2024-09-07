@@ -15,7 +15,7 @@ export let _PATCH = async ({
 }) => {
 	let body: { [key: string]: any } = {};
 	let collections = await getCollectionModels();
-	let collection = collections[schema.name as string];
+	let collection = collections[schema.id as string];
 	let _id = new mongoose.Types.ObjectId(data.get('_id') as string);
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
@@ -60,7 +60,7 @@ export let _PATCH = async ({
 			delete body._links[_collection];
 			await collection.deleteMany({
 				_link_id: body._id,
-				_linked_collection: body?._is_link ? body._linked_collection : schema.name
+				_linked_collection: body?._is_link ? body._linked_collection : schema.id
 			});
 			continue;
 		} else if (!body._links[_collection]) continue;
@@ -71,7 +71,7 @@ export let _PATCH = async ({
 		await collection.insertMany({
 			_id,
 			_link_id: body._id,
-			_linked_collection: body._is_link ? body._linked_collection : schema.name
+			_linked_collection: body._is_link ? body._linked_collection : schema.id
 		});
 		body._links[_collection] = _id;
 	}

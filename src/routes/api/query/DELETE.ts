@@ -14,7 +14,7 @@ export let _DELETE = async ({
 	user: User;
 }) => {
 	let collections = await getCollectionModels();
-	let collection = collections[schema.name as string];
+	let collection = collections[schema.id as string];
 
 	let ids = data.get('ids') as string;
 	ids = JSON.parse(ids);
@@ -35,7 +35,7 @@ export let _DELETE = async ({
 			let collection = collections[link];
 			await collection.deleteMany({
 				_link_id: new mongoose.Types.ObjectId(id),
-				_linked_collection: schema.name
+				_linked_collection: schema.id
 			});
 		}
 	}

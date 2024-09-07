@@ -15,7 +15,7 @@
 </script>
 
 <DropDown
-	items={Object.values($collections).map((collection) => collection.name)}
+	items={Object.values($collections).map((collection) => collection.path)}
 	bind:selected={_value}
 	label="Select Collection"
 />

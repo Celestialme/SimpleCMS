@@ -3,11 +3,11 @@ import { type Params, GuiSchema } from './types';
 import { getCollections } from '@src/collections';
 import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
-import type { CollectionContent, CollectionNames, Schema } from '@src/collections/types';
+import type { CollectionTypes, Schema } from '@src/collections/types';
 const WIDGET_NAME = 'Relation' as const;
 const widget = <
-	K extends CollectionContent[T][number],
-	T extends CollectionNames & keyof CollectionContent
+	K extends CollectionTypes[T][number],
+	T extends keyof CollectionTypes & keyof CollectionTypes
 >(
 	params: Params<K, T>
 ) => {

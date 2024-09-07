@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { config, toFormData } from './utils';
-import type { CollectionNames } from '@src/collections/types';
+import type { CollectionTypes } from '@src/collections/types';
 
 export async function getData(query: {
-	collectionName: CollectionNames;
+	collectionName: keyof CollectionTypes;
 	page?: number;
 	limit?: number;
 	contentLanguage?: string;
@@ -22,7 +22,7 @@ export async function addData({
 	collectionName
 }: {
 	data: FormData;
-	collectionName: CollectionNames;
+	collectionName: keyof CollectionTypes;
 }) {
 	data.append('collectionName', collectionName);
 	data.append('method', 'POST');
@@ -34,7 +34,7 @@ export async function updateData({
 	collectionName
 }: {
 	data: FormData;
-	collectionName: CollectionNames;
+	collectionName: keyof CollectionTypes;
 }) {
 	data.append('collectionName', collectionName);
 	data.append('method', 'PATCH');
@@ -46,7 +46,7 @@ export async function deleteData({
 	collectionName
 }: {
 	data: FormData;
-	collectionName: CollectionNames;
+	collectionName: keyof CollectionTypes;
 }) {
 	data.append('collectionName', collectionName);
 	data.append('method', 'DELETE');
@@ -58,7 +58,7 @@ export async function setStatus({
 	collectionName
 }: {
 	data: FormData;
-	collectionName: CollectionNames;
+	collectionName: keyof CollectionTypes;
 }) {
 	data.append('collectionName', collectionName);
 	data.append('method', 'SETSTATUS');

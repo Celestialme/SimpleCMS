@@ -4,7 +4,7 @@
 	import { drawerExpanded, mode } from '@src/stores/store.js';
 	import { collection } from '@src/stores/load';
 	import axios from 'axios';
-	import { categories, updateCollections } from '@src/collections';
+	import { categories } from '@src/collections';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
@@ -15,7 +15,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import PermissionsTable from '@src/components/PermissionsTable.svelte';
 	import { defaultPermissions, permissions, type Permissions } from '@src/collections/types';
-	let collectionName = $mode == 'edit' ? $collection.name : '';
+	let collectionName = $mode == 'edit' ? $collection.path : '';
 	let icon = $mode == 'edit' ? $collection.icon : '';
 	let permissionsValue: Permissions;
 	let tabs = ['Core', 'Permissions', 'Fields'] as const;
@@ -27,7 +27,7 @@
 	$drawerExpanded = true;
 
 	collection.subscribe((_) => {
-		collectionName = $mode == 'edit' ? $collection.name : '';
+		collectionName = $mode == 'edit' ? $collection.path : '';
 		icon = $mode == 'edit' ? $collection.icon : '';
 		fields = $mode == 'edit' ? $collection.fields : [];
 		permissionsValue = $collection?.permissions || defaultPermissions;
@@ -38,7 +38,7 @@
 		fields = [];
 	}
 	onDestroy(async () => {
-		await updateCollections();
+		// await updateCollections();
 	});
 	function save() {
 		for (let role in permissionsValue) {
@@ -66,7 +66,7 @@
 		let data =
 			$mode == 'edit'
 				? obj2formData({
-						originalName: $collection.name,
+						originalName: $collection.path,
 						collectionName,
 						fields: $collection.fields,
 						permissions: permissionsValue,

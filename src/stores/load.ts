@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import publicConfig from '@root/config/public';
-import type { CollectionNames, Schema } from '@src/collections/types';
+import type { CollectionTypes, Schema } from '@src/collections/types';
 import * as m from '@src/paraglide/messages.js';
 import { setLanguageTag, type AvailableLanguageTag } from '@src/paraglide/runtime';
 import type { ChildProcessWithoutNullStreams } from 'child_process';
@@ -10,14 +10,13 @@ export let systemLanguage: Writable<AvailableLanguageTag> = writable(
 ) as any;
 export let messages: Writable<typeof m> = writable({ ...m });
 export let contentLanguage: Writable<string> = writable(publicConfig.DEFAULT_CONTENT_LANGUAGE);
-export let categories: Writable<
-	Array<{
-		name: string;
-		icon: string;
-		collections: Array<Schema>;
-	}>
-> = writable();
-export let collections = writable({}) as Writable<{ [key in CollectionNames]: Schema }>;
+
+export let categories: Writable<{
+	[key: string]: {
+		is_category: boolean;
+	} & Schema;
+}> = writable();
+export let collections = writable({}) as Writable<{ [keyof in keyof CollectionTypes]: Schema }>;
 export let unAssigned: Writable<Array<Schema>> = writable();
 export let collection: Writable<Schema> = writable();
 export let saveFunction: Writable<{ fn: (args: any) => any; reset: () => any }> = writable({

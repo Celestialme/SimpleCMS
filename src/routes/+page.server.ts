@@ -16,5 +16,5 @@ export async function load({ cookies, route, params }) {
 			message: 'you dont have an access to any collection'
 		});
 	}
-	throw redirect(302, `/${publicConfig.DEFAULT_CONTENT_LANGUAGE}/${_filtered[0].name}`);
+	throw redirect(302, `/${publicConfig.DEFAULT_CONTENT_LANGUAGE}/${_filtered[0].path}`);
 }

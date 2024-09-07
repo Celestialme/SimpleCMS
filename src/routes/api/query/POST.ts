@@ -15,7 +15,7 @@ export let _POST = async ({
 }) => {
 	let body: { [key: string]: any } = {};
 	let collections = await getCollectionModels();
-	let collection = collections[schema.name as string];
+	let collection = collections[schema.id as string];
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
 		try {
@@ -46,7 +46,7 @@ export let _POST = async ({
 		await collection.insertMany({
 			_id,
 			_link_id: body._id,
-			_linked_collection: schema.name
+			_linked_collection: schema.id
 		});
 		body._links[_collection] = _id;
 	}

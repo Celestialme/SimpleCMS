@@ -15,7 +15,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	let $collections = get(collections);
 	let data: { [key: string]: any } = {};
 	for (let collection of Object.values($collections)) {
-		let name = collection.name as string;
+		let name = collection.path as string;
 		data[name as string] = (
 			await (
 				await _GET({

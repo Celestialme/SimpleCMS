@@ -44,7 +44,7 @@ export const GET: RequestHandler = async ({ cookies }) => {
 		}
 
 		if (text) {
-			fs.writeFileSync('./indexes/' + collection.name + '.txt', text);
+			fs.writeFileSync('./indexes/' + collection.path + '.txt', text);
 		}
 	}
 

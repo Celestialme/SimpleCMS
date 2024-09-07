@@ -17,7 +17,7 @@
 	let refresh = async (fetch: boolean = true) => {
 		if (fetch) {
 			data = await getData({
-				collectionName: $collection.name as any,
+				collectionName: $collection.path as any,
 				page: currentPage,
 				limit: 2,
 				contentLanguage: $contentLanguage,
@@ -41,7 +41,7 @@
 						}
 						obj[field.label] = await field.display?.({
 							data: entry[getFieldName(field)],
-							collection: $collection.name,
+							collection: $collection.path,
 							field,
 							entry,
 							contentLanguage: $contentLanguage
@@ -108,12 +108,12 @@
 		formData.append('status', statusMap[status]);
 		switch (status) {
 			case 'Delete':
-				await deleteData({ data: formData, collectionName: $collection.name as any });
+				await deleteData({ data: formData, collectionName: $collection.path as any });
 				break;
 			case 'Publish':
 			case 'Unpublish':
 			case 'Test':
-				await setStatus({ data: formData, collectionName: $collection.name as any });
+				await setStatus({ data: formData, collectionName: $collection.path as any });
 				break;
 		}
 		refresh();

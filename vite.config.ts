@@ -5,7 +5,7 @@ import { paraglide } from '@inlang/paraglide-js-adapter-vite';
 import { fileURLToPath } from 'url';
 import Path from 'path';
 import { compile } from './src/routes/api/compile/compile';
-import { generateCollectionFieldTypes, generateCollectionTypes } from './src/utils/collectionTypes';
+import { generateCollectionTypes } from './src/utils/collectionTypes';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
@@ -34,7 +34,6 @@ export default defineConfig({
 
 					compile({ collectionsFolderJS, collectionsFolderTS });
 					generateCollectionTypes();
-					generateCollectionFieldTypes();
 				};
 				server.watcher.on('add', cb);
 				server.watcher.on('unlink', cb);
@@ -42,8 +41,7 @@ export default defineConfig({
 					if (!/src[/\\]collections/.test(path) || path.includes('types.ts')) {
 						return;
 					}
-
-					generateCollectionFieldTypes();
+					generateCollectionTypes();
 				});
 			},
 

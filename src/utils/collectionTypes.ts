@@ -1,30 +1,9 @@
 import fs from 'fs';
+import path from 'path';
 import ts from 'typescript';
-// import { getFieldName } from './utils';
+
 export async function generateCollectionTypes() {
-	let files = fs.readdirSync('src/collections').filter((x) => {
-		return !['index.ts', 'types.ts', 'config.ts'].includes(x);
-	});
-
-	let collections =
-		'export type CollectionNames = ' +
-		files
-			.map((x) => `'${x.replace('.ts', '')}'`)
-			.join('|')
-			.replaceAll(/\n/g, '') +
-		';';
-
-	// console.log(collectionSchemas);
-	let types = fs.readFileSync('src/collections/types.ts', 'utf-8');
-	types = types.replace(/\n*export\s+type\s+CollectionNames\s?=\s?.*?;/gms, '');
-
-	types += collections;
-
-	fs.writeFileSync('src/collections/types.ts', types);
-}
-
-export async function generateCollectionFieldTypes() {
-	let files = fs.readdirSync('src/collections').filter((x) => {
+	let files = walkdir('./src/collections').filter((x) => {
 		return !['index.ts', 'types.ts', 'config.ts'].includes(x);
 	});
 	let collections = {};
@@ -50,10 +29,30 @@ export async function generateCollectionFieldTypes() {
 			let fieldName = field.db_fieldName || field.label;
 			collection.push(fieldName);
 		}
-		collections[file.replace('.ts', '')] = collection;
+		collections[file.replace('.ts', '').replace(/[/\\]/g, '::')] = collection;
 	}
 	let types = fs.readFileSync('src/collections/types.ts', 'utf-8');
-	types = types.replace(/\n*export\s+type\s+CollectionContent\s?=\s?.*?};/gms, '');
-	types += '\n' + 'export type CollectionContent = ' + JSON.stringify(collections) + ';';
+	types = types.replace(/\n*export\s+type\s+CollectionTypes\s?=\s?.*?};/gms, '');
+	types += '\n' + 'export type CollectionTypes = ' + JSON.stringify(collections) + ';';
 	fs.writeFileSync('src/collections/types.ts', types);
+}
+
+function walkdir(dir: string, fileList: string[] = [], baseDir = dir) {
+	// Read the directory contents
+	const files = fs.readdirSync(dir);
+
+	// Iterate through the contents
+	files.forEach((file) => {
+		const fullPath = path.join(dir, file);
+		const stat = fs.statSync(fullPath);
+
+		if (stat.isDirectory()) {
+			walkdir(fullPath, fileList, baseDir);
+		} else {
+			const relativePath = path.relative(baseDir, fullPath);
+			fileList.push(relativePath);
+		}
+	});
+
+	return fileList;
 }

@@ -15,7 +15,7 @@
 	let checked = {};
 	for (let category of $categories) {
 		for (let collection of category.collections) {
-			checked[collection.name as string] = true;
+			checked[collection.path as string] = true;
 		}
 	}
 </script>
@@ -51,11 +51,11 @@
 				>
 					{#if modeSet == 'edit'}
 						<CheckBox
-							bind:checked={checked[asAny(_collection.name)]}
+							bind:checked={checked[asAny(_collection.path)]}
 							callback={() => {
 								checked = checked;
 								category.collections = category.collections.filter(
-									(x) => x.name != _collection.name
+									(x) => x.name != _collection.path
 								);
 								$unAssigned = [...$unAssigned, _collection];
 							}}
@@ -69,7 +69,7 @@
 							class:ml-2={$drawerExpanded}
 						/>
 						{#if $drawerExpanded}
-							<p class="mx-auto">{_collection.label || _collection.name}</p>
+							<p class="mx-auto">{_collection.label || _collection.path}</p>
 						{/if}
 					</div>
 				</div>
@@ -85,11 +85,11 @@
 						}}
 					>
 						<CheckBox
-							bind:checked={checked[asAny(_collection.name)]}
+							bind:checked={checked[asAny(_collection.path)]}
 							callback={() => {
 								checked = checked;
 								category.collections.push(_collection);
-								$unAssigned = $unAssigned.filter((x) => x.name != _collection.name);
+								$unAssigned = $unAssigned.filter((x) => x.name != _collection.path);
 							}}
 							icon={CheckIcon}
 						/>
@@ -100,7 +100,7 @@
 								class:ml-2={$drawerExpanded}
 							/>
 							{#if $drawerExpanded}
-								<p class="mx-auto">{_collection.label || _collection.name}</p>
+								<p class="mx-auto">{_collection.label || _collection.path}</p>
 							{/if}
 						</div>
 					</div>

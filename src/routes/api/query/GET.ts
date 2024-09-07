@@ -24,7 +24,7 @@ export async function _GET({
 }) {
 	let aggregations: any = [];
 	let collections = await getCollectionModels();
-	let collection = collections[schema.name as string];
+	let collection = collections[schema.id as string];
 	let skip = (page - 1) * limit;
 	for (let field of schema.fields) {
 		let widget = widgets[field.widget.Name];

@@ -3,7 +3,7 @@ import { getCollectionModels } from '../db';
 
 export let _SETSTATUS = async ({ data, schema }: { data: FormData; schema: Schema }) => {
 	let collections = await getCollectionModels();
-	let collection = collections[schema.name as string];
+	let collection = collections[schema.id as string];
 	let ids = data.get('ids') as string;
 	ids = JSON.parse(ids);
 	let status = data.get('status') as string;

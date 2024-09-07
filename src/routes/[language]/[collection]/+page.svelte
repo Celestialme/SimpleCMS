@@ -5,9 +5,8 @@
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
 	import Header from '@src/components/Header.svelte';
-	import { collections, collection, contentLanguage } from '@src/stores/load';
+	import { collections, collection, contentLanguage, categories } from '@src/stores/load';
 	import { page } from '$app/stores';
-	import Collections from '@src/components/system/drawer/Collections.svelte';
 	import { goto } from '$app/navigation';
 	import type { Schema } from '@src/collections/types';
 	import { onDestroy } from 'svelte';
@@ -15,8 +14,10 @@
 	import axios from 'axios';
 	import FloatingNav from '@src/components/system/FloatingNav.svelte';
 	import Media from '@src/components/Media.svelte';
+	import Category from '@src/components/system/drawer/Category.svelte';
 	let ForwardBackward: boolean = false; // if using browser history
 	collection.set($collections[$page.params.collection as string] as Schema); // current collection
+
 	globalThis.onpopstate = async () => {
 		ForwardBackward = true;
 		collection.set($collections[$page.params.collection as string] as Schema);
@@ -26,7 +27,7 @@
 	let unsubscribe = collection.subscribe((_) => {
 		$collectionValue = {};
 		if (!ForwardBackward) {
-			goto(`/${$contentLanguage}/${$collection.name}`);
+			goto(`/${$contentLanguage}/${$collection.path}`);
 		}
 		ForwardBackward = false;
 	});
@@ -35,7 +36,7 @@
 	});
 	contentLanguage.subscribe((_) => {
 		if (!ForwardBackward) {
-			goto(`/${$contentLanguage}/${$collection.name}`);
+			goto(`/${$contentLanguage}/${$collection.path}`);
 		}
 	});
 	async function signOut() {
@@ -60,7 +61,9 @@
 <div class="flex max-md:flex-wrap h-screen">
 	<Drawer>
 		<section>
-			<Collections />
+			{#if $categories}
+				<Category />
+			{/if}
 		</section>
 		<section class="text-center">
 			<button on:click={() => mode.set('storage')} class="p-2 bg-[#353b63] text-white w-full">

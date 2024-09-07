@@ -29,10 +29,10 @@ export async function getCollectionModels() {
 							timestamps: { currentTime: () => Date.now() }
 						}
 					);
-					if (!collection.name) return;
-					collectionsModels[collection.name] = mongoose.models[collection.name]
-						? mongoose.model(collection.name)
-						: mongoose.model(collection.name, schema_object);
+					if (!collection.id) return;
+					collectionsModels[collection.id] = mongoose.models[collection.id]
+						? mongoose.model(collection.id)
+						: mongoose.model(collection.id, schema_object);
 				}
 
 				unsubscribe && unsubscribe();
