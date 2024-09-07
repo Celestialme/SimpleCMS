@@ -62,10 +62,10 @@ widget.modifyRequest = async ({
 		return;
 	}
 	let { getCollectionModels } = await import('@src/routes/api/db');
-	let relative_collection = (await getCollectionModels())[field.relation];
 	let relative_collection_schema = (await getCollections())[field.relation] as Schema;
+	let relative_collection = (await getCollectionModels())[relative_collection_schema.id];
 	let response = (await relative_collection.findById(_data)) as any;
-	let result = {};
+	let result = { _id: response._id };
 	for (let key in relative_collection_schema.fields) {
 		let _field = relative_collection_schema.fields[key];
 		let widget = widgets[_field.widget.Name];
@@ -78,14 +78,16 @@ widget.modifyRequest = async ({
 				result[getFieldName(_field)] = newData;
 			}
 		};
-		await widget.modifyRequest({
-			collection: relative_collection,
-			field: _field as ReturnType<typeof widget>,
-			data,
-			user,
-			type,
-			id
-		});
+		if ('modifyRequest' in widget) {
+			await widget.modifyRequest({
+				collection: relative_collection,
+				field: _field as ReturnType<typeof widget>,
+				data,
+				user,
+				type,
+				id
+			});
+		}
 	}
 	data.update(result);
 };

@@ -19,7 +19,7 @@
 	let entryMode: 'create' | 'edit' | 'choose' = 'choose';
 	let relation_entry;
 	let relationCollection = $collections[field?.relation];
-
+	console.log(value);
 	export const WidgetData = async () => {
 		let relation_id = '';
 		if (!field) return;
@@ -62,7 +62,7 @@
 				data = await extractData(fieldsData);
 			} else if (entryMode == 'choose') {
 				if (typeof value == 'string') {
-					data = await findById(value, relationCollection?.name as string);
+					data = await findById(value, relationCollection?.id as string);
 				} else {
 					data = value;
 				}

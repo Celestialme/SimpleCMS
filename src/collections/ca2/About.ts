@@ -6,7 +6,7 @@ let schema: Schema = {
 
 	fields: [
 		widgets.RichText({ label: 'RichText', translated: true, image_folder: 'images' }),
-		widgets.Relation({ label: 'Relation', relation: 'ca::ca12::About', displayPath: 'RichText' })
+		widgets.Relation({ label: 'Relation', relation: 'ca::About', displayPath: 'RichText' })
 	]
 };
 export default schema;

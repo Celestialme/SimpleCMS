@@ -14,7 +14,7 @@ async function setCollections() {
 		let collection = ((await modules[module]()) as any).default;
 		parseCategories(collection, path, _categories);
 		collection.name = path.split('/').slice(-1)[0];
-		path = path.replaceAll('/', '_');
+		path = path.replaceAll('/', '::');
 		collection.path = path;
 		!collection.icon && (collection.icon = 'iconoir:info-empty');
 
@@ -23,8 +23,6 @@ async function setCollections() {
 	}
 	categories.set(_categories as any);
 	collections.set(_collections as any);
-
-	console.log(get(categories));
 }
 function parseCategories(collection, name: string, categories) {
 	let path = name.split('/');

@@ -51,4 +51,4 @@ export let sanitizePermissions = (permissions) => {
 	return res;
 };
 
-export type CollectionTypes = {"ca::About":["RichText"],"ca::ca12::About":["RichText"],"ca2::About":["RichText","Relation"],"დიპლომისშემდგომი":["Date","thumbnail","Content"],"კვლევა":["Date","thumbnail","Content"],"კლინიკური ბაზები":["Date","thumbnail","Content"],"კლინიკური საქმიანობა":["Date","thumbnail","Content"],"მედიცინა":["Date","thumbnail","Content"],"მედიცინისა და სტომატოლოგიის საერთაშორისო ფაკულტეტი":["Date","thumbnail","Content"],"საერთაშორისო პროექტების მოზიდვისა და ხელშეწყობის განყოფილება":["Date","thumbnail","Content"],"საექთნო საქმის და სამეანო საქმის საბაკალავრო პროგრამები":["Date","thumbnail","Content"],"საზოგადოებრივი ჯანდაცვა":["Date","thumbnail","Content"],"სიახლეები":["Date","thumbnail","Content"],"სტომატოლოგია":["Date","thumbnail","Content"],"ფარმაცია":["Date","thumbnail","Content"],"ფიზიკური მედიცინა და რეაბილიტაცია":["Date","thumbnail","Content"]};
+export type CollectionTypes = {"ca::About":["RichText"],"ca::ca12::About":["RichText"],"ca::relation":["Relation"],"ca::sm":["Name","Name2"],"ca2::About":["RichText","Relation"]};
