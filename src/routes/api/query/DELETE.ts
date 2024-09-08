@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
 import { modifyRequest } from './modifyRequest';
+import { getCollections } from '@src/collections';
 export let _DELETE = async ({
 	data,
 	schema,
@@ -13,8 +14,9 @@ export let _DELETE = async ({
 	schema: Schema;
 	user: User;
 }) => {
-	let collections = await getCollectionModels();
-	let collection = collections[schema.id as string];
+	let collectionModels = await getCollectionModels();
+	let collections = await getCollections();
+	let collection = collectionModels[schema.id as string];
 
 	let ids = data.get('ids') as string;
 	ids = JSON.parse(ids);
@@ -32,10 +34,10 @@ export let _DELETE = async ({
 			type: 'DELETE'
 		});
 		for (let link of schema.links || []) {
-			let collection = collections[link];
+			let collection = collectionModels[collections[link].id];
 			await collection.deleteMany({
 				_link_id: new mongoose.Types.ObjectId(id),
-				_linked_collection: schema.id
+				_linked_collection: schema.path
 			});
 		}
 	}

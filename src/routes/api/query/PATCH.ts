@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
 import { modifyRequest } from './modifyRequest';
+import { getCollections } from '@src/collections';
 export let _PATCH = async ({
 	data,
 	schema,
@@ -14,8 +15,9 @@ export let _PATCH = async ({
 	user: User;
 }) => {
 	let body: { [key: string]: any } = {};
-	let collections = await getCollectionModels();
-	let collection = collections[schema.id as string];
+	let collectionModels = await getCollectionModels();
+	let collections = await getCollections();
+	let collection = collectionModels[schema.id as string];
 	let _id = new mongoose.Types.ObjectId(data.get('_id') as string);
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
@@ -33,7 +35,7 @@ export let _PATCH = async ({
 		}
 	}
 	if (body._is_link) {
-		collection = collections[body._linked_collection as string];
+		collection = collectionModels[collections[body._linked_collection].id as string];
 	}
 	for (let id of fileIDS) {
 		delete body[id];
@@ -54,13 +56,13 @@ export let _PATCH = async ({
 			: {};
 
 	for (let _collection in body._links) {
-		let collection = collections[_collection as string];
+		let collection = collectionModels[collections[_collection].id as string];
 		if (!collection) continue;
 		if (!body._links[_collection] && links?.[_collection]) {
 			delete body._links[_collection];
 			await collection.deleteMany({
 				_link_id: body._id,
-				_linked_collection: body?._is_link ? body._linked_collection : schema.id
+				_linked_collection: body?._is_link ? body._linked_collection : schema.path
 			});
 			continue;
 		} else if (!body._links[_collection]) continue;
@@ -71,7 +73,7 @@ export let _PATCH = async ({
 		await collection.insertMany({
 			_id,
 			_link_id: body._id,
-			_linked_collection: body._is_link ? body._linked_collection : schema.id
+			_linked_collection: body._is_link ? body._linked_collection : schema.path
 		});
 		body._links[_collection] = _id;
 	}

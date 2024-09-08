@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
 import { modifyRequest } from './modifyRequest';
+import { getCollections } from '@src/collections';
 export let _POST = async ({
 	data,
 	schema,
@@ -14,8 +15,9 @@ export let _POST = async ({
 	user: User;
 }) => {
 	let body: { [key: string]: any } = {};
-	let collections = await getCollectionModels();
-	let collection = collections[schema.id as string];
+	let collectionModels = await getCollectionModels();
+	let collections = await getCollections();
+	let collection = collectionModels[schema.id as string];
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
 		try {
@@ -38,15 +40,16 @@ export let _POST = async ({
 	if (!collection) return new Response('collection not found!!');
 	body._id = new mongoose.Types.ObjectId();
 	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'POST' });
-	for (let _collection in body._links.filter) {
-		if (body[_collection] == false) continue;
-		let collection = collections[_collection as string];
+
+	for (let _collection in body._links) {
+		if (body._links[_collection] == false) continue;
+		let collection = collectionModels[collections[_collection].id as string];
 
 		let _id = new mongoose.Types.ObjectId();
 		await collection.insertMany({
 			_id,
 			_link_id: body._id,
-			_linked_collection: schema.id
+			_linked_collection: schema.path
 		});
 		body._links[_collection] = _id;
 	}
