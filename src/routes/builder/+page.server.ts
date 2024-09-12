@@ -4,8 +4,7 @@ import type { WidgetType } from '@src/components/widgets';
 import fs from 'fs';
 import prettier from 'prettier';
 import prettierConfig from '@root/.prettierrc.json';
-import { updateCollections } from '@src/collections';
-import { compile } from '../api/compile/compile';
+
 import { SESSION_COOKIE_NAME } from '@src/auth';
 import { sanitizePermissions } from '@src/collections/types';
 
@@ -32,8 +31,8 @@ export const actions: Actions = {
 		let formData = await request.formData();
 		let fieldsData = formData.get('fields') as string;
 
-		let originalName = JSON.parse(formData.get('originalName') as string);
-		let collectionName = JSON.parse(formData.get('collectionName') as string);
+		let originalName = JSON.parse(formData.get('originalName') as string).replaceAll('::', '/');
+		let collectionName = JSON.parse(formData.get('collectionName') as string).replaceAll('::', '/');
 		let permissions = sanitizePermissions(JSON.parse(formData.get('permissions') as string));
 		console.log(JSON.parse(formData.get('permissions') as string));
 		let icon = JSON.parse((formData.get('icon') as string) || '""');
@@ -41,8 +40,8 @@ export const actions: Actions = {
 		let imports = await goThrough(fields);
 		let content = `
 	${imports}
-	import widgets from '../components/widgets';
-	import type { Schema } from './types';
+	import widgets from '@src/components/widgets';
+	import type { Schema } from '@src/collections/types';
 	let schema: Schema = {
 		icon:"${icon}",
 		${permissions ? `permissions:${JSON.stringify(permissions)},` : ''}
@@ -65,28 +64,9 @@ export const actions: Actions = {
 			);
 		}
 		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/${collectionName}.ts`, content);
-		await compile();
-		await updateCollections(true);
+
 		await getCollectionModels();
 		return null;
-	},
-
-	saveConfig: async ({ request }) => {
-		let formData = await request.formData();
-		let categories = formData.get('categories') as string;
-		let config = `
-		export function createCategories(collections) {
-			return ${categories}
-	
-		}
-		`;
-		config = config.replace(/["']🗑️|🗑️["']/g, '').replace(/🗑️/g, '');
-
-		config = await prettier.format(config, { ...(prettierConfig as any), parser: 'typescript' });
-		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/config.ts`, config);
-		await compile();
-		await updateCollections(true);
-		await getCollectionModels();
 	}
 };
 

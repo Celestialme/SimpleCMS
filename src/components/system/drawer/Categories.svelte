@@ -1,9 +1,9 @@
 <script lang="ts">
-	import {  categories, collection } from '@src/stores/load';
+	import { categories, collection } from '@src/stores/load';
 	import { drawerExpanded, mode } from '@src/stores/store';
 
 	export let data = $categories || {};
-
+	export let modeSet: typeof $mode = 'view';
 	let expanded: { [key: string]: boolean } = {};
 </script>
 
@@ -19,14 +19,14 @@
 		</div>
 		<div class:expand={expanded[index]} class=" ml-3 wrapper">
 			<div class="{expanded[index] ? 'delayed-overflow' : 'overflow-hidden'} inner">
-				<svelte:self data={data[item]} />
+				<svelte:self data={data[item]} {modeSet} />
 			</div>
 		</div>
 	{:else}
 		<div
 			class={'relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center'}
 			on:click={() => {
-				mode.set('view');
+				mode.set(modeSet);
 				collection.set(data[item]);
 			}}
 		>

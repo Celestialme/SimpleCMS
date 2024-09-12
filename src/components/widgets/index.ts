@@ -34,5 +34,5 @@ export type WidgetType = {
 		) => Promise<{}>;
 	};
 };
-export let initWidgets = () => (globalThis.widgets = widgets);
+
 export default widgets as WidgetType;

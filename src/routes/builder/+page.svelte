@@ -1,10 +1,8 @@
 <script lang="ts">
 	import 'iconify-icon';
-	import Collections from '@src/components/system/drawer/Collections.svelte';
 	import { drawerExpanded, mode } from '@src/stores/store.js';
 	import { collection } from '@src/stores/load';
 	import axios from 'axios';
-	import { categories } from '@src/collections';
 	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
@@ -15,6 +13,7 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import PermissionsTable from '@src/components/PermissionsTable.svelte';
 	import { defaultPermissions, permissions, type Permissions } from '@src/collections/types';
+	import Categories from '@src/components/system/drawer/Categories.svelte';
 	let collectionName = $mode == 'edit' ? $collection.path : '';
 	let icon = $mode == 'edit' ? $collection.icon : '';
 	let permissionsValue: Permissions;
@@ -48,20 +47,7 @@
 				}
 			}
 		}
-		let _categories: { name: string; icon: string; collections: string[] }[] = [];
-		for (let category of $categories) {
-			_categories.push({
-				name: category.name,
-				icon: category.icon,
-				collections: category.collections.map((x) => `🗑️collections.${x.name}🗑️` as string)
-			});
-		}
 
-		axios.post(`?/saveConfig`, obj2formData({ categories: _categories }), {
-			headers: {
-				'Content-Type': 'multipart/form-data'
-			}
-		});
 		if (!collectionName) return;
 		let data =
 			$mode == 'edit'
@@ -90,7 +76,7 @@
 	<div class="left_panel">
 		<Drawer>
 			<section>
-				<Collections modeSet="edit" />
+				<Categories modeSet="edit" />
 			</section>
 
 			<div class:max-md:hidden={!$drawerExpanded && navButton.x == navButton.radius}>

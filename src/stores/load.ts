@@ -1,4 +1,3 @@
-import { browser } from '$app/environment';
 import publicConfig from '@root/config/public';
 import type { CollectionTypes, Schema } from '@src/collections/types';
 import * as m from '@src/paraglide/messages.js';

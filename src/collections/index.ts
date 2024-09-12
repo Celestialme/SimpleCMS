@@ -1,9 +1,9 @@
 import { defaultPermissions, type CollectionTypes, type Schema } from '@src/collections/types';
-import { initWidgets } from '@src/components/widgets';
+
 import { categories, collections } from '@src/stores/load';
 import deepmerge from 'deepmerge';
-import { get, type Unsubscriber } from 'svelte/store';
-initWidgets();
+import { type Unsubscriber } from 'svelte/store';
+
 async function setCollections() {
 	const modules = import.meta.glob(['./**/*.ts', '!./index.ts', '!./types.ts', '!./config.ts']);
 	let _categories = {};

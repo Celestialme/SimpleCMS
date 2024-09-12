@@ -17,7 +17,7 @@ export let GuiSchema = {
 	db_fieldName: { widget: FloatingInput, required: true },
 	relation: {
 		widget: GuiField,
-		required: true,
-		imports: ['import {relation} from "./{relation}"']
+		required: true
+		// imports: ['import {relation} from "./{relation}"']
 	}
 };

@@ -14,7 +14,7 @@
 	import axios from 'axios';
 	import FloatingNav from '@src/components/system/FloatingNav.svelte';
 	import Media from '@src/components/Media.svelte';
-	import Category from '@src/components/system/drawer/Category.svelte';
+	import Categories from '@src/components/system/drawer/Categories.svelte';
 	let ForwardBackward: boolean = false; // if using browser history
 	collection.set($collections[$page.params.collection as string] as Schema); // current collection
 
@@ -62,7 +62,7 @@
 	<Drawer>
 		<section>
 			{#if $categories}
-				<Category />
+				<Categories />
 			{/if}
 		</section>
 		<section class="text-center">
