@@ -2,24 +2,17 @@ import { redirect, type Actions } from '@sveltejs/kit';
 import { auth } from '../api/db';
 import { addUserSchema, changePasswordSchema } from '@src/utils/formSchemas';
 import { fail } from '@sveltejs/kit';
-import { SESSION_COOKIE_NAME } from '@src/auth';
 import type { Roles } from '@src/auth/types';
 export async function load(event) {
-	let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = await auth.validateSession(session_id);
-	if (user) {
-		return {
-			user
-		};
-	} else {
-		throw redirect(302, `/login`);
-	}
+	let user = event.locals.user;
+	return {
+		user
+	};
 }
 
 export const actions: Actions = {
-	addUser: async ({ request, cookies }) => {
-		let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-		let user = await auth.validateSession(session_id);
+	addUser: async ({ request, locals }) => {
+		let user = locals.user;
 		let data = await request.formData();
 		let form = addUserSchema.safeParse(Object.fromEntries(data));
 		if (!form.success) return fail(400, { message: 'invalid form members' });
@@ -44,14 +37,13 @@ export const actions: Actions = {
 		console.log(token); // send token to user via email
 		return { message: 'user has been added successfully' };
 	},
-	changePassword: async ({ request, cookies }) => {
+	changePassword: async ({ request, locals }) => {
 		let data = await request.formData();
 		let form = changePasswordSchema.safeParse(Object.fromEntries(data));
 		if (!form.success) return fail(400, { message: 'invalid form members' });
 
 		let password = form.data.password;
-		let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-		let user = await auth.validateSession(session_id);
+		let user = locals.user;
 		if (!user) return { message: 'user does not exist or session expired' };
 		let res = await auth.updateUserAttributes(user, {
 			password: password,
@@ -61,8 +53,7 @@ export const actions: Actions = {
 		return { message: 'password changed successfully' };
 	},
 	deleteUser: async (event) => {
-		let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
-		let user = await auth.validateSession(session_id);
+		let user = event.locals.user;
 		if (!user || user.role != 'admin') {
 			return fail(403);
 		}
@@ -73,9 +64,8 @@ export const actions: Actions = {
 		}
 	},
 	editUser: async (event) => {
-		let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
-		let user = await auth.validateSession(session_id);
-		if (!user || user.role != 'admin') {
+		let user = event.locals.user;
+		if (user.role != 'admin') {
 			return fail(403);
 		}
 		let data = await event.request.formData();

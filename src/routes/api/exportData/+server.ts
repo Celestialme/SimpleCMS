@@ -1,14 +1,11 @@
 import fs from 'fs';
 import type { RequestHandler } from './$types';
-import { auth } from '../db';
-import { SESSION_COOKIE_NAME } from '@src/auth';
 import { collections } from '@src/stores/load';
 import { get } from 'svelte/store';
 import privateConfig from '@root/config/private';
 import { _GET } from '../query/GET';
-export const GET: RequestHandler = async ({ cookies }) => {
-	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = await auth.validateSession(session_id);
+export const GET: RequestHandler = async ({ locals }) => {
+	let user = locals.user;
 	if (!user || user.role != 'admin') {
 		return new Response('', { status: 403 });
 	}

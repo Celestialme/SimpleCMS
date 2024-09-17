@@ -1,4 +1,3 @@
-import { SESSION_COOKIE_NAME } from '@src/auth';
 import type { User } from '@src/auth/types';
 import { getCollections } from '@src/collections';
 import publicConfig from '@root/config/public';
@@ -10,18 +9,15 @@ import { _PATCH } from './PATCH';
 import { _DELETE } from './DELETE';
 import { _SETSTATUS } from './SETSTATUS';
 
-export const POST = async ({ request, cookies }) => {
+export const POST = async ({ request, locals }) => {
 	let data = await request.formData();
-	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
 	let user_id = data.get('user_id') as string;
 	let collectionName = data.get('collectionName') as string;
 	let method = data.get('method') as string;
 
 	['user_id', 'collectionName', 'method'].forEach((key) => data.delete(key));
 
-	let user = user_id
-		? ((await auth.checkUser({ _id: user_id })) as User)
-		: ((await auth.validateSession(session_id)) as User);
+	let user = user_id ? ((await auth.checkUser({ _id: user_id })) as User) : locals.user;
 	if (!user) {
 		return new Response('', { status: 403 });
 	}

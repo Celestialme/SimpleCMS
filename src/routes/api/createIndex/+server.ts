@@ -1,16 +1,14 @@
 import fs from 'fs';
 import type { RequestHandler } from './$types';
-import { auth } from '../db';
-import { SESSION_COOKIE_NAME } from '@src/auth';
+
 import { collections } from '@src/stores/load';
 import { get } from 'svelte/store';
 import { _GET } from '../query/GET';
 import widgets from '@src/components/widgets';
 import { getFieldName } from '@src/utils/utils';
-export const GET: RequestHandler = async ({ cookies }) => {
+export const GET: RequestHandler = async ({ locals }) => {
 	fs.mkdirSync('./indexes', { recursive: true });
-	let session_id = cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = await auth.validateSession(session_id);
+	let user = locals.user;
 	if (!user || user.role != 'admin') {
 		return new Response('', { status: 403 });
 	}

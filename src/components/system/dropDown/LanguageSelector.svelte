@@ -3,7 +3,7 @@
 	import { contentLanguage } from '@src/stores/load';
 	import { mode, translationProgress } from '@src/stores/store';
 	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
-	$contentLanguage = languages[0];
+	$contentLanguage = publicConfig.DEFAULT_CONTENT_LANGUAGE;
 	export let label: string = '';
 	let expanded = false;
 	mode.subscribe(() => {

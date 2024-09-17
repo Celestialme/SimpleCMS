@@ -1,29 +1,23 @@
 import { redirect, type Actions, error } from '@sveltejs/kit';
-import { auth, getCollectionModels } from '../api/db';
+import { getCollectionModels } from '../api/db';
 import type { WidgetType } from '@src/components/widgets';
 import fs from 'fs';
 import prettier from 'prettier';
 import prettierConfig from '@root/.prettierrc.json';
 
-import { SESSION_COOKIE_NAME } from '@src/auth';
 import { sanitizePermissions } from '@src/collections/types';
 
 type fields = ReturnType<WidgetType[keyof WidgetType]>;
 export async function load(event) {
-	let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = await auth.validateSession(session_id);
-	if (user) {
-		if (user.role != 'admin') {
-			throw error(404, {
-				message: 'you dont have an access to this page'
-			});
-		}
-		return {
-			user
-		};
-	} else {
-		throw redirect(302, `/login`);
+	let user = event.locals.user;
+	if (user.role != 'admin') {
+		throw error(404, {
+			message: 'you dont have an access to this page'
+		});
 	}
+	return {
+		user
+	};
 }
 
 export const actions: Actions = {
