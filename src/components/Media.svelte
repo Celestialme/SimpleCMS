@@ -1,10 +1,10 @@
 <script lang="ts">
 	import MediaCards from './MediaCards.svelte';
-	import type { ImageFiles } from '@src/utils/types';
+	import type { ImageFile } from '@src/utils/types';
 	import { debounce } from '@src/utils/utils';
 	import axios from 'axios';
 	export let onselect: any = () => {};
-	let files: ImageFiles[] = [];
+	let files: ImageFile[] = [];
 	let pagesCount = 1;
 	let search = '';
 	let currentPage = 1;

@@ -15,7 +15,7 @@ declare module '@tiptap/core' {
 	}
 }
 const DESCRIPTION_STYLE =
-	'text-align: center;position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0, 0, 0, .5); color: #fff; padding: 5px; font-size: 16px;';
+	'z-index: 10;text-align: center;position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0, 0, 0, .5); color: #fff; padding: 5px; font-size: 16px;';
 const ImageResize = ImageExtension.extend({
 	addOptions() {
 		return {
@@ -61,10 +61,10 @@ const ImageResize = ImageExtension.extend({
 			},
 			w: {
 				default: '200px',
-				parseHTML: (element) => (element as HTMLElement).style.width
+				parseHTML: (element) => (element.querySelector('img') as HTMLElement).getAttribute('width')
 			},
 			h: {
-				default: null,
+				default: '200px',
 				parseHTML: (element) => (element as HTMLElement).style.height
 			},
 			margin: {
@@ -97,14 +97,15 @@ const ImageResize = ImageExtension.extend({
 		return [
 			'div',
 			{
-				style: `text-align: ${HTMLAttributes.textAlign};float: ${HTMLAttributes.float};width: ${HTMLAttributes.w};height: ${HTMLAttributes.h}; margin: ${HTMLAttributes.margin};${HTMLAttributes.float == 'right' ? 'padding-left: 10px;' : 'padding-right: 10px;'}`
+				style: `text-align: ${HTMLAttributes.textAlign};float: ${HTMLAttributes.float};height: ${HTMLAttributes.h}; margin: ${HTMLAttributes.margin}`
 			},
 			[
 				'img',
 				{
 					storage_image: HTMLAttributes.storage_image,
 					src: HTMLAttributes.id || HTMLAttributes.src,
-					style: 'width: 100%; height: 100%'
+					id: HTMLAttributes.id,
+					style: `width: ${HTMLAttributes.w}; height: 100%`
 				}
 			],
 			HTMLAttributes.description
@@ -152,11 +153,11 @@ const ImageResize = ImageExtension.extend({
 			let knob2 = document.createElement('div');
 			let knob3 = document.createElement('div');
 			knob1.style.cssText =
-				'cursor: ew-resize;width: 15px; height: 100%;  position: absolute; top:0;left:10px;transform:translateX(-50%)';
+				'z-index: 10;cursor: ew-resize;width: 15px; height: 100%;  position: absolute; top:0;left:0px;transform:translateX(-50%)';
 			knob2.style.cssText =
-				'cursor: ew-resize;width: 15px; height: 100%;  position: absolute; top:0;right:10px;transform:translateX(50%)';
+				'z-index: 10;cursor: ew-resize;width: 15px; height: 100%;  position: absolute; top:0;right:0px;transform:translateX(50%)';
 			knob3.style.cssText =
-				'cursor: ns-resize;width: 100%; height: 15px;  position: absolute; bottom:0;left:0;transform:translateY(50%)';
+				'z-index: 10;cursor: ns-resize;width: 100%; height: 15px;  position: absolute; bottom:0;left:0;transform:translateY(50%)';
 
 			knob1.onpointerdown = (e) => {
 				knobDrag(e, knob1, 'left', resizer, nodeAttrs);
@@ -178,8 +179,7 @@ const ImageResize = ImageExtension.extend({
 				width: nodeAttrs.w,
 				height: nodeAttrs.h,
 				margin: nodeAttrs.margin,
-				float: nodeAttrs.float,
-				padding: nodeAttrs.float == 'right' ? '0 0 0 10px' : ' 0 10px 0 0'
+				float: nodeAttrs.float
 			});
 
 			resizer.appendChild(img);
@@ -188,12 +188,20 @@ const ImageResize = ImageExtension.extend({
 			img.alt = alt;
 			img.style.width = '100%';
 			img.style.height = '100%';
+			img.style.top = '0';
+			img.style.left = '0';
+			img.style.position = 'absolute';
 			img.style.cursor = 'pointer';
 
 			container.appendChild(resizer);
-
 			if (nodeAttrs.textAlign != 'justify') {
-				nodeAttrs.margin = resizer.style.margin = 'unset';
+				if (nodeAttrs.float == 'left') {
+					nodeAttrs.margin = resizer.style.margin = `0 10px 0 0`;
+				} else if (nodeAttrs.float == 'right') {
+					nodeAttrs.margin = resizer.style.margin = `0 0 0 10px`;
+				} else if (nodeAttrs.textAlign != 'unset') {
+					nodeAttrs.margin = resizer.style.margin = `0`;
+				}
 			}
 
 			resizer.ondrag = (e) => {
@@ -220,9 +228,9 @@ const ImageResize = ImageExtension.extend({
 						0
 					) + '%';
 				if (nodeAttrs.float == 'left' || nodeAttrs.float == 'unset') {
-					nodeAttrs.margin = resizer.style.margin = `0 0 0 ${marginLeft}`;
+					nodeAttrs.margin = resizer.style.margin = `0 10px 0 ${marginLeft}`;
 				} else if (nodeAttrs.float == 'right') {
-					nodeAttrs.margin = resizer.style.margin = `0 ${marginRight} 0 0`;
+					nodeAttrs.margin = resizer.style.margin = `0 ${marginRight} 0 10px`;
 				}
 			};
 			resizer.ondragend = (e) => {

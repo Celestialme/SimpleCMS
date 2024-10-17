@@ -3,7 +3,7 @@ import { getFieldName, getGuiFields, get_elements_by_id } from '@src/utils/utils
 import { saveImage } from '@src/utils/files';
 import { type ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
-import type { ImageFiles } from '@src/utils/types';
+import type { ImageFile } from '@src/utils/types';
 const WIDGET_NAME = 'ImageUpload' as const;
 const widget = (params: Params) => {
 	let display;
@@ -48,7 +48,7 @@ widget.modifyRequest = async ({
 	id,
 	meta_data
 }: ModifyRequestParams<typeof widget>) => {
-	let _data = data.get() as File | ImageFiles;
+	let _data = data.get() as File | ImageFile;
 	// _id == new image id;
 	// id == current document id;
 	switch (type) {

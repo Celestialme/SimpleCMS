@@ -49,7 +49,9 @@ widget.modifyRequest = async ({
 			let _data = data.get().data;
 			let _id;
 
-			for (let id of (_data.content['en'] as string).matchAll(/storage_image="(.+?)"/gms)) {
+			for (let id of (Object.values(_data.content).join('\n') as string).matchAll(
+				/storage_image="(.+?)"/gms
+			)) {
 				// images from richtext content itself
 				images[id[1]] = new mongoose.Types.ObjectId(id[1]);
 			}

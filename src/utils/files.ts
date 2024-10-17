@@ -1,7 +1,7 @@
 import fs from 'fs';
 import Path from 'path';
 import type sharp from 'sharp';
-import type { ImageFiles } from './types';
+import type { ImageFile } from './types';
 import publicConfig from '@root/config/public';
 import mongoose from 'mongoose';
 import _crypto from 'crypto';
@@ -19,7 +19,7 @@ export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
 export async function saveImage(
 	file: File,
 	folder: string
-): Promise<{ id: mongoose.Types.ObjectId; fileInfo: ImageFiles }> {
+): Promise<{ id: mongoose.Types.ObjectId; fileInfo: ImageFile }> {
 	if (browser) return {} as any;
 	let sharp = (await import('sharp')).default;
 
@@ -95,5 +95,5 @@ export async function saveImage(
 
 	let res = await mongoose.models['_storage_images'].insertMany(fileInfo);
 
-	return { id: new mongoose.Types.ObjectId(res[0]._id), fileInfo: fileInfo as ImageFiles };
+	return { id: new mongoose.Types.ObjectId(res[0]._id), fileInfo: fileInfo as ImageFile };
 }

@@ -6,14 +6,14 @@
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { Group } from 'konva/lib/Group';
-	import type { ImageFiles } from '@src/utils/types';
+	import type { ImageFile } from '@src/utils/types';
 	import type { Stage } from 'konva/lib/Stage';
 	import type { Image as KonvaImage } from 'konva/lib/shapes/Image';
 	import type { Layer } from 'konva/lib/Layer';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
 	export let field: FieldType;
-	export let value: File | ImageFiles = $entryData[getFieldName(field)]; // pass file directly from imageArray
-	let _data: File | ImageFiles | undefined = value;
+	export let value: File | ImageFile = $entryData[getFieldName(field)]; // pass file directly from imageArray
+	let _data: File | ImageFile | undefined = value;
 	$: updated = _data !== value;
 
 	export const WidgetData = async () => {
@@ -28,11 +28,7 @@
 			meta_data.add('storage_images_remove', [value._id]);
 		}
 		//if not updated value is not changed and is ImageFiles type so send back only id
-		return updated || $mode == 'create'
-			? _data
-			: value
-				? { _id: (value as ImageFiles)?._id }
-				: null;
+		return updated || $mode == 'create' ? _data : value ? { _id: (value as ImageFile)?._id } : null;
 	};
 
 	let editing = false;
@@ -53,7 +49,7 @@
 					this.image.src = _data.original.url;
 				}
 			} else {
-				this.image.src = (value as ImageFiles).original.url;
+				this.image.src = (value as ImageFile).original.url;
 			}
 			if (this.image.naturalHeight == 0) {
 				await new Promise((resolve) => {

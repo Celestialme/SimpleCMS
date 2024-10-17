@@ -373,7 +373,7 @@ export function toStringHelper({
 	path: (lang: string) => string;
 }) {
 	if (!data) return '';
-	if (field.translated) return path(publicConfig.DEFAULT_CONTENT_LANGUAGE);
+	if (!field.translated) return path(publicConfig.DEFAULT_CONTENT_LANGUAGE);
 	return publicConfig.AVAILABLE_CONTENT_LANGUAGES.reduce((acc, lang) => {
 		return (acc += path(lang) + '\n');
 	}, '\n');

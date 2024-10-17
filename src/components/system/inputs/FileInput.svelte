@@ -3,16 +3,16 @@
 	import Button from '../buttons/Button.svelte';
 	import XIcon from '../icons/XIcon.svelte';
 	import Media from '@src/components/Media.svelte';
-	import type { ImageFiles } from '@src/utils/types';
+	import type { ImageFile } from '@src/utils/types';
 	import { twMerge } from 'tailwind-merge';
 	import { createEventDispatcher } from 'svelte';
-	export let value: File | ImageFiles | undefined = undefined;
+	export let value: File | ImageFile | undefined = undefined;
 	export let show = true;
 	export let closeButton = false;
 	let ev = createEventDispatcher();
 	let input: HTMLInputElement;
 	let showMedia = false;
-	let mediaOnSelect = (data: ImageFiles) => {
+	let mediaOnSelect = (data: ImageFile) => {
 		show = false;
 		showMedia = false;
 		value = data;

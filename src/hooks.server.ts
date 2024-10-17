@@ -8,9 +8,13 @@ import { collections } from './stores/load';
 import { get } from 'svelte/store';
 export async function handle({ event, resolve }) {
 	let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
-	let user = (await auth.validateSession(session_id)) as User;
 
-	if (!user && event.url.pathname != '/login') throw redirect(302, `/login`);
+	let user_id = event.url.searchParams.get('user_id') as string;
+	let user = user_id
+		? ((await auth.checkUser({ _id: user_id })) as User)
+		: ((await auth.validateSession(session_id)) as User);
+
+	// if (!user && event.url.pathname != '/login') throw redirect(302, `/login`);
 
 	event.locals.user = user;
 

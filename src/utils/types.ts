@@ -1,7 +1,7 @@
 import type mongoose from 'mongoose';
 import type { SIZES } from './files';
 
-export type ImageFiles = {
+export type ImageFile = {
 	folder: string;
 	hash: string;
 	_id: string;

@@ -44,7 +44,7 @@
 		editor && editor.commands.setContent(_data.content[val] || '');
 	});
 	$: updateTranslationProgress(_data.content, field);
-	let deb = debounce(500);
+	let deb = debounce(200);
 	onMount(() => {
 		editor = new Editor({
 			parseOptions: { preserveWhitespace: 'full' },
