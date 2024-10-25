@@ -65,7 +65,7 @@ widget.modifyRequest = async ({
 	let relative_collection_schema = (await getCollections())[field.relation] as Schema;
 	let relative_collection = (await getCollectionModels())[relative_collection_schema.id];
 	let response = (await relative_collection.findById(_data)) as any;
-	let result = { _id: response._id };
+	let result = { _id: response?._id };
 	for (let key in relative_collection_schema.fields) {
 		let _field = relative_collection_schema.fields[key];
 		let widget = widgets[_field.widget.Name];

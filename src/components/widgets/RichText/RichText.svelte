@@ -27,6 +27,7 @@
 	import { contentLanguage } from '@src/stores/load';
 	import ImageDescription from './components/ImageDescription.svelte';
 	import VideoDialog from './components/VideoDialog.svelte';
+	import { Transaction } from '@tiptap/pm/state';
 	export let field: FieldType;
 	export const WidgetData = async () => ({ images, data: _data });
 	let fieldName = getFieldName(field);
@@ -39,6 +40,7 @@
 	export let value = $entryData[fieldName] || { content: {}, header: {} };
 	let _data = $mode == 'create' ? { content: {}, header: {} } : value;
 	$: _language = field?.translated ? $contentLanguage : publicConfig.DEFAULT_CONTENT_LANGUAGE;
+	let previous_language = _language;
 	contentLanguage.subscribe(async (val) => {
 		await tick();
 		editor && editor.commands.setContent(_data.content[val] || '');
@@ -81,7 +83,10 @@
 			onTransaction: ({ transaction }) => {
 				// force re-render so `editor.isActive` works as expected
 				active_dropDown = '';
-				handleImageDeletes(transaction);
+				if (previous_language == _language) {
+					handleImageDeletes(transaction);
+				}
+				previous_language = _language;
 				editor = editor;
 				deb(() => {
 					let content = editor.getHTML();
@@ -94,25 +99,41 @@
 			editor.commands.focus('start');
 		});
 	});
-	function handleImageDeletes(transaction) {
-		const getImageIds = (fragment) => {
-			let srcs = new Set();
+	function handleImageDeletes(transaction: Transaction) {
+		const getImageIds = (fragment: Transaction['doc']['content']) => {
+			let srcs = new Set<string>();
+			let obj = new Map<string, { id: string; src: string }>();
 			fragment.forEach((node) => {
 				if (node.type.name === 'image') {
 					srcs.add(node.attrs.storage_image);
+					obj.set(node.attrs.id, { id: node.attrs.id, src: node.attrs.src });
 				}
 			});
-			return srcs;
+			return { srcs, obj };
 		};
-
-		let currentIds = getImageIds(transaction.doc.content);
-		let previousIds = getImageIds(transaction.before.content);
-
+		let current = getImageIds(transaction.doc.content);
+		let previous = getImageIds(transaction.before.content);
 		// Determine which images were deleted
-		let deletedImageIds = [...previousIds].filter((id) => !currentIds.has(id)) as string[];
+		let deletedImageSrcs = [...previous.srcs].filter(
+			(src) => src && !current.srcs.has(src)
+		) as string[];
+		for (let obj of previous.obj) {
+			if (!current.obj.has(obj[0])) {
+				images[obj[0]] && delete images[obj[0]];
+			}
+		}
+		//for ctrl - Z
+		// for (let obj of current.obj) {
+		// 	if (!previous.obj.has(obj[0])) {
+		// 		fetch(obj[1].src).then(async (res) => {
+		// 			const blob = await res.blob();
+		// 			images[obj[0]] = blob;
+		// 		});
+		// 	}
+		// }
 
-		if (deletedImageIds.length > 0) {
-			meta_data.add('storage_images_remove', deletedImageIds);
+		if (deletedImageSrcs.length > 0) {
+			meta_data.add('storage_images_remove', deletedImageSrcs);
 		}
 	}
 	onDestroy(() => {

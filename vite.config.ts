@@ -61,6 +61,9 @@ export default defineConfig({
 		})
 	],
 	server: {
+		proxy: {
+			'/search': 'http://localhost:8000'
+		},
 		fs: { allow: ['static', '.'] }
 	}
 });
