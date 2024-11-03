@@ -125,74 +125,74 @@
 	};
 </script>
 
-{#key data}
-	<div class="overflow-auto max-h-[calc(100vh-55px)]">
-		<table>
-			<thead class="top-0">
-				<tr>
-					<th class="!pl-[30px]">
-						<iconify-icon icon="il:search" class="mt-[15px]" />
+<div class="overflow-auto max-h-[calc(100vh-55px)]">
+	<table>
+		<thead class="top-0">
+			<tr>
+				<th class="!pl-[30px]">
+					<iconify-icon icon="il:search" class="mt-[15px]" />
+				</th>
+				{#each tableHeaders as header}
+					<th>
+						<div class="flex items-center justify-between">
+							<FloatingInput
+								type="text"
+								label="filter"
+								theme="dark"
+								name={header.name}
+								on:input={(e) => {
+									let value = asAny(e.target).value;
+									if (value) {
+										waitFilter(() => {
+											filters[header.name] = value;
+										});
+									} else {
+										delete filters[header.name];
+										filters = filters;
+									}
+								}}
+							/>
+						</div>
 					</th>
-					{#each tableHeaders as header}
-						<th>
-							<div class="flex items-center justify-between">
-								<FloatingInput
-									type="text"
-									label="filter"
-									theme="dark"
-									name={header.name}
-									on:input={(e) => {
-										let value = asAny(e.target).value;
-										if (value) {
-											waitFilter(() => {
-												filters[header.name] = value;
-											});
-										} else {
-											delete filters[header.name];
-											filters = filters;
-										}
-									}}
-								/>
-							</div>
-						</th>
-					{/each}
-				</tr>
+				{/each}
+			</tr>
 
-				<tr>
-					<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} icon={SquareIcon} /> </th>
-					{#each tableHeaders as header}
-						<th
-							on:click={() => {
-								//sort
-								sorting = {
-									sortedBy: header.name,
-									isSorted: (() => {
-										if (header.name !== sorting.sortedBy) {
-											return 1;
-										}
-										if (sorting.isSorted === 0) {
-											return 1;
-										} else if (sorting.isSorted === 1) {
-											return -1;
-										} else {
-											return 0;
-										}
-									})()
-								};
-							}}
-						>
-							<div class="flex items-center justify-between">
-								{header.label}
-								<div
-									class="arrow"
-									class:up={sorting.isSorted === 1}
-									class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header.label}
-								/>
-							</div>
-						</th>
-					{/each}
-				</tr>
-			</thead>
+			<tr>
+				<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} icon={SquareIcon} /> </th>
+				{#each tableHeaders as header}
+					<th
+						on:click={() => {
+							//sort
+							sorting = {
+								sortedBy: header.name,
+								isSorted: (() => {
+									if (header.name !== sorting.sortedBy) {
+										return 1;
+									}
+									if (sorting.isSorted === 0) {
+										return 1;
+									} else if (sorting.isSorted === 1) {
+										return -1;
+									} else {
+										return 0;
+									}
+								})()
+							};
+						}}
+					>
+						<div class="flex items-center justify-between">
+							{header.label}
+							<div
+								class="arrow"
+								class:up={sorting.isSorted === 1}
+								class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header.label}
+							/>
+						</div>
+					</th>
+				{/each}
+			</tr>
+		</thead>
+		{#key data}
 			<tbody>
 				{#each tableData as row, index}
 					<tr
@@ -221,20 +221,20 @@
 					</tr>
 				{/each}
 			</tbody>
-		</table>
-		<div class="pages">
-			{#each Array((data?.pagesCount || 0) > 1 ? data?.pagesCount : 0) as _, page}
-				<div
-					class="page"
-					on:click={() => (currentPage = page + 1)}
-					class:active={currentPage == page + 1}
-				>
-					{page + 1}
-				</div>
-			{/each}
-		</div>
+		{/key}
+	</table>
+	<div class="pages">
+		{#each Array((data?.pagesCount || 0) > 1 ? data?.pagesCount : 0) as _, page}
+			<div
+				class="page"
+				on:click={() => (currentPage = page + 1)}
+				class:active={currentPage == page + 1}
+			>
+				{page + 1}
+			</div>
+		{/each}
 	</div>
-{/key}
+</div>
 
 <style>
 	.page.active {

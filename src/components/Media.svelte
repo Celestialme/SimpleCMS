@@ -88,6 +88,7 @@
 		display: flex;
 		align-items: center;
 		padding: 0 10px;
+		padding-right: 110px;
 	}
 	.header input {
 		margin: auto;

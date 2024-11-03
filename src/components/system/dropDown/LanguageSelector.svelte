@@ -46,8 +46,8 @@
 							></div>
 						</div>
 						<p>
-							{(($translationProgress[lang]?.translated.size ?? 1) * 100) /
-								$translationProgress[lang]?.total.size ?? 100}%
+							{(($translationProgress[lang]?.translated.size || 1) * 100) /
+								$translationProgress[lang]?.total.size || 100}%
 						</p>
 					</div>
 				{:else}

@@ -107,16 +107,17 @@
 					class="btn mr-1"
 					><iconify-icon icon="uil:focus-add" width="24" height="24" />
 				</button>
+			{:else}
+				<button
+					on:click={() => {
+						expanded = !expanded;
+						entryMode = 'edit';
+						fieldsData = {};
+						selected = undefined;
+					}}
+					class="btn"><iconify-icon icon="raphael:edit" width="24" height="24" /></button
+				>
 			{/if}
-			<button
-				on:click={() => {
-					expanded = !expanded;
-					entryMode = 'edit';
-					fieldsData = {};
-					selected = undefined;
-				}}
-				class="btn"><iconify-icon icon="raphael:edit" width="24" height="24" /></button
-			>
 		</div>
 	</div>
 {:else if !expanded && showDropDown}

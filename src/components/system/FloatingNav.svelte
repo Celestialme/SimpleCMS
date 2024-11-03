@@ -55,7 +55,7 @@
 			x: center.x,
 			y: center.y,
 			angle: 0,
-			url: { external: false, path: `/` },
+			url: { external: true, path: `/` },
 			icon: 'solar:home-bold'
 		},
 		{
@@ -71,8 +71,7 @@
 			angle: 0,
 			url: { external: false, path: `/profile` },
 			icon: 'bi:gear-fill'
-		},
-		
+		}
 	].filter((endpoint) => {
 		if (user?.role === 'admin') return true;
 		else if (endpoint.url.path === '/builder') return false;
