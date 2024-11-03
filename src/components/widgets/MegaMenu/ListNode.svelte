@@ -23,16 +23,6 @@
 	export let refresh = () => {
 		self?.children && (self.children = self.children);
 	};
-	function setBorderHeight(node: HTMLElement | null | undefined) {
-		if (!node) return;
-
-		setTimeout(async () => {
-			let lastHeader = node?.lastChild?.firstChild as HTMLElement;
-			if (!lastHeader) return;
-			let border = node?.querySelector('.border') as HTMLElement;
-			border && (border.style.height = lastHeader.offsetTop + lastHeader.offsetHeight / 2 + 'px');
-		}, 0);
-	}
 
 	$: if (showFields) {
 		$headerActionButton = XIcon;
@@ -262,7 +252,6 @@
 		class="children relative"
 		style="margin-left:{20 * (level > 0 ? 1 : 0) + 15}px;"
 	>
-		<div class="border" />
 		{#each self.children as child, index}
 			<li
 				use:drag
@@ -322,14 +311,6 @@
 	}
 	button:active {
 		transform: scale(0.9);
-	}
-	.border {
-		content: '';
-		position: absolute;
-		left: 0;
-		width: 0;
-		border-left: 1px dashed;
-		max-height: 100%;
 	}
 
 	ul {
