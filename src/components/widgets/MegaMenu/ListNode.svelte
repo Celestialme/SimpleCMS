@@ -34,20 +34,10 @@
 		}, 0);
 	}
 
-	$: if (self?.children?.length) {
-		recalculateBorderHeight();
-		ul;
-	}
 	$: if (showFields) {
 		$headerActionButton = XIcon;
 	}
 
-	function recalculateBorderHeight() {
-		MENU_CONTAINER &&
-			MENU_CONTAINER.querySelectorAll('ul').forEach((el) => {
-				setBorderHeight(el);
-			});
-	}
 	function notifyChildren(node: HTMLElement) {
 		node.addEventListener('custom:notifyChildren', (e) => {
 			let details = (e as any).detail as { clone_isExpanded: boolean };
@@ -168,10 +158,7 @@
 							((closest.el.firstChild as HTMLElement).style.borderColor = closest.isParent
 								? 'blue'
 								: 'red');
-						recalculateBorderHeight();
-						setTimeout(() => {
-							recalculateBorderHeight();
-						}, 110);
+
 						old_closest = closest.el;
 					});
 				};
@@ -215,9 +202,6 @@
 						})
 					);
 					refresh();
-					setTimeout(() => {
-						recalculateBorderHeight();
-					}, 120);
 				};
 			}, 200);
 		};
@@ -227,9 +211,6 @@
 <div
 	use:notifyChildren
 	on:click={(e) => {
-		if (expanded) {
-			recalculateBorderHeight();
-		}
 		expanded = !expanded;
 	}}
 	class="header header-level-{level}"
@@ -239,7 +220,6 @@
 		? `min-width:calc(100% + ${20 * (maxDepth * maxDepth - (level > 0 ? 1 : 0))}px)`
 		: `max-width:calc(100% - ${20 * (level > 0 ? 1 : 0)}px)`}"
 >
-	<div class="ladder" style="width:{20 * (level > 0 ? 1 : 0)}px" />
 	{#if self?.children?.length > 0}
 		<div class="arrow" class:expanded />
 	{/if}
@@ -323,15 +303,7 @@
 		min-width: 200px;
 		cursor: default;
 	}
-	li {
-		transition: padding 0.1s ease-in-out;
-	}
-	.ladder {
-		position: absolute;
-		height: 0;
-		right: 100%;
-		border-top: 1px dashed;
-	}
+
 	.arrow {
 		position: absolute;
 		left: 10px;
@@ -359,8 +331,43 @@
 		border-left: 1px dashed;
 		max-height: 100%;
 	}
+
 	ul {
 		overflow: visible;
 		user-select: none;
+		margin: 0;
+		padding-left: 25px;
+		list-style: none;
+		line-height: 2em;
+	}
+
+	ul li {
+		transition: padding 0.1s ease-in-out;
+		position: relative;
+	}
+
+	ul li::before,
+	ul li::after {
+		content: '';
+		position: absolute;
+		left: -25px;
+		border-left: 1px dashed #999;
+	}
+
+	ul li::before {
+		top: 0;
+		width: 40px;
+		height: 2em;
+		border-bottom: 1px dashed #999;
+	}
+
+	ul li::after {
+		top: 0px;
+		bottom: -5px;
+	}
+
+	/* Hide lines for last item */
+	ul li:last-child::after {
+		display: none;
 	}
 </style>
