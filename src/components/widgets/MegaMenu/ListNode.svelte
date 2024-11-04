@@ -211,7 +211,7 @@
 		: `max-width:calc(100% - ${20 * (level > 0 ? 1 : 0)}px)`}"
 >
 	{#if self?.children?.length > 0}
-		<div class="arrow" class:expanded />
+		<div class="arrow" class:expanded></div>
 	{/if}
 	{self?.Header?.[$contentLanguage] || 'No title'}
 	<div class="flex items-center ml-auto gap-1">

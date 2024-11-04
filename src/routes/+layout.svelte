@@ -2,6 +2,7 @@
 	import '../app.css';
 	import '../theme.postcss';
 	import 'iconify-icon';
+	let { children } = $props();
 </script>
 
-<slot />
+{@render children()}

@@ -2,20 +2,18 @@
 	import SignIn from './components/SignIn.svelte';
 	import SignUp from './components/SignUp.svelte';
 	import RoundLogo from './components/icons/RoundLogo.svelte';
-	import type { PageData } from './$types';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 
 	import { systemLanguage } from '@src/stores/load';
 	import publicConfig from '@root/config/public';
-	export let data: PageData;
-	console.log(data);
-	let active: undefined | 0 | 1 = undefined;
-	let background: 'white' | '#242728' = 'white';
+
+	let active: undefined | 0 | 1 = $state(undefined);
+	let background: 'white' | '#242728' = $state('white');
 </script>
 
 <div class="body" style="background:{background} ">
-	<SignIn {active} on:click={() => (active = 0)} on:pointerenter={() => (background = '#242728')} />
-	<SignUp {active} on:click={() => (active = 1)} on:pointerenter={() => (background = 'white')} />
+	<SignIn {active} onclick={() => (active = 0)} onpointerenter={() => (background = '#242728')} />
+	<SignUp {active} onclick={() => (active = 1)} onpointerenter={() => (background = 'white')} />
 	{#if active == undefined}
 		<div class="z-30"><RoundLogo /></div>
 	{/if}

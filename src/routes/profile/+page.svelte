@@ -5,8 +5,8 @@
 	import ChangePassword from './ChangePassword.svelte';
 	import ShowUsers from './ShowUsers.svelte';
 	import type { Roles } from '@src/auth/types';
-	export let data: PageData;
-	console.log(data);
+
+	let { data }: { data: PageData } = $props();
 
 	let options: { [key: number]: { role: Roles | undefined; option: any; label: string } } = {
 		0: {
@@ -26,7 +26,7 @@
 		}
 	};
 
-	let option: number | string = 2;
+	let option: number | string = $state(2);
 </script>
 
 <div class="body max-md:flex-col gap-[20px] max-md:gap-2 overflow-auto">
@@ -36,15 +36,17 @@
 		<!-- <p class="text-white text-center">Auth method {data.user.authMethod}</p> -->
 		{#each Object.entries(options) as [key, _option]}
 			{#if _option.role == undefined || _option.role == data.user.role}
-				<div class:active={option == key} on:click={() => (option = key)}>{_option.label}</div>
+				<div class:active={option == key} onclick={() => (option = key)}>{_option.label}</div>
 			{/if}
 		{/each}
 	</div>
 	<div class="flex-grow bg-gray-800 flex items-center justify-center">
 		{#if option == 0}
-			<svelte:component this={options[option].option} {data} bind:option />
+			{@const Component = options[option].option}
+			<Component {data} bind:option />
 		{:else}
-			<svelte:component this={options[option].option} {data} />
+			{@const Component = options[option].option}
+			<Component {data} />
 		{/if}
 	</div>
 </div>

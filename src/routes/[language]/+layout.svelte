@@ -5,10 +5,9 @@
 	import { mode } from '@src/stores/store';
 	mode.set('view');
 	contentLanguage.set($page.params.language);
+	let { children } = $props();
 </script>
 
-{#await getCollections()}
-	<p />
-{:then}
-	<slot />
+{#await getCollections() then _}
+	{@render children()}
 {/await}

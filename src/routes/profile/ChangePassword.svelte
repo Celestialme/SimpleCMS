@@ -5,13 +5,13 @@
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
 	import { parse } from 'devalue';
-	let submitted = false;
-	let response: { data: string; success: boolean } | undefined;
-	let form: ChangePasswordSchema = {
+	let submitted = $state(false);
+	let response: { data: string; success: boolean } | undefined = $state();
+	let form: ChangePasswordSchema = $state({
 		password: '',
 		confirmPassword: ''
-	};
-	let errors = validateZod(changePasswordSchema);
+	});
+	let errors = $state(validateZod(changePasswordSchema));
 	async function onSubmit(e) {
 		submitted = true;
 		e.preventDefault();
@@ -24,10 +24,12 @@
 		let result = await axios.post(`?/changePassword`, data).then((res) => res.data);
 		response = { data: parse(result.data).message, success: result.status == 200 };
 	}
-	$: if (submitted) errors = validateZod(changePasswordSchema, form);
+	$effect(() => {
+		if (submitted) errors = validateZod(changePasswordSchema, form);
+	});
 </script>
 
-<form on:submit={onSubmit} class=" flex w-full flex-col p-4 lg:w-1/2">
+<form onsubmit={onSubmit} class=" flex w-full flex-col p-4 lg:w-1/2">
 	<FloatingInput
 		bind:value={form.password}
 		iconClass="text-white"
@@ -50,7 +52,9 @@
 	{#if errors?.confirmPassword}<span class="invalid">{errors.confirmPassword}</span>{/if}
 	<Button class="mt-10" bgColor="#e64949" hoverColor="#f46363">change</Button>
 
-	{#if response}<p class="text-center !text-base {response.success ? 'valid' : 'invalid'}">{response.data}</p>{/if}
+	{#if response}<p class="text-center !text-base {response.success ? 'valid' : 'invalid'}">
+			{response.data}
+		</p>{/if}
 </form>
 
 <style>

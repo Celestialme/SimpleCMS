@@ -1,6 +1,5 @@
 <script lang="ts">
 	import SignupIcon from './icons/SignupIcon.svelte';
-	export let active: undefined | 0 | 1 = undefined;
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import {
 		signUpSchema_noToken,
@@ -12,25 +11,35 @@
 	import publicConfig from '@root/config/public';
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
-	import { goto } from '$app/navigation';
 	import { parse } from 'devalue';
 	import type { PageData } from '../$types';
 	import { page } from '$app/stores';
 	import { messages } from '@src/stores/load';
+
+	let {
+		active,
+		onclick,
+		onpointerenter
+	}: {
+		active: undefined | 0 | 1;
+		onclick: () => void;
+		onpointerenter: () => void;
+	} = $props();
+
 	let pageData = $page.data as PageData;
 	let firstUserExists = pageData.firstUserExists;
-	let response: string | undefined;
-	let submitted = false;
+	let response: string | undefined = $state();
+	let submitted = $state(false);
 	let signUpSchema = firstUserExists ? signUpSchema_token : signUpSchema_noToken;
-	let form: SignupSchema = {
+	let form: SignupSchema = $state({
 		...{ email: '', password: '', confirmPassword: '', username: '' },
 		...(firstUserExists ? { token: '' } : {})
-	};
+	});
 
 	if ('Token' in form) {
 		form.Token;
 	}
-	let errors = validateZod(signUpSchema);
+	let errors = $state(validateZod(signUpSchema));
 	async function onSubmit(e) {
 		submitted = true;
 		e.preventDefault();
@@ -42,24 +51,26 @@
 		}
 		let result = await axios.post(`?/signUp`, data).then((res) => res.data);
 		if (result.type == 'redirect') {
-			goto(result.location);
+			window.location = result.location;
 		} else if (result.type == 'failure') {
 			response = parse(result.data).message;
 		}
 	}
-	$: if (submitted) errors = validateZod(signUpSchema, form);
+	$effect(() => {
+		if (submitted) errors = validateZod(signUpSchema, form);
+	});
 </script>
 
 <section
-	on:click
-	on:pointerenter
+	{onclick}
+	{onpointerenter}
 	class="hover relative flex items-center"
 	class:active={active == 1}
 	class:inactive={active !== undefined && active !== 1}
 	class:hover={active == undefined || active == 0}
 >
 	<form
-		on:submit={onSubmit}
+		onsubmit={onSubmit}
 		class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2"
 		class:hide={active != 1}
 	>

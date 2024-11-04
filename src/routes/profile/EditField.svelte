@@ -6,26 +6,31 @@
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
+	import { untrack } from 'svelte';
 	import { z } from 'zod';
-	let value: string;
 	let emailSchema = z.object({
 		email: z.string().email()
 	});
 
-	let errors = validateZod(emailSchema);
-	export let info: {
-		show: boolean;
-		label: string;
-		field: string;
-		user_ids: string[];
-		update: (show: boolean, label: string, field: 'email' | 'role' | 'username') => void;
-	};
-	export let refresh: () => Promise<void>;
-	let submitted = false;
+	let errors = $state(validateZod(emailSchema));
+	interface Props {
+		info: {
+			show: boolean;
+			label: string;
+			field: string;
+			user_ids: string[];
+			value: string;
+			update: (show: boolean, label: string, field: 'email' | 'role' | 'username') => void;
+		};
+		refresh: () => Promise<void>;
+	}
+
+	let { info = $bindable(), refresh }: Props = $props();
+	let submitted = $state(false);
 	async function change() {
 		if (info.field == 'email') {
 			submitted = true;
-			errors = validateZod(emailSchema, { email: value });
+			errors = validateZod(emailSchema, { email: info.value });
 			if (errors) return;
 		}
 
@@ -36,7 +41,7 @@
 				JSON.stringify({
 					id: user_id,
 					field: info.field,
-					value
+					value: info.value
 				})
 			);
 		}
@@ -45,22 +50,25 @@
 		info.show = false;
 	}
 
-	$: info.show == false && ((value = ''), (submitted = false), (errors = null));
-	$: if (submitted) errors = validateZod(emailSchema, { email: value });
+	$effect(() => {
+		info.show == false && ((info.value = ''), (submitted = false), (errors = null));
+	});
+	$effect(() => {
+		if (submitted) errors = validateZod(emailSchema, { email: info.value });
+	});
 </script>
 
 {#if info.show}
 	<div class=" flex w-full flex-col p-4 lg:w-1/2">
-		<button class="ml-auto mb-[20px]" on:click={() => (info.show = false)}>
+		<button class="ml-auto mb-[20px]" onclick={() => (info.show = false)}>
 			<XIcon />
 		</button>
 		{#if info.field == 'role'}
-			{((value = 'user'), '')}
-			<DropDown items={Object.values(roles)} bind:selected={value} />
+			<DropDown items={Object.values(roles)} bind:selected={info.value} />
 		{:else}
 			<FloatingInput
 				on:keydown={(e) => e.key == 'Enter' && change()}
-				bind:value
+				bind:value={info.value}
 				iconClass="text-white"
 				inputClass="text-white"
 				name="field"

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import SigninIcon from './icons/SigninIcon.svelte';
-	export let active: undefined | 0 | 1 = undefined;
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import { loginSchema, type LoginSchema } from '@src/utils/formSchemas';
 	import CMSLogo from './icons/Logo.svelte';
@@ -10,19 +9,29 @@
 	import EnableIcon from '@src/components/system/buttons/EnableIcon.svelte';
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
-	import { goto } from '$app/navigation';
 	import { parse } from 'devalue';
 	import { messages } from '@src/stores/load';
-	let submitted = false;
-	let loginRecover = false;
-	let response;
-	let form: LoginSchema = {
+	// export let active: undefined | 0 | 1 = undefined;
+	let {
+		active,
+		onclick,
+		onpointerenter
+	}: {
+		active: undefined | 0 | 1;
+		onclick: () => void;
+		onpointerenter: () => void;
+	} = $props();
+
+	let submitted = $state(false);
+	let loginRecover = $state(false);
+	let response = $state();
+	let form: LoginSchema = $state({
 		email: '',
 		password: '',
 		isToken: false
-	};
+	});
 
-	let errors = validateZod(loginSchema);
+	let errors = $state(validateZod(loginSchema));
 	async function onSubmit(e) {
 		submitted = true;
 		e.preventDefault();
@@ -34,7 +43,7 @@
 		}
 		let result = await axios.post(`?/signIn`, data).then((res) => res.data);
 		if (result.type == 'redirect') {
-			goto(result.location);
+			window.location = result.location;
 		} else if (result.type == 'failure') {
 			response = parse(result.data).message;
 			console.log('deval', response);
@@ -42,12 +51,14 @@
 			setTimeout(() => e.target.classList.remove('wiggle'), 300);
 		}
 	}
-	$: if (submitted) errors = validateZod(loginSchema, form);
+	$effect(() => {
+		if (submitted) errors = validateZod(loginSchema, form);
+	});
 </script>
 
 <section
-	on:click
-	on:pointerenter
+	{onclick}
+	{onpointerenter}
 	class="hover relative flex items-center"
 	class:active={active == 0}
 	class:inactive={active !== undefined && active !== 0}
@@ -57,7 +68,7 @@
 		<form
 			class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2"
 			class:hide={active != 0}
-			on:submit={onSubmit}
+			onsubmit={onSubmit}
 		>
 			<div class="mb-6 flex flex-row gap-2">
 				<CMSLogo className="w-12" fill="red" />

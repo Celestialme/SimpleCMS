@@ -7,18 +7,21 @@
 	import { tableHeaders } from '@src/stores/load';
 	import EditField from './EditField.svelte';
 	import { linear } from 'svelte/easing';
+	import { string } from 'zod';
 
 	let editField: {
 		show: boolean;
 		label: string;
 		field: string;
 		user_ids: string[];
+		value: string;
 		update: (show: boolean, label: string, field: 'email' | 'role' | 'username') => void;
-	} = {
-		show: false,
+	} = $state({
+		show: false as boolean,
 		label: 'Email',
 		field: 'email',
-		user_ids: [],
+		user_ids: [] as string[],
+		value: '',
 		update(show, label, field) {
 			this.show = show;
 			this.label = label;
@@ -26,17 +29,17 @@
 			this.user_ids = Object.keys(modifyMap)
 				.map((index) => modifyMap[index] && filteredTableData[index].id)
 				.filter((id) => id !== false);
-			editField = editField;
+			let index = Object.values(modifyMap).findIndex((value) => value == true);
+			this.value = filteredTableData[index][this.field] || '';
 		}
-	};
+	});
 	let userInfo: {
 		[key in (typeof tableHeaders)[number]]: string;
-	}[] = [];
-	let modifyAll = false;
-	let tableData: typeof userInfo = [];
-	let filteredTableData: typeof userInfo = [];
-	let modifyMap: { [key: number]: boolean } = {};
-	let filters: { [key: string]: string } = {};
+	}[] = $state([]);
+	let modifyAll = $state(false);
+	let tableData: typeof userInfo = $state([]);
+	let modifyMap: { [key: number]: boolean } = $state({});
+	let filters: { [key: string]: string } = $state({});
 	async function refresh() {
 		userInfo = await axios.get('/api/getUsers').then((data) => data.data);
 
@@ -60,12 +63,14 @@
 			}
 		}
 	}
-	$: process_modifyAll(modifyAll);
-	let sorting: { sortedBy: string; isSorted: 0 | 1 | -1 } = {
+	$effect(() => {
+		process_modifyAll(modifyAll);
+	});
+	let sorting: { sortedBy: string; isSorted: 0 | 1 | -1 } = $state({
 		sortedBy: '',
 		isSorted: 0
-	};
-	$: {
+	});
+	$effect(() => {
 		tableData.sort((a, b) => {
 			if (sorting.sortedBy == 'createdAt') {
 				if (new Date(a[sorting.sortedBy]) < new Date(b[sorting.sortedBy])) {
@@ -85,11 +90,10 @@
 				return 0;
 			}
 		});
-		tableData = tableData;
-	}
+	});
 
-	$: {
-		filteredTableData = tableData.filter((item) => {
+	let filteredTableData = $derived(
+		tableData.filter((item) => {
 			return Object.entries(item).every(([key, value]) => {
 				if (filters[key]) {
 					return (value as string).toString().toLowerCase().includes(filters[key]);
@@ -97,8 +101,8 @@
 					return true;
 				}
 			});
-		});
-	}
+		})
+	);
 	async function deleteUser() {
 		let data = new FormData();
 		for (let index in modifyMap) {
@@ -129,7 +133,7 @@
 		<thead class="top-0">
 			<tr>
 				<th class="!pl-[30px]">
-					<iconify-icon icon="il:search" class="mt-[15px]" />
+					<iconify-icon icon="il:search" class="mt-[15px]"></iconify-icon>
 				</th>
 				{#each tableHeaders as header}
 					<th>
@@ -158,7 +162,7 @@
 				<th class="!pl-[25px]"> <CheckBox bind:checked={modifyAll} icon={SquareIcon} /> </th>
 				{#each tableHeaders as header}
 					<th
-						on:click={() => {
+						onclick={() => {
 							//sort
 							sorting = {
 								sortedBy: header,
@@ -183,42 +187,42 @@
 								class="arrow"
 								class:up={sorting.isSorted === 1}
 								class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header}
-							/>
+							></div>
 						</div>
 					</th>
 				{/each}
 			</tr>
 			{#if Object.values(modifyMap).includes(true)}
 				<tr transition:grow|local={{ duration: 150 }} class="h-[50px] sticky overflow-hidden">
-					<div
+					<td
 						transition:grow|local={{ duration: 150 }}
-						class="h-[50px] overflow-hidden gap-2 absolute flex justify-center w-full bg-[#3d4a5c] modify_buttons"
+						class="!p-0 h-[50px] overflow-hidden gap-2 absolute flex justify-center w-full bg-[#3d4a5c] modify_buttons"
 					>
-						<button on:click={deleteUser}>DELETE</button>
+						<button onclick={deleteUser}>DELETE</button>
 						{#if Object.values(modifyMap).filter((value) => value == true).length == 1}
 							<button
-								on:click={() => {
+								onclick={() => {
 									editField.update(true, 'Email', 'email');
 								}}>EDIT MAIL</button
 							>
 							<button
-								on:click={() => {
+								onclick={() => {
 									editField.update(true, 'Name', 'username');
 								}}>EDIT NAME</button
 							>
 						{/if}
 						<button
-							on:click={() => {
+							onclick={() => {
 								editField.update(true, 'Role', 'role');
 							}}>EDIT ROLE</button
 						>
-					</div>
+					</td>
 				</tr>
 			{/if}
 		</thead>
 		<tbody>
 			{#each filteredTableData as row, index}
-				<tr on:click={() => (modifyMap[index] = !modifyMap[index])}>
+				<tr onclick={() => (modifyMap[index] = !modifyMap[index])}>
 					<td class="!pl-[25px]">
 						<CheckBox bind:checked={modifyMap[index]} icon={SquareIcon} />
 					</td>

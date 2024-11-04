@@ -22,7 +22,7 @@
 		ForwardBackward = true;
 		collection.set($collections[$page.params.collection as string] as Schema);
 	};
-	let navButton;
+	let navButton: any = $state();
 
 	let unsubscribe = collection.subscribe((_) => {
 		$collectionValue = {};
@@ -66,7 +66,7 @@
 			{/if}
 		</section>
 		<section class="text-center">
-			<button on:click={() => mode.set('storage')} class="p-2 bg-[#353b63] text-white w-full">
+			<button onclick={() => mode.set('storage')} class="p-2 bg-[#353b63] text-white w-full">
 				Storage
 			</button>
 		</section>

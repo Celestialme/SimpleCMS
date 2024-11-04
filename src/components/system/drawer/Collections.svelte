@@ -52,7 +52,7 @@
 					{#if modeSet == 'edit'}
 						<CheckBox
 							bind:checked={checked[asAny(_collection.path)]}
-							callback={() => {
+							onchange={() => {
 								checked = checked;
 								category.collections = category.collections.filter(
 									(x) => x.name != _collection.path
@@ -86,7 +86,7 @@
 					>
 						<CheckBox
 							bind:checked={checked[asAny(_collection.path)]}
-							callback={() => {
+							onchange={() => {
 								checked = checked;
 								category.collections.push(_collection);
 								$unAssigned = $unAssigned.filter((x) => x.name != _collection.path);

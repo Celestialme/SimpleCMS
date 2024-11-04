@@ -6,13 +6,14 @@
 	import { asAny, debounce, getFieldName, meta_data } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	import { deleteData, getData, setStatus } from '@src/utils/data';
-	let data: { entryList: [any]; pagesCount: number } | undefined;
-	let tableHeaders: Array<{ label: string; name: string }> = [];
-	let tableData: any[] = [];
-	let modifyMap: { [key: string]: boolean } = {};
-	let deleteAll = false;
-	let filters: { [key: string]: string } = {};
-	let currentPage = 1;
+	import { untrack } from 'svelte';
+	let data: { entryList: [any]; pagesCount: number } | undefined = $state();
+	let tableHeaders: Array<{ label: string; name: string }> = $state([]);
+	let tableData: any[] = $state([]);
+	let modifyMap: { [key: string]: boolean } = $state({});
+	let deleteAll = $state(false);
+	let filters: { [key: string]: string } = $state({});
+	let currentPage = $state(1);
 	let waitFilter = debounce(300);
 	let refresh = async (fetch: boolean = true) => {
 		if (fetch) {
@@ -59,33 +60,14 @@
 		modifyMap = {};
 		deleteAll = false;
 	};
-	$: {
-		refresh();
-		$collection;
-		filters;
-		sorting;
-		currentPage;
-	}
-	$: {
-		refresh(false);
-		filters = {};
-		$contentLanguage;
-	}
-	$: {
-		currentPage = 1;
-		$collection;
-	}
-	$: process_deleteAll(deleteAll);
-	$: Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');
 	mode.subscribe(() => {
 		meta_data.clear();
 		if ($mode == 'view') {
 			entryData.set({});
 		}
 	});
-	function process_deleteAll(deleteAll: boolean) {
-		// triggerConfirm = true;
-		if (deleteAll) {
+	function process_modifyAll(modifyAll: boolean) {
+		if (modifyAll) {
 			for (let item in tableData) {
 				modifyMap[item] = true;
 			}
@@ -99,7 +81,6 @@
 	$modifyEntry = async (status: keyof typeof statusMap) => {
 		let modifyList: Array<string> = [];
 		for (let item in modifyMap) {
-			console.log(tableData[item]);
 			modifyMap[item] && modifyList.push(tableData[item]._id);
 		}
 		if (modifyList.length == 0) return;
@@ -117,12 +98,36 @@
 				break;
 		}
 		refresh();
+
 		mode.set('view');
 	};
-	let sorting: { sortedBy: string; isSorted: 0 | 1 | -1 } = {
+	let sorting: { sortedBy: string; isSorted: 0 | 1 | -1 } = $state({
 		sortedBy: '',
 		isSorted: 0
-	};
+	});
+	$effect(() => {
+		untrack(() => {
+			refresh(false);
+			filters = {};
+		});
+
+		$contentLanguage;
+	});
+	$effect(() => {
+		currentPage = 1;
+		$collection;
+	});
+	$effect(() => {
+		refresh();
+		$collection;
+		filters;
+		sorting;
+		currentPage;
+	});
+
+	$effect(() => {
+		Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');
+	});
 </script>
 
 <div class="overflow-auto max-h-[calc(100vh-55px)]">
@@ -130,7 +135,7 @@
 		<thead class="top-0">
 			<tr>
 				<th class="!pl-[30px]">
-					<iconify-icon icon="il:search" class="mt-[15px]" />
+					<iconify-icon icon="il:search" class="mt-[15px]"></iconify-icon>
 				</th>
 				{#each tableHeaders as header}
 					<th>
@@ -148,7 +153,6 @@
 										});
 									} else {
 										delete filters[header.name];
-										filters = filters;
 									}
 								}}
 							/>
@@ -158,10 +162,16 @@
 			</tr>
 
 			<tr>
-				<th class="!pl-[25px]"> <CheckBox bind:checked={deleteAll} icon={SquareIcon} /> </th>
+				<th class="!pl-[25px]">
+					<CheckBox
+						bind:checked={deleteAll}
+						onchange={() => process_modifyAll(deleteAll)}
+						icon={SquareIcon}
+					/>
+				</th>
 				{#each tableHeaders as header}
 					<th
-						on:click={() => {
+						onclick={() => {
 							//sort
 							sorting = {
 								sortedBy: header.name,
@@ -186,7 +196,7 @@
 								class="arrow"
 								class:up={sorting.isSorted === 1}
 								class:invisible={sorting.isSorted == 0 || sorting.sortedBy != header.label}
-							/>
+							></div>
 						</div>
 					</th>
 				{/each}
@@ -201,7 +211,7 @@
 							: data?.entryList[index]?.status == 'testing'
 								? '!bg-red-800'
 								: ''}
-						on:click={() => {
+						onclick={() => {
 							entryData.set(data?.entryList[index]);
 							mode.set('edit');
 						}}
@@ -227,7 +237,7 @@
 		{#each Array((data?.pagesCount || 0) > 1 ? data?.pagesCount : 0) as _, page}
 			<div
 				class="page"
-				on:click={() => (currentPage = page + 1)}
+				onclick={() => (currentPage = page + 1)}
 				class:active={currentPage == page + 1}
 			>
 				{page + 1}

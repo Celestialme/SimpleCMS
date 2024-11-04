@@ -25,6 +25,7 @@ export async function handle({ event, resolve }) {
 		(c) => user && c?.permissions?.[user.role]?.read != false
 	); // filters collection  based on reading permissions  and redirects to first left one
 	if (event.url.pathname == '/') {
+		console.log('here');
 		if (_filtered.length == 0) {
 			event.locals.error = {
 				status: 404,

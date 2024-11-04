@@ -16,7 +16,7 @@
 	};
 	let user: User = $page.data.user;
 
-	let schedule = {
+	let schedule = $state({
 		error: '',
 		showSchedule: false,
 		scheduleTime: $entryData._scheduled ? toISOString(new Date($entryData._scheduled)) : '',
@@ -33,7 +33,7 @@
 				$collectionValue._scheduled = () => new Date(schedule.scheduleTime).getTime();
 			}
 		}
-	};
+	});
 </script>
 
 <div
@@ -42,14 +42,14 @@
 	{#if $collection.permissions?.[user.role]?.write != false}
 		<Button class="max-md:hidden" on:click={$saveFunction.fn}>SAVE</Button>
 		<iconify-icon
-			on:click={() => (schedule.showSchedule = !schedule.showSchedule)}
+			onclick={() => (schedule.showSchedule = !schedule.showSchedule)}
 			icon="mdi:calendar-clock"
 			class="mt-[15px] cursor-pointer"
 			class:text-white={!$entryData._scheduled}
 			class:future={$entryData._scheduled && new Date($entryData._scheduled) > new Date()}
 			class:past={$entryData._scheduled && new Date($entryData._scheduled) < new Date()}
 			width="40"
-		/>
+		></iconify-icon>
 	{/if}
 </div>
 

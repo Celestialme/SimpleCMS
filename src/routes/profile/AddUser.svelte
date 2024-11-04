@@ -7,16 +7,17 @@
 	import { parse } from 'devalue';
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
-	export let option: number;
-	let submitted = false;
-	let response: { data: string; success: boolean } | undefined;
-	let form: AddUserSchema = {
+
+	let { option = $bindable() }: { option: number } = $props();
+	let submitted = $state(false);
+	let response: { data: string; success: boolean } | undefined = $state();
+	let form: AddUserSchema = $state({
 		email: '',
 		role: ''
-	};
+	});
 
 	form.role = 'user';
-	let errors = validateZod(addUserSchema);
+	let errors = $state(validateZod(addUserSchema));
 	async function onSubmit(e) {
 		submitted = true;
 		e.preventDefault();
@@ -32,10 +33,12 @@
 			setTimeout(() => (option = 1), 1000);
 		}
 	}
-	$: if (submitted) errors = validateZod(addUserSchema, form);
+	$effect(() => {
+		if (submitted) errors = validateZod(addUserSchema, form);
+	});
 </script>
 
-<form on:submit={onSubmit} class=" flex w-full flex-col p-4 lg:w-1/2">
+<form onsubmit={onSubmit} class=" flex w-full flex-col p-4 lg:w-1/2">
 	<FloatingInput
 		bind:value={form.email}
 		iconClass="text-white"
@@ -48,7 +51,9 @@
 	{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 	<DropDown items={Object.values(roles)} bind:selected={form.role} />
 	<Button class="mt-10" bgColor="#e64949" hoverColor="#f46363">Create</Button>
-	{#if response}<p class="text-center !text-base {response.success ? 'valid' : 'invalid'}">{response.data}</p>{/if}
+	{#if response}<p class="text-center !text-base {response.success ? 'valid' : 'invalid'}">
+			{response.data}
+		</p>{/if}
 </form>
 
 <style>

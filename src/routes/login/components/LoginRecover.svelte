@@ -8,14 +8,19 @@
 	import axios from 'axios';
 	import { validateZod } from '@src/utils/utils';
 	import { messages } from '@src/stores/load';
-	export let active: number | undefined;
-	export let loginRecover: boolean;
-	let submitted = false;
-	let form: RecoverSchema = {
+	let {
+		active,
+		loginRecover = $bindable()
+	}: {
+		active: number | undefined;
+		loginRecover: boolean;
+	} = $props();
+	let submitted = $state(false);
+	let form: RecoverSchema = $state({
 		email: ''
-	};
-	let response;
-	let errors = validateZod(recoverSchema);
+	});
+	let response: any = $state();
+	let errors = $state(validateZod(recoverSchema));
 	async function onSubmit(e) {
 		submitted = true;
 		e.preventDefault();
@@ -28,10 +33,16 @@
 		let result = await axios.post(`?/recover`, data).then((res) => res.data);
 		response = parse(result.data).message;
 	}
-	$: if (submitted) errors = validateZod(recoverSchema, form);
+	$effect(() => {
+		if (submitted) errors = validateZod(recoverSchema, form);
+	});
 </script>
 
-<form on:submit={onSubmit} class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2" class:hide={active != 0}>
+<form
+	onsubmit={onSubmit}
+	class="mx-auto mb-[5%] mt-[15%] flex w-full flex-col p-4 lg:w-1/2"
+	class:hide={active != 0}
+>
 	<div class="mb-6 flex flex-row gap-2">
 		<CMSLogo className="w-12" fill="red" />
 
@@ -46,7 +57,8 @@
 	<div class=" flex gap-2 mt-10 items-center">
 		<Button>{$messages.SendPasswordReset()}</Button>
 		<button
-			on:click={() => {
+			aria-label="Back"
+			onclick={() => {
 				loginRecover = false;
 			}}><iconify-icon icon="mdi:arrow-left-circle" width="30" /></button
 		>
