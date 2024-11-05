@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { collection, headerActionButton, saveFunction } from '@src/stores/load';
 	import MultiButton from './system/buttons/MultiButton.svelte';
-	import { drawerExpanded, mode } from '@src/stores/store';
+	import { drawerExpanded } from '@src/stores/store';
 	import XIcon from './system/icons/XIcon.svelte';
 	import LanguageSelector from './system/dropDown/LanguageSelector.svelte';
 
 	import type { User } from '@src/auth/types';
 	import { page } from '$app/stores';
+	import { mode } from '@src/stores/store.svelte';
 
 	$: {
 		$headerActionButton = XIcon;
@@ -23,7 +24,7 @@
 		<div class="collection mr-auto">
 			{$collection?.label || $collection?.name}
 		</div>
-		{#if ['edit', 'create'].includes($mode) && $collection.permissions?.[user.role]?.write != false}
+		{#if ['edit', 'create'].includes(mode.value) && $collection.permissions?.[user.role]?.write != false}
 			<button
 				class="md:hidden h-full aspect-square justify-center flex items-center p-[20px] rounded-full bg-gray-700 mr-2"
 				on:click={$saveFunction.fn}
@@ -34,7 +35,7 @@
 		<div class="w-[80px] h-full relative mr-2">
 			<LanguageSelector />
 		</div>
-		{#if !['edit', 'create'].includes($mode)}
+		{#if !['edit', 'create'].includes(mode.value)}
 			<MultiButton />
 		{:else}
 			<button class="flex item-center justify-center" on:click={() => mode.set('view')}>

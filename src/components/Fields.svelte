@@ -1,32 +1,48 @@
 <script lang="ts">
-	import { collectionValue, entryData } from '@src/stores/store';
+	import { collectionValue } from '@src/stores/store';
 	import { collection, collections } from '@src/stores/load';
 	import { asAny, getFieldName } from '@src/utils/utils';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import CheckBox from './system/buttons/CheckBox.svelte';
-	export let fields: typeof $collection.fields | undefined = undefined;
+	import { entryData } from '@src/stores/store.svelte';
 
-	export let root = true; // if Fields is not part of any widget.
-	export let fieldsData = {};
-	export let customData = {};
-	let links: { [key: string]: boolean } = $entryData['_links'] || {};
+	interface Props {
+		fields?: typeof $collection.fields | undefined;
+		root?: boolean;
+		fieldsData?: any;
+		customData?: any;
+		value?: any;
+	}
 
-	$: if (root)
-		$collectionValue = {
-			...$collectionValue,
-			...fieldsData,
-			_links: () => links,
-			_is_link: () => $entryData['_is_link'] || false,
-			_linked_collection: () => $entryData['_linked_collection'] || null
-		};
-	let linked_collection = $collections[$entryData['_linked_collection']];
+	let {
+		fields = undefined,
+		root = true,
+		fieldsData = $bindable({}),
+		customData = {},
+		...restProps
+	}: Props = $props();
+	let links: { [key: string]: boolean } = $state(entryData.value['_links'] || {});
+
+	$effect(() => {
+		if (root)
+			collectionValue.update((old_value) => {
+				return {
+					...old_value,
+					...fieldsData,
+					_links: () => links,
+					_is_link: () => entryData.value['_is_link'] || false,
+					_linked_collection: () => entryData.value['_linked_collection'] || null
+				};
+			});
+	});
+	let linked_collection = $collections[entryData.value['_linked_collection']];
 </script>
 
 <div class="wrapper relative">
 	<div
 		class="flex flex-wrap gap-2 w-full pb-[10px] mb-[15px] shadow-[1px_2px_20px_0px_#00000061] empty:hidden"
 	>
-		{#each $entryData['_is_link'] ? linked_collection?.links : $collection?.links || [] as link}
+		{#each entryData.value['_is_link'] ? linked_collection?.links : $collection?.links || [] as link}
 			<div
 				class="min-w-[150px] border border-solid border-gray-300 flex items-center p-2 gap-2 rounded-md"
 			>
@@ -46,13 +62,12 @@
 				>
 					<div class="px-[5px] text-start inline-block max-w-full">
 						<p>{field.label}</p>
-						{#await import(`@src/components/widgets/${field.widget.Name}/${field.widget.Name}.svelte`) then widget}
-							<svelte:component
-								this={widget.default}
+						{#await import(`@src/components/widgets/${field.widget.Name}/${field.widget.Name}.svelte`) then { default: Widget }}
+							<Widget
 								field={asAny(field)}
 								bind:WidgetData={fieldsData[getFieldName(field)]}
 								value={customData[getFieldName(field)]}
-								{...$$props}
+								{...restProps}
 							/>
 						{/await}
 					</div>

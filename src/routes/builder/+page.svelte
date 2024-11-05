@@ -1,6 +1,6 @@
 <script lang="ts">
 	import 'iconify-icon';
-	import { drawerExpanded, mode } from '@src/stores/store.js';
+	import { drawerExpanded } from '@src/stores/store.js';
 	import { collection } from '@src/stores/load';
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
@@ -14,24 +14,25 @@
 	import PermissionsTable from '@src/components/PermissionsTable.svelte';
 	import { defaultPermissions, permissions, type Permissions } from '@src/collections/types';
 	import Categories from '@src/components/system/drawer/Categories.svelte';
-	let collectionName = $mode == 'edit' ? $collection.path : '';
-	let icon = $mode == 'edit' ? $collection.icon : '';
+	import { mode } from '@src/stores/store.svelte';
+	let collectionName = mode.value == 'edit' ? $collection.path : '';
+	let icon = mode.value == 'edit' ? $collection.icon : '';
 	let permissionsValue: Permissions;
 	let tabs = ['Core', 'Permissions', 'Fields'] as const;
 	let currentTab: (typeof tabs)[number] = 'Core';
 	let fields = [] as any;
 	let addField = false;
 	let navButton;
-	// $mode = 'create';
+	// mode.value = 'create';
 	$drawerExpanded = true;
 
 	collection.subscribe((_) => {
-		collectionName = $mode == 'edit' ? $collection.path : '';
-		icon = $mode == 'edit' ? $collection.icon : '';
-		fields = $mode == 'edit' ? $collection.fields : [];
+		collectionName = mode.value == 'edit' ? $collection.path : '';
+		icon = mode.value == 'edit' ? $collection.icon : '';
+		fields = mode.value == 'edit' ? $collection.fields : [];
 		permissionsValue = $collection?.permissions || defaultPermissions;
 	});
-	$: if ($mode == 'create') {
+	$: if (mode.value == 'create') {
 		collectionName = '';
 		icon = '';
 		fields = [];
@@ -50,7 +51,7 @@
 
 		if (!collectionName) return;
 		let data =
-			$mode == 'edit'
+			mode.value == 'edit'
 				? obj2formData({
 						originalName: $collection.path,
 						collectionName,
@@ -112,9 +113,9 @@
 			<div>
 				<PermissionsTable bind:value={permissionsValue} />
 			</div>
-		{:else if $mode == 'create'}
+		{:else if mode.value == 'create'}
 			<WidgetBuilder {fields} bind:addField />
-		{:else if $mode == 'edit'}
+		{:else if mode.value == 'edit'}
 			<WidgetBuilder bind:fields={$collection.fields} bind:addField />
 		{/if}
 	</div>

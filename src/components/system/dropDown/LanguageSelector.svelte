@@ -1,36 +1,38 @@
 <script lang="ts">
 	import publicConfig from '@root/config/public';
 	import { contentLanguage } from '@src/stores/load';
-	import { mode, translationProgress } from '@src/stores/store';
+	import { mode, translationProgress } from '@src/stores/store.svelte';
 	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
 	$contentLanguage = publicConfig.DEFAULT_CONTENT_LANGUAGE;
-	export let label: string = '';
-	let expanded = false;
+
+	let { label = '' }: { label?: string } = $props();
+	let expanded = $state(false);
 	mode.subscribe(() => {
-		if ($mode != 'view') $translationProgress = { show: true };
-		else {
-			$translationProgress = { show: false };
-		}
+		if (mode.value != 'view') translationProgress.value = { show: true };
+		else translationProgress.value = { show: false };
 	});
 </script>
 
 <div class="container absolute bg-[#363636]" class:expanded>
 	<div
-		on:click={() => (expanded = !expanded)}
+		onclick={() => (expanded = !expanded)}
 		class="flex cursor-pointer items-center justify-evenly"
 		class:selected={expanded}
 	>
-		<iconify-icon icon="clarity:language-solid" width="24" />
+		<iconify-icon icon="clarity:language-solid" width="24"></iconify-icon>
 
 		<p>{($contentLanguage || label).toUpperCase()}</p>
 	</div>
 	{#if expanded}
-		<div class="items bg-[#363636]" class:itemsView={!$translationProgress.show}>
+		<div class="items bg-[#363636]" class:itemsView={!translationProgress.value.show}>
 			{#each languages as lang}
-				{#if $translationProgress.show}
+				{#if translationProgress.value.show}
+					{@const percentage =
+						(translationProgress.value[lang]?.translated.size * 100) /
+							translationProgress.value[lang]?.total.size || 0}
 					<div
 						class="flex item items-center py-2"
-						on:click={() => {
+						onclick={() => {
 							$contentLanguage = lang;
 							expanded = false;
 						}}
@@ -39,21 +41,16 @@
 							{lang.toUpperCase()}
 						</p>
 						<div class="w-[100px] h-[5px] bg-white">
-							<div
-								style="width:{($translationProgress[lang]?.translated.size * 100) /
-									$translationProgress[lang]?.total.size}%"
-								class="h-[5px] bg-green-500 transition-all"
-							></div>
+							<div style="width:{percentage}%" class="h-[5px] bg-green-500 transition-all"></div>
 						</div>
 						<p>
-							{(($translationProgress[lang]?.translated.size || 1) * 100) /
-								$translationProgress[lang]?.total.size || 100}%
+							{percentage}%
 						</p>
 					</div>
 				{:else}
 					<p
 						class="item"
-						on:click={() => {
+						onclick={() => {
 							$contentLanguage = lang;
 							expanded = false;
 						}}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { FieldType } from '.';
-	import { entryData, mode } from '@src/stores/store';
+	import { entryData, mode } from '@src/stores/store.svelte';
 	import { contentLanguage, collection, collections, saveFunction } from '@src/stores/load';
 	import { extractData, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
@@ -9,7 +9,7 @@
 
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
-	export let value = $entryData[fieldName];
+	export let value = entryData.value[fieldName];
 	export let expanded = false;
 
 	let dropDownData;
@@ -57,7 +57,7 @@
 
 	$: (async (_) => {
 		let data;
-		if ($mode == 'edit' && field) {
+		if (mode.value == 'edit' && field) {
 			if (entryMode == 'edit' || entryMode == 'create') {
 				data = await extractData(fieldsData);
 			} else if (entryMode == 'choose') {
@@ -73,12 +73,12 @@
 		}
 
 		data = data[field.displayPath] ? data : value;
-		data = $mode == 'create' ? {} : data;
+		data = mode.value == 'create' ? {} : data;
 		display = await field?.display({
 			data,
 			field,
 			collection: $collection,
-			entry: $entryData,
+			entry: entryData.value,
 			contentLanguage: $contentLanguage
 		});
 	})(expanded);
@@ -95,7 +95,7 @@
 			{@html selected?.display || display || 'select new'}
 		</p>
 		<div class="ml-auto">
-			{#if $mode == 'create'}
+			{#if mode.value == 'create'}
 				<button
 					on:click={() => {
 						expanded = !expanded;

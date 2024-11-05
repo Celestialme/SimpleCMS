@@ -2,7 +2,7 @@ import { type Params, GuiSchema } from './types';
 import Input from '../Input';
 import { writable, type Writable } from 'svelte/store';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
-import { entryData, mode } from '@src/stores/store';
+import { entryData, mode } from '@src/stores/store.svelte';
 import { headerActionButton } from '@src/stores/load';
 
 import widgets, { type ModifyRequestParams } from '..';

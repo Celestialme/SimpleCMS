@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Fields from '@src/components/Fields.svelte';
-	import { mode } from '@src/stores/store';
+	import { mode } from '@src/stores/store.svelte';
 	import { getFieldName, saveFormData } from '@src/utils/utils';
 	import type { FieldType } from '.';
 
@@ -34,7 +34,7 @@
 			/>
 		</div>
 	{/each}
-{:else if $mode == 'edit'}
+{:else if mode.value == 'edit'}
 	<Fields fields={field.fields} />
 {:else}
 	<input

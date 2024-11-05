@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { FieldType } from '.';
-	import { entryData, mode } from '@src/stores/store';
+	import { entryData, mode } from '@src/stores/store.svelte';
 	import { meta_data, getFieldName } from '@src/utils/utils';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
@@ -12,7 +12,7 @@
 	import type { Layer } from 'konva/lib/Layer';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
 	export let field: FieldType;
-	export let value: File | ImageFile = $entryData[getFieldName(field)]; // pass file directly from imageArray
+	export let value: File | ImageFile = entryData.value[getFieldName(field)]; // pass file directly from imageArray
 	let _data: File | ImageFile | undefined = value;
 	$: updated = _data !== value;
 
@@ -22,13 +22,17 @@
 			!(_data instanceof File) &&
 			_data?._id !== value?._id &&
 			value?._id &&
-			$mode == 'edit'
+			mode.value == 'edit'
 		) {
 			//send replaced image's id so we can remove it from _storage_images usage
 			meta_data.add('storage_images_remove', [value._id]);
 		}
 		//if not updated value is not changed and is ImageFiles type so send back only id
-		return updated || $mode == 'create' ? _data : value ? { _id: (value as ImageFile)?._id } : null;
+		return updated || mode.value == 'create'
+			? _data
+			: value
+				? { _id: (value as ImageFile)?._id }
+				: null;
 	};
 
 	let editing = false;

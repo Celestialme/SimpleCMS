@@ -3,30 +3,31 @@
 	import { currentChild, type FieldType } from '.';
 	import { extractData, getFieldName } from '@src/utils/utils';
 	import ListNode from './ListNode.svelte';
-	import { entryData, mode, translationProgress } from '@src/stores/store';
+	import { translationProgress } from '@src/stores/store.svelte';
 	import { saveFunction } from '@src/stores/load';
+	import { mode, entryData } from '@src/stores/store.svelte';
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
-	$translationProgress.show = false;
-	export let value = $entryData[fieldName];
+	translationProgress.value.show = false;
+	export let value = entryData.value[fieldName];
 	export const WidgetData = async () => _data;
 	let MENU_CONTAINER: HTMLUListElement;
 	let showFields = false;
 	let depth = 0;
-	let _data: { [key: string]: any; children: any[] } = $mode == 'create' ? null : value;
+	let _data: { [key: string]: any; children: any[] } = mode.value == 'create' ? null : value;
 	let fieldsData = {};
-	let saveMode = $mode;
+	let saveMode = mode.value;
 
 	async function saveLayer() {
 		let _fieldsData = await extractData(fieldsData);
 
 		if (!_data) {
 			_data = { ..._fieldsData, children: [] };
-		} else if ($mode == 'edit') {
+		} else if (mode.value == 'edit') {
 			for (let key in _fieldsData) {
 				$currentChild[key] = _fieldsData[key];
 			}
-		} else if ($mode == 'create' && $currentChild.children) {
+		} else if (mode.value == 'create' && $currentChild.children) {
 			$currentChild.children.push({ ..._fieldsData, children: [] });
 		}
 

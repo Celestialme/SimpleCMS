@@ -15,7 +15,6 @@
 	import type { ComponentProps } from 'svelte';
 	import ImageResize from './extensions/ImageResize';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
-	import { entryData, mode } from '@src/stores/store';
 	import {
 		meta_data,
 		createRandomID,
@@ -28,6 +27,7 @@
 	import ImageDescription from './components/ImageDescription.svelte';
 	import VideoDialog from './components/VideoDialog.svelte';
 	import { Transaction } from '@tiptap/pm/state';
+	import { entryData, mode } from '@src/stores/store.svelte';
 	export let field: FieldType;
 	export const WidgetData = async () => ({ images, data: _data });
 	let fieldName = getFieldName(field);
@@ -37,8 +37,8 @@
 	let showVideoDialog = false;
 	let images = {};
 	let active_dropDown = '';
-	export let value = $entryData[fieldName] || { content: {}, header: {} };
-	let _data = $mode == 'create' ? { content: {}, header: {} } : value;
+	export let value = entryData.value[fieldName] || { content: {}, header: {} };
+	let _data = mode.value == 'create' ? { content: {}, header: {} } : value;
 	$: _language = field?.translated ? $contentLanguage : publicConfig.DEFAULT_CONTENT_LANGUAGE;
 	let previous_language = _language;
 	contentLanguage.subscribe(async (val) => {

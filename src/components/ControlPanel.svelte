@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { collection, saveFunction } from '@src/stores/load';
 	import Button from './system/buttons/Button.svelte';
-	import { collectionValue, entryData, mode } from '@src/stores/store';
+	import { collectionValue } from '@src/stores/store';
 	import { saveFormData, toISOString } from '@src/utils/utils';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
 	import XIcon from './system/icons/XIcon.svelte';
+	import { mode, entryData } from '@src/stores/store.svelte';
 	let _saveFunction;
 	_saveFunction = $saveFunction.fn = async () => {
 		await saveFormData({ data: $collectionValue });
@@ -19,7 +20,9 @@
 	let schedule = $state({
 		error: '',
 		showSchedule: false,
-		scheduleTime: $entryData._scheduled ? toISOString(new Date($entryData._scheduled)) : '',
+		scheduleTime: entryData.value._scheduled
+			? toISOString(new Date(entryData.value._scheduled))
+			: '',
 		setSchedule() {
 			if (new Date(schedule.scheduleTime) < new Date()) {
 				schedule.error = 'Cannot schedule in the past';
@@ -45,9 +48,9 @@
 			onclick={() => (schedule.showSchedule = !schedule.showSchedule)}
 			icon="mdi:calendar-clock"
 			class="mt-[15px] cursor-pointer"
-			class:text-white={!$entryData._scheduled}
-			class:future={$entryData._scheduled && new Date($entryData._scheduled) > new Date()}
-			class:past={$entryData._scheduled && new Date($entryData._scheduled) < new Date()}
+			class:text-white={!entryData.value._scheduled}
+			class:future={entryData.value._scheduled && new Date(entryData.value._scheduled) > new Date()}
+			class:past={entryData.value._scheduled && new Date(entryData.value._scheduled) < new Date()}
 			width="40"
 		></iconify-icon>
 	{/if}

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { mode, entryData, modifyEntry, statusMap } from '@src/stores/store';
+	import { modifyEntry, statusMap } from '@src/stores/store';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { contentLanguage, collection } from '@src/stores/load';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
@@ -7,11 +7,12 @@
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	import { deleteData, getData, setStatus } from '@src/utils/data';
 	import { untrack } from 'svelte';
+	import { entryData, mode } from '@src/stores/store.svelte';
 	let data: { entryList: [any]; pagesCount: number } | undefined = $state();
 	let tableHeaders: Array<{ label: string; name: string }> = $state([]);
 	let tableData: any[] = $state([]);
 	let modifyMap: { [key: string]: boolean } = $state({});
-	let deleteAll = $state(false);
+	let selectAll = $state(false);
 	let filters: { [key: string]: string } = $state({});
 	let currentPage = $state(1);
 	let waitFilter = debounce(300);
@@ -58,15 +59,15 @@
 		}));
 
 		modifyMap = {};
-		deleteAll = false;
+		selectAll = false;
 	};
 	mode.subscribe(() => {
 		meta_data.clear();
-		if ($mode == 'view') {
-			entryData.set({});
+		if (mode.value == 'view') {
+			// entryData.value = {};
 		}
 	});
-	function process_modifyAll(modifyAll: boolean) {
+	function set_selectAll(modifyAll: boolean) {
 		if (modifyAll) {
 			for (let item in tableData) {
 				modifyMap[item] = true;
@@ -99,7 +100,7 @@
 		}
 		refresh();
 
-		mode.set('view');
+		mode.value = 'view';
 	};
 	let sorting: { sortedBy: string; isSorted: 0 | 1 | -1 } = $state({
 		sortedBy: '',
@@ -164,8 +165,8 @@
 			<tr>
 				<th class="!pl-[25px]">
 					<CheckBox
-						bind:checked={deleteAll}
-						onchange={() => process_modifyAll(deleteAll)}
+						bind:checked={selectAll}
+						onchange={() => set_selectAll(selectAll)}
 						icon={SquareIcon}
 					/>
 				</th>
@@ -212,7 +213,7 @@
 								? '!bg-red-800'
 								: ''}
 						onclick={() => {
-							entryData.set(data?.entryList[index]);
+							entryData.value = data?.entryList[index];
 							mode.set('edit');
 						}}
 					>

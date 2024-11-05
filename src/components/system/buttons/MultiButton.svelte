@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { mode, modifyEntry } from '@src/stores/store';
+	import { modifyEntry } from '@src/stores/store';
+	import { mode } from '@src/stores/store.svelte';
 
 	export let buttons = {
 		Create: {
@@ -44,15 +45,16 @@
 		}
 	};
 	export let defaultButton: keyof typeof buttons = 'Create';
-	$: defaultButton = $mode == 'modify' ? 'Delete' : 'Create';
+	$: defaultButton = mode.value == 'modify' ? 'Delete' : 'Create';
 	let expanded = false;
-	$: expanded = $mode == 'modify' ? expanded : false;
-	$: activeArrow = $mode == 'modify';
+	$: expanded = mode.value == 'modify' ? expanded : false;
+	$: activeArrow = mode.value == 'modify';
 </script>
 
 <div class="wrapper md:w-[200px]">
 	<button
-		style="--color:{buttons[defaultButton].color};background-color:{buttons[defaultButton].bg_color}"
+		style="--color:{buttons[defaultButton].color};background-color:{buttons[defaultButton]
+			.bg_color}"
 		class="flex-grow default flex items-center justify-center max-md:!p-[10px]"
 		class:rounded-bl-[10px]={!expanded}
 		on:click={buttons[defaultButton].fn}
@@ -72,9 +74,10 @@
 	</div>
 	<div class="buttons rounded-b-[10px] overflow-hidden" class:expanded>
 		{#each Object.keys(buttons) as button}
-			{#if button != defaultButton && button != 'Create' && $mode == 'modify'}
+			{#if button != defaultButton && button != 'Create' && mode.value == 'modify'}
 				<button
-					style="--color:{buttons[button].color};--bg-color:{buttons[button].bg_color || 'rgb(37, 36, 36)'}"
+					style="--color:{buttons[button].color};--bg-color:{buttons[button].bg_color ||
+						'rgb(37, 36, 36)'}"
 					class="w-full nested"
 					on:click={buttons[button].fn}
 				>

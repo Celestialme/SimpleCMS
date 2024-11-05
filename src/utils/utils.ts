@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { get } from 'svelte/store';
-import { entryData, mode, translationProgress } from '@src/stores/store';
+import { translationProgress } from '@src/stores/store.svelte';
+import { entryData, mode } from '@src/stores/store.svelte';
 import { collection } from '@src/stores/load';
 import publicConfig from '@root/config/public';
 import _crypto from 'crypto';
@@ -126,9 +127,8 @@ export async function saveFormData({
 	_mode?: 'edit' | 'create';
 	id?: string;
 }) {
-	let $mode = _mode || get(mode);
+	let $mode = _mode || mode.value;
 	let $collection = _collection || get(collection);
-	let $entryData = get(entryData);
 	let formData = data instanceof FormData ? data : await col2formData(data);
 	if (_mode === 'edit' && !id) {
 		throw new Error('ID is required for edit mode.');
@@ -139,7 +139,7 @@ export async function saveFormData({
 		case 'create':
 			return await addData({ data: formData, collectionName: $collection.path as any });
 		case 'edit':
-			formData.append('_id', id || $entryData._id);
+			formData.append('_id', id || entryData.value._id);
 			return await updateData({ data: formData, collectionName: $collection.path as any });
 	}
 }
@@ -253,15 +253,14 @@ export async function motion(
 }
 export function updateTranslationProgress(data, field) {
 	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
-	let $translationProgress = get(translationProgress);
 	for (let lang of languages) {
-		!$translationProgress[lang] &&
-			($translationProgress[lang] = { total: new Set(), translated: new Set() });
-		if (field?.translated) $translationProgress[lang].total.add(field);
-		if (field?.translated && data[lang]) $translationProgress[lang].translated.add(field);
-		else $translationProgress[lang].translated.delete(field);
+		!translationProgress.value[lang] &&
+			(translationProgress.value[lang] = { total: new Set(), translated: new Set() });
+		if (field?.translated) translationProgress.value[lang].total.add(field);
+		if (field?.translated && data[lang]) translationProgress.value[lang].translated.add(field);
+		else translationProgress.value[lang].translated.delete(field);
+		translationProgress.value[lang] = { ...translationProgress.value[lang] };
 	}
-	translationProgress.set($translationProgress);
 }
 
 export let get_elements_by_id = {

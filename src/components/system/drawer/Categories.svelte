@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { categories, collection } from '@src/stores/load';
-	import { drawerExpanded, mode } from '@src/stores/store';
+	import { drawerExpanded } from '@src/stores/store';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
+	import { mode } from '@src/stores/store.svelte';
 	export let data = $categories || {};
-	export let modeSet: typeof $mode = 'view';
+	export let modeSet: typeof mode.value = 'view';
 	let expanded: { [key: string]: boolean } = {};
 	let user: User = $page.data.user;
 </script>

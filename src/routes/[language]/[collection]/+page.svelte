@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { collectionValue, drawerExpanded, mode } from '@src/stores/store';
+	import { collectionValue, drawerExpanded } from '@src/stores/store';
 	import Drawer from '@src/components/system/drawer/Drawer.svelte';
 	import Fields from '@src/components/Fields.svelte';
 	import ControlPanel from '@src/components/ControlPanel.svelte';
@@ -15,6 +15,7 @@
 	import FloatingNav from '@src/components/system/FloatingNav.svelte';
 	import Media from '@src/components/Media.svelte';
 	import Categories from '@src/components/system/drawer/Categories.svelte';
+	import { mode } from '@src/stores/store.svelte';
 	let ForwardBackward: boolean = false; // if using browser history
 	collection.set($collections[$page.params.collection as string] as Schema); // current collection
 
@@ -85,23 +86,23 @@
 		</div>
 	</Drawer>
 	<div class="flex-grow-[2] overflow-hidden max-h-screen pl-[2px] pr-[4px]">
-		{#if $mode !== 'storage'}
+		{#if mode.value !== 'storage'}
 			<Header />
 		{/if}
-		{#if $mode == 'view' || $mode == 'modify'}
+		{#if mode.value == 'view' || mode.value == 'modify'}
 			<EntryList />
-		{:else if ['edit', 'create'].includes($mode)}
+		{:else if ['edit', 'create'].includes(mode.value)}
 			<div
 				id="fields_container"
 				class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]"
 			>
 				<Fields />
 			</div>
-		{:else if $mode == 'storage'}
+		{:else if mode.value == 'storage'}
 			<Media />
 		{/if}
 	</div>
-	{#if ['edit', 'create'].includes($mode)}
+	{#if ['edit', 'create'].includes(mode.value)}
 		<ControlPanel />
 	{/if}
 </div>

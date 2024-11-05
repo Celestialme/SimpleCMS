@@ -4,23 +4,42 @@
 	import type { FieldType } from '.';
 	import Input from '@src/components/system/inputs/Input.svelte';
 	import { contentLanguage } from '@src/stores/load';
-	import { mode, entryData } from '@src/stores/store';
 	import { updateTranslationProgress, getFieldName, get_date } from '@src/utils/utils';
+	import { entryData, mode } from '@src/stores/store.svelte';
+	import { untrack } from 'svelte';
 
-	export let field: FieldType;
-	let fieldName = getFieldName(field);
-	export let value = $entryData[fieldName] || {};
-	let _data = $mode == 'create' ? {} : value;
-
-	$: _language = field?.translated ? $contentLanguage : publicConfig.DEFAULT_CONTENT_LANGUAGE;
-
-	$: updateTranslationProgress(_data, field);
-
-	export const WidgetData = async () => _data;
-
-	$: if (field.type == 'date') {
-		!_data[_language] && (_data[_language] = get_date());
+	interface Props {
+		field: FieldType;
+		value?: any;
+		WidgetData?: any;
 	}
+
+	let {
+		field,
+		value = entryData.value[getFieldName(field)] || {},
+		WidgetData = $bindable()
+	}: Props = $props();
+
+	let _data = $state(mode.value == 'create' ? {} : value);
+
+	let _language = $derived(
+		field?.translated ? $contentLanguage : publicConfig.DEFAULT_CONTENT_LANGUAGE
+	);
+
+	$effect(() => {
+		untrack(() => {
+			updateTranslationProgress(_data, field);
+		});
+		_data[_language];
+	});
+
+	WidgetData = async () => _data;
+
+	$effect(() => {
+		if (field.type == 'date') {
+			!_data[_language] && (_data[_language] = get_date());
+		}
+	});
 </script>
 
 {#if ['text', 'email'].includes(field.type)}
