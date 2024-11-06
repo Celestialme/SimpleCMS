@@ -31,7 +31,7 @@
 	import { entryData, mode } from '@src/stores/store.svelte';
 
 	let element = $state() as HTMLElement;
-	let editor = $state() as () => Editor;
+	let editor = $state() as Editor;
 	let showImageDialog = $state(false);
 	let showVideoDialog = $state(false);
 	let images = $state({});
@@ -55,7 +55,7 @@
 	// svelte-ignore state_referenced_locally
 	let previous_language = _language;
 	contentLanguage.subscribe(async (val) => {
-		editor && editor().commands.setContent(_data.content[val] || '');
+		editor && editor.commands.setContent(_data.content[val] || '');
 	});
 	$effect(() => {
 		untrack(() => {
@@ -103,19 +103,19 @@
 					handleImageDeletes(transaction);
 				}
 				previous_language = _language;
-				let _editor = editor();
-				editor = () => _editor;
+				editor = undefined as unknown as Editor;
+				editor = _editor;
 				deb(() => {
-					let content = editor().getHTML();
+					let content = editor.getHTML();
 					content == '<p></p>' && (content = '');
 					_data.content[_language] = content;
 				});
 			}
 		});
-		// force re-render so `editor().isActive` works as expected
-		editor = () => _editor;
+		// force re-render so `editor.isActive` works as expected
+		editor = _editor;
 		tick().then(() => {
-			editor().commands.focus('start');
+			editor.commands.focus('start');
 		});
 	});
 	function handleImageDeletes(transaction: Transaction) {
@@ -156,8 +156,8 @@
 		}
 	}
 	onDestroy(() => {
-		if (editor()) {
-			editor().destroy();
+		if (editor) {
+			editor.destroy();
 		}
 	});
 	let textTypes: ComponentProps<DropDown>['items'] = $derived.by(() => {
@@ -166,20 +166,20 @@
 			{
 				name: 'paragraph',
 				icon: 'icomoon-free:section',
-				active: () => editor().isActive('paragraph'),
-				onClick: () => editor().chain().focus().setParagraph().run()
+				active: () => editor.isActive('paragraph'),
+				onClick: () => editor.chain().focus().setParagraph().run()
 			},
 			{
 				name: 'Heading',
 				icon: 'ci:heading-h1',
-				active: () => editor().isActive('heading', { level: 1 }),
-				onClick: () => editor().chain().focus().toggleHeading({ level: 1 }).run()
+				active: () => editor.isActive('heading', { level: 1 }),
+				onClick: () => editor.chain().focus().toggleHeading({ level: 1 }).run()
 			},
 			{
 				name: 'Heading',
 				icon: 'ci:heading-h2',
-				active: () => editor().isActive('heading', { level: 2 }),
-				onClick: () => editor().chain().focus().toggleHeading({ level: 2 }).run()
+				active: () => editor.isActive('heading', { level: 2 }),
+				onClick: () => editor.chain().focus().toggleHeading({ level: 2 }).run()
 			}
 		];
 	});
@@ -188,34 +188,34 @@
 		return [
 			{
 				name: 'Arial',
-				active: () => editor().isActive('textStyle', { fontFamily: 'Arial' }),
-				onClick: () => editor().chain().focus().setFontFamily('Arial').run()
+				active: () => editor.isActive('textStyle', { fontFamily: 'Arial' }),
+				onClick: () => editor.chain().focus().setFontFamily('Arial').run()
 			},
 			{
 				name: 'Verdana',
-				active: () => editor().isActive('textStyle', { fontFamily: 'Verdana' }),
-				onClick: () => editor().chain().focus().setFontFamily('Verdana').run()
+				active: () => editor.isActive('textStyle', { fontFamily: 'Verdana' }),
+				onClick: () => editor.chain().focus().setFontFamily('Verdana').run()
 			},
 			{
 				name: 'Tahoma',
-				active: () => editor().isActive('textStyle', { fontFamily: 'Tahoma' }),
-				onClick: () => editor().chain().focus().setFontFamily('Tahoma').run()
+				active: () => editor.isActive('textStyle', { fontFamily: 'Tahoma' }),
+				onClick: () => editor.chain().focus().setFontFamily('Tahoma').run()
 			},
 
 			{
 				name: 'Times New Roman',
-				active: () => editor().isActive('textStyle', { fontFamily: 'Times New Roman' }),
-				onClick: () => editor().chain().focus().setFontFamily('Times New Roman').run()
+				active: () => editor.isActive('textStyle', { fontFamily: 'Times New Roman' }),
+				onClick: () => editor.chain().focus().setFontFamily('Times New Roman').run()
 			},
 			{
 				name: 'Georgia',
-				active: () => editor().isActive('textStyle', { fontFamily: 'Georgia' }),
-				onClick: () => editor().chain().focus().setFontFamily('Georgia').run()
+				active: () => editor.isActive('textStyle', { fontFamily: 'Georgia' }),
+				onClick: () => editor.chain().focus().setFontFamily('Georgia').run()
 			},
 			{
 				name: 'Garamond',
-				active: () => editor().isActive('textStyle', { fontFamily: 'Garamond' }),
-				onClick: () => editor().chain().focus().setFontFamily('Garamond').run()
+				active: () => editor.isActive('textStyle', { fontFamily: 'Garamond' }),
+				onClick: () => editor.chain().focus().setFontFamily('Garamond').run()
 			}
 		];
 	});
@@ -225,26 +225,26 @@
 			{
 				name: 'left',
 				icon: 'fa6-solid:align-left',
-				active: () => editor().isActive({ textAlign: 'left' }),
-				onClick: () => editor().chain().focus().setTextAlign('left').run()
+				active: () => editor.isActive({ textAlign: 'left' }),
+				onClick: () => editor.chain().focus().setTextAlign('left').run()
 			},
 			{
 				name: 'right',
 				icon: 'fa6-solid:align-right',
-				active: () => editor().isActive({ textAlign: 'right' }),
-				onClick: () => editor().commands.setTextAlign('right')
+				active: () => editor.isActive({ textAlign: 'right' }),
+				onClick: () => editor.commands.setTextAlign('right')
 			},
 			{
 				name: 'center',
 				icon: 'fa6-solid:align-center',
-				active: () => editor().isActive({ textAlign: 'center' }),
-				onClick: () => editor().chain().focus().setTextAlign('center').run()
+				active: () => editor.isActive({ textAlign: 'center' }),
+				onClick: () => editor.chain().focus().setTextAlign('center').run()
 			},
 			{
 				name: 'justify',
 				icon: 'fa6-solid:align-justify',
-				active: () => editor().isActive({ textAlign: 'justify' }),
-				onClick: () => editor().chain().focus().setTextAlign('justify').run()
+				active: () => editor.isActive({ textAlign: 'justify' }),
+				onClick: () => editor.chain().focus().setTextAlign('justify').run()
 			}
 		];
 	});
@@ -257,7 +257,7 @@
 				onClick: () => {
 					showImageDialog = true;
 				},
-				active: () => editor().isActive('image')
+				active: () => editor.isActive('image')
 			},
 			{
 				name: 'video',
@@ -265,7 +265,7 @@
 				onClick: () => {
 					showVideoDialog = true;
 				},
-				active: () => editor().isActive('video')
+				active: () => editor.isActive('video')
 			}
 		];
 	});
@@ -275,19 +275,19 @@
 			{
 				name: 'wrap left',
 				icon: 'teenyicons:align-left-solid',
-				onClick: () => editor().chain().focus().setImageFloat('left').run(),
+				onClick: () => editor.chain().focus().setImageFloat('left').run(),
 				active: () => false
 			},
 			{
 				name: 'wrap right',
 				icon: 'teenyicons:align-right-solid',
-				onClick: () => editor().chain().focus().setImageFloat('right').run(),
+				onClick: () => editor.chain().focus().setImageFloat('right').run(),
 				active: () => false
 			},
 			{
 				name: 'unwrap',
 				icon: 'mdi:filter-remove',
-				onClick: () => editor().chain().focus().setImageFloat('unset').run(),
+				onClick: () => editor.chain().focus().setImageFloat('unset').run(),
 				active: () => false
 			}
 		];
@@ -297,7 +297,7 @@
 	$effect(() => {
 		editor &&
 			(fontSize =
-				editor().getAttributes('textStyle').fontSize ||
+				editor.getAttributes('textStyle').fontSize ||
 				window
 					.getComputedStyle(
 						window.getSelection()?.focusNode?.parentElement || (element as HTMLElement)
@@ -319,7 +319,7 @@
 			| 'fontSize'
 			| 'description'
 	) => {
-		if (editor()?.isActive('image')) {
+		if (editor?.isActive('image')) {
 			return ['float', 'align', 'description'].includes(button);
 		}
 		if (['description', 'float'].includes(button)) {
@@ -359,8 +359,8 @@
 					key="color"
 					bind:active={active_dropDown}
 					show={show('color')}
-					color={editor().getAttributes('textStyle').color || '#000000'}
-					on:change={(e) => editor().chain().focus().setColor(e.detail).run()}
+					color={editor.getAttributes('textStyle').color || '#000000'}
+					on:change={(e) => editor.chain().focus().setColor(e.detail).run()}
 				/>
 
 				<div class="flex items-center" class:hidden={!show('fontSize')}>
@@ -368,7 +368,7 @@
 						aria-label="Decrease Font Size"
 						onclick={() => {
 							fontSize--;
-							editor().chain().focus().setFontSize(fontSize).run();
+							editor.chain().focus().setFontSize(fontSize).run();
 						}}
 					>
 						<iconify-icon icon="ic:twotone-minus" width="20"></iconify-icon>
@@ -378,7 +378,7 @@
 						aria-label="Increase Font Size"
 						onclick={() => {
 							fontSize++;
-							editor().chain().focus().setFontSize(fontSize).run();
+							editor.chain().focus().setFontSize(fontSize).run();
 						}}
 					>
 						<iconify-icon icon="ph:plus-bold" width="20"></iconify-icon>
@@ -387,32 +387,32 @@
 				<button
 					aria-label="Bold"
 					class:hidden={!show('bold')}
-					onclick={() => editor().chain().focus().toggleBold().run()}
-					class:active={editor().isActive('bold')}
+					onclick={() => editor.chain().focus().toggleBold().run()}
+					class:active={editor.isActive('bold')}
 				>
 					<iconify-icon icon="bi:type-bold" width="20"></iconify-icon>
 				</button>
 				<button
 					aria-label="Italic"
 					class:hidden={!show('italic')}
-					onclick={() => editor().chain().focus().toggleItalic().run()}
-					class:active={editor().isActive('italic')}
+					onclick={() => editor.chain().focus().toggleItalic().run()}
+					class:active={editor.isActive('italic')}
 				>
 					<iconify-icon icon="lucide:italic" width="20"></iconify-icon>
 				</button>
 				<button
 					aria-label="Strikethrough"
 					class:hidden={!show('strike')}
-					onclick={() => editor().chain().focus().toggleStrike().run()}
-					class:active={editor().isActive('strike')}
+					onclick={() => editor.chain().focus().toggleStrike().run()}
+					class:active={editor.isActive('strike')}
 				>
 					<iconify-icon icon="majesticons:strike-through-line" width="20"></iconify-icon>
 				</button>
 				<button
 					aria-label="Link"
 					class:hidden={!show('link')}
-					onclick={() => editor().chain().focus().toggleLink({ href: 'https://google.com' }).run()}
-					class:active={editor().isActive('link')}
+					onclick={() => editor.chain().focus().toggleLink({ href: 'https://google.com' }).run()}
+					class:active={editor.isActive('link')}
 				>
 					<iconify-icon icon="pajamas:link" width="20"></iconify-icon>
 				</button>
@@ -443,9 +443,9 @@
 					bind:active={active_dropDown}
 					key="description"
 					show={show('description')}
-					value={editor().getAttributes('image').description}
+					value={editor.getAttributes('image').description}
 					on:submit={(e) => {
-						editor().chain().focus().setImageDescription(e.detail).run();
+						editor.chain().focus().setImageDescription(e.detail).run();
 					}}
 				/>
 				<FileInput
@@ -459,20 +459,20 @@
 							url = URL.createObjectURL(data);
 							let image_id = createRandomID().toString();
 							images[image_id] = data;
-							editor().chain().focus().setImage({ src: url, id: image_id }).run();
+							editor.chain().focus().setImage({ src: url, id: image_id }).run();
 						} else {
 							url = data.original.url;
 
-							editor().chain().focus().setImage({ src: url, storage_image: data._id }).run();
+							editor.chain().focus().setImage({ src: url, storage_image: data._id }).run();
 						}
 					}}
 				/>
-				<VideoDialog bind:show={showVideoDialog} editor={editor()} />
+				<VideoDialog bind:show={showVideoDialog} {editor} />
 			</div>
 		</div>
 	{/if}
 	<div
-		onpointerdown={self(() => editor().commands.focus('end'))}
+		onpointerdown={self(() => editor.commands.focus('end'))}
 		class="text_Area RichText"
 		bind:this={element}
 	></div>
