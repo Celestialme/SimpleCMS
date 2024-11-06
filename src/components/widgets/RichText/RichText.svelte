@@ -98,7 +98,6 @@
 					: value.content[_language] || '',
 
 			onTransaction: async ({ transaction }) => {
-				// force re-render so `editor().isActive` works as expected
 				active_dropDown = '';
 				if (previous_language == _language) {
 					handleImageDeletes(transaction);
@@ -113,6 +112,7 @@
 				});
 			}
 		});
+		// force re-render so `editor().isActive` works as expected
 		editor = () => _editor;
 		tick().then(() => {
 			editor().commands.focus('start');
@@ -160,143 +160,142 @@
 			editor().destroy();
 		}
 	});
-	let a = $derived(editor && editor());
-	let textTypes: ComponentProps<DropDown>['items'] = $state([]);
-	let fonts: ComponentProps<DropDown>['items'] = $state([]);
-	let alignText: ComponentProps<DropDown>['items'] = $state([]);
-	let inserts: ComponentProps<DropDown>['items'] = $state([]);
-	let floats: ComponentProps<DropDown>['items'] = $state([]);
-	$effect(() => {
-		untrack(() => {
-			textTypes = [
-				{
-					name: 'paragraph',
-					icon: 'icomoon-free:section',
-					active: () => editor().isActive('paragraph'),
-					onClick: () => editor().chain().focus().setParagraph().run()
-				},
-				{
-					name: 'Heading',
-					icon: 'ci:heading-h1',
-					active: () => editor().isActive('heading', { level: 1 }),
-					onClick: () => editor().chain().focus().toggleHeading({ level: 1 }).run()
-				},
-				{
-					name: 'Heading',
-					icon: 'ci:heading-h2',
-					active: () => editor().isActive('heading', { level: 2 }),
-					onClick: () => editor().chain().focus().toggleHeading({ level: 2 }).run()
-				}
-			];
-
-			fonts = [
-				{
-					name: 'Arial',
-					active: () => editor().isActive('textStyle', { fontFamily: 'Arial' }),
-					onClick: () => editor().chain().focus().setFontFamily('Arial').run()
-				},
-				{
-					name: 'Verdana',
-					active: () => editor().isActive('textStyle', { fontFamily: 'Verdana' }),
-					onClick: () => editor().chain().focus().setFontFamily('Verdana').run()
-				},
-				{
-					name: 'Tahoma',
-					active: () => editor().isActive('textStyle', { fontFamily: 'Tahoma' }),
-					onClick: () => editor().chain().focus().setFontFamily('Tahoma').run()
-				},
-
-				{
-					name: 'Times New Roman',
-					active: () => editor().isActive('textStyle', { fontFamily: 'Times New Roman' }),
-					onClick: () => editor().chain().focus().setFontFamily('Times New Roman').run()
-				},
-				{
-					name: 'Georgia',
-					active: () => editor().isActive('textStyle', { fontFamily: 'Georgia' }),
-					onClick: () => editor().chain().focus().setFontFamily('Georgia').run()
-				},
-				{
-					name: 'Garamond',
-					active: () => editor().isActive('textStyle', { fontFamily: 'Garamond' }),
-					onClick: () => editor().chain().focus().setFontFamily('Garamond').run()
-				}
-			];
-
-			alignText = [
-				{
-					name: 'left',
-					icon: 'fa6-solid:align-left',
-					active: () => editor().isActive({ textAlign: 'left' }),
-					onClick: () => editor().chain().focus().setTextAlign('left').run()
-				},
-				{
-					name: 'right',
-					icon: 'fa6-solid:align-right',
-					active: () => editor().isActive({ textAlign: 'right' }),
-					onClick: () => editor().commands.setTextAlign('right')
-				},
-				{
-					name: 'center',
-					icon: 'fa6-solid:align-center',
-					active: () => editor().isActive({ textAlign: 'center' }),
-					onClick: () => editor().chain().focus().setTextAlign('center').run()
-				},
-				{
-					name: 'justify',
-					icon: 'fa6-solid:align-justify',
-					active: () => editor().isActive({ textAlign: 'justify' }),
-					onClick: () => editor().chain().focus().setTextAlign('justify').run()
-				}
-			];
-			inserts = [
-				{
-					name: 'image',
-					icon: 'fa6-solid:image',
-					onClick: () => {
-						showImageDialog = true;
-					},
-					active: () => editor().isActive('image')
-				},
-				{
-					name: 'video',
-					icon: 'fa6-solid:video',
-					onClick: () => {
-						// editor().commands.setYoutubeVideo({
-						// 	src: 'https://www.youtube.com/watch?v=Q2x2KdHtZ_w'
-						// });
-						showVideoDialog = true;
-					},
-					active: () => editor().isActive('video')
-				}
-			];
-			floats = [
-				{
-					name: 'wrap left',
-					icon: 'teenyicons:align-left-solid',
-					onClick: () => editor().chain().focus().setImageFloat('left').run(),
-					active: () => false
-				},
-				{
-					name: 'wrap right',
-					icon: 'teenyicons:align-right-solid',
-					onClick: () => editor().chain().focus().setImageFloat('right').run(),
-					active: () => false
-				},
-				{
-					name: 'unwrap',
-					icon: 'mdi:filter-remove',
-					onClick: () => editor().chain().focus().setImageFloat('unset').run(),
-					active: () => false
-				}
-			];
-		});
+	let textTypes: ComponentProps<DropDown>['items'] = $derived.by(() => {
 		editor;
+		return [
+			{
+				name: 'paragraph',
+				icon: 'icomoon-free:section',
+				active: () => editor().isActive('paragraph'),
+				onClick: () => editor().chain().focus().setParagraph().run()
+			},
+			{
+				name: 'Heading',
+				icon: 'ci:heading-h1',
+				active: () => editor().isActive('heading', { level: 1 }),
+				onClick: () => editor().chain().focus().toggleHeading({ level: 1 }).run()
+			},
+			{
+				name: 'Heading',
+				icon: 'ci:heading-h2',
+				active: () => editor().isActive('heading', { level: 2 }),
+				onClick: () => editor().chain().focus().toggleHeading({ level: 2 }).run()
+			}
+		];
+	});
+	let fonts: ComponentProps<DropDown>['items'] = $derived.by(() => {
+		editor;
+		return [
+			{
+				name: 'Arial',
+				active: () => editor().isActive('textStyle', { fontFamily: 'Arial' }),
+				onClick: () => editor().chain().focus().setFontFamily('Arial').run()
+			},
+			{
+				name: 'Verdana',
+				active: () => editor().isActive('textStyle', { fontFamily: 'Verdana' }),
+				onClick: () => editor().chain().focus().setFontFamily('Verdana').run()
+			},
+			{
+				name: 'Tahoma',
+				active: () => editor().isActive('textStyle', { fontFamily: 'Tahoma' }),
+				onClick: () => editor().chain().focus().setFontFamily('Tahoma').run()
+			},
+
+			{
+				name: 'Times New Roman',
+				active: () => editor().isActive('textStyle', { fontFamily: 'Times New Roman' }),
+				onClick: () => editor().chain().focus().setFontFamily('Times New Roman').run()
+			},
+			{
+				name: 'Georgia',
+				active: () => editor().isActive('textStyle', { fontFamily: 'Georgia' }),
+				onClick: () => editor().chain().focus().setFontFamily('Georgia').run()
+			},
+			{
+				name: 'Garamond',
+				active: () => editor().isActive('textStyle', { fontFamily: 'Garamond' }),
+				onClick: () => editor().chain().focus().setFontFamily('Garamond').run()
+			}
+		];
+	});
+	let alignText: ComponentProps<DropDown>['items'] = $derived.by(() => {
+		editor;
+		return [
+			{
+				name: 'left',
+				icon: 'fa6-solid:align-left',
+				active: () => editor().isActive({ textAlign: 'left' }),
+				onClick: () => editor().chain().focus().setTextAlign('left').run()
+			},
+			{
+				name: 'right',
+				icon: 'fa6-solid:align-right',
+				active: () => editor().isActive({ textAlign: 'right' }),
+				onClick: () => editor().commands.setTextAlign('right')
+			},
+			{
+				name: 'center',
+				icon: 'fa6-solid:align-center',
+				active: () => editor().isActive({ textAlign: 'center' }),
+				onClick: () => editor().chain().focus().setTextAlign('center').run()
+			},
+			{
+				name: 'justify',
+				icon: 'fa6-solid:align-justify',
+				active: () => editor().isActive({ textAlign: 'justify' }),
+				onClick: () => editor().chain().focus().setTextAlign('justify').run()
+			}
+		];
+	});
+	let inserts: ComponentProps<DropDown>['items'] = $derived.by(() => {
+		editor;
+		return [
+			{
+				name: 'image',
+				icon: 'fa6-solid:image',
+				onClick: () => {
+					showImageDialog = true;
+				},
+				active: () => editor().isActive('image')
+			},
+			{
+				name: 'video',
+				icon: 'fa6-solid:video',
+				onClick: () => {
+					showVideoDialog = true;
+				},
+				active: () => editor().isActive('video')
+			}
+		];
+	});
+	let floats: ComponentProps<DropDown>['items'] = $derived.by(() => {
+		editor;
+		return [
+			{
+				name: 'wrap left',
+				icon: 'teenyicons:align-left-solid',
+				onClick: () => editor().chain().focus().setImageFloat('left').run(),
+				active: () => false
+			},
+			{
+				name: 'wrap right',
+				icon: 'teenyicons:align-right-solid',
+				onClick: () => editor().chain().focus().setImageFloat('right').run(),
+				active: () => false
+			},
+			{
+				name: 'unwrap',
+				icon: 'mdi:filter-remove',
+				onClick: () => editor().chain().focus().setImageFloat('unset').run(),
+				active: () => false
+			}
+		];
 	});
 
 	let fontSize = $state(16);
 	$effect(() => {
-		editor() &&
+		editor &&
 			(fontSize =
 				editor().getAttributes('textStyle').fontSize ||
 				window
@@ -305,32 +304,29 @@
 					)
 					.fontSize.replace('px', ''));
 	});
-	let show = $state(
-		(
-			button:
-				| 'textType'
-				| 'font'
-				| 'align'
-				| 'insert'
-				| 'float'
-				| 'color'
-				| 'bold'
-				| 'italic'
-				| 'strike'
-				| 'link'
-				| 'fontSize'
-				| 'description'
-		) => {
-			if (editor()?.isActive('image')) {
-				return ['float', 'align', 'description'].includes(button);
-			}
-			if (['description', 'float'].includes(button)) {
-				return false;
-			}
-			return true;
+	let show = (
+		button:
+			| 'textType'
+			| 'font'
+			| 'align'
+			| 'insert'
+			| 'float'
+			| 'color'
+			| 'bold'
+			| 'italic'
+			| 'strike'
+			| 'link'
+			| 'fontSize'
+			| 'description'
+	) => {
+		if (editor()?.isActive('image')) {
+			return ['float', 'align', 'description'].includes(button);
 		}
-	);
-	$inspect(a);
+		if (['description', 'float'].includes(button)) {
+			return false;
+		}
+		return true;
+	};
 </script>
 
 <Input
