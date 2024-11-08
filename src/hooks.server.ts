@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import { SESSION_COOKIE_NAME } from './auth';
 import { auth } from './routes/api/db';
 import type { User } from './auth/types';
@@ -14,7 +14,7 @@ export async function handle({ event, resolve }) {
 		? ((await auth.checkUser({ _id: user_id })) as User)
 		: ((await auth.validateSession(session_id)) as User);
 
-	// if (!user && event.url.pathname != '/login') throw redirect(302, `/login`);
+	if (!user && event.url.pathname != '/login') throw redirect(302, `/login`);
 
 	event.locals.user = user;
 

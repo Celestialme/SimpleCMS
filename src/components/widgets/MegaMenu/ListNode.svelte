@@ -215,7 +215,7 @@
 	{#if self?.children?.length > 0}
 		<div class="arrow" class:expanded></div>
 	{/if}
-	{self?.Header?.[contentLanguage.value] || 'No title'}
+	{self?.Header?.[contentLanguage()] || 'No title'}
 	<div class="flex items-center ml-auto gap-1">
 		{#if level < maxDepth - 1}
 			<button
@@ -224,17 +224,17 @@
 					depth = level + 1;
 					showFields = true;
 					mode.set('create');
-					translationProgress.value.show = true;
+					translationProgress().show = true;
 				}}><iconify-icon icon="uil:focus-add" width="24" height="24" /></button
 			>
 		{/if}
 		<button
 			on:click|stopPropagation={() => {
 				$currentChild = self;
-				mode.value = 'edit';
+				mode.set('edit');
 				depth = level;
 				showFields = true;
-				translationProgress.value.show = true;
+				translationProgress().show = true;
 			}}><iconify-icon icon="raphael:edit" width="24" height="24" /></button
 		>
 		{#if level > 0}

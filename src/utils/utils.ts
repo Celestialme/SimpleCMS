@@ -127,7 +127,7 @@ export async function saveFormData({
 	_mode?: 'edit' | 'create';
 	id?: string;
 }) {
-	let $mode = _mode || mode.value;
+	let $mode = _mode || mode();
 	let $collection = _collection || get(collection);
 	let formData = data instanceof FormData ? data : await col2formData(data);
 	if (_mode === 'edit' && !id) {
@@ -139,7 +139,7 @@ export async function saveFormData({
 		case 'create':
 			return await addData({ data: formData, collectionName: $collection.path as any });
 		case 'edit':
-			formData.append('_id', id || entryData.value._id);
+			formData.append('_id', id || entryData()._id);
 			return await updateData({ data: formData, collectionName: $collection.path as any });
 	}
 }
@@ -254,12 +254,12 @@ export async function motion(
 export function updateTranslationProgress(data, field) {
 	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
 	for (let lang of languages) {
-		!translationProgress.value[lang] &&
-			(translationProgress.value[lang] = { total: new Set(), translated: new Set() });
-		if (field?.translated) translationProgress.value[lang].total.add(field);
-		if (field?.translated && data[lang]) translationProgress.value[lang].translated.add(field);
-		else translationProgress.value[lang].translated.delete(field);
-		translationProgress.value[lang] = { ...translationProgress.value[lang] };
+		!translationProgress()[lang] &&
+			(translationProgress()[lang] = { total: new Set(), translated: new Set() });
+		if (field?.translated) translationProgress()[lang].total.add(field);
+		if (field?.translated && data[lang]) translationProgress()[lang].translated.add(field);
+		else translationProgress()[lang].translated.delete(field);
+		translationProgress()[lang] = { ...translationProgress()[lang] };
 	}
 }
 

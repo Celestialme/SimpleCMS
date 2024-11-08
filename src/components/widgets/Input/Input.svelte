@@ -3,7 +3,7 @@
 
 	import type { FieldType } from '.';
 	import Input from '@src/components/system/inputs/Input.svelte';
-	import { contentLanguage } from '@src/stores/store.svelte';
+	import { contentLanguage, track } from '@src/stores/store.svelte';
 	import { updateTranslationProgress, getFieldName, get_date } from '@src/utils/utils';
 	import { entryData, mode } from '@src/stores/store.svelte';
 	import { untrack } from 'svelte';
@@ -16,22 +16,22 @@
 
 	let {
 		field,
-		value = entryData.value[getFieldName(field)] || {},
+		value = entryData()[getFieldName(field)] || {},
 		WidgetData = $bindable()
 	}: Props = $props();
 
-	let _data = $state(mode.value == 'create' ? {} : value);
+	let _data = $state(mode() == 'create' ? {} : value);
 
 	let _language = $derived(
-		field?.translated ? contentLanguage.value : publicConfig.DEFAULT_CONTENT_LANGUAGE
+		field?.translated ? contentLanguage() : publicConfig.DEFAULT_CONTENT_LANGUAGE
 	);
 
-	$effect(() => {
-		// untrack(() => {
-		updateTranslationProgress(_data, field);
-		// });
-		// _data[_language];
-	});
+	track(
+		() => {
+			updateTranslationProgress(_data, field);
+		},
+		() => _data[_language]
+	);
 
 	WidgetData = async () => _data;
 

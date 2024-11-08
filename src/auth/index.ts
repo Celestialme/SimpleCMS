@@ -14,7 +14,14 @@ export class Auth {
 		this.Token = Token;
 		this.Session = Session;
 	}
-	async createUser({ email, password, username, role, lastAuthMethod, is_registered }: Omit<User, UserParams>) {
+	async createUser({
+		email,
+		password,
+		username,
+		role,
+		lastAuthMethod,
+		is_registered
+	}: Omit<User, UserParams>) {
 		let hashed_password: string | undefined = undefined;
 		if (password) hashed_password = crypto.createHash('sha256').update(password).digest('hex');
 		let user = (
@@ -31,14 +38,21 @@ export class Auth {
 		return user as User;
 	}
 	async updateUserAttributes(user: User, attributes: Partial<User>) {
-		if (attributes.password) attributes.password = crypto.createHash('sha256').update(attributes.password).digest('hex');
+		if (attributes.password)
+			attributes.password = crypto.createHash('sha256').update(attributes.password).digest('hex');
 
 		return await this.User.updateOne({ _id: user.id }, { $set: attributes });
 	}
 	async deleteUser(id: string) {
 		await this.User.deleteOne({ _id: id });
 	}
-	async createSession({ user_id, expires = 60 * 60 * 1000 }: { user_id: string; expires?: number }) {
+	async createSession({
+		user_id,
+		expires = 60 * 60 * 1000
+	}: {
+		user_id: string;
+		expires?: number;
+	}) {
 		let session = (
 			await this.Session.insertMany({
 				user_id: new mongoose.Types.ObjectId(user_id),
@@ -90,6 +104,7 @@ export class Auth {
 		await this.Session.deleteOne({ _id: session_id });
 	}
 	async validateSession(session_id: string): Promise<User | null> {
+		if (!session_id) return null;
 		let resp = (
 			await this.Session.aggregate([
 				{

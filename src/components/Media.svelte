@@ -1,16 +1,19 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import MediaCards from './MediaCards.svelte';
 	import type { ImageFile } from '@src/utils/types';
 	import { debounce } from '@src/utils/utils';
 	import axios from 'axios';
-	export let onselect: any = () => {};
-	let files: ImageFile[] = [];
-	let pagesCount = 1;
-	let search = '';
-	let currentPage = 1;
-	let showFolders = true;
-	let folders = [];
-	let currentFolder = '';
+
+	let { onselect = () => {} }: { onselect?: any } = $props();
+	let files: ImageFile[] = $state([]);
+	let pagesCount = $state(1);
+	let search = $state('');
+	let currentPage = $state(1);
+	let showFolders = $state(true);
+	let folders = $state([]);
+	let currentFolder = $state('');
 	axios.get(`/storage/getFolderContentCount`).then((res) => (folders = res.data));
 	async function refresh() {
 		let resp = await axios.get(
@@ -20,13 +23,13 @@
 		pagesCount = resp.data.pagesCount;
 	}
 	let searchDeb = debounce(500);
-	$: {
+	run(() => {
 		if (!showFolders) {
 			searchDeb(() => refresh());
 			search;
 			currentPage;
 		}
-	}
+	});
 </script>
 
 <div class="header">
@@ -35,7 +38,7 @@
 		class="text-white mr-2"
 		class:cursor-pointer={!showFolders}
 		width="30"
-		on:click={() => {
+		onclick={() => {
 			files = [];
 			showFolders = true;
 			pagesCount = 0;
@@ -51,7 +54,7 @@
 		{#each Object.keys(folders) as folder}
 			<div
 				class="folder"
-				on:click={async () => {
+				onclick={async () => {
 					currentFolder = folder;
 					showFolders = false;
 				}}
@@ -72,7 +75,7 @@
 	{#each Array((pagesCount || 0) > 1 ? pagesCount : 0) as _, page}
 		<div
 			class="page"
-			on:click={() => (currentPage = page + 1)}
+			onclick={() => (currentPage = page + 1)}
 			class:active={currentPage == page + 1}
 		>
 			{page + 1}

@@ -34,7 +34,7 @@
 			/>
 		</div>
 	{/each}
-{:else if mode.value == 'edit'}
+{:else if mode() == 'edit'}
 	<Fields fields={field.fields} />
 {:else}
 	<input

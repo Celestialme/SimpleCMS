@@ -7,8 +7,8 @@
 	let { label = '' }: { label?: string } = $props();
 	let expanded = $state(false);
 	mode.subscribe(() => {
-		if (mode.value != 'view') translationProgress.value = { show: true };
-		else translationProgress.value = { show: false };
+		if (mode() != 'view') translationProgress.set({ show: true });
+		else translationProgress.set({ show: false });
 	});
 </script>
 
@@ -20,19 +20,19 @@
 	>
 		<iconify-icon icon="clarity:language-solid" width="24"></iconify-icon>
 
-		<p>{(contentLanguage.value || label).toUpperCase()}</p>
+		<p>{(contentLanguage() || label).toUpperCase()}</p>
 	</div>
 	{#if expanded}
-		<div class="items bg-[#363636]" class:itemsView={!translationProgress.value.show}>
+		<div class="items bg-[#363636]" class:itemsView={!translationProgress().show}>
 			{#each languages as lang}
-				{#if translationProgress.value.show}
+				{#if translationProgress().show}
 					{@const percentage =
-						(translationProgress.value[lang]?.translated.size * 100) /
-							translationProgress.value[lang]?.total.size || 0}
+						(translationProgress()[lang]?.translated.size * 100) /
+							translationProgress()[lang]?.total.size || 0}
 					<div
 						class="flex item items-center py-2"
 						onclick={() => {
-							contentLanguage.value = lang;
+							contentLanguage.set(lang);
 							expanded = false;
 						}}
 					>
@@ -50,7 +50,7 @@
 					<p
 						class="item"
 						onclick={() => {
-							contentLanguage.value = lang;
+							contentLanguage.set(lang);
 							expanded = false;
 						}}
 					>

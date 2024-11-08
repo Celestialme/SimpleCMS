@@ -10,7 +10,7 @@
 
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
-	export let value = entryData.value[fieldName];
+	export let value = entryData()[fieldName];
 	export let expanded = false;
 
 	let dropDownData;
@@ -58,7 +58,7 @@
 
 	$: (async (_) => {
 		let data;
-		if (mode.value == 'edit' && field) {
+		if (mode() == 'edit' && field) {
 			if (entryMode == 'edit' || entryMode == 'create') {
 				data = await extractData(fieldsData);
 			} else if (entryMode == 'choose') {
@@ -74,13 +74,13 @@
 		}
 
 		data = data[field.displayPath] ? data : value;
-		data = mode.value == 'create' ? {} : data;
+		data = mode() == 'create' ? {} : data;
 		display = await field?.display({
 			data,
 			field,
 			collection: $collection,
-			entry: entryData.value,
-			contentLanguage: contentLanguage.value
+			entry: entryData(),
+			contentLanguage: contentLanguage()
 		});
 	})(expanded);
 
@@ -96,7 +96,7 @@
 			{@html selected?.display || display || 'select new'}
 		</p>
 		<div class="ml-auto">
-			{#if mode.value == 'create'}
+			{#if mode() == 'create'}
 				<button
 					on:click={() => {
 						expanded = !expanded;

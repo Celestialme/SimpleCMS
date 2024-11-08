@@ -34,13 +34,13 @@
 				collection.set(data[item]);
 			}}
 		>
-			<div class="flex items-center h-full" class:grow={drawerExpanded.value}>
+			<div class="flex items-center h-full" class:grow={drawerExpanded()}>
 				<iconify-icon
 					icon={data[item].icon}
-					class:ml-auto={!drawerExpanded.value}
-					class:ml-2={drawerExpanded.value}
+					class:ml-auto={!drawerExpanded()}
+					class:ml-2={drawerExpanded()}
 				></iconify-icon>
-				{#if drawerExpanded.value}
+				{#if drawerExpanded()}
 					<p class="mx-auto">{data[item].label || item}</p>
 				{/if}
 			</div>

@@ -5,7 +5,7 @@
 
 <div class="h-[60px] w-full">
 	<div class="wrapper max-md:!fixed max-md:top-0 max-md:left-0">
-		<button class="text-white" on:click={() => (drawerExpanded.value = !drawerExpanded.value)}
+		<button class="text-white" on:click={() => drawerExpanded.set(!drawerExpanded())}
 			><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24"></iconify-icon>
 		</button>
 		<button

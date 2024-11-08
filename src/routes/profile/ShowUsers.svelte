@@ -143,8 +143,8 @@
 								label="filter"
 								theme="dark"
 								name={header}
-								on:input={(e) => {
-									let value = asAny(e.target).value;
+								oninput={(e) => {
+									let value = (e.target as any).value;
 									if (value) {
 										filters[header] = value;
 									} else {

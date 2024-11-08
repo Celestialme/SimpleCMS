@@ -20,7 +20,7 @@
 		customData = {},
 		...restProps
 	}: Props = $props();
-	let links: { [key: string]: boolean } = $state(entryData.value['_links'] || {});
+	let links: { [key: string]: boolean } = $state(entryData()['_links'] || {});
 
 	track(
 		() => {
@@ -30,21 +30,21 @@
 						...old_value,
 						...fieldsData,
 						_links: () => links,
-						_is_link: () => entryData.value['_is_link'] || false,
-						_linked_collection: () => entryData.value['_linked_collection'] || null
+						_is_link: () => entryData()['_is_link'] || false,
+						_linked_collection: () => entryData()['_linked_collection'] || null
 					};
 				});
 		},
 		() => [root, $state.snapshot(fieldsData)]
 	);
-	let linked_collection = $collections[entryData.value['_linked_collection']];
+	let linked_collection = $collections[entryData()['_linked_collection']];
 </script>
 
 <div class="wrapper relative">
 	<div
 		class="flex flex-wrap gap-2 w-full pb-[10px] mb-[15px] shadow-[1px_2px_20px_0px_#00000061] empty:hidden"
 	>
-		{#each entryData.value['_is_link'] ? linked_collection?.links : $collection?.links || [] as link}
+		{#each entryData()['_is_link'] ? linked_collection?.links : $collection?.links || [] as link}
 			<div
 				class="min-w-[150px] border border-solid border-gray-300 flex items-center p-2 gap-2 rounded-md"
 			>

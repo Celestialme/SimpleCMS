@@ -15,24 +15,24 @@
 	import { defaultPermissions, permissions, type Permissions } from '@src/collections/types';
 	import Categories from '@src/components/system/drawer/Categories.svelte';
 	import { mode, drawerExpanded } from '@src/stores/store.svelte';
-	let collectionName = mode.value == 'edit' ? $collection.path : '';
-	let icon = mode.value == 'edit' ? $collection.icon : '';
+	let collectionName = mode() == 'edit' ? $collection.path : '';
+	let icon = mode() == 'edit' ? $collection.icon : '';
 	let permissionsValue: Permissions;
 	let tabs = ['Core', 'Permissions', 'Fields'] as const;
 	let currentTab: (typeof tabs)[number] = 'Core';
 	let fields = [] as any;
 	let addField = false;
 	let navButton;
-	// mode.value = 'create';
-	drawerExpanded.value = true;
+	// mode() = 'create';
+	drawerExpanded.set(true);
 
 	collection.subscribe((_) => {
-		collectionName = mode.value == 'edit' ? $collection.path : '';
-		icon = mode.value == 'edit' ? $collection.icon : '';
-		fields = mode.value == 'edit' ? $collection.fields : [];
+		collectionName = mode() == 'edit' ? $collection.path : '';
+		icon = mode() == 'edit' ? $collection.icon : '';
+		fields = mode() == 'edit' ? $collection.fields : [];
 		permissionsValue = $collection?.permissions || defaultPermissions;
 	});
-	$: if (mode.value == 'create') {
+	$: if (mode() == 'create') {
 		collectionName = '';
 		icon = '';
 		fields = [];
@@ -51,7 +51,7 @@
 
 		if (!collectionName) return;
 		let data =
-			mode.value == 'edit'
+			mode() == 'edit'
 				? obj2formData({
 						originalName: $collection.path,
 						collectionName,
@@ -71,7 +71,7 @@
 <div class="body">
 	<button
 		class="text-white fixed top-[13px] left-[10px]"
-		on:click={() => (drawerExpanded.value = !drawerExpanded.value)}
+		on:click={() => drawerExpanded.set(!drawerExpanded)}
 		><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
 	>
 	<div class="left_panel">
@@ -80,7 +80,7 @@
 				<Categories modeSet="edit" />
 			</section>
 
-			<div class:max-md:hidden={!drawerExpanded.value && navButton.x == navButton.radius}>
+			<div class:max-md:hidden={!drawerExpanded() && navButton.x == navButton.radius}>
 				<FloatingNav bind:buttonInfo={navButton} />
 			</div>
 			<section class="text-center">
@@ -113,9 +113,9 @@
 			<div>
 				<PermissionsTable bind:value={permissionsValue} />
 			</div>
-		{:else if mode.value == 'create'}
+		{:else if mode() == 'create'}
 			<WidgetBuilder {fields} bind:addField />
-		{:else if mode.value == 'edit'}
+		{:else if mode() == 'edit'}
 			<WidgetBuilder bind:fields={$collection.fields} bind:addField />
 		{/if}
 	</div>

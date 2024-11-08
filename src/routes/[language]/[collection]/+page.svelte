@@ -25,9 +25,9 @@
 	let navButton: any = $state();
 
 	let unsubscribe = collection.subscribe((_) => {
-		collectionValue.value = {};
+		collectionValue.set({});
 		if (!ForwardBackward) {
-			goto(`/${contentLanguage.value}/${$collection.path}`);
+			goto(`/${contentLanguage()}/${$collection.path}`);
 		}
 		ForwardBackward = false;
 	});
@@ -36,7 +36,7 @@
 	});
 	contentLanguage.subscribe((_) => {
 		if (!ForwardBackward) {
-			goto(`/${contentLanguage.value}/${$collection.path}`);
+			goto(`/${contentLanguage()}/${$collection.path}`);
 		}
 	});
 	async function signOut() {
@@ -72,7 +72,7 @@
 		</section>
 		<section class="mt-auto text-center">
 			<Button class="max-w-full" on:click={signOut}>
-				{#if drawerExpanded.value}
+				{#if drawerExpanded()}
 					SignOut
 				{:else}
 					<iconify-icon icon="charm:sign-out"></iconify-icon>
@@ -80,28 +80,28 @@
 			</Button>
 		</section>
 
-		<div class:max-md:hidden={!drawerExpanded.value && navButton.x == navButton.radius}>
+		<div class:max-md:hidden={!drawerExpanded() && navButton.x == navButton.radius}>
 			<FloatingNav bind:buttonInfo={navButton} />
 		</div>
 	</Drawer>
 	<div class="flex-grow-[2] overflow-hidden max-h-screen pl-[2px] pr-[4px]">
-		{#if mode.value !== 'storage'}
+		{#if mode() !== 'storage'}
 			<Header />
 		{/if}
-		{#if mode.value == 'view' || mode.value == 'modify'}
+		{#if mode() == 'view' || mode() == 'modify'}
 			<EntryList />
-		{:else if ['edit', 'create'].includes(mode.value)}
+		{:else if ['edit', 'create'].includes(mode())}
 			<div
 				id="fields_container"
 				class="overflow-y-auto fields max-h-[calc(100vh-60px)] max-md:max-h-[calc(100vh-120px)]"
 			>
 				<Fields />
 			</div>
-		{:else if mode.value == 'storage'}
+		{:else if mode() == 'storage'}
 			<Media />
 		{/if}
 	</div>
-	{#if ['edit', 'create'].includes(mode.value)}
+	{#if ['edit', 'create'].includes(mode())}
 		<ControlPanel />
 	{/if}
 </div>

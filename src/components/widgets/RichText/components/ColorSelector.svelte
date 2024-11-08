@@ -1,15 +1,33 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { track } from '@src/stores/store.svelte';
 	import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
-	export let color = '';
-	export let show = false;
-	export let key = '';
-	export let active = '';
-	let expanded = false;
-	$: key != active && (expanded = false);
-	let dispatch = createEventDispatcher();
-	$: dispatch('change', color);
-	let header: HTMLDivElement;
+	interface Props {
+		color?: string;
+		show?: boolean;
+		key?: string;
+		active?: string;
+		onchange?: (color: string) => void;
+	}
+
+	let {
+		onchange,
+		color = $bindable(''),
+		show = false,
+		key = '',
+		active = $bindable('')
+	}: Props = $props();
+	let expanded = $state(false);
+
+	track(
+		() => key != active && (expanded = false),
+		() => active
+	);
+	track(
+		() => onchange?.(color),
+		() => color
+	);
+	color;
+	let header = $state() as HTMLDivElement;
 	function setPosition(node: HTMLDivElement) {
 		let parent = header.parentElement as HTMLElement;
 		let left_pos = header.getBoundingClientRect().left - parent.getBoundingClientRect().left;
@@ -25,7 +43,7 @@
 	<div
 		class="selected arrow"
 		class:arrow_up={expanded}
-		on:click={() => {
+		onclick={() => {
 			expanded = !expanded;
 			active = key;
 		}}

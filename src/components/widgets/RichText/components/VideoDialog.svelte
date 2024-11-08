@@ -4,10 +4,14 @@
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import type { Editor } from '@tiptap/core';
 
-	export let show = false;
-	export let editor: Editor;
-	let insert_url = false;
-	let youtube_url = '';
+	interface Props {
+		show?: boolean;
+		editor: Editor;
+	}
+
+	let { show = $bindable(false), editor }: Props = $props();
+	let insert_url = $state(false);
+	let youtube_url = $state('');
 	function addVideo() {
 		editor.chain().focus().setYoutubeVideo({ src: youtube_url }).run();
 		youtube_url = '';

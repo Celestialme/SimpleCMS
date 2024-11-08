@@ -12,7 +12,7 @@
 	import type { Layer } from 'konva/lib/Layer';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
 	export let field: FieldType;
-	export let value: File | ImageFile = entryData.value[getFieldName(field)]; // pass file directly from imageArray
+	export let value: File | ImageFile = entryData()[getFieldName(field)]; // pass file directly from imageArray
 	let _data: File | ImageFile | undefined = value;
 	$: updated = _data !== value;
 
@@ -22,13 +22,13 @@
 			!(_data instanceof File) &&
 			_data?._id !== value?._id &&
 			value?._id &&
-			mode.value == 'edit'
+			mode() == 'edit'
 		) {
 			//send replaced image's id so we can remove it from _storage_images usage
 			meta_data.add('storage_images_remove', [value._id]);
 		}
 		//if not updated value is not changed and is ImageFiles type so send back only id
-		return updated || mode.value == 'create'
+		return updated || mode() == 'create'
 			? _data
 			: value
 				? { _id: (value as ImageFile)?._id }
@@ -241,7 +241,7 @@
 		{/if}
 	</div>
 {:else}
-	<FileInput on:change={(e) => (_data = e.detail)} />
+	<FileInput onchange={(file) => (_data = file)} />
 {/if}
 
 <style>

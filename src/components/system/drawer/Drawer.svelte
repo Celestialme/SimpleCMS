@@ -4,11 +4,11 @@
 
 <div
 	class="wrapper max-md:fixed max-md:w-0"
-	class:max-md:!min-w-0={drawerExpanded.value == false}
-	class:drawerExpanded={drawerExpanded.value}
+	class:max-md:!min-w-0={drawerExpanded() == false}
+	class:drawerExpanded={drawerExpanded()}
 >
 	<section class="h-[50px] mb-[10px] !p-[10px]">
-		<button class="text-white" on:click={() => (drawerExpanded.value = !drawerExpanded.value)}
+		<button class="text-white" on:click={() => drawerExpanded.set(!drawerExpanded())}
 			><iconify-icon class="h-[14px]" icon="mingcute:menu-fill" width="24"></iconify-icon></button
 		>
 	</section>

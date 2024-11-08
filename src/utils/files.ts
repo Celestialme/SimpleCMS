@@ -27,7 +27,11 @@ export async function saveImage(
 
 	let arrayBuffer = await file.arrayBuffer();
 	let buffer = Buffer.from(arrayBuffer);
-	let hash = _crypto.createHash('sha256').update(buffer).digest('hex').slice(0, 20);
+	let hash = _crypto
+		.createHash('sha256')
+		.update(buffer as any)
+		.digest('hex')
+		.slice(0, 20);
 	let existing_file = await mongoose.models['_storage_images'].findOne({ hash: hash });
 	if (existing_file) {
 		return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
@@ -87,7 +91,7 @@ export async function saveImage(
 					fs.mkdirSync(Path.dirname(`${publicConfig.STORAGE_FOLDER}/${url}`), { recursive: true });
 				}
 				//sized images
-				fs.writeFileSync(`${publicConfig.STORAGE_FOLDER}/${url}`, resizedImage.data);
+				fs.writeFileSync(`${publicConfig.STORAGE_FOLDER}/${url}`, resizedImage.data as any);
 				fileInfo[size] = {
 					name: `${name}.${removeExtension(url).ext}`,
 					url: '/storage/' + url,

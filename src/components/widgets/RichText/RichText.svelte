@@ -44,13 +44,13 @@
 
 	let {
 		field,
-		value = entryData.value[getFieldName(field)] || { content: {}, header: {} },
+		value = entryData()[getFieldName(field)] || { content: {}, header: {} },
 		WidgetData = $bindable()
 	}: Props = $props();
 	WidgetData = async () => ({ images, data: _data });
-	let _data = $state(mode.value == 'create' ? { content: {}, header: {} } : value);
+	let _data = $state(mode() == 'create' ? { content: {}, header: {} } : value);
 	let _language = $derived(
-		field?.translated ? contentLanguage.value : publicConfig.DEFAULT_CONTENT_LANGUAGE
+		field?.translated ? contentLanguage() : publicConfig.DEFAULT_CONTENT_LANGUAGE
 	);
 	// svelte-ignore state_referenced_locally
 	let previous_language = _language;
@@ -160,7 +160,7 @@
 			editor.destroy();
 		}
 	});
-	let textTypes: ComponentProps<DropDown>['items'] = $derived.by(() => {
+	let textTypes: ComponentProps<typeof DropDown>['items'] = $derived.by(() => {
 		editor;
 		return [
 			{
@@ -183,7 +183,7 @@
 			}
 		];
 	});
-	let fonts: ComponentProps<DropDown>['items'] = $derived.by(() => {
+	let fonts: ComponentProps<typeof DropDown>['items'] = $derived.by(() => {
 		editor;
 		return [
 			{
@@ -219,7 +219,7 @@
 			}
 		];
 	});
-	let alignText: ComponentProps<DropDown>['items'] = $derived.by(() => {
+	let alignText: ComponentProps<typeof DropDown>['items'] = $derived.by(() => {
 		editor;
 		return [
 			{
@@ -248,7 +248,7 @@
 			}
 		];
 	});
-	let inserts: ComponentProps<DropDown>['items'] = $derived.by(() => {
+	let inserts: ComponentProps<typeof DropDown>['items'] = $derived.by(() => {
 		editor;
 		return [
 			{
@@ -269,7 +269,7 @@
 			}
 		];
 	});
-	let floats: ComponentProps<DropDown>['items'] = $derived.by(() => {
+	let floats: ComponentProps<typeof DropDown>['items'] = $derived.by(() => {
 		editor;
 		return [
 			{
@@ -360,7 +360,7 @@
 					bind:active={active_dropDown}
 					show={show('color')}
 					color={editor.getAttributes('textStyle').color || '#000000'}
-					on:change={(e) => editor.chain().focus().setColor(e.detail).run()}
+					onchange={(color) => editor.chain().focus().setColor(color).run()}
 				/>
 
 				<div class="flex items-center" class:hidden={!show('fontSize')}>
@@ -438,16 +438,16 @@
 					key="description"
 					show={show('description')}
 					value={editor.getAttributes('image').description}
-					on:submit={(e) => {
-						editor.chain().focus().setImageDescription(e.detail).run();
+					onsubmit={(description) => {
+						editor.chain().focus().setImageDescription(description).run();
 					}}
 				/>
 				<FileInput
 					closeButton
 					bind:show={showImageDialog}
 					class="fixed bg-white top-0 left-1/2 -translate-x-1/2 z-10"
-					on:change={(e) => {
-						let data = e.detail;
+					onchange={(file) => {
+						let data = file;
 						let url;
 						if (data instanceof File) {
 							url = URL.createObjectURL(data);

@@ -22,7 +22,7 @@
 				collectionName: $collection.path as any,
 				page: currentPage,
 				limit: 2,
-				contentLanguage: contentLanguage.value,
+				contentLanguage: contentLanguage(),
 				filter: JSON.stringify(filters),
 				sort: JSON.stringify(
 					sorting.isSorted
@@ -46,7 +46,7 @@
 							collection: $collection.path,
 							field,
 							entry,
-							contentLanguage: contentLanguage.value
+							contentLanguage: contentLanguage()
 						});
 					}
 					obj._id = entry._id;
@@ -63,8 +63,8 @@
 	};
 	mode.subscribe(() => {
 		meta_data.clear();
-		if (mode.value == 'view') {
-			// entryData.value = {};
+		if (mode() == 'view') {
+			entryData.set({});
 		}
 	});
 	function set_selectAll(modifyAll: boolean) {
@@ -79,7 +79,7 @@
 		}
 	}
 
-	modifyEntry.value = async (status: keyof typeof statusMap) => {
+	modifyEntry.set(async (status: keyof typeof statusMap) => {
 		let modifyList: Array<string> = [];
 		for (let item in modifyMap) {
 			modifyMap[item] && modifyList.push(tableData[item]._id);
@@ -100,8 +100,8 @@
 		}
 		refresh();
 
-		mode.value = 'view';
-	};
+		mode.set('view');
+	});
 	let sorting: { sortedBy: string; isSorted: 0 | 1 | -1 } = $state({
 		sortedBy: '',
 		isSorted: 0
@@ -111,7 +111,7 @@
 			refresh(false);
 			filters = {};
 		},
-		() => contentLanguage.value
+		() => contentLanguage()
 	);
 	$effect(() => {
 		currentPage = 1;
@@ -140,8 +140,8 @@
 								theme="dark"
 								name={header.name}
 								value={filters[header.name]}
-								on:input={(e) => {
-									let value = asAny(e.target).value;
+								oninput={(e) => {
+									let value = (e.target as any).value;
 									if (value) {
 										waitFilter(() => {
 											filters[header.name] = value;
@@ -207,7 +207,7 @@
 								? '!bg-red-800'
 								: ''}
 						onclick={() => {
-							entryData.value = data?.entryList[index];
+							entryData.set(data?.entryList[index]);
 							mode.set('edit');
 						}}
 					>

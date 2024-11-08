@@ -1,46 +1,60 @@
 <script lang="ts">
-	import { asAny } from '@src/utils/utils';
 	import Button from '../buttons/Button.svelte';
 	import XIcon from '../icons/XIcon.svelte';
 	import Media from '@src/components/Media.svelte';
 	import type { ImageFile } from '@src/utils/types';
 	import { twMerge } from 'tailwind-merge';
-	import { createEventDispatcher } from 'svelte';
-	export let value: File | ImageFile | undefined = undefined;
-	export let show = true;
-	export let closeButton = false;
-	let ev = createEventDispatcher();
-	let input: HTMLInputElement;
-	let showMedia = false;
+	interface Props {
+		value?: File | ImageFile | undefined;
+		show?: boolean;
+		closeButton?: boolean;
+		onchange?: (value: File | ImageFile) => void;
+		class?: string;
+	}
+
+	let {
+		value = $bindable(undefined),
+		show = $bindable(true),
+		closeButton = false,
+		onchange,
+		class: _class
+	}: Props = $props();
+	let input = $state() as HTMLInputElement;
+	let showMedia = $state(false);
 	let mediaOnSelect = (data: ImageFile) => {
 		show = false;
 		showMedia = false;
 		value = data;
-		ev('change', value);
+		onchange?.(value);
 	};
-	let onChange = () => {
+	let _onChange = () => {
 		if (input.files?.length == 0) return;
 		value = input.files?.[0] as File;
 		show = false;
-		ev('change', value);
+		onchange?.(value);
 	};
 </script>
 
 {#if show}
 	{#if !showMedia}
 		<div
-			on:drop|preventDefault={(e) => {
+			ondrop={(e) => {
+				e.preventDefault();
 				value = e?.dataTransfer?.files[0];
+				show = false;
+				value && onchange?.(value);
 			}}
-			on:dragover|preventDefault={(e) => {
-				asAny(e.target).style.borderColor = '#6bdfff';
+			ondragover={(e) => {
+				e.preventDefault();
+				(e.target as any).style.borderColor = '#6bdfff';
 			}}
-			on:dragleave|preventDefault={(e) => {
-				asAny(e.target).style.removeProperty('border-color');
+			ondragleave={(e) => {
+				e.preventDefault();
+				(e.target as any).style.removeProperty('border-color');
 			}}
 			class={twMerge(
 				'w-[500px] max-w-full h-[200px] mt-2 border-2 border-dashed border-[#c1c1c1] flex flex-col items-center justify-center gap-4 select-none relative',
-				$$props.class
+				_class
 			)}
 		>
 			{#if closeButton}
@@ -56,19 +70,16 @@
 					>Select Existing</Button
 				>
 			</div>
-			<input bind:this={input} type="file" hidden on:change={onChange} />
+			<input bind:this={input} type="file" hidden onchange={_onChange} />
 		</div>
 	{:else}
 		<div
-			class={twMerge(
-				'flex flex-col rounded-md p-2 min-w-full max-w-full bg-white dashed',
-				$$props.class
-			)}
+			class={twMerge('flex flex-col rounded-md p-2 min-w-full max-w-full bg-white dashed', _class)}
 		>
-			<button on:click={() => (showMedia = false)} class="ml-auto cursor-pointer">
+			<button onclick={() => (showMedia = false)} class="ml-auto cursor-pointer">
 				<XIcon />
 			</button>
-			<Media bind:onselect={mediaOnSelect} />
+			<Media onselect={mediaOnSelect} />
 		</div>
 	{/if}
 {/if}

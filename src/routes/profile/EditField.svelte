@@ -67,7 +67,7 @@
 			<DropDown items={Object.values(roles)} bind:selected={info.value} />
 		{:else}
 			<FloatingInput
-				on:keydown={(e) => e.key == 'Enter' && change()}
+				onkeydown={(e) => e.key == 'Enter' && change()}
 				bind:value={info.value}
 				iconClass="text-white"
 				inputClass="text-white"

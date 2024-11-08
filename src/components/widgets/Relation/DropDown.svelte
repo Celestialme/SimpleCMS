@@ -18,8 +18,8 @@
 				data: item,
 				collection: $collection,
 				field,
-				entry: entryData.value,
-				contentLanguage: contentLanguage.value
+				entry: entryData(),
+				contentLanguage: contentLanguage()
 			}),
 			_id: item._id
 		}))

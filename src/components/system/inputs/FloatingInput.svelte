@@ -1,20 +1,37 @@
 <script lang="ts">
+	import { store } from '@src/stores/store.svelte';
 	import { twMerge } from 'tailwind-merge';
-	export let iconClass = '';
-	export let inputClass = '';
-	export let name: string;
-	export let label: string;
-	export let type: 'password' | 'text' | 'email' = 'text';
-	export let leading_icon = getIcon();
-	export let value = '';
-	export let required = false;
-	export let theme: 'dark' | 'light' = 'light';
-	let showPassword = false;
-	let inputElement: HTMLInputElement;
-	$: if (type === 'password')
-		showPassword
-			? inputElement && (inputElement.type = 'text')
-			: inputElement && (inputElement.type = 'password');
+	interface Props {
+		iconClass?: string;
+		inputClass?: string;
+		name: string;
+		label: string;
+		type?: 'password' | 'text' | 'email';
+		leading_icon?: any;
+		value?: string;
+		required?: boolean;
+		theme?: 'dark' | 'light';
+		children?: import('svelte').Snippet;
+		oninput?: (e: Event) => void;
+		onkeydown?: (e: KeyboardEvent) => void;
+	}
+
+	let {
+		iconClass = '',
+		inputClass = '',
+		name,
+		label,
+		type = 'text',
+		leading_icon = getIcon(),
+		value = $bindable(''),
+		required = false,
+		theme = 'light',
+		oninput,
+		onkeydown,
+		children
+	}: Props = $props();
+
+	let inputElement = store<HTMLInputElement>();
 
 	function getIcon() {
 		switch (type) {
@@ -32,12 +49,12 @@
 </script>
 
 <div class="container relative" class:dark={theme == 'dark'}>
-	<slot />
-	<iconify-icon icon={leading_icon} class={iconClass} />
+	{@render children?.()}
+	<iconify-icon icon={leading_icon} class={iconClass}></iconify-icon>
 
 	<input
 		class={twMerge('bg-transparent text-black', inputClass)}
-		bind:this={inputElement}
+		bind:this={inputElement.value}
 		use:initInput
 		placeholder=" "
 		type="text"
@@ -45,8 +62,8 @@
 		id="input"
 		bind:value
 		class:text-white={theme == 'dark'}
-		on:input
-		on:keydown
+		{oninput}
+		{onkeydown}
 	/>
 	<label for="input" class="text-xs text-gray-400"
 		>{label}
@@ -56,12 +73,16 @@
 	</label>
 	{#if type === 'password'}
 		<iconify-icon
-			icon={showPassword ? 'bi:eye-fill' : 'bi:eye-slash-fill'}
+			icon={inputElement()?.type != 'password' ? 'bi:eye-fill' : 'bi:eye-slash-fill'}
 			class="absolute right-0"
 			class:text-gray-400={theme == 'dark'}
 			width="24"
-			on:click|preventDefault={() => (showPassword = !showPassword)}
-		/>
+			onclick={(e) => {
+				e.preventDefault();
+				inputElement().type = inputElement().type == 'text' ? 'password' : 'text';
+				inputElement.trigger();
+			}}
+		></iconify-icon>
 	{/if}
 </div>
 
@@ -105,7 +126,7 @@
 	.dark input:focus + label {
 		color: #82d0ff;
 	}
-	input:not(:placeholder-shown) + label {
+	input:not(:global(:placeholder-shown)) + label {
 		top: unset;
 		top: 0;
 		margin-top: -10px;

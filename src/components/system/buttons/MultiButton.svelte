@@ -15,26 +15,26 @@
 				color: 'white'
 			},
 			Delete: {
-				fn: () => modifyEntry.value('Delete'),
+				fn: () => modifyEntry()('Delete'),
 				icon: 'tdesign:delete-1',
 				bg_color: 'red',
 				color: 'white'
 			},
 			Publish: {
-				fn: () => modifyEntry.value('Publish'),
+				fn: () => modifyEntry()('Publish'),
 				icon: '',
 				bg_color: 'lime',
 				color: 'white'
 			},
 			Unpublish: {
-				fn: () => modifyEntry.value('Unpublish'),
+				fn: () => modifyEntry()('Unpublish'),
 
 				icon: '',
 				bg_color: 'orange',
 				color: 'white'
 			},
 			Test: {
-				fn: () => modifyEntry.value('Test'),
+				fn: () => modifyEntry()('Test'),
 				icon: '',
 				bg_color: 'brown',
 				color: 'white'
@@ -44,11 +44,11 @@
 	}: Props = $props();
 	let expanded = $state(false);
 	$effect(() => {
-		defaultButton = mode.value == 'modify' ? 'Delete' : 'Create';
-		expanded = mode.value == 'modify' ? expanded : false;
+		defaultButton = mode() == 'modify' ? 'Delete' : 'Create';
+		expanded = mode() == 'modify' ? expanded : false;
 	});
 
-	let activeArrow = $derived(mode.value == 'modify');
+	let activeArrow = $derived(mode() == 'modify');
 </script>
 
 <div class="wrapper md:w-[200px]">
@@ -74,7 +74,7 @@
 	</div>
 	<div class="buttons rounded-b-[10px] overflow-hidden" class:expanded>
 		{#each Object.keys(buttons) as button}
-			{#if button != defaultButton && button != 'Create' && mode.value == 'modify'}
+			{#if button != defaultButton && button != 'Create' && mode() == 'modify'}
 				<button
 					style="--color:{buttons[button].color};--bg-color:{buttons[button].bg_color ||
 						'rgb(37, 36, 36)'}"

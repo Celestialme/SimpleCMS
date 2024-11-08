@@ -8,26 +8,26 @@
 	import { mode, entryData } from '@src/stores/store.svelte';
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
-	translationProgress.value.show = false;
-	export let value = entryData.value[fieldName];
+	translationProgress().show = false;
+	export let value = entryData()[fieldName];
 	export const WidgetData = async () => _data;
 	let MENU_CONTAINER: HTMLUListElement;
 	let showFields = false;
 	let depth = 0;
-	let _data: { [key: string]: any; children: any[] } = mode.value == 'create' ? null : value;
+	let _data: { [key: string]: any; children: any[] } = mode() == 'create' ? null : value;
 	let fieldsData = {};
-	let saveMode = mode.value;
+	let saveMode = mode();
 
 	async function saveLayer() {
 		let _fieldsData = await extractData(fieldsData);
 
 		if (!_data) {
 			_data = { ..._fieldsData, children: [] };
-		} else if (mode.value == 'edit') {
+		} else if (mode() == 'edit') {
 			for (let key in _fieldsData) {
 				$currentChild[key] = _fieldsData[key];
 			}
-		} else if (mode.value == 'create' && $currentChild.children) {
+		} else if (mode() == 'create' && $currentChild.children) {
 			$currentChild.children.push({ ..._fieldsData, children: [] });
 		}
 
