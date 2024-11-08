@@ -16,7 +16,6 @@ export let categories: Writable<{
 }> = writable();
 export let collections = writable({}) as Writable<{ [keyof in keyof CollectionTypes]: Schema }>;
 export let unAssigned: Writable<Array<Schema>> = writable();
-export let collection: Writable<Schema> = writable();
 export let saveFunction: Writable<{ fn: (args: any) => any; reset: () => any }> = writable({
 	fn: () => {},
 	reset: () => {}

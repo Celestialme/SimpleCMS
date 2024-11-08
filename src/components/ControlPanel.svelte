@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { collection, saveFunction } from '@src/stores/load';
+	import { saveFunction } from '@src/stores/load';
 	import Button from './system/buttons/Button.svelte';
 	import { saveFormData, toISOString } from '@src/utils/utils';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
 	import XIcon from './system/icons/XIcon.svelte';
-	import { mode, entryData, collectionValue } from '@src/stores/store.svelte';
+	import { collection, mode, entryData, collectionValue } from '@src/stores/store.svelte';
 	let _saveFunction;
 	_saveFunction = $saveFunction.fn = async () => {
 		await saveFormData({ data: collectionValue() });
@@ -39,7 +39,7 @@
 <div
 	class="wrapper max-md:!h-auto max-md:!w-screen max-md:!max-w-full max-md:absolute max-md:top-[calc(100vh-45px)]"
 >
-	{#if $collection.permissions?.[user.role]?.write != false}
+	{#if collection().permissions?.[user.role]?.write != false}
 		<Button class="max-md:hidden" on:click={$saveFunction.fn}>SAVE</Button>
 		<iconify-icon
 			onclick={() => (schedule.showSchedule = !schedule.showSchedule)}

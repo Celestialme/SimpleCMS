@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import publicConfig from '@root/config/public';
-	import { contentLanguage } from '@src/stores/store.svelte';
+	import { collection, contentLanguage } from '@src/stores/store.svelte';
 	import { mode, translationProgress } from '@src/stores/store.svelte';
 	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
 
@@ -32,7 +33,7 @@
 					<div
 						class="flex item items-center py-2"
 						onclick={() => {
-							contentLanguage.set(lang);
+							goto(`/${lang}/${collection().path}`);
 							expanded = false;
 						}}
 					>
@@ -50,7 +51,7 @@
 					<p
 						class="item"
 						onclick={() => {
-							contentLanguage.set(lang);
+							goto(`/${lang}/${collection().path}`);
 							expanded = false;
 						}}
 					>

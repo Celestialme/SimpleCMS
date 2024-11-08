@@ -1,6 +1,6 @@
 import { untrack } from 'svelte';
 
-interface StoreFunction<T> {
+interface Store<T> {
 	(): T;
 	value: T;
 	update: (f: (value: T) => T) => void;
@@ -10,7 +10,7 @@ interface StoreFunction<T> {
 }
 export function store<T>(v?: T) {
 	let value = $state(v) as T;
-	let f = (() => value) as StoreFunction<T>;
+	let f = (() => value) as Store<T>;
 
 	f.update = (f) => {
 		value = f(value);

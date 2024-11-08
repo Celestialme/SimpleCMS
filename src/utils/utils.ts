@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { get } from 'svelte/store';
-import { translationProgress } from '@src/stores/store.svelte';
+import { collection, translationProgress } from '@src/stores/store.svelte';
 import { entryData, mode } from '@src/stores/store.svelte';
-import { collection } from '@src/stores/load';
+
 import publicConfig from '@root/config/public';
 import _crypto from 'crypto';
 import type { Schema } from '@src/collections/types';
@@ -128,7 +128,7 @@ export async function saveFormData({
 	id?: string;
 }) {
 	let $mode = _mode || mode();
-	let $collection = _collection || get(collection);
+	let $collection = _collection || collection();
 	let formData = data instanceof FormData ? data : await col2formData(data);
 	if (_mode === 'edit' && !id) {
 		throw new Error('ID is required for edit mode.');

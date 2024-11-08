@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { categories, collection } from '@src/stores/load';
+	import { categories } from '@src/stores/load';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
-	import { mode, drawerExpanded } from '@src/stores/store.svelte';
+	import { mode, drawerExpanded, contentLanguage } from '@src/stores/store.svelte';
+	import { goto } from '$app/navigation';
 	export let data = $categories || {};
 	export let modeSet: typeof mode.value = 'view';
 	let expanded: { [key: string]: boolean } = {};
@@ -31,7 +32,7 @@
 			class={'relative cursor-pointer border-b border-surface-200 bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-surface-400 dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center'}
 			on:click={() => {
 				mode.set(modeSet);
-				collection.set(data[item]);
+				goto(`/${contentLanguage()}/${data[item].path}`);
 			}}
 		>
 			<div class="flex items-center h-full" class:grow={drawerExpanded()}>

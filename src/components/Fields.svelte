@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { collection, collections } from '@src/stores/load';
+	import { collections } from '@src/stores/load';
 	import { asAny, getFieldName } from '@src/utils/utils';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import CheckBox from './system/buttons/CheckBox.svelte';
-	import { entryData, collectionValue } from '@src/stores/store.svelte';
+	import { collection, entryData, collectionValue } from '@src/stores/store.svelte';
 	import { track } from '@src/utils/reactivity.svelte';
 
 	interface Props {
-		fields?: typeof $collection.fields | undefined;
+		fields?: typeof collection.value.fields | undefined;
 		root?: boolean;
 		fieldsData?: any;
 		customData?: any;
@@ -45,7 +45,7 @@
 	<div
 		class="flex flex-wrap gap-2 w-full pb-[10px] mb-[15px] shadow-[1px_2px_20px_0px_#00000061] empty:hidden"
 	>
-		{#each entryData()['_is_link'] ? linked_collection?.links : $collection?.links || [] as link}
+		{#each entryData()['_is_link'] ? linked_collection?.links : collection()?.links || [] as link}
 			<div
 				class="min-w-[150px] border border-solid border-gray-300 flex items-center p-2 gap-2 rounded-md"
 			>
@@ -54,9 +54,9 @@
 			</div>
 		{/each}
 	</div>
-	{#each fields || $collection.fields as field, index}
+	{#each fields || collection().fields as field, index}
 		{#if field.widget}
-			{#key $collection}
+			{#key collection()}
 				<div
 					class=" mx-auto text-center {!field.width ? 'w-full' : 'max-md:!w-full'}"
 					style={'min-width:min(300px,100%);' + field.width

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { modifyEntry, statusMap } from '@src/stores/store.svelte';
+	import { collection, modifyEntry, statusMap } from '@src/stores/store.svelte';
 	import CheckBox from './system/buttons/CheckBox.svelte';
-	import { collection } from '@src/stores/load';
+
 	import { contentLanguage } from '@src/stores/store.svelte';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
-	import { asAny, debounce, getFieldName, meta_data } from '@src/utils/utils';
+	import { debounce, getFieldName, meta_data } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	import { deleteData, getData, setStatus } from '@src/utils/data';
 	import { entryData, mode } from '@src/stores/store.svelte';
@@ -20,7 +20,7 @@
 	let refresh = async (fetch: boolean = true) => {
 		if (fetch) {
 			data = await getData({
-				collectionName: $collection.path as any,
+				collectionName: collection().path as any,
 				page: currentPage,
 				limit: 2,
 				contentLanguage: contentLanguage(),
@@ -38,13 +38,13 @@
 			(tableData = await Promise.all(
 				data.entryList.map(async (entry) => {
 					let obj: { [key: string]: any } = {};
-					for (let field of $collection.fields) {
+					for (let field of collection().fields) {
 						if ('callback' in field) {
 							field.callback({ data });
 						}
 						obj[field.label] = await field.display?.({
 							data: entry[getFieldName(field)],
-							collection: $collection.path,
+							collection: collection().path,
 							field,
 							entry,
 							contentLanguage: contentLanguage()
@@ -54,7 +54,7 @@
 					return obj;
 				})
 			));
-		tableHeaders = $collection.fields.map((field) => ({
+		tableHeaders = collection().fields.map((field) => ({
 			label: field.label,
 			name: getFieldName(field)
 		}));
@@ -91,12 +91,12 @@
 		formData.append('status', statusMap[status]);
 		switch (status) {
 			case 'Delete':
-				await deleteData({ data: formData, collectionName: $collection.path as any });
+				await deleteData({ data: formData, collectionName: collection().path as any });
 				break;
 			case 'Publish':
 			case 'Unpublish':
 			case 'Test':
-				await setStatus({ data: formData, collectionName: $collection.path as any });
+				await setStatus({ data: formData, collectionName: collection().path as any });
 				break;
 		}
 		refresh();
@@ -116,9 +116,9 @@
 	);
 	$effect(() => {
 		currentPage = 1;
-		$collection;
+		collection();
 	});
-	track(refresh, () => [$collection, $state.snapshot(filters), sorting, currentPage]);
+	track(refresh, () => [collection(), $state.snapshot(filters), sorting, currentPage]);
 
 	$effect(() => {
 		Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');

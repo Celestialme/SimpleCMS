@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { FieldType } from '.';
-	import { entryData, mode } from '@src/stores/store.svelte';
-	import { collection, collections, saveFunction } from '@src/stores/load';
-	import { contentLanguage } from '@src/stores/store.svelte';
+	import { collection, entryData, mode, contentLanguage } from '@src/stores/store.svelte';
+	import { collections, saveFunction } from '@src/stores/load';
+
 	import { extractData, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
@@ -78,7 +78,7 @@
 		display = await field?.display({
 			data,
 			field,
-			collection: $collection,
+			collection: collection(),
 			entry: entryData(),
 			contentLanguage: contentLanguage()
 		});

@@ -4,41 +4,31 @@
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
 	import Header from '@src/components/Header.svelte';
-	import { collections, collection, categories } from '@src/stores/load';
-	import { contentLanguage, drawerExpanded, mode, collectionValue } from '@src/stores/store.svelte';
-	import { page } from '$app/stores';
+	import { categories, collections } from '@src/stores/load';
+	import { collection, contentLanguage, drawerExpanded, mode } from '@src/stores/store.svelte';
 	import { goto } from '$app/navigation';
-	import type { Schema } from '@src/collections/types';
-	import { onDestroy } from 'svelte';
+
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import axios from 'axios';
 	import FloatingNav from '@src/components/system/FloatingNav.svelte';
 	import Media from '@src/components/Media.svelte';
 	import Categories from '@src/components/system/drawer/Categories.svelte';
-	let ForwardBackward: boolean = false; // if using browser history
-	collection.set($collections[$page.params.collection as string] as Schema); // current collection
+	import { page } from '$app/stores';
 
-	globalThis.onpopstate = async () => {
-		ForwardBackward = true;
-		collection.set($collections[$page.params.collection as string] as Schema);
-	};
 	let navButton: any = $state();
+	let [p_collection, p_language] = $derived.by(() => [
+		$page.params.collection,
+		$page.params.language
+	]);
 
-	let unsubscribe = collection.subscribe((_) => {
-		collectionValue.set({});
-		if (!ForwardBackward) {
-			goto(`/${contentLanguage()}/${$collection.path}`);
-		}
-		ForwardBackward = false;
+	$effect(() => {
+		collection.set($collections[p_collection as string]);
+		mode.set('view');
 	});
-	onDestroy(() => {
-		unsubscribe();
+	$effect(() => {
+		contentLanguage.set(p_language as any);
 	});
-	contentLanguage.subscribe((_) => {
-		if (!ForwardBackward) {
-			goto(`/${contentLanguage()}/${$collection.path}`);
-		}
-	});
+
 	async function signOut() {
 		let resp = (
 			await axios.post(
