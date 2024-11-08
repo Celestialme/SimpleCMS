@@ -2,12 +2,13 @@
 	import { modifyEntry, statusMap } from '@src/stores/store.svelte';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { collection } from '@src/stores/load';
-	import { contentLanguage, track } from '@src/stores/store.svelte';
+	import { contentLanguage } from '@src/stores/store.svelte';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import { asAny, debounce, getFieldName, meta_data } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	import { deleteData, getData, setStatus } from '@src/utils/data';
 	import { entryData, mode } from '@src/stores/store.svelte';
+	import { track } from '@src/utils/reactivity.svelte';
 	let data: { entryList: [any]; pagesCount: number } | undefined = $state();
 	let tableHeaders: Array<{ label: string; name: string }> = $state([]);
 	let tableData: any[] = $state([]);

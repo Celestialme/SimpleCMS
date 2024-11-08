@@ -6,7 +6,6 @@
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
-	import { untrack } from 'svelte';
 	import { z } from 'zod';
 	let emailSchema = z.object({
 		email: z.string().email()

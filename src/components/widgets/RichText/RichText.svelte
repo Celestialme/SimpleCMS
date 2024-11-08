@@ -4,7 +4,7 @@
 	import Input from '@src/components/system/inputs/Input.svelte';
 	import DropDown from './components/DropDown.svelte';
 	import ColorSelector from './components/ColorSelector.svelte';
-	import { onMount, onDestroy, tick, untrack } from 'svelte';
+	import { onMount, onDestroy, tick } from 'svelte';
 	import { Editor, Extension } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import Link from '@tiptap/extension-link';
@@ -29,6 +29,7 @@
 	import VideoDialog from './components/VideoDialog.svelte';
 	import { Transaction } from '@tiptap/pm/state';
 	import { entryData, mode } from '@src/stores/store.svelte';
+	import { track } from '@src/utils/reactivity.svelte';
 
 	let element = $state() as HTMLElement;
 	let editor = $state() as Editor;
@@ -57,12 +58,10 @@
 	contentLanguage.subscribe(async (val) => {
 		editor && editor.commands.setContent(_data.content[val] || '');
 	});
-	$effect(() => {
-		untrack(() => {
-			updateTranslationProgress(_data.content, field);
-		});
-		_data.content[_language];
-	});
+	track(
+		() => updateTranslationProgress(_data.content, field),
+		() => _data.content[_language]
+	);
 	let deb = debounce(200);
 	onMount(() => {
 		let _editor = new Editor({

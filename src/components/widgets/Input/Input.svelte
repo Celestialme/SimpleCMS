@@ -3,10 +3,10 @@
 
 	import type { FieldType } from '.';
 	import Input from '@src/components/system/inputs/Input.svelte';
-	import { contentLanguage, track } from '@src/stores/store.svelte';
+	import { contentLanguage } from '@src/stores/store.svelte';
 	import { updateTranslationProgress, getFieldName, get_date } from '@src/utils/utils';
 	import { entryData, mode } from '@src/stores/store.svelte';
-	import { untrack } from 'svelte';
+	import { track } from '@src/utils/reactivity.svelte';
 
 	interface Props {
 		field: FieldType;
@@ -27,9 +27,7 @@
 	);
 
 	track(
-		() => {
-			updateTranslationProgress(_data, field);
-		},
+		() => updateTranslationProgress(_data, field),
 		() => _data[_language]
 	);
 

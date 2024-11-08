@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { track } from '@src/stores/store.svelte';
+	import { track } from '@src/utils/reactivity.svelte';
 	import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
 	interface Props {
 		color?: string;

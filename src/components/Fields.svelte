@@ -3,7 +3,8 @@
 	import { asAny, getFieldName } from '@src/utils/utils';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import CheckBox from './system/buttons/CheckBox.svelte';
-	import { entryData, collectionValue, track } from '@src/stores/store.svelte';
+	import { entryData, collectionValue } from '@src/stores/store.svelte';
+	import { track } from '@src/utils/reactivity.svelte';
 
 	interface Props {
 		fields?: typeof $collection.fields | undefined;
@@ -23,18 +24,18 @@
 	let links: { [key: string]: boolean } = $state(entryData()['_links'] || {});
 
 	track(
-		() => {
+		() =>
 			root &&
-				collectionValue.update((old_value) => {
-					return {
-						...old_value,
-						...fieldsData,
-						_links: () => links,
-						_is_link: () => entryData()['_is_link'] || false,
-						_linked_collection: () => entryData()['_linked_collection'] || null
-					};
-				});
-		},
+			collectionValue.update((old_value) => {
+				return {
+					...old_value,
+					...fieldsData,
+					_links: () => links,
+					_is_link: () => entryData()['_is_link'] || false,
+					_linked_collection: () => entryData()['_linked_collection'] || null
+				};
+			}),
+
 		() => [root, $state.snapshot(fieldsData)]
 	);
 	let linked_collection = $collections[entryData()['_linked_collection']];

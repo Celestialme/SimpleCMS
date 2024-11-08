@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { store } from '@src/stores/store.svelte';
+	import { store } from '@src/utils/reactivity.svelte';
 	import { twMerge } from 'tailwind-merge';
 	interface Props {
 		iconClass?: string;
