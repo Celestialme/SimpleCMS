@@ -1,6 +1,6 @@
 <script lang="ts">
 	import 'iconify-icon';
-	import { drawerExpanded } from '@src/stores/store.js';
+
 	import { collection } from '@src/stores/load';
 	import axios from 'axios';
 	import { obj2formData } from '@src/utils/utils';
@@ -14,7 +14,7 @@
 	import PermissionsTable from '@src/components/PermissionsTable.svelte';
 	import { defaultPermissions, permissions, type Permissions } from '@src/collections/types';
 	import Categories from '@src/components/system/drawer/Categories.svelte';
-	import { mode } from '@src/stores/store.svelte';
+	import { mode, drawerExpanded } from '@src/stores/store.svelte';
 	let collectionName = mode.value == 'edit' ? $collection.path : '';
 	let icon = mode.value == 'edit' ? $collection.icon : '';
 	let permissionsValue: Permissions;
@@ -24,7 +24,7 @@
 	let addField = false;
 	let navButton;
 	// mode.value = 'create';
-	$drawerExpanded = true;
+	drawerExpanded.value = true;
 
 	collection.subscribe((_) => {
 		collectionName = mode.value == 'edit' ? $collection.path : '';
@@ -71,7 +71,7 @@
 <div class="body">
 	<button
 		class="text-white fixed top-[13px] left-[10px]"
-		on:click={() => ($drawerExpanded = !$drawerExpanded)}
+		on:click={() => (drawerExpanded.value = !drawerExpanded.value)}
 		><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
 	>
 	<div class="left_panel">
@@ -80,7 +80,7 @@
 				<Categories modeSet="edit" />
 			</section>
 
-			<div class:max-md:hidden={!$drawerExpanded && navButton.x == navButton.radius}>
+			<div class:max-md:hidden={!drawerExpanded.value && navButton.x == navButton.radius}>
 				<FloatingNav bind:buttonInfo={navButton} />
 			</div>
 			<section class="text-center">

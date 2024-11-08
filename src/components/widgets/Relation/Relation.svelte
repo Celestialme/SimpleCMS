@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store.svelte';
-	import { contentLanguage, collection, collections, saveFunction } from '@src/stores/load';
+	import { collection, collections, saveFunction } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/store.svelte';
 	import { extractData, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
@@ -79,7 +80,7 @@
 			field,
 			collection: $collection,
 			entry: entryData.value,
-			contentLanguage: $contentLanguage
+			contentLanguage: contentLanguage.value
 		});
 	})(expanded);
 

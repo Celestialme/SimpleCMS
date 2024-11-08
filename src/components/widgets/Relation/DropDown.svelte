@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Input from '@src/components/system/inputs/Input.svelte';
 	import type { FieldType } from '.';
-	import { entryData } from '@src/stores/store';
-	import { collection, contentLanguage } from '@src/stores/load';
+	import { entryData } from '@src/stores/store.svelte';
+	import { collection } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/store.svelte';
 	export let dropDownData: any[] = [];
 	export let selected: { display: any; _id: any } | undefined = undefined;
 	export let field: FieldType | undefined;
@@ -13,7 +14,13 @@
 	console.log(dropDownData);
 	$: Promise.all(
 		dropDownData.map(async (item) => ({
-			display: await field?.display({ data: item, collection: $collection, field, entry: $entryData, contentLanguage: $contentLanguage }),
+			display: await field?.display({
+				data: item,
+				collection: $collection,
+				field,
+				entry: entryData.value,
+				contentLanguage: contentLanguage.value
+			}),
 			_id: item._id
 		}))
 	).then((res) => (options = res));

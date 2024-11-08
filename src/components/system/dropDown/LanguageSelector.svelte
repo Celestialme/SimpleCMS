@@ -1,9 +1,8 @@
 <script lang="ts">
 	import publicConfig from '@root/config/public';
-	import { contentLanguage } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/store.svelte';
 	import { mode, translationProgress } from '@src/stores/store.svelte';
 	let languages = publicConfig.AVAILABLE_CONTENT_LANGUAGES;
-	$contentLanguage = publicConfig.DEFAULT_CONTENT_LANGUAGE;
 
 	let { label = '' }: { label?: string } = $props();
 	let expanded = $state(false);
@@ -21,7 +20,7 @@
 	>
 		<iconify-icon icon="clarity:language-solid" width="24"></iconify-icon>
 
-		<p>{($contentLanguage || label).toUpperCase()}</p>
+		<p>{(contentLanguage.value || label).toUpperCase()}</p>
 	</div>
 	{#if expanded}
 		<div class="items bg-[#363636]" class:itemsView={!translationProgress.value.show}>
@@ -33,7 +32,7 @@
 					<div
 						class="flex item items-center py-2"
 						onclick={() => {
-							$contentLanguage = lang;
+							contentLanguage.value = lang;
 							expanded = false;
 						}}
 					>
@@ -51,7 +50,7 @@
 					<p
 						class="item"
 						onclick={() => {
-							$contentLanguage = lang;
+							contentLanguage.value = lang;
 							expanded = false;
 						}}
 					>

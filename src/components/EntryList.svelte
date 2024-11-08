@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { modifyEntry, statusMap } from '@src/stores/store';
+	import { modifyEntry, statusMap } from '@src/stores/store.svelte';
 	import CheckBox from './system/buttons/CheckBox.svelte';
-	import { contentLanguage, collection } from '@src/stores/load';
+	import { collection } from '@src/stores/load';
+	import { contentLanguage, track } from '@src/stores/store.svelte';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import { asAny, debounce, getFieldName, meta_data } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	import { deleteData, getData, setStatus } from '@src/utils/data';
-	import { untrack } from 'svelte';
 	import { entryData, mode } from '@src/stores/store.svelte';
 	let data: { entryList: [any]; pagesCount: number } | undefined = $state();
 	let tableHeaders: Array<{ label: string; name: string }> = $state([]);
@@ -22,7 +22,7 @@
 				collectionName: $collection.path as any,
 				page: currentPage,
 				limit: 2,
-				contentLanguage: $contentLanguage,
+				contentLanguage: contentLanguage.value,
 				filter: JSON.stringify(filters),
 				sort: JSON.stringify(
 					sorting.isSorted
@@ -46,7 +46,7 @@
 							collection: $collection.path,
 							field,
 							entry,
-							contentLanguage: $contentLanguage
+							contentLanguage: contentLanguage.value
 						});
 					}
 					obj._id = entry._id;
@@ -79,7 +79,7 @@
 		}
 	}
 
-	$modifyEntry = async (status: keyof typeof statusMap) => {
+	modifyEntry.value = async (status: keyof typeof statusMap) => {
 		let modifyList: Array<string> = [];
 		for (let item in modifyMap) {
 			modifyMap[item] && modifyList.push(tableData[item]._id);
@@ -106,25 +106,18 @@
 		sortedBy: '',
 		isSorted: 0
 	});
-	$effect(() => {
-		untrack(() => {
+	track(
+		() => {
 			refresh(false);
 			filters = {};
-		});
-
-		$contentLanguage;
-	});
+		},
+		() => contentLanguage.value
+	);
 	$effect(() => {
 		currentPage = 1;
 		$collection;
 	});
-	$effect(() => {
-		refresh();
-		$collection;
-		filters;
-		sorting;
-		currentPage;
-	});
+	track(refresh, () => [$collection, $state.snapshot(filters), sorting, currentPage]);
 
 	$effect(() => {
 		Object.values(modifyMap).includes(true) ? mode.set('modify') : mode.set('view');
@@ -146,6 +139,7 @@
 								label="filter"
 								theme="dark"
 								name={header.name}
+								value={filters[header.name]}
 								on:input={(e) => {
 									let value = asAny(e.target).value;
 									if (value) {

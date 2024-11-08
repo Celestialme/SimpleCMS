@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { collection, headerActionButton, saveFunction } from '@src/stores/load';
 	import MultiButton from './system/buttons/MultiButton.svelte';
-	import { drawerExpanded } from '@src/stores/store';
 	import XIcon from './system/icons/XIcon.svelte';
 	import LanguageSelector from './system/dropDown/LanguageSelector.svelte';
 
 	import type { User } from '@src/auth/types';
 	import { page } from '$app/stores';
-	import { mode } from '@src/stores/store.svelte';
+	import { mode, drawerExpanded } from '@src/stores/store.svelte';
 
 	$: {
 		$headerActionButton = XIcon;
@@ -18,8 +17,9 @@
 
 <div class="h-[60px] z-20 relative">
 	<div class="wrapper max-md:!fixed max-md:top-0 max-md:left-0">
-		<button class="text-white" on:click={() => ($drawerExpanded = !$drawerExpanded)}
-			><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
+		<button class="text-white" on:click={() => (drawerExpanded.value = !drawerExpanded.value)}
+			><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24"
+			></iconify-icon></button
 		>
 		<div class="collection mr-auto">
 			{$collection?.label || $collection?.name}
@@ -42,7 +42,7 @@
 				{#if typeof $headerActionButton != 'string'}
 					<svelte:component this={$headerActionButton} />
 				{:else}
-					<iconify-icon width="22" class="p-[10px]" icon={$headerActionButton} />
+					<iconify-icon width="22" class="p-[10px]" icon={$headerActionButton}></iconify-icon>
 				{/if}
 			</button>
 		{/if}

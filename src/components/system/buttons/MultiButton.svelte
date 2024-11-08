@@ -1,54 +1,54 @@
 <script lang="ts">
-	import { modifyEntry } from '@src/stores/store';
-	import { mode } from '@src/stores/store.svelte';
+	import { mode, modifyEntry } from '@src/stores/store.svelte';
 
-	export let buttons = {
-		Create: {
-			fn: () => {
-				mode.set('create');
+	interface Props {
+		buttons?: any;
+		defaultButton?: keyof typeof buttons;
+	}
+
+	let {
+		buttons = {
+			Create: {
+				fn: () => mode.set('create'),
+				icon: 'gravity-ui:plus',
+				bg_color: '#15d515',
+				color: 'white'
 			},
-			icon: 'gravity-ui:plus',
-			bg_color: '#15d515',
-			color: 'white'
+			Delete: {
+				fn: () => modifyEntry.value('Delete'),
+				icon: 'tdesign:delete-1',
+				bg_color: 'red',
+				color: 'white'
+			},
+			Publish: {
+				fn: () => modifyEntry.value('Publish'),
+				icon: '',
+				bg_color: 'lime',
+				color: 'white'
+			},
+			Unpublish: {
+				fn: () => modifyEntry.value('Unpublish'),
+
+				icon: '',
+				bg_color: 'orange',
+				color: 'white'
+			},
+			Test: {
+				fn: () => modifyEntry.value('Test'),
+				icon: '',
+				bg_color: 'brown',
+				color: 'white'
+			}
 		},
-		Delete: {
-			fn: () => {
-				$modifyEntry('Delete');
-			},
-			icon: 'tdesign:delete-1',
-			bg_color: 'red',
-			color: 'white'
-		},
-		Publish: {
-			fn: () => {
-				$modifyEntry('Publish');
-			},
-			icon: '',
-			bg_color: 'lime',
-			color: 'white'
-		},
-		Unpublish: {
-			fn: () => {
-				$modifyEntry('Unpublish');
-			},
-			icon: '',
-			bg_color: 'orange',
-			color: 'white'
-		},
-		Test: {
-			fn: () => {
-				$modifyEntry('Test');
-			},
-			icon: '',
-			bg_color: 'brown',
-			color: 'white'
-		}
-	};
-	export let defaultButton: keyof typeof buttons = 'Create';
-	$: defaultButton = mode.value == 'modify' ? 'Delete' : 'Create';
-	let expanded = false;
-	$: expanded = mode.value == 'modify' ? expanded : false;
-	$: activeArrow = mode.value == 'modify';
+		defaultButton = $bindable('Create')
+	}: Props = $props();
+	let expanded = $state(false);
+	$effect(() => {
+		defaultButton = mode.value == 'modify' ? 'Delete' : 'Create';
+		expanded = mode.value == 'modify' ? expanded : false;
+	});
+
+	let activeArrow = $derived(mode.value == 'modify');
 </script>
 
 <div class="wrapper md:w-[200px]">
@@ -57,20 +57,20 @@
 			.bg_color}"
 		class="flex-grow default flex items-center justify-center max-md:!p-[10px]"
 		class:rounded-bl-[10px]={!expanded}
-		on:click={buttons[defaultButton].fn}
-		><iconify-icon class="md:hidden" icon={buttons[defaultButton].icon} />
+		onclick={buttons[defaultButton].fn}
+		><iconify-icon class="md:hidden" icon={buttons[defaultButton].icon}></iconify-icon>
 		<span class="max-md:hidden">
 			{defaultButton}
 		</span>
 	</button>
 	<div
-		on:click={() => (expanded = !expanded)}
+		onclick={() => (expanded = !expanded)}
 		class=" w-[50px] relative hover:active:scale-95 rounded-r-[10px]"
 		class:cursor-pointer={activeArrow}
 		class:pointer-events-none={!activeArrow}
 		style="background-color: rgb(37, 36, 36);"
 	>
-		<div class="arrow" class:!border-red-800={!activeArrow} />
+		<div class="arrow" class:!border-red-800={!activeArrow}></div>
 	</div>
 	<div class="buttons rounded-b-[10px] overflow-hidden" class:expanded>
 		{#each Object.keys(buttons) as button}
@@ -79,9 +79,9 @@
 					style="--color:{buttons[button].color};--bg-color:{buttons[button].bg_color ||
 						'rgb(37, 36, 36)'}"
 					class="w-full nested"
-					on:click={buttons[button].fn}
+					onclick={buttons[button].fn}
 				>
-					<iconify-icon icon={buttons[button].icon} />
+					<iconify-icon icon={buttons[button].icon}></iconify-icon>
 					{button}</button
 				>
 			{/if}
@@ -135,7 +135,7 @@
 		color: white;
 	}
 
-	.buttons .nested:not(:last-of-type) {
+	.buttons .nested:not(:global(:last-of-type)) {
 		border-bottom: 1px solid rgb(88, 87, 87);
 	}
 	.nested:hover {

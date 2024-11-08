@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { translationProgress } from '@src/stores/store.svelte';
 	import { currentChild } from '.';
-	import { contentLanguage, headerActionButton } from '@src/stores/load';
+	import { headerActionButton } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/store.svelte';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { CustomDragEvent } from './types';
 	import { onMount, tick } from 'svelte';
@@ -214,7 +215,7 @@
 	{#if self?.children?.length > 0}
 		<div class="arrow" class:expanded></div>
 	{/if}
-	{self?.Header?.[$contentLanguage] || 'No title'}
+	{self?.Header?.[contentLanguage.value] || 'No title'}
 	<div class="flex items-center ml-auto gap-1">
 		{#if level < maxDepth - 1}
 			<button

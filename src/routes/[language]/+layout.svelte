@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { getCollections } from '@src/collections';
 	import { page } from '$app/stores';
-	import { contentLanguage } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/store.svelte';
 	import { mode } from '@src/stores/store.svelte';
 	mode.set('view');
-	contentLanguage.set($page.params.language);
+	contentLanguage.set($page.params.language as any);
 	let { children } = $props();
 </script>
 

@@ -57,7 +57,6 @@
 	<div class=" flex gap-2 mt-10 items-center">
 		<Button>{$messages.SendPasswordReset()}</Button>
 		<button
-			aria-label="Back"
 			onclick={() => {
 				loginRecover = false;
 			}}><iconify-icon icon="mdi:arrow-left-circle" width="30" /></button

@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { categories, collection } from '@src/stores/load';
-	import { drawerExpanded } from '@src/stores/store';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
-	import { mode } from '@src/stores/store.svelte';
+	import { mode, drawerExpanded } from '@src/stores/store.svelte';
 	export let data = $categories || {};
 	export let modeSet: typeof mode.value = 'view';
 	let expanded: { [key: string]: boolean } = {};
@@ -35,13 +34,13 @@
 				collection.set(data[item]);
 			}}
 		>
-			<div class="flex items-center h-full" class:grow={$drawerExpanded}>
+			<div class="flex items-center h-full" class:grow={drawerExpanded.value}>
 				<iconify-icon
 					icon={data[item].icon}
-					class:ml-auto={!$drawerExpanded}
-					class:ml-2={$drawerExpanded}
-				/>
-				{#if $drawerExpanded}
+					class:ml-auto={!drawerExpanded.value}
+					class:ml-2={drawerExpanded.value}
+				></iconify-icon>
+				{#if drawerExpanded.value}
 					<p class="mx-auto">{data[item].label || item}</p>
 				{/if}
 			</div>

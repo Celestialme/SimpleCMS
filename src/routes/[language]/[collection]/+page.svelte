@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { collectionValue, drawerExpanded } from '@src/stores/store';
 	import Drawer from '@src/components/system/drawer/Drawer.svelte';
 	import Fields from '@src/components/Fields.svelte';
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
 	import Header from '@src/components/Header.svelte';
-	import { collections, collection, contentLanguage, categories } from '@src/stores/load';
+	import { collections, collection, categories } from '@src/stores/load';
+	import { contentLanguage, drawerExpanded, mode, collectionValue } from '@src/stores/store.svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import type { Schema } from '@src/collections/types';
@@ -15,7 +15,6 @@
 	import FloatingNav from '@src/components/system/FloatingNav.svelte';
 	import Media from '@src/components/Media.svelte';
 	import Categories from '@src/components/system/drawer/Categories.svelte';
-	import { mode } from '@src/stores/store.svelte';
 	let ForwardBackward: boolean = false; // if using browser history
 	collection.set($collections[$page.params.collection as string] as Schema); // current collection
 
@@ -26,9 +25,9 @@
 	let navButton: any = $state();
 
 	let unsubscribe = collection.subscribe((_) => {
-		$collectionValue = {};
+		collectionValue.value = {};
 		if (!ForwardBackward) {
-			goto(`/${$contentLanguage}/${$collection.path}`);
+			goto(`/${contentLanguage.value}/${$collection.path}`);
 		}
 		ForwardBackward = false;
 	});
@@ -37,7 +36,7 @@
 	});
 	contentLanguage.subscribe((_) => {
 		if (!ForwardBackward) {
-			goto(`/${$contentLanguage}/${$collection.path}`);
+			goto(`/${contentLanguage.value}/${$collection.path}`);
 		}
 	});
 	async function signOut() {
@@ -73,7 +72,7 @@
 		</section>
 		<section class="mt-auto text-center">
 			<Button class="max-w-full" on:click={signOut}>
-				{#if $drawerExpanded}
+				{#if drawerExpanded.value}
 					SignOut
 				{:else}
 					<iconify-icon icon="charm:sign-out"></iconify-icon>
@@ -81,7 +80,7 @@
 			</Button>
 		</section>
 
-		<div class:max-md:hidden={!$drawerExpanded && navButton.x == navButton.radius}>
+		<div class:max-md:hidden={!drawerExpanded.value && navButton.x == navButton.radius}>
 			<FloatingNav bind:buttonInfo={navButton} />
 		</div>
 	</Drawer>

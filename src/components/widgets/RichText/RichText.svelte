@@ -24,7 +24,7 @@
 		updateTranslationProgress
 	} from '@src/utils/utils';
 	import type { FieldType } from '.';
-	import { contentLanguage } from '@src/stores/load';
+	import { contentLanguage } from '@src/stores/store.svelte';
 	import ImageDescription from './components/ImageDescription.svelte';
 	import VideoDialog from './components/VideoDialog.svelte';
 	import { Transaction } from '@tiptap/pm/state';
@@ -50,7 +50,7 @@
 	WidgetData = async () => ({ images, data: _data });
 	let _data = $state(mode.value == 'create' ? { content: {}, header: {} } : value);
 	let _language = $derived(
-		field?.translated ? $contentLanguage : publicConfig.DEFAULT_CONTENT_LANGUAGE
+		field?.translated ? contentLanguage.value : publicConfig.DEFAULT_CONTENT_LANGUAGE
 	);
 	// svelte-ignore state_referenced_locally
 	let previous_language = _language;
@@ -365,7 +365,6 @@
 
 				<div class="flex items-center" class:hidden={!show('fontSize')}>
 					<button
-						aria-label="Decrease Font Size"
 						onclick={() => {
 							fontSize--;
 							editor.chain().focus().setFontSize(fontSize).run();
@@ -375,7 +374,6 @@
 					</button>
 					<input type="text" class="w-[30px] outline-none text-center" bind:value={fontSize} />
 					<button
-						aria-label="Increase Font Size"
 						onclick={() => {
 							fontSize++;
 							editor.chain().focus().setFontSize(fontSize).run();
@@ -385,7 +383,6 @@
 					</button>
 				</div>
 				<button
-					aria-label="Bold"
 					class:hidden={!show('bold')}
 					onclick={() => editor.chain().focus().toggleBold().run()}
 					class:active={editor.isActive('bold')}
@@ -393,7 +390,6 @@
 					<iconify-icon icon="bi:type-bold" width="20"></iconify-icon>
 				</button>
 				<button
-					aria-label="Italic"
 					class:hidden={!show('italic')}
 					onclick={() => editor.chain().focus().toggleItalic().run()}
 					class:active={editor.isActive('italic')}
@@ -401,7 +397,6 @@
 					<iconify-icon icon="lucide:italic" width="20"></iconify-icon>
 				</button>
 				<button
-					aria-label="Strikethrough"
 					class:hidden={!show('strike')}
 					onclick={() => editor.chain().focus().toggleStrike().run()}
 					class:active={editor.isActive('strike')}
@@ -409,7 +404,6 @@
 					<iconify-icon icon="majesticons:strike-through-line" width="20"></iconify-icon>
 				</button>
 				<button
-					aria-label="Link"
 					class:hidden={!show('link')}
 					onclick={() => editor.chain().focus().toggleLink({ href: 'https://google.com' }).run()}
 					class:active={editor.isActive('link')}

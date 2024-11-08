@@ -8,7 +8,6 @@ export let systemLanguage: Writable<AvailableLanguageTag> = writable(
 	publicConfig.DEFAULT_SYSTEM_LANGUAGE
 ) as any;
 export let messages: Writable<typeof m> = writable({ ...m });
-export let contentLanguage: Writable<string> = writable(publicConfig.DEFAULT_CONTENT_LANGUAGE);
 
 export let categories: Writable<{
 	[key: string]: {

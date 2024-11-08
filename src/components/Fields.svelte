@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { collectionValue } from '@src/stores/store';
 	import { collection, collections } from '@src/stores/load';
 	import { asAny, getFieldName } from '@src/utils/utils';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import CheckBox from './system/buttons/CheckBox.svelte';
-	import { entryData } from '@src/stores/store.svelte';
+	import { entryData, collectionValue, track } from '@src/stores/store.svelte';
 
 	interface Props {
 		fields?: typeof $collection.fields | undefined;
@@ -23,18 +22,21 @@
 	}: Props = $props();
 	let links: { [key: string]: boolean } = $state(entryData.value['_links'] || {});
 
-	$effect(() => {
-		if (root)
-			collectionValue.update((old_value) => {
-				return {
-					...old_value,
-					...fieldsData,
-					_links: () => links,
-					_is_link: () => entryData.value['_is_link'] || false,
-					_linked_collection: () => entryData.value['_linked_collection'] || null
-				};
-			});
-	});
+	track(
+		() => {
+			root &&
+				collectionValue.update((old_value) => {
+					return {
+						...old_value,
+						...fieldsData,
+						_links: () => links,
+						_is_link: () => entryData.value['_is_link'] || false,
+						_linked_collection: () => entryData.value['_linked_collection'] || null
+					};
+				});
+		},
+		() => [root, $state.snapshot(fieldsData)]
+	);
 	let linked_collection = $collections[entryData.value['_linked_collection']];
 </script>
 

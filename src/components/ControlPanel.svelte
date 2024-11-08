@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { collection, saveFunction } from '@src/stores/load';
 	import Button from './system/buttons/Button.svelte';
-	import { collectionValue } from '@src/stores/store';
 	import { saveFormData, toISOString } from '@src/utils/utils';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
 	import XIcon from './system/icons/XIcon.svelte';
-	import { mode, entryData } from '@src/stores/store.svelte';
+	import { mode, entryData, collectionValue } from '@src/stores/store.svelte';
 	let _saveFunction;
 	_saveFunction = $saveFunction.fn = async () => {
-		await saveFormData({ data: $collectionValue });
+		await saveFormData({ data: collectionValue.value });
 		mode.set('view');
 	};
 	$saveFunction.reset = () => {
@@ -31,9 +30,9 @@
 			schedule.showSchedule = false;
 
 			if (!schedule.scheduleTime) {
-				$collectionValue._scheduled = () => false;
+				collectionValue.value._scheduled = () => false;
 			} else {
-				$collectionValue._scheduled = () => new Date(schedule.scheduleTime).getTime();
+				collectionValue.value._scheduled = () => new Date(schedule.scheduleTime).getTime();
 			}
 		}
 	});
