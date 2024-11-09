@@ -85,5 +85,23 @@ export const actions: Actions = {
 					[info.field]: info.value
 				});
 		}
+	},
+	getUsers: async (event) => {
+		let user = event.locals.user;
+		if (user.role != 'admin') {
+			return fail(403);
+		}
+		let data = await event.request.formData();
+		let tableHeaders = JSON.parse(data.get('tableHeaders') as string);
+
+		let docs = await auth.getAllUsers();
+		let users = docs.map((doc) => {
+			let result = {};
+			for (let header of tableHeaders) {
+				result[header] = doc[header];
+			}
+			return result;
+		});
+		return users;
 	}
 };

@@ -10,7 +10,7 @@
 	import { validateZod } from '@src/utils/utils';
 	import axios from 'axios';
 	import { parse } from 'devalue';
-	import { messages } from '@src/stores/load';
+	import { messages } from '@src/stores/store.svelte';
 	// export let active: undefined | 0 | 1 = undefined;
 	let {
 		active,
@@ -75,17 +75,17 @@
 
 				<h1 class="text-3xl font-bold text-black lg:text-4xl">
 					<div class="text-xs text-[#b1b3c5]">{publicConfig.SITE_NAME}</div>
-					<div class="lg:-mt-1">{$messages.signIn()}</div>
+					<div class="lg:-mt-1">{messages().signIn()}</div>
 				</h1>
 			</div>
-			<FloatingInput name="email" type="email" bind:value={form.email} label={$messages.Email()} />
+			<FloatingInput name="email" type="email" bind:value={form.email} label={messages().Email()} />
 			{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 
 			<FloatingInput
 				name="password"
 				type="password"
 				bind:value={form.password}
-				label={form.isToken ? 'token' : $messages.Password()}
+				label={form.isToken ? 'token' : messages().Password()}
 			>
 				<EnableIcon
 					bind:checked={form.isToken}
@@ -97,7 +97,7 @@
 			{#if errors?.password}<span class="invalid">{errors.password}</span>{/if}
 			{#if response}<span class="invalid">{response}</span>{/if}
 			<div class="mt-5 flex gap-2">
-				<Button>{$messages.signIn()}</Button>
+				<Button>{messages().signIn()}</Button>
 				<Button
 					on:click={(e) => {
 						e.preventDefault();
@@ -105,7 +105,7 @@
 					}}
 					bgColor="white"
 					border="1px solid gray"
-					textColor="#ff3535">{$messages.ForgotPassword()}</Button
+					textColor="#ff3535">{messages().ForgotPassword()}</Button
 				>
 			</div>
 		</form>

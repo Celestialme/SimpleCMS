@@ -5,9 +5,9 @@
 		collection,
 		entryData,
 		mode,
-		contentLanguage
+		contentLanguage,
+		saveFunction
 	} from '@src/stores/store.svelte';
-	import { saveFunction } from '@src/stores/load';
 
 	import { extractData, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
@@ -81,6 +81,7 @@
 
 		data = data[field.displayPath] ? data : value;
 		data = mode() == 'create' ? {} : data;
+		console.log(JSON.stringify(data));
 		display = await field?.display({
 			data,
 			field,
@@ -92,7 +93,7 @@
 
 	function save() {
 		expanded = false;
-		$saveFunction.reset();
+		saveFunction().reset();
 	}
 </script>
 
@@ -136,7 +137,7 @@
 		bind:fieldsData
 		customData={relation_entry}
 	/>
-	{(($saveFunction.fn = save), '')}
+	{((saveFunction().fn = save), '')}
 {/if}
 
 <style>

@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { translationProgress } from '@src/stores/store.svelte';
 	import { currentChild } from '.';
-	import { headerActionButton } from '@src/stores/load';
-	import { contentLanguage } from '@src/stores/store.svelte';
+	import {
+		contentLanguage,
+		headerActionButton,
+		mode,
+		translationProgress
+	} from '@src/stores/store.svelte';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { CustomDragEvent } from './types';
 	import { onMount, tick } from 'svelte';
 	import { debounce } from '@src/utils/utils';
-	import { mode } from '@src/stores/store.svelte';
 	export let self: { [key: string]: any; children: any[] };
 	export let parent: { [key: string]: any; children: any[] } | null = null;
 	export let level = 0;
@@ -27,7 +29,7 @@
 	};
 
 	$: if (showFields) {
-		$headerActionButton = XIcon;
+		headerActionButton.set(XIcon);
 	}
 
 	function notifyChildren(node: HTMLElement) {

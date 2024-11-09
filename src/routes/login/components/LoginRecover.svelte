@@ -7,7 +7,7 @@
 	import { parse } from 'devalue';
 	import axios from 'axios';
 	import { validateZod } from '@src/utils/utils';
-	import { messages } from '@src/stores/load';
+	import { messages } from '@src/stores/store.svelte';
 	let {
 		active,
 		loginRecover = $bindable()
@@ -48,14 +48,14 @@
 
 		<h1 class="text-3xl font-bold text-black lg:text-4xl">
 			<div class="text-xs text-[#b1b3c5]">{publicConfig.SITE_NAME}</div>
-			<div class="lg:-mt-1">{$messages.ForgotPassword()}</div>
+			<div class="lg:-mt-1">{messages().ForgotPassword()}</div>
 		</h1>
 	</div>
-	<FloatingInput name="email" type="email" bind:value={form.email} label={$messages.Email()} />
+	<FloatingInput name="email" type="email" bind:value={form.email} label={messages().Email()} />
 	{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 	{#if response}<span class="invalid">{response}</span>{/if}
 	<div class=" flex gap-2 mt-10 items-center">
-		<Button>{$messages.SendPasswordReset()}</Button>
+		<Button>{messages().SendPasswordReset()}</Button>
 		<button
 			onclick={() => {
 				loginRecover = false;

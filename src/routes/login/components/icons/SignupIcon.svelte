@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { messages } from '@src/stores/load';
+	import { messages } from '@src/stores/store.svelte';
 
 	let {
 		show = true
@@ -26,7 +26,7 @@
 			/>
 		</svg>
 	</div>
-	<p class="text-center font-semibold uppercase text-white">{$messages.signUp()}</p>
+	<p class="text-center font-semibold uppercase text-white">{messages().signUp()}</p>
 </div>
 
 <style>

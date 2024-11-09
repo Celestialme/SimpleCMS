@@ -10,7 +10,11 @@
 </script>
 
 <div class="container {twMerge('bg-gray-500', $$props.class)} ">
-	<div on:click={() => (expanded = !expanded)} class="flex cursor-pointer items-center justify-evenly" class:selected={expanded}>
+	<div
+		on:click={() => (expanded = !expanded)}
+		class="flex cursor-pointer items-center justify-evenly"
+		class:selected={expanded}
+	>
 		{#if icon}
 			<iconify-icon {icon} width="24" />
 		{/if}

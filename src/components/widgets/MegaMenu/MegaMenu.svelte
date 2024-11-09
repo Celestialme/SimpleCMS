@@ -3,9 +3,7 @@
 	import { currentChild, type FieldType } from '.';
 	import { extractData, getFieldName } from '@src/utils/utils';
 	import ListNode from './ListNode.svelte';
-	import { translationProgress } from '@src/stores/store.svelte';
-	import { saveFunction } from '@src/stores/load';
-	import { mode, entryData } from '@src/stores/store.svelte';
+	import { mode, entryData, saveFunction, translationProgress } from '@src/stores/store.svelte';
 	export let field: FieldType;
 	let fieldName = getFieldName(field);
 	translationProgress().show = false;
@@ -36,7 +34,7 @@
 		fieldsData = {};
 		mode.set(saveMode);
 		depth = 0;
-		$saveFunction.reset();
+		saveFunction().reset();
 	}
 </script>
 
@@ -44,7 +42,7 @@
 	{#key depth}
 		<Fields fields={field.fields[depth]} root={false} bind:fieldsData customData={$currentChild} />
 	{/key}
-	{(($saveFunction.fn = saveLayer), '')}
+	{((saveFunction().fn = saveLayer), '')}
 {/if}
 {#if _data}
 	<ul bind:this={MENU_CONTAINER} class:hidden={depth != 0} class="children MENU_CONTAINER">

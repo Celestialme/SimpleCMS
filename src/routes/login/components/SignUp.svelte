@@ -14,7 +14,7 @@
 	import { parse } from 'devalue';
 	import type { PageData } from '../$types';
 	import { page } from '$app/stores';
-	import { messages } from '@src/stores/load';
+	import { messages } from '@src/stores/store.svelte';
 
 	let {
 		active,
@@ -80,7 +80,7 @@
 			<h1 class="text-3xl font-bold text-white lg:text-4xl">
 				<div class="text-xs text-[#b1b3c5]">{publicConfig.SITE_NAME}</div>
 				<div class="lg:-mt-1">
-					{$messages.signUp()}
+					{messages().signUp()}
 					{#if !firstUserExists}
 						as Admin
 					{:else}
@@ -97,7 +97,7 @@
 			type="text"
 			leading_icon="mdi:user-circle"
 			bind:value={form.username}
-			label={$messages.Username()}
+			label={messages().Username()}
 			theme="dark"
 		/>
 		{#if errors?.username}<span class="invalid">{errors.username}</span>{/if}
@@ -107,7 +107,7 @@
 			name="email"
 			type="email"
 			bind:value={form.email}
-			label={$messages.Email()}
+			label={messages().Email()}
 			theme="dark"
 		/>
 		{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
@@ -118,7 +118,7 @@
 			name="password"
 			type="password"
 			bind:value={form.password}
-			label={$messages.Password()}
+			label={messages().Password()}
 			theme="dark"
 		/>
 		{#if errors?.password}<span class="invalid">{errors.password}</span>{/if}
@@ -128,7 +128,7 @@
 			name="confirmPassword"
 			type="password"
 			bind:value={form.confirmPassword}
-			label={$messages.ConfirmPassword()}
+			label={messages().ConfirmPassword()}
 			theme="dark"
 		/>
 		{#if errors?.confirmPassword}<span class="invalid">{errors.confirmPassword}</span>{/if}
@@ -145,7 +145,7 @@
 		{/if}
 		{#if errors && 'token' in errors}<span class="invalid">{errors.token}</span>{/if}
 		{#if response}<p class="text-center !text-base invalid">{response}</p>{/if}
-		<Button class="bg-white mt-10">{$messages.signUp()}</Button>
+		<Button class="bg-white mt-10">{messages().signUp()}</Button>
 	</form>
 	<SignupIcon show={active == 0 || active == undefined} />
 </section>

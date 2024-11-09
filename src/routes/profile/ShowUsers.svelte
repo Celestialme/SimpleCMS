@@ -3,12 +3,11 @@
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import CheckBox from '@src/components/system/buttons/CheckBox.svelte';
 	import SquareIcon from '@src/components/system/icons/SquareIcon.svelte';
-	import { asAny } from '@src/utils/utils';
-	import { tableHeaders } from '@src/stores/load';
+	import { parse } from 'devalue';
 	import EditField from './EditField.svelte';
 	import { linear } from 'svelte/easing';
-	import { string } from 'zod';
 
+	const tableHeaders = ['id', 'email', 'username', 'role', 'createdAt'] as const;
 	let editField: {
 		show: boolean;
 		label: string;
@@ -40,8 +39,12 @@
 	let tableData: typeof userInfo = $state([]);
 	let modifyMap: { [key: number]: boolean } = $state({});
 	let filters: { [key: string]: string } = $state({});
+
 	async function refresh() {
-		userInfo = await axios.get('/api/getUsers').then((data) => data.data);
+		let form = new FormData();
+		form.append('tableHeaders', JSON.stringify(tableHeaders));
+		form.append('filters', JSON.stringify(filters));
+		userInfo = await axios.post('?/getUsers', form).then((data) => parse(data.data.data));
 
 		userInfo.map((user) => {
 			for (let header of tableHeaders) {

@@ -4,7 +4,7 @@
 	import RoundLogo from './components/icons/RoundLogo.svelte';
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
 
-	import { systemLanguage } from '@src/stores/load';
+	import { systemLanguage } from '@src/stores/store.svelte';
 	import publicConfig from '@root/config/public';
 
 	let active: undefined | 0 | 1 = $state(undefined);
@@ -18,7 +18,10 @@
 		<div class="z-30"><RoundLogo /></div>
 	{/if}
 	<div class="absolute top-[80%] left-1/2 -translate-x-1/2">
-		<DropDown items={publicConfig.AVAILABLE_SYSTEM_LANGUAGES} bind:selected={$systemLanguage} />
+		<DropDown
+			items={publicConfig.AVAILABLE_SYSTEM_LANGUAGES}
+			bind:selected={systemLanguage.value}
+		/>
 	</div>
 </div>
 

@@ -1,18 +1,23 @@
 <script lang="ts">
-	import { saveFunction } from '@src/stores/load';
 	import Button from './system/buttons/Button.svelte';
 	import { saveFormData, toISOString } from '@src/utils/utils';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
 	import XIcon from './system/icons/XIcon.svelte';
-	import { collection, mode, entryData, collectionValue } from '@src/stores/store.svelte';
+	import {
+		collection,
+		mode,
+		entryData,
+		collectionValue,
+		saveFunction
+	} from '@src/stores/store.svelte';
 	let _saveFunction;
-	_saveFunction = $saveFunction.fn = async () => {
+	_saveFunction = saveFunction().fn = async () => {
 		await saveFormData({ data: collectionValue() });
 		mode.set('view');
 	};
-	$saveFunction.reset = () => {
-		$saveFunction.fn = _saveFunction;
+	saveFunction().reset = () => {
+		saveFunction().fn = _saveFunction;
 	};
 	let user: User = $page.data.user;
 
@@ -40,7 +45,7 @@
 	class="wrapper max-md:!h-auto max-md:!w-screen max-md:!max-w-full max-md:absolute max-md:top-[calc(100vh-45px)]"
 >
 	{#if collection().permissions?.[user.role]?.write != false}
-		<Button class="max-md:hidden" on:click={$saveFunction.fn}>SAVE</Button>
+		<Button class="max-md:hidden" on:click={saveFunction().fn}>SAVE</Button>
 		<iconify-icon
 			onclick={() => (schedule.showSchedule = !schedule.showSchedule)}
 			icon="mdi:calendar-clock"

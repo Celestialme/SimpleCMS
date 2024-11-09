@@ -2,8 +2,7 @@ import { type Params, GuiSchema } from './types';
 import Input from '../Input';
 import { writable, type Writable } from 'svelte/store';
 import { getFieldName, getGuiFields } from '@src/utils/utils';
-import { entryData, mode } from '@src/stores/store.svelte';
-import { headerActionButton } from '@src/stores/load';
+import { entryData, mode, headerActionButton } from '@src/stores/store.svelte';
 
 import widgets, { type ModifyRequestParams } from '..';
 export let currentChild: Writable<any> = writable({});

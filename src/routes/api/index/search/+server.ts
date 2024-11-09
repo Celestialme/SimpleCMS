@@ -1,10 +1,6 @@
-import { auth } from '@src/routes/api/db';
-import { SESSION_COOKIE_NAME } from '@src/auth';
-import type { User } from '@src/auth/types';
-import { spawn } from 'child_process';
-import { indexer } from '@src/stores/load.js';
+import { spawn, type ChildProcessWithoutNullStreams } from 'child_process';
+let process: ChildProcessWithoutNullStreams;
 export const POST = async ({ request, locals }) => {
-	let process = indexer;
 	if (!process || process.exitCode) {
 		process = spawn('main.exe');
 	}

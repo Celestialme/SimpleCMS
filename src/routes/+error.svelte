@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import SimpleCmsLogo from '@src/components/SimpleCMS_Logo.svelte';
 	import publicConfig from '@root/config/public';
-	import { messages } from '@src/stores/load';
+	import { messages } from '@src/stores/store.svelte';
 
 	// typesafe-i18n
 
@@ -46,7 +46,7 @@
 				class="absolute left-1/2 top-1/2 mx-auto -translate-x-1/2 -translate-y-1/2 rotate-12 transform rounded-md bg-[#356a8c]/80 px-2 text-center text-sm font-bold text-white"
 			>
 				<div class="w-min-[200px]">{$page.url}</div>
-				<div class="flex-nowrap whitespace-nowrap">{$messages.PageNotFound()}</div>
+				<div class="flex-nowrap whitespace-nowrap">{messages().PageNotFound()}</div>
 			</div>
 		</div>
 
@@ -56,12 +56,12 @@
 			{/if}
 		</h1>
 
-		<p class="text-lg text-white">{$messages.GeneralError()}</p>
+		<p class="text-lg text-white">{messages().GeneralError()}</p>
 		<a
 			href="/"
 			data-sveltekit-preload-data="tap"
 			class="relative mt-5 block rounded-full bg-gradient-to-br from-[#2c5975] via-[#356a8c] to-[#2c5975] px-8 py-4 font-bold uppercase !text-white shadow-xl"
-			>{$messages.GoToFrontPage()}</a
+			>{messages().GoToFrontPage()}</a
 		>
 	</main>
 {/if}

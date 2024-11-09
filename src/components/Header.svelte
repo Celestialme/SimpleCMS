@@ -1,15 +1,20 @@
 <script lang="ts">
-	import { headerActionButton, saveFunction } from '@src/stores/load';
 	import MultiButton from './system/buttons/MultiButton.svelte';
 	import XIcon from './system/icons/XIcon.svelte';
 	import LanguageSelector from './system/dropDown/LanguageSelector.svelte';
 
 	import type { User } from '@src/auth/types';
 	import { page } from '$app/stores';
-	import { collection, mode, drawerExpanded } from '@src/stores/store.svelte';
+	import {
+		collection,
+		mode,
+		drawerExpanded,
+		headerActionButton,
+		saveFunction
+	} from '@src/stores/store.svelte';
 
 	$effect(() => {
-		$headerActionButton = XIcon;
+		headerActionButton.set(XIcon);
 		collection();
 	});
 	let user: User = $page.data.user;
@@ -27,7 +32,7 @@
 		{#if ['edit', 'create'].includes(mode()) && collection().permissions?.[user.role]?.write != false}
 			<button
 				class="md:hidden h-full aspect-square justify-center flex items-center p-[20px] rounded-full bg-gray-700 mr-2"
-				onclick={$saveFunction.fn}
+				onclick={saveFunction().fn}
 			>
 				<iconify-icon width="26" style="color:#05ff05" icon="ic:sharp-save-as"></iconify-icon>
 			</button>
@@ -38,12 +43,13 @@
 		{#if !['edit', 'create'].includes(mode())}
 			<MultiButton />
 		{:else}
+			{@const ActionButton = headerActionButton()}
 			<button class="flex item-center justify-center" onclick={() => mode.set('view')}>
-				{#if typeof $headerActionButton != 'string'}
-					{@const SvelteComponent = $headerActionButton}
+				{#if typeof ActionButton != 'string'}
+					{@const SvelteComponent = ActionButton}
 					<SvelteComponent />
 				{:else}
-					<iconify-icon width="22" class="p-[10px]" icon={$headerActionButton}></iconify-icon>
+					<iconify-icon width="22" class="p-[10px]" icon={ActionButton}></iconify-icon>
 				{/if}
 			</button>
 		{/if}
