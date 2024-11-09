@@ -26,12 +26,12 @@
 		$page.params.collection,
 		$page.params.language
 	]);
-
-	$effect(() => {
+	mode.set('view');
+	$effect.pre(() => {
 		collection.set(collections()[p_collection as string]);
 		mode.set('view');
 	});
-	$effect(() => {
+	$effect.pre(() => {
 		contentLanguage.set(p_language as any);
 	});
 
