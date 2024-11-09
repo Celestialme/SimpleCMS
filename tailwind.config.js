@@ -45,6 +45,5 @@ export default {
 				// => @media (min-width: 1536px) { ... }
 			}
 		}
-	},
-	plugins: [...require('./src/utils/skeleton-tailwind-plugin/skeleton.cjs')({ intellisense: false })]
+	}
 };

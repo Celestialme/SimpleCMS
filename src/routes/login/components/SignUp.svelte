@@ -78,7 +78,7 @@
 			<CMSLogo className="w-12" fill="red" />
 
 			<h1 class="text-3xl font-bold text-white lg:text-4xl">
-				<div class="text-xs text-surface-300">{publicConfig.SITE_NAME}</div>
+				<div class="text-xs text-[#b1b3c5]">{publicConfig.SITE_NAME}</div>
 				<div class="lg:-mt-1">
 					{$messages.signUp()}
 					{#if !firstUserExists}

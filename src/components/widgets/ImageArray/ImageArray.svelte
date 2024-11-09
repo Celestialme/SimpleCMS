@@ -41,7 +41,7 @@
 		bind:files
 		name={getFieldName(field)}
 		multiple
-		class="block w-full cursor-pointer rounded-lg border border-surface-300 bg-surface-50 text-sm text-surface-900 focus:outline-none dark:border-surface-600 dark:bg-surface-700 dark:text-surface-400 dark:placeholder-surface-400"
+		class="block w-full cursor-pointer rounded-lg border border-[#b1b3c5] bg-[#e2e3e9] text-sm text-[#1d2036] focus:outline-none dark:border-[#353b63] dark:bg-[#2c3253] dark:text-[#767b9a] dark:placeholder-[#767b9a]"
 		type="file"
 	/>
 {/if}

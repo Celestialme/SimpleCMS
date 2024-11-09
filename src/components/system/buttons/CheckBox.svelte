@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="flex min-h-[28px] h-[28px] w-[28px] min-w-[28px] items-center justify-center rounded-md border-2 border-gray-600 dark:border-surface-500 {$$props.class}"
+	class="flex min-h-[28px] h-[28px] w-[28px] min-w-[28px] items-center justify-center rounded-md border-2 border-gray-600 dark:border-[#3b426e] {$$props.class}"
 	on:click|stopPropagation={() => {
 		checked = !checked;
 

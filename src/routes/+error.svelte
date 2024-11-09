@@ -19,7 +19,7 @@
 
 {#if $page}
 	<main
-		class="flex h-screen w-full flex-col items-center justify-center bg-gradient-to-t from-surface-900 via-surface-700 to-surface-900 text-white"
+		class="flex h-screen w-full flex-col items-center justify-center bg-gradient-to-t from-[#1d2036] via-[#2c3253] to-[#1d2036] text-white"
 	>
 		<div class="relative">
 			<div
@@ -43,14 +43,14 @@
 			</h1>
 			<!-- error url  -->
 			<div
-				class="absolute left-1/2 top-1/2 mx-auto -translate-x-1/2 -translate-y-1/2 rotate-12 transform rounded-md bg-error-600/80 px-2 text-center text-sm font-bold text-white"
+				class="absolute left-1/2 top-1/2 mx-auto -translate-x-1/2 -translate-y-1/2 rotate-12 transform rounded-md bg-[#356a8c]/80 px-2 text-center text-sm font-bold text-white"
 			>
 				<div class="w-min-[200px]">{$page.url}</div>
 				<div class="flex-nowrap whitespace-nowrap">{$messages.PageNotFound()}</div>
 			</div>
 		</div>
 
-		<h1 class="text-5xl font-extrabold tracking-widest text-surface-400">
+		<h1 class="text-5xl font-extrabold tracking-widest text-[#767b9a]">
 			{#if $page.error}
 				{$page.error.message}
 			{/if}
@@ -60,7 +60,7 @@
 		<a
 			href="/"
 			data-sveltekit-preload-data="tap"
-			class="relative mt-5 block rounded-full bg-gradient-to-br from-error-700 via-error-600 to-error-700 px-8 py-4 font-bold uppercase !text-white shadow-xl"
+			class="relative mt-5 block rounded-full bg-gradient-to-br from-[#2c5975] via-[#356a8c] to-[#2c5975] px-8 py-4 font-bold uppercase !text-white shadow-xl"
 			>{$messages.GoToFrontPage()}</a
 		>
 	</main>
