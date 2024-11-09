@@ -79,5 +79,8 @@ export let _PATCH = async ({
 
 	delete body._is_link;
 	delete body._linked_collection;
-	return new Response(JSON.stringify(await collection.updateOne({ _id }, body, { upsert: true })));
+	let response = JSON.stringify(body);
+	await collection.updateOne({ _id }, body, { upsert: true });
+
+	return new Response(response);
 };

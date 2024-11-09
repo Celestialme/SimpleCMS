@@ -26,8 +26,9 @@
 	let entryMode: 'create' | 'edit' | 'choose' = 'choose';
 	let relation_entry;
 	let relationCollection = collections()[field?.relation];
-	console.log(value);
+
 	export const WidgetData = async () => {
+		debugger;
 		let relation_id = '';
 		if (!field) return;
 		if (entryMode == 'create') {
@@ -36,15 +37,6 @@
 			)[0]?._id;
 		} else if (entryMode == 'choose') {
 			relation_id = selected?._id;
-		} else if (entryMode == 'edit') {
-			relation_id = (
-				await saveFormData({
-					data: fieldsData,
-					_collection: relationCollection,
-					_mode: 'edit',
-					id: relation_entry._id
-				})
-			)[0]?._id;
 		}
 		return relation_id;
 	};
@@ -81,7 +73,24 @@
 
 		data = data[field.displayPath] ? data : value;
 		data = mode() == 'create' ? {} : data;
-		console.log(JSON.stringify(data));
+		!display &&
+			(display = await field?.display({
+				data,
+				field,
+				collection: collection(),
+				entry: entryData(),
+				contentLanguage: contentLanguage()
+			}));
+	})(expanded);
+
+	async function save() {
+		let data = await saveFormData({
+			data: fieldsData,
+			_collection: relationCollection,
+			_mode: 'edit',
+			id: relation_entry._id
+		});
+		console.log(data);
 		display = await field?.display({
 			data,
 			field,
@@ -89,9 +98,6 @@
 			entry: entryData(),
 			contentLanguage: contentLanguage()
 		});
-	})(expanded);
-
-	function save() {
 		expanded = false;
 		saveFunction().reset();
 	}
