@@ -1,10 +1,10 @@
 import type { Schema } from '@src/collections/types';
-import { getCollectionModels } from '../db';
+import { collectionModels } from '../db';
 import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
 import { modifyRequest } from './modifyRequest';
-import { getCollections } from '@src/collections';
+import { collections } from '@src/stores/store.svelte';
 export let _PATCH = async ({
 	data,
 	schema,
@@ -15,8 +15,7 @@ export let _PATCH = async ({
 	user: User;
 }) => {
 	let body: { [key: string]: any } = {};
-	let collectionModels = await getCollectionModels();
-	let collections = await getCollections();
+
 	let collection = collectionModels[schema.id as string];
 	let _id = new mongoose.Types.ObjectId(data.get('_id') as string);
 	let fileIDS: string[] = [];
@@ -35,7 +34,7 @@ export let _PATCH = async ({
 		}
 	}
 	if (body._is_link) {
-		collection = collectionModels[collections[body._linked_collection].id as string];
+		collection = collectionModels[collections()[body._linked_collection].id as string];
 	}
 	for (let id of fileIDS) {
 		delete body[id];
@@ -56,7 +55,7 @@ export let _PATCH = async ({
 			: {};
 
 	for (let _collection in body._links) {
-		let collection = collectionModels[collections[_collection].id as string];
+		let collection = collectionModels[collections()[_collection].id as string];
 		if (!collection) continue;
 		if (!body._links[_collection] && links?.[_collection]) {
 			delete body._links[_collection];

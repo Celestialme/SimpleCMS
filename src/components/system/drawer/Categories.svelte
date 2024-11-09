@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { categories } from '@src/stores/load';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
-	import { mode, drawerExpanded, contentLanguage } from '@src/stores/store.svelte';
+	import { categories, mode, drawerExpanded, contentLanguage } from '@src/stores/store.svelte';
 	import { goto } from '$app/navigation';
-	export let data = $categories || {};
+	export let data = categories() || {};
 	export let modeSet: typeof mode.value = 'view';
 	let expanded: { [key: string]: boolean } = {};
 	let user: User = $page.data.user;

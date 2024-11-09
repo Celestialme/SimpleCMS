@@ -1,10 +1,10 @@
 import type { Schema } from '@src/collections/types';
-import { getCollectionModels } from '../db';
+import { collectionModels } from '../db';
 import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
 import { modifyRequest } from './modifyRequest';
-import { getCollections } from '@src/collections';
+import { collections } from '@src/stores/store.svelte';
 export let _POST = async ({
 	data,
 	schema,
@@ -15,8 +15,7 @@ export let _POST = async ({
 	user: User;
 }) => {
 	let body: { [key: string]: any } = {};
-	let collectionModels = await getCollectionModels();
-	let collections = await getCollections();
+
 	let collection = collectionModels[schema.id as string];
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
@@ -43,7 +42,7 @@ export let _POST = async ({
 
 	for (let _collection in body._links) {
 		if (body._links[_collection] == false) continue;
-		let collection = collectionModels[collections[_collection].id as string];
+		let collection = collectionModels[collections()[_collection].id as string];
 
 		let _id = new mongoose.Types.ObjectId();
 		await collection.insertMany({

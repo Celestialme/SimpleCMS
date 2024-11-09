@@ -2,10 +2,9 @@ import { redirect } from '@sveltejs/kit';
 import { SESSION_COOKIE_NAME } from './auth';
 import { auth } from './routes/api/db';
 import type { User } from './auth/types';
-import { getCollections } from './collections';
+
 import publicConfig from '@root/config/public';
-import { collections } from './stores/load';
-import { get } from 'svelte/store';
+import { collections } from './stores/store.svelte';
 export async function handle({ event, resolve }) {
 	let session_id = event.cookies.get(SESSION_COOKIE_NAME) as string;
 
@@ -21,7 +20,7 @@ export async function handle({ event, resolve }) {
 	if (user?.lastAuthMethod == 'token') {
 		throw redirect(302, `/profile`);
 	}
-	let _filtered = Object.values(await getCollections()).filter(
+	let _filtered = Object.values(collections()).filter(
 		(c) => user && c?.permissions?.[user.role]?.read != false
 	); // filters collection  based on reading permissions  and redirects to first left one
 	if (event.url.pathname == '/') {
@@ -32,7 +31,7 @@ export async function handle({ event, resolve }) {
 			};
 		} else throw redirect(302, `/${publicConfig.DEFAULT_CONTENT_LANGUAGE}/${_filtered[0].path}`);
 	}
-	let collection = get(collections)[event.params.collection as string];
+	let collection = collections()[event.params.collection as string];
 	if (event.route.id == '/[language]') {
 		//else if language and collection both set in url
 

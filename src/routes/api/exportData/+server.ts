@@ -1,7 +1,7 @@
 import fs from 'fs';
 import type { RequestHandler } from './$types';
-import { collections } from '@src/stores/load';
-import { get } from 'svelte/store';
+import { collections } from '@src/stores/store.svelte';
+
 import privateConfig from '@root/config/private';
 import { _GET } from '../query/GET';
 export const GET: RequestHandler = async ({ locals }) => {
@@ -9,9 +9,9 @@ export const GET: RequestHandler = async ({ locals }) => {
 	if (!user || user.role != 'admin') {
 		return new Response('', { status: 403 });
 	}
-	let $collections = get(collections);
+
 	let data: { [key: string]: any } = {};
-	for (let collection of Object.values($collections)) {
+	for (let collection of Object.values(collections())) {
 		let name = collection.path as string;
 		data[name as string] = (
 			await (

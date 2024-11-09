@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { collections } from '@src/stores/load';
 	import { asAny, getFieldName } from '@src/utils/utils';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import CheckBox from './system/buttons/CheckBox.svelte';
-	import { collection, entryData, collectionValue } from '@src/stores/store.svelte';
+	import { collections, collection, entryData, collectionValue } from '@src/stores/store.svelte';
 	import { track } from '@src/utils/reactivity.svelte';
 
 	interface Props {
@@ -38,7 +37,7 @@
 
 		() => [root, $state.snapshot(fieldsData)]
 	);
-	let linked_collection = $collections[entryData()['_linked_collection']];
+	let linked_collection = collections()[entryData()['_linked_collection']];
 </script>
 
 <div class="wrapper relative">
@@ -50,7 +49,7 @@
 				class="min-w-[150px] border border-solid border-gray-300 flex items-center p-2 gap-2 rounded-md"
 			>
 				<CheckBox icon={SquareIcon} bind:checked={links[link]} />
-				{$collections[link].label || link}
+				{collections()[link].label || link}
 			</div>
 		{/each}
 	</div>

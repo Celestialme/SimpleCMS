@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { get } from 'svelte/store';
 import { collection, translationProgress } from '@src/stores/store.svelte';
 import { entryData, mode } from '@src/stores/store.svelte';
 

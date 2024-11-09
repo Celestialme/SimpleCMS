@@ -1,7 +1,13 @@
 <script lang="ts">
 	import type { FieldType } from '.';
-	import { collection, entryData, mode, contentLanguage } from '@src/stores/store.svelte';
-	import { collections, saveFunction } from '@src/stores/load';
+	import {
+		collections,
+		collection,
+		entryData,
+		mode,
+		contentLanguage
+	} from '@src/stores/store.svelte';
+	import { saveFunction } from '@src/stores/load';
 
 	import { extractData, findById, getFieldName, saveFormData } from '@src/utils/utils';
 	import DropDown from './DropDown.svelte';
@@ -19,7 +25,7 @@
 	let showDropDown = false;
 	let entryMode: 'create' | 'edit' | 'choose' = 'choose';
 	let relation_entry;
-	let relationCollection = $collections[field?.relation];
+	let relationCollection = collections()[field?.relation];
 	console.log(value);
 	export const WidgetData = async () => {
 		let relation_id = '';

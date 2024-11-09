@@ -1,14 +1,12 @@
 <script lang="ts">
-	import { getCollections } from '@src/collections';
 	import { page } from '$app/stores';
-	import { contentLanguage } from '@src/stores/store.svelte';
+	import { collection, collections, contentLanguage } from '@src/stores/store.svelte';
 	import { mode } from '@src/stores/store.svelte';
 
 	mode.set('view');
 	contentLanguage.set($page.params.language as any);
+	collection.set(collections()[$page.params.collection]);
 	let { children } = $props();
 </script>
 
-{#await getCollections() then _}
-	{@render children()}
-{/await}
+{@render children()}

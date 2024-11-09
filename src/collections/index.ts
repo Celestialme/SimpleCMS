@@ -1,17 +1,26 @@
 import { defaultPermissions, type CollectionTypes, type Schema } from '@src/collections/types';
 
-import { categories, collections } from '@src/stores/load';
 import deepmerge from 'deepmerge';
-import { type Unsubscriber } from 'svelte/store';
 
-async function setCollections() {
-	const modules = import.meta.glob(['./**/*.ts', '!./index.ts', '!./types.ts', '!./config.ts']);
-	let _categories = {};
-	let _collections = {};
-	collections.set({} as any);
+export function loadModules() {
+	const modules: any = import.meta.glob(
+		['./**/*.ts', '!./index.ts', '!./types.ts', '!./config.ts'],
+		{
+			eager: true
+		}
+	);
+
+	let _categories: {
+		[key: string]: {
+			is_category: boolean;
+		} & Schema;
+	} = {};
+	let _collections = {} as {
+		[keyof in keyof CollectionTypes]: Schema;
+	};
 	for (let module in modules) {
 		let path = module.replace(/.ts$/, '').replace('./', '');
-		let collection = ((await modules[module]()) as any).default;
+		let collection = modules[module].default;
 		parseCategories(collection, path, _categories);
 		collection.name = path.split('/').slice(-1)[0];
 		path = path.replaceAll('/', '::');
@@ -21,8 +30,7 @@ async function setCollections() {
 		_collections[path] = collection;
 		_collections[path].permissions = deepmerge(defaultPermissions, collection.permissions || {});
 	}
-	categories.set(_categories as any);
-	collections.set(_collections as any);
+	return { collections: _collections, categories: _categories };
 }
 function parseCategories(collection, name: string, categories) {
 	let path = name.split('/');
@@ -38,19 +46,4 @@ function parseCategories(collection, name: string, categories) {
 			temp[path[i]] = collection;
 		}
 	}
-}
-
-setCollections();
-
-let unsubscribe: Unsubscriber | undefined;
-export async function getCollections() {
-	return new Promise<{ [keyof in keyof CollectionTypes]: Schema }>((resolve) => {
-		unsubscribe = collections.subscribe((collections) => {
-			if (Object.keys(collections)?.length > 0) {
-				unsubscribe && unsubscribe();
-				unsubscribe = undefined;
-				resolve(collections);
-			}
-		});
-	});
 }

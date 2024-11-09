@@ -4,8 +4,14 @@
 	import ControlPanel from '@src/components/ControlPanel.svelte';
 	import EntryList from '@src/components/EntryList.svelte';
 	import Header from '@src/components/Header.svelte';
-	import { categories, collections } from '@src/stores/load';
-	import { collection, contentLanguage, drawerExpanded, mode } from '@src/stores/store.svelte';
+	import {
+		categories,
+		collections,
+		collection,
+		contentLanguage,
+		drawerExpanded,
+		mode
+	} from '@src/stores/store.svelte';
 	import { goto } from '$app/navigation';
 
 	import Button from '@src/components/system/buttons/Button.svelte';
@@ -22,7 +28,7 @@
 	]);
 
 	$effect(() => {
-		collection.set($collections[p_collection as string]);
+		collection.set(collections()[p_collection as string]);
 		mode.set('view');
 	});
 	$effect(() => {
@@ -51,7 +57,7 @@
 <div class="flex max-md:flex-wrap h-screen">
 	<Drawer>
 		<section>
-			{#if $categories}
+			{#if categories()}
 				<Categories />
 			{/if}
 		</section>

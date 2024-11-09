@@ -1,5 +1,5 @@
 import { redirect, type Actions, error } from '@sveltejs/kit';
-import { getCollectionModels } from '../api/db';
+import { collectionModels } from '../api/db';
 import type { WidgetType } from '@src/components/widgets';
 import fs from 'fs';
 import prettier from 'prettier';
@@ -59,7 +59,7 @@ export const actions: Actions = {
 		}
 		fs.writeFileSync(`${import.meta.env.collectionsFolderTS}/${collectionName}.ts`, content);
 
-		await getCollectionModels();
+		collectionModels;
 		return null;
 	}
 };

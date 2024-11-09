@@ -1,9 +1,9 @@
 import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { type Params, GuiSchema } from './types';
-import { getCollections } from '@src/collections';
 import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
 import type { CollectionTypes, Schema } from '@src/collections/types';
+import { collections } from '@src/stores/store.svelte';
 const WIDGET_NAME = 'Relation' as const;
 const widget = <
 	K extends CollectionTypes[T][number],
@@ -13,7 +13,7 @@ const widget = <
 ) => {
 	let display;
 	display = async ({ data, collection, field, entry, contentLanguage }) => {
-		let relative_collection = (await getCollections())[field.relation];
+		let relative_collection = collections()[field.relation];
 
 		let relative_field = relative_collection?.fields.find(
 			(f) => getFieldName(f) == field.displayPath
@@ -61,9 +61,9 @@ widget.modifyRequest = async ({
 	if (type !== 'GET' || !_data) {
 		return;
 	}
-	let { getCollectionModels } = await import('@src/routes/api/db');
-	let relative_collection_schema = (await getCollections())[field.relation] as Schema;
-	let relative_collection = (await getCollectionModels())[relative_collection_schema.id];
+	let { collectionModels: collectionsModels } = await import('@src/routes/api/db');
+	let relative_collection_schema = collections()[field.relation] as Schema;
+	let relative_collection = collectionsModels[relative_collection_schema.id];
 	let response = (await relative_collection.findById(_data)) as any;
 	let result = { _id: response?._id };
 	for (let key in relative_collection_schema.fields) {
@@ -94,7 +94,7 @@ widget.modifyRequest = async ({
 widget.aggregations = {
 	filters: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
-		let relative_collection = (await getCollections())[field.relation];
+		let relative_collection = collections()[field.relation];
 		let relative_field = relative_collection?.fields.find(
 			(f) => getFieldName(f) == field.displayPath
 		);
@@ -112,7 +112,7 @@ widget.aggregations = {
 	},
 	sorts: async (info) => {
 		let field = info.field as ReturnType<typeof widget>;
-		let relative_collection = (await getCollections())[field.relation];
+		let relative_collection = collections()[field.relation];
 		let relative_field = relative_collection?.fields.find(
 			(f) => getFieldName(f) == field.displayPath
 		);

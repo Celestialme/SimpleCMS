@@ -1,8 +1,7 @@
 import fs from 'fs';
 import type { RequestHandler } from './$types';
 
-import { collections } from '@src/stores/load';
-import { get } from 'svelte/store';
+import { collections } from '@src/stores/store.svelte';
 import { _GET } from '../query/GET';
 import widgets from '@src/components/widgets';
 import { getFieldName } from '@src/utils/utils';
@@ -12,9 +11,8 @@ export const GET: RequestHandler = async ({ locals }) => {
 	if (!user || user.role != 'admin') {
 		return new Response('', { status: 403 });
 	}
-	let $collections = get(collections);
 
-	for (let collection of Object.values($collections)) {
+	for (let collection of Object.values(collections())) {
 		let text = '';
 		let entryList = (
 			await (

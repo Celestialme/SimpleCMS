@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import privateEnv from '@root/config/private';
-import { collections } from '@src/stores/load';
-import type { Unsubscriber } from 'svelte/store';
+import { collections } from '@src/stores/store.svelte';
+
 import { Auth } from '@src/auth';
 import { mongooseSessionSchema, mongooseTokenSchema, mongooseUserSchema } from '@src/auth/types';
 
@@ -14,34 +14,23 @@ mongoose
 	})
 	.then(() => console.log('---------------------connected-----------------------'));
 mongoose.set('strictQuery', false);
-let collectionsModels: { [Key: string]: mongoose.Model<any> } = {};
-let unsubscribe: Unsubscriber | undefined;
-export async function getCollectionModels() {
-	return new Promise<typeof collectionsModels>((resolve) => {
-		unsubscribe = collections.subscribe((collections) => {
-			if (collections) {
-				for (let collection of Object.values(collections)) {
-					const schema_object = new mongoose.Schema(
-						{ createdAt: Number, updatedAt: Number },
-						{
-							typeKey: '$type',
-							strict: false,
-							timestamps: { currentTime: () => Date.now() }
-						}
-					);
-					if (!collection.id) return;
-					collectionsModels[collection.id] = mongoose.models[collection.id]
-						? mongoose.model(collection.id)
-						: mongoose.model(collection.id, schema_object);
-				}
-
-				unsubscribe && unsubscribe();
-				unsubscribe = undefined;
-				resolve(collectionsModels);
-			}
-		});
-	});
+console.log('updating db...');
+export let collectionModels: { [Key: string]: mongoose.Model<any> } = {};
+for (let collection of Object.values(collections())) {
+	const schema_object = new mongoose.Schema(
+		{ createdAt: Number, updatedAt: Number },
+		{
+			typeKey: '$type',
+			strict: false,
+			timestamps: { currentTime: () => Date.now() }
+		}
+	);
+	if (!collection.id) throw new Error('collection id is required');
+	collectionModels[collection.id] = mongoose.models[collection.id]
+		? mongoose.model(collection.id)
+		: mongoose.model(collection.id, schema_object);
 }
+
 !mongoose.models['_storage_images'] &&
 	mongoose.model(
 		'_storage_images',
@@ -59,9 +48,8 @@ export async function getCollectionModels() {
 !mongoose.models['auth_users'] && mongoose.model('auth_users', mongooseUserSchema);
 !mongoose.models['auth_sessions'] && mongoose.model('auth_sessions', mongooseSessionSchema);
 
-let auth = new Auth({
+export let auth = new Auth({
 	User: mongoose.models['auth_users'],
 	Session: mongoose.models['auth_sessions'],
 	Token: mongoose.models['auth_tokens']
 });
-export { collectionsModels, auth };

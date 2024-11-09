@@ -1,11 +1,13 @@
 import type { Schema } from '@src/collections/types';
 import widgets from '@src/components/widgets';
 import { getFieldName, get_elements_by_id } from '@src/utils/utils';
-import { getCollectionModels } from '../db';
+import { collectionModels } from '../db';
 import type { User } from '@src/auth/types';
 import publicConfig from '@root/config/public';
 import { modifyRequest } from './modifyRequest';
-import { getCollections } from '@src/collections';
+
+import { collections } from '@src/stores/store.svelte';
+
 export async function _GET({
 	schema,
 	sort = {},
@@ -24,8 +26,7 @@ export async function _GET({
 	page?: number;
 }) {
 	let aggregations: any = [];
-	let collectionModels = await getCollectionModels();
-	let collections = await getCollections();
+
 	let collection = collectionModels[schema.id as string];
 	let skip = (page - 1) * limit;
 	for (let field of schema.fields) {
@@ -67,7 +68,7 @@ export async function _GET({
 	for (let index in entryList) {
 		let entry = entryList[index];
 		if (entry._link_id && entry._linked_collection) {
-			let collection = collectionModels[collections[entry._linked_collection].id as string];
+			let collection = collectionModels[collections()[entry._linked_collection].id as string];
 			let resp = await collection.findOne({ _id: entry._link_id }).lean();
 			if (!resp) {
 				entryList.splice(index, 1);

@@ -1,5 +1,4 @@
 import type { User } from '@src/auth/types';
-import { getCollections } from '@src/collections';
 import publicConfig from '@root/config/public';
 import { auth } from '../db';
 import type { Schema } from '@src/collections/types';
@@ -8,6 +7,7 @@ import { _POST } from './POST';
 import { _PATCH } from './PATCH';
 import { _DELETE } from './DELETE';
 import { _SETSTATUS } from './SETSTATUS';
+import { collections } from '@src/stores/store.svelte';
 
 export const POST = async ({ request, locals }) => {
 	let data = await request.formData();
@@ -21,7 +21,7 @@ export const POST = async ({ request, locals }) => {
 	if (!user) {
 		return new Response('', { status: 403 });
 	}
-	let collection_schema = (await getCollections())[collectionName] as Schema;
+	let collection_schema = collections()[collectionName] as Schema;
 	let has_read_access = collection_schema?.permissions?.[user.role]?.read != false;
 	let has_write_access = collection_schema?.permissions?.[user.role]?.write != false;
 	if (!has_read_access) {

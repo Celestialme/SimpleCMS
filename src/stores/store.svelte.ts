@@ -1,4 +1,5 @@
 import publicConfig from '@root/config/public';
+import { loadModules } from '@src/collections';
 import type { Schema } from '@src/collections/types';
 import { store } from '@src/utils/reactivity.svelte';
 export let entryData = store({} as { [key: string]: any });
@@ -10,7 +11,11 @@ export let translationProgress = store({
 export let contentLanguage = store(publicConfig.DEFAULT_CONTENT_LANGUAGE);
 export let drawerExpanded = store(true);
 export let collectionValue = store<any>({});
-export let collection = store<Schema>();
+let { collections: _collections, categories: _categories } = loadModules();
+export let collections = store(_collections);
+export let categories = store(_categories);
+
+export let collection = store<Schema>({} as Schema);
 export let modifyEntry = store((_: keyof typeof statusMap): any => {});
 export let statusMap = {
 	Delete: 'deleted',
