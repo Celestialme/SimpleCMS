@@ -1,5 +1,6 @@
 import ImageArray from './ImageArray';
 import ImageUpload from './ImageUpload';
+import { GuiSchema } from './ImageUpload/types';
 import Input from './Input';
 import MegaMenu from './MegaMenu';
 import Relation from './Relation';
@@ -15,7 +16,7 @@ let widgets = {
 	MegaMenu,
 	Relation,
 	RichText
-};
+} as const;
 
 type K = (typeof widgets)[keyof typeof widgets]['Name'];
 export type ModifyRequestParams<T extends (...args: any) => any> = {
@@ -35,4 +36,6 @@ export type WidgetType = {
 	};
 };
 
+export type GuiSchema = WidgetType[keyof WidgetType]['GuiSchema'];
 export default widgets as WidgetType;
+export let widgetKeys = Object.keys(widgets) as unknown as keyof WidgetType;

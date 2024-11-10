@@ -1,5 +1,4 @@
 <script lang="ts">
-	import widgets from '@src/components/widgets';
 	import { debounce } from '@src/utils/utils';
 	import AddWidget from './AddWidget.svelte';
 	interface Props {
@@ -7,17 +6,10 @@
 	}
 
 	let { fields = $bindable([]) }: Props = $props();
-	let widget_keys = Object.keys(widgets) as unknown as keyof typeof widgets;
 
 	let container = $state() as HTMLDivElement;
-	let currentFieldKey: keyof typeof widgets | null = $state(null);
+	let currentFieldKey: any = $state(null);
 	let currentField: any = $state();
-	let guiSchema: (typeof widgets)[typeof widget_keys]['GuiSchema'] = $state() as any;
-	$effect(() => {
-		if (currentFieldKey) {
-			guiSchema = widgets[currentFieldKey].GuiSchema;
-		}
-	});
 
 	function drag(e: PointerEvent) {
 		let timeOut;

@@ -1,22 +1,20 @@
 <script lang="ts">
 	import DropDown from '@src/components/system/dropDown/DropDown.svelte';
-	import widgets from '@src/components/widgets';
+	import widgets, { widgetKeys, type GuiSchema } from '@src/components/widgets';
 	import InputSwitch from './InputSwitch.svelte';
 	import Button from '@src/components/system/buttons/Button.svelte';
-	import { asAny, deepCopy } from '@src/utils/utils';
+	import { deepCopy } from '@src/utils/utils';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
-	import { untrack } from 'svelte';
-	let widget_keys = Object.keys(widgets) as unknown as keyof typeof widgets;
 
-	let guiSchema: (typeof widgets)[typeof widget_keys]['GuiSchema'] = $state() as any;
+	let guiSchema: GuiSchema = $state() as any;
 	interface Props {
 		fields?: Array<any>;
 		addField?: Boolean;
 		editField?: Boolean;
-		selected_widget?: keyof typeof widgets | null;
+		selected_widget?: typeof widgetKeys | null;
 		field?: {
 			label: '';
-			widget: { key: keyof typeof widgets; GuiFields: {} };
+			widget: { key: typeof widgetKeys; GuiFields: {} };
 		};
 	}
 
@@ -30,7 +28,7 @@
 	let saveField = deepCopy(field);
 	field = field || {
 		label: '',
-		widget: { key: selected_widget as unknown as keyof typeof widgets, GuiFields: {} }
+		widget: { key: selected_widget as unknown as typeof widgetKeys, GuiFields: {} }
 	};
 	let tabs = {
 		Core(property: string) {
@@ -53,7 +51,7 @@
 	<div class="properties">
 		<button class="ml-auto mr-[40px] mb-[20px]" onclick={() => (addField = false)}><XIcon /></button
 		>
-		<DropDown items={widget_keys} bind:selected={selected_widget} label="Select Widget" />
+		<DropDown items={widgetKeys} bind:selected={selected_widget} label="Select Widget" />
 	</div>
 {:else}
 	<div class="properties">
@@ -76,7 +74,7 @@
 					<Button
 						class="!min-w-[120px]"
 						bgColor={tab == currentTab ? '#42c542' : 'gray'}
-						onclick={() => (currentTab = asAny(tab))}>{tab}</Button
+						onclick={() => (currentTab = tab as any)}>{tab}</Button
 					>
 				{/if}
 			{/each}
@@ -98,7 +96,7 @@
 			onclick={() => {
 				if (!selected_widget) return;
 				field.widget = { key: selected_widget, GuiFields: field.widget.GuiFields };
-				field.label = asAny(field.widget.GuiFields).label;
+				field.label = (field.widget.GuiFields as any).label;
 				!editField && fields.push(field);
 				fields = fields;
 				addField = false;
