@@ -58,7 +58,7 @@
 			)}
 		>
 			{#if closeButton}
-				<XIcon class="absolute right-2 top-2 cursor-pointer" on:click={() => (show = false)} />
+				<XIcon class="absolute right-2 top-2 cursor-pointer" onclick={() => (show = false)} />
 			{/if}
 			<p>Drag & Drop</p>
 			<p>or</p>

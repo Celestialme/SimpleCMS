@@ -1,6 +1,10 @@
 <script lang="ts">
-	export let fill = 'currentColor';
-	export let className = '';
+	interface Props {
+		fill?: string;
+		className?: string;
+	}
+
+	let { fill = 'currentColor', className = '' }: Props = $props();
 </script>
 
 <svg

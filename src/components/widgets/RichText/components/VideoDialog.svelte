@@ -27,7 +27,7 @@
 
 {#if show}
 	<div class="fixed bg-white top-0 left-1/2 -translate-x-1/2 z-10">
-		<XIcon class="absolute right-2 top-4 cursor-pointer z-10" on:click={close} />
+		<XIcon class="absolute right-2 top-4 cursor-pointer z-10" onclick={close} />
 		{#if insert_url}
 			<div
 				class="px-[50px] w-[500px] max-w-full h-[200px] mt-2 border-2 border-dashed border-[#c1c1c1] flex flex-col items-center justify-center gap-4 select-none relative"

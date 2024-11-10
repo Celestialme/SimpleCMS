@@ -4,13 +4,9 @@
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import { defaultPermissions, permissions, type Permissions } from '@src/collections/types';
 	import deepmerge from 'deepmerge';
-	import { track } from '@src/utils/reactivity.svelte';
 
 	let { value = $bindable(defaultPermissions as any) }: { value: Permissions } = $props();
-	// track(
-	// 	() => (value = deepmerge(defaultPermissions, value || {})),
-	// 	() => value
-	// );
+
 	value = deepmerge(defaultPermissions, value || {});
 </script>
 

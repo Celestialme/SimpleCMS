@@ -1,5 +1,10 @@
 <script lang="ts">
 	import { drawerExpanded } from '@src/stores/store.svelte';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 </script>
 
 <div
@@ -8,12 +13,12 @@
 	class:drawerExpanded={drawerExpanded()}
 >
 	<section class="h-[50px] mb-[10px] !p-[10px]">
-		<button class="text-white" on:click={() => drawerExpanded.set(!drawerExpanded())}
+		<button class="text-white" onclick={() => drawerExpanded.set(!drawerExpanded())}
 			><iconify-icon class="h-[14px]" icon="mingcute:menu-fill" width="24"></iconify-icon></button
 		>
 	</section>
 
-	<slot />
+	{@render children?.()}
 </div>
 
 <style>

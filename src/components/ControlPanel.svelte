@@ -64,7 +64,7 @@
 		class="p-4 w-[400px] max-w-full flex flex-col items-center justify-start h-[200px] rounded-md bg-white border-solid border-gray-500 border-2 fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
 	>
 		<XIcon
-			on:click={() => (schedule.showSchedule = false)}
+			onclick={() => (schedule.showSchedule = false)}
 			class="absolute top-2 right-2 cursor-pointer"
 		></XIcon>
 		<input type="datetime-local" bind:value={schedule.scheduleTime} />

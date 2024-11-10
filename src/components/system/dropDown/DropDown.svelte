@@ -1,22 +1,34 @@
 <script lang="ts">
 	import { twMerge } from 'tailwind-merge';
 
-	export let items;
-	export let selected = items[0];
-	export let label: string = '';
-	export let modifier = (input) => input;
-	export let icon: String | undefined = undefined;
-	let expanded = false;
+	interface Props {
+		items: any;
+		selected?: any;
+		label?: string;
+		modifier?: any;
+		icon?: String | undefined;
+		class?: string;
+	}
+
+	let {
+		items,
+		selected = $bindable(items[0]),
+		label = '',
+		modifier = (input) => input,
+		icon = undefined,
+		class: _class
+	}: Props = $props();
+	let expanded = $state(false);
 </script>
 
-<div class="container {twMerge('bg-gray-500', $$props.class)} ">
+<div class="container {twMerge('bg-gray-500', _class)} ">
 	<div
-		on:click={() => (expanded = !expanded)}
+		onclick={() => (expanded = !expanded)}
 		class="flex cursor-pointer items-center justify-evenly"
 		class:selected={expanded}
 	>
 		{#if icon}
-			<iconify-icon {icon} width="24" />
+			<iconify-icon {icon} width="24"></iconify-icon>
 		{/if}
 		<p>{modifier(selected || label)}</p>
 	</div>
@@ -25,7 +37,7 @@
 			{#each items.filter((item) => item !== selected) as item}
 				<p
 					class="item"
-					on:click={() => {
+					onclick={() => {
 						selected = item;
 						expanded = false;
 					}}

@@ -1,6 +1,16 @@
+<script lang="ts">
+	let {
+		class: _class,
+		onclick
+	}: {
+		class?: string;
+		onclick?: () => void;
+	} = $props();
+</script>
+
 <svg
-	on:click
-	class={$$props.class}
+	{onclick}
+	class={_class}
 	xmlns="http://www.w3.org/2000/svg"
 	width="20"
 	height="20"
