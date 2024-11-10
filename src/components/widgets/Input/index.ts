@@ -1,6 +1,6 @@
 import publicConfig from '@root/config/public';
-import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { GuiSchema, toString, type Params } from './types';
+import { getGuiFields, getFieldName } from '@src/utils/fields';
 const WIDGET_NAME = 'Input' as const;
 const widget = (params: Params) => {
 	/** This is a description of the foo function. */

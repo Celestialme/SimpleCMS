@@ -1,8 +1,6 @@
 <script lang="ts">
 	import 'iconify-icon';
-
 	import axios from 'axios';
-	import { obj2formData } from '@src/utils/utils';
 	import WidgetBuilder from './WidgetBuilder.svelte';
 	import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 	import Drawer from '@src/components/system/drawer/Drawer.svelte';
@@ -14,28 +12,36 @@
 	import { defaultPermissions, permissions, type Permissions } from '@src/collections/types';
 	import Categories from '@src/components/system/drawer/Categories.svelte';
 	import { mode, drawerExpanded, collection } from '@src/stores/store.svelte';
-	let collectionName = mode() == 'edit' ? collection().path : '';
-	let icon = mode() == 'edit' ? collection().icon : '';
-	let permissionsValue: Permissions;
+	import { track } from '@src/utils/reactivity.svelte';
+	import { obj2formData } from '@src/utils/fields';
+	let collectionName = $state(mode() == 'edit' ? collection().path : '');
+	let icon = $state(mode() == 'edit' ? collection().icon : '');
+	let permissionsValue = $state() as Permissions;
 	let tabs = ['Core', 'Permissions', 'Fields'] as const;
-	let currentTab: (typeof tabs)[number] = 'Core';
-	let fields = [] as any;
-	let addField = false;
-	let navButton;
-	// mode() = 'create';
+	let currentTab: (typeof tabs)[number] = $state('Core');
+	let fields = $state([] as any);
+	let addField = $state(false);
+	let navButton = $state({ x: 0, y: 0, radius: 0 });
+	// mode.set('create');
 	drawerExpanded.set(true);
 
-	collection.subscribe((_) => {
-		collectionName = mode() == 'edit' ? collection().path : '';
-		icon = mode() == 'edit' ? collection().icon : '';
-		fields = mode() == 'edit' ? collection().fields : [];
-		permissionsValue = collection()?.permissions || defaultPermissions;
+	collection.subscribe((collection) => {
+		collectionName = mode() == 'edit' ? collection.path : '';
+		icon = mode() == 'edit' ? collection.icon : '';
+		fields = mode() == 'edit' ? collection.fields : [];
+		permissionsValue = (collection?.permissions || defaultPermissions) as Permissions;
 	});
-	$: if (mode() == 'create') {
-		collectionName = '';
-		icon = '';
-		fields = [];
-	}
+
+	track(
+		() => {
+			if (mode() != 'create') return;
+			collectionName = '';
+			icon = '';
+			fields = [];
+		},
+		() => mode()
+	);
+
 	onDestroy(async () => {
 		// await updateCollections();
 	});
@@ -59,6 +65,7 @@
 						icon
 					})
 				: obj2formData({ fields, collectionName, icon, permissions: permissionsValue });
+
 		axios.post(`?/saveCollection`, data, {
 			headers: {
 				'Content-Type': 'multipart/form-data'
@@ -70,8 +77,9 @@
 <div class="body">
 	<button
 		class="text-white fixed top-[13px] left-[10px]"
-		on:click={() => drawerExpanded.set(!drawerExpanded)}
-		><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24" /></button
+		onclick={() => drawerExpanded.set(!drawerExpanded)}
+		><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24"
+		></iconify-icon></button
 	>
 	<div class="left_panel">
 		<Drawer>
@@ -84,7 +92,7 @@
 			</div>
 			<section class="text-center">
 				<button
-					on:click={() => axios.get('/api/exportData')}
+					onclick={() => axios.get('/api/exportData')}
 					class="p-2 bg-[#353b63] text-white w-full"
 				>
 					Export Data
@@ -99,7 +107,7 @@
 				<Button
 					class="!min-w-[120px]"
 					bgColor={tab == currentTab ? '#42c542' : 'gray'}
-					on:click={() => (currentTab = tab)}>{tab}</Button
+					onclick={() => (currentTab = tab)}>{tab}</Button
 				>
 			{/each}
 		</div>

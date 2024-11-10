@@ -99,7 +99,7 @@
 			<div class="mt-5 flex gap-2">
 				<Button>{messages().signIn()}</Button>
 				<Button
-					on:click={(e) => {
+					onclick={(e) => {
 						e.preventDefault();
 						loginRecover = true;
 					}}

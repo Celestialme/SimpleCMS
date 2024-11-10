@@ -1,9 +1,9 @@
-import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { type Params, GuiSchema } from './types';
 import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
 import type { CollectionTypes, Schema } from '@src/collections/types';
 import { collections } from '@src/stores/store.svelte';
+import { getFieldName, getGuiFields } from '@src/utils/fields';
 const WIDGET_NAME = 'Relation' as const;
 const widget = <
 	K extends CollectionTypes[T][number],

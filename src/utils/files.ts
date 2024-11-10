@@ -1,7 +1,6 @@
 import fs from 'fs';
 import Path from 'path';
 import type sharp from 'sharp';
-import type { ImageFile } from './types';
 import publicConfig from '@root/config/public';
 import mongoose from 'mongoose';
 import _crypto from 'crypto';
@@ -113,3 +112,21 @@ export async function saveImage(
 
 	return { id: new mongoose.Types.ObjectId(res[0]._id), fileInfo: fileInfo as ImageFile };
 }
+
+export type ImageFile = {
+	folder: string;
+	hash: string;
+	_id: string;
+	used_by: mongoose.Types.ObjectId[];
+} & Record<
+	keyof typeof SIZES,
+	{
+		name: string;
+		url: string;
+		size: number;
+		type: string;
+		lastModified: number;
+		width: number;
+		height: number;
+	}
+>;

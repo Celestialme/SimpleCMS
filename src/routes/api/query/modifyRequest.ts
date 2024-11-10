@@ -1,5 +1,5 @@
 import widgets from '@src/components/widgets';
-import { getFieldName } from '@src/utils/utils';
+import { getFieldName } from '@src/utils/fields';
 
 export async function modifyRequest({ data, fields, collection, user, type }) {
 	for (let field of fields) {

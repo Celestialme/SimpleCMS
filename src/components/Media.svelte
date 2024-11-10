@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
+	import { track } from '@src/utils/reactivity.svelte';
 	import MediaCards from './MediaCards.svelte';
-	import type { ImageFile } from '@src/utils/types';
+	import type { ImageFile } from '@src/utils/files';
 	import { debounce } from '@src/utils/utils';
 	import axios from 'axios';
 
@@ -23,13 +22,11 @@
 		pagesCount = resp.data.pagesCount;
 	}
 	let searchDeb = debounce(500);
-	run(() => {
-		if (!showFolders) {
-			searchDeb(() => refresh());
-			search;
-			currentPage;
-		}
-	});
+
+	track(
+		() => !showFolders && searchDeb(() => refresh()),
+		() => [search, currentPage, showFolders]
+	);
 </script>
 
 <div class="header">

@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types';
 import { collections } from '@src/stores/store.svelte';
 import { _GET } from '../query/GET';
 import widgets from '@src/components/widgets';
-import { getFieldName } from '@src/utils/utils';
+import { getFieldName } from '@src/utils/fields';
 export const GET: RequestHandler = async ({ locals }) => {
 	fs.mkdirSync('./indexes', { recursive: true });
 	let user = locals.user;

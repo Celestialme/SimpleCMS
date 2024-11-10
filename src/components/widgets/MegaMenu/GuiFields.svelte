@@ -7,7 +7,7 @@
 
 <div class="container border p-2">
 	<p>Menu Fields</p>
-	<Button on:click={() => (value = [...value, []])}>Add Level</Button>
+	<Button onclick={() => (value = [...value, []])}>Add Level</Button>
 	{#each value as level, index}
 		<div class="level">
 			<p>level {index + 1}</p>

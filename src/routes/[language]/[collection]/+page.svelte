@@ -67,7 +67,7 @@
 			</button>
 		</section>
 		<section class="mt-auto text-center">
-			<Button class="max-w-full" on:click={signOut}>
+			<Button class="max-w-full" onclick={signOut}>
 				{#if drawerExpanded()}
 					SignOut
 				{:else}

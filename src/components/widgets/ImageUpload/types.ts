@@ -1,5 +1,5 @@
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
-import { SIZES } from '@src/utils/files';
+
 import publicConfig from '@root/config/public';
 export type Params = {
 	label: string;
@@ -15,15 +15,3 @@ export let GuiSchema = {
 	display: { widget: FloatingInput, required: true },
 	db_fieldName: { widget: FloatingInput, required: true }
 };
-let types = Object.keys(SIZES)
-	.map(
-		(size) =>
-			`type ${size} {
-	name: String
-	url: String
-	size: Int
-	type: String
-	lastModified: Float
-}`
-	)
-	.join('\n');

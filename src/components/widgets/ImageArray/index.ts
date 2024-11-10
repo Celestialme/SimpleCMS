@@ -1,12 +1,27 @@
 // ImageArray - allows multiple image upload with editor
 import type { Params as ImageUpload_Params } from '../ImageUpload/types';
-import { getFieldName, getGuiFields } from '@src/utils/utils.js';
 import { type Params, GuiSchema } from './types';
-import ImageArray from './ImageArray.svelte';
 import ImageUpload from '../ImageUpload';
 import type { ModifyRequestParams } from '..';
 import widgets from '..';
+import { getFieldName, getGuiFields } from '@src/utils/fields';
 const WIDGET_NAME = 'ImageArray' as const;
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * Constructs an ImageArray widget configuration.
+ *
+ * This function initializes an ImageUpload field and inserts it at the beginning
+ * of the provided fields array. It also constructs the widget object with its
+ * name and GUI fields, and sets up the display logic for rendering the thumbnail
+ * of the uploaded image. The resulting field object includes metadata and configuration
+ * for the widget, such as display settings, labels, paths, and requirements.
+ *
+ * @param params - The parameters for configuring the ImageArray widget, including
+ *                 field metadata and uploader configurations.
+ * @returns An object containing the widget configuration and field metadata.
+ */
+
+/******  87eb5124-d3d8-493d-93ef-abfe5d2d1eee  *******/
 const widget = (params: Params) => {
 	params.fields.unshift(
 		ImageUpload({

@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { config, toFormData } from './utils';
-import type { CollectionTypes } from '@src/collections/types';
+import { config, meta_data, toFormData } from './utils';
+import type { CollectionTypes, Schema } from '@src/collections/types';
+import { mode, collection, entryData } from '@src/stores/store.svelte';
+import { col2formData } from './fields';
 
 export async function getData(query: {
 	collectionName: keyof CollectionTypes;
@@ -63,4 +65,32 @@ export async function setStatus({
 	data.append('collectionName', collectionName);
 	data.append('method', 'SETSTATUS');
 	return await axios.post(`/api/query`, data, config).then((res) => res.data);
+}
+
+export async function saveFormData({
+	data,
+	_collection,
+	_mode,
+	id
+}: {
+	data: any;
+	_collection?: Schema;
+	_mode?: 'edit' | 'create';
+	id?: string;
+}) {
+	let $mode = _mode || mode();
+	let $collection = _collection || collection();
+	let formData = data instanceof FormData ? data : await col2formData(data);
+	if (_mode === 'edit' && !id) {
+		throw new Error('ID is required for edit mode.');
+	}
+	if (!formData) return;
+	if (!meta_data.is_empty()) formData.append('_meta_data', JSON.stringify(meta_data.get()));
+	switch ($mode) {
+		case 'create':
+			return await addData({ data: formData, collectionName: $collection.path as any });
+		case 'edit':
+			formData.append('_id', id || entryData()._id);
+			return await updateData({ data: formData, collectionName: $collection.path as any });
+	}
 }

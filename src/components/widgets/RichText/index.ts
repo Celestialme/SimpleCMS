@@ -1,9 +1,11 @@
 import publicConfig from '@root/config/public';
-import { getFieldName, getGuiFields } from '@src/utils/utils';
 import { saveImage } from '@src/utils/files';
 import { GuiSchema, toString, type Params } from './types';
-import type { ModifyRequestParams } from '..';
+// import type { ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
+import { getGuiFields, getFieldName } from '@src/utils/fields';
+import type { ModifyRequestParams } from '..';
+// import type { ModifyRequestParams } from '..';
 const WIDGET_NAME = 'RichText' as const;
 const widget = (params: Params) => {
 	/** This is a description of the foo function. */

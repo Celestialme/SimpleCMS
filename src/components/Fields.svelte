@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { asAny, getFieldName } from '@src/utils/utils';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import { collections, collection, entryData, collectionValue } from '@src/stores/store.svelte';
 	import { track } from '@src/utils/reactivity.svelte';
+	import { getFieldName } from '@src/utils/fields';
 
 	interface Props {
 		fields?: typeof collection.value.fields | undefined;
@@ -66,7 +66,7 @@
 						<p>{field.label}</p>
 						{#await import(`@src/components/widgets/${field.widget.Name}/${field.widget.Name}.svelte`) then { default: Widget }}
 							<Widget
-								field={asAny(field)}
+								field={field as any}
 								bind:WidgetData={fieldsData[getFieldName(field)]}
 								value={customData[getFieldName(field)]}
 								{...restProps}

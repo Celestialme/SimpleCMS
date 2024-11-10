@@ -1,17 +1,33 @@
-<script>
-	export let textColor = 'white';
-	export let bgColor = 'gray';
-	export let border = 'none;';
-	export let hoverColor = '#4fdc4f';
-	export let style = '';
+<script lang="ts">
+	interface Props {
+		textColor?: string;
+		bgColor?: string;
+		border?: string;
+		hoverColor?: string;
+		style?: string;
+		onclick?: (args: any) => void;
+		class?: string;
+		children?: import('svelte').Snippet;
+	}
+
+	let {
+		textColor = 'white',
+		bgColor = 'gray',
+		border = 'none;',
+		hoverColor = '#4fdc4f',
+		style = '',
+		onclick,
+		class: _class,
+		children
+	}: Props = $props();
 </script>
 
 <button
-	on:click
-	class={$$props.class}
+	{onclick}
+	class={_class}
 	style={`color: ${textColor}; background-color: ${bgColor}; border: ${border}; --hover-color: ${hoverColor}; ${style};`}
 >
-	<slot />
+	{@render children?.()}
 </button>
 
 <style>

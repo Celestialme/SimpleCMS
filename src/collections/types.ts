@@ -21,7 +21,7 @@ export let defaultPermissions = roles.reduce((acc, role) => {
 }, {} as Permissions);
 
 export type Permissions = {
-	[K in Roles]?: { [permissions in (typeof permissions)[number]]?: boolean };
+	[K in Roles]: { [permissions in (typeof permissions)[number]]?: boolean };
 };
 export interface Schema {
 	name?: keyof CollectionTypes;
@@ -33,7 +33,7 @@ export interface Schema {
 	icon?: string;
 	fields: ReturnType<(typeof widgets)[keyof typeof widgets]>[];
 	status?: 'published' | 'unpublished' | 'draft';
-	permissions?: Permissions;
+	permissions?: Partial<Permissions>;
 }
 
 export let sanitizePermissions = (permissions) => {
@@ -50,5 +50,11 @@ export let sanitizePermissions = (permissions) => {
 	if (Object.keys(res).length == 0) return undefined;
 	return res;
 };
-
-export type CollectionTypes = {"ca::About":["RichText"],"ca::ca12::About":["RichText"],"ca::relation":["Relation"],"ca::sm":["Name","Name2"],"ca2::About":["RichText","Relation"]};
+
+export type CollectionTypes = {
+	'ca::About': ['RichText'];
+	'ca::ca12::About': ['RichText'];
+	'ca::relation': ['Relation'];
+	'ca::sm': ['Name', 'Name2'];
+	'ca2::About': ['RichText', 'Relation'];
+};

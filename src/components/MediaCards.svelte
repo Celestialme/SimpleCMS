@@ -1,5 +1,6 @@
-<script>
+<script lang="ts">
 	import { SIZES } from '@src/utils/files';
+	import type { ImageFile } from '@src/utils/files';
 	import axios from 'axios';
 
 	function formatBytes(bytes) {
@@ -13,18 +14,25 @@
 			return bytes + ' bytes';
 		}
 	}
-	export let files;
-	export let onselect;
+	interface Props {
+		files: ImageFile[];
+		onselect: (file: ImageFile) => void;
+	}
 
-	let showInfo = Array.from({ length: files.length }, () => false);
+	let { files = $bindable(), onselect }: Props = $props();
+
+	let showInfo = $state(Array.from({ length: files.length }, () => false));
 </script>
 
 {#each files as file, index}
-	<div on:click={() => onselect(file)} class="card relative flex flex-col md:w-[30%] w-[100%]">
+	<div onclick={() => onselect(file)} class="card relative flex flex-col md:w-[30%] w-[100%]">
 		<div class="absolute flex w-full bg-[#2c3844] items-center">
 			<button
 				class="mt-[2px] ml-[2px] w-[30px] block"
-				on:click|stopPropagation={() => (showInfo[index] = !showInfo[index])}
+				onclick={(e) => {
+					e.stopPropagation();
+					showInfo[index] = !showInfo[index];
+				}}
 			>
 				<iconify-icon icon="raphael:info" width="25" class="text-[#00d3d0]"></iconify-icon>
 			</button>
@@ -32,7 +40,8 @@
 			{#if file.used_by.length == 0}
 				<button
 					class="mt-[2px] mr-[2px] w-[30px] block"
-					on:click|stopPropagation={async () => {
+					onclick={async (e) => {
+						e.stopPropagation();
 						let data = new FormData();
 						data.append('id', file._id);
 						await axios.post('/storage/delete', data);

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Fields from '@src/components/Fields.svelte';
 	import { currentChild, type FieldType } from '.';
-	import { extractData, getFieldName } from '@src/utils/utils';
+	import { extractData, getFieldName } from '@src/utils/fields';
 	import ListNode from './ListNode.svelte';
 	import { mode, entryData, saveFunction, translationProgress } from '@src/stores/store.svelte';
 	export let field: FieldType;

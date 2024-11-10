@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Fields from '@src/components/Fields.svelte';
 	import { mode } from '@src/stores/store.svelte';
-	import { getFieldName, saveFormData } from '@src/utils/utils';
+	import { saveFormData } from '@src/utils/data';
 	import type { FieldType } from '.';
+	import { getFieldName } from '@src/utils/fields';
 
 	export let field: FieldType;
 	let _fieldsValue: any = [];

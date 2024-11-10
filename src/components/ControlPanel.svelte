@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from './system/buttons/Button.svelte';
-	import { saveFormData, toISOString } from '@src/utils/utils';
+	import { toISOString } from '@src/utils/utils';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
 	import XIcon from './system/icons/XIcon.svelte';
@@ -11,6 +11,7 @@
 		collectionValue,
 		saveFunction
 	} from '@src/stores/store.svelte';
+	import { saveFormData } from '@src/utils/data';
 	let _saveFunction;
 	_saveFunction = saveFunction().fn = async () => {
 		await saveFormData({ data: collectionValue() });
@@ -45,7 +46,7 @@
 	class="wrapper max-md:!h-auto max-md:!w-screen max-md:!max-w-full max-md:absolute max-md:top-[calc(100vh-45px)]"
 >
 	{#if collection().permissions?.[user.role]?.write != false}
-		<Button class="max-md:hidden" on:click={saveFunction().fn}>SAVE</Button>
+		<Button class="max-md:hidden" onclick={saveFunction().fn}>SAVE</Button>
 		<iconify-icon
 			onclick={() => (schedule.showSchedule = !schedule.showSchedule)}
 			icon="mdi:calendar-clock"
@@ -68,7 +69,7 @@
 		></XIcon>
 		<input type="datetime-local" bind:value={schedule.scheduleTime} />
 		<span class="text-red-500">{schedule.error}</span>
-		<Button on:click={() => schedule.setSchedule()} class="mt-auto">Schedule</Button>
+		<Button onclick={() => schedule.setSchedule()} class="mt-auto">Schedule</Button>
 	</div>
 {/if}
 

@@ -1,9 +1,10 @@
 import { type Params, GuiSchema } from './types';
-import { getFieldName, getGuiFields, get_elements_by_id } from '@src/utils/utils';
+import { get_elements_by_id } from '@src/utils/utils';
 import { saveImage } from '@src/utils/files';
 import { type ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
-import type { ImageFile } from '@src/utils/types';
+import type { ImageFile } from '@src/utils/files';
+import { getGuiFields, getFieldName } from '@src/utils/fields';
 const WIDGET_NAME = 'ImageUpload' as const;
 const widget = (params: Params) => {
 	let display;

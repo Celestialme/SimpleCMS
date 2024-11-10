@@ -1,9 +1,21 @@
 <script lang="ts">
-	export let checked = false;
-	export let icon: string;
+	interface Props {
+		checked?: boolean;
+		icon: string;
+		class?: string;
+	}
+
+	let { checked = $bindable(), icon, class: _class, ...props }: Props = $props();
 </script>
 
-<iconify-icon {...$$props} {icon} class="icon text-gray-400 {$$props.class}" width="24" class:checked on:click={() => (checked = !checked)} />
+<iconify-icon
+	{props}
+	{icon}
+	class="icon text-gray-400 {_class}"
+	width="24"
+	class:checked
+	onclick={() => (checked = !checked)}
+></iconify-icon>
 
 <style>
 	.icon {

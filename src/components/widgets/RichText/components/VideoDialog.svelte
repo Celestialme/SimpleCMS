@@ -38,7 +38,7 @@
 					name="Youtube URL"
 					label="Youtube URL"
 				/>
-				<Button on:click={addVideo}>Add Video</Button>
+				<Button onclick={addVideo}>Add Video</Button>
 			</div>
 		{:else}
 			<div
@@ -48,7 +48,7 @@
 				<p>or</p>
 				<div class="flex w-full gap-2 justify-center">
 					<Button style="flex: 1 1 0px; max-width:150px">Browse locally</Button>
-					<Button style="flex: 1 1 0px; max-width:150px" on:click={() => (insert_url = true)}
+					<Button style="flex: 1 1 0px; max-width:150px" onclick={() => (insert_url = true)}
 						>YouTube</Button
 					>
 				</div>

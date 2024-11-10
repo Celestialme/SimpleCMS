@@ -1,18 +1,38 @@
 <script lang="ts">
 	import { twMerge } from 'tailwind-merge';
-	export let trackClass = '';
-	export let thumbClass = '';
-	export let value = false;
-	export let width = 80;
-	export let height = 40;
-	export let label = '';
-	export let labelClass = '';
+	interface Props {
+		trackClass?: string;
+		thumbClass?: string;
+		value?: boolean;
+		width?: number;
+		height?: number;
+		label?: string;
+		labelClass?: string;
+	}
+
+	let {
+		trackClass = '',
+		thumbClass = '',
+		value = $bindable(false),
+		width = 80,
+		height = 40,
+		label = '',
+		labelClass = ''
+	}: Props = $props();
 </script>
 
 <div class="container">
 	<p class={twMerge('text-white ', labelClass)}>{label}</p>
-	<div on:click={() => (value = !value)} class={twMerge('track bg-white ', trackClass)} style="width: {width}px; height: {height}px">
-		<div class:checked={value} class={twMerge('thumb bg-gray-400', thumbClass)} style="width: {width / 2}px; height: {height}px" />
+	<div
+		onclick={() => (value = !value)}
+		class={twMerge('track bg-white ', trackClass)}
+		style="width: {width}px; height: {height}px"
+	>
+		<div
+			class:checked={value}
+			class={twMerge('thumb bg-gray-400', thumbClass)}
+			style="width: {width / 2}px; height: {height}px"
+		></div>
 	</div>
 </div>
 

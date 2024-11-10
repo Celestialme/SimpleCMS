@@ -4,9 +4,10 @@
 	import type { FieldType } from '.';
 	import Input from '@src/components/system/inputs/Input.svelte';
 	import { contentLanguage } from '@src/stores/store.svelte';
-	import { updateTranslationProgress, getFieldName, get_date } from '@src/utils/utils';
+	import { updateTranslationProgress, get_date } from '@src/utils/utils';
 	import { entryData, mode } from '@src/stores/store.svelte';
 	import { track } from '@src/utils/reactivity.svelte';
+	import { getFieldName } from '@src/utils/fields';
 
 	interface Props {
 		field: FieldType;

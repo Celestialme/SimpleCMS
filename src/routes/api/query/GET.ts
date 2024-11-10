@@ -1,12 +1,13 @@
 import type { Schema } from '@src/collections/types';
 import widgets from '@src/components/widgets';
-import { getFieldName, get_elements_by_id } from '@src/utils/utils';
+import { get_elements_by_id } from '@src/utils/utils';
 import { collectionModels } from '../db';
 import type { User } from '@src/auth/types';
 import publicConfig from '@root/config/public';
 import { modifyRequest } from './modifyRequest';
 
 import { collections } from '@src/stores/store.svelte';
+import { getFieldName } from '@src/utils/fields';
 
 export async function _GET({
 	schema,

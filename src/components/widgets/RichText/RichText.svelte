@@ -16,13 +16,7 @@
 	import type { ComponentProps } from 'svelte';
 	import ImageResize from './extensions/ImageResize';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
-	import {
-		meta_data,
-		createRandomID,
-		debounce,
-		getFieldName,
-		updateTranslationProgress
-	} from '@src/utils/utils';
+	import { meta_data, createRandomID, debounce, updateTranslationProgress } from '@src/utils/utils';
 	import type { FieldType } from '.';
 	import { contentLanguage } from '@src/stores/store.svelte';
 	import ImageDescription from './components/ImageDescription.svelte';
@@ -30,6 +24,7 @@
 	import { Transaction } from '@tiptap/pm/state';
 	import { entryData, mode } from '@src/stores/store.svelte';
 	import { track } from '@src/utils/reactivity.svelte';
+	import { getFieldName } from '@src/utils/fields';
 
 	let element = $state() as HTMLElement;
 	let editor = $state() as Editor;

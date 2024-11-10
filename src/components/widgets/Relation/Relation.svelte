@@ -9,10 +9,12 @@
 		saveFunction
 	} from '@src/stores/store.svelte';
 
-	import { extractData, findById, getFieldName, saveFormData } from '@src/utils/utils';
+	import { findById } from '@src/utils/utils';
+	import { saveFormData } from '@src/utils/data';
 	import DropDown from './DropDown.svelte';
 	import Fields from '@src/components/Fields.svelte';
 	import { getData } from '@src/utils/data';
+	import { getFieldName, extractData } from '@src/utils/fields';
 
 	export let field: FieldType;
 	let fieldName = getFieldName(field);

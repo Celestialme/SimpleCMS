@@ -1,11 +1,19 @@
 <script lang="ts">
-	export let value;
-	export let widget: any;
-	export let key: string;
-
-	$: if (key == 'display' && value?.default == true) {
-		value = '';
+	interface Props {
+		value: any;
+		widget: any;
+		key: string;
 	}
+
+	let { value = $bindable(), widget, key }: Props = $props();
+	value = value || null;
+	$effect(() => {
+		if (key == 'display' && value?.default == true) {
+			value = '';
+		}
+	});
+
+	const SvelteComponent = $derived(widget);
 </script>
 
-<svelte:component this={widget} bind:value label={key} theme="dark" />
+<SvelteComponent bind:value label={key} theme="dark" />

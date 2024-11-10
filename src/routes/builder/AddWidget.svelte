@@ -5,19 +5,33 @@
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import { asAny, deepCopy } from '@src/utils/utils';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
-	export let fields: Array<any> = [];
-	export let addField: Boolean = false;
-	export let editField: Boolean = false;
-	export let selected_widget: keyof typeof widgets | null = null;
+	import { untrack } from 'svelte';
 	let widget_keys = Object.keys(widgets) as unknown as keyof typeof widgets;
 
-	let guiSchema: (typeof widgets)[typeof widget_keys]['GuiSchema'];
-	$: if (selected_widget) {
-		guiSchema = widgets[selected_widget].GuiSchema;
+	let guiSchema: (typeof widgets)[typeof widget_keys]['GuiSchema'] = $state() as any;
+	interface Props {
+		fields?: Array<any>;
+		addField?: Boolean;
+		editField?: Boolean;
+		selected_widget?: keyof typeof widgets | null;
+		field?: {
+			label: '';
+			widget: { key: keyof typeof widgets; GuiFields: {} };
+		};
 	}
-	export let field = { label: '', widget: { key: selected_widget as unknown as keyof typeof widgets, GuiFields: {} } };
-	let saveField = deepCopy(field);
 
+	let {
+		fields = $bindable([]),
+		addField = $bindable(false),
+		editField = false,
+		selected_widget = $bindable(),
+		field = $bindable()
+	}: Props = $props();
+	let saveField = deepCopy(field);
+	field = field || {
+		label: '',
+		widget: { key: selected_widget as unknown as keyof typeof widgets, GuiFields: {} }
+	};
 	let tabs = {
 		Core(property: string) {
 			return ['label', 'display', 'db_fieldName'].includes(property);
@@ -27,19 +41,25 @@
 			return !this.Core(property);
 		}
 	};
-	let currentTab: keyof typeof tabs = 'Core';
+	let currentTab: keyof typeof tabs = $state('Core');
+	$effect(() => {
+		if (selected_widget) {
+			guiSchema = widgets[selected_widget].GuiSchema;
+		}
+	});
 </script>
 
 {#if !selected_widget && !editField}
 	<div class="properties">
-		<button class="ml-auto mr-[40px] mb-[20px]" on:click={() => (addField = false)}><XIcon /></button>
+		<button class="ml-auto mr-[40px] mb-[20px]" onclick={() => (addField = false)}><XIcon /></button
+		>
 		<DropDown items={widget_keys} bind:selected={selected_widget} label="Select Widget" />
 	</div>
 {:else}
 	<div class="properties">
 		<button
 			class="ml-auto mr-[40px]"
-			on:click={() => {
+			onclick={() => {
 				if (editField) {
 					for (let key in field) {
 						field[key] = saveField[key];
@@ -52,20 +72,30 @@
 		>
 		<div class="flex justify-center gap-1 w-full">
 			{#each Object.keys(tabs) as tab}
-				{#if Object.keys(guiSchema).some((key) => tabs[tab](key))}
-					<Button class="!min-w-[120px]" bgColor={tab == currentTab ? '#42c542' : 'gray'} on:click={() => (currentTab = asAny(tab))}>{tab}</Button>
+				{#if guiSchema && Object.keys(guiSchema).some((key) => tabs[tab](key))}
+					<Button
+						class="!min-w-[120px]"
+						bgColor={tab == currentTab ? '#42c542' : 'gray'}
+						onclick={() => (currentTab = asAny(tab))}>{tab}</Button
+					>
 				{/if}
 			{/each}
 		</div>
 		<div class="min-h-[200px] w-full p-[10px] flex flex-col items-center">
-			{#each Object.entries(guiSchema) as [property, value]}
-				{#if tabs[currentTab](property)}
-					<InputSwitch bind:value={field.widget.GuiFields[property]} widget={asAny(value).widget} key={property} />
-				{/if}
-			{/each}
+			{#if guiSchema}
+				{#each Object.entries(guiSchema) as [property, value]}
+					{#if tabs[currentTab](property)}
+						<InputSwitch
+							bind:value={field.widget.GuiFields[property]}
+							widget={value.widget as any}
+							key={property}
+						/>
+					{/if}
+				{/each}
+			{/if}
 		</div>
 		<Button
-			on:click={() => {
+			onclick={() => {
 				if (!selected_widget) return;
 				field.widget = { key: selected_widget, GuiFields: field.widget.GuiFields };
 				field.label = asAny(field.widget.GuiFields).label;

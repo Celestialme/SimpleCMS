@@ -2,7 +2,7 @@
 	import Button from '../buttons/Button.svelte';
 	import XIcon from '../icons/XIcon.svelte';
 	import Media from '@src/components/Media.svelte';
-	import type { ImageFile } from '@src/utils/types';
+	import type { ImageFile } from '@src/utils/files';
 	import { twMerge } from 'tailwind-merge';
 	interface Props {
 		value?: File | ImageFile | undefined;
@@ -63,10 +63,10 @@
 			<p>Drag & Drop</p>
 			<p>or</p>
 			<div class="flex w-full gap-2 justify-center">
-				<Button style="flex: 1 1 0px; max-width:150px" on:click={() => input.click()}
+				<Button style="flex: 1 1 0px; max-width:150px" onclick={() => input.click()}
 					>Browse locally</Button
 				>
-				<Button style="flex: 1 1 0px; max-width:150px" on:click={() => (showMedia = true)}
+				<Button style="flex: 1 1 0px; max-width:150px" onclick={() => (showMedia = true)}
 					>Select Existing</Button
 				>
 			</div>

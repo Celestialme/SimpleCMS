@@ -1,16 +1,17 @@
 <script lang="ts">
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store.svelte';
-	import { meta_data, getFieldName } from '@src/utils/utils';
+	import { meta_data } from '@src/utils/utils';
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
 	import type { Group } from 'konva/lib/Group';
-	import type { ImageFile } from '@src/utils/types';
+	import type { ImageFile } from '@src/utils/files';
 	import type { Stage } from 'konva/lib/Stage';
 	import type { Image as KonvaImage } from 'konva/lib/shapes/Image';
 	import type { Layer } from 'konva/lib/Layer';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
+	import { getFieldName } from '@src/utils/fields';
 	export let field: FieldType;
 	export let value: File | ImageFile = entryData()[getFieldName(field)]; // pass file directly from imageArray
 	let _data: File | ImageFile | undefined = value;
@@ -206,25 +207,25 @@
 		<div class="w-full h-[50px] bg-[#242734] flex items-center">
 			{#if editing}
 				<iconify-icon
-					on:click={() => edit.saveEdit()}
+					onclick={() => edit.saveEdit()}
 					width="26"
 					class="px-2 cursor-pointer"
 					style="color:#05ff05"
 					icon="ic:sharp-save-as"
 				></iconify-icon>
-				<Button on:click={() => edit.addBlur()}>blur</Button>
-				<button on:click={() => (editing = false)} class="ml-auto cursor-pointer mr-2">
+				<Button onclick={() => edit.addBlur()}>blur</Button>
+				<button onclick={() => (editing = false)} class="ml-auto cursor-pointer mr-2">
 					<XIcon />
 				</button>
 			{:else}
 				<iconify-icon
-					on:click={() => edit.startEdit()}
+					onclick={() => edit.startEdit()}
 					class=" px-2 cursor-pointer text-white"
 					icon="flat-color-icons:edit-image"
 					width="24"
 				/>
 				<iconify-icon
-					on:click={() => (_data = undefined)}
+					onclick={() => (_data = undefined)}
 					class="ml-auto px-2 cursor-pointer text-white"
 					icon="streamline:arrow-reload-horizontal-1-solid"
 					width="24"

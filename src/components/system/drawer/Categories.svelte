@@ -1,11 +1,22 @@
 <script lang="ts">
+	import Categories from './Categories.svelte';
 	import { page } from '$app/stores';
 	import type { User } from '@src/auth/types';
-	import { categories, mode, drawerExpanded, contentLanguage } from '@src/stores/store.svelte';
+	import {
+		categories,
+		mode,
+		drawerExpanded,
+		contentLanguage,
+		collection
+	} from '@src/stores/store.svelte';
 	import { goto } from '$app/navigation';
-	export let data = categories() || {};
-	export let modeSet: typeof mode.value = 'view';
-	let expanded: { [key: string]: boolean } = {};
+	interface Props {
+		data?: any;
+		modeSet?: typeof mode.value;
+	}
+
+	let { data = categories() || {}, modeSet = 'view' }: Props = $props();
+	let expanded: { [key: string]: boolean } = $state({});
 	let user: User = $page.data.user;
 </script>
 
@@ -15,13 +26,13 @@
 			class={'flex items-center  tooltip_right relative mb-1 h-[40px] cursor-pointer overflow-visible rounded-sm bg-[#353b63] py-2 text-center text-white'}
 			class:arrow={data[item].is_category}
 			class:arrow_up={expanded[index]}
-			on:click={() => (expanded[index] = !expanded[index])}
+			onclick={() => (expanded[index] = !expanded[index])}
 		>
 			<p class="mx-auto">{item}</p>
 		</div>
 		<div class:expand={expanded[index]} class=" ml-3 wrapper">
 			<div class="{expanded[index] ? 'delayed-overflow' : 'overflow-hidden'} inner">
-				<svelte:self data={data[item]} {modeSet} />
+				<Categories data={data[item]} {modeSet} />
 			</div>
 		</div>
 	{:else}
@@ -29,9 +40,11 @@
 			class:hidden={data[item]?.permissions?.[user.role]?.read == false ||
 				data[item]?.hidden == true}
 			class={'relative cursor-pointer border-b border-[#ced0db] bg-[#777a89] p-0 text-center text-white last:mb-1 last:border-b-0 hover:bg-[#65dfff] hover:text-white dark:bg-[#767b9a] dark:text-white dark:hover:bg-[#65dfff] dark:hover:text-white flex h-[40px] items-center justify-center'}
-			on:click={() => {
+			onclick={() => {
 				mode.set(modeSet);
-				goto(`/${contentLanguage()}/${data[item].path}`);
+				modeSet != 'edit'
+					? goto(`/${contentLanguage()}/${data[item].path}`)
+					: collection.set(data[item]);
 			}}
 		>
 			<div class="flex items-center h-full" class:grow={drawerExpanded()}>

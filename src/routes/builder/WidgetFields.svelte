@@ -2,16 +2,22 @@
 	import widgets from '@src/components/widgets';
 	import { debounce } from '@src/utils/utils';
 	import AddWidget from './AddWidget.svelte';
-	export let fields: Array<any> = [];
+	interface Props {
+		fields?: Array<any>;
+	}
+
+	let { fields = $bindable([]) }: Props = $props();
 	let widget_keys = Object.keys(widgets) as unknown as keyof typeof widgets;
 
-	let container: HTMLDivElement;
-	let currentFieldKey: keyof typeof widgets | null = null;
-	let currentField: any;
-	let guiSchema: (typeof widgets)[typeof widget_keys]['GuiSchema'];
-	$: if (currentFieldKey) {
-		guiSchema = widgets[currentFieldKey].GuiSchema;
-	}
+	let container = $state() as HTMLDivElement;
+	let currentFieldKey: keyof typeof widgets | null = $state(null);
+	let currentField: any = $state();
+	let guiSchema: (typeof widgets)[typeof widget_keys]['GuiSchema'] = $state() as any;
+	$effect(() => {
+		if (currentFieldKey) {
+			guiSchema = widgets[currentFieldKey].GuiSchema;
+		}
+	});
 
 	function drag(e: PointerEvent) {
 		let timeOut;
@@ -25,7 +31,7 @@
 		node.onpointerup = () => {
 			clearTimeout(timeOut);
 		};
-		node.onpointerleave = (e) => {
+		node.onpointerleave = (_) => {
 			clearTimeout(timeOut);
 		};
 		timeOut = setTimeout(() => {
@@ -113,11 +119,14 @@
 <div class="wrapper" bind:this={container}>
 	{#each fields as field, index}
 		<div
-			on:click={() => {
+			onclick={() => {
 				currentFieldKey = field.widget.Name;
 				currentField = field;
 			}}
-			on:pointerdown|stopPropagation={drag}
+			onpointerdown={(e) => {
+				e.stopPropagation();
+				drag(e);
+			}}
 			class="field"
 			data-index={index}
 		>
@@ -127,9 +136,10 @@
 			</div>
 			<button
 				class="absolute right-[5px] top-[5px]"
-				on:click|stopPropagation={() => {
+				onclick={(e) => {
+					e.stopPropagation();
 					fields = [...fields.filter((f) => f !== field)];
-				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24" /></button
+				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24"></iconify-icon></button
 			>
 		</div>
 	{/each}

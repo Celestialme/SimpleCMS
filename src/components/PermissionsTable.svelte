@@ -2,11 +2,16 @@
 	import { roles } from '@src/auth/types';
 	import CheckBox from './system/buttons/CheckBox.svelte';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
-	import { defaultPermissions, permissions } from '@src/collections/types';
+	import { defaultPermissions, permissions, type Permissions } from '@src/collections/types';
 	import deepmerge from 'deepmerge';
+	import { track } from '@src/utils/reactivity.svelte';
 
-	export let value = defaultPermissions as any;
-	$: value = deepmerge(defaultPermissions, value || {});
+	let { value = $bindable(defaultPermissions as any) }: { value: Permissions } = $props();
+	// track(
+	// 	() => (value = deepmerge(defaultPermissions, value || {})),
+	// 	() => value
+	// );
+	value = deepmerge(defaultPermissions, value || {});
 </script>
 
 <table class="table">
@@ -21,7 +26,7 @@
 	<tbody>
 		{#each roles.filter((r) => r !== 'admin') as role}
 			<tr
-				on:click={() => {
+				onclick={() => {
 					let toggle = permissions.some((p) => {
 						return value[role][p] == true;
 					});

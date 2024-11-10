@@ -1,6 +1,6 @@
 import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import GuiField from './GuiField.svelte';
-import { getFieldName } from '@src/utils/utils';
+import { getFieldName } from '@src/utils/fields';
 import mongoose from 'mongoose';
 
 export type Params<K, T> = {

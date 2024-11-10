@@ -77,7 +77,7 @@
 			{#if errors?.email}<span class="invalid">{errors.email}</span>{/if}
 		{/if}
 
-		<Button on:click={change} class="mt-10" bgColor="#e64949" hoverColor="#f46363">change</Button>
+		<Button onclick={change} class="mt-10" bgColor="#e64949" hoverColor="#f46363">change</Button>
 	</div>
 {/if}
 
