@@ -95,10 +95,8 @@
 		<Button
 			onclick={() => {
 				if (!selected_widget) return;
-				field.widget = { key: selected_widget, GuiFields: field.widget.GuiFields };
 				field.label = (field.widget.GuiFields as any).label;
 				!editField && fields.push(field);
-				fields = fields;
 				addField = false;
 			}}>Finish Widget</Button
 		>

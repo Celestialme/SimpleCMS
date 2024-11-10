@@ -12,13 +12,14 @@
 
 	let {
 		items,
-		selected = $bindable(items[0]),
+		selected = $bindable(),
 		label = '',
 		modifier = (input) => input,
 		icon = undefined,
 		class: _class
 	}: Props = $props();
 	let expanded = $state(false);
+	selected = selected || items[0];
 </script>
 
 <div class="container {twMerge('bg-gray-500', _class)} ">
