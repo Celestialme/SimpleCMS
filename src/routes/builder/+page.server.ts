@@ -1,4 +1,4 @@
-import { redirect, type Actions, error } from '@sveltejs/kit';
+import { type Actions, error } from '@sveltejs/kit';
 import { collectionModels } from '../api/db';
 import type { WidgetType } from '@src/components/widgets';
 import fs from 'fs';
