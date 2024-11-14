@@ -10,7 +10,7 @@ let schema: Schema = {
 			label: 'ImageArray',
 			uploader_label: 'Image',
 			uploader_path: 'images',
-			extract: true
+			extractFields: true
 		})
 	]
 };

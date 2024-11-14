@@ -31,7 +31,7 @@ export async function _GET({
 	let collection = collectionModels[schema.id as string];
 	let skip = (page - 1) * limit;
 	for (let field of schema.fields.flatMap((field: any) =>
-		field.extract ? field.fields : [field]
+		field.extractFields ? field.fields : [field]
 	)) {
 		let widget = widgets[field.widget.Name];
 		let fieldName = getFieldName(field);

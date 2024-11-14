@@ -40,7 +40,7 @@
 				data.entryList.map(async (entry) => {
 					let obj: { [key: string]: any } = {};
 					for (let field of collection().fields.flatMap((field: any) =>
-						field.extract ? field.fields : [field]
+						field.extractFields ? field.fields : [field]
 					)) {
 						if ('callback' in field) {
 							field.callback({ data });
@@ -59,7 +59,7 @@
 				})
 			));
 		tableHeaders = collection()
-			.fields.flatMap((field: any) => (field.extract ? field.fields : [field]))
+			.fields.flatMap((field: any) => (field.extractFields ? field.fields : [field]))
 			.map((field) => ({
 				label: field.label,
 				name: getFieldName(field)
