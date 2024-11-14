@@ -3,34 +3,44 @@
 	import type { FieldType } from '.';
 	import { collection, entryData } from '@src/stores/store.svelte';
 	import { contentLanguage } from '@src/stores/store.svelte';
-	export let dropDownData: any[] = [];
-	export let selected: { display: any; _id: any } | undefined = undefined;
-	export let field: FieldType | undefined;
-	export let showDropDown = true;
-	let search = '';
-	let options: Array<{ display: any; _id: any }> = [];
-	let filtered = options;
+	interface Props {
+		dropDownData?: any[];
+		selected?: { display: any; _id: any } | undefined;
+		field: FieldType | undefined;
+		showDropDown?: boolean;
+	}
 
-	$: Promise.all(
-		dropDownData.map(async (item) => ({
-			display: await field?.display({
-				data: item,
-				collection: collection(),
-				field,
-				entry: entryData(),
-				contentLanguage: contentLanguage()
-			}),
-			_id: item._id
-		}))
-	).then((res) => (options = res));
-	$: filtered = options.filter((item) => item.display?.includes(search));
+	let {
+		dropDownData = [],
+		selected = $bindable(undefined),
+		field,
+		showDropDown = $bindable(true)
+	}: Props = $props();
+	let search = $state('');
+	let options: Array<{ display: any; _id: any }> = $state([]);
+	let filtered = $derived(options.filter((item) => item.display?.includes(search)));
+
+	$effect(() => {
+		Promise.all(
+			dropDownData.map(async (item) => ({
+				display: await field?.display({
+					data: item,
+					collection: collection(),
+					field,
+					entry: entryData(),
+					contentLanguage: contentLanguage()
+				}),
+				_id: item._id
+			}))
+		).then((res) => (options = res));
+	});
 </script>
 
 <Input inputClass="w-full" placeholder="search..." bind:value={search} />
 <div class="overflow-auto">
 	{#each filtered as option}
 		<p
-			on:click={() => {
+			onclick={() => {
 				selected = option;
 				showDropDown = false;
 			}}

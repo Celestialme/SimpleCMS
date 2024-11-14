@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import type { FieldType } from '.';
 	import {
 		collections,
@@ -15,22 +17,31 @@
 	import Fields from '@src/components/Fields.svelte';
 	import { getData } from '@src/utils/data';
 	import { getFieldName, extractData } from '@src/utils/fields';
+	import { track } from '@src/utils/reactivity.svelte';
 
-	export let field: FieldType;
-	let fieldName = getFieldName(field);
-	export let value = entryData()[fieldName];
-	export let expanded = false;
+	interface Props {
+		field: FieldType;
+		value?: any;
+		expanded?: boolean;
+		WidgetData?: any;
+	}
 
-	let dropDownData;
-	let selected: { display: any; _id: any } | undefined = undefined;
-	let fieldsData = {};
-	let showDropDown = false;
-	let entryMode: 'create' | 'edit' | 'choose' = 'choose';
-	let relation_entry;
+	let {
+		field,
+		value = entryData()[getFieldName(field)],
+		expanded = $bindable(false),
+		WidgetData = $bindable()
+	}: Props = $props();
+
+	let dropDownData: any = $state();
+	let selected: { display: any; _id: any } | undefined = $state(undefined);
+	let fieldsData = $state({});
+	let showDropDown = $state(false);
+	let entryMode: 'create' | 'edit' | 'choose' = $state('choose');
+	let relation_entry = $state({ _id: '' });
 	let relationCollection = collections()[field?.relation];
 
-	export const WidgetData = async () => {
-		debugger;
+	WidgetData = async () => {
 		let relation_id = '';
 		if (!field) return;
 		if (entryMode == 'create') {
@@ -54,36 +65,39 @@
 		showDropDown = true;
 		entryMode = 'choose';
 	}
-	let display = '';
+	let display = $state('');
 
-	$: (async (_) => {
-		let data;
-		if (mode() == 'edit' && field) {
-			if (entryMode == 'edit' || entryMode == 'create') {
-				data = await extractData(fieldsData);
-			} else if (entryMode == 'choose') {
-				if (typeof value == 'string') {
-					data = await findById(value, relationCollection?.id as string);
-				} else {
-					data = value;
+	track(
+		async () => {
+			let data;
+			if (mode() == 'edit' && field) {
+				if (entryMode == 'edit' || entryMode == 'create') {
+					data = await extractData(fieldsData);
+				} else if (entryMode == 'choose') {
+					if (typeof value == 'string') {
+						data = await findById(value, relationCollection?.id as string);
+					} else {
+						data = value;
+					}
 				}
+				!relation_entry && (relation_entry = data);
+			} else {
+				data = await extractData(fieldsData);
 			}
-			!relation_entry && (relation_entry = data);
-		} else {
-			data = await extractData(fieldsData);
-		}
 
-		data = data[field.displayPath] ? data : value;
-		data = mode() == 'create' ? {} : data;
-		!display &&
-			(display = await field?.display({
-				data,
-				field,
-				collection: collection(),
-				entry: entryData(),
-				contentLanguage: contentLanguage()
-			}));
-	})(expanded);
+			data = data[field.displayPath] ? data : value;
+			data = mode() == 'create' ? {} : data;
+			!display &&
+				(display = await field?.display({
+					data,
+					field,
+					collection: collection(),
+					entry: entryData(),
+					contentLanguage: contentLanguage()
+				}));
+		},
+		() => expanded
+	);
 
 	async function save() {
 		let data = await saveFormData({
@@ -107,31 +121,32 @@
 
 {#if !expanded && !showDropDown}
 	<div class="flex header">
-		<p class="flex-grow text-center" on:click={openDropDown}>
+		<p class="flex-grow text-center" onclick={openDropDown}>
 			{@html selected?.display || display || 'select new'}
 		</p>
 		<div class="ml-auto">
 			{#if mode() == 'create'}
 				<button
-					on:click={() => {
+					onclick={() => {
 						expanded = !expanded;
 						entryMode = 'create';
 						fieldsData = {};
 						selected = undefined;
-						relation_entry = {};
+						relation_entry = {} as any;
 					}}
 					class="btn mr-1"
-					><iconify-icon icon="uil:focus-add" width="24" height="24" />
+					><iconify-icon icon="uil:focus-add" width="24" height="24"></iconify-icon>
 				</button>
 			{:else}
 				<button
-					on:click={() => {
+					onclick={() => {
 						expanded = !expanded;
 						entryMode = 'edit';
 						fieldsData = {};
 						selected = undefined;
 					}}
-					class="btn"><iconify-icon icon="raphael:edit" width="24" height="24" /></button
+					class="btn"
+					><iconify-icon icon="raphael:edit" width="24" height="24"></iconify-icon></button
 				>
 			{/if}
 		</div>

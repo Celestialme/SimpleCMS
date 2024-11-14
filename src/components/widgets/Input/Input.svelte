@@ -33,7 +33,7 @@
 	);
 
 	WidgetData = async () => _data;
-
+	export const d = async () => _data;
 	$effect(() => {
 		if (field.type == 'date') {
 			!_data[_language] && (_data[_language] = get_date());

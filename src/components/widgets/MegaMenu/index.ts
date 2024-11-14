@@ -1,11 +1,11 @@
 import { type Params, GuiSchema } from './types';
 import Input from '../Input';
-import { writable, type Writable } from 'svelte/store';
 import { entryData, mode, headerActionButton } from '@src/stores/store.svelte';
 
 import widgets, { type ModifyRequestParams } from '..';
 import { getGuiFields, getFieldName } from '@src/utils/fields';
-export let currentChild: Writable<any> = writable({});
+import { store } from '@src/utils/reactivity.svelte';
+export let currentChild = store({} as { [key: string]: any; children: any[] });
 const WIDGET_NAME = 'MegaMenu' as const;
 /**
  * Creates Mega Menu Field.

@@ -55,7 +55,6 @@
 					return obj;
 				})
 			));
-		console.log(collection(), 'here');
 		tableHeaders = collection().fields.map((field) => ({
 			label: field.label,
 			name: getFieldName(field)

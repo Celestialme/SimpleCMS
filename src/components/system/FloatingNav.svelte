@@ -7,14 +7,24 @@
 	import { tick } from 'svelte';
 	import { motion } from '@src/utils/utils';
 	import type { User } from '@src/auth/types';
-	let navigation_info = JSON.parse(localStorage.getItem('navigation') || '{}');
+	import { track } from '@src/utils/reactivity.svelte';
+	let navigation_info = $state(JSON.parse(localStorage.getItem('navigation') || '{}'));
 	let buttonRadius = 25;
-	export let buttonInfo = {
+	let {
+		buttonInfo = $bindable()
+	}: {
+		buttonInfo: {
+			x: number;
+			y: number;
+			radius: number;
+		};
+	} = $props();
+	buttonInfo = {
 		x: 50,
 		y: window.innerHeight / 2,
 		radius: buttonRadius
 	};
-	let showRoutes = false;
+	let showRoutes = $state(false);
 	let center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 	window.onresize = async () => {
 		center = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -32,14 +42,16 @@
 		}, pathname);
 		return params.length > 0 ? replaced : pathname;
 	}
-	$: buttonInfo = {
-		...{ x: 25, y: window.innerHeight / 2 },
-		...navigation_info?.[getBasePath($page.url.pathname)],
-		...{ radius: buttonRadius }
-	};
-	let firstLine: SVGLineElement;
-	let firstCircle: HTMLDivElement;
-	let svg: SVGElement;
+	$effect(() => {
+		buttonInfo = {
+			...{ x: 25, y: window.innerHeight / 2 },
+			...navigation_info?.[getBasePath($page.url.pathname)],
+			...{ radius: buttonRadius }
+		};
+	});
+	let firstLine = $state() as SVGLineElement;
+	let firstCircle = $state() as HTMLDivElement;
+	let svg = $state() as SVGElement;
 	let user: User = $page.data.user;
 	let endpoints: {
 		x: number;
@@ -50,35 +62,37 @@
 			path: string;
 		};
 		icon: string;
-	}[] = [
-		{
-			x: center.x,
-			y: center.y,
-			angle: 0,
-			url: { external: true, path: `/` },
-			icon: 'solar:home-bold'
-		},
-		{
-			x: 0,
-			y: 0,
-			angle: 60,
-			url: { external: false, path: '/builder' },
-			icon: 'icomoon-free:wrench'
-		},
-		{
-			x: 0,
-			y: 0,
-			angle: 0,
-			url: { external: false, path: `/profile` },
-			icon: 'bi:gear-fill'
-		}
-	].filter((endpoint) => {
-		if (user?.role === 'admin') return true;
-		else if (endpoint.url.path === '/builder') return false;
-		else return true;
-	});
+	}[] = $state(
+		[
+			{
+				x: center.x,
+				y: center.y,
+				angle: 0,
+				url: { external: true, path: `/` },
+				icon: 'solar:home-bold'
+			},
+			{
+				x: 0,
+				y: 0,
+				angle: 60,
+				url: { external: false, path: '/builder' },
+				icon: 'icomoon-free:wrench'
+			},
+			{
+				x: 0,
+				y: 0,
+				angle: 0,
+				url: { external: false, path: `/profile` },
+				icon: 'bi:gear-fill'
+			}
+		].filter((endpoint) => {
+			if (user?.role === 'admin') return true;
+			else if (endpoint.url.path === '/builder') return false;
+			else return true;
+		})
+	);
 
-	let circles: HTMLDivElement[] = [];
+	let circles: HTMLDivElement[] = $state([]);
 	// Function to calculate the coordinates of the endpoint of a vector
 	function calculateSecondVector(startX, startY, x1, y1, distance, angle) {
 		let firstAngle = Math.atan2(y1 - startY, x1 - startX) * (180 / Math.PI);
@@ -86,21 +100,24 @@
 		let y2 = Math.round(Math.sin(((firstAngle - angle) * Math.PI) / 180) * distance + y1);
 		return { x: x2, y: y2 };
 	}
-	$: {
-		for (let index in endpoints) {
-			endpoints[index] = {
-				...endpoints[index],
-				...calculateSecondVector(
-					buttonInfo.x,
-					buttonInfo.y,
-					center.x,
-					center.y,
-					140,
-					endpoints[index].angle
-				)
-			};
-		}
-	}
+	track(
+		() => {
+			for (let index in endpoints) {
+				endpoints[index] = {
+					...endpoints[index],
+					...calculateSecondVector(
+						buttonInfo.x,
+						buttonInfo.y,
+						center.x,
+						center.y,
+						140,
+						endpoints[index].angle
+					)
+				};
+			}
+		},
+		() => buttonInfo
+	);
 
 	function drag(node: HTMLDivElement) {
 		let moved = false;
@@ -224,7 +241,9 @@
 			circle.style.display = 'none';
 		}
 	}
-	$: if (!showRoutes) reverse();
+	$effect(() => {
+		if (!showRoutes) reverse();
+	});
 	function keepAlive(node, { delay = 0, duration = 400, easing: easing$1 = linear } = {}) {
 		return {
 			delay,
@@ -248,7 +267,9 @@
 {#if showRoutes}
 	<div
 		out:keepAlive|local
-		on:click|self={() => (showRoutes = false)}
+		onclick={function (e) {
+			if (e.target == (this as any)) showRoutes = false;
+		}}
 		class=" fixed top-0 left-0 z-[9999999]"
 	>
 		<svg bind:this={svg} xmlns="http://www.w3.org/2000/svg" use:setDash>
@@ -265,7 +286,7 @@
 		></div>
 		<div
 			bind:this={circles[0]}
-			on:click={() => {
+			onclick={() => {
 				endpoints[0]?.url?.external
 					? (location.href = endpoints[0]?.url?.path || '/')
 					: goto(endpoints[0]?.url?.path || '/');
@@ -274,12 +295,12 @@
 			class="circle flex items-center justify-center"
 			style="top:{center.y}px;left:{center.x}px;visibility:hidden; animation: showEndPoints 0.2s 0.2s forwards"
 		>
-			<iconify-icon width="30" style="color:white" icon={endpoints[0].icon} />
+			<iconify-icon width="30" style="color:white" icon={endpoints[0].icon}></iconify-icon>
 		</div>
 		{#each endpoints.slice(1, endpoints.length) as endpoint, index}
 			<div
 				bind:this={circles[index + 1]}
-				on:click={() => {
+				onclick={() => {
 					endpoint?.url?.external
 						? (location.href = endpoint?.url?.path || '/')
 						: goto(endpoint?.url?.path || '/');
@@ -288,7 +309,7 @@
 				class="circle flex items-center justify-center opacity-0"
 				style="top:{endpoint.y}px;left:{endpoint.x}px;animation: showEndPoints 0.2s 0.4s forwards"
 			>
-				<iconify-icon width="30" style="color:white" icon={endpoint.icon} />
+				<iconify-icon width="30" style="color:white" icon={endpoint.icon}></iconify-icon>
 			</div>
 		{/each}
 	</div>
@@ -329,10 +350,10 @@
 		cursor: pointer;
 		z-index: 99999999;
 	}
-	.circle:not(:first-of-type):hover {
+	.circle:not(:global(:first-of-type)):hover {
 		transform: translate(-50%, -50%) scale(1.5);
 	}
-	.circle:not(:first-of-type):active {
+	.circle:not(:global(:first-of-type)):active {
 		transform: translate(-50%, -50%) scale(1) !important;
 	}
 	.circle:first-of-type:active {

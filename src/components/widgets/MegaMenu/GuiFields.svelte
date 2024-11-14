@@ -1,17 +1,20 @@
 <script lang="ts">
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import WidgetBuilder from '@src/routes/builder/WidgetBuilder.svelte';
-	export let value: Array<Array<any>> = [];
-	console.log(value);
+	interface Props {
+		value?: Array<Array<any>>;
+	}
+
+	let { value = $bindable([]) }: Props = $props();
 </script>
 
 <div class="container border p-2">
 	<p>Menu Fields</p>
 	<Button onclick={() => (value = [...value, []])}>Add Level</Button>
-	{#each value as level, index}
+	{#each value as _, index}
 		<div class="level">
 			<p>level {index + 1}</p>
-			<WidgetBuilder bind:fields={level} />
+			<WidgetBuilder bind:fields={value[index]} />
 		</div>
 	{/each}
 </div>

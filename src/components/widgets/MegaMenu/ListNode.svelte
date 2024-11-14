@@ -1,4 +1,6 @@
 <script lang="ts">
+	import ListNode from './ListNode.svelte';
+
 	import { currentChild } from '.';
 	import {
 		contentLanguage,
@@ -10,27 +12,42 @@
 	import type { CustomDragEvent } from './types';
 	import { onMount, tick } from 'svelte';
 	import { debounce } from '@src/utils/utils';
-	export let self: { [key: string]: any; children: any[] };
-	export let parent: { [key: string]: any; children: any[] } | null = null;
-	export let level = 0;
-	export let depth = 0;
-	export let showFields = false;
-	export let maxDepth = 0;
-	export let expanded = false;
-	export let MENU_CONTAINER: HTMLUListElement;
 	let fields_container: HTMLDivElement;
 	onMount(() => {
 		fields_container = document.getElementById('fields_container') as HTMLDivElement;
 	});
-	let expanded_list: boolean[] = [];
-	let ul: HTMLElement;
-	export let refresh = () => {
-		self?.children && (self.children = self.children);
-	};
-
-	$: if (showFields) {
-		headerActionButton.set(XIcon);
+	let expanded_list: boolean[] = $state([]);
+	interface Props {
+		self: { [key: string]: any; children: any[] };
+		parent?: { [key: string]: any; children: any[] } | null;
+		level?: number;
+		depth?: number;
+		showFields?: boolean;
+		maxDepth?: number;
+		expanded?: boolean;
+		MENU_CONTAINER: HTMLUListElement;
+		refresh?: any;
 	}
+
+	let {
+		self = $bindable(),
+		parent = null,
+		level = 0,
+		depth = $bindable(0),
+		showFields = $bindable(),
+		maxDepth = 0,
+		expanded = $bindable(),
+		MENU_CONTAINER,
+		refresh = () => {
+			self?.children && (self.children = self.children);
+		}
+	}: Props = $props();
+
+	$effect(() => {
+		if (showFields) {
+			headerActionButton.set(XIcon);
+		}
+	});
 
 	function notifyChildren(node: HTMLElement) {
 		node.addEventListener('custom:notifyChildren', (e) => {
@@ -55,8 +72,6 @@
 					})
 				);
 			} else {
-				// let isSameParent = self.children.indexOf(event.detail.children[event.detail.clone_index]) !== -1;
-
 				self?.children?.splice(event.detail.closest_index, 0, event.detail.dragged_item);
 				expanded_list.splice(event.detail.closest_index, 0, clone_isExpanded);
 				expanded_list = expanded_list;
@@ -204,7 +219,7 @@
 
 <div
 	use:notifyChildren
-	on:click={(e) => {
+	onclick={(e) => {
 		expanded = !expanded;
 	}}
 	class="header header-level-{level}"
@@ -221,41 +236,40 @@
 	<div class="flex items-center ml-auto gap-1">
 		{#if level < maxDepth - 1}
 			<button
-				on:click|stopPropagation={() => {
-					$currentChild = self;
+				onclick={(e) => {
+					e.stopPropagation();
+					currentChild.set(self);
 					depth = level + 1;
 					showFields = true;
 					mode.set('create');
 					translationProgress().show = true;
-				}}><iconify-icon icon="uil:focus-add" width="24" height="24" /></button
+				}}><iconify-icon icon="uil:focus-add" width="24" height="24"></iconify-icon></button
 			>
 		{/if}
 		<button
-			on:click|stopPropagation={() => {
-				$currentChild = self;
+			onclick={(e) => {
+				e.stopPropagation();
+				currentChild.set(self);
 				mode.set('edit');
 				depth = level;
 				showFields = true;
 				translationProgress().show = true;
-			}}><iconify-icon icon="raphael:edit" width="24" height="24" /></button
+			}}><iconify-icon icon="raphael:edit" width="24" height="24"></iconify-icon></button
 		>
 		{#if level > 0}
 			<button
-				on:click|stopPropagation={() => {
+				onclick={(e) => {
+					e.stopPropagation();
 					parent?.children?.splice(parent?.children?.indexOf(self), 1);
 					refresh();
-				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24" /></button
+				}}><iconify-icon icon="tdesign:delete-1" width="24" height="24"></iconify-icon></button
 			>
 		{/if}
 	</div>
 </div>
 
 {#if self?.children?.length > 0 && expanded}
-	<ul
-		bind:this={ul}
-		class="children relative"
-		style="margin-left:{20 * (level > 0 ? 1 : 0) + 15}px;"
-	>
+	<ul class="children relative" style="margin-left:{20 * (level > 0 ? 1 : 0) + 15}px;">
 		{#each self.children as child, index}
 			<li
 				use:drag
@@ -263,7 +277,7 @@
 				data-index={index}
 				class={`level-${level} touch-none`}
 			>
-				<svelte:self
+				<ListNode
 					{MENU_CONTAINER}
 					{refresh}
 					self={child}

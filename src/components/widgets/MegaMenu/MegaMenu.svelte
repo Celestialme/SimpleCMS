@@ -4,16 +4,26 @@
 	import { extractData, getFieldName } from '@src/utils/fields';
 	import ListNode from './ListNode.svelte';
 	import { mode, entryData, saveFunction, translationProgress } from '@src/stores/store.svelte';
-	export let field: FieldType;
-	let fieldName = getFieldName(field);
+	import { track } from '@src/utils/reactivity.svelte';
+
 	translationProgress().show = false;
-	export let value = entryData()[fieldName];
-	export const WidgetData = async () => _data;
-	let MENU_CONTAINER: HTMLUListElement;
-	let showFields = false;
-	let depth = 0;
-	let _data: { [key: string]: any; children: any[] } = mode() == 'create' ? null : value;
-	let fieldsData = {};
+	interface Props {
+		field: FieldType;
+		value?: any;
+		WidgetData?: any;
+	}
+
+	let {
+		field,
+		value = entryData()[getFieldName(field)],
+		WidgetData = $bindable()
+	}: Props = $props();
+	WidgetData = async () => _data;
+	let MENU_CONTAINER = $state() as HTMLUListElement;
+	let showFields = $state(false);
+	let depth = $state(0);
+	let _data: { [key: string]: any; children: any[] } = $state(mode() == 'create' ? null : value);
+	let fieldsData = $state({});
 	let saveMode = mode();
 
 	async function saveLayer() {
@@ -23,10 +33,10 @@
 			_data = { ..._fieldsData, children: [] };
 		} else if (mode() == 'edit') {
 			for (let key in _fieldsData) {
-				$currentChild[key] = _fieldsData[key];
+				currentChild()[key] = _fieldsData[key];
 			}
-		} else if (mode() == 'create' && $currentChild.children) {
-			$currentChild.children.push({ ..._fieldsData, children: [] });
+		} else if (mode() == 'create' && currentChild().children) {
+			currentChild().children.push({ ..._fieldsData, children: [] });
 		}
 
 		_data = _data;
@@ -36,13 +46,18 @@
 		depth = 0;
 		saveFunction().reset();
 	}
+	track(
+		() => {
+			if (!_data || showFields) saveFunction().fn = saveLayer;
+		},
+		() => [_data, showFields]
+	);
 </script>
 
 {#if !_data || showFields}
 	{#key depth}
-		<Fields fields={field.fields[depth]} root={false} bind:fieldsData customData={$currentChild} />
+		<Fields fields={field.fields[depth]} root={false} bind:fieldsData customData={currentChild()} />
 	{/key}
-	{((saveFunction().fn = saveLayer), '')}
 {/if}
 {#if _data}
 	<ul bind:this={MENU_CONTAINER} class:hidden={depth != 0} class="children MENU_CONTAINER">
