@@ -14,6 +14,14 @@ let schema: Schema = {
 			label: 'Text2',
 			type: 'text',
 			translated: true
+		}),
+		widgets.ImageUpload({
+			folder: 'images',
+			label: 'Image'
+		}),
+		widgets.ImageUpload({
+			folder: 'images',
+			label: 'Image2'
 		})
 	]
 };

@@ -5,6 +5,7 @@ import { GuiSchema, toString, type Params } from './types';
 import mongoose from 'mongoose';
 import { getGuiFields, getFieldName } from '@src/utils/fields';
 import type { ModifyRequestParams } from '..';
+import { cleanRemovedImages } from '@src/utils/utils';
 // import type { ModifyRequestParams } from '..';
 const WIDGET_NAME = 'RichText' as const;
 const widget = (params: Params) => {
@@ -74,15 +75,7 @@ widget.modifyRequest = async ({
 					// selected from Media images
 					_id = new mongoose.Types.ObjectId(images[img_id]);
 				}
-				if (meta_data?.storage_images?.removed && _id) {
-					let removed = meta_data?.storage_images?.removed as string[];
-					let index = removed.indexOf(_id.toString());
-
-					while (index != -1) {
-						removed.splice(index, 1);
-						index = removed.indexOf(_id.toString());
-					}
-				}
+				cleanRemovedImages(meta_data, _id);
 
 				await mongoose.models['_storage_images'].updateOne({ _id }, { $addToSet: { used_by: id } });
 			}

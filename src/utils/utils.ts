@@ -244,3 +244,15 @@ export function toStringHelper({
 		return (acc += path(lang) + '\n');
 	}, '\n');
 }
+
+export function cleanRemovedImages(meta_data, id) {
+	//prevents other widgets from removing images if current widget needs it.
+	if (meta_data?.storage_images?.removed && id) {
+		let removed = meta_data?.storage_images?.removed as string[];
+		let index = removed.indexOf(id.toString());
+		while (index != -1) {
+			removed.splice(index, 1);
+			index = removed.indexOf(id.toString());
+		}
+	}
+}

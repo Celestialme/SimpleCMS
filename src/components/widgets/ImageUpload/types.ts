@@ -5,7 +5,6 @@ export type Params = {
 	label: string;
 	display?: DISPLAY;
 	db_fieldName?: string;
-	widget?: any;
 	folder: (typeof publicConfig.FOLDERS)[number];
 	width?: number;
 };

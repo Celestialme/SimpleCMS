@@ -8,7 +8,7 @@ export async function modifyRequest({ data, fields, collection, user, type }) {
 
 		if ('modifyRequest' in widget) {
 			// widget can modify own portion of entryList;
-			data = await Promise.all(
+			await Promise.all(
 				data.map(async (entry: any) => {
 					let data = {
 						get() {
@@ -25,7 +25,7 @@ export async function modifyRequest({ data, fields, collection, user, type }) {
 						user,
 						type,
 						id: entry._id,
-						meta_data: entry.meta_data
+						meta_data: entry._meta_data
 					});
 					return entry;
 				})

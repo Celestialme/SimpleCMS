@@ -80,7 +80,7 @@
 			<FloatingNav bind:buttonInfo={navButton} />
 		</div>
 	</Drawer>
-	<div class="flex-grow-[2] overflow-hidden max-h-screen pl-[2px] pr-[4px]">
+	<div class="w-full flex-grow-[2] overflow-hidden max-h-screen pl-[2px] pr-[4px]">
 		{#if mode() !== 'storage'}
 			<Header />
 		{/if}

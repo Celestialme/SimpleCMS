@@ -12,23 +12,26 @@
 	import type { Layer } from 'konva/lib/Layer';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
 	import { getFieldName } from '@src/utils/fields';
-	export let field: FieldType;
-	export let value: File | ImageFile = entryData()[getFieldName(field)]; // pass file directly from imageArray
-	let _data: File | ImageFile | undefined = value;
-	$: updated = _data !== value;
+	interface Props {
+		field: FieldType;
+		value?: File | ImageFile;
+		WidgetData?: any;
+	}
 
-	export const WidgetData = async () => {
-		if (
-			!(value instanceof File) &&
-			!(_data instanceof File) &&
-			_data?._id !== value?._id &&
-			value?._id &&
-			mode() == 'edit'
-		) {
+	let {
+		field,
+		value = entryData()[getFieldName(field)],
+		WidgetData = $bindable()
+	}: Props = $props();
+	let _data: File | ImageFile | undefined = $state(value);
+	let updated = $derived(_data !== value);
+
+	WidgetData = async () => {
+		if (value && mode() == 'edit' && (_data as ImageFile)?._id !== (value as ImageFile)?._id) {
 			//send replaced image's id so we can remove it from _storage_images usage
-			meta_data.add('storage_images_remove', [value._id]);
+			meta_data.add('storage_images_remove', [(value as ImageFile)._id]);
 		}
-		//if not updated value is not changed and is ImageFiles type so send back only id
+		//if not updated, value is not changed and is ImageFiles type so send back only id
 		return updated || mode() == 'create'
 			? _data
 			: value
@@ -36,7 +39,7 @@
 				: null;
 	};
 
-	let editing = false;
+	let editing = $state(false);
 	let edit = {
 		stage: {} as Stage,
 		group: {} as Group,
@@ -223,13 +226,13 @@
 					class=" px-2 cursor-pointer text-white"
 					icon="flat-color-icons:edit-image"
 					width="24"
-				/>
+				></iconify-icon>
 				<iconify-icon
 					onclick={() => (_data = undefined)}
 					class="ml-auto px-2 cursor-pointer text-white"
 					icon="streamline:arrow-reload-horizontal-1-solid"
 					width="24"
-				/>
+				></iconify-icon>
 			{/if}
 		</div>
 		{#if editing}
