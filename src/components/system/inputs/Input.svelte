@@ -1,10 +1,22 @@
 <script lang="ts">
-	export let type: 'text' | 'password' | 'email' = 'text';
-	export let label = '';
-	export let labelClass = '';
-	export let inputClass = '';
-	export let placeholder = '';
-	export let value = '';
+	interface Props {
+		type?: 'text' | 'password' | 'email';
+		label?: string;
+		labelClass?: string;
+		inputClass?: string;
+		placeholder?: string;
+		value?: string;
+	}
+
+	let {
+		type = 'text',
+		label = '',
+		labelClass = '',
+		inputClass = '',
+		placeholder = '',
+		value = $bindable(''),
+		...props
+	}: Props = $props();
 	function typeAction(node: HTMLInputElement) {
 		node.type = type;
 	}
@@ -14,7 +26,7 @@
 	{#if label}
 		<label for="input" class={labelClass}>{label}</label>
 	{/if}
-	<input use:typeAction id="input" class={inputClass} bind:value {placeholder} {...$$props} />
+	<input use:typeAction id="input" class={inputClass} bind:value {placeholder} {...props} />
 </div>
 
 <style>

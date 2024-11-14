@@ -5,10 +5,15 @@
 	import type { FieldType } from '.';
 	import { getFieldName } from '@src/utils/fields';
 
-	export let field: FieldType;
-	let _fieldsValue: any = [];
-	let files: any = [];
-	export const WidgetData = async () => {
+	interface Props {
+		field: FieldType;
+		WidgetData?: any;
+	}
+
+	let { field, WidgetData = $bindable() }: Props = $props();
+	let _fieldsValue: any = $state([]);
+	let files: any = $state([]);
+	WidgetData = async () => {
 		for (let i = 0; i < files.length; i++) {
 			let fieldsData = _fieldsValue[i];
 			for (let key in fieldsData) {

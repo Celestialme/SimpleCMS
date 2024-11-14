@@ -13,8 +13,7 @@
 	let repeat = 3;
 	let separator = ' • ';
 
-	let array: any = [];
-	$: array = [...Array(repeat)].map((_) => [...text].concat([...separator])).flat();
+	let array: any = [...Array(repeat)].map((_) => [...text].concat([...separator])).flat();
 </script>
 
 {#if $page}

@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { drawerExpanded, mode } from '@src/stores/store.svelte';
-	export let saveFunction = () => {};
+	let { saveFunction = () => {} } = $props();
 </script>
 
 <div class="h-[60px] w-full">
 	<div class="wrapper max-md:!fixed max-md:top-0 max-md:left-0">
-		<button class="text-white" on:click={() => drawerExpanded.set(!drawerExpanded())}
+		<button class="text-white" onclick={() => drawerExpanded.set(!drawerExpanded())}
 			><iconify-icon class="md:hidden h-[17px]" icon="mingcute:menu-fill" width="24"></iconify-icon>
 		</button>
 		<button
-			on:click={() => mode.set('create')}
+			onclick={() => mode.set('create')}
 			class="flex items-center justify-center bg-green-500 rounded-[50%] w-[35px] h-[35px] md:ml-auto md:mr-[10px]"
 			><iconify-icon icon="gravity-ui:plus"></iconify-icon></button
 		>
 		<button
-			on:click={() => saveFunction()}
+			onclick={() => saveFunction()}
 			class="flex items-center justify-center bg-green-500 rounded-[50%] w-[35px] h-[35px]"
 			><iconify-icon width="25" icon="material-symbols:sync-saved-locally-outline-rounded"
 			></iconify-icon>

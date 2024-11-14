@@ -59,7 +59,7 @@
 		<button
 			onclick={() => {
 				loginRecover = false;
-			}}><iconify-icon icon="mdi:arrow-left-circle" width="30" /></button
+			}}><iconify-icon icon="mdi:arrow-left-circle" width="30"></iconify-icon></button
 		>
 	</div>
 </form>
