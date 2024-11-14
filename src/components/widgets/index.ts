@@ -24,6 +24,7 @@ export type ModifyRequestParams<T extends (...args: any) => any> = {
 	id: mongoose.Types.ObjectId;
 	field: ReturnType<T>;
 	data: { get: () => any; update: (newData) => void };
+	entry?: { [key: string]: any };
 	user: User;
 	type: 'GET' | 'POST' | 'DELETE' | 'PATCH';
 	meta_data?: { [key: string]: any };

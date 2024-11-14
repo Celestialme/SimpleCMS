@@ -39,10 +39,13 @@
 			(tableData = await Promise.all(
 				data.entryList.map(async (entry) => {
 					let obj: { [key: string]: any } = {};
-					for (let field of collection().fields) {
+					for (let field of collection().fields.flatMap((field: any) =>
+						field.extract ? field.fields : [field]
+					)) {
 						if ('callback' in field) {
 							field.callback({ data });
 						}
+
 						obj[field.label] = await field.display?.({
 							data: entry[getFieldName(field)],
 							collection: collection().path,
@@ -55,10 +58,12 @@
 					return obj;
 				})
 			));
-		tableHeaders = collection().fields.map((field) => ({
-			label: field.label,
-			name: getFieldName(field)
-		}));
+		tableHeaders = collection()
+			.fields.flatMap((field: any) => (field.extract ? field.fields : [field]))
+			.map((field) => ({
+				label: field.label,
+				name: getFieldName(field)
+			}));
 
 		modifyMap = {};
 		selectAll = false;

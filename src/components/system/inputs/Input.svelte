@@ -14,7 +14,7 @@
 		labelClass = '',
 		inputClass = '',
 		placeholder = '',
-		value = $bindable(''),
+		value = $bindable(),
 		...props
 	}: Props = $props();
 	function typeAction(node: HTMLInputElement) {

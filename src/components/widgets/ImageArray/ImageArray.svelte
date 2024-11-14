@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Fields from '@src/components/Fields.svelte';
-	import { mode } from '@src/stores/store.svelte';
+	import { mode, saveFunction } from '@src/stores/store.svelte';
 	import { saveFormData } from '@src/utils/data';
 	import type { FieldType } from '.';
 	import { getFieldName } from '@src/utils/fields';
@@ -12,24 +12,25 @@
 
 	let { field, WidgetData = $bindable() }: Props = $props();
 	let _fieldsValue: any = $state([]);
-	let files: any = $state([]);
-	WidgetData = async () => {
-		for (let i = 0; i < files.length; i++) {
+	let files: any = $state();
+	saveFunction().fn = async () => {
+		for (let i = 0; i < files?.length || 0; i++) {
 			let fieldsData = _fieldsValue[i];
 			for (let key in fieldsData) {
-				console.log(await fieldsData[key]());
+				console.log(key);
 			}
 			await saveFormData({ data: fieldsData });
 		}
-		if (!files.length) {
+		if (mode() == 'edit') {
 			// if no files currently being chosen, means we are editing, should update.
 			let fieldsData = _fieldsValue;
 			await saveFormData({ data: fieldsData });
 		}
+		mode.set('view');
 	};
 </script>
 
-{#if files.length > 0}
+{#if files?.length > 0}
 	{#each files as file, index}
 		<div class="relative my-4 rounded-lg border-2 border-[#8cccff] p-[20px]">
 			<Fields
@@ -41,7 +42,7 @@
 		</div>
 	{/each}
 {:else if mode() == 'edit'}
-	<Fields fields={field.fields} />
+	<Fields fields={field.fields} bind:fieldsData={_fieldsValue} />
 {:else}
 	<input
 		bind:files

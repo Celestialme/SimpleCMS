@@ -9,7 +9,7 @@ export type Params = {
 	icon?: string;
 	required?: boolean;
 	widget?: any;
-	//widget.widgets
+	extract?: boolean;
 	fields: any;
 	display?: DISPLAY;
 	uploader_label: string;

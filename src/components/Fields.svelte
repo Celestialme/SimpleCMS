@@ -16,12 +16,12 @@
 	let {
 		fields = undefined,
 		root = true,
-		fieldsData = $bindable({}),
+		fieldsData = $bindable(),
 		customData = {},
 		...restProps
 	}: Props = $props();
 	let links: { [key: string]: boolean } = $state(entryData()['_links'] || {});
-
+	fieldsData = {};
 	track(
 		() =>
 			root &&

@@ -5,23 +5,12 @@ let schema: Schema = {
 	icon: 'iconoir:post',
 
 	fields: [
-		widgets.Input({
-			label: 'Text',
-			type: 'text',
-			translated: true
-		}),
-		widgets.Input({
-			label: 'Text2',
-			type: 'text',
-			translated: true
-		}),
-		widgets.ImageUpload({
-			folder: 'images',
-			label: 'Image'
-		}),
-		widgets.ImageUpload({
-			folder: 'images',
-			label: 'Image2'
+		widgets.ImageArray({
+			fields: [widgets.Input({ label: 'Text', type: 'text' })],
+			label: 'ImageArray',
+			uploader_label: 'Image',
+			uploader_path: 'images',
+			extract: true
 		})
 	]
 };

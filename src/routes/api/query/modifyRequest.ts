@@ -22,6 +22,7 @@ export async function modifyRequest({ data, fields, collection, user, type }) {
 						collection,
 						field,
 						data,
+						entry,
 						user,
 						type,
 						id: entry._id,

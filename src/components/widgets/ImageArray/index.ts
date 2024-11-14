@@ -6,22 +6,7 @@ import type { ModifyRequestParams } from '..';
 import widgets from '..';
 import { getFieldName, getGuiFields } from '@src/utils/fields';
 const WIDGET_NAME = 'ImageArray' as const;
-/*************  ✨ Codeium Command ⭐  *************/
-/**
- * Constructs an ImageArray widget configuration.
- *
- * This function initializes an ImageUpload field and inserts it at the beginning
- * of the provided fields array. It also constructs the widget object with its
- * name and GUI fields, and sets up the display logic for rendering the thumbnail
- * of the uploaded image. The resulting field object includes metadata and configuration
- * for the widget, such as display settings, labels, paths, and requirements.
- *
- * @param params - The parameters for configuring the ImageArray widget, including
- *                 field metadata and uploader configurations.
- * @returns An object containing the widget configuration and field metadata.
- */
 
-/******  87eb5124-d3d8-493d-93ef-abfe5d2d1eee  *******/
 const widget = (params: Params) => {
 	params.fields.unshift(
 		ImageUpload({
@@ -38,8 +23,14 @@ const widget = (params: Params) => {
 	};
 	let display;
 	if (!params.display) {
-		display = async ({ data, collection, field, entry, contentLanguage }) => {
-			return `<img class='max-w-[200px] inline-block' src="${entry[getFieldName(uploader)]?.thumbnail?.url}" />`;
+		display = async ({ collection, field, entry, contentLanguage }) => {
+			return await uploader.display?.({
+				data: entry[getFieldName(uploader)],
+				collection,
+				field,
+				entry,
+				contentLanguage
+			});
 		};
 		display.default = true;
 	} else {
@@ -57,7 +48,7 @@ const widget = (params: Params) => {
 		uploader_path: params.uploader_path,
 		uploader_display: params.uploader_display,
 		uploader_db_fieldName: params.uploader_db_fieldName,
-		extract: true,
+		extract: params.extract,
 		width: params.width
 	};
 
@@ -66,22 +57,28 @@ const widget = (params: Params) => {
 
 widget.modifyRequest = async ({
 	field,
-	data,
 	user,
+	entry,
 	type,
 	id,
 	collection
 }: ModifyRequestParams<typeof widget>) => {
-	let _data = data.get();
-	console.log('data:', _data);
-	return;
 	for (let _field of field.fields) {
 		let widget = widgets[_field.widget.Name];
-		if ('modifyRequest' in widget) {
+
+		if (entry && 'modifyRequest' in widget) {
+			let data = {
+				get() {
+					return entry[getFieldName(_field)];
+				},
+				update(newData) {
+					entry[getFieldName(_field)] = newData;
+				}
+			};
 			await widget.modifyRequest({
 				collection,
 				field: _field as ReturnType<typeof widget>,
-				data: _data[getFieldName(_field)],
+				data,
 				user,
 				type,
 				id
