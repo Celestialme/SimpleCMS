@@ -4,6 +4,7 @@ import deepmerge from 'deepmerge';
 import type { CollectionTypes, Schema } from '@src/collections/types';
 import { collections } from '@src/stores/store.svelte';
 import { getFieldName, getGuiFields } from '@src/utils/fields';
+import mongoose from 'mongoose';
 const WIDGET_NAME = 'Relation' as const;
 const widget = <
 	K extends CollectionTypes[T][number],
@@ -57,77 +58,46 @@ widget.modifyRequest = async ({
 	id
 }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get();
-
-	if (type !== 'GET' || !_data) {
-		return;
+	switch (type) {
+		case 'POST':
+		case 'PATCH':
+			let _id = new mongoose.Types.ObjectId(_data);
+			data.update(_id);
+			break;
 	}
-	let { collectionModels: collectionsModels } = await import('@src/routes/api/db');
-	let relative_collection_schema = collections()[field.relation] as Schema;
-	let relative_collection = collectionsModels[relative_collection_schema.id];
-	let response = (await relative_collection.findById(_data)) as any;
-	let result = { _id: response?._id };
-	for (let key in relative_collection_schema.fields) {
-		let _field = relative_collection_schema.fields[key];
-		let widget = widgets[_field.widget.Name];
-		result[getFieldName(_field)] = response?.[getFieldName(_field)];
-		let data = {
-			get() {
-				return response?.[getFieldName(_field)];
-			},
-			update(newData) {
-				result[getFieldName(_field)] = newData;
-			}
-		};
-		if ('modifyRequest' in widget) {
-			await widget.modifyRequest({
-				collection: relative_collection,
-				field: _field as ReturnType<typeof widget>,
-				data,
-				user,
-				type,
-				id
-			});
-		}
-	}
-	data.update(result);
 };
-widget.aggregations = {
-	filters: async (info) => {
-		let field = info.field as ReturnType<typeof widget>;
-		let relative_collection = collections()[field.relation];
-		let relative_field = relative_collection?.fields.find(
-			(f) => getFieldName(f) == field.displayPath
-		);
-		let widget = widgets[relative_field.widget.Name];
-		let new_field = deepmerge(relative_field, {
-			db_fieldName: 'relation.' + getFieldName(relative_field)
-		}); //use db_fieldName since it overrides label.
-		return (
-			widget?.aggregations?.filters({
-				field: new_field,
-				filter: info.filter,
-				contentLanguage: info.contentLanguage
-			}) ?? []
-		);
-	},
-	sorts: async (info) => {
-		let field = info.field as ReturnType<typeof widget>;
-		let relative_collection = collections()[field.relation];
-		let relative_field = relative_collection?.fields.find(
-			(f) => getFieldName(f) == field.displayPath
-		);
-		let widget = widgets[relative_field.widget.Name];
-		let new_field = deepmerge(relative_field, {
-			db_fieldName: 'relation.' + getFieldName(relative_field)
-		}); //use db_fieldName since it overrides label.
-		return (
-			widget?.aggregations?.sorts({
-				field: new_field,
-				sort: info.sort,
-				contentLanguage: info.contentLanguage
-			}) ?? []
-		);
-	}
-} as Aggregations;
+widget.modifiers = (async (info) => {
+	let field = info.field as ReturnType<typeof widget>;
+	let fieldName = getFieldName(field);
+	let relative_collection = collections()[field.relation];
+	let relative_field = relative_collection?.fields.find(
+		(f) => getFieldName(f) == field.displayPath
+	);
+	let widget = widgets[relative_field.widget.Name];
+	let new_field = deepmerge(relative_field, {
+		db_fieldName: `${fieldName}.${getFieldName(relative_field)}`
+	}); //use db_fieldName since it overrides label.
+
+	return [
+		{
+			$lookup: {
+				from: relative_collection.id,
+				localField: fieldName,
+				foreignField: '_id',
+				as: fieldName
+			}
+		},
+		{
+			$unwind: `$${fieldName}`
+		},
+		...(await widget?.modifiers({
+			field: new_field,
+			filter: info.filter,
+			sort: info.sort,
+			contentLanguage: info.contentLanguage
+		}))
+	];
+}) as modifiers;
+
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

@@ -130,36 +130,6 @@ export function updateTranslationProgress(data, field) {
 	}
 }
 
-export let get_elements_by_id = {
-	//this function is used to get elements by id together at the end to minimize calls to database.
-	store: {},
-	add(collection, id, callback) {
-		if (!collection || !id) return;
-		if (!this.store[collection]) {
-			this.store[collection] = {};
-		}
-		if (!this.store[collection][id]) {
-			this.store[collection][id] = [callback];
-		} else {
-			this.store[collection][id].push(callback);
-		}
-	},
-	async getAll() {
-		let store = this.store;
-		this.store = {};
-		for (let collection in store) {
-			let ids = Object.keys(store[collection]);
-			let data = await mongoose.models[collection].find({ _id: { $in: ids } });
-
-			for (let doc in data) {
-				for (let callback of store[collection][data[doc]._id.toString()]) {
-					callback(data[doc]);
-				}
-			}
-		}
-	}
-};
-
 export let createRandomID = (id?: string) => {
 	return id ? new mongoose.Types.ObjectId(id) : new mongoose.Types.ObjectId();
 };

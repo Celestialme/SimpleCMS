@@ -1,6 +1,5 @@
 import type { Schema } from '@src/collections/types';
 import widgets from '@src/components/widgets';
-import { get_elements_by_id } from '@src/utils/utils';
 import { collectionModels } from '../db';
 import type { User } from '@src/auth/types';
 import publicConfig from '@root/config/public';
@@ -26,7 +25,7 @@ export async function _GET({
 	limit?: number;
 	page?: number;
 }) {
-	let aggregations: any = [];
+	let modifiers: any = [];
 
 	let collection = collectionModels[schema.id as string];
 	let skip = (page - 1) * limit;
@@ -36,33 +35,27 @@ export async function _GET({
 		let widget = widgets[field.widget.Name];
 		let fieldName = getFieldName(field);
 
-		if ('aggregations' in widget) {
+		if ('modifiers' in widget) {
 			let _filter = filter[fieldName];
 			let _sort = sort[fieldName];
 
-			if (widget.aggregations.filters && _filter) {
-				let _aggregations = await widget.aggregations.filters({
+			if (widget.modifiers) {
+				let _modifiers = await widget.modifiers({
 					field,
 					contentLanguage: contentLanguage,
-					filter: _filter
-				});
-				aggregations.push(..._aggregations);
-			}
-			if (widget.aggregations.sorts && _sort) {
-				let _aggregations = await widget.aggregations.sorts({
-					field,
-					contentLanguage: contentLanguage,
+					filter: _filter,
 					sort: _sort
 				});
-				aggregations.push(..._aggregations);
+				modifiers.push(..._modifiers);
 			}
 		}
 	}
+	modifiers = modifiers.filter((x) => x);
 	let entryListWithCount = await collection.aggregate([
 		{
 			$facet: {
-				entries: [...aggregations, { $skip: skip }, ...(limit ? [{ $limit: limit }] : [])],
-				totalCount: [...aggregations, { $count: 'total' }]
+				entries: [...modifiers, { $skip: skip }, ...(limit ? [{ $limit: limit }] : [])],
+				totalCount: [...modifiers, { $count: 'total' }]
 			}
 		}
 	]);
@@ -91,7 +84,6 @@ export async function _GET({
 		type: 'GET'
 	});
 
-	await get_elements_by_id.getAll(); //get all collected ids together and modify request.
 	let totalCount = entryListWithCount[0].totalCount[0]
 		? entryListWithCount[0].totalCount[0].total
 		: 0;

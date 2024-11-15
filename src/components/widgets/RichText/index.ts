@@ -90,25 +90,22 @@ widget.modifyRequest = async ({
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
 widget.toString = toString;
-widget.aggregations = {
-	filters: async (info) => {
-		let field = info.field as ReturnType<typeof widget>;
-		return [
-			{
-				$match: {
-					[`${getFieldName(field)}.header.${info.contentLanguage}`]: {
-						$regex: info.filter,
-						$options: 'i'
-					}
+widget.modifiers = (async (info) => {
+	let field = info.field as ReturnType<typeof widget>;
+	let fieldName = getFieldName(field);
+	return [
+		info.filter && {
+			$match: {
+				[`${getFieldName(field)}.header.${info.contentLanguage}`]: {
+					$regex: info.filter,
+					$options: 'i'
 				}
 			}
-		];
-	},
-	sorts: async (info) => {
-		let field = info.field as ReturnType<typeof widget>;
-		let fieldName = getFieldName(field);
-		return [{ $sort: { [`${fieldName}.header.${info.contentLanguage}`]: info.sort } }];
-	}
-} as Aggregations;
+		},
+		info.sort && {
+			$sort: { [`${fieldName}.header.${info.contentLanguage}`]: info.sort }
+		}
+	];
+}) as modifiers;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

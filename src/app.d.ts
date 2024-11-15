@@ -21,26 +21,17 @@ declare global {
 		contentLanguage: string
 	}) => Promise<any>) & { default?: boolean };
 
-	type Aggregations = {
-		filters?: ({
-			field,
-			contentLanguage,
-			filter
-		}: {
-			field: any;
-			contentLanguage: string;
-			filter: string;
-		}) => Promise<PipelineStage[]>;
-		sorts?: ({
-			field,
-			contentLanguage,
-			sort
-		}: {
-			field: any;
-			contentLanguage: string;
-			sort: number;
-		}) => Promise<PipelineStage[]>;
-	};
+	type modifiers = ({
+		field,
+		contentLanguage,
+		filter,
+		sort
+	}: {
+		field: any;
+		contentLanguage: string;
+		filter: string;
+		sort: number;
+	}) => Promise<PipelineStage[]>;
 
 	interface RegExpConstructor {
 		escape(str: string): string;

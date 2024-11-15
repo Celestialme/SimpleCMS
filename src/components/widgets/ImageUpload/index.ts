@@ -1,5 +1,5 @@
 import { type Params, GuiSchema } from './types';
-import { cleanRemovedImages, get_elements_by_id } from '@src/utils/utils';
+import { cleanRemovedImages } from '@src/utils/utils';
 import { saveImage } from '@src/utils/files';
 import { type ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
@@ -53,11 +53,6 @@ widget.modifyRequest = async ({
 	// _id == new image id;
 	// id == current document id;
 	switch (type) {
-		case 'GET':
-			// here _data is just id of the image
-			data.update(null);
-			get_elements_by_id.add('_storage_images', _data, (newData) => data.update(newData));
-			break;
 		case 'POST':
 		case 'PATCH':
 			let _id;
@@ -78,21 +73,27 @@ widget.modifyRequest = async ({
 			break;
 	}
 };
-widget.aggregations = {
-	filters: async (info) => {
-		let field = info.field as ReturnType<typeof widget>;
-
-		return [
-			{
-				$match: { [`${getFieldName(field)}.original.name`]: { $regex: info.filter, $options: 'i' } }
+widget.modifiers = (async (info) => {
+	let field = info.field as ReturnType<typeof widget>;
+	let fieldName = getFieldName(field);
+	return [
+		{
+			$lookup: {
+				from: '_storage_images',
+				localField: fieldName,
+				foreignField: '_id',
+				as: fieldName
 			}
-		];
-	},
-	sorts: async (info) => {
-		let field = info.field as ReturnType<typeof widget>;
-		let fieldName = getFieldName(field);
-		return [{ $sort: { [`${fieldName}.original.name`]: info.sort } }];
-	}
-} as Aggregations;
+		},
+		{
+			$unwind: `$${fieldName}`
+		},
+		info.filter && {
+			$match: { [`${getFieldName(field)}.original.name`]: { $regex: info.filter, $options: 'i' } }
+		},
+		info.sort && { $sort: { [`${fieldName}.original.name`]: info.sort } }
+	];
+}) as modifiers;
+
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;
