@@ -30,7 +30,7 @@
 </script>
 
 <div class="body max-md:flex-col gap-[20px] max-md:gap-2 overflow-auto">
-	<FloatingNav />
+	<FloatingNav buttonInfo={{ x: 0, y: 0, radius: 0 }} />
 	<div class="options bg-gray-800 md:px-[30px] p-[20px] min-w-[320px]">
 		<p class="text-white text-center mb-2">User: {data.user.username}</p>
 		<!-- <p class="text-white text-center">Auth method {data.user.authMethod}</p> -->

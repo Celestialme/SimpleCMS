@@ -14,12 +14,24 @@ export let UserSchema = {
 	is_registered: Boolean // is the user registration finished
 };
 export let tokenSchema = {
-	token: String,
-	user_id: mongoose.Schema.ObjectId,
-	expiresIn: Number
+	token: {
+		type: String,
+		required: true
+	},
+	user_id: {
+		type: String,
+		required: true
+	},
+	expiresIn: {
+		type: Number,
+		required: true
+	}
 };
 export let sessionSchema = {
-	user_id: mongoose.Schema.ObjectId,
+	user_id: {
+		type: String,
+		required: true
+	},
 	expires: Number
 };
 

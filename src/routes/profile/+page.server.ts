@@ -5,6 +5,7 @@ import { fail } from '@sveltejs/kit';
 import type { Roles } from '@src/auth/types';
 export async function load(event) {
 	let user = event.locals.user;
+	console.log(user);
 	return {
 		user
 	};

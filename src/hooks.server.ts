@@ -10,14 +10,13 @@ export async function handle({ event, resolve }) {
 
 	let user_id = event.url.searchParams.get('user_id') as string;
 	let user = user_id
-		? ((await auth.checkUser({ _id: user_id })) as User)
-		: ((await auth.validateSession(session_id)) as User);
-
+		? (auth.checkUser({ _id: user_id }) as User)
+		: (auth.validateSession(session_id) as User);
 	if (!user && event.url.pathname != '/login') throw redirect(302, `/login`);
 
 	event.locals.user = user;
 
-	if (user?.lastAuthMethod == 'token') {
+	if (user?.lastAuthMethod == 'token' && event.url.pathname != '/profile') {
 		throw redirect(302, `/profile`);
 	}
 	let _filtered = Object.values(collections()).filter(
