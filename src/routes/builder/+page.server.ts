@@ -28,7 +28,7 @@ export const actions: Actions = {
 		let originalName = JSON.parse(formData.get('originalName') as string).replaceAll('::', '/');
 		let collectionName = JSON.parse(formData.get('collectionName') as string).replaceAll('::', '/');
 		let permissions = sanitizePermissions(JSON.parse(formData.get('permissions') as string));
-		console.log(JSON.parse(formData.get('permissions') as string));
+		let id = JSON.parse(formData.get('id') as string);
 		let icon = JSON.parse((formData.get('icon') as string) || '""');
 		let fields = JSON.parse(fieldsData) as Array<fields>;
 		let imports = await goThrough(fields);
@@ -37,6 +37,7 @@ export const actions: Actions = {
 	import widgets from '@src/components/widgets';
 	import type { Schema } from '@src/collections/types';
 	let schema: Schema = {
+		id: '${id}',
 		icon:"${icon}",
 		${permissions ? `permissions:${JSON.stringify(permissions)},` : ''}
 		fields: [
@@ -83,9 +84,6 @@ async function goThrough(object: any, imports: Set<string> = new Set()) {
 
 				object[key] = `🗑️widgets.${object[key].widgetName}(
 					${JSON.stringify(object[key].params, (key, value) => {
-						if (key == 'type' || key == 'key') {
-							return undefined;
-						}
 						if (typeof value == 'string') {
 							return value.replace(/\s*🗑️\s*/g, '🗑️').trim();
 						}

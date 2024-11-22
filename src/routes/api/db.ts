@@ -53,3 +53,4 @@ export let auth = new Auth({
 	Session: mongoose.models['auth_sessions'],
 	Token: mongoose.models['auth_tokens']
 });
+await auth.fetchData();

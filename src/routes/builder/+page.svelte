@@ -16,6 +16,7 @@
 	import { obj2formData } from '@src/utils/fields';
 	let collectionName = $state(mode() == 'edit' ? collection().path : '');
 	let icon = $state(mode() == 'edit' ? collection().icon : '');
+	let id = $state(mode() == 'edit' ? collection().id : '');
 	let permissionsValue = $state() as Permissions;
 	let tabs = ['Core', 'Permissions', 'Fields'] as const;
 	let currentTab: (typeof tabs)[number] = $state('Core');
@@ -26,6 +27,7 @@
 	drawerExpanded.set(true);
 
 	collection.subscribe((collection) => {
+		id = mode() == 'edit' ? collection.id : '';
 		collectionName = mode() == 'edit' ? collection.path : '';
 		icon = mode() == 'edit' ? collection.icon : '';
 		fields = mode() == 'edit' ? collection.fields : [];
@@ -35,6 +37,7 @@
 	track(
 		() => {
 			if (mode() != 'create') return;
+			id = '';
 			collectionName = '';
 			icon = '';
 			fields = [];
@@ -62,9 +65,10 @@
 						collectionName,
 						fields: collection().fields,
 						permissions: permissionsValue,
-						icon
+						icon,
+						id
 					})
-				: obj2formData({ fields, collectionName, icon, permissions: permissionsValue });
+				: obj2formData({ id, fields, collectionName, icon, permissions: permissionsValue });
 
 		axios.post(`?/saveCollection`, data, {
 			headers: {
@@ -113,6 +117,7 @@
 		</div>
 		{#if currentTab == 'Core'}
 			<div>
+				<FloatingInput theme="dark" label="id" name="id" bind:value={id} />
 				<FloatingInput theme="dark" label="name" name="name" bind:value={collectionName} />
 				<FloatingInput theme="dark" label="icon" name="icon" bind:value={icon} />
 			</div>

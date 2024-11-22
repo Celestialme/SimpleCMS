@@ -16,22 +16,27 @@ export class Auth {
 		this.User = User;
 		this.Token = Token;
 		this.Session = Session;
-		(async () => {
-			this.users = (await User.find({}).lean()).map(({ _id, ...user }) => ({
-				...user,
-				id: _id.toString()
-			}));
-			this.sessions = (await Session.find({}).lean()).map(({ _id, ...session }) => ({
-				...session,
-				user_id: session.user_id.toString(),
-				id: _id.toString()
-			}));
-			this.tokens = (await Token.find({}).lean()).map(({ _id, ...token }) => ({
-				...token,
-				user_id: token.user_id.toString(),
-				id: _id.toString()
-			}));
-		})();
+	}
+	async fetchData() {
+		let [users, sessions, tokens] = await Promise.all([
+			this.User.find({}).lean() as any,
+			this.Session.find({}).lean() as any,
+			this.Token.find({}).lean() as any
+		]);
+		this.users = users.map(({ _id, ...user }) => ({
+			...user,
+			id: _id.toString()
+		}));
+		this.sessions = sessions.map(({ _id, ...session }) => ({
+			...session,
+			user_id: session.user_id.toString(),
+			id: _id.toString()
+		}));
+		this.tokens = tokens.map(({ _id, ...token }) => ({
+			...token,
+			user_id: token.user_id.toString(),
+			id: _id.toString()
+		}));
 	}
 	async createUser({
 		email,
