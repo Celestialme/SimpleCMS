@@ -17,7 +17,7 @@ let { collections: _collections, categories: _categories } = loadModules();
 export let collections = store(_collections);
 export let categories = store(_categories);
 export let systemLanguage = store<AvailableLanguageTag>(publicConfig.DEFAULT_SYSTEM_LANGUAGE);
-export let collection = store<Schema>({} as Schema);
+export let collection = store({} as Schema & { name: string });
 export let headerActionButton = store<Component<any> | string>();
 export let modifyEntry = store((_: keyof typeof statusMap): any => {});
 export let statusMap = {

@@ -24,7 +24,6 @@ export type Permissions = {
 	[K in Roles]: { [permissions in (typeof permissions)[number]]?: boolean };
 };
 export interface Schema {
-	name?: keyof CollectionTypes;
 	id: string;
 	path?: string;
 	hidden?: boolean;
