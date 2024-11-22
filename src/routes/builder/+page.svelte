@@ -23,7 +23,7 @@
 	let fields = $state([] as any);
 	let addField = $state(false);
 	let navButton = $state({ x: 0, y: 0, radius: 0 });
-	// mode.set('create');
+	mode.set('create');
 	drawerExpanded.set(true);
 
 	collection.subscribe((collection) => {
@@ -68,7 +68,13 @@
 						icon,
 						id
 					})
-				: obj2formData({ id, fields, collectionName, icon, permissions: permissionsValue });
+				: obj2formData({
+						fields,
+						collectionName,
+						originalName: collectionName,
+						icon,
+						permissions: permissionsValue
+					});
 
 		axios.post(`?/saveCollection`, data, {
 			headers: {

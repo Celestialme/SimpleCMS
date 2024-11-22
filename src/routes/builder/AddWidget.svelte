@@ -16,6 +16,7 @@
 			label: '';
 			widget: typeof widgetKeys;
 			params: {};
+			widgetName: string;
 		};
 	}
 
@@ -30,7 +31,8 @@
 	field = field || {
 		label: '',
 		widget: selected_widget as any,
-		params: {}
+		params: {},
+		widgetName: ''
 	};
 	let tabs = {
 		Core(property: string) {
@@ -98,6 +100,8 @@
 			onclick={() => {
 				if (!selected_widget) return;
 				field.label = (field.params as any).label;
+				field.widgetName = widgets[selected_widget].Name;
+				// field.widgetName = widgets[selected_widget];
 				!editField && fields.push(field);
 				addField = false;
 			}}>Finish Widget</Button

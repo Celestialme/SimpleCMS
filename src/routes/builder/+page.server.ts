@@ -6,6 +6,7 @@ import prettierConfig from '@root/.prettierrc.json';
 
 import { sanitizePermissions } from '@src/collections/types';
 import { writeCollection } from '@src/utils/collections.js';
+import mongoose from 'mongoose';
 
 type fields = ReturnType<WidgetType[keyof WidgetType]>;
 export async function load(event) {
@@ -28,7 +29,7 @@ export const actions: Actions = {
 		let originalName = JSON.parse(formData.get('originalName') as string).replaceAll('::', '/');
 		let collectionName = JSON.parse(formData.get('collectionName') as string).replaceAll('::', '/');
 		let permissions = sanitizePermissions(JSON.parse(formData.get('permissions') as string));
-		let id = JSON.parse(formData.get('id') as string);
+		let id = JSON.parse(formData.get('id') as string) || new mongoose.Types.ObjectId();
 		let icon = JSON.parse((formData.get('icon') as string) || '""');
 		let fields = JSON.parse(fieldsData) as Array<fields>;
 
