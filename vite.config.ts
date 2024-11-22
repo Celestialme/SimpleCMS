@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import { paraglide } from '@inlang/paraglide-js-adapter-vite';
 import { fileURLToPath } from 'url';
 import Path from 'path';
+import { generateCollectionTypes } from './src/utils/collectionTypes';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
@@ -19,27 +20,18 @@ export default defineConfig({
 
 		{
 			name: 'vite:server',
-			transform(code, id) {
-				if (id.endsWith('.svelte')) {
-					return {};
-				}
-			},
+
 			configureServer(server) {
 				let cb = (path: string) => {
 					if (!/src[/\\]collections/.test(path)) {
 						return;
 					}
 
-					// generateCollectionTypes();
+					generateCollectionTypes(server);
 				};
 				server.watcher.on('add', cb);
 				server.watcher.on('unlink', cb);
-				server.watcher.on('change', (path) => {
-					if (!/src[/\\]collections/.test(path) || path.includes('types.ts')) {
-						return;
-					}
-					// generateCollectionTypes();
-				});
+				server.watcher.on('change', cb);
 			},
 
 			async config() {

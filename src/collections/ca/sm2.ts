@@ -4,14 +4,6 @@ let schema: Schema = {
 	id: 'sm2',
 	icon: 'iconoir:post',
 
-	fields: [
-		widgets.ImageArray({
-			fields: [widgets.Input({ label: 'Text', type: 'text' })],
-			label: 'ImageArray',
-			uploader_label: 'Image',
-			uploader_path: 'images',
-			extractFields: true
-		})
-	]
+	fields: [widgets.Input({ label: 'Text', type: 'text' })]
 };
 export default schema;
