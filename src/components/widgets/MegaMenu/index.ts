@@ -3,7 +3,7 @@ import Input from '../Input';
 import { entryData, mode, headerActionButton } from '@src/stores/store.svelte';
 
 import widgets, { type ModifyRequestParams } from '..';
-import { getGuiFields, getFieldName } from '@src/utils/fields';
+import { getFieldName } from '@src/utils/fields';
 import { store } from '@src/utils/reactivity.svelte';
 export let currentChild = store({} as { [key: string]: any; children: any[] });
 const WIDGET_NAME = 'MegaMenu' as const;
@@ -20,10 +20,7 @@ const widget = (params: Params) => {
 	} else {
 		display = params.display;
 	}
-	let widget = {
-		Name: WIDGET_NAME,
-		GuiFields: getGuiFields(params, GuiSchema)
-	};
+	let widgetName = WIDGET_NAME;
 
 	for (let level of params.fields) {
 		level.unshift(Input({ label: 'Header', translated: true, type: 'text' }));
@@ -43,7 +40,7 @@ const widget = (params: Params) => {
 		callback
 	};
 
-	return { ...field, widget };
+	return { ...field, widgetName, params };
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
@@ -62,7 +59,7 @@ widget.modifyRequest = async ({
 		for (let index in children) {
 			for (let _field of field.fields[level]) {
 				// if menu as other nested widgets inside which has its own modifyRequest method... neccessary for nested image to work
-				let widget = widgets[_field.widget.Name];
+				let widget = widgets[_field.widgetName];
 				if ('modifyRequest' in widget) {
 					let data = {
 						get() {

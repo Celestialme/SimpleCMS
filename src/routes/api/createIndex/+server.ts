@@ -25,7 +25,7 @@ export const GET: RequestHandler = async ({ locals }) => {
 		for (let entry of entryList) {
 			let entry_text = '';
 			for (let field of collection.fields) {
-				let widget = widgets[field.widget.Name];
+				let widget = widgets[field.widgetName];
 				let fieldName = getFieldName(field);
 				if ('toString' in widget) {
 					entry_text += widget.toString({ field, data: entry[fieldName] }) + '\n';

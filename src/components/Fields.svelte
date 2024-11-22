@@ -54,7 +54,7 @@
 		{/each}
 	</div>
 	{#each fields || collection().fields as field, index}
-		{#if field.widget}
+		{#if field.widgetName}
 			{#key collection()}
 				<div
 					class=" mx-auto text-center {!field.width ? 'w-full' : 'max-md:!w-full'}"
@@ -64,7 +64,7 @@
 				>
 					<div class="px-[5px] text-start inline-block max-w-full">
 						<p>{field.label}</p>
-						{#await import(`@src/components/widgets/${field.widget.Name}/${field.widget.Name}.svelte`) then { default: Widget }}
+						{#await import(`@src/components/widgets/${field.widgetName}/${field.widgetName}.svelte`) then { default: Widget }}
 							<Widget
 								field={field as any}
 								bind:WidgetData={fieldsData[getFieldName(field)]}

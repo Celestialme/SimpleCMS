@@ -7,11 +7,6 @@
 
 	let { value = $bindable(), widget, key }: Props = $props();
 	value = value || null;
-	$effect(() => {
-		if (key == 'display' && value?.default == true) {
-			value = '';
-		}
-	});
 
 	const SvelteComponent = $derived(widget);
 </script>

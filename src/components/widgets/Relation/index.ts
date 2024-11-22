@@ -3,7 +3,7 @@ import widgets, { type ModifyRequestParams } from '@src/components/widgets';
 import deepmerge from 'deepmerge';
 import type { CollectionTypes, Schema } from '@src/collections/types';
 import { collections } from '@src/stores/store.svelte';
-import { getFieldName, getGuiFields } from '@src/utils/fields';
+import { getFieldName } from '@src/utils/fields';
 import mongoose from 'mongoose';
 const WIDGET_NAME = 'Relation' as const;
 const widget = <
@@ -32,10 +32,7 @@ const widget = <
 	};
 	display.default = true;
 
-	let widget = {
-		Name: WIDGET_NAME,
-		GuiFields: getGuiFields(params, GuiSchema)
-	};
+	let widgetName = WIDGET_NAME;
 
 	let field = {
 		display,
@@ -46,7 +43,7 @@ const widget = <
 		displayPath: params.displayPath
 	};
 
-	return { ...field, widget };
+	return { ...field, widgetName, params };
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
@@ -73,7 +70,7 @@ widget.modifiers = (async (info) => {
 	let relative_field = relative_collection?.fields.find(
 		(f) => getFieldName(f) == field.displayPath
 	);
-	let widget = widgets[relative_field.widget.Name];
+	let widget = widgets[relative_field.widgetName];
 	let new_field = deepmerge(relative_field, {
 		db_fieldName: `${fieldName}.${getFieldName(relative_field)}`
 	}); //use db_fieldName since it overrides label.

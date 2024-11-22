@@ -4,7 +4,7 @@ import { type Params, GuiSchema } from './types';
 import ImageUpload from '../ImageUpload';
 import type { ModifyRequestParams } from '..';
 import widgets from '..';
-import { getFieldName, getGuiFields } from '@src/utils/fields';
+import { getFieldName } from '@src/utils/fields';
 const WIDGET_NAME = 'ImageArray' as const;
 
 const widget = (params: Params) => {
@@ -17,10 +17,7 @@ const widget = (params: Params) => {
 		})
 	);
 	let uploader = params.fields[0] as ImageUpload_Params;
-	let widget = {
-		Name: WIDGET_NAME,
-		GuiFields: getGuiFields(params, GuiSchema)
-	};
+	let widgetName = WIDGET_NAME;
 	let display;
 	if (!params.display) {
 		display = async ({ collection, field, entry, contentLanguage }) => {
@@ -52,7 +49,7 @@ const widget = (params: Params) => {
 		width: params.width
 	};
 
-	return { ...field, widget };
+	return { ...field, widgetName, params };
 };
 
 widget.modifyRequest = async ({
@@ -64,7 +61,7 @@ widget.modifyRequest = async ({
 	collection
 }: ModifyRequestParams<typeof widget>) => {
 	for (let _field of field.fields) {
-		let widget = widgets[_field.widget.Name];
+		let widget = widgets[_field.widgetName];
 
 		if (entry && 'modifyRequest' in widget) {
 			let data = {

@@ -4,7 +4,7 @@ import { saveImage } from '@src/utils/files';
 import { type ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
 import type { ImageFile } from '@src/utils/files';
-import { getGuiFields, getFieldName } from '@src/utils/fields';
+import { getFieldName } from '@src/utils/fields';
 const WIDGET_NAME = 'ImageUpload' as const;
 const widget = (params: Params) => {
 	let display;
@@ -19,14 +19,10 @@ const widget = (params: Params) => {
 
 			return `<img class='max-w-[200px] inline-block' src="${url}" />`;
 		};
-		display.default = true;
 	} else {
 		display = params.display;
 	}
-	let widget = {
-		Name: WIDGET_NAME,
-		GuiFields: getGuiFields(params, GuiSchema)
-	};
+	let widgetName = WIDGET_NAME;
 	let field = {
 		display,
 		label: params.label,
@@ -35,7 +31,7 @@ const widget = (params: Params) => {
 		width: params.width
 	};
 
-	return { ...field, widget };
+	return { ...field, widgetName, params };
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;

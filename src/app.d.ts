@@ -13,13 +13,13 @@ declare global {
 		// interface Platform {}
 	}
 
-	type DISPLAY = (({
+	type DISPLAY = ({
 		data: any,
 		collection: any,
 		field: any,
 		entry: any,
 		contentLanguage: string
-	}) => Promise<any>) & { default?: boolean };
+	}) => Promise<any>;
 
 	type modifiers = ({
 		field,

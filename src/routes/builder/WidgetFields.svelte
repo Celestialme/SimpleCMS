@@ -112,7 +112,7 @@
 	{#each fields as field, index}
 		<div
 			onclick={() => {
-				currentFieldKey = field.widget.Name;
+				currentFieldKey = field.widgetName;
 				currentField = field;
 			}}
 			onpointerdown={(e) => {
@@ -123,7 +123,7 @@
 			data-index={index}
 		>
 			<div class="w-full h-full p-[10px]">
-				<p>widget: {field.widget.Name}</p>
+				<p>widget: {field.widgetName}</p>
 				<p>label: {field.label}</p>
 			</div>
 			<button

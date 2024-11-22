@@ -50,11 +50,5 @@ export let sanitizePermissions = (permissions) => {
 	if (Object.keys(res).length == 0) return undefined;
 	return res;
 };
-
-export type CollectionTypes = {
-	'ca::About': ['RichText'];
-	'ca::ca12::About': ['RichText'];
-	'ca::relation': ['Relation'];
-	'ca::sm': ['Name', 'Name2'];
-	'ca2::About': ['RichText', 'Relation'];
-};
+
+export type CollectionTypes = {"ca::About":["RichText"],"ca::ca12::About":["RichText"],"ca::relation":["Relation"],"ca::sm":["MegaMenu"],"ca::sm2":["ImageArray"],"ca2::About":["RichText","Relation"]};

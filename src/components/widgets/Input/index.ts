@@ -1,6 +1,6 @@
 import publicConfig from '@root/config/public';
 import { GuiSchema, toString, type Params } from './types';
-import { getGuiFields, getFieldName } from '@src/utils/fields';
+import { getFieldName } from '@src/utils/fields';
 const WIDGET_NAME = 'Input' as const;
 const widget = (params: Params) => {
 	/** This is a description of the foo function. */
@@ -16,10 +16,7 @@ const widget = (params: Params) => {
 	} else {
 		display = params.display;
 	}
-	let widget = {
-		Name: WIDGET_NAME,
-		GuiFields: getGuiFields(params, GuiSchema)
-	};
+	let widgetName = WIDGET_NAME;
 	let field = {
 		display,
 		label: params.label,
@@ -28,7 +25,7 @@ const widget = (params: Params) => {
 		translated: params.translated,
 		width: params.width
 	};
-	return { ...field, widget };
+	return { ...field, widgetName, params };
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;

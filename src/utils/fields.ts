@@ -1,20 +1,5 @@
 import { createRandomID, deepCopy } from './utils';
 
-export const getGuiFields = (
-	fieldParams: { [key: string]: any },
-	GuiSchema: { [key: string]: any }
-) => {
-	let guiFields = {};
-	for (let key in GuiSchema) {
-		if (Array.isArray(fieldParams[key])) {
-			guiFields[key] = deepCopy(fieldParams[key]);
-		} else {
-			guiFields[key] = fieldParams[key];
-		}
-	}
-	return guiFields;
-};
-
 export function getFieldName(field: any, sanitize = false) {
 	if (sanitize) {
 		return (field?.db_fieldName || field?.label)?.replaceAll(' ', '_');
@@ -47,7 +32,6 @@ export const obj2formData = (obj: any) => {
 		let data = JSON.stringify(obj[key], (key, val) => {
 			if (!val && val !== false) return undefined;
 			else if (key == 'schema') return undefined;
-			else if (key == 'display' && val.default == true) return undefined;
 			else if (key == 'display')
 				return ('🗑️' + val + '🗑️').replaceAll('display', 'function display');
 			else if (typeof val === 'function') {

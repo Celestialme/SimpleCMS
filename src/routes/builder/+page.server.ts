@@ -71,18 +71,18 @@ async function goThrough(object: any, imports: Set<string> = new Set()) {
 			let field = object[key];
 			await goThrough(field, imports);
 
-			if (field.widget) {
-				let widget = widgets[field.widget.Name];
+			if (field.widgetName) {
+				let widget = widgets[field.widgetName];
 				for (let key in widget.GuiSchema) {
 					if (!widget.GuiSchema[key].imports) continue;
 					for (let _import of widget.GuiSchema[key].imports) {
-						let replacement = field.widget.GuiFields[key].replaceAll('🗑️', '').trim();
+						let replacement = field.params[key].replaceAll('🗑️', '').trim();
 						imports.add(_import.replaceAll(`{${key}}`, replacement));
 					}
 				}
 
-				object[key] = `🗑️widgets.${object[key].widget.Name}(
-					${JSON.stringify(object[key].widget.GuiFields, (key, value) => {
+				object[key] = `🗑️widgets.${object[key].widgetName}(
+					${JSON.stringify(object[key].params, (key, value) => {
 						if (key == 'type' || key == 'key') {
 							return undefined;
 						}

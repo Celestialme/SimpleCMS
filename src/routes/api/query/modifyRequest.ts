@@ -3,7 +3,7 @@ import { getFieldName } from '@src/utils/fields';
 
 export async function modifyRequest({ data, fields, collection, user, type }) {
 	for (let field of fields) {
-		let widget = widgets[field.widget.Name];
+		let widget = widgets[field.widgetName];
 		let fieldName = getFieldName(field);
 
 		if ('modifyRequest' in widget) {

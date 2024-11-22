@@ -14,7 +14,8 @@
 		selected_widget?: typeof widgetKeys | null;
 		field?: {
 			label: '';
-			widget: { key: typeof widgetKeys; GuiFields: {} };
+			widget: typeof widgetKeys;
+			params: {};
 		};
 	}
 
@@ -28,7 +29,8 @@
 	let saveField = deepCopy(field);
 	field = field || {
 		label: '',
-		widget: { key: selected_widget as unknown as typeof widgetKeys, GuiFields: {} }
+		widget: selected_widget as any,
+		params: {}
 	};
 	let tabs = {
 		Core(property: string) {
@@ -84,7 +86,7 @@
 				{#each Object.entries(guiSchema) as [property, value]}
 					{#if tabs[currentTab](property)}
 						<InputSwitch
-							bind:value={field.widget.GuiFields[property]}
+							bind:value={field.params[property]}
 							widget={value.widget as any}
 							key={property}
 						/>
@@ -95,7 +97,7 @@
 		<Button
 			onclick={() => {
 				if (!selected_widget) return;
-				field.label = (field.widget.GuiFields as any).label;
+				field.label = (field.params as any).label;
 				!editField && fields.push(field);
 				addField = false;
 			}}>Finish Widget</Button

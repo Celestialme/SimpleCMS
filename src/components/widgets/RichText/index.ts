@@ -3,7 +3,7 @@ import { saveImage } from '@src/utils/files';
 import { GuiSchema, toString, type Params } from './types';
 // import type { ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
-import { getGuiFields, getFieldName } from '@src/utils/fields';
+import { getFieldName } from '@src/utils/fields';
 import type { ModifyRequestParams } from '..';
 import { cleanRemovedImages } from '@src/utils/utils';
 // import type { ModifyRequestParams } from '..';
@@ -22,10 +22,7 @@ const widget = (params: Params) => {
 	} else {
 		display = params.display;
 	}
-	let widget = {
-		Name: WIDGET_NAME,
-		GuiFields: getGuiFields(params, GuiSchema)
-	};
+	let widgetName = WIDGET_NAME;
 	let field = {
 		display,
 		label: params.label,
@@ -34,7 +31,7 @@ const widget = (params: Params) => {
 		width: params.width,
 		image_folder: params.image_folder
 	};
-	return { ...field, widget };
+	return { ...field, widgetName, params };
 };
 widget.modifyRequest = async ({
 	field,

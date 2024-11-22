@@ -14,6 +14,7 @@ export type Params = {
 
 export let GuiSchema = {
 	label: { widget: FloatingInput, required: true },
+	type: { widget: FloatingInput, required: true },
 	display: { widget: FloatingInput, required: true },
 	db_fieldName: { widget: FloatingInput, required: true },
 	translated: { widget: Toggle, required: false }

@@ -32,7 +32,7 @@ export async function _GET({
 	for (let field of schema.fields.flatMap((field: any) =>
 		field.extractFields ? field.fields : [field]
 	)) {
-		let widget = widgets[field.widget.Name];
+		let widget = widgets[field.widgetName];
 		let fieldName = getFieldName(field);
 
 		if ('modifiers' in widget) {

@@ -18,9 +18,9 @@ export let GuiSchema = {
 	db_fieldName: { widget: FloatingInput, required: true },
 	translated: { widget: Toggle, required: false }
 };
-let parsed_text;
+
 export function toString({ field, data }: { field: any; data: any }) {
-	parsed_text = '';
+	let parsed_text = '';
 	let parser = new Parser({
 		ontext: (text) => {
 			parsed_text += text.trim();
