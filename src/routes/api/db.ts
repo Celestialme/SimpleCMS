@@ -4,6 +4,8 @@ import { collections } from '@src/stores/store.svelte';
 
 import { Auth } from '@src/auth';
 import { mongooseSessionSchema, mongooseTokenSchema, mongooseUserSchema } from '@src/auth/types';
+import { writeCollection } from '@src/utils/collections';
+import { sanitizePermissions } from '@src/collections/types';
 
 mongoose
 	.connect(privateEnv.DB_HOST, {
@@ -25,7 +27,17 @@ for (let collection of Object.values(collections())) {
 			timestamps: { currentTime: () => Date.now() }
 		}
 	);
-	if (!collection.id) throw new Error('collection id is required');
+	if (!collection.id || collection.fields.some((field) => !(field.params as any).id)) {
+		!collection.id && (collection.id = new mongoose.Types.ObjectId().toString());
+		await writeCollection({
+			collectionName: collection.path?.replaceAll('::', '/'),
+			fields: collection.fields,
+			icon: collection.icon,
+			originalName: collection.path?.replaceAll('::', '/'),
+			permissions: sanitizePermissions(collection.permissions),
+			id: collection.id
+		});
+	}
 	collectionModels[collection.id] = mongoose.models[collection.id]
 		? mongoose.model(collection.id)
 		: mongoose.model(collection.id, schema_object);

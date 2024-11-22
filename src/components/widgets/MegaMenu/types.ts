@@ -3,6 +3,7 @@ import GuiFields from './GuiFields.svelte';
 import { type WidgetType } from '..';
 type Fields = ReturnType<WidgetType[keyof WidgetType]>[][];
 export type Params = {
+	id?: string;
 	widget?: any;
 	db_fieldName?: string;
 	label: string;

@@ -2,6 +2,7 @@ import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 
 import publicConfig from '@root/config/public';
 export type Params = {
+	id?: string;
 	label: string;
 	display?: DISPLAY;
 	db_fieldName?: string;

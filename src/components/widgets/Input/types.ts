@@ -4,6 +4,7 @@ import FloatingInput from '@src/components/system/inputs/FloatingInput.svelte';
 import { toStringHelper } from '@src/utils/utils';
 
 export type Params = {
+	id?: string;
 	type: 'text' | 'email' | 'date';
 	label: string;
 	width?: number;

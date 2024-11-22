@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 import { paraglide } from '@inlang/paraglide-js-adapter-vite';
 import { fileURLToPath } from 'url';
 import Path from 'path';
-import { generateCollectionTypes } from './src/utils/collectionTypes';
+import { generateCollectionTypes } from './src/utils/vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = Path.dirname(__filename);
