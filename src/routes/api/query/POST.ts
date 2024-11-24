@@ -1,5 +1,5 @@
 import type { Schema } from '@src/collections/types';
-import { collectionModels } from '../db';
+import { adapter, collectionModels } from '../db';
 import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
@@ -52,5 +52,6 @@ export let _POST = async ({
 		});
 		body._links[_collection] = _id;
 	}
+	adapter.insert(schema, body);
 	return new Response(JSON.stringify(await collection.insertMany(body)));
 };

@@ -17,7 +17,6 @@
 		for (let i = 0; i < files?.length || 0; i++) {
 			let fieldsData = _fieldsValue[i];
 			for (let key in fieldsData) {
-				console.log(key);
 			}
 			await saveFormData({ data: fieldsData });
 		}

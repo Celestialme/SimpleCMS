@@ -46,7 +46,6 @@
 			window.location = result.location;
 		} else if (result.type == 'failure') {
 			response = parse(result.data).message;
-			console.log('deval', response);
 			e.target.classList.add('wiggle');
 			setTimeout(() => e.target.classList.remove('wiggle'), 300);
 		}

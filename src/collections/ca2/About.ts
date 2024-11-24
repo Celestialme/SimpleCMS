@@ -16,6 +16,12 @@ let schema: Schema = {
 			relation: 'ca::About',
 			displayPath: 'RichText',
 			id: '6740a635a47d16674004b9eb'
+		}),
+		widgets.Relation({
+			label: 'Relation2',
+			relation: 'ca::About',
+			displayPath: 'RichText',
+			id: '6740a635a47d16674004b9ec'
 		})
 	]
 };

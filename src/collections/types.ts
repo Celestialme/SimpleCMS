@@ -50,4 +50,4 @@ export let sanitizePermissions = (permissions) => {
 	return res;
 };
 
-export type CollectionTypes = {"ca::About":["RichText"],"ca::ca12::About":["RichText"],"ca::relation":["Relation"],"ca::sm":["MegaMenu"],"ca::sm2":["Textsdada"],"ca2::About":["RichText","Relation"]};
+export type CollectionTypes = {"ca::About":["RichText"],"ca::ca12::About":["RichText"],"ca::relation":["Relation"],"ca::sm":["MegaMenu"],"ca::sm2":["Textsdada"],"ca2::About":["RichText","Relation","Relation2"]};

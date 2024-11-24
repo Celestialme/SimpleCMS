@@ -110,7 +110,6 @@
 		let data = new FormData();
 		for (let index in modifyMap) {
 			modifyMap[index] && data.append('id', filteredTableData[index].id);
-			console.log(filteredTableData, index);
 			delete modifyMap[index];
 		}
 		await axios.post('?/deleteUser', data);

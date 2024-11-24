@@ -163,7 +163,6 @@ export class Auth {
 	}
 	async validateToken(token: string, user_id: string) {
 		let result = this.tokens.find((_token) => _token.token === token && _token.user_id === user_id);
-		console.log(result);
 		if (result) {
 			if (isWithinExpiration(result.expiresIn)) {
 				return { success: true, message: 'token is Valid' };

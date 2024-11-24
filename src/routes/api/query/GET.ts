@@ -1,6 +1,6 @@
 import type { Schema } from '@src/collections/types';
 import widgets from '@src/components/widgets';
-import { collectionModels } from '../db';
+import { adapter, collectionModels } from '../db';
 import type { User } from '@src/auth/types';
 import publicConfig from '@root/config/public';
 import { modifyRequest } from './modifyRequest';
@@ -26,9 +26,6 @@ export async function _GET({
 	page?: number;
 }) {
 	let modifiers: any = [];
-
-	let collection = collectionModels[schema.id as string];
-	let skip = (page - 1) * limit;
 	for (let field of schema.fields.flatMap((field: any) =>
 		field.extractFields ? field.fields : [field]
 	)) {
@@ -51,44 +48,10 @@ export async function _GET({
 		}
 	}
 	modifiers = modifiers.filter((x) => x);
-	let entryListWithCount = await collection.aggregate([
-		{
-			$facet: {
-				entries: [...modifiers, { $skip: skip }, ...(limit ? [{ $limit: limit }] : [])],
-				totalCount: [...modifiers, { $count: 'total' }]
-			}
-		}
-	]);
-	let entryList = entryListWithCount[0].entries;
-
-	for (let index in entryList) {
-		let entry = entryList[index];
-		if (entry._link_id && entry._linked_collection) {
-			let collection = collectionModels[collections()[entry._linked_collection].id as string];
-			let resp = await collection.findOne({ _id: entry._link_id }).lean();
-			if (!resp) {
-				entryList.splice(index, 1);
-				continue;
-			}
-			entryList[index] = resp;
-			entryList[index]._is_link = true;
-			entryList[index]._linked_collection = entry._linked_collection;
-		}
-	}
-
-	await modifyRequest({
-		data: entryList,
-		collection,
-		fields: schema.fields,
-		user,
-		type: 'GET'
-	});
-
-	let totalCount = entryListWithCount[0].totalCount[0]
-		? entryListWithCount[0].totalCount[0].total
-		: 0;
-
-	let pagesCount = Math.ceil(totalCount / limit);
+	// let entryList = await adapter.getAll(schema);
+	let entryList = await adapter.relative(schema, modifiers);
+	console.log(entryList);
+	let pagesCount = 1;
 	return new Response(
 		JSON.stringify({
 			entryList,

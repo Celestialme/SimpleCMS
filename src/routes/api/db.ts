@@ -6,6 +6,7 @@ import { Auth } from '@src/auth';
 import { mongooseSessionSchema, mongooseTokenSchema, mongooseUserSchema } from '@src/auth/types';
 import { writeCollection } from '@src/utils/collections';
 import { sanitizePermissions } from '@src/collections/types';
+import { Adapter } from '@src/utils/adapters';
 
 mongoose
 	.connect(privateEnv.DB_HOST, {
@@ -66,3 +67,6 @@ export let auth = new Auth({
 	Token: mongoose.models['auth_tokens']
 });
 await auth.fetchData();
+
+export let adapter = new Adapter(collections());
+await adapter.setup();

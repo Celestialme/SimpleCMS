@@ -1,5 +1,5 @@
 import type { Schema } from '@src/collections/types';
-import { collectionModels } from '../db';
+import { adapter, collectionModels } from '../db';
 import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
@@ -18,6 +18,7 @@ export let _PATCH = async ({
 
 	let collection = collectionModels[schema.id as string];
 	let _id = new mongoose.Types.ObjectId(data.get('_id') as string);
+	body._id = _id;
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
 		try {
@@ -41,7 +42,6 @@ export let _PATCH = async ({
 	}
 	if (!collection) return new Response('collection not found!!');
 
-	body._id = _id;
 	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'PATCH' });
 	if (body?._meta_data?.storage_images?.removed) {
 		await mongoose.models['_storage_images'].updateMany(
@@ -81,6 +81,6 @@ export let _PATCH = async ({
 	delete body._linked_collection;
 	let response = JSON.stringify(body);
 	await collection.updateOne({ _id }, body, { upsert: true });
-
+	adapter.update(schema, body);
 	return new Response(response);
 };

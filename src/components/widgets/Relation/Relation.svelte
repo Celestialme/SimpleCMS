@@ -106,7 +106,6 @@
 			_mode: 'edit',
 			id: relation_entry._id
 		});
-		console.log(data);
 		display = await field?.display({
 			data,
 			field,
