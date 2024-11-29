@@ -42,8 +42,8 @@ const widget = <
 		width: params.width,
 		displayPath: params.displayPath
 	};
-
-	return { ...field, widgetName, params };
+	let dataType = 'ObjectId';
+	return { ...field, widgetName, params, dataType };
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;

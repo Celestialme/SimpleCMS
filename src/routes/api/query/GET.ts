@@ -1,11 +1,9 @@
 import type { Schema } from '@src/collections/types';
 import widgets from '@src/components/widgets';
-import { adapter, collectionModels } from '../db';
+import { adapter } from '../db';
 import type { User } from '@src/auth/types';
 import publicConfig from '@root/config/public';
-import { modifyRequest } from './modifyRequest';
 
-import { collections } from '@src/stores/store.svelte';
 import { getFieldName } from '@src/utils/fields';
 
 export async function _GET({
@@ -48,9 +46,7 @@ export async function _GET({
 		}
 	}
 	modifiers = modifiers.filter((x) => x);
-	// let entryList = await adapter.getAll(schema);
-	let entryList = await adapter.relative(schema, modifiers);
-	console.log(entryList);
+	let entryList = await adapter.getAll(schema, modifiers);
 	let pagesCount = 1;
 	return new Response(
 		JSON.stringify({

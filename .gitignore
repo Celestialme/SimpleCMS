@@ -14,3 +14,4 @@ vite.config.ts.timestamp-*
 /data.json
 /indexes
 /*.bin
+*.db

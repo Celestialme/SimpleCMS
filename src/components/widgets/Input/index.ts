@@ -25,7 +25,14 @@ const widget = (params: Params) => {
 		translated: params.translated,
 		width: params.width
 	};
-	return { ...field, widgetName, params };
+	let dataType = publicConfig.AVAILABLE_CONTENT_LANGUAGES.reduce(
+		(acc, lang) => {
+			acc[lang] = 'string';
+			return acc;
+		},
+		{} as { [key in (typeof publicConfig.AVAILABLE_CONTENT_LANGUAGES)[number]]: string }
+	);
+	return { ...field, widgetName, params, dataType };
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;

@@ -30,8 +30,8 @@ const widget = (params: Params) => {
 		folder: params.folder,
 		width: params.width
 	};
-
-	return { ...field, widgetName, params };
+	let dataType = 'ObjectId';
+	return { ...field, widgetName, params, dataType };
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;
