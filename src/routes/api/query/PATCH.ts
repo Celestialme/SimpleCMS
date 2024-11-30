@@ -81,6 +81,6 @@ export let _PATCH = async ({
 	delete body._linked_collection;
 	let response = JSON.stringify(body);
 	await collection.updateOne({ _id }, body, { upsert: true });
-	adapter.update(schema, body);
+	adapter.update(schema.path as string, body);
 	return new Response(response);
 };

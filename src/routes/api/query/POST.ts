@@ -52,6 +52,6 @@ export let _POST = async ({
 		});
 		body._links[_collection] = _id;
 	}
-	adapter.insert(schema, body);
+	adapter.insert(schema.path as string, body);
 	return new Response(JSON.stringify(await collection.insertMany(body)));
 };

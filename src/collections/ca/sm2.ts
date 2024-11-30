@@ -10,6 +10,11 @@ let schema: Schema = {
 			label: 'Text',
 			type: 'text',
 			id: '2740a9df834dc88c5e1603a9'
+		}),
+		widgets.ImageUpload({
+			id: '2740a9df834dc88c5e1603a9',
+			label: 'image',
+			folder: 'images'
 		})
 	]
 };

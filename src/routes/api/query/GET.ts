@@ -46,7 +46,7 @@ export async function _GET({
 		}
 	}
 	modifiers = modifiers.filter((x) => x);
-	let entryList = await adapter.getAll(schema, modifiers);
+	let entryList = await adapter.getAll(schema.path as string, modifiers);
 	let pagesCount = 1;
 	return new Response(
 		JSON.stringify({

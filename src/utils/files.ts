@@ -20,6 +20,7 @@ export async function saveImage(
 	folder: string
 ): Promise<{ id: mongoose.Types.ObjectId; fileInfo: ImageFile }> {
 	if (browser) return {} as any;
+	let { adapter } = await import('@src/routes/api/db');
 	let sharp = (await import('sharp')).default;
 
 	let fileInfo: { [key: string]: any } = {};
@@ -31,10 +32,11 @@ export async function saveImage(
 		.update(buffer as any)
 		.digest('hex')
 		.slice(0, 20);
-	let existing_file = await mongoose.models['_storage_images'].findOne({ hash: hash });
-	if (existing_file) {
-		return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
-	}
+	// let existing_file = await adapter.getOne('_storage_images', [{ hash: hash }]);
+	// console.log(existing_file);
+	// if (existing_file) {
+	// 	return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
+	// }
 	let { name, ext } = removeExtension(file.name);
 
 	fileInfo = {
@@ -108,9 +110,10 @@ export async function saveImage(
 	await Promise.all(promises);
 
 	console.timeEnd('images');
-	let res = await mongoose.models['_storage_images'].insertMany(fileInfo);
 
-	return { id: new mongoose.Types.ObjectId(res[0]._id), fileInfo: fileInfo as ImageFile };
+	let _id = await adapter.insert('_storage_images', fileInfo);
+
+	return { id: new mongoose.Types.ObjectId(_id), fileInfo: fileInfo as ImageFile };
 }
 
 export type ImageFile = {
