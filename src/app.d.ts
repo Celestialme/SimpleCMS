@@ -31,7 +31,7 @@ declare global {
 		contentLanguage: string;
 		filter: string;
 		sort: number;
-	}) => Promise<PipelineStage[]>;
+	}) => Promise<any>;
 
 	interface RegExpConstructor {
 		escape(str: string): string;

@@ -41,7 +41,7 @@ export async function _GET({
 					filter: _filter,
 					sort: _sort
 				});
-				modifiers.push(..._modifiers);
+				modifiers.push(_modifiers);
 			}
 		}
 	}

@@ -258,10 +258,11 @@ function get(
 	modifiers: any[],
 	collections: { [key: string]: Schema & { columns: { [key: string]: string } } }
 ) {
-	let lookups = modifiers.filter((m) => m.$lookup);
+	let lookups = modifiers.filter((m) => m.lookup);
 
+	let matches = modifiers.filter((m) => m.match);
 	let selects = collection.fields
-		.filter((f) => !lookups.find((m) => m.$lookup.as === getFieldName(f)))
+		.filter((f) => !lookups.find((m) => m.lookup.as === getFieldName(f)))
 		.map((f: any) =>
 			Object.keys(flattenData(f.dataType, getFieldName(f))).map((f) => `main."${f}"`)
 		)
@@ -271,18 +272,27 @@ function get(
 	let sql = `SELECT ${selects} main._id,main._links,main._is_link, main.status `;
 	for (let lookup of lookups) {
 		let relative_collection = Object.values(collections).find(
-			(c) => c.id === lookup.$lookup.from
+			(c) => c.id === lookup.lookup.from
 		) as Schema;
 		let relative_fields = relative_collection.fields.map((f: any) => {
 			return Object.keys(flattenData(f.dataType, `${getFieldName(f)}`)).map(
-				(f) => `${lookup.$lookup.localField}."${f}" as "${lookup.$lookup.localField}->${f}"`
+				(f) => `${lookup.lookup.localField}."${f}" as "${lookup.lookup.localField}->${f}"`
 			);
 		}) as any[];
 		sql += `,${relative_fields.join(',')}`;
 	}
 	sql += ` FROM "${collection.id}" main`;
 	for (let lookup of lookups) {
-		sql += ` LEFT JOIN "${lookup.$lookup.from}" ${lookup.$lookup.localField}  ON ${lookup.$lookup.localField}.${lookup.$lookup.foreignField} = main.${lookup.$lookup.localField}`;
+		sql += ` LEFT JOIN "${lookup.lookup.from}" ${lookup.lookup.localField}  ON ${lookup.lookup.localField}.${lookup.lookup.foreignField} = main.${lookup.lookup.localField}`;
+	}
+	let is_where = false;
+	for (let i = 0; i < matches.length; i++) {
+		let match = matches[i];
+		if (!is_where) sql += ' WHERE ';
+		let key = Object.keys(match.match)[0];
+		is_where = true;
+		sql += ` "${key}" LIKE "%${match.match[key].$regex}%"`;
+		if (i < matches.length - 1) sql += ' AND ';
 	}
 	return sql;
 }

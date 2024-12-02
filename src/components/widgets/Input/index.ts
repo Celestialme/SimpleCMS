@@ -40,17 +40,26 @@ widget.toString = toString;
 widget.modifiers = (async (info) => {
 	let field = info.field as ReturnType<typeof widget>;
 	let fieldName = getFieldName(field);
-	return [
-		info.filter && {
-			$match: {
-				[`${getFieldName(field)}.${info.contentLanguage}`]: {
-					$regex: info.filter,
-					$options: 'i'
+
+	return {
+		...(info.filter
+			? {
+					match: {
+						[`${fieldName}->${info.contentLanguage}`]: {
+							$regex: info.filter,
+							$options: 'i'
+						}
+					}
 				}
-			}
-		},
-		info.sort && { $sort: { [`${fieldName}.${info.contentLanguage}`]: info.sort } }
-	];
+			: {}),
+		...(info.sort
+			? {
+					sort: {
+						[`${fieldName}->${info.contentLanguage}`]: info.sort
+					}
+				}
+			: {})
+	};
 }) as modifiers;
 
 export interface FieldType extends ReturnType<typeof widget> {}
