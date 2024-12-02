@@ -142,23 +142,23 @@ export class Adapter {
 		db.run(sql, params);
 	}
 
-	async getOne(collectionPath: string, modifiers: any[]) {
+	async getOne(collectionPath: string, modifiers: ReturnType<modifiers>[]) {
 		let collection = this.collections[collectionPath];
 		let sql = get(collection, modifiers, this.collections) + ' LIMIT 1';
 		const result = await new Promise<any>((resolve, reject) => {
-			db.get(sql, (err, rows) => {
+			db.get(sql, (err, row) => {
 				if (err) {
 					reject(err);
 				} else {
-					resolve(rows);
+					resolve(row);
 				}
 			});
 		});
-		return result.map((row) => {
-			row._links = JSON.parse(row._links);
+		if ('_links' in collection.columns) {
+			result._links = JSON.parse(result._links);
+		}
 
-			return unflattenData(row);
-		});
+		return unflattenData(result);
 	}
 
 	async getAll(collectionPath: string, modifiers: any[]) {
@@ -174,8 +174,9 @@ export class Adapter {
 			});
 		});
 		return result.map((row) => {
-			row._links = JSON.parse(row._links);
-
+			if ('_links' in collection.columns) {
+				row._links = JSON.parse(row._links);
+			}
 			return unflattenData(row);
 		});
 	}
@@ -254,22 +255,27 @@ function unflattenData(flatObj) {
 }
 
 function get(
-	collection: Schema,
-	modifiers: any[],
+	collection: Schema & {
+		columns: {
+			[key: string]: string;
+		};
+	},
+	modifiers: ReturnType<modifiers>[],
 	collections: { [key: string]: Schema & { columns: { [key: string]: string } } }
 ) {
-	let lookups = modifiers.filter((m) => m.lookup);
-
-	let matches = modifiers.filter((m) => m.match);
+	let lookups = modifiers.filter((m) => m.lookup) as Required<ReturnType<modifiers>>[];
+	let matches = modifiers.filter((m) => m.match) as Required<ReturnType<modifiers>>[];
+	let sort = modifiers.filter((m) => m.sort)[0] as Required<ReturnType<modifiers>>;
 	let selects = collection.fields
 		.filter((f) => !lookups.find((m) => m.lookup.as === getFieldName(f)))
 		.map((f: any) =>
 			Object.keys(flattenData(f.dataType, getFieldName(f))).map((f) => `main."${f}"`)
 		)
+		.concat(Object.keys(collection.columns).map((c) => `main."${c}"`))
 
 		.join(', ');
 	if (selects) selects += ', ';
-	let sql = `SELECT ${selects} main._id,main._links,main._is_link, main.status `;
+	let sql = `SELECT ${selects} main._id `;
 	for (let lookup of lookups) {
 		let relative_collection = Object.values(collections).find(
 			(c) => c.id === lookup.lookup.from
@@ -291,8 +297,14 @@ function get(
 		if (!is_where) sql += ' WHERE ';
 		let key = Object.keys(match.match)[0];
 		is_where = true;
-		sql += ` "${key}" LIKE "%${match.match[key].$regex}%"`;
+		if (match.match[key].strict) sql += ` "${key}" = "${match.match[key].text}"`;
+		else sql += ` "${key}" LIKE "%${match.match[key].text}%"`;
 		if (i < matches.length - 1) sql += ' AND ';
+	}
+	if (sort) {
+		let key = Object.keys(sort.sort)[0];
+		let order = sort.sort[key];
+		if (order != 0) sql += ` ORDER BY "${key}" ${order < 0 ? 'ASC' : 'DESC'}`;
 	}
 	return sql;
 }

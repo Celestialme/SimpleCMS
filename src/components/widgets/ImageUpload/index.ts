@@ -72,23 +72,23 @@ widget.modifyRequest = async ({
 widget.modifiers = (async (info) => {
 	let field = info.field as ReturnType<typeof widget>;
 	let fieldName = getFieldName(field);
-
-	return {
+	let modifiers: ReturnType<modifiers> = {
 		lookup: {
 			from: '_storage_images',
 			localField: fieldName,
 			foreignField: '_id',
 			as: fieldName
-		},
-		...(info.filter
-			? {
-					match: {
-						[`${fieldName}->original->name`]: { $regex: info.filter, $options: 'i' }
-					}
-				}
-			: {}),
-		...(info.sort ? { sort: { [`${fieldName}->original->name`]: info.sort } } : {})
+		}
 	};
+	if (info.filter)
+		modifiers.match = {
+			[`${fieldName}->original->name`]: {
+				strict: false,
+				text: info.filter
+			}
+		};
+	if (info.sort) modifiers.sort = { [`${fieldName}->original->name`]: info.sort };
+	return modifiers;
 }) as modifiers;
 
 export interface FieldType extends ReturnType<typeof widget> {}

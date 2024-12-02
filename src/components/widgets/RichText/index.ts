@@ -90,19 +90,25 @@ widget.toString = toString;
 widget.modifiers = (async (info) => {
 	let field = info.field as ReturnType<typeof widget>;
 	let fieldName = getFieldName(field);
-	return [
-		info.filter && {
-			$match: {
-				[`${getFieldName(field)}.header.${info.contentLanguage}`]: {
-					$regex: info.filter,
-					$options: 'i'
-				}
-			}
-		},
-		info.sort && {
-			$sort: { [`${fieldName}.header.${info.contentLanguage}`]: info.sort }
+
+	let modifiers: ReturnType<modifiers> = {
+		lookup: {
+			from: '_storage_images',
+			localField: fieldName,
+			foreignField: '_id',
+			as: fieldName
 		}
-	];
+	};
+	if (info.filter)
+		modifiers.match = {
+			[`${fieldName}->header->${info.contentLanguage}`]: {
+				strict: false,
+				text: info.filter
+			}
+		};
+	if (info.sort) modifiers.sort = { [`${fieldName}->header->${info.contentLanguage}`]: info.sort };
+
+	return modifiers;
 }) as modifiers;
 export interface FieldType extends ReturnType<typeof widget> {}
 export default widget;

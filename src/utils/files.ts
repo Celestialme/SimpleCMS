@@ -32,8 +32,17 @@ export async function saveImage(
 		.update(buffer as any)
 		.digest('hex')
 		.slice(0, 20);
-	// let existing_file = await adapter.getOne('_storage_images', [{ hash: hash }]);
-	// console.log(existing_file);
+	let existing_file = await adapter.getOne('_storage_images', [
+		{
+			match: {
+				hash: {
+					strict: true,
+					text: hash
+				}
+			}
+		}
+	]);
+	console.log(existing_file);
 	// if (existing_file) {
 	// 	return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
 	// }

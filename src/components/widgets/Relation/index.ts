@@ -75,17 +75,12 @@ widget.modifiers = (async (info) => {
 		db_fieldName: `${fieldName}.${getFieldName(relative_field)}`
 	}); //use db_fieldName since it overrides label.
 
-	return [
-		{
-			$lookup: {
-				from: relative_collection.id,
-				localField: fieldName,
-				foreignField: '_id',
-				as: fieldName
-			}
-		},
-		{
-			$unwind: `$${fieldName}`
+	return {
+		lookup: {
+			from: relative_collection.id,
+			localField: fieldName,
+			foreignField: '_id',
+			as: fieldName
 		},
 		...(await widget?.modifiers({
 			field: new_field,
@@ -93,7 +88,7 @@ widget.modifiers = (async (info) => {
 			sort: info.sort,
 			contentLanguage: info.contentLanguage
 		}))
-	];
+	};
 }) as modifiers;
 
 export interface FieldType extends ReturnType<typeof widget> {}

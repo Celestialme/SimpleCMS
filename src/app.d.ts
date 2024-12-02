@@ -31,7 +31,23 @@ declare global {
 		contentLanguage: string;
 		filter: string;
 		sort: number;
-	}) => Promise<any>;
+	}) => {
+		lookup?: {
+			from: string;
+			localField: string;
+			foreignField: string;
+			as: string;
+		};
+		sort?: {
+			[key: string]: number;
+		};
+		match?: {
+			[key: string]: {
+				text: string;
+				strict: boolean;
+			};
+		};
+	};
 
 	interface RegExpConstructor {
 		escape(str: string): string;
