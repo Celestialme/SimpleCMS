@@ -2,7 +2,6 @@ import type { Schema } from '@src/collections/types';
 import { getFieldName } from './fields';
 import sqlite3 from 'sqlite3';
 import mongoose from 'mongoose';
-import widgets from '@src/components/widgets';
 import { SIZES } from './files';
 const db = new sqlite3.Database('./db.db');
 
@@ -42,7 +41,17 @@ export class Adapter {
 	constructor(collections: { [key: string]: Schema & { columns?: { [key: string]: string } } }) {
 		for (let c in collections) {
 			collections[c].columns = { _links: 'json', _is_link: 'boolean', status: 'string' };
+			for (let field of collections[c].fields) {
+				if ('dataType' in field) {
+					let dataType = flattenDataType(field.dataType, getFieldName(field), {});
+					collections[c].columns = { ...collections[c].columns, ...dataType };
+				}
+			}
 		}
+		_storage_images.columns = _storage_images.fields.reduce(
+			(acc, f) => ({ ...acc, ...flattenDataType(f.dataType, getFieldName(f), {}) }),
+			{}
+		);
 		this.collections = { ...collections, _storage_images: _storage_images as any };
 	}
 	transformType = {
@@ -58,13 +67,6 @@ export class Adapter {
 		for (let key in this.collections) {
 			const collection = this.collections[key];
 			let columns = this.transformColumns(collection.columns);
-
-			for (let field of collection.fields) {
-				if ('dataType' in field) {
-					let dataType = flattenDataType(field.dataType, getFieldName(field), this.transformType);
-					columns = { ...columns, ...dataType };
-				}
-			}
 
 			let _columns = Object.keys(columns)
 				.map((key) => `"${key}" ${columns[key]}`)
@@ -82,26 +84,24 @@ export class Adapter {
 		let id = data?._id?.toString() || new mongoose.Types.ObjectId().toString();
 		let collection = this.collections[collectionPath];
 		const fieldNames = collection.fields.map((field) => getFieldName(field));
-		let fieldsData: any[][] = [];
-
 		for (let fieldName of fieldNames) {
-			fieldsData = [...fieldsData, ...Object.entries(flattenData(data[fieldName], fieldName))];
+			let flat_data = flattenData(data[fieldName], fieldName);
+			delete data[fieldName];
+			data = { ...data, ...flat_data };
 		}
 		let columns = Object.entries(collection.columns).filter(([key]) => data[key] !== undefined);
-		const placeholders = ', ?'.repeat(fieldsData.length + columns.length);
+		const placeholders = ', ?'.repeat(columns.length);
 		const sql = `
-        INSERT INTO "${collection.id}" (_id, ${columns.map((c) => c[0]).join(', ')}, ${fieldsData.map((f) => `"${f[0]}"`).join(', ')})
+        INSERT INTO "${collection.id}" (_id, ${columns.map(([key]) => `"${key}"`).join(', ')})
         VALUES (? ${placeholders});
     `.replace(/,\s+,/g, ', ');
 		let params: any[] = [];
 		params.push(id);
+
 		for (let [key, type] of columns) {
 			params.push(type != 'json' ? data[key] : JSON.stringify(data[key]));
 		}
 
-		for (let [key, value] of fieldsData) {
-			params.push(value);
-		}
 		return await new Promise<string>((resolve, reject) => {
 			db.run(sql, params, (err) => {
 				if (err) {
@@ -116,16 +116,14 @@ export class Adapter {
 	update(collectionPath: string, data) {
 		let collection = this.collections[collectionPath];
 		const fieldNames = collection.fields.map((field) => getFieldName(field));
-		let fieldsData: any[][] = [];
 
 		for (let fieldName of fieldNames) {
-			fieldsData = [...fieldsData, ...Object.entries(flattenData(data[fieldName], fieldName))];
+			let flat_data = flattenData(data[fieldName], fieldName);
+			delete data[fieldName];
+			data = { ...data, ...flat_data };
 		}
 		let columns = Object.entries(collection.columns).filter(([key]) => data[key] !== undefined);
-		const setClause = [
-			...columns.map(([key]) => `"${key}" = ?`),
-			...fieldsData.map(([key]) => `"${key}" = ?`)
-		].join(', ');
+		const setClause = columns.map(([key]) => `"${key}" = ?`).join(', ');
 		const sql = `
 		        UPDATE "${collection.id}"
 		        SET  ${setClause}
@@ -135,10 +133,7 @@ export class Adapter {
 		for (let [key, type] of columns) {
 			params.push(type != 'json' ? data[key] : JSON.stringify(data[key]));
 		}
-		console.log(collection.columns);
-		for (let [key, value] of fieldsData) {
-			params.push(value);
-		}
+
 		params.push(data._id.toString());
 		db.run(sql, params);
 	}
@@ -156,10 +151,10 @@ export class Adapter {
 				}
 			});
 		});
-		if ('_links' in collection.columns) {
-			result._links = JSON.parse(result._links);
-		}
-
+		if (result)
+			for (let key in collection.columns) {
+				result[key] = collection.columns[key] != 'json' ? result[key] : JSON.parse(result[key]);
+			}
 		return unflattenData(result) as any;
 	}
 
@@ -185,28 +180,30 @@ export class Adapter {
 				}
 			});
 		});
+		let columns = { ...collection.columns };
+		let lookups = modifiers.filter((m) => m.lookup);
+		for (let lookup of lookups) {
+			let relative_collection = Object.values(this.collections).find(
+				(c) => c.id === lookup.lookup.from
+			);
+			let relative_columns = relative_collection?.columns;
+			for (let key in relative_columns) {
+				columns[`${lookup.lookup.as}->${key}`] = relative_columns[key];
+			}
+			delete columns[lookup.lookup.as];
+		}
 
 		return {
 			entryList: result.map((row) => {
-				if ('_links' in collection.columns) {
-					row._links = JSON.parse(row._links);
+				for (let key in columns) {
+					row[key] = columns[key] != 'json' ? row[key] : JSON.parse(row[key]);
 				}
 				return unflattenData(row);
 			}) as any[],
 			total
 		};
 	}
-	mediaExists(hash: string): Promise<boolean> {
-		return new Promise((resolve, reject) => {
-			db.get(`SELECT * FROM _storage_images WHERE hash = ? LIMIT 1`, [hash], (err, row) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(!!row);
-				}
-			});
-		});
-	}
+
 	transformColumns(columns) {
 		return Object.keys(columns).reduce((acc, key) => {
 			acc[key] = this.transformType[columns[key]];
@@ -219,7 +216,7 @@ function flattenDataType(type: Object, prefix = '', transformType) {
 	let result = {};
 
 	if (typeof type == 'string') {
-		return { [prefix]: transformType[type] };
+		return { [prefix]: transformType[type] || type };
 	}
 
 	for (const key in type) {
@@ -228,7 +225,7 @@ function flattenDataType(type: Object, prefix = '', transformType) {
 			Object.assign(result, flattenDataType(type[key], `${prefix}->${key}`, transformType));
 		} else {
 			// Add the flattened key-value pair to the result
-			result[`${prefix}->${key}`] = transformType[type[key]];
+			result[`${prefix}->${key}`] = transformType[type[key]] || type[key];
 		}
 	}
 
@@ -239,6 +236,8 @@ function flattenData(type: any, prefix = '') {
 	let result = {};
 	if (typeof type == 'string' || type instanceof mongoose.Types.ObjectId) {
 		return { [prefix]: type.toString() };
+	} else if (Array.isArray(type)) {
+		return { [prefix]: type };
 	}
 	for (const key in type) {
 		if (typeof type[key] === 'object' && !Array.isArray(type[key])) {
@@ -253,6 +252,7 @@ function flattenData(type: any, prefix = '') {
 	return result;
 }
 function unflattenData(flatObj) {
+	if (!flatObj) return null;
 	let result = {};
 	for (const flatKey in flatObj) {
 		const keys = flatKey.split('->'); // Split the flat key into parts
@@ -290,13 +290,10 @@ function get_sql(
 	let limit = modifiers.filter((m) => 'limit' in m)[0]?.limit as Required<
 		ReturnType<modifiers>['limit']
 	>;
-	let selects = collection.fields
-		.filter((f) => !lookups.find((m) => m.lookup.as === getFieldName(f)))
-		.map((f: any) =>
-			Object.keys(flattenData(f.dataType, getFieldName(f))).map((f) => `main."${f}"`)
-		)
-		.concat(Object.keys(collection.columns).map((c) => `main."${c}"`))
 
+	let selects = Object.keys(collection.columns)
+		.filter((f) => !lookups.find((m) => m.lookup.as === f))
+		.map((c) => `main."${c}"`)
 		.join(', ');
 	if (selects) selects += ', ';
 	let sql = `SELECT ${selects} main._id `;
@@ -315,27 +312,17 @@ function get_sql(
 	for (let lookup of lookups) {
 		sql += ` LEFT JOIN "${lookup.lookup.from}" ${lookup.lookup.localField}  ON ${lookup.lookup.localField}.${lookup.lookup.foreignField} = main.${lookup.lookup.localField}`;
 	}
-	let count_sql = `SELECT COUNT(*) as count FROM "${collection.id}" main`;
 	let is_where = false;
 	for (let i = 0; i < matches.length; i++) {
 		let match = matches[i];
-		if (!is_where) {
-			sql += ' WHERE ';
-			count_sql += ' WHERE ';
-		}
+		if (!is_where) sql += ' WHERE ';
+
 		let key = Object.keys(match.match)[0];
 		is_where = true;
-		if (match.match[key].strict) {
-			sql += ` "${key}" = "${match.match[key].value}"`;
-			count_sql += ` "${key}" = "${match.match[key].value}"`;
-		} else {
-			sql += ` "${key}" LIKE "%${match.match[key].value}%"`;
-			count_sql += ` "${key}" LIKE "%${match.match[key].value}%"`;
-		}
-		if (i < matches.length - 1) {
-			sql += ' AND ';
-			count_sql += ' AND ';
-		}
+		if (match.match[key].strict) sql += ` "${key}" = "${match.match[key].value}"`;
+		else sql += ` "${key}" LIKE "%${match.match[key].value}%"`;
+
+		if (i < matches.length - 1) sql += ' AND ';
 	}
 
 	if (sort) {
@@ -343,12 +330,10 @@ function get_sql(
 		let order = sort[key];
 		if (order != 0) sql += ` ORDER BY "${key}" ${order < 0 ? 'ASC' : 'DESC'}`;
 	}
+	let count_sql = sql.replace('SELECT', 'SELECT COUNT(*) as count,');
+	if (limit) sql += ` LIMIT ${limit}`;
 
-	if (limit) {
-		sql += ` LIMIT ${limit}`;
-	}
-	if (skip) {
-		sql += ` OFFSET ${skip}`;
-	}
+	if (skip) sql += ` OFFSET ${skip}`;
+
 	return { sql, count_sql };
 }

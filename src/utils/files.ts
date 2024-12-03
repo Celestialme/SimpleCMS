@@ -43,9 +43,9 @@ export async function saveImage(
 		}
 	]);
 	console.log(existing_file);
-	// if (existing_file) {
-	// 	return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
-	// }
+	if (existing_file) {
+		return { id: new mongoose.Types.ObjectId(existing_file._id), fileInfo: existing_file };
+	}
 	let { name, ext } = removeExtension(file.name);
 
 	fileInfo = {
@@ -119,9 +119,7 @@ export async function saveImage(
 	await Promise.all(promises);
 
 	console.timeEnd('images');
-	console.log(fileInfo);
 	let _id = await adapter.insert('_storage_images', fileInfo);
-
 	return { id: new mongoose.Types.ObjectId(_id), fileInfo: fileInfo as ImageFile };
 }
 
