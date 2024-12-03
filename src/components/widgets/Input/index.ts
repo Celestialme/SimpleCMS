@@ -46,7 +46,7 @@ widget.modifiers = (async (info) => {
 		modifiers.match = {
 			[`${fieldName}->${info.contentLanguage}`]: {
 				strict: false,
-				text: info.filter
+				value: info.filter
 			}
 		};
 	if (info.sort)

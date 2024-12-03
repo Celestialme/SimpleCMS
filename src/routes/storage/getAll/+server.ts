@@ -1,3 +1,4 @@
+import { adapter } from '@src/routes/api/db';
 import type { RequestHandler } from './$types';
 
 import mongoose from 'mongoose';
@@ -9,27 +10,18 @@ export const GET: RequestHandler = async ({ url }) => {
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 	let re = new RegExp(RegExp.escape(search), 'i');
 
-	let search_aggregation = {
-		$match: {
-			'original.name': { $regex: re },
-			folder: folder
+	let search_modifier = {
+		match: {
+			'original->name': { value: re, strict: false }
 		}
 	};
 
-	let files = await mongoose.models['_storage_images'].aggregate([
-		{
-			$facet: {
-				images: [search_aggregation, { $skip: (page - 1) * limit }, { $limit: limit }],
-				totalCount: [search_aggregation, { $count: 'total' }]
-			}
-		}
-	]);
-	let totalCount = files[0].totalCount[0] ? files[0].totalCount[0].total : 0;
-
+	let { entryList: files, total: totalCount } = await adapter.getAll('_storage_images', []);
+	console.log(files);
 	let pagesCount = Math.ceil(totalCount / limit);
 	return new Response(
 		JSON.stringify({
-			images: files[0].images,
+			images: files,
 			pagesCount
 		})
 	);

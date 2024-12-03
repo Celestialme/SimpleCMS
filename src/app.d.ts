@@ -43,7 +43,7 @@ declare global {
 		};
 		match?: {
 			[key: string]: {
-				text: string;
+				value: string;
 				strict: boolean;
 			};
 		};

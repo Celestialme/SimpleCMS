@@ -84,7 +84,7 @@ widget.modifiers = (async (info) => {
 		modifiers.match = {
 			[`${fieldName}->original->name`]: {
 				strict: false,
-				text: info.filter
+				value: info.filter
 			}
 		};
 	if (info.sort) modifiers.sort = { [`${fieldName}->original->name`]: info.sort };

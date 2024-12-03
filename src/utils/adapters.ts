@@ -99,7 +99,7 @@ export class Adapter {
 			params.push(type != 'json' ? data[key] : JSON.stringify(data[key]));
 		}
 
-		for (let [_, value] of fieldsData) {
+		for (let [key, value] of fieldsData) {
 			params.push(value);
 		}
 		return await new Promise<string>((resolve, reject) => {
@@ -135,7 +135,8 @@ export class Adapter {
 		for (let [key, type] of columns) {
 			params.push(type != 'json' ? data[key] : JSON.stringify(data[key]));
 		}
-		for (let [_, value] of fieldsData) {
+		console.log(collection.columns);
+		for (let [key, value] of fieldsData) {
 			params.push(value);
 		}
 		params.push(data._id.toString());
@@ -159,7 +160,7 @@ export class Adapter {
 			result._links = JSON.parse(result._links);
 		}
 
-		return unflattenData(result);
+		return unflattenData(result) as any;
 	}
 
 	async getAll(collectionPath: string, modifiers: any[]) {
@@ -191,7 +192,7 @@ export class Adapter {
 					row._links = JSON.parse(row._links);
 				}
 				return unflattenData(row);
-			}),
+			}) as any[],
 			total
 		};
 	}
@@ -283,10 +284,10 @@ function get_sql(
 	let sort = modifiers.filter((m) => 'sort' in m)[0]?.sort as Required<
 		ReturnType<modifiers>['sort']
 	>;
-	let skip = modifiers.filter((m) => 'skip' in m)[0].skip as Required<
+	let skip = modifiers.filter((m) => 'skip' in m)[0]?.skip as Required<
 		ReturnType<modifiers>['skip']
 	>;
-	let limit = modifiers.filter((m) => 'limit' in m)[0].limit as Required<
+	let limit = modifiers.filter((m) => 'limit' in m)[0]?.limit as Required<
 		ReturnType<modifiers>['limit']
 	>;
 	let selects = collection.fields
@@ -325,11 +326,11 @@ function get_sql(
 		let key = Object.keys(match.match)[0];
 		is_where = true;
 		if (match.match[key].strict) {
-			sql += ` "${key}" = "${match.match[key].text}"`;
-			count_sql += ` "${key}" = "${match.match[key].text}"`;
+			sql += ` "${key}" = "${match.match[key].value}"`;
+			count_sql += ` "${key}" = "${match.match[key].value}"`;
 		} else {
-			sql += ` "${key}" LIKE "%${match.match[key].text}%"`;
-			count_sql += ` "${key}" LIKE "%${match.match[key].text}%"`;
+			sql += ` "${key}" LIKE "%${match.match[key].value}%"`;
+			count_sql += ` "${key}" LIKE "%${match.match[key].value}%"`;
 		}
 		if (i < matches.length - 1) {
 			sql += ' AND ';

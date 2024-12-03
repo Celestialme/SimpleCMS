@@ -37,7 +37,7 @@ export async function saveImage(
 			match: {
 				hash: {
 					strict: true,
-					text: hash
+					value: hash
 				}
 			}
 		}
@@ -119,7 +119,7 @@ export async function saveImage(
 	await Promise.all(promises);
 
 	console.timeEnd('images');
-
+	console.log(fileInfo);
 	let _id = await adapter.insert('_storage_images', fileInfo);
 
 	return { id: new mongoose.Types.ObjectId(_id), fileInfo: fileInfo as ImageFile };

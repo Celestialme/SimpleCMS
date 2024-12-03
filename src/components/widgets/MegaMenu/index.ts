@@ -97,7 +97,7 @@ widget.modifiers = (async (info) => {
 	if (info.filter)
 		modifiers.match = {
 			[`${getFieldName(field)}.Header.${info.contentLanguage}`]: {
-				text: info.filter,
+				value: info.filter,
 				strict: false
 			}
 		};
