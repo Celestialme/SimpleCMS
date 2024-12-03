@@ -47,6 +47,8 @@ declare global {
 				strict: boolean;
 			};
 		};
+		skip?: number;
+		limit?: number;
 	};
 
 	interface RegExpConstructor {

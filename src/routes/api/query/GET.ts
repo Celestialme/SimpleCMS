@@ -24,6 +24,7 @@ export async function _GET({
 	page?: number;
 }) {
 	let modifiers: any = [];
+	let skip = (page - 1) * limit;
 	for (let field of schema.fields.flatMap((field: any) =>
 		field.extractFields ? field.fields : [field]
 	)) {
@@ -45,9 +46,9 @@ export async function _GET({
 			}
 		}
 	}
-	modifiers = modifiers.filter((x) => x);
-	let entryList = await adapter.getAll(schema.path as string, modifiers);
-	let pagesCount = 1;
+	modifiers = modifiers.filter((x) => x).concat({ limit, skip });
+	let { entryList, total } = await adapter.getAll(schema.path as string, modifiers);
+	let pagesCount = Math.ceil(total / limit);
 	return new Response(
 		JSON.stringify({
 			entryList,

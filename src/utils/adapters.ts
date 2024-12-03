@@ -144,7 +144,8 @@ export class Adapter {
 
 	async getOne(collectionPath: string, modifiers: ReturnType<modifiers>[]) {
 		let collection = this.collections[collectionPath];
-		let sql = get(collection, modifiers, this.collections) + ' LIMIT 1';
+		let { sql } = get_sql(collection, modifiers, this.collections);
+		sql += ' LIMIT 1';
 		const result = await new Promise<any>((resolve, reject) => {
 			db.get(sql, (err, row) => {
 				if (err) {
@@ -163,9 +164,10 @@ export class Adapter {
 
 	async getAll(collectionPath: string, modifiers: any[]) {
 		let collection = this.collections[collectionPath];
-		let sql = get(collection, modifiers, this.collections);
+		let { sql, count_sql } = get_sql(collection, modifiers, this.collections);
+
 		const result = await new Promise<any[]>((resolve, reject) => {
-			db.all(sql, (err, rows) => {
+			db.all(`${sql}`, (err, rows) => {
 				if (err) {
 					reject(err);
 				} else {
@@ -173,12 +175,25 @@ export class Adapter {
 				}
 			});
 		});
-		return result.map((row) => {
-			if ('_links' in collection.columns) {
-				row._links = JSON.parse(row._links);
-			}
-			return unflattenData(row);
+		const total = await new Promise<any>((resolve, reject) => {
+			db.get(`${count_sql}`, (err, row: { count: number }) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(row.count);
+				}
+			});
 		});
+
+		return {
+			entryList: result.map((row) => {
+				if ('_links' in collection.columns) {
+					row._links = JSON.parse(row._links);
+				}
+				return unflattenData(row);
+			}),
+			total
+		};
 	}
 	mediaExists(hash: string): Promise<boolean> {
 		return new Promise((resolve, reject) => {
@@ -254,7 +269,7 @@ function unflattenData(flatObj) {
 	return result;
 }
 
-function get(
+function get_sql(
 	collection: Schema & {
 		columns: {
 			[key: string]: string;
@@ -265,7 +280,15 @@ function get(
 ) {
 	let lookups = modifiers.filter((m) => m.lookup) as Required<ReturnType<modifiers>>[];
 	let matches = modifiers.filter((m) => m.match) as Required<ReturnType<modifiers>>[];
-	let sort = modifiers.filter((m) => m.sort)[0] as Required<ReturnType<modifiers>>;
+	let sort = modifiers.filter((m) => 'sort' in m)[0]?.sort as Required<
+		ReturnType<modifiers>['sort']
+	>;
+	let skip = modifiers.filter((m) => 'skip' in m)[0].skip as Required<
+		ReturnType<modifiers>['skip']
+	>;
+	let limit = modifiers.filter((m) => 'limit' in m)[0].limit as Required<
+		ReturnType<modifiers>['limit']
+	>;
 	let selects = collection.fields
 		.filter((f) => !lookups.find((m) => m.lookup.as === getFieldName(f)))
 		.map((f: any) =>
@@ -291,20 +314,40 @@ function get(
 	for (let lookup of lookups) {
 		sql += ` LEFT JOIN "${lookup.lookup.from}" ${lookup.lookup.localField}  ON ${lookup.lookup.localField}.${lookup.lookup.foreignField} = main.${lookup.lookup.localField}`;
 	}
+	let count_sql = `SELECT COUNT(*) as count FROM "${collection.id}" main`;
 	let is_where = false;
 	for (let i = 0; i < matches.length; i++) {
 		let match = matches[i];
-		if (!is_where) sql += ' WHERE ';
+		if (!is_where) {
+			sql += ' WHERE ';
+			count_sql += ' WHERE ';
+		}
 		let key = Object.keys(match.match)[0];
 		is_where = true;
-		if (match.match[key].strict) sql += ` "${key}" = "${match.match[key].text}"`;
-		else sql += ` "${key}" LIKE "%${match.match[key].text}%"`;
-		if (i < matches.length - 1) sql += ' AND ';
+		if (match.match[key].strict) {
+			sql += ` "${key}" = "${match.match[key].text}"`;
+			count_sql += ` "${key}" = "${match.match[key].text}"`;
+		} else {
+			sql += ` "${key}" LIKE "%${match.match[key].text}%"`;
+			count_sql += ` "${key}" LIKE "%${match.match[key].text}%"`;
+		}
+		if (i < matches.length - 1) {
+			sql += ' AND ';
+			count_sql += ' AND ';
+		}
 	}
+
 	if (sort) {
-		let key = Object.keys(sort.sort)[0];
-		let order = sort.sort[key];
+		let key = Object.keys(sort)[0];
+		let order = sort[key];
 		if (order != 0) sql += ` ORDER BY "${key}" ${order < 0 ? 'ASC' : 'DESC'}`;
 	}
-	return sql;
+
+	if (limit) {
+		sql += ` LIMIT ${limit}`;
+	}
+	if (skip) {
+		sql += ` OFFSET ${skip}`;
+	}
+	return { sql, count_sql };
 }
