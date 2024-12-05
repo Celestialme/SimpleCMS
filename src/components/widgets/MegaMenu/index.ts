@@ -51,7 +51,8 @@ widget.modifyRequest = async ({
 	data,
 	user,
 	type,
-	id
+	id,
+	storage
 }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get();
 
@@ -75,7 +76,8 @@ widget.modifyRequest = async ({
 						data,
 						user,
 						type,
-						id
+						id,
+						storage
 					});
 				}
 			}

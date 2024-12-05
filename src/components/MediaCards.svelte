@@ -37,7 +37,7 @@
 				<iconify-icon icon="raphael:info" width="25" class="text-[#00d3d0]"></iconify-icon>
 			</button>
 			<p class="mx-auto text-white pr-[30px]">{file.thumbnail.name}</p>
-			{#if file.used_by.length == 0}
+			{#if file.used_by == 0}
 				<button
 					class="mt-[2px] mr-[2px] w-[30px] block"
 					onclick={async (e) => {
@@ -60,11 +60,11 @@
 
 		<div class:hidden={!showInfo[index]}>
 			<p class=" mt-[30px] text-white text-center bg-[#2c3844]">
-				{file.used_by.length == 0
+				{file.used_by == 0
 					? 'Not Used'
-					: file.used_by.length == 1
+					: file.used_by == 1
 						? 'Used By 1 entry'
-						: `Used By ${file.used_by.length} entries`}
+						: `Used By ${file.used_by} entries`}
 			</p>
 			<table class="w-full min-h-[calc(100%-30px)]">
 				<tbody>

@@ -14,7 +14,7 @@ let schema: Schema = {
 		widgets.ImageUpload({
 			id: '2740a9df834dc88c5e1603a9',
 			label: 'image',
-			folder: 'images'
+			folder: 'images2'
 		})
 	]
 };

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { config, meta_data, toFormData } from './utils';
+import { config, toFormData } from './utils';
 import type { CollectionTypes, Schema } from '@src/collections/types';
 import { mode, collection, entryData } from '@src/stores/store.svelte';
 import { col2formData } from './fields';
@@ -85,7 +85,6 @@ export async function saveFormData({
 		throw new Error('ID is required for edit mode.');
 	}
 	if (!formData) return;
-	if (!meta_data.is_empty()) formData.append('_meta_data', JSON.stringify(meta_data.get()));
 	switch ($mode) {
 		case 'create':
 			return await addData({ data: formData, collectionName: $collection.path as any });

@@ -58,10 +58,11 @@ widget.modifyRequest = async ({
 	entry,
 	type,
 	id,
-	collection
+	collection,
+	storage
 }: ModifyRequestParams<typeof widget>) => {
 	for (let _field of field.fields) {
-		let widget = widgets[_field.widgetName];
+		let widget = widgets[_field.widgetName as keyof typeof widgets];
 
 		if (entry && 'modifyRequest' in widget) {
 			let data = {
@@ -78,7 +79,8 @@ widget.modifyRequest = async ({
 				data,
 				user,
 				type,
-				id
+				id,
+				storage
 			});
 		}
 	}

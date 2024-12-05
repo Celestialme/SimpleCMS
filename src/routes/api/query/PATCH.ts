@@ -15,7 +15,7 @@ export let _PATCH = async ({
 	user: User;
 }) => {
 	let body: { [key: string]: any } = {};
-
+	let storage = { images: new Set<ObjectId>() };
 	let collection = collectionModels[schema.id as string];
 	let _id = new mongoose.Types.ObjectId(data.get('_id') as string);
 	body._id = _id;
@@ -42,13 +42,15 @@ export let _PATCH = async ({
 	}
 	if (!collection) return new Response('collection not found!!');
 
-	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'PATCH' });
-	if (body?._meta_data?.storage_images?.removed) {
-		await mongoose.models['_storage_images'].updateMany(
-			{ _id: { $in: body?._meta_data?.storage_images?.removed } },
-			{ $pull: { used_by: new mongoose.Types.ObjectId(_id) } }
-		);
-	}
+	await modifyRequest({
+		data: [body],
+		fields: schema.fields,
+		collection: schema,
+		user,
+		type: 'PATCH',
+		storage
+	});
+
 	let links =
 		schema?.links?.length || 0 > 0 || body?._is_link
 			? (await collection.findById(body._id))._links
@@ -79,6 +81,7 @@ export let _PATCH = async ({
 
 	delete body._is_link;
 	delete body._linked_collection;
+	body._storage_images = Array.from(storage.images);
 	let response = JSON.stringify(body);
 	await collection.updateOne({ _id }, body, { upsert: true });
 	adapter.update(schema.path as string, body);

@@ -1,16 +1,8 @@
+import { adapter } from '@src/routes/api/db';
 import type { RequestHandler } from './$types';
 
-import mongoose from 'mongoose';
-
 export const GET: RequestHandler = async ({ url }) => {
-	let files = await mongoose.models['_storage_images'].aggregate([
-		{
-			$group: {
-				_id: '$folder',
-				count: { $sum: 1 }
-			}
-		}
-	]);
+	let files = await adapter.countFolders('_storage_images');
 	let res = files.reduce((acc, x) => {
 		acc[x._id] = x.count;
 		return acc;

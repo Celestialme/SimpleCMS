@@ -1,12 +1,9 @@
 import publicConfig from '@root/config/public';
 import { saveImage } from '@src/utils/files';
 import { GuiSchema, toString, type Params } from './types';
-// import type { ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
 import { getFieldName } from '@src/utils/fields';
 import type { ModifyRequestParams } from '..';
-import { cleanRemovedImages } from '@src/utils/utils';
-// import type { ModifyRequestParams } from '..';
 const WIDGET_NAME = 'RichText' as const;
 const widget = (params: Params) => {
 	/** This is a description of the foo function. */
@@ -40,7 +37,7 @@ widget.modifyRequest = async ({
 	type,
 	collection,
 	id,
-	meta_data
+	storage
 }: ModifyRequestParams<typeof widget>) => {
 	switch (type) {
 		case 'POST':
@@ -72,15 +69,9 @@ widget.modifyRequest = async ({
 					// selected from Media images
 					_id = new mongoose.Types.ObjectId(images[img_id]);
 				}
-				cleanRemovedImages(meta_data, _id);
-
-				await mongoose.models['_storage_images'].updateOne({ _id }, { $addToSet: { used_by: id } });
+				storage?.images.add(_id);
 			}
 			data.update(_data);
-			break;
-		case 'DELETE':
-			await mongoose.models['_storage_images'].updateMany({}, { $pull: { used_by: id } });
-
 			break;
 	}
 };

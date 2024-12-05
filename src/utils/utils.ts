@@ -134,32 +134,6 @@ export let createRandomID = (id?: string) => {
 	return id ? new mongoose.Types.ObjectId(id) : new mongoose.Types.ObjectId();
 };
 
-export let meta_data: {
-	meta_data: { [key: string]: any };
-	add: (key: 'storage_images_remove', data: string[]) => void;
-	clear: () => void;
-	get: () => { [key: string]: any };
-	is_empty: () => boolean;
-} = {
-	meta_data: {},
-	add(key, data) {
-		switch (key) {
-			case 'storage_images_remove':
-				if (!this.meta_data?.storage_images) this.meta_data.storage_images = { removed: [] };
-				this.meta_data.storage_images.removed.push(...data);
-				break;
-		}
-	},
-	get() {
-		return this.meta_data;
-	},
-	clear() {
-		this.meta_data = {};
-	},
-	is_empty() {
-		return Object.keys(this.meta_data).length === 0;
-	}
-};
 RegExp.escape = (string) => {
 	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
@@ -213,16 +187,4 @@ export function toStringHelper({
 	return publicConfig.AVAILABLE_CONTENT_LANGUAGES.reduce((acc, lang) => {
 		return (acc += path(lang) + '\n');
 	}, '\n');
-}
-
-export function cleanRemovedImages(meta_data, id) {
-	//prevents other widgets from removing images if current widget needs it.
-	if (meta_data?.storage_images?.removed && id) {
-		let removed = meta_data?.storage_images?.removed as string[];
-		let index = removed.indexOf(id.toString());
-		while (index != -1) {
-			removed.splice(index, 1);
-			index = removed.indexOf(id.toString());
-		}
-	}
 }

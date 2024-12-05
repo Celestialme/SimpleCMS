@@ -1,3 +1,4 @@
+import type { Schema } from '@src/collections/types';
 import ImageArray from './ImageArray';
 import ImageUpload from './ImageUpload';
 import { GuiSchema } from './ImageUpload/types';
@@ -6,7 +7,7 @@ import MegaMenu from './MegaMenu';
 import Relation from './Relation';
 import RichText from './RichText';
 
-import type { Model, User } from '@src/auth/types';
+import type { User } from '@src/auth/types';
 import type mongoose from 'mongoose';
 
 let widgets = {
@@ -20,14 +21,16 @@ let widgets = {
 
 type K = (typeof widgets)[keyof typeof widgets]['Name'];
 export type ModifyRequestParams<T extends (...args: any) => any> = {
-	collection: Model;
-	id: mongoose.Types.ObjectId;
+	collection: Schema;
+	id: ObjectId;
 	field: ReturnType<T>;
 	data: { get: () => any; update: (newData) => void };
 	entry?: { [key: string]: any };
 	user: User;
 	type: 'GET' | 'POST' | 'DELETE' | 'PATCH';
-	meta_data?: { [key: string]: any };
+	storage?: {
+		images: Set<ObjectId>;
+	};
 };
 export type WidgetType = {
 	[key in K]: (typeof widgets)[key] & {

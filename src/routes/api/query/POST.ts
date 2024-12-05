@@ -15,7 +15,7 @@ export let _POST = async ({
 	user: User;
 }) => {
 	let body: { [key: string]: any } = {};
-
+	let storage = { images: new Set<ObjectId>() };
 	let collection = collectionModels[schema.id as string];
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
@@ -38,7 +38,14 @@ export let _POST = async ({
 	body['status'] = 'PUBLISHED';
 	if (!collection) return new Response('collection not found!!');
 	body._id = new mongoose.Types.ObjectId();
-	await modifyRequest({ data: [body], fields: schema.fields, collection, user, type: 'POST' });
+	await modifyRequest({
+		data: [body],
+		fields: schema.fields,
+		collection: schema,
+		user,
+		type: 'POST',
+		storage
+	});
 
 	for (let _collection in body._links) {
 		if (body._links[_collection] == false) continue;
@@ -52,6 +59,7 @@ export let _POST = async ({
 		});
 		body._links[_collection] = _id;
 	}
+	body._storage_images = Array.from(storage.images);
 	adapter.insert(schema.path as string, body);
 	return new Response(JSON.stringify(await collection.insertMany(body)));
 };

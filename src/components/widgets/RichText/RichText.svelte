@@ -16,7 +16,7 @@
 	import type { ComponentProps } from 'svelte';
 	import ImageResize from './extensions/ImageResize';
 	import FileInput from '@src/components/system/inputs/FileInput.svelte';
-	import { meta_data, createRandomID, debounce, updateTranslationProgress } from '@src/utils/utils';
+	import { createRandomID, debounce, updateTranslationProgress } from '@src/utils/utils';
 	import type { FieldType } from '.';
 	import { contentLanguage } from '@src/stores/store.svelte';
 	import ImageDescription from './components/ImageDescription.svelte';
@@ -144,10 +144,6 @@
 		// 		});
 		// 	}
 		// }
-
-		if (deletedImageSrcs.length > 0) {
-			meta_data.add('storage_images_remove', deletedImageSrcs);
-		}
 	}
 	onDestroy(() => {
 		if (editor) {

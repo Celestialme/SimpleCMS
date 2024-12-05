@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { FieldType } from '.';
 	import { entryData, mode } from '@src/stores/store.svelte';
-	import { meta_data } from '@src/utils/utils';
+
 	import Button from '@src/components/system/buttons/Button.svelte';
 	import type { Transformer } from 'konva/lib/shapes/Transformer';
 	import XIcon from '@src/components/system/icons/XIcon.svelte';
@@ -25,12 +25,7 @@
 	}: Props = $props();
 	let _data: File | ImageFile | undefined = $state(value);
 	let updated = $derived(_data !== value);
-
 	WidgetData = async () => {
-		if (value && mode() == 'edit' && (_data as ImageFile)?._id !== (value as ImageFile)?._id) {
-			//send replaced image's id so we can remove it from _storage_images usage
-			meta_data.add('storage_images_remove', [(value as ImageFile)._id]);
-		}
 		//if not updated, value is not changed and is ImageFiles type so send back only id
 		return updated || mode() == 'create'
 			? _data
@@ -124,7 +119,6 @@
 					}
 				});
 			});
-			if ('_id' in value) meta_data.add('storage_images_remove', [value._id]);
 			editing = false;
 		},
 		async addBlur() {

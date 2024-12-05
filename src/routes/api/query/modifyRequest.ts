@@ -1,9 +1,28 @@
+import type { User } from '@src/auth/types';
+import type { Schema } from '@src/collections/types';
 import widgets from '@src/components/widgets';
 import { getFieldName } from '@src/utils/fields';
+import type mongoose from 'mongoose';
 
-export async function modifyRequest({ data, fields, collection, user, type }) {
+export async function modifyRequest({
+	data,
+	fields,
+	collection,
+	user,
+	type,
+	storage
+}: {
+	data: any;
+	fields: any[];
+	collection: Schema;
+	user: User;
+	type: 'GET' | 'POST' | 'DELETE' | 'PATCH';
+	storage?: {
+		images: Set<ObjectId>;
+	};
+}) {
 	for (let field of fields) {
-		let widget = widgets[field.widgetName];
+		let widget = widgets[field.widgetName as keyof typeof widgets];
 		let fieldName = getFieldName(field);
 
 		if ('modifyRequest' in widget) {
@@ -26,7 +45,7 @@ export async function modifyRequest({ data, fields, collection, user, type }) {
 						user,
 						type,
 						id: entry._id,
-						meta_data: entry._meta_data
+						storage
 					});
 					return entry;
 				})

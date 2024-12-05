@@ -1,5 +1,4 @@
 import { type Params, GuiSchema } from './types';
-import { cleanRemovedImages } from '@src/utils/utils';
 import { saveImage } from '@src/utils/files';
 import { type ModifyRequestParams } from '..';
 import mongoose from 'mongoose';
@@ -43,7 +42,7 @@ widget.modifyRequest = async ({
 	type,
 	collection,
 	id,
-	meta_data
+	storage
 }: ModifyRequestParams<typeof widget>) => {
 	let _data = data.get() as File | ImageFile;
 	// _id == new image id;
@@ -60,12 +59,8 @@ widget.modifyRequest = async ({
 				_id = new mongoose.Types.ObjectId(_data._id);
 				data.update(_id);
 			}
-			cleanRemovedImages(meta_data, _id);
+			storage?.images.add(_id);
 
-			await mongoose.models['_storage_images'].updateOne({ _id }, { $addToSet: { used_by: id } });
-			break;
-		case 'DELETE':
-			await mongoose.models['_storage_images'].updateMany({}, { $pull: { used_by: id } });
 			break;
 	}
 };

@@ -18,7 +18,7 @@ export const SIZES = { ...env_sizes, original: 0, thumbnail: 320 } as const;
 export async function saveImage(
 	file: File,
 	folder: string
-): Promise<{ id: mongoose.Types.ObjectId; fileInfo: ImageFile }> {
+): Promise<{ id: ObjectId; fileInfo: ImageFile }> {
 	if (browser) return {} as any;
 	let { adapter } = await import('@src/routes/api/db');
 	let sharp = (await import('sharp')).default;
@@ -50,7 +50,6 @@ export async function saveImage(
 
 	fileInfo = {
 		hash,
-		used_by: [],
 		folder: folder
 	};
 	let keys = Object.keys(SIZES).filter((key) => key != 'original');
@@ -127,7 +126,7 @@ export type ImageFile = {
 	folder: string;
 	hash: string;
 	_id: string;
-	used_by: mongoose.Types.ObjectId[];
+	used_by: number;
 } & Record<
 	keyof typeof SIZES,
 	{

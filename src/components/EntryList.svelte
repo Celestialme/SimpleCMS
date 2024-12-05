@@ -4,7 +4,7 @@
 
 	import { contentLanguage } from '@src/stores/store.svelte';
 	import SquareIcon from './system/icons/SquareIcon.svelte';
-	import { debounce, meta_data } from '@src/utils/utils';
+	import { debounce } from '@src/utils/utils';
 	import FloatingInput from './system/inputs/FloatingInput.svelte';
 	import { deleteData, getData, setStatus } from '@src/utils/data';
 	import { entryData, mode } from '@src/stores/store.svelte';
@@ -69,7 +69,6 @@
 		selectAll = false;
 	};
 	mode.subscribe(() => {
-		meta_data.clear();
 		if (mode() == 'view') {
 			entryData.set({});
 		}

@@ -17,10 +17,7 @@ let _storage_images = {
 			label: 'folder',
 			dataType: 'string'
 		},
-		{
-			label: 'used_by',
-			dataType: 'json'
-		},
+
 		...Object.keys(SIZES).map((key) => ({
 			label: key,
 			dataType: {
@@ -35,12 +32,24 @@ let _storage_images = {
 		}))
 	]
 };
-
+const transformType = {
+	string: 'TEXT',
+	ObjectId: 'TEXT',
+	boolean: 'BOOLEAN',
+	number: 'NUMBER',
+	date: 'TEXT',
+	json: 'TEXT'
+};
 export class Adapter {
-	collections: { [key: string]: Schema & { columns: { [key: string]: string } } };
+	private collections: { [key: string]: Schema & { columns: { [key: string]: string } } };
 	constructor(collections: { [key: string]: Schema & { columns?: { [key: string]: string } } }) {
 		for (let c in collections) {
-			collections[c].columns = { _links: 'json', _is_link: 'boolean', status: 'string' };
+			collections[c].columns = {
+				_links: 'json',
+				_is_link: 'boolean',
+				status: 'string',
+				_storage_images: 'json'
+			};
 			for (let field of collections[c].fields) {
 				if ('dataType' in field) {
 					let dataType = flattenDataType(field.dataType, getFieldName(field), {});
@@ -54,19 +63,12 @@ export class Adapter {
 		);
 		this.collections = { ...collections, _storage_images: _storage_images as any };
 	}
-	transformType = {
-		string: 'TEXT',
-		ObjectId: 'TEXT',
-		boolean: 'BOOLEAN',
-		number: 'NUMBER',
-		date: 'TEXT',
-		json: 'TEXT'
-	};
+
 	async setup() {
 		let sql = '';
 		for (let key in this.collections) {
 			const collection = this.collections[key];
-			let columns = this.transformColumns(collection.columns);
+			let columns = transformColumns(collection.columns);
 
 			let _columns = Object.keys(columns)
 				.map((key) => `"${key}" ${columns[key]}`)
@@ -158,7 +160,7 @@ export class Adapter {
 		return unflattenData(result) as any;
 	}
 
-	async getAll(collectionPath: string, modifiers: any[]) {
+	async getAll(collectionPath: string, modifiers: ReturnType<modifiers>[]) {
 		let collection = this.collections[collectionPath];
 		let { sql, count_sql } = get_sql(collection, modifiers, this.collections);
 
@@ -181,7 +183,7 @@ export class Adapter {
 			});
 		});
 		let columns = { ...collection.columns };
-		let lookups = modifiers.filter((m) => m.lookup);
+		let lookups = modifiers.filter((m) => m.lookup) as Required<ReturnType<modifiers>>[];
 		for (let lookup of lookups) {
 			let relative_collection = Object.values(this.collections).find(
 				(c) => c.id === lookup.lookup.from
@@ -204,11 +206,84 @@ export class Adapter {
 		};
 	}
 
-	transformColumns(columns) {
-		return Object.keys(columns).reduce((acc, key) => {
-			acc[key] = this.transformType[columns[key]];
-			return acc;
-		}, {});
+	async getMedia({
+		type,
+		search,
+		folder,
+		limit,
+		page
+	}: {
+		type: 'IMAGE';
+		search: string;
+		folder: string;
+		limit: number;
+		page: number;
+	}) {
+		let path = {
+			IMAGE: '_storage_images'
+		};
+		let collections = { ...this.collections };
+		for (let key in path) {
+			delete collections[path[key]];
+		}
+		let collection = this.collections[path[type]];
+		let selects = Object.keys(collections).map((key) => `"${collections[key].id}"._storage_images`);
+		let sql = `SELECT main.*,COUNT(*) as count, COALESCE(${selects.join(', ')}) as used_by FROM  ${collection.id} main `;
+		for (let key in collections) {
+			sql += `LEFT JOIN "${collections[key].id}" ON main._id IN (
+    		SELECT value
+  		  	FROM json_each("${collections[key].id}"._storage_images)
+			)\n`;
+		}
+
+		sql += `WHERE main.folder = '${folder}'`;
+		if (search) {
+			sql += ` AND main."original->name" LIKE '%${search}%' `;
+		}
+		sql += ' GROUP BY main._id ';
+		sql += ` LIMIT ${limit} OFFSET ${limit * (page - 1)}`;
+		let result = await new Promise<any[]>((resolve, reject) => {
+			db.all(sql, (err, rows) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(rows);
+				}
+			});
+		});
+		let count_sql = `SELECT COUNT(*) as count FROM  ${collection.id} main WHERE folder = '${folder}'`;
+		if (search) {
+			count_sql += ` AND main."original->name" LIKE '%${search}%' `;
+		}
+		let total = await new Promise<number>((resolve, reject) => {
+			db.get(count_sql, (err, row: { count: number }) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(row.count);
+				}
+			});
+		});
+		return {
+			entryList: result.map((row) => {
+				row.used_by = row.used_by ? row.count : 0;
+				return unflattenData(row);
+			}) as any[],
+			total
+		};
+	}
+	countFolders(collectionPath: string) {
+		let collection = this.collections[collectionPath];
+		let sql = `SELECT folder AS _id,  COUNT(*) AS count FROM  ${collection.id} GROUP BY folder;`;
+		return new Promise<{ _id: string; count: number }[]>((resolve, reject) => {
+			db.all(sql, (err, rows) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(rows as any);
+				}
+			});
+		});
 	}
 }
 
@@ -300,13 +375,12 @@ function get_sql(
 	for (let lookup of lookups) {
 		let relative_collection = Object.values(collections).find(
 			(c) => c.id === lookup.lookup.from
-		) as Schema;
-		let relative_fields = relative_collection.fields.map((f: any) => {
-			return Object.keys(flattenData(f.dataType, `${getFieldName(f)}`)).map(
-				(f) => `${lookup.lookup.localField}."${f}" as "${lookup.lookup.localField}->${f}"`
-			);
-		}) as any[];
-		sql += `,${relative_fields.join(',')}`;
+		) as Schema & { columns: { [key: string]: string } };
+		let relative_fields = Object.keys(relative_collection?.columns).map(
+			(c) => `${lookup.lookup.localField}."${c}" as "${lookup.lookup.localField}->${c}"`
+		);
+
+		sql += `,${lookup.lookup.localField}."_id" as "${lookup.lookup.localField}->_id",${relative_fields.join(',')}`;
 	}
 	sql += ` FROM "${collection.id}" main`;
 	for (let lookup of lookups) {
@@ -317,10 +391,14 @@ function get_sql(
 		let match = matches[i];
 		if (!is_where) sql += ' WHERE ';
 
-		let key = Object.keys(match.match)[0];
+		let keys = Object.keys(match.match);
 		is_where = true;
-		if (match.match[key].strict) sql += ` "${key}" = "${match.match[key].value}"`;
-		else sql += ` "${key}" LIKE "%${match.match[key].value}%"`;
+		for (let i = 0; i < keys.length; i++) {
+			let key = keys[i];
+			if (match.match[key].strict) sql += ` "${key}" = "${match.match[key].value}"`;
+			else sql += ` "${key}" LIKE "%${match.match[key].value}%"`;
+			if (i < keys.length - 1) sql += ' AND ';
+		}
 
 		if (i < matches.length - 1) sql += ' AND ';
 	}
@@ -336,4 +414,10 @@ function get_sql(
 	if (skip) sql += ` OFFSET ${skip}`;
 
 	return { sql, count_sql };
+}
+function transformColumns(columns) {
+	return Object.keys(columns).reduce((acc, key) => {
+		acc[key] = transformType[columns[key]];
+		return acc;
+	}, {});
 }

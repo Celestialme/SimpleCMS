@@ -21,7 +21,7 @@ export let _DELETE = async ({
 
 	for (let id of ids) {
 		await modifyRequest({
-			collection,
+			collection: schema,
 			data: [
 				{
 					_id: new mongoose.Types.ObjectId(id)

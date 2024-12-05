@@ -20,7 +20,7 @@ declare global {
 		entry: any,
 		contentLanguage: string
 	}) => Promise<any>;
-
+	type ObjectId = mongoose.Types.ObjectId;
 	type modifiers = ({
 		field,
 		contentLanguage,
