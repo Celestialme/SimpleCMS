@@ -60,6 +60,6 @@ export let _POST = async ({
 		body._links[_collection] = _id;
 	}
 	body._storage_images = Array.from(storage.images);
-	adapter.insert(schema.path as string, body);
-	return new Response(JSON.stringify(await collection.insertMany(body)));
+
+	return new Response(JSON.stringify(await adapter.insert(schema.path as string, body)));
 };

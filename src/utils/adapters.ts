@@ -116,7 +116,7 @@ export class Adapter {
 		});
 	}
 
-	updateMany(collectionPath: string, data) {
+	async updateMany(collectionPath: string, data) {
 		let collection = this.collections[collectionPath];
 		const fieldNames = collection.fields.map((field) => getFieldName(field));
 
@@ -132,13 +132,14 @@ export class Adapter {
 		        SET  ${setClause}
 		        WHERE _id IN (${data._ids.map(() => '?').join(', ')}) ;
 		    `;
-
 		let params: any[] = [];
 		for (let [key, type] of columns) {
 			params.push(type != 'json' ? data[key] : JSON.stringify(data[key]));
 		}
 
-		params.push(...data._ids);
+		params.push(...data._ids.map((id) => id.toString()));
+		console.log(setClause);
+		console.log(params);
 		db.run(sql, params);
 	}
 
@@ -209,15 +210,16 @@ export class Adapter {
 			let keys = Object.keys(match);
 			for (let i = 0; i < keys.length; i++) {
 				let key = keys[i];
-				if (match[key].strict) sql += ` AND "${key}" = "${match[key].value}"`;
-				else sql += ` AND "${key}" LIKE "%${match[key].value}%"`;
+				let _key = !key.includes('__') ? `main.${key}` : key;
+				if (match[key].strict) sql += ` AND ${_key} = "${match[key].value}"`;
+				else sql += ` AND ${_key} LIKE "%${match[key].value}%"`;
 			}
 		}
 
 		if (sort) {
 			let key = Object.keys(sort)[0];
 			let order = sort[key];
-			if (order != 0) sql += ` ORDER BY "${key}" ${order < 0 ? 'ASC' : 'DESC'}`;
+			if (order != 0) sql += ` ORDER BY ${key} ${order < 0 ? 'ASC' : 'DESC'}`;
 		}
 		let count_sql = sql.replace('SELECT', 'SELECT COUNT(*) as count,');
 		if (limit) sql += ` LIMIT ${limit}`;
@@ -242,6 +244,7 @@ export class Adapter {
 				}
 			});
 		});
+
 		return {
 			rows: result.map((row) => {
 				for (let key in columns) {

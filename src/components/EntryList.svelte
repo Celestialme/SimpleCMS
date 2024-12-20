@@ -15,7 +15,7 @@
 	let tableData: any[] = $state([]);
 	let modifyMap: { [key: string]: boolean } = $state({});
 	let selectAll = $state(false);
-	let filters: { [key: string]: string } = $state({});
+	let filters: { [key: string]: { strict: boolean; value: string } } = $state({});
 	let currentPage = $state(1);
 	let waitFilter = debounce(300);
 	let refresh = async (fetch: boolean = true) => {
@@ -25,14 +25,12 @@
 				page: currentPage,
 				limit: 2,
 				contentLanguage: contentLanguage(),
-				filter: JSON.stringify(filters),
-				sort: JSON.stringify(
-					sorting.isSorted
-						? {
-								[sorting.sortedBy]: sorting.isSorted
-							}
-						: {}
-				)
+				filter: filters,
+				sort: sorting.isSorted
+					? {
+							[sorting.sortedBy]: sorting.isSorted
+						}
+					: {}
 			});
 		}
 		data &&
@@ -145,12 +143,15 @@
 								label="filter"
 								theme="dark"
 								name={header.name}
-								value={filters[header.name]}
+								value={filters[header.name]?.value}
 								oninput={(e) => {
 									let value = (e.target as any).value;
 									if (value) {
 										waitFilter(() => {
-											filters[header.name] = value;
+											filters[header.name] = {
+												strict: false,
+												value
+											};
 										});
 									} else {
 										delete filters[header.name];

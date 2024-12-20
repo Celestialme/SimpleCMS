@@ -42,11 +42,7 @@
 	WidgetData = async () => {
 		let relation_id = value?._id;
 		if (!field) return;
-		if (entryMode == 'create') {
-			relation_id = (
-				await saveFormData({ data: fieldsData, _collection: relationCollection, _mode: 'create' })
-			)[0]?._id;
-		} else if (entryMode == 'choose') {
+		if (entryMode == 'create' || entryMode == 'choose') {
 			relation_id = selected?._id;
 		}
 		return relation_id;
@@ -71,13 +67,10 @@
 			if (mode() == 'edit' && field) {
 				if (entryMode == 'edit' || entryMode == 'create') {
 					data = await extractData(fieldsData);
-				} else if (entryMode == 'choose') {
-					if (typeof value == 'string') {
-						data = await findById(value, relationCollection?.id as string);
-					} else {
-						data = value;
-					}
+				} else {
+					data = value;
 				}
+
 				!relation_entry && (relation_entry = data);
 			} else {
 				data = await extractData(fieldsData);
@@ -98,15 +91,26 @@
 	);
 
 	async function save() {
-		console.log(relation_entry._id);
-		let data = await saveFormData({
+		let id = await saveFormData({
 			data: fieldsData,
 			_collection: relationCollection,
-			_mode: 'edit',
+			_mode: entryMode as 'create' | 'edit',
 			id: relation_entry._id
 		});
+		selected = (
+			await getData({
+				collectionName: relationCollection.path as any,
+				limit: 1,
+				filter: {
+					_id: {
+						value: id,
+						strict: true
+					}
+				}
+			})
+		).entryList[0];
 		display = await field?.display({
-			data,
+			data: selected,
 			field,
 			collection: collection(),
 			entry: entryData(),

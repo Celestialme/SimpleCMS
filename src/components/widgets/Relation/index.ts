@@ -72,7 +72,7 @@ widget.modifiers = (async (info) => {
 	);
 	let widget = widgets[relative_field.widgetName];
 	let new_field = deepmerge(relative_field, {
-		db_fieldName: `${fieldName}.${getFieldName(relative_field)}`
+		db_fieldName: `${fieldName}__${getFieldName(relative_field)}`
 	}); //use db_fieldName since it overrides label.
 
 	return {

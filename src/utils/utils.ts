@@ -10,11 +10,6 @@ export const config = {
 	}
 };
 
-export async function find(query: object, collectionName: string) {
-	if (!collectionName) return;
-	let _query = JSON.stringify(query);
-	return (await axios.get(`/api/find?collection=${collectionName}&query=${_query}`)).data;
-}
 export async function findById(id: string, collectionName: string) {
 	if (!id || !collectionName) return;
 	return (await axios.get(`/api/find?collection=${collectionName}&id=${id}`)).data;

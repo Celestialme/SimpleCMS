@@ -9,10 +9,17 @@ export async function getData(query: {
 	page?: number;
 	limit?: number;
 	contentLanguage?: string;
-	filter?: string;
-	sort?: string;
+	filter?: { [key: string]: any };
+	sort?: { [key: string]: any };
 }) {
-	let q = toFormData({ method: 'GET', ...query });
+	let { filter, sort } = query;
+
+	let q = toFormData({
+		method: 'GET',
+		...query,
+		filter: JSON.stringify(filter),
+		sort: JSON.stringify(sort)
+	});
 	return (await axios.post('/api/query', q).then((data) => data.data)) as {
 		entryList: [any];
 		pagesCount: number;

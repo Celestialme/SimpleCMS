@@ -18,13 +18,14 @@ export async function _GET({
 	schema: Schema;
 	user: User;
 	sort?: { [key: string]: number };
-	filter?: { [key: string]: string };
+	filter?: { [key: string]: { strict: boolean; value: string } };
 	contentLanguage?: string;
 	limit?: number;
 	page?: number;
 }) {
 	let modifiers: any = [];
 	let skip = (page - 1) * limit;
+
 	for (let field of schema.fields.flatMap((field: any) =>
 		field.extractFields ? field.fields : [field]
 	)) {
@@ -39,14 +40,26 @@ export async function _GET({
 				let _modifiers = await widget.modifiers({
 					field,
 					contentLanguage: contentLanguage,
-					filter: _filter,
+					filter: _filter?.value,
 					sort: _sort
 				});
 				modifiers.push(_modifiers);
+				delete filter[fieldName];
 			}
 		}
 	}
 	modifiers = modifiers.filter((x) => x).concat({ limit, skip });
+	for (let [key, value] of Object.entries(filter)) {
+		modifiers.push({
+			match: {
+				[key]: {
+					strict: value.strict,
+					value: value.value
+				}
+			}
+		});
+	}
+	console.log(modifiers);
 	let { rows: entryList, total } = await adapter.get(schema.path as string, modifiers);
 	let pagesCount = Math.ceil(total / limit);
 	return new Response(
