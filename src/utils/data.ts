@@ -17,8 +17,8 @@ export async function getData(query: {
 	let q = toFormData({
 		method: 'GET',
 		...query,
-		filter: JSON.stringify(filter),
-		sort: JSON.stringify(sort)
+		filter: JSON.stringify(filter || {}),
+		sort: JSON.stringify(sort || {})
 	});
 	return (await axios.post('/api/query', q).then((data) => data.data)) as {
 		entryList: [any];

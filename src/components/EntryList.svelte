@@ -17,54 +17,56 @@
 	let selectAll = $state(false);
 	let filters: { [key: string]: { strict: boolean; value: string } } = $state({});
 	let currentPage = $state(1);
-	let waitFilter = debounce(300);
-	let refresh = async (fetch: boolean = true) => {
-		if (fetch) {
-			data = await getData({
-				collectionName: collection().path as any,
-				page: currentPage,
-				limit: 2,
-				contentLanguage: contentLanguage(),
-				filter: filters,
-				sort: sorting.isSorted
-					? {
-							[sorting.sortedBy]: sorting.isSorted
-						}
-					: {}
-			});
-		}
-		data &&
-			(tableData = await Promise.all(
-				data.entryList.map(async (entry) => {
-					let obj: { [key: string]: any } = {};
-					for (let field of collection().fields.flatMap((field: any) =>
-						field.extractFields ? field.fields : [field]
-					)) {
-						if ('callback' in field) {
-							field.callback({ data });
-						}
+	let deb = debounce(300);
+	let refresh = (fetch: boolean = true) => {
+		deb(async () => {
+			if (fetch) {
+				data = await getData({
+					collectionName: collection().path as any,
+					page: currentPage,
+					limit: 2,
+					contentLanguage: contentLanguage(),
+					filter: filters,
+					sort: sorting.isSorted
+						? {
+								[sorting.sortedBy]: sorting.isSorted
+							}
+						: {}
+				});
+			}
+			data &&
+				(tableData = await Promise.all(
+					data.entryList.map(async (entry) => {
+						let obj: { [key: string]: any } = {};
+						for (let field of collection().fields.flatMap((field: any) =>
+							field.extractFields ? field.fields : [field]
+						)) {
+							if ('callback' in field) {
+								field.callback({ data });
+							}
 
-						obj[field.label] = await field.display?.({
-							data: entry[getFieldName(field)],
-							collection: collection().path,
-							field,
-							entry,
-							contentLanguage: contentLanguage()
-						});
-					}
-					obj._id = entry._id;
-					return obj;
-				})
-			));
-		tableHeaders = collection()
-			.fields.flatMap((field: any) => (field.extractFields ? field.fields : [field]))
-			.map((field) => ({
-				label: field.label,
-				name: getFieldName(field)
-			}));
+							obj[field.label] = await field.display?.({
+								data: entry[getFieldName(field)],
+								collection: collection().path,
+								field,
+								entry,
+								contentLanguage: contentLanguage()
+							});
+						}
+						obj._id = entry._id;
+						return obj;
+					})
+				));
+			tableHeaders = collection()
+				.fields.flatMap((field: any) => (field.extractFields ? field.fields : [field]))
+				.map((field) => ({
+					label: field.label,
+					name: getFieldName(field)
+				}));
 
-		modifyMap = {};
-		selectAll = false;
+			modifyMap = {};
+			selectAll = false;
+		});
 	};
 	mode.subscribe(() => {
 		if (mode() == 'view') {
@@ -147,12 +149,10 @@
 								oninput={(e) => {
 									let value = (e.target as any).value;
 									if (value) {
-										waitFilter(() => {
-											filters[header.name] = {
-												strict: false,
-												value
-											};
-										});
+										filters[header.name] = {
+											strict: false,
+											value
+										};
 									} else {
 										delete filters[header.name];
 									}

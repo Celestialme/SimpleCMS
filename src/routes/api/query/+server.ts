@@ -30,8 +30,10 @@ export const POST = async ({ request, locals }) => {
 
 	let page = parseInt(data.get('page') as string) || 1;
 	let limit = parseInt(data.get('limit') as string) || 0;
-	let filter: { [key: string]: string } = JSON.parse(data.get('filter') as string) || {};
-	let sort: { [key: string]: number } = JSON.parse(data.get('sort') as string) || {};
+	let filter: { [key: string]: { strict: boolean; value: string } } = JSON.parse(
+		(data.get('filter') as string) || '{}'
+	);
+	let sort: { [key: string]: number } = JSON.parse((data.get('sort') as string) || '{}');
 	let contentLanguage =
 		(data.get('contentLanguage') as string) || publicConfig.DEFAULT_CONTENT_LANGUAGE;
 
