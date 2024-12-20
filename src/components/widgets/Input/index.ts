@@ -44,14 +44,14 @@ widget.modifiers = (async (info) => {
 	let modifiers: ReturnType<modifiers> = {};
 	if (info.filter)
 		modifiers.match = {
-			[`${fieldName}->${info.contentLanguage}`]: {
+			[`${fieldName}__${info.contentLanguage}`]: {
 				strict: false,
 				value: info.filter
 			}
 		};
 	if (info.sort)
 		modifiers.sort = {
-			[`${fieldName}->${info.contentLanguage}`]: info.sort
+			[`${fieldName}__${info.contentLanguage}`]: info.sort
 		};
 	return modifiers;
 }) as modifiers;

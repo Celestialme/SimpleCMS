@@ -50,4 +50,4 @@ export let sanitizePermissions = (permissions) => {
 	return res;
 };
 
-export type CollectionTypes = {"ca::sm":["relation","relation2"],"ca::sm2":["Text","image"]};
+export type CollectionTypes = {"ca::sm":["relation"],"ca::sm2":["Text","image"]};

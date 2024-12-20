@@ -47,7 +47,7 @@ export async function _GET({
 		}
 	}
 	modifiers = modifiers.filter((x) => x).concat({ limit, skip });
-	let { entryList, total } = await adapter.getAll(schema.path as string, modifiers);
+	let { rows: entryList, total } = await adapter.get(schema.path as string, modifiers);
 	let pagesCount = Math.ceil(total / limit);
 	return new Response(
 		JSON.stringify({

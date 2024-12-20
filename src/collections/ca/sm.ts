@@ -10,12 +10,6 @@ let schema: Schema = {
 			label: 'relation',
 			displayPath: 'Text',
 			id: '6748959e0840aa58c660df97'
-		}),
-		widgets.Relation({
-			relation: 'ca::sm2',
-			label: 'relation2',
-			displayPath: 'Text',
-			id: '6748959e0840aa58c660df97'
 		})
 	]
 };

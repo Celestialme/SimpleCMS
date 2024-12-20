@@ -3,6 +3,7 @@ import { getFieldName } from './fields';
 import sqlite3 from 'sqlite3';
 import mongoose from 'mongoose';
 import { SIZES } from './files';
+import widgets from '@src/components/widgets';
 const db = new sqlite3.Database('./db.db');
 
 let _storage_images = {
@@ -115,7 +116,7 @@ export class Adapter {
 		});
 	}
 
-	update(collectionPath: string, data) {
+	updateMany(collectionPath: string, data) {
 		let collection = this.collections[collectionPath];
 		const fieldNames = collection.fields.map((field) => getFieldName(field));
 
@@ -129,40 +130,99 @@ export class Adapter {
 		const sql = `
 		        UPDATE "${collection.id}"
 		        SET  ${setClause}
-		        WHERE _id = ?;
+		        WHERE _id IN (${data._ids.map(() => '?').join(', ')}) ;
 		    `;
+
 		let params: any[] = [];
 		for (let [key, type] of columns) {
 			params.push(type != 'json' ? data[key] : JSON.stringify(data[key]));
 		}
 
-		params.push(data._id.toString());
+		params.push(...data._ids);
 		db.run(sql, params);
 	}
 
-	async getOne(collectionPath: string, modifiers: ReturnType<modifiers>[]) {
+	async get(collectionPath: string, modifiers: ReturnType<modifiers>[]) {
 		let collection = this.collections[collectionPath];
-		let { sql } = get_sql(collection, modifiers, this.collections);
-		sql += ' LIMIT 1';
-		const result = await new Promise<any>((resolve, reject) => {
-			db.get(sql, (err, row) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(row);
-				}
-			});
-		});
-		if (result)
-			for (let key in collection.columns) {
-				result[key] = collection.columns[key] != 'json' ? result[key] : JSON.parse(result[key]);
-			}
-		return unflattenData(result) as any;
-	}
+		let lookups = modifiers
+			.filter((m) => m.lookup)
+			.map((m) => ({ ...m.lookup, prefix: 'main.' })) as (Required<
+			ReturnType<modifiers>
+		>['lookup'] & { prefix: string })[];
+		let matches = modifiers.filter((m) => m.match).map((m) => m.match) as Required<
+			ReturnType<modifiers>
+		>['match'][];
+		let sort = modifiers.filter((m) => 'sort' in m)[0]?.sort as Required<
+			ReturnType<modifiers>['sort']
+		>;
+		let skip = modifiers.filter((m) => 'skip' in m)[0]?.skip as Required<
+			ReturnType<modifiers>['skip']
+		>;
+		let limit = modifiers.filter((m) => 'limit' in m)[0]?.limit as Required<
+			ReturnType<modifiers>['limit']
+		>;
 
-	async getAll(collectionPath: string, modifiers: ReturnType<modifiers>[]) {
-		let collection = this.collections[collectionPath];
-		let { sql, count_sql } = get_sql(collection, modifiers, this.collections);
+		let selects = Object.keys(collection.columns)
+			.filter((f) => !lookups.find((m) => m.as === f))
+			.map((c) => `main."${c}"`)
+			.join(', ');
+		let sql = `SELECT ${selects ? `${selects},` : ''} main._id `;
+		let columns = { ...collection.columns };
+		for (let lookup of lookups) {
+			let relative_collection = Object.values(this.collections).find(
+				(c) => c.id === lookup.from
+			) as Schema & { columns: { [key: string]: string } };
+
+			for (let field of relative_collection?.fields) {
+				let widget = widgets[field?.widgetName];
+				if (widget && 'modifiers' in widget) {
+					let modifiers = await widget.modifiers({
+						field
+					});
+					if (modifiers?.lookup) {
+						let _lookup = modifiers.lookup as ReturnType<modifiers>['lookup'] & { prefix: string };
+						_lookup.prefix = '';
+						_lookup.localField = `${lookup.localField}__${_lookup.as}`;
+						_lookup.as = `${lookup.as}__${_lookup.as}`;
+						lookups.push(_lookup);
+					}
+				}
+			}
+			let relative_fields = Object.keys(relative_collection?.columns).map(
+				(c) => `${lookup.localField}.${c} as ${lookup.localField}__${c}`
+			);
+			let relative_columns = relative_collection?.columns;
+			for (let key in relative_columns) {
+				columns[`${lookup.as}__${key}`] = relative_columns[key];
+			}
+			delete columns[lookup.as];
+			sql += `,${lookup.localField}._id as ${lookup.localField}___id,${relative_fields.join(',')}`;
+		}
+		sql += ` FROM "${collection.id}" main`;
+		for (let lookup of lookups) {
+			sql += ` LEFT JOIN "${lookup.from}" ${lookup.localField} ON ${lookup.localField}.${lookup.foreignField} = ${lookup.prefix}${lookup.localField}`;
+		}
+		sql += ' WHERE 1=1';
+		for (let i = 0; i < matches.length; i++) {
+			let match = matches[i];
+
+			let keys = Object.keys(match);
+			for (let i = 0; i < keys.length; i++) {
+				let key = keys[i];
+				if (match[key].strict) sql += ` AND "${key}" = "${match[key].value}"`;
+				else sql += ` AND "${key}" LIKE "%${match[key].value}%"`;
+			}
+		}
+
+		if (sort) {
+			let key = Object.keys(sort)[0];
+			let order = sort[key];
+			if (order != 0) sql += ` ORDER BY "${key}" ${order < 0 ? 'ASC' : 'DESC'}`;
+		}
+		let count_sql = sql.replace('SELECT', 'SELECT COUNT(*) as count,');
+		if (limit) sql += ` LIMIT ${limit}`;
+
+		if (skip) sql += ` OFFSET ${skip}`;
 
 		const result = await new Promise<any[]>((resolve, reject) => {
 			db.all(`${sql}`, (err, rows) => {
@@ -182,21 +242,8 @@ export class Adapter {
 				}
 			});
 		});
-		let columns = { ...collection.columns };
-		let lookups = modifiers.filter((m) => m.lookup) as Required<ReturnType<modifiers>>[];
-		for (let lookup of lookups) {
-			let relative_collection = Object.values(this.collections).find(
-				(c) => c.id === lookup.lookup.from
-			);
-			let relative_columns = relative_collection?.columns;
-			for (let key in relative_columns) {
-				columns[`${lookup.lookup.as}->${key}`] = relative_columns[key];
-			}
-			delete columns[lookup.lookup.as];
-		}
-
 		return {
-			entryList: result.map((row) => {
+			rows: result.map((row) => {
 				for (let key in columns) {
 					row[key] = columns[key] != 'json' ? row[key] : JSON.parse(row[key]);
 				}
@@ -238,7 +285,7 @@ export class Adapter {
 
 		sql += `WHERE main.folder = '${folder}'`;
 		if (search) {
-			sql += ` AND main."original->name" LIKE '%${search}%' `;
+			sql += ` AND main."original__name" LIKE '%${search}%' `;
 		}
 		sql += ' GROUP BY main._id ';
 		sql += ` LIMIT ${limit} OFFSET ${limit * (page - 1)}`;
@@ -253,7 +300,7 @@ export class Adapter {
 		});
 		let count_sql = `SELECT COUNT(*) as count FROM  ${collection.id} main WHERE folder = '${folder}'`;
 		if (search) {
-			count_sql += ` AND main."original->name" LIKE '%${search}%' `;
+			count_sql += ` AND main."original__name" LIKE '%${search}%' `;
 		}
 		let total = await new Promise<number>((resolve, reject) => {
 			db.get(count_sql, (err, row: { count: number }) => {
@@ -285,6 +332,19 @@ export class Adapter {
 			});
 		});
 	}
+	deleteMany(collectionPath: string, ids: string[]) {
+		let collection = this.collections[collectionPath];
+		let sql = `DELETE FROM "${collection.id}" WHERE _id IN (${ids.map((_) => `?`).join(', ')})`;
+		return new Promise<void>((resolve, reject) => {
+			db.run(sql, ids, (err) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve();
+				}
+			});
+		});
+	}
 }
 
 function flattenDataType(type: Object, prefix = '', transformType) {
@@ -297,10 +357,10 @@ function flattenDataType(type: Object, prefix = '', transformType) {
 	for (const key in type) {
 		if (typeof type[key] === 'object' && !Array.isArray(type[key])) {
 			// Recursively flatten the nested object
-			Object.assign(result, flattenDataType(type[key], `${prefix}->${key}`, transformType));
+			Object.assign(result, flattenDataType(type[key], `${prefix}__${key}`, transformType));
 		} else {
 			// Add the flattened key-value pair to the result
-			result[`${prefix}->${key}`] = transformType[type[key]] || type[key];
+			result[`${prefix}__${key}`] = transformType[type[key]] || type[key];
 		}
 	}
 
@@ -317,10 +377,10 @@ function flattenData(type: any, prefix = '') {
 	for (const key in type) {
 		if (typeof type[key] === 'object' && !Array.isArray(type[key])) {
 			// Recursively flatten the nested object
-			Object.assign(result, flattenData(type[key], `${prefix}->${key}`));
+			Object.assign(result, flattenData(type[key], `${prefix}__${key}`));
 		} else {
 			// Add the flattened key-value pair to the result
-			result[`${prefix}->${key}`] = type[key];
+			result[`${prefix}__${key}`] = type[key];
 		}
 	}
 
@@ -328,11 +388,13 @@ function flattenData(type: any, prefix = '') {
 }
 function unflattenData(flatObj) {
 	if (!flatObj) return null;
+
 	let result = {};
 	for (const flatKey in flatObj) {
-		const keys = flatKey.split('->'); // Split the flat key into parts
+		const keys = flatKey.split('__'); // Split the flat key into parts
 		keys.reduce((acc, key, index) => {
 			// If it's the last key, assign the value
+			if (typeof acc[key] != 'object') acc[key] = {};
 			if (index === keys.length - 1) {
 				acc[key] = flatObj[flatKey];
 			} else {
@@ -345,76 +407,6 @@ function unflattenData(flatObj) {
 	return result;
 }
 
-function get_sql(
-	collection: Schema & {
-		columns: {
-			[key: string]: string;
-		};
-	},
-	modifiers: ReturnType<modifiers>[],
-	collections: { [key: string]: Schema & { columns: { [key: string]: string } } }
-) {
-	let lookups = modifiers.filter((m) => m.lookup) as Required<ReturnType<modifiers>>[];
-	let matches = modifiers.filter((m) => m.match) as Required<ReturnType<modifiers>>[];
-	let sort = modifiers.filter((m) => 'sort' in m)[0]?.sort as Required<
-		ReturnType<modifiers>['sort']
-	>;
-	let skip = modifiers.filter((m) => 'skip' in m)[0]?.skip as Required<
-		ReturnType<modifiers>['skip']
-	>;
-	let limit = modifiers.filter((m) => 'limit' in m)[0]?.limit as Required<
-		ReturnType<modifiers>['limit']
-	>;
-
-	let selects = Object.keys(collection.columns)
-		.filter((f) => !lookups.find((m) => m.lookup.as === f))
-		.map((c) => `main."${c}"`)
-		.join(', ');
-	if (selects) selects += ', ';
-	let sql = `SELECT ${selects} main._id `;
-	for (let lookup of lookups) {
-		let relative_collection = Object.values(collections).find(
-			(c) => c.id === lookup.lookup.from
-		) as Schema & { columns: { [key: string]: string } };
-		let relative_fields = Object.keys(relative_collection?.columns).map(
-			(c) => `${lookup.lookup.localField}."${c}" as "${lookup.lookup.localField}->${c}"`
-		);
-
-		sql += `,${lookup.lookup.localField}."_id" as "${lookup.lookup.localField}->_id",${relative_fields.join(',')}`;
-	}
-	sql += ` FROM "${collection.id}" main`;
-	for (let lookup of lookups) {
-		sql += ` LEFT JOIN "${lookup.lookup.from}" ${lookup.lookup.localField}  ON ${lookup.lookup.localField}.${lookup.lookup.foreignField} = main.${lookup.lookup.localField}`;
-	}
-	let is_where = false;
-	for (let i = 0; i < matches.length; i++) {
-		let match = matches[i];
-		if (!is_where) sql += ' WHERE ';
-
-		let keys = Object.keys(match.match);
-		is_where = true;
-		for (let i = 0; i < keys.length; i++) {
-			let key = keys[i];
-			if (match.match[key].strict) sql += ` "${key}" = "${match.match[key].value}"`;
-			else sql += ` "${key}" LIKE "%${match.match[key].value}%"`;
-			if (i < keys.length - 1) sql += ' AND ';
-		}
-
-		if (i < matches.length - 1) sql += ' AND ';
-	}
-
-	if (sort) {
-		let key = Object.keys(sort)[0];
-		let order = sort[key];
-		if (order != 0) sql += ` ORDER BY "${key}" ${order < 0 ? 'ASC' : 'DESC'}`;
-	}
-	let count_sql = sql.replace('SELECT', 'SELECT COUNT(*) as count,');
-	if (limit) sql += ` LIMIT ${limit}`;
-
-	if (skip) sql += ` OFFSET ${skip}`;
-
-	return { sql, count_sql };
-}
 function transformColumns(columns) {
 	return Object.keys(columns).reduce((acc, key) => {
 		acc[key] = transformType[columns[key]];

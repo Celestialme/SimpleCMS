@@ -77,12 +77,12 @@ widget.modifiers = (async (info) => {
 	};
 	if (info.filter)
 		modifiers.match = {
-			[`${fieldName}->original->name`]: {
+			[`${fieldName}__original__name`]: {
 				strict: false,
 				value: info.filter
 			}
 		};
-	if (info.sort) modifiers.sort = { [`${fieldName}->original->name`]: info.sort };
+	if (info.sort) modifiers.sort = { [`${fieldName}__original__name`]: info.sort };
 	return modifiers;
 }) as modifiers;
 

@@ -28,9 +28,9 @@ declare global {
 		sort
 	}: {
 		field: any;
-		contentLanguage: string;
-		filter: string;
-		sort: number;
+		contentLanguage?: string;
+		filter?: string;
+		sort?: number;
 	}) => {
 		lookup?: {
 			from: string;

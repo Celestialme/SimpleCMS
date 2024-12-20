@@ -18,7 +18,7 @@ export let _PATCH = async ({
 	let storage = { images: new Set<ObjectId>() };
 	let collection = collectionModels[schema.id as string];
 	let _id = new mongoose.Types.ObjectId(data.get('_id') as string);
-	body._id = _id;
+	body._ids = [_id];
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
 		try {
@@ -83,7 +83,6 @@ export let _PATCH = async ({
 	delete body._linked_collection;
 	body._storage_images = Array.from(storage.images);
 	let response = JSON.stringify(body);
-	await collection.updateOne({ _id }, body, { upsert: true });
-	adapter.update(schema.path as string, body);
+	adapter.updateMany(schema.path as string, body);
 	return new Response(response);
 };

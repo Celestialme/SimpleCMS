@@ -1,5 +1,5 @@
 import type { Schema } from '@src/collections/types';
-import { collectionModels } from '../db';
+import { adapter, collectionModels } from '../db';
 import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
@@ -16,8 +16,7 @@ export let _DELETE = async ({
 }) => {
 	let collection = collectionModels[schema.id as string];
 
-	let ids = data.get('ids') as string;
-	ids = JSON.parse(ids);
+	let ids: string[] = JSON.parse(data.get('ids') as string);
 
 	for (let id of ids) {
 		await modifyRequest({
@@ -39,6 +38,7 @@ export let _DELETE = async ({
 			});
 		}
 	}
+	await adapter.deleteMany(schema.path as string, ids);
 	return new Response(
 		JSON.stringify(
 			await collection.deleteMany({

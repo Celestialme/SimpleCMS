@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import type { FieldType } from '.';
 	import {
 		collections,
@@ -34,15 +32,15 @@
 	}: Props = $props();
 
 	let dropDownData: any = $state();
-	let selected: { display: any; _id: any } | undefined = $state(undefined);
+	let selected: { display: any; _id: any } | undefined = $state(value);
 	let fieldsData = $state({});
 	let showDropDown = $state(false);
 	let entryMode: 'create' | 'edit' | 'choose' = $state('choose');
-	let relation_entry = $state({ _id: '' });
+	let relation_entry = $state() as { [key: string]: any };
 	let relationCollection = collections()[field?.relation];
 
 	WidgetData = async () => {
-		let relation_id = '';
+		let relation_id = value?._id;
 		if (!field) return;
 		if (entryMode == 'create') {
 			relation_id = (
@@ -100,6 +98,7 @@
 	);
 
 	async function save() {
+		console.log(relation_entry._id);
 		let data = await saveFormData({
 			data: fieldsData,
 			_collection: relationCollection,
@@ -116,6 +115,14 @@
 		expanded = false;
 		saveFunction().reset();
 	}
+	track(
+		() => {
+			if (expanded) {
+				saveFunction().fn = save;
+			}
+		},
+		() => [expanded]
+	);
 </script>
 
 {#if !expanded && !showDropDown}
@@ -159,7 +166,6 @@
 		bind:fieldsData
 		customData={relation_entry}
 	/>
-	{((saveFunction().fn = save), '')}
 {/if}
 
 <style>

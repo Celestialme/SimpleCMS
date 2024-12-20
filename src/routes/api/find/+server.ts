@@ -1,15 +1,28 @@
 import type { RequestHandler } from './$types';
-import { collectionModels } from '@src/routes/api/db';
+import { collectionModels, adapter } from '@src/routes/api/db';
 export const GET: RequestHandler = async ({ url }) => {
-	let collection = collectionModels[url.searchParams.get('collection') as string];
+	let path = url.searchParams.get('collection') as string;
 	let id = url.searchParams.get('id') as string | null;
+
 	// return new Response(await collection.find(url.searchParams.get("id") as string))
 	if (id) {
-		let resp = JSON.stringify(await collection.findById(url.searchParams.get('id') as string));
+		let resp = JSON.stringify(
+			(
+				await adapter.get(path, [
+					{
+						match: {
+							_id: {
+								strict: true,
+								value: id
+							}
+						},
+						limit: 1
+					}
+				])
+			).rows
+		);
 		return new Response(resp);
 	} else {
-		let query = JSON.parse(url.searchParams.get('query') as string);
-		let resp = JSON.stringify(await collection.find(query));
-		return new Response(resp);
+		throw new Error('id is required');
 	}
 };
