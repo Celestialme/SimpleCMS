@@ -49,14 +49,15 @@ export let _POST = async ({
 
 	for (let _collection in body._links) {
 		if (body._links[_collection] == false) continue;
-		let collection = collectionModels[collections()[_collection].id as string];
 
 		let _id = new mongoose.Types.ObjectId();
-		await collection.insertMany({
+
+		await adapter.insert((collections()[_collection].id + '_link') as string, {
 			_id,
 			_link_id: body._id,
-			_linked_collection: schema.path
+			_linked_collection: schema.id
 		});
+
 		body._links[_collection] = _id;
 	}
 	body._storage_images = Array.from(storage.images);

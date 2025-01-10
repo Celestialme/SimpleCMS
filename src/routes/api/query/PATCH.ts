@@ -52,7 +52,18 @@ export let _PATCH = async ({
 
 	let links =
 		schema?.links?.length || 0 > 0 || body?._is_link
-			? (await collection.findById(body._id))._links
+			? (
+					await adapter.get(schema.path as string, [
+						{
+							match: {
+								_id: {
+									value: body._id,
+									strict: true
+								}
+							}
+						}
+					])
+				).rows[0]._links
 			: {};
 
 	for (let _collection in body._links) {

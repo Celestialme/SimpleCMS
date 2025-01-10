@@ -59,7 +59,6 @@ export async function _GET({
 			}
 		});
 	}
-	console.log(modifiers);
 	let { rows: entryList, total } = await adapter.get(schema.path as string, modifiers);
 	let pagesCount = Math.ceil(total / limit);
 	return new Response(
