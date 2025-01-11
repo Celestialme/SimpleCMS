@@ -16,7 +16,7 @@ export let _PATCH = async ({
 }) => {
 	let body: { [key: string]: any } = {};
 	let storage = { images: new Set<ObjectId>() };
-	let collection = collectionModels[schema.id as string];
+	let schemaPath = schema.path as string;
 	let _id = new mongoose.Types.ObjectId(data.get('_id') as string);
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
@@ -34,12 +34,12 @@ export let _PATCH = async ({
 		}
 	}
 	if (body._is_link) {
-		collection = collectionModels[collections()[body._linked_collection].id as string];
+		schemaPath = body._linked_collection;
 	}
 	for (let id of fileIDS) {
 		delete body[id];
 	}
-	if (!collection) return new Response('collection not found!!');
+	if (!schemaPath) return new Response('collection not found!!');
 
 	await modifyRequest({
 		data: [body],
@@ -51,9 +51,9 @@ export let _PATCH = async ({
 	});
 
 	let links =
-		schema?.links?.length || 0 > 0 || body?._is_link
+		(schema?.links?.length || 0) > 0 || body?._is_link
 			? (
-					await adapter.get(schema.path as string, [
+					await adapter.get(schemaPath as string, [
 						{
 							match: {
 								_id: {
@@ -65,27 +65,34 @@ export let _PATCH = async ({
 					])
 				).rows[0]._links
 			: {};
-
 	for (let _collection in body._links) {
-		let collection = collectionModels[collections()[_collection].id as string];
-		if (!collection) continue;
+		let schemaPath = (collections()[_collection].id + '_link') as string;
+		if (!schemaPath) continue;
 		if (!body._links[_collection] && links?.[_collection]) {
 			delete body._links[_collection];
-			await collection.deleteMany({
-				_link_id: body._id,
-				_linked_collection: body?._is_link ? body._linked_collection : schema.path
-			});
+			await adapter.deleteMany(schemaPath, [
+				{
+					_link_id: {
+						value: body._id,
+						strict: true
+					},
+					_linked_collection: {
+						value: body._is_link ? collections()[body._linked_collection].id : schema.path,
+						strict: true
+					}
+				}
+			]);
 			continue;
 		} else if (!body._links[_collection]) continue;
 
 		if (links?.[_collection]) continue;
 		let _id = new mongoose.Types.ObjectId();
-
-		await collection.insertMany({
+		await adapter.insert(schemaPath, {
 			_id,
 			_link_id: body._id,
-			_linked_collection: body._is_link ? body._linked_collection : schema.path
+			_linked_collection: body._is_link ? collections()[body._linked_collection].id : schema.id
 		});
+
 		body._links[_collection] = _id;
 	}
 
@@ -93,6 +100,6 @@ export let _PATCH = async ({
 	delete body._linked_collection;
 	body._storage_images = Array.from(storage.images);
 	let response = JSON.stringify(body);
-	await adapter.updateMany(schema.path as string, { _ids: [_id], ...body });
+	await adapter.updateMany(schemaPath, { _ids: [_id], ...body });
 	return new Response(response);
 };

@@ -45,7 +45,7 @@ const transformType = {
 export class Adapter {
 	private collections: { [key: string]: Schema & { columns: { [key: string]: string } } };
 	private linkedCollections: {
-		[key: string]: Schema & { columns: { [key: string]: string }; originalCollections: string[] };
+		[key: string]: Schema & { columns: { [key: string]: string }; originalCollections: Schema[] };
 	};
 	constructor(collections: { [key: string]: Schema & { columns?: { [key: string]: string } } }) {
 		for (let c in collections) {
@@ -74,9 +74,9 @@ export class Adapter {
 		).reduce((acc: { [key: string]: any }, c) => {
 			acc[collections[c as string].id + '_link'] = {
 				id: collections[c as string].id + '_link',
-				originalCollections: Object.values(collections)
-					.filter((collection) => collection.links?.includes(c as any))
-					.map((c) => c.id),
+				originalCollections: Object.values(collections).filter((collection) =>
+					collection.links?.includes(c as any)
+				),
 				fields: [],
 				columns: {
 					_link_id: 'ObjectId',
@@ -167,8 +167,6 @@ export class Adapter {
 		}
 
 		params.push(...data._ids.map((id) => id.toString()));
-		console.log(setClause);
-		console.log(params);
 		db.run(sql, params);
 	}
 
@@ -196,7 +194,7 @@ export class Adapter {
 			.filter((f) => !lookups.find((m) => m.as === f))
 			.map((c) => `main."${c}"`)
 			.join(', ');
-		let sql = `SELECT * FROM (SELECT main._id,false as _is_link, `;
+		let sql = `SELECT * FROM (SELECT main._id,false as _is_link, false as _linked_collection,`;
 		let columns = { ...collection.columns };
 		for (let lookup of lookups) {
 			let relative_collection = Object.values(this.collections).find(
@@ -241,11 +239,11 @@ export class Adapter {
 			for (let Lcollection of linkedCollection.originalCollections) {
 				sql += `
 			UNION
-			SELECT main._id,true as _is_link, ${selects}
+			SELECT main._id,true as _is_link,'${Lcollection.path}' as _linked_collection, ${selects}
 			FROM
 				"${collection.id}_link" link
 				JOIN
-				"${Lcollection}" main ON link._link_id = main._id AND link._linked_collection = '${Lcollection}'`;
+				"${Lcollection.id}" main ON link._link_id = main._id AND link._linked_collection = '${Lcollection.id}'`;
 				sql += `${joins}`;
 			}
 		}
@@ -383,11 +381,36 @@ export class Adapter {
 			});
 		});
 	}
-	deleteMany(collectionPath: string, ids: string[]) {
+	deleteById(collectionPath: string, ids: string[]) {
 		let collection = this.collections[collectionPath];
 		let sql = `DELETE FROM "${collection.id}" WHERE _id IN (${ids.map((_) => `?`).join(', ')})`;
 		return new Promise<void>((resolve, reject) => {
 			db.run(sql, ids, (err) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve();
+				}
+			});
+		});
+	}
+	deleteMany(collectionPath: string, modifiers: ReturnType<modifiers>['match'][]) {
+		let matches = modifiers.filter((m) => m!.match).map((m) => m!.match);
+		let collection = this.collections[collectionPath];
+		let sql = `DELETE FROM "${collection.id}" WHERE 1=1`;
+		for (let i = 0; i < matches.length; i++) {
+			let match = matches[i];
+			let keys = Object.keys(match);
+			for (let i = 0; i < keys.length; i++) {
+				let key = keys[i];
+				let _key = !key.includes('__') ? `main.${key}` : key;
+				if (match[key].strict) sql += ` AND ${_key} = "${match[key].value}"`;
+				else sql += ` AND ${_key} LIKE "%${match[key].value}%"`;
+			}
+		}
+
+		return new Promise<void>((resolve, reject) => {
+			db.run(sql, (err) => {
 				if (err) {
 					reject(err);
 				} else {

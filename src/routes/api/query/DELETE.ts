@@ -38,7 +38,7 @@ export let _DELETE = async ({
 			});
 		}
 	}
-	await adapter.deleteMany(schema.path as string, ids);
+	await adapter.deleteById(schema.path as string, ids);
 	return new Response(
 		JSON.stringify(
 			await collection.deleteMany({
