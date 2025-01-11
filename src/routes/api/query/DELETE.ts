@@ -31,11 +31,18 @@ export let _DELETE = async ({
 			type: 'DELETE'
 		});
 		for (let link of schema.links || []) {
-			let collection = collectionModels[collections()[link].id];
-			await collection.deleteMany({
-				_link_id: new mongoose.Types.ObjectId(id),
-				_linked_collection: schema.path
-			});
+			await adapter.deleteMany(collections()[link].id + '_link', [
+				{
+					_link_id: {
+						value: id,
+						strict: true
+					},
+					_linked_collection: {
+						value: schema.id,
+						strict: true
+					}
+				}
+			]);
 		}
 	}
 	await adapter.deleteById(schema.path as string, ids);
