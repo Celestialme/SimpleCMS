@@ -54,6 +54,13 @@ export class Adapter {
 				status: 'string',
 				_storage_images: 'json'
 			};
+			for (let key in collections[c].fields) {
+				let field = collections[c].fields[key];
+				if ('extractFields' in field) {
+					collections[c].fields = [...collections[c].fields, ...field.fields];
+				}
+			}
+			collections[c].fields = collections[c].fields.filter((f) => 'extractFields' in f == false);
 			for (let field of collections[c].fields) {
 				if ('dataType' in field) {
 					let dataType = flattenDataType(field.dataType, getFieldName(field), {});
@@ -118,10 +125,12 @@ export class Adapter {
 		let collection = this.collections[collectionPath];
 		const fieldNames = collection.fields.map((field) => getFieldName(field));
 		for (let fieldName of fieldNames) {
+			if (this.collections[collectionPath].columns[fieldName] == 'json') continue;
 			let flat_data = flattenData(data[fieldName], fieldName);
 			delete data[fieldName];
 			data = { ...data, ...flat_data };
 		}
+
 		let columns = Object.entries(collection.columns).filter(([key]) => data[key] !== undefined);
 		const placeholders = ', ?'.repeat(columns.length);
 		const sql = `
@@ -150,6 +159,7 @@ export class Adapter {
 		const fieldNames = collection.fields.map((field) => getFieldName(field));
 
 		for (let fieldName of fieldNames) {
+			if (this.collections[collectionPath].columns[fieldName] == 'json') continue;
 			let flat_data = flattenData(data[fieldName], fieldName);
 			delete data[fieldName];
 			data = { ...data, ...flat_data };

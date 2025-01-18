@@ -40,7 +40,7 @@ const widget = (params: Params) => {
 		callback
 	};
 
-	return { ...field, widgetName, params };
+	return { ...field, widgetName, params, dataType: 'json' };
 };
 widget.Name = WIDGET_NAME;
 widget.GuiSchema = GuiSchema;

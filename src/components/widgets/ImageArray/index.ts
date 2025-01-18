@@ -45,11 +45,17 @@ const widget = (params: Params) => {
 		uploader_path: params.uploader_path,
 		uploader_display: params.uploader_display,
 		uploader_db_fieldName: params.uploader_db_fieldName,
-		extractFields: params.extractFields || true,
+		extractFields: params.extractFields ?? true,
 		width: params.width
 	};
-
-	return { ...field, widgetName, params };
+	let dataType = params.fields.reduce(
+		(acc, field) => ({
+			...acc,
+			[getFieldName(field)]: field.dataType
+		}),
+		{}
+	);
+	return { ...field, widgetName, params, dataType };
 };
 
 widget.modifyRequest = async ({
