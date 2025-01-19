@@ -29,7 +29,7 @@ export const actions: Actions = {
 			role,
 			lastAuthMethod: 'password',
 			is_registered: false
-		});
+		} as any);
 
 		if (!newUser) return fail(400, { message: 'unknown error' });
 

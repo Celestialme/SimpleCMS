@@ -5,8 +5,39 @@ import mongoose from 'mongoose';
 import { SIZES } from './files';
 import widgets from '@src/components/widgets';
 import { collections } from '@src/stores/store.svelte';
+import { sessionSchema, tokenSchema, UserSchema } from '@src/auth/types';
 const db = new sqlite3.Database('./db.db');
 
+let _users = {
+	id: '_users',
+	columns: {},
+	fields: [
+		...Object.keys(UserSchema).map((key) => ({
+			label: key,
+			dataType: UserSchema[key]
+		}))
+	]
+};
+let _sessions = {
+	id: '_sessions',
+	columns: {},
+	fields: [
+		...Object.keys(sessionSchema).map((key) => ({
+			label: key,
+			dataType: sessionSchema[key]
+		}))
+	]
+};
+let _tokens = {
+	id: '_tokens',
+	columns: {},
+	fields: [
+		...Object.keys(tokenSchema).map((key) => ({
+			label: key,
+			dataType: tokenSchema[key]
+		}))
+	]
+};
 let _storage_images = {
 	id: '_storage_images',
 	columns: {},
@@ -39,7 +70,7 @@ const transformType = {
 	ObjectId: 'TEXT',
 	boolean: 'BOOLEAN',
 	number: 'NUMBER',
-	date: 'TEXT',
+	date: 'NUMBER',
 	json: 'TEXT'
 };
 export class Adapter {
@@ -72,6 +103,18 @@ export class Adapter {
 			(acc, f) => ({ ...acc, ...flattenDataType(f.dataType, getFieldName(f), {}) }),
 			{}
 		);
+		_users.columns = _users.fields.reduce(
+			(acc, f) => ({ ...acc, ...flattenDataType(f.dataType, getFieldName(f), {}) }),
+			{}
+		);
+		_sessions.columns = _sessions.fields.reduce(
+			(acc, f) => ({ ...acc, ...flattenDataType(f.dataType, getFieldName(f), {}) }),
+			{}
+		);
+		_tokens.columns = _tokens.fields.reduce(
+			(acc, f) => ({ ...acc, ...flattenDataType(f.dataType, getFieldName(f), {}) }),
+			{}
+		);
 
 		this.linkedCollections = Array.from(
 			Object.values(collections).reduce((acc, c) => {
@@ -97,6 +140,9 @@ export class Adapter {
 		this.collections = {
 			...collections,
 			_storage_images: _storage_images as any,
+			_users: _users as any,
+			_sessions: _sessions as any,
+			_tokens: _tokens as any,
 			...this.linkedCollections
 		};
 	}
@@ -121,17 +167,18 @@ export class Adapter {
 	}
 
 	async insert(collectionPath: string, data): Promise<string> {
-		let id = data?._id?.toString() || new mongoose.Types.ObjectId().toString();
+		let _data = { ...data };
+		let id = _data?._id?.toString() || new mongoose.Types.ObjectId().toString();
 		let collection = this.collections[collectionPath];
 		const fieldNames = collection.fields.map((field) => getFieldName(field));
+
 		for (let fieldName of fieldNames) {
 			if (this.collections[collectionPath].columns[fieldName] == 'json') continue;
-			let flat_data = flattenData(data[fieldName], fieldName);
-			delete data[fieldName];
-			data = { ...data, ...flat_data };
+			let flat_data = flattenData(_data[fieldName], fieldName);
+			delete _data[fieldName];
+			_data = { ..._data, ...flat_data };
 		}
-
-		let columns = Object.entries(collection.columns).filter(([key]) => data[key] !== undefined);
+		let columns = Object.entries(collection.columns).filter(([key]) => _data[key] !== undefined);
 		const placeholders = ', ?'.repeat(columns.length);
 		const sql = `
         INSERT INTO "${collection.id}" (_id, ${columns.map(([key]) => `"${key}"`).join(', ')})
@@ -141,8 +188,9 @@ export class Adapter {
 		params.push(id);
 
 		for (let [key, type] of columns) {
-			params.push(sanitizeData({ data: data[key], type, flow: 'in' }));
+			params.push(sanitizeData({ data: _data[key], type, flow: 'in' }));
 		}
+
 		return await new Promise<string>((resolve, reject) => {
 			db.run(sql, params, (err) => {
 				if (err) {
@@ -456,6 +504,8 @@ function flattenData(type: any, prefix = '') {
 	if (typeof type == 'string' || type instanceof mongoose.Types.ObjectId) {
 		return { [prefix]: type.toString() };
 	} else if (Array.isArray(type)) {
+		return { [prefix]: type };
+	} else if (typeof type == 'number' || typeof type == 'boolean') {
 		return { [prefix]: type };
 	}
 	for (const key in type) {

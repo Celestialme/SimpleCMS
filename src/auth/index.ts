@@ -1,38 +1,36 @@
 export const SESSION_COOKIE_NAME = 'auth_sessions';
 import crypto from 'crypto';
-import type { Cookie, User, UserParams, Session, Model, Token } from './types';
+import type { Cookie, User, UserParams, Session, Token } from './types';
 import mongoose from 'mongoose';
+import type { Adapter } from '@src/utils/adapters';
 
 export class Auth {
-	private User: Model;
-	private Token: Model;
-	private Session: Model;
-
+	private adapter: Adapter;
 	private users: User[] = [];
 	private sessions: Session[] = [];
 	private tokens: Token[] = [];
 
-	constructor({ User, Token, Session }) {
-		this.User = User;
-		this.Token = Token;
-		this.Session = Session;
+	constructor(adapter: Adapter) {
+		this.adapter = adapter;
 	}
 	async fetchData() {
 		let [users, sessions, tokens] = await Promise.all([
-			this.User.find({}).lean() as any,
-			this.Session.find({}).lean() as any,
-			this.Token.find({}).lean() as any
+			this.adapter.get('_users', []),
+			this.adapter.get('_sessions', []),
+			this.adapter.get('_tokens', [])
 		]);
-		this.users = users.map(({ _id, ...user }) => ({
+
+		this.users = users.rows.map(({ _id, ...user }) => ({
 			...user,
 			id: _id.toString()
 		}));
-		this.sessions = sessions.map(({ _id, ...session }) => ({
+
+		this.sessions = sessions.rows.map(({ _id, ...session }) => ({
 			...session,
 			user_id: session.user_id.toString(),
 			id: _id.toString()
 		}));
-		this.tokens = tokens.map(({ _id, ...token }) => ({
+		this.tokens = tokens.rows.map(({ _id, ...token }) => ({
 			...token,
 			user_id: token.user_id.toString(),
 			id: _id.toString()
@@ -48,19 +46,17 @@ export class Auth {
 	}: Omit<User, UserParams>) {
 		let hashed_password: string | undefined = undefined;
 		if (password) hashed_password = crypto.createHash('sha256').update(password).digest('hex');
-		let user = (
-			await this.User.insertMany(
-				{
-					email,
-					password: hashed_password,
-					username,
-					role,
-					lastAuthMethod,
-					is_registered
-				},
-				{ lean: true }
-			)
-		).map(({ _id, ...user }) => ({ ...user, id: _id.toString() }) as User)[0];
+		let user: any = {
+			email,
+			password: hashed_password as string,
+			username,
+			role,
+			lastAuthMethod,
+			is_registered
+		};
+
+		let id = await this.adapter.insert('_users', user);
+		user = { ...user, id: id };
 		this.users.push(user);
 		return user as User;
 	}
@@ -69,11 +65,14 @@ export class Auth {
 			attributes.password = crypto.createHash('sha256').update(attributes.password).digest('hex');
 
 		this.users = this.users.map((u) => (u.id === user.id ? { ...u, ...attributes } : u));
-		return await this.User.updateOne({ _id: user.id }, { $set: attributes });
+		return await this.adapter.updateMany('_users', {
+			_ids: [user.id],
+			...attributes
+		});
 	}
 	async deleteUser(id: string) {
 		this.users = this.users.filter((user) => user.id !== id);
-		await this.User.deleteOne({ _id: id });
+		await this.adapter.deleteById('_users', [id]);
 	}
 	async createSession({
 		user_id,
@@ -82,18 +81,12 @@ export class Auth {
 		user_id: string;
 		expires?: number;
 	}) {
-		let session = (
-			await this.Session.insertMany(
-				{
-					user_id: new mongoose.Types.ObjectId(user_id),
-					expires: Date.now() + expires
-				},
-				{ lean: true }
-			)
-		).map(
-			({ _id, ...session }) =>
-				({ ...session, user_id: session.user_id.toString(), id: _id.toString() }) as Session
-		)[0];
+		let session: any = {
+			user_id: new mongoose.Types.ObjectId(user_id),
+			expires: Date.now() + expires
+		};
+		let id = await this.adapter.insert('_sessions', session);
+		session = { ...session, user_id: session.user_id.toString(), id: id };
 		this.sessions.push(session);
 		return session;
 	}
@@ -111,7 +104,7 @@ export class Auth {
 	}
 	async destroySession(session_id: string) {
 		this.sessions = this.sessions.filter((session) => session.id !== session_id);
-		await this.Session.deleteOne({ _id: session_id });
+		await this.adapter.deleteById('_sessions', [session_id]);
 	}
 	createSessionCookie(session: Session): Cookie {
 		let cookie: Cookie = {
@@ -148,15 +141,10 @@ export class Auth {
 	async createToken(user_id: string, expires = 60 * 60 * 1000) {
 		let token = crypto.randomBytes(16).toString('hex');
 		let id = new mongoose.Types.ObjectId(user_id);
-		let result = (
-			await this.Token.insertMany(
-				{ user_id: id, token, expiresIn: Date.now() + expires },
-				{ lean: true }
-			)
-		).map(
-			({ _id, ...token }) =>
-				({ ...token, user_id: token.user_id.toString(), id: _id.toString() }) as Token
-		)[0];
+		let result: any = { user_id: id, token, expiresIn: Date.now() + expires };
+		let _id = await this.adapter.insert('_tokens', result);
+		result = { ...result, user_id: result.user_id.toString(), id: _id.toString() };
+
 		this.tokens.push(result);
 
 		return token;
@@ -176,7 +164,18 @@ export class Auth {
 	async consumeToken(token: string, user_id: string) {
 		let result = this.tokens.find((_token) => _token.token === token && _token.user_id === user_id);
 		if (result) {
-			await this.Token.deleteOne({ user_id, token });
+			this.adapter.deleteMany('_tokens', [
+				{
+					user_id: {
+						value: user_id,
+						strict: true
+					},
+					token: {
+						value: token,
+						strict: true
+					}
+				}
+			]);
 			this.tokens = this.tokens.filter((token) => token.token !== result.token);
 			if (isWithinExpiration(result.expiresIn)) {
 				return { status: true, message: 'token is Valid' };

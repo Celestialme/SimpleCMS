@@ -128,6 +128,7 @@ async function FirstUsersignUp(
 		lastAuthMethod: 'password',
 		is_registered: true
 	});
+	console.log(user);
 	if (!user) return { status: false, message: 'user does not exist' };
 	const session = await auth.createSession({ user_id: user.id });
 	const sessionCookie = auth.createSessionCookie(session);

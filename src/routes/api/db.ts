@@ -3,7 +3,6 @@ import privateEnv from '@root/config/private';
 import { collections } from '@src/stores/store.svelte';
 
 import { Auth } from '@src/auth';
-import { mongooseSessionSchema, mongooseTokenSchema, mongooseUserSchema } from '@src/auth/types';
 import { writeCollection } from '@src/utils/collections';
 import { sanitizePermissions } from '@src/collections/types';
 import { Adapter } from '@src/utils/adapters';
@@ -57,16 +56,14 @@ for (let collection of Object.values(collections())) {
 		)
 	);
 
-!mongoose.models['auth_tokens'] && mongoose.model('auth_tokens', mongooseTokenSchema);
-!mongoose.models['auth_users'] && mongoose.model('auth_users', mongooseUserSchema);
-!mongoose.models['auth_sessions'] && mongoose.model('auth_sessions', mongooseSessionSchema);
-
-export let auth = new Auth({
-	User: mongoose.models['auth_users'],
-	Session: mongoose.models['auth_sessions'],
-	Token: mongoose.models['auth_tokens']
-});
-await auth.fetchData();
+!mongoose.models['auth_tokens'] &&
+	mongoose.model('auth_tokens', new mongoose.Schema({}, { timestamps: true, id: true }));
+!mongoose.models['auth_users'] &&
+	mongoose.model('auth_users', new mongoose.Schema({}, { id: true }));
+!mongoose.models['auth_sessions'] &&
+	mongoose.model('auth_sessions', new mongoose.Schema({}, { timestamps: true, id: true }));
 
 export let adapter = new Adapter(collections());
+export let auth = new Auth(adapter);
 await adapter.setup();
+await auth.fetchData();
