@@ -42,7 +42,7 @@ const widget = <
 		width: params.width,
 		displayPath: params.displayPath
 	};
-	let dataType = 'ObjectId';
+	let dataType = 'objectId';
 	return { ...field, widgetName, params, dataType };
 };
 widget.Name = WIDGET_NAME;

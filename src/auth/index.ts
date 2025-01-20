@@ -24,7 +24,6 @@ export class Auth {
 			...user,
 			id: _id.toString()
 		}));
-
 		this.sessions = sessions.rows.map(({ _id, ...session }) => ({
 			...session,
 			user_id: session.user_id.toString(),
@@ -52,7 +51,9 @@ export class Auth {
 			username,
 			role,
 			lastAuthMethod,
-			is_registered
+			is_registered,
+			_createdAt: Date.now(),
+			_updatedAt: Date.now()
 		};
 
 		let id = await this.adapter.insert('_users', user);
@@ -64,7 +65,9 @@ export class Auth {
 		if (attributes.password)
 			attributes.password = crypto.createHash('sha256').update(attributes.password).digest('hex');
 
-		this.users = this.users.map((u) => (u.id === user.id ? { ...u, ...attributes } : u));
+		this.users = this.users.map((u) =>
+			u.id === user.id ? { ...u, ...attributes, _updatedAt: Date.now() } : u
+		);
 		return await this.adapter.updateMany('_users', {
 			_ids: [user.id],
 			...attributes

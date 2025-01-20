@@ -67,7 +67,7 @@ let _storage_images = {
 };
 const transformType = {
 	string: 'TEXT',
-	ObjectId: 'TEXT',
+	objectId: 'TEXT',
 	boolean: 'BOOLEAN',
 	number: 'NUMBER',
 	date: 'NUMBER',
@@ -83,7 +83,10 @@ export class Adapter {
 			collections[c].columns = {
 				_links: 'json',
 				status: 'string',
-				_storage_images: 'json'
+				_storage_images: 'json',
+				_scheduled: 'number',
+				_createdAt: 'number',
+				_updatedAt: 'number'
 			};
 			for (let key in collections[c].fields) {
 				let field = collections[c].fields[key];
@@ -129,7 +132,7 @@ export class Adapter {
 				),
 				fields: [],
 				columns: {
-					_link_id: 'ObjectId',
+					_link_id: 'objectId',
 					_linked_collection: 'string'
 				}
 			};
@@ -167,7 +170,7 @@ export class Adapter {
 	}
 
 	async insert(collectionPath: string, data): Promise<string> {
-		let _data = { ...data };
+		let _data = { ...data, _createdAt: Date.now(), _updatedAt: Date.now() };
 		let id = _data?._id?.toString() || new mongoose.Types.ObjectId().toString();
 		let collection = this.collections[collectionPath];
 		const fieldNames = collection.fields.map((field) => getFieldName(field));
@@ -178,6 +181,7 @@ export class Adapter {
 			delete _data[fieldName];
 			_data = { ..._data, ...flat_data };
 		}
+
 		let columns = Object.entries(collection.columns).filter(([key]) => _data[key] !== undefined);
 		const placeholders = ', ?'.repeat(columns.length);
 		const sql = `
@@ -203,28 +207,29 @@ export class Adapter {
 	}
 
 	async updateMany(collectionPath: string, data) {
+		let _data = { ...data, _updatedAt: Date.now() };
 		let collection = this.collections[collectionPath];
 		const fieldNames = collection.fields.map((field) => getFieldName(field));
 
 		for (let fieldName of fieldNames) {
 			if (this.collections[collectionPath].columns[fieldName] == 'json') continue;
-			let flat_data = flattenData(data[fieldName], fieldName);
-			delete data[fieldName];
-			data = { ...data, ...flat_data };
+			let flat_data = flattenData(_data[fieldName], fieldName);
+			delete _data[fieldName];
+			_data = { ..._data, ...flat_data };
 		}
-		let columns = Object.entries(collection.columns).filter(([key]) => data[key] !== undefined);
+		let columns = Object.entries(collection.columns).filter(([key]) => _data[key] !== undefined);
 		const setClause = columns.map(([key]) => `"${key}" = ?`).join(', ');
 		const sql = `
 		        UPDATE "${collection.id}"
 		        SET  ${setClause}
-		        WHERE _id IN (${data._ids.map(() => '?').join(', ')}) ;
+		        WHERE _id IN (${_data._ids.map(() => '?').join(', ')}) ;
 		    `;
 		let params: any[] = [];
 		for (let [key, type] of columns) {
-			params.push(sanitizeData({ data: data[key], type, flow: 'in' }));
+			params.push(sanitizeData({ data: _data[key], type, flow: 'in' }));
 		}
 
-		params.push(...data._ids.map((id) => id.toString()));
+		params.push(..._data._ids.map((id) => id.toString()));
 		db.run(sql, params);
 	}
 
@@ -500,6 +505,14 @@ function flattenDataType(type: Object, prefix = '', transformType) {
 }
 
 function flattenData(type: any, prefix = '') {
+	/**
+	 * Recursively flattens a nested object into a flat object with keys
+	 * concatenated with '__' in between.
+	 *
+	 * @param {any} type - The object to flatten
+	 * @param {string} [prefix=''] - The prefix string to add to the flattened keys
+	 * @returns {Object} The flattened object
+	 */
 	let result = {};
 	if (typeof type == 'string' || type instanceof mongoose.Types.ObjectId) {
 		return { [prefix]: type.toString() };
@@ -551,6 +564,6 @@ function transformColumns(columns) {
 function sanitizeData({ data, type, flow }: { data: any; type: string; flow: 'in' | 'out' }) {
 	if (type == 'json' && flow == 'in') return JSON.stringify(data);
 	else if (type == 'json' && flow == 'out') return JSON.parse(data);
-	else if (type == 'ObjectId') return data.toString();
+	else if (type == 'objectId') return data.toString();
 	return data;
 }

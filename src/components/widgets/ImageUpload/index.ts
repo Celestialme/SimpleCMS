@@ -29,7 +29,7 @@ const widget = (params: Params) => {
 		folder: params.folder,
 		width: params.width
 	};
-	let dataType = 'ObjectId';
+	let dataType = 'objectId';
 	return { ...field, widgetName, params, dataType };
 };
 widget.Name = WIDGET_NAME;

@@ -7,16 +7,22 @@ export let UserSchema = {
 	lastAuthMethod: 'string',
 	role: 'string',
 	username: 'string',
-	is_registered: 'boolean'
+	is_registered: 'boolean',
+	_createdAt: 'number',
+	_updatedAt: 'number'
 };
 export let tokenSchema = {
 	token: 'string',
 	user_id: 'ObjectId',
-	expiresIn: 'number'
+	expiresIn: 'number',
+	_createdAt: 'number',
+	_updatedAt: 'number'
 };
 export let sessionSchema = {
 	user_id: 'ObjectId',
-	expires: 'number'
+	expires: 'number',
+	_createdAt: 'number',
+	_updatedAt: 'number'
 };
 
 export type User = {

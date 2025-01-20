@@ -6,8 +6,9 @@
 	import { parse } from 'devalue';
 	import EditField from './EditField.svelte';
 	import { linear } from 'svelte/easing';
+	import { track } from '@src/utils/reactivity.svelte';
 
-	const tableHeaders = ['id', 'email', 'username', 'role', 'createdAt'] as const;
+	const tableHeaders = ['id', 'email', 'username', 'role', '_createdAt'] as const;
 	let editField: {
 		show: boolean;
 		label: string;
@@ -49,13 +50,13 @@
 		userInfo.map((user) => {
 			for (let header of tableHeaders) {
 				if (!user[header]) user[header] = 'NO DATA';
-				if (header == 'createdAt') user[header] = new Date(user[header]).toLocaleString();
+				if (header == '_createdAt') user[header] = new Date(user[header]).toLocaleString();
 			}
 		});
 		tableData = [...userInfo];
 	}
 	refresh();
-	function process_modifyAll(modifyAll: boolean) {
+	function process_modifyAll() {
 		if (modifyAll) {
 			for (let item in tableData) {
 				modifyMap[item] = true;
@@ -66,16 +67,19 @@
 			}
 		}
 	}
-	$effect(() => {
-		process_modifyAll(modifyAll);
-	});
+	track(
+		() => {
+			process_modifyAll();
+		},
+		() => modifyAll
+	);
 	let sorting: { sortedBy: string; isSorted: 0 | 1 | -1 } = $state({
 		sortedBy: '',
 		isSorted: 0
 	});
 	$effect(() => {
 		tableData.sort((a, b) => {
-			if (sorting.sortedBy == 'createdAt') {
+			if (sorting.sortedBy == '_createdAt') {
 				if (new Date(a[sorting.sortedBy]) < new Date(b[sorting.sortedBy])) {
 					return -1 * sorting.isSorted;
 				} else if (new Date(a[sorting.sortedBy]) > new Date(b[sorting.sortedBy])) {
@@ -125,6 +129,7 @@
 			css: (t) => `height: ${t * o}px`
 		};
 	}
+	$inspect(modifyMap);
 </script>
 
 <div
@@ -184,7 +189,7 @@
 						}}
 					>
 						<div class="flex items-center justify-between">
-							{header}
+							{header.replace(/^_/, '')}
 							<div
 								class="arrow"
 								class:up={sorting.isSorted === 1}

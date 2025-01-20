@@ -21,7 +21,7 @@ export const actions: Actions = {
 		}
 		let email = form.data.email;
 		let role = form.data.role as Roles;
-		if (await auth.checkUser({ email })) {
+		if (auth.checkUser({ email })) {
 			return fail(400, { message: 'user already exists' });
 		}
 		let newUser = await auth.createUser({
@@ -94,7 +94,7 @@ export const actions: Actions = {
 		let data = await event.request.formData();
 		let tableHeaders = JSON.parse(data.get('tableHeaders') as string);
 
-		let docs = await auth.getAllUsers();
+		let docs = auth.getAllUsers();
 		let users = docs.map((doc) => {
 			let result = {};
 			for (let header of tableHeaders) {
