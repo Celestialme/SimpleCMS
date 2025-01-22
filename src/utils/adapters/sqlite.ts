@@ -1,11 +1,12 @@
 import type { Schema } from '@src/collections/types';
-import { getFieldName } from './fields';
+import { getFieldName } from '../fields';
 import sqlite3 from 'sqlite3';
 import mongoose from 'mongoose';
-import { SIZES } from './files';
+import { SIZES } from '../files';
 import widgets from '@src/components/widgets';
 import { collections } from '@src/stores/store.svelte';
 import { sessionSchema, tokenSchema, UserSchema } from '@src/auth/types';
+import { PATH, type MEDIA } from './types';
 const db = new sqlite3.Database('./db.db');
 
 let _users = {
@@ -125,8 +126,8 @@ export class Adapter {
 				return acc;
 			}, new Set())
 		).reduce((acc: { [key: string]: any }, c) => {
-			acc[collections[c as string].id + '_link'] = {
-				id: collections[c as string].id + '_link',
+			acc[collections[c as string].id + '_links'] = {
+				id: collections[c as string].id + '_links',
 				originalCollections: Object.values(collections).filter((collection) =>
 					collection.links?.includes(c as any)
 				),
@@ -296,7 +297,7 @@ export class Adapter {
 			joins += ` LEFT JOIN "${lookup.from}" ${lookup.localField} ON ${lookup.localField}.${lookup.foreignField} = ${lookup.prefix}${lookup.localField}`;
 		}
 		sql += joins;
-		let linkedCollection = this.linkedCollections[`${collection.id}_link`];
+		let linkedCollection = this.linkedCollections[`${collection.id}_links`];
 
 		if (linkedCollection) {
 			for (let Lcollection of linkedCollection.originalCollections) {
@@ -304,7 +305,7 @@ export class Adapter {
 			UNION
 			SELECT main._id,true as _is_link,'${Lcollection.path}' as _linked_collection, ${selects}
 			FROM
-				"${collection.id}_link" link
+				"${collection.id}_links" link
 				JOIN
 				"${Lcollection.id}" main ON link._link_id = main._id AND link._linked_collection = '${Lcollection.id}'`;
 				sql += `${joins}`;
@@ -370,37 +371,34 @@ export class Adapter {
 		limit,
 		page
 	}: {
-		type: 'IMAGE';
+		type: MEDIA;
 		search: string;
 		folder: string;
 		limit: number;
 		page: number;
 	}) {
-		let path = {
-			IMAGE: '_storage_images'
-		};
 		let _collections = {};
 		for (let key in collections()) {
 			_collections[key] = this.collections[key];
 		}
-		let collection = this.collections[path[type]];
-		let selects = Object.keys(_collections).map(
-			(key) => `"${_collections[key].id}"._storage_images`
+		let collection = this.collections[PATH[type]];
+		let sql = 'SELECT *,COUNT(*) as count FROM (';
+		let unions = Object.keys(_collections).map(
+			(key) => `
+					SELECT main.*  FROM  ${collection.id} main
+					JOIN "${_collections[key].id}" ON main._id IN (
+					SELECT value
+					FROM json_each("${_collections[key].id}".${PATH[type]}))\n`
 		);
-		let sql = `SELECT main.*,COUNT(*) as count, COALESCE(${selects.join(', ')}) as used_by FROM  ${collection.id} main `;
-		for (let key in _collections) {
-			sql += `LEFT JOIN "${_collections[key].id}" ON main._id IN (
-    		SELECT value
-  		  	FROM json_each("${_collections[key].id}"._storage_images)
-			)\n`;
-		}
+		sql += unions.join(' UNION ALL ') + ') ';
 
-		sql += `WHERE main.folder = '${folder}'`;
+		sql += `main WHERE main.folder = '${folder}'`;
 		if (search) {
 			sql += ` AND main."original__name" LIKE '%${search}%' `;
 		}
 		sql += ' GROUP BY main._id ';
 		sql += ` LIMIT ${limit} OFFSET ${limit * (page - 1)}`;
+
 		let result = await new Promise<any[]>((resolve, reject) => {
 			db.all(sql, (err, rows) => {
 				if (err) {
@@ -425,7 +423,7 @@ export class Adapter {
 		});
 		return {
 			entryList: result.map((row) => {
-				row.used_by = row.used_by ? row.count : 0;
+				row.used_by = row.count;
 				return unflattenData(row);
 			}) as any[],
 			total

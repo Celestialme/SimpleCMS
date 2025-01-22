@@ -7,14 +7,14 @@ export const GET: RequestHandler = async ({ url }) => {
 	let folder = url.searchParams.get('folder') as string;
 	let page = parseInt(url.searchParams.get('page') as string) || 1;
 
-	let { entryList: files, total: totalCount } = await adapter.getMedia({
+	let { entryList: files, total } = await adapter.getMedia({
 		type: 'IMAGE',
 		search: search,
 		folder,
 		limit,
 		page
 	});
-	let pagesCount = Math.ceil(totalCount / limit);
+	let pagesCount = Math.ceil(total / limit);
 	return new Response(
 		JSON.stringify({
 			images: files,

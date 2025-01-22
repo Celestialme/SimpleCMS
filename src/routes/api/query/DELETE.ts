@@ -1,5 +1,5 @@
 import type { Schema } from '@src/collections/types';
-import { adapter, collectionModels } from '../db';
+import { adapter } from '../db';
 import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
@@ -14,8 +14,6 @@ export let _DELETE = async ({
 	schema: Schema;
 	user: User;
 }) => {
-	let collection = collectionModels[schema.id as string];
-
 	let ids: string[] = JSON.parse(data.get('ids') as string);
 
 	for (let id of ids) {
@@ -31,7 +29,7 @@ export let _DELETE = async ({
 			type: 'DELETE'
 		});
 		for (let link of schema.links || []) {
-			await adapter.deleteMany(collections()[link].id + '_link', [
+			await adapter.deleteMany(collections()[link].id + '_links', [
 				{
 					_link_id: {
 						value: id,
@@ -45,14 +43,6 @@ export let _DELETE = async ({
 			]);
 		}
 	}
-	await adapter.deleteById(schema.path as string, ids);
-	return new Response(
-		JSON.stringify(
-			await collection.deleteMany({
-				_id: {
-					$in: ids
-				}
-			})
-		)
-	);
+
+	return new Response(JSON.stringify(await adapter.deleteById(schema.path as string, ids)));
 };

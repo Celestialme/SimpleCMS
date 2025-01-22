@@ -1,5 +1,5 @@
 import type { Schema } from '@src/collections/types';
-import { adapter, collectionModels } from '../db';
+import { adapter } from '../db';
 
 export let _SETSTATUS = async ({ data, schema }: { data: FormData; schema: Schema }) => {
 	let _ids = data.get('ids') as string;

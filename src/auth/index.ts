@@ -2,7 +2,7 @@ export const SESSION_COOKIE_NAME = 'auth_sessions';
 import crypto from 'crypto';
 import type { Cookie, User, UserParams, Session, Token } from './types';
 import mongoose from 'mongoose';
-import type { Adapter } from '@src/utils/adapters';
+import type { Adapter } from '@src/utils/adapters/sqlite';
 
 export class Auth {
 	private adapter: Adapter;
@@ -24,6 +24,7 @@ export class Auth {
 			...user,
 			id: _id.toString()
 		}));
+
 		this.sessions = sessions.rows.map(({ _id, ...session }) => ({
 			...session,
 			user_id: session.user_id.toString(),

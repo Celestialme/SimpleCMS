@@ -1,5 +1,5 @@
 import type { Schema } from '@src/collections/types';
-import { adapter, collectionModels } from '../db';
+import { adapter } from '../db';
 import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
@@ -16,7 +16,6 @@ export let _POST = async ({
 }) => {
 	let body: { [key: string]: any } = {};
 	let storage = { images: new Set<ObjectId>() };
-	let collection = collectionModels[schema.id as string];
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
 		try {
@@ -36,7 +35,6 @@ export let _POST = async ({
 		delete body[id];
 	}
 	body['status'] = 'PUBLISHED';
-	if (!collection) return new Response('collection not found!!');
 	body._id = new mongoose.Types.ObjectId();
 	await modifyRequest({
 		data: [body],
@@ -52,7 +50,7 @@ export let _POST = async ({
 
 		let _id = new mongoose.Types.ObjectId();
 
-		await adapter.insert((collections()[_collection].id + '_link') as string, {
+		await adapter.insert((collections()[_collection].id + '_links') as string, {
 			_id,
 			_link_id: body._id,
 			_linked_collection: schema.id

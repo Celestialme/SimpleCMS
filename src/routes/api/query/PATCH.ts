@@ -1,5 +1,5 @@
 import type { Schema } from '@src/collections/types';
-import { adapter, collectionModels } from '../db';
+import { adapter } from '../db';
 import mongoose from 'mongoose';
 
 import type { User } from '@src/auth/types';
@@ -17,7 +17,6 @@ export let _PATCH = async ({
 	let body: { [key: string]: any } = {};
 	let storage = { images: new Set<ObjectId>() };
 	let schemaPath = schema.path as string;
-	let _id = new mongoose.Types.ObjectId(data.get('_id') as string);
 	let fileIDS: string[] = [];
 	for (let key of data.keys()) {
 		try {
@@ -33,6 +32,7 @@ export let _PATCH = async ({
 			body[key] = data.get(key) as string;
 		}
 	}
+	body._id = new mongoose.Types.ObjectId(body._id as string);
 	if (body._is_link) {
 		schemaPath = body._linked_collection;
 	}
@@ -58,7 +58,8 @@ export let _PATCH = async ({
 							match: {
 								_id: {
 									value: body._id,
-									strict: true
+									strict: true,
+									id: true
 								}
 							}
 						}
@@ -66,7 +67,7 @@ export let _PATCH = async ({
 				).rows[0]._links
 			: {};
 	for (let _collection in body._links) {
-		let schemaPath = (collections()[_collection].id + '_link') as string;
+		let schemaPath = (collections()[_collection].id + '_links') as string;
 		if (!schemaPath) continue;
 		if (!body._links[_collection] && links?.[_collection]) {
 			delete body._links[_collection];
@@ -74,7 +75,8 @@ export let _PATCH = async ({
 				{
 					_link_id: {
 						value: body._id,
-						strict: true
+						strict: true,
+						id: true
 					},
 					_linked_collection: {
 						value: body._is_link ? collections()[body._linked_collection].id : schema.path,
@@ -100,6 +102,6 @@ export let _PATCH = async ({
 	delete body._linked_collection;
 	body._storage_images = Array.from(storage.images);
 	let response = JSON.stringify(body);
-	await adapter.updateMany(schemaPath, { _ids: [_id], ...body });
+	await adapter.updateMany(schemaPath, { _ids: [body._id], ...body });
 	return new Response(response);
 };

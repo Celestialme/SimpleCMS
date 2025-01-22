@@ -45,6 +45,7 @@ declare global {
 			[key: string]: {
 				value: string;
 				strict: boolean;
+				id?: boolean;
 			};
 		};
 		skip?: number;
