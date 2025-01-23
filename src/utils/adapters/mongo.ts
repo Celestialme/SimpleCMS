@@ -162,8 +162,7 @@ export class Adapter {
 		for (let key in sort) {
 			_modifiers.push({ $sort: sort[key] });
 		}
-
-		return (
+		let result = (
 			await collectionModel.aggregate([
 				{
 					$facet: {
@@ -173,11 +172,18 @@ export class Adapter {
 				}
 			])
 		)[0];
+
+		return {
+			rows: result.rows,
+			total: result.total[0]?.total
+		};
 	}
 
 	async insert(collectionPath: string, data): Promise<string> {
 		let _data = { ...data, _createdAt: Date.now(), _updatedAt: Date.now() };
-
+		_data._id = _data?._id
+			? new mongoose.Types.ObjectId(_data?._id as string)
+			: new mongoose.Types.ObjectId();
 		let collection = this.collections[collectionPath];
 		let collectionModel = mongoose.models[collection.id];
 		await collectionModel.insertMany(_data);
