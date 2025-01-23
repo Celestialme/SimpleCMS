@@ -175,7 +175,7 @@ export class Adapter {
 
 		return {
 			rows: result.rows,
-			total: result.total[0]?.total
+			total: result.total[0]?.total ?? 0
 		};
 	}
 
